@@ -2,7 +2,7 @@
 
 The central reference document for how all the pieces of Evryn fit together.
 
-*Last updated: January 21, 2025*
+*Last updated: January 24, 2026*
 
 ---
 
@@ -233,8 +233,9 @@ FORWARD DETECTED               DIRECT MESSAGE
 
 | Repo | Purpose | Status |
 |------|---------|--------|
-| `_evryn-meta` | System-wide documentation | Created |
-| `evryn-website` | Marketing site | Building now |
+| `_evryn-meta` | System-wide documentation | Active |
+| `evryn-website` | Marketing site | LIVE |
+| `evryn-team-agents` | AI executive team (C-suite agents) | Building |
 | `evryn-prelaunch-landing` | Old landing page | Archived |
 | `evryn-app` | Member product UI | Future |
 | `evryn-backend` | API, agents, admin tools | Future |
@@ -250,16 +251,32 @@ FORWARD DETECTED               DIRECT MESSAGE
 | **Supabase** | Database | Evryn |
 | **HubSpot** | CRM, waitlist | Evryn |
 | **Cloudflare** | Turnstile captcha | Evryn |
-| **Anthropic** | Claude API + Claude Code | Claude Max subscription |
+| **Anthropic** | Claude API + Claude Code | Claude Pro subscription + API credits |
+| **Google Cloud** | Pub/Sub for Gmail push notifications | Evryn project |
 | **iDenfy** | Identity verification | Chosen, not yet integrated |
+| **Vapi** | Voice AI platform (future) | Researched, not yet integrated |
+| **Hume AI** | Emotion detection for voice (future) | Researched, not yet integrated |
+| **ElevenLabs** | Voice synthesis (future) | Researched, not yet integrated |
 
 ---
 
 ## Key Contacts
 
-- **Justin** — Founder, building everything with Claude Code
+**Leadership:**
+- **Justin** — Founder/CEO, building everything with Claude Code
+
+**AI Executive Team (Primary Operations):**
+- See `evryn-team-agents/agents/` for the full C-suite (Thea, Taylor, Jordan, Dana, Dominic, Nathan, Lucas, Alex)
+- This is the primary operating team
+
+**Human Advisors:**
+- **Andrew Lester** — Operations Advisor
+- **Salil Chatrath** — Product Advisor
+- **Manuele Capacci** — Design Advisor
+- **Megan Griffiths** — Film Industry Advisor
+
+**Pilot Users:**
 - **Mark** — First gatekeeper user (August Island Pictures, Eva's Wild)
-- **Manuele** — UX designer (limited availability)
 
 ---
 
@@ -279,3 +296,7 @@ FORWARD DETECTED               DIRECT MESSAGE
 | 2025-01-16 | Initial document created |
 | 2025-01-20 | Removed n8n - all backend built in code via Claude Code. Added _evryn-meta repo. Updated architecture diagram. Aligned "brains" with PRD concepts. Added iDenfy rationale. Updated Supabase tables to current state. Added two-pathway flow for Mark's triage. |
 | 2025-01-21 | Website LIVE at evryn.ai. Updated Vercel project info. Added Cloudflare to external services. Priority 1 marked complete. |
+| 2025-01-22 | Added evryn-team-agents repo (AI executive team). Created LEARNINGS.md and AGENT_PATTERNS.md for cross-project knowledge capture. Architecture complete. Code scaffolded overnight - ready for credentials and testing. |
+| 2025-01-23 | Team agents update: AA Alex (email/API) is primary interface, CC Alex (terminal) occasional. Gmail push notifications via Pub/Sub instead of polling. Billing switch to Pro + API credits. Added Google Cloud to external services. |
+| 2025-01-23 | Gmail aliases configured on agents@evryn.ai. Catch-all routing to Thea. Voice integration researched (Vapi + Hume AI) for future Phase 4. Added voice AI platforms to external services (future). |
+| 2025-01-24 | Team structure update: AI executive team is now primary operations, human team members (Andrew, Salil, Manuele) moving to advisor roles. Added company-context.md to evryn-team-agents for agent context. |
