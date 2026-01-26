@@ -128,6 +128,26 @@ Summarization must complete BEFORE old messages leave hot context. Use an overla
 
 Zero gap architecture. Never lose data between tiers.
 
+### Multi-Channel Memory: Time, Not Channel
+When agents have multiple input channels (email, Slack, voice), the unifying factor is **time**, not channel. If someone emails, Slacks, and calls about the same topic in 5 minutes, that's ONE conversation.
+
+**Three layers:**
+1. **Immediate context** (channel-specific, verbatim) - What I'm responding to right now. Email = this thread. Slack = this convo. Voice = this call.
+2. **Working memory** (cross-channel, ~30 min, summarized) - What I've been thinking about. "Justin mentioned X on Slack 10 min ago." Informs but doesn't pollute.
+3. **Long-term memory** (semantic search, any time) - What I know that's relevant. Vector embeddings, retrieve k=1-2 most relevant.
+
+**Session concept:** ~30 min of silence = session ends. Working memory gets summarized and stored to long-term. Next interaction starts fresh but can retrieve.
+
+**Channel-appropriate responses:** Agent is AWARE of cross-channel context but doesn't POLLUTE responses. No Slack quotes in email. Reference naturally: "as we discussed" not "[pasting transcript]".
+
+### Agent Self-Monitoring
+Agents that only respond to triggers are fragile. If the trigger system fails, they silently die. Build self-monitoring:
+- Periodic "wake-up" trigger: "Check your status, pending tasks, deadlines. Miss anything?"
+- Ability to query "what happened while I was down"
+- Don't mark emails as processed if agent is halted (so they're visible on recovery)
+
+A human employee checks their inbox. An agent should too.
+
 ### Multi-Cadence Reflection
 Daily consolidation misses long arcs. Weekly misses patterns across weeks. Use multiple cadences:
 - **Daily:** Today's transcript → notes snapshot
