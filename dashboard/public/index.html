@@ -353,7 +353,7 @@
 
   <!-- Progress Tab -->
   <div id="progress-tab" class="main-tab-content">
-    <h2>Backlog</h2>
+    <h2>GitHub Issues</h2>
     <div class="legend">
       <span style="margin-right: 8px;">Priority:</span>
       <div class="legend-item"><div class="legend-bar" style="background:#ec4899;"></div> Urgent</div>
@@ -362,6 +362,11 @@
       <div class="legend-item"><div class="legend-bar" style="background:#22c55e;"></div> Low</div>
       <div class="legend-item"><div class="legend-bar" style="background:#a855f7;"></div> Evaluate</div>
     </div>
+    <div id="github-issues-container">
+      <div class="loading">Loading GitHub Issues...</div>
+    </div>
+
+    <h2 style="margin-top: 24px;">Supabase Backlog</h2>
     <div class="kanban" id="kanban">
       <div class="kanban-column" id="col-pending">
         <div class="kanban-header">Pending <span id="count-pending"></span></div>
@@ -746,6 +751,72 @@
       if (e.key === 'Escape') closeModal();
     });
 
+    function getPriorityFromLabels(labels) {
+      const priorityLabels = ['urgent', 'high', 'medium', 'low', 'evaluate'];
+      for (const p of priorityLabels) {
+        if (labels.some(l => l.name === 'priority: ' + p)) return p;
+      }
+      return 'medium';
+    }
+
+    function getCategoryFromLabels(labels) {
+      const cats = labels.filter(l => l.name.startsWith('category: ')).map(l => l.name.replace('category: ', ''));
+      return cats.length > 0 ? cats[0] : null;
+    }
+
+    function renderGithubIssues(issues, error) {
+      const container = document.getElementById('github-issues-container');
+      if (error) {
+        container.innerHTML = `<div style="color:#666; font-size:0.85rem; padding:12px; background:#111; border-radius:6px;">${error === 'GITHUB_TOKEN not configured' ? 'Add GITHUB_TOKEN to Vercel env vars to enable this widget.' : 'Error: ' + error}</div>`;
+        return;
+      }
+      if (!issues || issues.length === 0) {
+        container.innerHTML = '<div style="color:#666; padding:12px;">No open issues.</div>';
+        return;
+      }
+
+      // Sort by priority
+      const priorityOrder = { urgent: 0, high: 1, medium: 2, low: 3, evaluate: 4 };
+      const sorted = [...issues].sort((a, b) => {
+        const pa = priorityOrder[getPriorityFromLabels(a.labels)] ?? 2;
+        const pb = priorityOrder[getPriorityFromLabels(b.labels)] ?? 2;
+        return pa - pb || a.number - b.number;
+      });
+
+      let html = '<div style="display:grid; gap:8px;">';
+      sorted.forEach(issue => {
+        const priority = getPriorityFromLabels(issue.labels);
+        const category = getCategoryFromLabels(issue.labels);
+        const catLabel = category ? `<span class="backlog-category">${category}</span> ` : '';
+        const assignee = issue.assignee ? `<span style="color:#60a5fa; font-size:0.7rem;">@${issue.assignee}</span>` : '';
+        const ago = getTimeAgo(issue.updated_at);
+
+        html += `
+          <a href="${issue.html_url}" target="_blank" rel="noopener" style="text-decoration:none; color:inherit;">
+            <div class="backlog-item priority-${priority}" style="margin-bottom:0;">
+              <div class="backlog-title">#${issue.number} ${truncate(issue.title, 60)}</div>
+              <div class="backlog-meta">
+                ${catLabel}${assignee}${ago ? ` <span style="color:#555; font-size:0.65rem;">updated ${ago}</span>` : ''}
+              </div>
+            </div>
+          </a>
+        `;
+      });
+      html += '</div>';
+      container.innerHTML = html;
+    }
+
+    function getTimeAgo(isoString) {
+      if (!isoString) return '';
+      const diff = Date.now() - new Date(isoString).getTime();
+      const mins = Math.floor(diff / 60000);
+      if (mins < 60) return mins + 'm ago';
+      const hours = Math.floor(mins / 60);
+      if (hours < 24) return hours + 'h ago';
+      const days = Math.floor(hours / 24);
+      return days + 'd ago';
+    }
+
     function renderBacklog(backlog) {
       backlogData = backlog;
       const columns = { pending: [], in_progress: [], blocked: [], completed: [] };
@@ -826,6 +897,9 @@
 
         // Render month spend
         renderMonthSpend(data.monthSpend || { byAgent: {}, total: 0 });
+
+        // Render GitHub Issues
+        renderGithubIssues(data.githubIssues || [], data.githubError || null);
 
         // Render backlog
         renderBacklog(data.backlog || []);
