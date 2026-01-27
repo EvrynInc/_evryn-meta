@@ -748,8 +748,12 @@
       });
 
       const categoryLabels = { token_optimization: 'Tokens', reliability: 'Reliability', features: 'Features' };
+      const priorityOrder = { urgent: 0, high: 1, medium: 2, low: 3 };
 
       Object.keys(columns).forEach(status => {
+        // Sort by priority (urgent first, then high, medium, low)
+        columns[status].sort((a, b) => (priorityOrder[a.priority] || 2) - (priorityOrder[b.priority] || 2));
+
         const col = document.getElementById('col-' + status);
         const headerEl = col.querySelector('.kanban-header');
         document.getElementById('count-' + status).textContent = `(${columns[status].length})`;
