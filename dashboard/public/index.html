@@ -379,7 +379,7 @@
   </div>
 
   <script>
-    const agents = ['Thea', 'Lucas', 'Alex', 'Taylor', 'Dana', 'Dominic', 'Nathan'];
+    const agents = ['Thea', 'Lucas', 'Alex', 'Taylor', 'Dana', 'Jordan', 'Dominic', 'Nathan'];
     let activeFilters = new Set(['api', 'scheduled', 'email-in', 'email-out', 'inter_agent']);
     let activityData = [];
     let allActivityData = [];
@@ -459,7 +459,10 @@
     function renderMonthSpend(monthSpend) {
       document.getElementById('month-total-header').textContent = '$' + (monthSpend.total || 0).toFixed(2);
       let html = '';
-      const sortedAgents = Object.entries(monthSpend.byAgent || {}).sort((a, b) => b[1] - a[1]);
+      const agentOrder = ['thea', 'lucas', 'alex', 'taylor', 'dana', 'jordan', 'dominic', 'nathan'];
+      const sortedAgents = agentOrder
+        .map(name => [name, (monthSpend.byAgent || {})[name] || 0])
+        .filter(([_, amount]) => amount > 0);
       sortedAgents.forEach(([agent, amount]) => {
         const capitalizedAgent = agent.charAt(0).toUpperCase() + agent.slice(1);
         html += `<div class="month-row"><span class="month-agent">${capitalizedAgent}</span><span class="month-amount">$${amount.toFixed(3)}</span></div>`;
