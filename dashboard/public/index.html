@@ -193,6 +193,7 @@
     .backlog-item.priority-high { border-left-color: #ef4444; }
     .backlog-item.priority-medium { border-left-color: #eab308; }
     .backlog-item.priority-low { border-left-color: #22c55e; }
+    .backlog-item.priority-evaluate { border-left-color: #a855f7; }
     .backlog-title { font-size: 0.8rem; color: #fff; margin-bottom: 4px; }
     .backlog-meta { font-size: 0.7rem; color: #666; }
     .backlog-category {
@@ -238,6 +239,7 @@
     .modal-priority.high { background: #ef4444; color: #fff; }
     .modal-priority.medium { background: #eab308; color: #000; }
     .modal-priority.low { background: #22c55e; color: #000; }
+    .modal-priority.evaluate { background: #a855f7; color: #fff; }
 
     /* Misc */
     .truncate { cursor: help; }
@@ -358,6 +360,7 @@
       <div class="legend-item"><div class="legend-bar" style="background:#ef4444;"></div> High</div>
       <div class="legend-item"><div class="legend-bar" style="background:#eab308;"></div> Medium</div>
       <div class="legend-item"><div class="legend-bar" style="background:#22c55e;"></div> Low</div>
+      <div class="legend-item"><div class="legend-bar" style="background:#a855f7;"></div> Evaluate</div>
     </div>
     <div class="kanban" id="kanban">
       <div class="kanban-column" id="col-pending">
@@ -748,7 +751,7 @@
       });
 
       const categoryLabels = { token_optimization: 'Tokens', reliability: 'Reliability', features: 'Features' };
-      const priorityOrder = { urgent: 0, high: 1, medium: 2, low: 3 };
+      const priorityOrder = { urgent: 0, high: 1, medium: 2, low: 3, evaluate: 4 };
 
       Object.keys(columns).forEach(status => {
         // Sort by priority (urgent first, then high, medium, low)
