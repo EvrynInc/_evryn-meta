@@ -105,14 +105,14 @@
       vertical-align: top;
     }
     .activity-table tr:hover td { background: #1a1a1a; }
-    .activity-table .col-time { width: 120px; color: #666; }
-    .activity-table .col-type { width: 60px; }
-    .activity-table .col-agent { width: 70px; color: #60a5fa; }
-    .activity-table .col-from, .activity-table .col-to { width: 100px; }
-    .activity-table .col-model { width: 80px; }
-    .activity-table .col-tokens { width: 60px; text-align: right; }
-    .activity-table .col-cost { width: 60px; text-align: right; }
-    .activity-table .col-subject { width: 150px; }
+    .activity-table .col-time { width: 110px; white-space: nowrap; color: #666; }
+    .activity-table .col-type { width: 50px; }
+    .activity-table .col-agent { width: 60px; color: #60a5fa; }
+    .activity-table .col-from, .activity-table .col-to { width: 90px; max-width: 90px; overflow: hidden; text-overflow: ellipsis; }
+    .activity-table .col-model { width: 55px; }
+    .activity-table .col-tokens { width: 50px; text-align: right; }
+    .activity-table .col-cost { width: 55px; text-align: right; }
+    .activity-table .col-subject { max-width: 180px; }
     .activity-type {
       display: inline-block;
       padding: 2px 6px;
@@ -176,8 +176,8 @@
       cursor: pointer;
     }
     .backlog-item:hover { background: #222; }
-    .backlog-item.priority-urgent { border-left-color: #dc2626; }
-    .backlog-item.priority-high { border-left-color: #ef4444; }
+    .backlog-item.priority-urgent { border-left-color: #ec4899; }
+    .backlog-item.priority-high { border-left-color: #f97316; }
     .backlog-item.priority-medium { border-left-color: #eab308; }
     .backlog-item.priority-low { border-left-color: #22c55e; }
     .backlog-title { font-size: 0.8rem; color: #fff; margin-bottom: 4px; }
@@ -221,8 +221,8 @@
     .modal-label { font-size: 0.7rem; color: #666; text-transform: uppercase; margin-bottom: 4px; }
     .modal-value { font-size: 0.85rem; color: #e0e0e0; }
     .modal-priority { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 0.7rem; text-transform: uppercase; }
-    .modal-priority.urgent { background: #dc2626; color: #fff; }
-    .modal-priority.high { background: #ef4444; color: #fff; }
+    .modal-priority.urgent { background: #ec4899; color: #fff; }
+    .modal-priority.high { background: #f97316; color: #fff; }
     .modal-priority.medium { background: #eab308; color: #000; }
     .modal-priority.low { background: #22c55e; color: #000; }
 
@@ -294,6 +294,9 @@
     <h2>Activity</h2>
     <div class="filters" id="filters">
       <span class="filters-label">Filter:</span>
+      <button class="filter-btn" data-action="none">None</button>
+      <button class="filter-btn" data-action="all">All</button>
+      <span style="color:#333; margin: 0 4px;">|</span>
       <button class="filter-btn active" data-filter="api">API</button>
       <button class="filter-btn active" data-filter="scheduled">Scheduled</button>
       <button class="filter-btn active" data-filter="email-in">Emails In</button>
@@ -329,8 +332,8 @@
     <h2>Backlog</h2>
     <div class="legend">
       <span style="margin-right: 8px;">Priority:</span>
-      <div class="legend-item"><div class="legend-bar" style="background:#dc2626;"></div> Urgent</div>
-      <div class="legend-item"><div class="legend-bar" style="background:#ef4444;"></div> High</div>
+      <div class="legend-item"><div class="legend-bar" style="background:#ec4899;"></div> Urgent</div>
+      <div class="legend-item"><div class="legend-bar" style="background:#f97316;"></div> High</div>
       <div class="legend-item"><div class="legend-bar" style="background:#eab308;"></div> Medium</div>
       <div class="legend-item"><div class="legend-bar" style="background:#22c55e;"></div> Low</div>
     </div>
@@ -494,9 +497,31 @@
     });
 
     // Multi-select filter toggling
+    const allFilterKeys = ['api', 'scheduled', 'email-in', 'email-out', 'inter_agent'];
+
+    function updateFilterButtons() {
+      document.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
+        if (activeFilters.has(btn.dataset.filter)) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
     document.getElementById('filters').addEventListener('click', (e) => {
-      if (e.target.classList.contains('filter-btn')) {
-        const filter = e.target.dataset.filter;
+      if (!e.target.classList.contains('filter-btn')) return;
+
+      const action = e.target.dataset.action;
+      const filter = e.target.dataset.filter;
+
+      if (action === 'none') {
+        activeFilters.clear();
+        updateFilterButtons();
+      } else if (action === 'all') {
+        allFilterKeys.forEach(k => activeFilters.add(k));
+        updateFilterButtons();
+      } else if (filter) {
         if (activeFilters.has(filter)) {
           activeFilters.delete(filter);
           e.target.classList.remove('active');
@@ -504,9 +529,9 @@
           activeFilters.add(filter);
           e.target.classList.add('active');
         }
-        displayedCount = 10;
-        renderActivity();
       }
+      displayedCount = 10;
+      renderActivity();
     });
 
     // Load more
@@ -526,13 +551,13 @@
         toShow.forEach(item => {
           const isApi = item.type === 'api_call';
           const isMessage = item.type === 'message';
-          const from = isMessage ? truncate(item.from_address, 20) : '-';
-          const to = isMessage ? truncate(item.to_address, 20) : '-';
-          const model = isApi ? (item.model || '-') : '-';
-          const tokens = isApi ? (item.tokens || 0) : '-';
-          const cost = isApi ? '$' + (item.cost_usd || 0).toFixed(4) : '-';
-          const subject = isMessage ? truncate(item.subject, 25) : '-';
-          const task = isApi ? truncate(item.description, 40) : '-';
+          const from = isMessage ? truncate(item.from_address, 18) : '';
+          const to = isMessage ? truncate(item.to_address, 18) : '';
+          const model = isApi ? (item.model || '') : '';
+          const tokens = isApi ? (item.tokens || 0) : '';
+          const cost = isApi ? '$' + (item.cost_usd || 0).toFixed(4) : '';
+          const subject = isMessage ? truncate(item.subject, 30) : '';
+          const task = isApi ? truncate(item.description, 50) : '';
 
           html += `
             <tr>
