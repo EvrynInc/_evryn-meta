@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Evryn Agents Dashboard</title>
+  <title>Evryn Dashboard</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -12,29 +12,29 @@
       color: #e0e0e0;
       padding: 16px;
       line-height: 1.5;
-      max-width: 100%;
     }
-    h1 { color: #fff; margin-bottom: 8px; font-size: 1.4rem; }
-    h2 { color: #888; margin: 20px 0 10px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+    h1 { color: #fff; margin-bottom: 4px; font-size: 1.4rem; }
+    h2 { color: #888; margin: 16px 0 8px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
 
-    /* Tabs */
-    .tabs { display: flex; gap: 4px; margin-bottom: 16px; }
-    .tab {
-      padding: 8px 16px;
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 4px 4px 0 0;
+    /* Main Tabs */
+    .main-tabs { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 1px solid #333; }
+    .main-tab {
+      padding: 10px 20px;
+      background: transparent;
+      border: none;
       cursor: pointer;
-      color: #888;
-      font-size: 0.85rem;
+      color: #666;
+      font-size: 0.95rem;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
     }
-    .tab.active { background: #222; color: #fff; border-bottom-color: #222; }
-    .tab:hover:not(.active) { background: #222; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
+    .main-tab.active { color: #fff; border-bottom-color: #60a5fa; }
+    .main-tab:hover:not(.active) { color: #aaa; }
+    .main-tab-content { display: none; }
+    .main-tab-content.active { display: block; }
 
     /* Agent Grid */
-    .agent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; margin-bottom: 20px; }
+    .agent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; margin-bottom: 16px; }
     .agent-card {
       background: #1a1a1a;
       border-radius: 6px;
@@ -65,8 +65,15 @@
     .status-dot.halted { background: #ef4444; }
     .status-dot.idle { background: #666; }
 
+    /* Legends */
+    .legend { display: flex; gap: 16px; font-size: 0.7rem; color: #666; margin-bottom: 12px; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 4px; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .legend-bar { width: 12px; height: 3px; border-radius: 1px; }
+
     /* Filters */
-    .filters { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+    .filters { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+    .filters-label { font-size: 0.75rem; color: #666; margin-right: 4px; }
     .filter-btn {
       padding: 4px 10px;
       background: #1a1a1a;
@@ -79,28 +86,39 @@
     .filter-btn.active { background: #333; color: #fff; border-color: #555; }
     .filter-btn:hover:not(.active) { background: #222; }
 
-    /* Activity Feed */
-    .activity-feed { margin-bottom: 24px; }
-    .activity-item {
-      display: grid;
-      grid-template-columns: 100px 70px 1fr;
-      gap: 8px;
-      padding: 8px;
-      border-bottom: 1px solid #1a1a1a;
-      font-size: 0.8rem;
-      align-items: center;
+    /* Activity Table */
+    .activity-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; margin-bottom: 16px; }
+    .activity-table th {
+      text-align: left;
+      padding: 8px 6px;
+      border-bottom: 1px solid #333;
+      color: #666;
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 0.65rem;
+      letter-spacing: 0.5px;
     }
-    .activity-item:hover { background: #1a1a1a; }
-    .activity-time { color: #666; font-size: 0.75rem; }
-    .activity-agent { color: #60a5fa; }
-    .activity-desc { color: #888; }
+    .activity-table td {
+      padding: 6px;
+      border-bottom: 1px solid #1a1a1a;
+      color: #888;
+      vertical-align: top;
+    }
+    .activity-table tr:hover td { background: #1a1a1a; }
+    .activity-table .col-time { width: 120px; color: #666; }
+    .activity-table .col-type { width: 60px; }
+    .activity-table .col-agent { width: 70px; color: #60a5fa; }
+    .activity-table .col-from, .activity-table .col-to { width: 100px; }
+    .activity-table .col-model { width: 80px; }
+    .activity-table .col-tokens { width: 60px; text-align: right; }
+    .activity-table .col-cost { width: 60px; text-align: right; }
+    .activity-table .col-subject { width: 150px; }
     .activity-type {
       display: inline-block;
       padding: 2px 6px;
       border-radius: 3px;
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       text-transform: uppercase;
-      margin-right: 6px;
     }
     .type-api { background: #1e3a5f; color: #60a5fa; }
     .type-email-in { background: #14532d; color: #22c55e; }
@@ -121,16 +139,24 @@
     }
     .load-more:hover { background: #222; color: #fff; }
 
+    /* Month Spend Collapsible */
+    .collapsible-header { display: flex; align-items: center; cursor: pointer; gap: 8px; }
+    .collapsible-header:hover { opacity: 0.8; }
+    .collapse-icon { transition: transform 0.2s; font-size: 0.7rem; color: #666; }
+    .collapse-icon.open { transform: rotate(90deg); }
+    .month-spend-content { display: none; margin-top: 8px; background: #111; border-radius: 6px; padding: 12px; margin-bottom: 16px; }
+    .month-spend-content.open { display: block; }
+    .month-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.8rem; border-bottom: 1px solid #1a1a1a; }
+    .month-row:last-child { border-bottom: none; }
+    .month-agent { color: #888; }
+    .month-amount { color: #60a5fa; }
+    .month-total { margin-top: 8px; padding-top: 8px; border-top: 1px solid #333; font-weight: 600; }
+
     /* Kanban */
     .kanban { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; min-height: 400px; }
     @media (max-width: 900px) { .kanban { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 500px) { .kanban { grid-template-columns: 1fr; } }
-    .kanban-column {
-      background: #111;
-      border-radius: 6px;
-      padding: 12px;
-      min-height: 200px;
-    }
+    .kanban-column { background: #111; border-radius: 6px; padding: 12px; min-height: 200px; }
     .kanban-header {
       font-size: 0.75rem;
       text-transform: uppercase;
@@ -146,8 +172,10 @@
       padding: 10px;
       margin-bottom: 8px;
       border-left: 3px solid #333;
-      cursor: default;
+      cursor: pointer;
     }
+    .backlog-item:hover { background: #222; }
+    .backlog-item.priority-urgent { border-left-color: #dc2626; }
     .backlog-item.priority-high { border-left-color: #ef4444; }
     .backlog-item.priority-medium { border-left-color: #eab308; }
     .backlog-item.priority-low { border-left-color: #22c55e; }
@@ -163,66 +191,51 @@
       color: #888;
     }
 
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #1a1a1a;
+      border-radius: 8px;
+      padding: 24px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      border: 1px solid #333;
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+    .modal-title { font-size: 1.1rem; color: #fff; }
+    .modal-close { background: none; border: none; color: #666; font-size: 1.5rem; cursor: pointer; line-height: 1; }
+    .modal-close:hover { color: #fff; }
+    .modal-field { margin-bottom: 12px; }
+    .modal-label { font-size: 0.7rem; color: #666; text-transform: uppercase; margin-bottom: 4px; }
+    .modal-value { font-size: 0.85rem; color: #e0e0e0; }
+    .modal-priority { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 0.7rem; text-transform: uppercase; }
+    .modal-priority.urgent { background: #dc2626; color: #fff; }
+    .modal-priority.high { background: #ef4444; color: #fff; }
+    .modal-priority.medium { background: #eab308; color: #000; }
+    .modal-priority.low { background: #22c55e; color: #000; }
+
     /* Misc */
     .truncate { cursor: help; }
     .loading { color: #666; padding: 40px; text-align: center; }
     .error { color: #ef4444; padding: 40px; text-align: center; }
-    .refresh {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #333;
-      border: none;
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
+    .refresh { position: fixed; top: 16px; right: 16px; background: #333; border: none; color: #fff; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; z-index: 50; }
     .refresh:hover { background: #444; }
     .timestamp { color: #666; font-size: 0.75rem; margin-bottom: 16px; }
-
-    /* Month Spend Collapsible */
-    .collapsible-header {
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      gap: 8px;
-    }
-    .collapsible-header:hover { opacity: 0.8; }
-    .collapse-icon {
-      transition: transform 0.2s;
-      font-size: 0.7rem;
-      color: #666;
-    }
-    .collapse-icon.open { transform: rotate(90deg); }
-    .month-spend-content {
-      display: none;
-      margin-top: 8px;
-      background: #111;
-      border-radius: 6px;
-      padding: 12px;
-    }
-    .month-spend-content.open { display: block; }
-    .month-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 4px 0;
-      font-size: 0.8rem;
-      border-bottom: 1px solid #1a1a1a;
-    }
-    .month-row:last-child { border-bottom: none; }
-    .month-agent { color: #888; }
-    .month-amount { color: #60a5fa; }
-    .month-total {
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px solid #333;
-      font-weight: 600;
-    }
   </style>
 </head>
 <body>
+  <!-- Login Overlay -->
   <div id="login-overlay" style="display:none; position:fixed; inset:0; background:#0a0a0a; z-index:100; display:flex; align-items:center; justify-content:center;">
     <div style="background:#1a1a1a; padding:40px; border-radius:8px; border:1px solid #333; text-align:center;">
       <h2 style="color:#fff; margin-bottom:20px;">Evryn Dashboard</h2>
@@ -236,43 +249,89 @@
     </div>
   </div>
 
+  <!-- Backlog Item Modal -->
+  <div class="modal-overlay" id="backlog-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="modal-title"></div>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
   <button class="refresh" onclick="loadData()">Refresh</button>
-  <h1>Evryn Agents</h1>
+  <h1>Evryn Dashboard</h1>
   <div class="timestamp" id="timestamp">Loading...</div>
 
-  <h2>Agent Status</h2>
-  <div class="agent-grid" id="agent-grid">
-    <div class="loading">Loading...</div>
+  <!-- Main Tabs -->
+  <div class="main-tabs">
+    <button class="main-tab active" data-tab="agents">Agents</button>
+    <button class="main-tab" data-tab="progress">Progress</button>
   </div>
 
-  <div class="collapsible-header" id="month-toggle" onclick="toggleMonthSpend()">
-    <span class="collapse-icon" id="month-icon">▶</span>
-    <h2 style="margin: 0;">Month Spend: <span id="month-total-header">$0.00</span></h2>
-  </div>
-  <div class="month-spend-content" id="month-spend">
-    <div id="month-breakdown"></div>
-  </div>
-
-  <div class="tabs">
-    <div class="tab active" data-tab="activity">Activity</div>
-    <div class="tab" data-tab="backlog">Backlog</div>
-  </div>
-
-  <div id="activity-tab" class="tab-content active">
-    <div class="filters" id="filters">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="api_call">API Calls</button>
-      <button class="filter-btn" data-filter="message-in">Emails In</button>
-      <button class="filter-btn" data-filter="message-out">Emails Out</button>
-      <button class="filter-btn" data-filter="inter_agent">Inter-Agent</button>
+  <!-- Agents Tab -->
+  <div id="agents-tab" class="main-tab-content active">
+    <h2>Status</h2>
+    <div class="legend" id="status-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#22c55e;"></div> Active (5 min)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#666;"></div> Idle</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div> Halted</div>
     </div>
-    <div class="activity-feed" id="activity-feed">
+    <div class="agent-grid" id="agent-grid">
       <div class="loading">Loading...</div>
+    </div>
+
+    <div class="collapsible-header" onclick="toggleMonthSpend()">
+      <span class="collapse-icon" id="month-icon">&#9654;</span>
+      <h2 style="margin: 0;">Month Spend: <span id="month-total-header">$0.00</span></h2>
+    </div>
+    <div class="month-spend-content" id="month-spend">
+      <div id="month-breakdown"></div>
+    </div>
+
+    <h2>Activity</h2>
+    <div class="filters" id="filters">
+      <span class="filters-label">Filter:</span>
+      <button class="filter-btn active" data-filter="api_call">API</button>
+      <button class="filter-btn active" data-filter="message-in">Emails In</button>
+      <button class="filter-btn active" data-filter="message-out">Emails Out</button>
+      <button class="filter-btn active" data-filter="inter_agent">Inter-Agent</button>
+    </div>
+    <div class="activity-wrapper" style="overflow-x: auto;">
+      <table class="activity-table">
+        <thead>
+          <tr>
+            <th class="col-time">Time</th>
+            <th class="col-type">Type</th>
+            <th class="col-agent">Agent</th>
+            <th class="col-from">From</th>
+            <th class="col-to">To</th>
+            <th class="col-model">Model</th>
+            <th class="col-tokens">Tokens</th>
+            <th class="col-cost">Cost</th>
+            <th class="col-subject">Subject</th>
+            <th>Task/Message</th>
+          </tr>
+        </thead>
+        <tbody id="activity-body">
+          <tr><td colspan="10" class="loading">Loading...</td></tr>
+        </tbody>
+      </table>
     </div>
     <button class="load-more" id="load-more" style="display:none;">Load More</button>
   </div>
 
-  <div id="backlog-tab" class="tab-content">
+  <!-- Progress Tab -->
+  <div id="progress-tab" class="main-tab-content">
+    <h2>Backlog</h2>
+    <div class="legend">
+      <span style="margin-right: 8px;">Priority:</span>
+      <div class="legend-item"><div class="legend-bar" style="background:#dc2626;"></div> Urgent</div>
+      <div class="legend-item"><div class="legend-bar" style="background:#ef4444;"></div> High</div>
+      <div class="legend-item"><div class="legend-bar" style="background:#eab308;"></div> Medium</div>
+      <div class="legend-item"><div class="legend-bar" style="background:#22c55e;"></div> Low</div>
+    </div>
     <div class="kanban" id="kanban">
       <div class="kanban-column" id="col-pending">
         <div class="kanban-header">Pending <span id="count-pending"></span></div>
@@ -291,57 +350,33 @@
 
   <script>
     const agents = ['thea', 'taylor', 'jordan', 'dana', 'dominic', 'nathan', 'lucas', 'alex'];
-    let currentFilter = 'all';
+    let activeFilters = new Set(['api_call', 'message-in', 'message-out', 'inter_agent']);
     let activityData = [];
-    let currentOffset = 0;
-    const pageSize = 50;
+    let allActivityData = [];
+    let displayedCount = 10;
+    let backlogData = [];
 
     function toggleMonthSpend() {
-      const content = document.getElementById('month-spend');
-      const icon = document.getElementById('month-icon');
-      content.classList.toggle('open');
-      icon.classList.toggle('open');
+      document.getElementById('month-spend').classList.toggle('open');
+      document.getElementById('month-icon').classList.toggle('open');
     }
 
     function renderMonthSpend(monthSpend) {
       document.getElementById('month-total-header').textContent = '$' + (monthSpend.total || 0).toFixed(2);
-
       let html = '';
-      const sortedAgents = Object.entries(monthSpend.byAgent || {})
-        .sort((a, b) => b[1] - a[1]);
-
+      const sortedAgents = Object.entries(monthSpend.byAgent || {}).sort((a, b) => b[1] - a[1]);
       sortedAgents.forEach(([agent, amount]) => {
-        html += `
-          <div class="month-row">
-            <span class="month-agent">${agent}</span>
-            <span class="month-amount">$${amount.toFixed(3)}</span>
-          </div>
-        `;
+        html += `<div class="month-row"><span class="month-agent">${agent}</span><span class="month-amount">$${amount.toFixed(3)}</span></div>`;
       });
-
-      html += `
-        <div class="month-row month-total">
-          <span>Total</span>
-          <span class="month-amount">$${(monthSpend.total || 0).toFixed(2)}</span>
-        </div>
-      `;
-
+      html += `<div class="month-row month-total"><span>Total</span><span class="month-amount">$${(monthSpend.total || 0).toFixed(2)}</span></div>`;
       document.getElementById('month-breakdown').innerHTML = html;
     }
 
-    function formatTime(isoString) {
+    function formatDateTime(isoString) {
       if (!isoString) return '-';
       const d = new Date(isoString);
-      return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    }
-
-    function formatDate(isoString) {
-      if (!isoString) return '-';
-      const d = new Date(isoString);
-      const now = new Date();
-      const isToday = d.toDateString() === now.toDateString();
-      if (isToday) return formatTime(isoString);
-      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' + formatTime(isoString);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' +
+             d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
     }
 
     function getSpendClass(spend, alert, halt) {
@@ -385,24 +420,17 @@
       return '';
     }
 
-    function getActivityDescription(item) {
-      if (item.type === 'api_call') {
-        return `${item.model || '-'} | $${(item.cost_usd || 0).toFixed(4)} | ${truncate(item.description, 60)}`;
-      }
+    function getFilterKey(item) {
+      if (item.type === 'api_call') return 'api_call';
       if (item.type === 'message') {
-        const addr = item.direction === 'inbound' ? item.from_address : item.to_address;
-        return `${truncate(addr, 20)} - ${truncate(item.subject, 40)}`;
+        if (item.message_type === 'inter_agent') return 'inter_agent';
+        return item.direction === 'inbound' ? 'message-in' : 'message-out';
       }
-      return '-';
+      return 'other';
     }
 
-    function matchesFilter(item, filter) {
-      if (filter === 'all') return true;
-      if (filter === 'api_call') return item.type === 'api_call';
-      if (filter === 'message-in') return item.type === 'message' && item.direction === 'inbound' && item.message_type !== 'inter_agent';
-      if (filter === 'message-out') return item.type === 'message' && item.direction === 'outbound' && item.message_type !== 'inter_agent';
-      if (filter === 'inter_agent') return item.type === 'message' && item.message_type === 'inter_agent';
-      return true;
+    function matchesFilters(item) {
+      return activeFilters.has(getFilterKey(item));
     }
 
     let authHeader = localStorage.getItem('evryn_auth') || null;
@@ -427,65 +455,152 @@
       }
     }
 
-    // Tab switching
-    document.querySelectorAll('.tab').forEach(tab => {
+    // Main tab switching
+    document.querySelectorAll('.main-tab').forEach(tab => {
       tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.main-tab-content').forEach(c => c.classList.remove('active'));
         tab.classList.add('active');
         document.getElementById(tab.dataset.tab + '-tab').classList.add('active');
       });
     });
 
-    // Filter switching
+    // Multi-select filter toggling
     document.getElementById('filters').addEventListener('click', (e) => {
       if (e.target.classList.contains('filter-btn')) {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        currentFilter = e.target.dataset.filter;
+        const filter = e.target.dataset.filter;
+        if (activeFilters.has(filter)) {
+          activeFilters.delete(filter);
+          e.target.classList.remove('active');
+        } else {
+          activeFilters.add(filter);
+          e.target.classList.add('active');
+        }
+        displayedCount = 10;
         renderActivity();
       }
     });
 
+    // Load more
+    document.getElementById('load-more').addEventListener('click', () => {
+      displayedCount += 10;
+      renderActivity();
+    });
+
     function renderActivity() {
-      const filtered = activityData.filter(item => matchesFilter(item, currentFilter));
+      const filtered = allActivityData.filter(matchesFilters);
+      const toShow = filtered.slice(0, displayedCount);
+
       let html = '';
-      filtered.slice(0, 10).forEach(item => {
-        html += `
-          <div class="activity-item">
-            <div class="activity-time">${formatDate(item.created_at)}</div>
-            <div class="activity-agent">${item.agent_name}</div>
-            <div class="activity-desc">
-              <span class="activity-type ${getActivityTypeClass(item)}">${getActivityTypeLabel(item)}</span>
-              ${getActivityDescription(item)}
-            </div>
-          </div>
-        `;
-      });
-      document.getElementById('activity-feed').innerHTML = html || '<div class="loading">No activity</div>';
+      if (toShow.length === 0) {
+        html = '<tr><td colspan="10" class="loading">No activity matching filters</td></tr>';
+      } else {
+        toShow.forEach(item => {
+          const isApi = item.type === 'api_call';
+          const isMessage = item.type === 'message';
+          const from = isMessage ? truncate(item.from_address, 20) : '-';
+          const to = isMessage ? truncate(item.to_address, 20) : '-';
+          const model = isApi ? (item.model || '-') : '-';
+          const tokens = isApi ? (item.tokens || 0) : '-';
+          const cost = isApi ? '$' + (item.cost_usd || 0).toFixed(4) : '-';
+          const subject = isMessage ? truncate(item.subject, 25) : '-';
+          const task = isApi ? truncate(item.description, 40) : '-';
+
+          html += `
+            <tr>
+              <td class="col-time">${formatDateTime(item.created_at)}</td>
+              <td class="col-type"><span class="activity-type ${getActivityTypeClass(item)}">${getActivityTypeLabel(item)}</span></td>
+              <td class="col-agent">${item.agent_name}</td>
+              <td class="col-from">${from}</td>
+              <td class="col-to">${to}</td>
+              <td class="col-model">${model}</td>
+              <td class="col-tokens">${tokens}</td>
+              <td class="col-cost">${cost}</td>
+              <td class="col-subject">${subject}</td>
+              <td>${task}</td>
+            </tr>
+          `;
+        });
+      }
+      document.getElementById('activity-body').innerHTML = html;
+      document.getElementById('load-more').style.display = filtered.length > displayedCount ? 'block' : 'none';
     }
 
+    function openModal(item) {
+      document.getElementById('modal-title').innerHTML =
+        (item.item_number ? '#' + item.item_number + ' ' : '') + item.title;
+
+      const priorityClass = item.priority || 'medium';
+      const categoryLabels = { token_optimization: 'Token Optimization', reliability: 'Reliability', features: 'Features' };
+      const statusLabels = { pending: 'Pending', in_progress: 'In Progress', blocked: 'Blocked', completed: 'Completed' };
+
+      let html = `
+        <div class="modal-field">
+          <div class="modal-label">Priority</div>
+          <div class="modal-value"><span class="modal-priority ${priorityClass}">${item.priority || 'medium'}</span></div>
+        </div>
+        <div class="modal-field">
+          <div class="modal-label">Status</div>
+          <div class="modal-value">${statusLabels[item.status] || item.status}</div>
+        </div>
+        <div class="modal-field">
+          <div class="modal-label">Category</div>
+          <div class="modal-value">${categoryLabels[item.category] || item.category}</div>
+        </div>
+        <div class="modal-field">
+          <div class="modal-label">Description</div>
+          <div class="modal-value">${item.description || '-'}</div>
+        </div>
+      `;
+      if (item.impact_description) {
+        html += `<div class="modal-field"><div class="modal-label">Impact</div><div class="modal-value">${item.impact_description}</div></div>`;
+      }
+      if (item.dependencies) {
+        html += `<div class="modal-field"><div class="modal-label">Dependencies</div><div class="modal-value">${item.dependencies}</div></div>`;
+      }
+      if (item.assigned_to) {
+        html += `<div class="modal-field"><div class="modal-label">Assigned To</div><div class="modal-value">${item.assigned_to}</div></div>`;
+      }
+      if (item.notes) {
+        html += `<div class="modal-field"><div class="modal-label">Notes</div><div class="modal-value">${item.notes}</div></div>`;
+      }
+
+      document.getElementById('modal-content').innerHTML = html;
+      document.getElementById('backlog-modal').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('backlog-modal').classList.remove('open');
+    }
+
+    // Close modal on overlay click
+    document.getElementById('backlog-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'backlog-modal') closeModal();
+    });
+
+    // Close modal on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
     function renderBacklog(backlog) {
+      backlogData = backlog;
       const columns = { pending: [], in_progress: [], blocked: [], completed: [] };
       backlog.forEach(item => {
         if (columns[item.status]) columns[item.status].push(item);
       });
 
-      const categoryLabels = {
-        token_optimization: 'Tokens',
-        reliability: 'Reliability',
-        features: 'Features'
-      };
+      const categoryLabels = { token_optimization: 'Tokens', reliability: 'Reliability', features: 'Features' };
 
       Object.keys(columns).forEach(status => {
         const col = document.getElementById('col-' + status);
-        const header = col.querySelector('.kanban-header');
+        const headerEl = col.querySelector('.kanban-header');
         document.getElementById('count-' + status).textContent = `(${columns[status].length})`;
 
-        let html = '';
-        columns[status].forEach(item => {
+        let html = headerEl.outerHTML;
+        columns[status].forEach((item, idx) => {
           html += `
-            <div class="backlog-item priority-${item.priority}">
+            <div class="backlog-item priority-${item.priority}" onclick="openModal(backlogData.find(b => b.id === '${item.id}'))">
               <div class="backlog-title">${item.item_number ? '#' + item.item_number + ' ' : ''}${item.title}</div>
               <div class="backlog-meta">
                 <span class="backlog-category">${categoryLabels[item.category] || item.category}</span>
@@ -494,8 +609,7 @@
             </div>
           `;
         });
-        // Keep header, replace items
-        col.innerHTML = header.outerHTML + html;
+        col.innerHTML = html;
       });
     }
 
@@ -506,9 +620,7 @@
           return;
         }
 
-        const res = await fetch('/api/data', {
-          headers: { 'Authorization': authHeader }
-        });
+        const res = await fetch('/api/data', { headers: { 'Authorization': authHeader } });
 
         if (res.status === 401) {
           localStorage.removeItem('evryn_auth');
@@ -520,9 +632,7 @@
         if (!res.ok) throw new Error('Failed to fetch');
         const data = await res.json();
 
-        // Update timestamp
-        document.getElementById('timestamp').textContent =
-          `${data.today} | Refreshed ${new Date().toLocaleTimeString()}`;
+        document.getElementById('timestamp').textContent = `${data.today} | Refreshed ${new Date().toLocaleTimeString()}`;
 
         // Build agent grid
         let agentHtml = '';
@@ -542,8 +652,8 @@
         });
         document.getElementById('agent-grid').innerHTML = agentHtml;
 
-        // Store activity data and render
-        activityData = data.activity || [];
+        // Store all activity data and render
+        allActivityData = data.activity || [];
         renderActivity();
 
         // Render month spend
@@ -551,9 +661,6 @@
 
         // Render backlog
         renderBacklog(data.backlog || []);
-
-        // Show/hide load more based on pagination
-        document.getElementById('load-more').style.display = data.pagination?.hasMore ? 'block' : 'none';
 
       } catch (err) {
         console.error(err);
