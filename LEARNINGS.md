@@ -126,4 +126,19 @@ Voice platforms provide their own phone numbers. No Google Workspace seats neede
 
 ---
 
+## Context Management
+
+### Separate Strategic from Tactical Context
+When using Claude Code across multiple concerns (CTO-level strategy + repo-level building), keep them in separate CLAUDE.md files at different repo levels. Loading 500+ lines of strategic memory into every build session wastes context and creates clutter. The CTO thinks about *what* and *why*; the builder thinks about *how*.
+
+The builder should still have a lightweight "flag things up" principle — devs in the trenches see trees where the CTO sees forests. But they shouldn't carry the CTO's full notebook.
+
+### Documents Need Scope Guardrails
+Every long-lived document should have a "how to use this" header explaining what belongs and what doesn't. Without this, documents sprawl — session logs creep into CLAUDE.md, build details creep into strategic docs, and everything gets noisy. Explicit scope = implicit discipline.
+
+### Static Priority Lists Get Stale
+Don't duplicate a priority list from GitHub Issues into CLAUDE.md. It creates a middle layer that's always slightly wrong. Point to the source of truth (Issues) and let the active thread hold the real "what's next." Use assignment labels (e.g. `CTO`, `evryn-team-agents`) to route issues to the right altitude.
+
+---
+
 *Add learnings as they emerge. Keep entries concise and actionable.*
