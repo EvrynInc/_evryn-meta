@@ -560,7 +560,7 @@
           const tokens = isApi ? (item.tokens || 0) : '';
           const cost = isApi ? '$' + (item.cost_usd || 0).toFixed(4) : '';
           const subject = isMessage ? truncate(item.subject, 30, true) : '';
-          const task = isApi ? truncate(item.description, 50) : '';
+          const task = isApi ? truncate(item.description, 50) : truncate(item.body, 50);
 
           html += `
             <tr>

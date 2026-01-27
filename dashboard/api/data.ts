@@ -124,6 +124,7 @@ export default async function handler(request: Request) {
         to_address: msg.to_address,
         subject: msg.subject,
         message_type: msg.message_type,
+        body: msg.body,
       })),
     ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
