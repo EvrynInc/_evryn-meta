@@ -86,6 +86,19 @@
     .filter-btn.active { background: #333; color: #fff; border-color: #555; }
     .filter-btn:hover:not(.active) { background: #222; }
 
+    /* Date Range */
+    .date-range { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+    .date-range-label { font-size: 0.75rem; color: #666; margin-right: 4px; }
+    .date-input {
+      padding: 4px 8px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 0.75rem;
+    }
+    .date-input::-webkit-calendar-picker-indicator { filter: invert(1); }
+
     /* Activity Table */
     .activity-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; margin-bottom: 16px; }
     .activity-table th {
@@ -100,7 +113,7 @@
     }
     .activity-table td {
       padding: 6px;
-      border: 1px solid #333;
+      border-bottom: 1px solid #1a1a1a;
       color: #888;
       vertical-align: top;
     }
@@ -292,10 +305,19 @@
     </div>
 
     <h2>Activity</h2>
+    <div class="date-range">
+      <span class="date-range-label">Date Range:</span>
+      <button class="filter-btn active" id="date-today">Today</button>
+      <button class="filter-btn" id="date-week">This Week</button>
+      <span style="color:#333; margin: 0 4px;">|</span>
+      <input type="date" class="date-input" id="date-from">
+      <span style="color:#666;">to</span>
+      <input type="date" class="date-input" id="date-to">
+    </div>
     <div class="filters" id="filters">
       <span class="filters-label">Filter:</span>
-      <button class="filter-btn" data-action="none">None</button>
       <button class="filter-btn" data-action="all">All</button>
+      <button class="filter-btn" data-action="none">None</button>
       <span style="color:#333; margin: 0 4px;">|</span>
       <button class="filter-btn active" data-filter="api">API</button>
       <button class="filter-btn active" data-filter="scheduled">Scheduled</button>
@@ -354,12 +376,77 @@
   </div>
 
   <script>
-    const agents = ['Thea', 'Taylor', 'Jordan', 'Dana', 'Dominic', 'Nathan', 'Lucas', 'Alex'];
+    const agents = ['Thea', 'Lucas', 'Alex', 'Taylor', 'Dana', 'Dominic', 'Nathan'];
     let activeFilters = new Set(['api', 'scheduled', 'email-in', 'email-out', 'inter_agent']);
     let activityData = [];
     let allActivityData = [];
     let displayedCount = 10;
     let backlogData = [];
+    let dateFrom = null;
+    let dateTo = null;
+
+    function getTodayPacific() {
+      const now = new Date();
+      // Get Pacific time date string
+      return now.toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' });
+    }
+
+    function getWeekStartPacific() {
+      const now = new Date();
+      const pacific = new Date(now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+      const day = pacific.getDay();
+      const diff = pacific.getDate() - day;
+      pacific.setDate(diff);
+      return pacific.toISOString().split('T')[0];
+    }
+
+    function initDateRange() {
+      const today = getTodayPacific();
+      dateFrom = today;
+      dateTo = today;
+      document.getElementById('date-from').value = today;
+      document.getElementById('date-to').value = today;
+    }
+
+    function setDateRangeToday() {
+      const today = getTodayPacific();
+      dateFrom = today;
+      dateTo = today;
+      document.getElementById('date-from').value = today;
+      document.getElementById('date-to').value = today;
+      document.getElementById('date-today').classList.add('active');
+      document.getElementById('date-week').classList.remove('active');
+      displayedCount = 10;
+      renderActivity();
+    }
+
+    function setDateRangeWeek() {
+      const today = getTodayPacific();
+      const weekStart = getWeekStartPacific();
+      dateFrom = weekStart;
+      dateTo = today;
+      document.getElementById('date-from').value = weekStart;
+      document.getElementById('date-to').value = today;
+      document.getElementById('date-today').classList.remove('active');
+      document.getElementById('date-week').classList.add('active');
+      displayedCount = 10;
+      renderActivity();
+    }
+
+    function onDateChange() {
+      dateFrom = document.getElementById('date-from').value;
+      dateTo = document.getElementById('date-to').value;
+      // Clear preset buttons
+      document.getElementById('date-today').classList.remove('active');
+      document.getElementById('date-week').classList.remove('active');
+      // Check if it matches today
+      const today = getTodayPacific();
+      if (dateFrom === today && dateTo === today) {
+        document.getElementById('date-today').classList.add('active');
+      }
+      displayedCount = 10;
+      renderActivity();
+    }
 
     function toggleMonthSpend() {
       document.getElementById('month-spend').classList.toggle('open');
@@ -371,7 +458,8 @@
       let html = '';
       const sortedAgents = Object.entries(monthSpend.byAgent || {}).sort((a, b) => b[1] - a[1]);
       sortedAgents.forEach(([agent, amount]) => {
-        html += `<div class="month-row"><span class="month-agent">${agent}</span><span class="month-amount">$${amount.toFixed(3)}</span></div>`;
+        const capitalizedAgent = agent.charAt(0).toUpperCase() + agent.slice(1);
+        html += `<div class="month-row"><span class="month-agent">${capitalizedAgent}</span><span class="month-amount">$${amount.toFixed(3)}</span></div>`;
       });
       html += `<div class="month-row month-total"><span>Total</span><span class="month-amount">$${(monthSpend.total || 0).toFixed(2)}</span></div>`;
       document.getElementById('month-breakdown').innerHTML = html;
@@ -543,8 +631,21 @@
       renderActivity();
     });
 
+    // Date range controls
+    document.getElementById('date-today').addEventListener('click', setDateRangeToday);
+    document.getElementById('date-week').addEventListener('click', setDateRangeWeek);
+    document.getElementById('date-from').addEventListener('change', onDateChange);
+    document.getElementById('date-to').addEventListener('change', onDateChange);
+
+    function matchesDateRange(item) {
+      if (!dateFrom || !dateTo) return true;
+      const itemDate = item.created_at ? item.created_at.split('T')[0] : null;
+      if (!itemDate) return true;
+      return itemDate >= dateFrom && itemDate <= dateTo;
+    }
+
     function renderActivity() {
-      const filtered = allActivityData.filter(matchesFilters);
+      const filtered = allActivityData.filter(item => matchesFilters(item) && matchesDateRange(item));
       const toShow = filtered.slice(0, displayedCount);
 
       let html = '';
@@ -744,7 +845,8 @@
       });
     });
 
-    // Load on page load
+    // Initialize date range and load
+    initDateRange();
     loadData();
 
     // Auto-refresh every 30 seconds

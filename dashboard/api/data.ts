@@ -130,7 +130,7 @@ export default async function handler(request: Request) {
 
     // Agent status: check for recent activity and halt status
     const agentStatus: Record<string, { lastActivity: string | null; halted: boolean; todaySpend: number }> = {};
-    const agents = ['thea', 'taylor', 'jordan', 'dana', 'dominic', 'nathan', 'lucas', 'alex'];
+    const agents = ['thea', 'lucas', 'alex', 'taylor', 'dana', 'dominic', 'nathan'];
 
     for (const agent of agents) {
       const spendRecord = (dailySpend || []).find(s => s.agent_name === agent);
