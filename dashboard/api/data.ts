@@ -59,6 +59,22 @@ export default async function handler(request: Request) {
 
     if (spendError) throw spendError;
 
+    // Fetch month spend (all days in current month)
+    const monthStart = today.substring(0, 7) + '-01'; // YYYY-MM-01
+    const { data: monthSpend, error: monthError } = await supabase
+      .from('agent_daily_spend')
+      .select('agent_name, total_cost_usd')
+      .gte('date', monthStart);
+
+    if (monthError) throw monthError;
+
+    // Aggregate month spend by agent
+    const monthByAgent: Record<string, number> = {};
+    (monthSpend || []).forEach(s => {
+      monthByAgent[s.agent_name] = (monthByAgent[s.agent_name] || 0) + (s.total_cost_usd || 0);
+    });
+    const monthTotal = Object.values(monthByAgent).reduce((a, b) => a + b, 0);
+
     // Fetch recent API calls with pagination
     const { data: apiCalls, error: apiError } = await supabase
       .from('agent_api_calls')
@@ -127,6 +143,7 @@ export default async function handler(request: Request) {
     return new Response(JSON.stringify({
       today,
       dailySpend: dailySpend || [],
+      monthSpend: { byAgent: monthByAgent, total: monthTotal },
       activity,
       backlog: backlogItems,
       agentStatus,

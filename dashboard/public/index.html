@@ -10,7 +10,7 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: #0a0a0a;
       color: #e0e0e0;
-      padding: 16px 12px;
+      padding: 16px;
       line-height: 1.5;
       max-width: 100%;
     }
@@ -181,6 +181,45 @@
     }
     .refresh:hover { background: #444; }
     .timestamp { color: #666; font-size: 0.75rem; margin-bottom: 16px; }
+
+    /* Month Spend Collapsible */
+    .collapsible-header {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      gap: 8px;
+    }
+    .collapsible-header:hover { opacity: 0.8; }
+    .collapse-icon {
+      transition: transform 0.2s;
+      font-size: 0.7rem;
+      color: #666;
+    }
+    .collapse-icon.open { transform: rotate(90deg); }
+    .month-spend-content {
+      display: none;
+      margin-top: 8px;
+      background: #111;
+      border-radius: 6px;
+      padding: 12px;
+    }
+    .month-spend-content.open { display: block; }
+    .month-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      font-size: 0.8rem;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    .month-row:last-child { border-bottom: none; }
+    .month-agent { color: #888; }
+    .month-amount { color: #60a5fa; }
+    .month-total {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid #333;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
@@ -204,6 +243,14 @@
   <h2>Agent Status</h2>
   <div class="agent-grid" id="agent-grid">
     <div class="loading">Loading...</div>
+  </div>
+
+  <div class="collapsible-header" id="month-toggle" onclick="toggleMonthSpend()">
+    <span class="collapse-icon" id="month-icon">▶</span>
+    <h2 style="margin: 0;">Month Spend: <span id="month-total-header">$0.00</span></h2>
+  </div>
+  <div class="month-spend-content" id="month-spend">
+    <div id="month-breakdown"></div>
   </div>
 
   <div class="tabs">
@@ -248,6 +295,39 @@
     let activityData = [];
     let currentOffset = 0;
     const pageSize = 50;
+
+    function toggleMonthSpend() {
+      const content = document.getElementById('month-spend');
+      const icon = document.getElementById('month-icon');
+      content.classList.toggle('open');
+      icon.classList.toggle('open');
+    }
+
+    function renderMonthSpend(monthSpend) {
+      document.getElementById('month-total-header').textContent = '$' + (monthSpend.total || 0).toFixed(2);
+
+      let html = '';
+      const sortedAgents = Object.entries(monthSpend.byAgent || {})
+        .sort((a, b) => b[1] - a[1]);
+
+      sortedAgents.forEach(([agent, amount]) => {
+        html += `
+          <div class="month-row">
+            <span class="month-agent">${agent}</span>
+            <span class="month-amount">$${amount.toFixed(3)}</span>
+          </div>
+        `;
+      });
+
+      html += `
+        <div class="month-row month-total">
+          <span>Total</span>
+          <span class="month-amount">$${(monthSpend.total || 0).toFixed(2)}</span>
+        </div>
+      `;
+
+      document.getElementById('month-breakdown').innerHTML = html;
+    }
 
     function formatTime(isoString) {
       if (!isoString) return '-';
@@ -370,7 +450,7 @@
     function renderActivity() {
       const filtered = activityData.filter(item => matchesFilter(item, currentFilter));
       let html = '';
-      filtered.slice(0, 50).forEach(item => {
+      filtered.slice(0, 10).forEach(item => {
         html += `
           <div class="activity-item">
             <div class="activity-time">${formatDate(item.created_at)}</div>
@@ -465,6 +545,9 @@
         // Store activity data and render
         activityData = data.activity || [];
         renderActivity();
+
+        // Render month spend
+        renderMonthSpend(data.monthSpend || { byAgent: {}, total: 0 });
 
         // Render backlog
         renderBacklog(data.backlog || []);
