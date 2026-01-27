@@ -100,7 +100,7 @@
     }
     .activity-table td {
       padding: 6px;
-      border-bottom: 1px solid #1a1a1a;
+      border: 1px solid #333;
       color: #888;
       vertical-align: top;
     }
@@ -108,11 +108,11 @@
     .activity-table .col-time { width: 110px; white-space: nowrap; color: #666; }
     .activity-table .col-type { width: 50px; }
     .activity-table .col-agent { width: 60px; color: #60a5fa; }
-    .activity-table .col-from, .activity-table .col-to { width: 180px; }
+    .activity-table .col-from, .activity-table .col-to { width: 130px; }
     .activity-table .col-model { width: 55px; }
     .activity-table .col-tokens { width: 50px; text-align: right; }
     .activity-table .col-cost { width: 55px; text-align: right; }
-    .activity-table .col-subject { max-width: 180px; }
+    .activity-table .col-subject { min-width: 120px; max-width: 200px; }
     .activity-type {
       display: inline-block;
       padding: 2px 6px;
@@ -398,11 +398,14 @@
       return lastTime > fiveMinAgo ? 'active' : 'idle';
     }
 
-    function truncate(str, len) {
-      if (!str) return '-';
+    function truncate(str, len, alwaysTooltip = false) {
+      if (!str) return '';
       const escaped = str.replace(/"/g, '&quot;').replace(/</g, '&lt;');
       if (str.length > len) {
         return `<span class="truncate" title="${escaped}">${str.substring(0, len)}...</span>`;
+      }
+      if (alwaysTooltip) {
+        return `<span class="truncate" title="${escaped}">${escaped}</span>`;
       }
       return escaped;
     }
@@ -551,12 +554,12 @@
         toShow.forEach(item => {
           const isApi = item.type === 'api_call';
           const isMessage = item.type === 'message';
-          const from = isMessage ? truncate(item.from_address, 35) : '';
-          const to = isMessage ? truncate(item.to_address, 35) : '';
+          const from = isMessage ? truncate(item.from_address, 25) : '';
+          const to = isMessage ? truncate(item.to_address, 25) : '';
           const model = isApi ? (item.model || '') : '';
           const tokens = isApi ? (item.tokens || 0) : '';
           const cost = isApi ? '$' + (item.cost_usd || 0).toFixed(4) : '';
-          const subject = isMessage ? truncate(item.subject, 30) : '';
+          const subject = isMessage ? truncate(item.subject, 30, true) : '';
           const task = isApi ? truncate(item.description, 50) : '';
 
           html += `
