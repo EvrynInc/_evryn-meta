@@ -121,6 +121,7 @@
       text-transform: uppercase;
     }
     .type-api { background: #1e3a5f; color: #60a5fa; }
+    .type-scheduled { background: #1e3a3a; color: #2dd4bf; }
     .type-email-in { background: #14532d; color: #22c55e; }
     .type-email-out { background: #7c2d12; color: #f97316; }
     .type-inter { background: #4a1d6a; color: #a855f7; }
@@ -293,9 +294,10 @@
     <h2>Activity</h2>
     <div class="filters" id="filters">
       <span class="filters-label">Filter:</span>
-      <button class="filter-btn active" data-filter="api_call">API</button>
-      <button class="filter-btn active" data-filter="message-in">Emails In</button>
-      <button class="filter-btn active" data-filter="message-out">Emails Out</button>
+      <button class="filter-btn active" data-filter="api">API</button>
+      <button class="filter-btn active" data-filter="scheduled">Scheduled</button>
+      <button class="filter-btn active" data-filter="email-in">Emails In</button>
+      <button class="filter-btn active" data-filter="email-out">Emails Out</button>
       <button class="filter-btn active" data-filter="inter_agent">Inter-Agent</button>
     </div>
     <div class="activity-wrapper" style="overflow-x: auto;">
@@ -350,7 +352,7 @@
 
   <script>
     const agents = ['thea', 'taylor', 'jordan', 'dana', 'dominic', 'nathan', 'lucas', 'alex'];
-    let activeFilters = new Set(['api_call', 'message-in', 'message-out', 'inter_agent']);
+    let activeFilters = new Set(['api', 'scheduled', 'email-in', 'email-out', 'inter_agent']);
     let activityData = [];
     let allActivityData = [];
     let displayedCount = 10;
@@ -403,7 +405,11 @@
     }
 
     function getActivityTypeClass(item) {
-      if (item.type === 'api_call') return 'type-api';
+      if (item.type === 'api_call') {
+        if (item.trigger_type === 'scheduled' || item.trigger_type === 'reflection') return 'type-scheduled';
+        if (item.trigger_type === 'inter_agent') return 'type-inter';
+        return 'type-api';
+      }
       if (item.type === 'message') {
         if (item.message_type === 'inter_agent') return 'type-inter';
         return item.direction === 'inbound' ? 'type-email-in' : 'type-email-out';
@@ -412,25 +418,47 @@
     }
 
     function getActivityTypeLabel(item) {
-      if (item.type === 'api_call') return 'API';
+      if (item.type === 'api_call') {
+        if (item.trigger_type === 'scheduled' || item.trigger_type === 'reflection') return 'Sched';
+        if (item.trigger_type === 'inter_agent') return 'Invoke';
+        return 'API';
+      }
       if (item.type === 'message') {
-        if (item.message_type === 'inter_agent') return 'Inter';
+        if (item.message_type === 'inter_agent') return 'Invoke';
         return item.direction === 'inbound' ? 'In' : 'Out';
       }
       return '';
     }
 
-    function getFilterKey(item) {
-      if (item.type === 'api_call') return 'api_call';
-      if (item.type === 'message') {
-        if (item.message_type === 'inter_agent') return 'inter_agent';
-        return item.direction === 'inbound' ? 'message-in' : 'message-out';
+    function getFilterKeys(item) {
+      // Returns array of filter keys this item matches (can match multiple)
+      const keys = [];
+      if (item.type === 'api_call') {
+        // Scheduled includes 'scheduled' and 'reflection' trigger types
+        if (item.trigger_type === 'scheduled' || item.trigger_type === 'reflection') {
+          keys.push('scheduled');
+        }
+        // Inter-agent API calls
+        if (item.trigger_type === 'inter_agent') {
+          keys.push('inter_agent');
+        }
+        // All API calls also match 'api' filter
+        keys.push('api');
       }
-      return 'other';
+      if (item.type === 'message') {
+        if (item.message_type === 'inter_agent') {
+          keys.push('inter_agent');
+        } else {
+          // Regular email messages
+          keys.push(item.direction === 'inbound' ? 'email-in' : 'email-out');
+        }
+      }
+      return keys.length > 0 ? keys : ['other'];
     }
 
     function matchesFilters(item) {
-      return activeFilters.has(getFilterKey(item));
+      const itemKeys = getFilterKeys(item);
+      return itemKeys.some(key => activeFilters.has(key));
     }
 
     let authHeader = localStorage.getItem('evryn_auth') || null;
