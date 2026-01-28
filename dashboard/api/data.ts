@@ -93,42 +93,6 @@ export default async function handler(request: Request) {
 
     if (msgError) throw msgError;
 
-    // Fetch GitHub Issues from _evryn-meta repo
-    let githubIssues: any[] = [];
-    let githubError: string | null = null;
-    const githubToken = process.env.GITHUB_TOKEN;
-    if (githubToken) {
-      try {
-        const ghRes = await fetch('https://api.github.com/repos/EvrynInc/_evryn-meta/issues?state=open&per_page=100&sort=created&direction=desc', {
-          headers: {
-            'Authorization': `Bearer ${githubToken}`,
-            'Accept': 'application/vnd.github.v3+json',
-            'User-Agent': 'Evryn-Dashboard',
-          },
-        });
-        if (ghRes.ok) {
-          const ghData = await ghRes.json();
-          githubIssues = ghData.filter((i: any) => !i.pull_request).map((issue: any) => ({
-            number: issue.number,
-            title: issue.title,
-            state: issue.state,
-            labels: issue.labels.map((l: any) => ({ name: l.name, color: l.color })),
-            assignee: issue.assignee?.login || null,
-            created_at: issue.created_at,
-            updated_at: issue.updated_at,
-            html_url: issue.html_url,
-            body: issue.body ? issue.body.substring(0, 200) : null,
-          }));
-        } else {
-          githubError = `GitHub API returned ${ghRes.status}`;
-        }
-      } catch (e: any) {
-        githubError = e.message || 'Failed to fetch GitHub issues';
-      }
-    } else {
-      githubError = 'GITHUB_TOKEN not configured';
-    }
-
     // Build unified activity feed (merge API calls and messages)
     const activity = [
       ...(apiCalls || []).map(call => ({
@@ -172,8 +136,6 @@ export default async function handler(request: Request) {
       dailySpend: dailySpend || [],
       monthSpend: { byAgent: monthByAgent, total: monthTotal },
       activity,
-      githubIssues,
-      githubError,
       agentStatus,
       budgetPerAgent: 0.21,
       alertThreshold: 0.63,  // 3x daily
