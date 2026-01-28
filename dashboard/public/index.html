@@ -181,7 +181,7 @@
       border-bottom: 1px solid #222;
     }
     .kanban-header span { color: #888; font-size: 0.7rem; margin-left: 4px; }
-    .backlog-item {
+    .issue-item {
       background: #1a1a1a;
       border-radius: 4px;
       padding: 10px;
@@ -189,15 +189,15 @@
       border-left: 3px solid #333;
       cursor: pointer;
     }
-    .backlog-item:hover { background: #222; }
-    .backlog-item.priority-urgent { border-left-color: #ec4899; }
-    .backlog-item.priority-high { border-left-color: #ef4444; }
-    .backlog-item.priority-medium { border-left-color: #eab308; }
-    .backlog-item.priority-low { border-left-color: #22c55e; }
-    .backlog-item.priority-evaluate { border-left-color: #a855f7; }
-    .backlog-title { font-size: 0.8rem; color: #fff; margin-bottom: 4px; }
-    .backlog-meta { font-size: 0.7rem; color: #666; }
-    .backlog-category {
+    .issue-item:hover { background: #222; }
+    .issue-item.priority-urgent { border-left-color: #ec4899; }
+    .issue-item.priority-high { border-left-color: #ef4444; }
+    .issue-item.priority-medium { border-left-color: #eab308; }
+    .issue-item.priority-low { border-left-color: #22c55e; }
+    .issue-item.priority-evaluate { border-left-color: #a855f7; }
+    .issue-title { font-size: 0.8rem; color: #fff; margin-bottom: 4px; }
+    .issue-meta { font-size: 0.7rem; color: #666; }
+    .issue-category {
       display: inline-block;
       padding: 1px 5px;
       border-radius: 2px;
@@ -710,15 +710,15 @@
       sorted.forEach(issue => {
         const priority = getPriorityFromLabels(issue.labels);
         const category = getCategoryFromLabels(issue.labels);
-        const catLabel = category ? `<span class="backlog-category">${category}</span> ` : '';
+        const catLabel = category ? `<span class="issue-category">${category}</span> ` : '';
         const assignee = issue.assignee ? `<span style="color:#60a5fa; font-size:0.7rem;">@${issue.assignee}</span>` : '';
         const ago = getTimeAgo(issue.updated_at);
 
         html += `
           <a href="${issue.html_url}" target="_blank" rel="noopener" style="text-decoration:none; color:inherit;">
-            <div class="backlog-item priority-${priority}" style="margin-bottom:0;">
-              <div class="backlog-title">#${issue.number} ${truncate(issue.title, 60)}</div>
-              <div class="backlog-meta">
+            <div class="issue-item priority-${priority}" style="margin-bottom:0;">
+              <div class="issue-title">#${issue.number} ${truncate(issue.title, 60)}</div>
+              <div class="issue-meta">
                 ${catLabel}${assignee}${ago ? ` <span style="color:#555; font-size:0.65rem;">updated ${ago}</span>` : ''}
               </div>
             </div>
