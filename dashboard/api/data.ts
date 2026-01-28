@@ -93,16 +93,6 @@ export default async function handler(request: Request) {
 
     if (msgError) throw msgError;
 
-    // Fetch backlog items
-    const { data: backlog, error: backlogError } = await supabase
-      .from('backlog_items')
-      .select('*')
-      .order('priority', { ascending: false })
-      .order('item_number', { ascending: true });
-
-    // Don't throw if backlog table doesn't exist yet
-    const backlogItems = backlogError ? [] : (backlog || []);
-
     // Fetch GitHub Issues from _evryn-meta repo
     let githubIssues: any[] = [];
     let githubError: string | null = null;
@@ -182,7 +172,6 @@ export default async function handler(request: Request) {
       dailySpend: dailySpend || [],
       monthSpend: { byAgent: monthByAgent, total: monthTotal },
       activity,
-      backlog: backlogItems,
       githubIssues,
       githubError,
       agentStatus,

@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <title>Evryn Dashboard</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -265,17 +266,6 @@
     </div>
   </div>
 
-  <!-- Backlog Item Modal -->
-  <div class="modal-overlay" id="backlog-modal">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title" id="modal-title"></div>
-        <button class="modal-close" onclick="closeModal()">&times;</button>
-      </div>
-      <div id="modal-content"></div>
-    </div>
-  </div>
-
   <button class="refresh" onclick="loadData()">Refresh</button>
   <h1>Evryn Dashboard</h1>
   <div class="timestamp" id="timestamp">Loading...</div>
@@ -366,21 +356,6 @@
       <div class="loading">Loading GitHub Issues...</div>
     </div>
 
-    <h2 style="margin-top: 24px;">Supabase Backlog</h2>
-    <div class="kanban" id="kanban">
-      <div class="kanban-column" id="col-pending">
-        <div class="kanban-header">Pending <span id="count-pending"></span></div>
-      </div>
-      <div class="kanban-column" id="col-in_progress">
-        <div class="kanban-header">In Progress <span id="count-in_progress"></span></div>
-      </div>
-      <div class="kanban-column" id="col-blocked">
-        <div class="kanban-header">Blocked <span id="count-blocked"></span></div>
-      </div>
-      <div class="kanban-column" id="col-completed">
-        <div class="kanban-header">Completed <span id="count-completed"></span></div>
-      </div>
-    </div>
   </div>
 
   <script>
@@ -389,7 +364,6 @@
     let activityData = [];
     let allActivityData = [];
     let displayedCount = 10;
-    let backlogData = [];
     let dateFrom = null;
     let dateTo = null;
 
@@ -694,63 +668,6 @@
       document.getElementById('load-more').style.display = filtered.length > displayedCount ? 'block' : 'none';
     }
 
-    function openModal(item) {
-      document.getElementById('modal-title').innerHTML =
-        (item.item_number ? '#' + item.item_number + ' ' : '') + item.title;
-
-      const priorityClass = item.priority || 'medium';
-      const categoryLabels = { token_optimization: 'Token Optimization', reliability: 'Reliability', features: 'Features' };
-      const statusLabels = { pending: 'Pending', in_progress: 'In Progress', blocked: 'Blocked', completed: 'Completed' };
-
-      let html = `
-        <div class="modal-field">
-          <div class="modal-label">Priority</div>
-          <div class="modal-value"><span class="modal-priority ${priorityClass}">${item.priority || 'medium'}</span></div>
-        </div>
-        <div class="modal-field">
-          <div class="modal-label">Status</div>
-          <div class="modal-value">${statusLabels[item.status] || item.status}</div>
-        </div>
-        <div class="modal-field">
-          <div class="modal-label">Category</div>
-          <div class="modal-value">${categoryLabels[item.category] || item.category}</div>
-        </div>
-        <div class="modal-field">
-          <div class="modal-label">Description</div>
-          <div class="modal-value">${item.description || '-'}</div>
-        </div>
-      `;
-      if (item.impact_description) {
-        html += `<div class="modal-field"><div class="modal-label">Impact</div><div class="modal-value">${item.impact_description}</div></div>`;
-      }
-      if (item.dependencies) {
-        html += `<div class="modal-field"><div class="modal-label">Dependencies</div><div class="modal-value">${item.dependencies}</div></div>`;
-      }
-      if (item.assigned_to) {
-        html += `<div class="modal-field"><div class="modal-label">Assigned To</div><div class="modal-value">${item.assigned_to}</div></div>`;
-      }
-      if (item.notes) {
-        html += `<div class="modal-field"><div class="modal-label">Notes</div><div class="modal-value">${item.notes}</div></div>`;
-      }
-
-      document.getElementById('modal-content').innerHTML = html;
-      document.getElementById('backlog-modal').classList.add('open');
-    }
-
-    function closeModal() {
-      document.getElementById('backlog-modal').classList.remove('open');
-    }
-
-    // Close modal on overlay click
-    document.getElementById('backlog-modal').addEventListener('click', (e) => {
-      if (e.target.id === 'backlog-modal') closeModal();
-    });
-
-    // Close modal on Escape
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModal();
-    });
-
     function getPriorityFromLabels(labels) {
       const priorityLabels = ['urgent', 'high', 'medium', 'low', 'evaluate'];
       for (const p of priorityLabels) {
@@ -767,7 +684,13 @@
     function renderGithubIssues(issues, error) {
       const container = document.getElementById('github-issues-container');
       if (error) {
-        container.innerHTML = `<div style="color:#666; font-size:0.85rem; padding:12px; background:#111; border-radius:6px;">${error === 'GITHUB_TOKEN not configured' ? 'Add GITHUB_TOKEN to Vercel env vars to enable this widget.' : 'Error: ' + error}</div>`;
+        const is401 = error.includes('401');
+        const msg = is401
+          ? 'GitHub token expired. <a href="https://github.com/settings/tokens" target="_blank" rel="noopener" style="color:#60a5fa;">Renew it here</a>, then update GITHUB_TOKEN in Vercel env vars.'
+          : error === 'GITHUB_TOKEN not configured'
+            ? 'Add GITHUB_TOKEN to Vercel env vars to enable this widget.'
+            : 'Error: ' + error;
+        container.innerHTML = `<div style="color:${is401 ? '#eab308' : '#666'}; font-size:0.85rem; padding:12px; background:#111; border-radius:6px;">${msg}</div>`;
         return;
       }
       if (!issues || issues.length === 0) {
@@ -817,39 +740,6 @@
       return days + 'd ago';
     }
 
-    function renderBacklog(backlog) {
-      backlogData = backlog;
-      const columns = { pending: [], in_progress: [], blocked: [], completed: [] };
-      backlog.forEach(item => {
-        if (columns[item.status]) columns[item.status].push(item);
-      });
-
-      const categoryLabels = { token_optimization: 'Tokens', reliability: 'Reliability', features: 'Features' };
-      const priorityOrder = { urgent: 0, high: 1, medium: 2, low: 3, evaluate: 4 };
-
-      Object.keys(columns).forEach(status => {
-        // Sort by priority (urgent first, then high, medium, low)
-        columns[status].sort((a, b) => (priorityOrder[a.priority] || 2) - (priorityOrder[b.priority] || 2));
-
-        const col = document.getElementById('col-' + status);
-        const headerEl = col.querySelector('.kanban-header');
-        document.getElementById('count-' + status).textContent = `(${columns[status].length})`;
-
-        let html = headerEl.outerHTML;
-        columns[status].forEach((item, idx) => {
-          html += `
-            <div class="backlog-item priority-${item.priority}" onclick="openModal(backlogData.find(b => b.id === '${item.id}'))">
-              <div class="backlog-title">${item.item_number ? '#' + item.item_number + ' ' : ''}${item.title}</div>
-              <div class="backlog-meta">
-                <span class="backlog-category">${categoryLabels[item.category] || item.category}</span>
-                ${item.impact_description ? ' - ' + truncate(item.impact_description, 30) : ''}
-              </div>
-            </div>
-          `;
-        });
-        col.innerHTML = html;
-      });
-    }
 
     async function loadData() {
       try {
@@ -901,8 +791,6 @@
         // Render GitHub Issues
         renderGithubIssues(data.githubIssues || [], data.githubError || null);
 
-        // Render backlog
-        renderBacklog(data.backlog || []);
 
       } catch (err) {
         console.error(err);

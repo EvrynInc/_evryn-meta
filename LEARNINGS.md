@@ -8,6 +8,13 @@ Patterns, insights, and lessons learned that transfer across Evryn projects.
 
 ## Documentation & Process
 
+### Write Notes That Survive Context Loss
+Notes written during a session have full context. When someone reads them later in a different session, that context is gone. Every note should be understandable by someone with very limited knowledge of the conversation that produced it. Include: the specific context, the why, and ideally an example.
+
+**Do:** "When updating notes.md files, use full timestamps like '2026-01-26T22:15:00-05:00' instead of 'Evening'. Why: 'Evening' is ambiguous across timezones and sessions."
+
+**Avoid:** "Timestamps: Use timestamptz, not vague labels." (Future reader: "Timestamps where? For what?")
+
 ### Context Checkpoints Save Sanity
 Power outages happen. Long sessions drift. Proactive check-ins (~45-60 minutes or after significant work) prevent lost context. The #lock command forces documentation discipline.
 

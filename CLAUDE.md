@@ -102,13 +102,14 @@ This isn't about blocking Justin's ideas. It's about being a real technical part
 
 ## Document Ownership
 
-**Every document should have a "how to use this" header** that explains what belongs in it and what doesn't. This prevents scope creep and sprawl.
+**When writing or modifying a document, ensure that all documents have a "how to use this" header** that explains what belongs in it and what doesn't. This prevents scope creep and sprawl.
 
 | Document | Owner | Purpose |
 |----------|-------|---------|
 | `_evryn-meta/CLAUDE.md` | Alex (CTO) | CTO-level context (this file) |
 | `_evryn-meta/SYSTEM_OVERVIEW.md` | Alex (CTO) | Technical architecture, repos, services |
 | `_evryn-meta/LEARNINGS.md` | Alex (CTO) | Cross-project patterns and insights |
+| `_evryn-meta/RESEARCH.md` | Alex (CTO) | Cross-project research index, pointers to repo research |
 | `_evryn-meta/AGENT_PATTERNS.md` | Alex (CTO) | Agent-building learnings for Evryn product |
 | `evryn-team-agents/CLAUDE.md` | Alex (CTO) | Build context for builder CC instance |
 | `evryn-team-agents/agents/_global/*` | Alex (CTO) | Agent framework, company context |

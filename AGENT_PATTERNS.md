@@ -138,7 +138,7 @@ When agents have multiple input channels (email, Slack, voice), the unifying fac
 
 **Session concept:** ~30 min of silence = session ends. Working memory gets summarized and stored to long-term. Next interaction starts fresh but can retrieve.
 
-**Channel-appropriate responses:** Agent is AWARE of cross-channel context but doesn't POLLUTE responses. No Slack quotes in email. Reference naturally: "as we discussed" not "[pasting transcript]".
+**Channel-appropriate responses:** Agent is AWARE of cross-channel context but doesn't POLLUTE responses. Avoid raw cross-channel artifacts in responses. Reference naturally: "as we discussed over on Slack" or "based on Taylor's input" — not pasted transcripts or internal coordination logs.
 
 ### Agent Self-Monitoring
 Agents that only respond to triggers are fragile. If the trigger system fails, they silently die. Build self-monitoring:
