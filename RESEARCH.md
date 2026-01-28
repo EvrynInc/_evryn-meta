@@ -1,6 +1,6 @@
 # Cross-Project Research
 
-**How to use this file:** Index of research that applies across Evryn repos. Repo-specific research lives in that repo's `docs/RESEARCH.md`. This file tracks cross-cutting findings and points to where deeper research lives.
+**How to use this file:** Index of research that applies across Evryn repos. Repo-specific research lives in topic files under that repo's `docs/research/` folder (e.g., `evryn-team-agents/docs/research/`). This file tracks cross-cutting findings and points to where deeper research lives.
 
 *Add entries as research happens. Newest at top.*
 
@@ -8,12 +8,14 @@
 
 ## Research by Repo
 
-### evryn-team-agents (`docs/RESEARCH.md`)
-- **Memory architecture design** — Three-layer system (immediate/working/long-term). Not yet implemented.
-- **Agent memory state of the art** — Mem0, A-MEM, AgeMem survey. Industry moving toward agentic memory.
-- **Agent orchestration frameworks** — LangGraph, CrewAI, AutoGen comparison. LangGraph recommended.
-- **Google Antigravity evaluation** — IDE, not a framework. Staying with Claude Code.
-- **Token/context analysis** — Cost analysis, prompt caching strategy.
+### evryn-team-agents (`docs/research/`)
+Research moved to topic-based files (2026-01-28). See `docs/research/README.md` for full index.
+- **Claude Agent SDK** — `claude-agent-sdk.md` — Deep dive, migration path, LangGraph comparison
+- **Memory systems** — `memory-systems.md` — 8 systems evaluated, 4-layer architecture proposed
+- **Orchestration frameworks** — `orchestration-frameworks.md` — LangGraph vs CrewAI vs AutoGen
+- **Tools & workflows** — `tools-and-workflows.md` — Anthropic Skills, MCP, observability, testing
+- **Linear** — `linear-project-management.md` — Setup decisions, Free tier, labels, OAuth plan
+- **Misc** — `misc.md` — Antigravity eval, token analysis, workshop info
 
 ### evryn-website
 *(No research yet)*
