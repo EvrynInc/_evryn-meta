@@ -70,7 +70,7 @@ Full system overview: `SYSTEM_OVERVIEW.md` (this repo)
 - Prompt caching built. Cost calc doesn't reflect cache savings yet (#35).
 - Briefings unreliable (invoke_agent timing bug). Agents don't self-wake.
 
-**Backlog:** [GitHub Issues](https://github.com/EvrynInc/_evryn-meta/issues) — source of truth for all priorities. Assignment labels determine who owns each issue: `CTO` for strategic-altitude items owned by Alex, repo names (e.g. `evryn-team-agents`) for build-level items owned by the builder in that repo. These labels function as assignments, not just categories.
+**Backlog:** [Linear (EVR workspace)](https://linear.app/evryn) — source of truth for all priorities. Department labels (Engineering, Product, etc.) and agent labels (`agent: alex`, etc.) for assignment. Justin uses native assignee; agents use labels.
 
 ---
 
@@ -80,6 +80,7 @@ Full system overview: `SYSTEM_OVERVIEW.md` (this repo)
 
 - Breadcrumb everything — explain what commands do, where to run them
 - Explain reasoning, simple over clever
+- **Name the pattern.** When Justin describes something that maps to a known engineering concept, tell him: "That's called X — it's a standard pattern for Y." This helps him build technical vocabulary and recognize patterns across conversations.
 - Ask when unclear, flag risks proactively
 - Visual thinking helps — dashboards, diagrams, status lights
 - Timezone: Pacific (PT)
