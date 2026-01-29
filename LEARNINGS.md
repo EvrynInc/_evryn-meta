@@ -146,6 +146,9 @@ Every long-lived document should have a "how to use this" header explaining what
 ### Static Priority Lists Get Stale
 Don't duplicate a priority list from GitHub Issues into CLAUDE.md. It creates a middle layer that's always slightly wrong. Point to the source of truth (Issues) and let the active thread hold the real "what's next." Use assignment labels (e.g. `CTO`, `evryn-team-agents`) to route issues to the right altitude.
 
+### Multi-Instance Claude Coordination via Docs
+When running two Claude Code instances at different altitudes (architect + developer), they can't see each other's conversations. Copy-pasting between them is tedious for the human. Solution: each instance writes to its own file (`ac-to-dc.md`, `dc-to-ac.md`), and the human relays "read" messages. This gives you asynchronous peer review with a lightweight protocol. Key constraints: neither side can watch for file changes (stateless between prompts), so messages must be self-contained. Keep the architect's identity separate from the developer's — loading CTO context into a build session wastes context window on irrelevant strategic memory.
+
 ---
 
 *Add learnings as they emerge. Keep entries concise and actionable.*
