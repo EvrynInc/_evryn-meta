@@ -2,7 +2,7 @@
 
 Learnings from building AI agents that will help when building Evryn (the product).
 
-*Last updated: 2026-01-24*
+*Last updated: 2026-01-30*
 
 ---
 
@@ -237,6 +237,20 @@ Never rely solely on real-time notifications. Pair instant triggers with schedul
 - Track by unique ID, not time window - no gaps, no duplicates
 
 This applies to email, webhooks, any event-driven system. Belt and suspenders.
+
+---
+
+## Safety & Self-Modification
+
+### Structural Guards for Agent Self-Modification
+When agents can modify their own persistent state (notes, memory, config), they will eventually destroy it — not maliciously, but because they don't realize a write is destructive. Two-layer defense:
+
+1. **Tell them it's destructive.** Most agents doing a "full overwrite" don't know that's what they're doing. Explicit guidance in the response schema ("this replaces the entire file, preserve what you want to keep") fixes the root cause.
+2. **Validate before writing.** Compare new content against existing: if it's dramatically shorter or missing most structural markers (headers, sections), reject the write and append instead. Log when the guard triggers so you can tune thresholds.
+
+The prompting fix handles the common case. The structural guard catches the failure mode. Neither alone is sufficient — prompting fails when agents ignore instructions, guards fail when legitimate restructuring looks like destruction.
+
+Keep validation in the execution layer (where the write happens), not as a separate orchestration step. This is a side-effect check, not a state transition.
 
 ---
 

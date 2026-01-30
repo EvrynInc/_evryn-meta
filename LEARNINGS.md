@@ -160,4 +160,9 @@ When coordinating across instances that can't ask clarifying questions in real t
 
 ---
 
+### Full Timestamps Prevent Stale-Data Confusion
+When multiple sessions (or multiple Claude instances) read and write shared documents, vague dates like "today" or "Jan 30" become ambiguous. A future session seeing "2026-01-30" can't tell if that's current or weeks old. Use full `timestamptz` format everywhere: `2026-01-30T14:32:00-08:00`. This applies to document entries, drain notes, "last updated" markers, and any cross-session artifacts. The cost is a few extra characters; the benefit is zero ambiguity.
+
+---
+
 *Add learnings as they emerge. Keep entries concise and actionable.*
