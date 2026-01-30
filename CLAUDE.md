@@ -131,7 +131,9 @@ Full system overview: `SYSTEM_OVERVIEW.md` (this repo)
 
 **For full architectural detail:** Read `evryn-team-agents/docs/ARCHITECTURE.md` — AC owns and maintains that doc. It has component inventory, build phases, state schema, and known issues.
 
-**Backlog:** [Linear (EVR workspace)](https://linear.app/evryn) — source of truth for all priorities. Department labels (Engineering, Product, etc.) and agent labels (`agent: alex`, etc.) for assignment. Justin uses native assignee; agents use labels.
+**Backlog:** [Linear (EVR workspace)](https://linear.app/evryn) — backlog bucket only, not a workflow tool. Holds small items that shouldn't be forgotten but aren't part of a current build. No projects, no AC labels, no process overhead. When AC specs a new build phase, AC pulls relevant tickets into the build doc scope and closes them when done. LINEAR_API_KEY is in `.env` (this repo) for querying.
+
+**How work flows:** ARCHITECTURE.md defines what the system should look like. CLAUDE.md "Current System State" says what it looks like now. The gap = the work. When a build starts, DC creates a build doc. Linear tickets get pulled into scope or stay in the backlog. When the build is done, relevant tickets close. Linear is never the coordination tool between AC and DC — that's the mailbox pattern.
 
 ---
 
@@ -178,7 +180,7 @@ This isn't about blocking Justin's ideas. It's about being a real technical part
 | `evryn-team-agents/agents/*/instructions.md` | Alex (CTO) | Individual agent roles (Justin signs off) |
 | `evryn-team-agents/agents/*/capabilities.md` | Alex (CTO) | What each agent can/can't do now |
 | `evryn-team-agents/agents/*/notes.md` | Each agent | Working memory — agents maintain their own |
-| GitHub Issues (`_evryn-meta`) | Alex (CTO) | Backlog, priorities, task tracking |
+| Linear (EVR workspace) | Alex (CTO) | Backlog — small items to not forget |
 
 **Sync responsibility:** When company-level changes happen (team structure, mission, strategy), update both `company-context.md` AND `SYSTEM_OVERVIEW.md`. They serve different audiences (agents vs developers) but must stay consistent.
 
@@ -232,10 +234,10 @@ Check in with Justin periodically:
 
 When Justin says `#lock` or it's time for a checkpoint:
 
-1. **This file (CLAUDE.md)** — Refresh to reflect current state. Clean snapshot, not a log.
+1. **This file (CLAUDE.md)** — Refresh to reflect current state. Clean snapshot, not a log. **Cross-repo sync:** Read `evryn-team-agents/CLAUDE.md` current state section and update your own "Current System State" if anything changed.
 2. **`agents/alex/notes.md`** (in `evryn-team-agents`) — Update with anything appropriate to that doc's scope and rules.
 3. **`docs/DECISIONS.md`** (in `evryn-team-agents`) — Add any new architectural decisions, appropriate to that doc's format.
-4. **GitHub Issues** — Create issues for new work items with priority and assignment labels.
+4. **Linear** — Create tickets for small backlog items that aren't part of a current build. Don't duplicate what's in build docs or ARCHITECTURE.md.
 5. **`SYSTEM_OVERVIEW.md`** — Update only if something system-level changed.
 6. **`LEARNINGS.md`** — Add appropriate cross-project patterns or insights.
 7. **`AGENT_PATTERNS.md`** — Add appropriate agent-building learnings.
@@ -248,8 +250,8 @@ When Justin says `#lock` or it's time for a checkpoint:
 
 After a strategic conversation produces build tasks:
 
-1. **Create GitHub Issues** for discrete work items (with priority and assignment labels)
-2. **Update the relevant repo's CLAUDE.md** if the builder needs new context
+1. **Update the relevant repo's CLAUDE.md** if the builder needs new context
+2. **Add small backlog items to Linear** if they're not part of a current build
 3. **Don't put build details here** — this file stays at altitude
 
 DC doesn't need to know why we decided something. It needs to know what to build and any constraints.
