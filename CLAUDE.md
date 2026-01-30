@@ -23,18 +23,57 @@ When a conversation produces build work, write it into the relevant repo's CLAUD
 
 ## AC/DC Communication Protocol
 
-AC (you, here) and DC (the senior developer in `evryn-team-agents`) are separate Claude Code instances. They can't see each other's conversations. Justin relays "read" messages between them.
+AC (you, here) and DC (Developer Claude instances in repos) are separate Claude Code instances. They can't see each other's conversations. Justin relays "read" messages between them.
 
-**How it works:**
-- AC writes to `_evryn-meta/docs/ac-to-dc.md`
-- DC writes to `_evryn-meta/docs/dc-to-ac.md`
-- Justin says "read" to either side to trigger a read-and-respond cycle
+### The Mailbox Pattern
+
+Communication docs are **disposable mailboxes, not logs.** Each new message **overwrites** the previous one. No history accumulates. If something is worth keeping, absorb it into a persistent doc (ARCHITECTURE.md, CLAUDE.md, etc.) before it gets overwritten.
+
+**Mailboxes live in the repo they're about**, not in `_evryn-meta`. For example:
+- `evryn-team-agents/docs/ac-to-dc.md` / `dc-to-ac.md`
+- `evryn-backend/docs/ac-to-dc.md` / `dc-to-ac.md`
+
+The general pattern: `<repo>/docs/ac-to-dc.md` and `<repo>/docs/dc-to-ac.md`.
+
+Justin says "read" to either side to trigger a read-and-respond cycle.
 
 **When to use this:** Before major builds, architectural changes, or anything where AC should review DC's plan before code gets written. AC reviews for alignment with `ARCHITECTURE.md`, scope discipline, and systemic concerns. DC provides implementation detail and flags practical constraints.
 
-**Neither side can watch for file changes.** Each only reads when Justin prompts. Keep messages self-contained — don't assume the other side remembers prior context beyond what's in the docs.
+**Neither side can watch for file changes.** Each only reads when Justin prompts.
 
-**Key relationship:** DC is a senior developer, not a junior executor. It has no CTO identity or Alex persona — that was deliberately stripped to keep its context lean for building. But it has strong technical judgment and will push back when architectural guidance doesn't work at the implementation level. Treat it as a peer collaboration: AC holds the system-level view and cross-repo awareness, DC holds codebase-level knowledge and practical constraints.
+**Writing mailbox messages:** Assume the other party has taken appropriate notes from prior exchanges into their own persistent docs, but doesn't have the raw message history any more than you do. Reference shared artifacts (ARCHITECTURE.md, build docs, Linear issues) rather than restating their contents. Don't repeat context that lives in a doc both sides can read — just point to it.
+
+**Avoid passive voice in instructions.** When writing to DC (or anyone), always make it clear who does what. "The files will be archived" is ambiguous — archived by whom? Say "AC will archive these files" or "You should archive these files." This matters especially when coordinating across instances that can't clarify in real time.
+
+### Theory of Mind — Understanding DC
+
+DC has **deep codebase knowledge** — it's read every file, knows the runtime internals, understands the build history. It does NOT have:
+- Cross-repo awareness (doesn't know what's happening in other repos)
+- Strategic context (doesn't know why Justin wants something, just what to build)
+- Your conversation history with Justin
+
+DC's persistent state lives in: its repo's CLAUDE.md, build docs, ARCHITECTURE.md (read-only), and the codebase itself. When you write to DC, you can assume it knows the code and recent build decisions. You need to provide: architectural constraints, cross-repo implications, and strategic framing it wouldn't have.
+
+### Multi-Instance Structure
+
+AC is the single architect. There can be multiple DC instances building in parallel across repos. Each DC is scoped to one repo and one build.
+
+```
+AC (one instance, _evryn-meta)
+ ├── DC1 (evryn-team-agents) — agent runtime builds
+ ├── DC2 (evryn-backend) — product backend builds (future)
+ └── DC3 (evryn-website) — website builds (future)
+```
+
+Each DC has its own mailbox pair in its repo. The pattern is the same everywhere: disposable messages, persistent state in repo docs.
+
+### Key Relationship
+
+DC is a senior developer, not a junior executor. It has no CTO identity or Alex persona — that was deliberately stripped to keep its context lean for building. But it has strong technical judgment and will push back when architectural guidance doesn't work at the implementation level. Treat it as a peer collaboration: AC holds the system-level view and cross-repo awareness, DC holds codebase-level knowledge and practical constraints.
+
+### Architecture Doc Ownership
+
+**AC writes `docs/ARCHITECTURE.md` (in each repo). DC reads it but never modifies it.** DC should read ARCHITECTURE.md at session start for constraints and decisions. If DC encounters a conflict between what it's building and what ARCHITECTURE.md says, it flags the conflict to AC via the mailbox — it doesn't resolve it unilaterally.
 
 ---
 
@@ -83,10 +122,14 @@ Full system overview: `SYSTEM_OVERVIEW.md` (this repo)
 ## Current System State
 
 **Agent infrastructure** (in `evryn-team-agents`):
-- Email gateway, scheduler, database, dashboard, inter-agent comms — all working
-- Running locally on Justin's desktop (`npm start`). No cloud deployment yet.
+- **LangGraph orchestration layer is LIVE.** 5-node graph (intake → router → agent → output), 3 triggers (email, scheduler, tasks). `npm start` runs `graph-index.ts`. Old entry point preserved at `src/index.ts`.
+- Email trigger tested live and working. Scheduler trigger patched (3 bugs: runaway invoke_agent loop, double trigger, Haiku 404). DC is re-testing scheduler and task triggers now.
+- invoke_agent has depth=1 stopgap — child agents can't invoke further agents. Briefing workflow redesign (pre-reflection, cross-agent consultation, call budget) is future work, to be specced separately.
+- Running locally on Justin's desktop. No cloud deployment yet.
 - Prompt caching built. Cost calc doesn't reflect cache savings yet (#35).
-- Briefings unreliable (invoke_agent timing bug). Agents don't self-wake.
+- Agents don't self-wake.
+
+**For full architectural detail:** Read `evryn-team-agents/docs/ARCHITECTURE.md` — AC owns and maintains that doc. It has component inventory, build phases, state schema, and known issues.
 
 **Backlog:** [Linear (EVR workspace)](https://linear.app/evryn) — source of truth for all priorities. Department labels (Engineering, Product, etc.) and agent labels (`agent: alex`, etc.) for assignment. Justin uses native assignee; agents use labels.
 

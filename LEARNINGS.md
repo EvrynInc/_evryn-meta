@@ -2,7 +2,7 @@
 
 Patterns, insights, and lessons learned that transfer across Evryn projects.
 
-*Last updated: 2026-01-23*
+*Last updated: 2026-01-30*
 
 ---
 
@@ -148,6 +148,15 @@ Don't duplicate a priority list from GitHub Issues into CLAUDE.md. It creates a 
 
 ### Multi-Instance Claude Coordination via Docs
 When running two Claude Code instances at different altitudes (architect + developer), they can't see each other's conversations. Copy-pasting between them is tedious for the human. Solution: each instance writes to its own file (`ac-to-dc.md`, `dc-to-ac.md`), and the human relays "read" messages. This gives you asynchronous peer review with a lightweight protocol. Key constraints: neither side can watch for file changes (stateless between prompts), so messages must be self-contained. Keep the architect's identity separate from the developer's — loading CTO context into a build session wastes context window on irrelevant strategic memory.
+
+### Mailbox Pattern for Cross-Instance Communication
+Communication logs between instances grow fast and waste tokens — every new message forces both sides to re-read the full history, and the system feeds it on every volley. Solution: make communication docs **disposable mailboxes** that overwrite (not append) each message. Each side absorbs what it needs into its own persistent docs before writing the next message. This keeps token usage flat regardless of how many exchanges happen. Mailboxes should live in the repo they're about (not centralized), so they scale to multiple builder instances without cross-contamination.
+
+### Theory of Mind Between Instances
+When two Claude instances coordinate, each needs enough information to model the other's knowledge accurately — not just "what to say" but "what the other side already knows vs. what it needs to hear." Document this explicitly in each instance's CLAUDE.md: what the other instance's persistent state looks like, what it has access to, and what its blind spots are. This prevents both over-explaining (wasting tokens restating what the other side knows) and under-explaining (assuming context the other side doesn't have). Example: the architect knows cross-repo implications but hasn't read the code; the developer knows runtime behavior but doesn't know strategic reasoning.
+
+### Passive Voice Creates Ambiguity in Cross-Instance Instructions
+When coordinating across instances that can't ask clarifying questions in real time, passive voice ("the files will be archived") creates genuine confusion about who does what. Always use active voice with explicit actors ("AC will archive these files" or "you should archive these files"). This is a communication discipline, not a style preference.
 
 ---
 
