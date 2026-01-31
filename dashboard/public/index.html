@@ -150,6 +150,25 @@
     .month-amount { color: #60a5fa; }
     .month-total { margin-top: 8px; padding-top: 8px; border-top: 1px solid #333; font-weight: 600; }
 
+    /* Usage Chart */
+    .chart-container {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 16px;
+      height: 300px;
+      min-height: 150px;
+      max-height: 800px;
+      resize: vertical;
+      overflow: hidden;
+      position: relative;
+    }
+    .chart-controls { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; }
+    .chart-controls .separator { color: #333; margin: 0 4px; }
+    .chart-agent-btn { min-width: unset; }
+    .chart-agent-btn.active { color: #fff; }
+
     /* Misc */
     .truncate { cursor: help; }
     .loading { color: #666; padding: 40px; text-align: center; }
@@ -158,6 +177,7 @@
     .refresh:hover { background: #444; }
     .timestamp { color: #666; font-size: 0.75rem; margin-bottom: 16px; }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <!-- Login Overlay -->
@@ -196,6 +216,34 @@
     </div>
     <div class="month-spend-content" id="month-spend">
       <div id="month-breakdown"></div>
+    </div>
+
+    <h2>Usage Over Time</h2>
+    <div class="chart-controls" id="chart-controls">
+      <span class="filters-label">Metric:</span>
+      <button class="filter-btn active" data-metric="cost">Cost</button>
+      <button class="filter-btn" data-metric="tokens">Tokens</button>
+      <span class="separator">|</span>
+      <span class="filters-label">Per:</span>
+      <button class="filter-btn" data-gran="minute">Minute</button>
+      <button class="filter-btn active" data-gran="hour">Hour</button>
+      <button class="filter-btn" data-gran="day">Day</button>
+      <span class="separator">|</span>
+      <button class="filter-btn active" data-chart-action="total">Total</button>
+      <button class="filter-btn" data-chart-action="all">All</button>
+      <button class="filter-btn" data-chart-action="none">None</button>
+      <span class="separator">|</span>
+      <button class="filter-btn chart-agent-btn" data-chart-agent="thea" style="border-color:#22c55e;">Thea</button>
+      <button class="filter-btn chart-agent-btn" data-chart-agent="lucas" style="border-color:#60a5fa;">Lucas</button>
+      <button class="filter-btn chart-agent-btn" data-chart-agent="alex" style="border-color:#a855f7;">Alex</button>
+      <button class="filter-btn chart-agent-btn" data-chart-agent="taylor" style="border-color:#eab308;">Taylor</button>
+      <button class="filter-btn chart-agent-btn" data-chart-agent="dana" style="border-color:#f97316;">Dana</button>
+      <button class="filter-btn chart-agent-btn" data-chart-agent="jordan" style="border-color:#ec4899;">Jordan</button>
+      <button class="filter-btn chart-agent-btn" data-chart-agent="dominic" style="border-color:#2dd4bf;">Dominic</button>
+      <button class="filter-btn chart-agent-btn" data-chart-agent="nathan" style="border-color:#f43f5e;">Nathan</button>
+    </div>
+    <div class="chart-container">
+      <canvas id="usage-chart"></canvas>
     </div>
 
     <h2>Activity</h2>
@@ -285,6 +333,7 @@
       document.getElementById('date-week').classList.remove('active');
       displayedCount = 10;
       renderActivity();
+      if (typeof loadUsageData === 'function') loadUsageData();
     }
 
     function setDateRangeWeek() {
@@ -298,6 +347,7 @@
       document.getElementById('date-week').classList.add('active');
       displayedCount = 10;
       renderActivity();
+      if (typeof loadUsageData === 'function') loadUsageData();
     }
 
     function onDateChange() {
@@ -313,6 +363,7 @@
       }
       displayedCount = 10;
       renderActivity();
+      if (typeof loadUsageData === 'function') loadUsageData();
     }
 
     function toggleMonthSpend() {
@@ -590,6 +641,8 @@
         // Render month spend
         renderMonthSpend(data.monthSpend || { byAgent: {}, total: 0 });
 
+        // Refresh usage chart
+        loadUsageData();
 
       } catch (err) {
         console.error(err);
@@ -622,6 +675,170 @@
 
     // Auto-refresh every 30 seconds
     setInterval(loadData, 30000);
+
+    // ========== Usage Chart ==========
+    const agentColors = {
+      thea: '#22c55e', lucas: '#60a5fa', alex: '#a855f7', taylor: '#eab308',
+      dana: '#f97316', jordan: '#ec4899', dominic: '#2dd4bf', nathan: '#f43f5e'
+    };
+    const agentKeys = Object.keys(agentColors);
+    let chartMetric = 'cost';
+    let chartGranularity = 'hour';
+    let chartMode = 'total'; // 'total', 'individual'
+    let chartSelectedAgents = new Set();
+    let usageData = [];
+    let usageChart = null;
+
+    function initChart() {
+      const ctx = document.getElementById('usage-chart').getContext('2d');
+      usageChart = new Chart(ctx, {
+        type: 'line',
+        data: { labels: [], datasets: [] },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          scales: {
+            x: { ticks: { color: '#666', maxTicksLimit: 20 }, grid: { color: '#222' } },
+            y: { ticks: { color: '#666' }, grid: { color: '#222' }, beginAtZero: true }
+          },
+          plugins: { legend: { display: true, labels: { color: '#888', boxWidth: 12 } } }
+        }
+      });
+    }
+
+    function formatBucketLabel(bucket, gran) {
+      const d = new Date(bucket);
+      if (gran === 'day') return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      if (gran === 'hour') return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+      return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function renderChart() {
+      if (!usageChart || usageData.length === 0) return;
+      const labels = usageData.map(d => formatBucketLabel(d.bucket, chartGranularity));
+      const datasets = [];
+      const metric = chartMetric === 'cost' ? 'cost' : 'tokens';
+
+      if (chartMode === 'total') {
+        datasets.push({
+          label: 'Total',
+          data: usageData.map(d => {
+            let sum = 0;
+            Object.values(d.agents).forEach(a => { sum += a[metric]; });
+            return metric === 'cost' ? parseFloat(sum.toFixed(4)) : sum;
+          }),
+          borderColor: '#60a5fa',
+          backgroundColor: 'rgba(96,165,250,0.1)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 2,
+        });
+      } else {
+        // Individual agent lines
+        const showAgents = chartSelectedAgents.size > 0 ? [...chartSelectedAgents] : [];
+        showAgents.forEach(agent => {
+          datasets.push({
+            label: agent.charAt(0).toUpperCase() + agent.slice(1),
+            data: usageData.map(d => {
+              const a = d.agents[agent];
+              if (!a) return 0;
+              return metric === 'cost' ? parseFloat(a[metric].toFixed(4)) : a[metric];
+            }),
+            borderColor: agentColors[agent],
+            backgroundColor: 'transparent',
+            tension: 0.3,
+            pointRadius: 2,
+          });
+        });
+      }
+
+      usageChart.data.labels = labels;
+      usageChart.data.datasets = datasets;
+      usageChart.options.scales.y.title = { display: true, text: metric === 'cost' ? 'USD' : 'Tokens', color: '#666' };
+      usageChart.update();
+    }
+
+    async function loadUsageData() {
+      if (!authHeader) return;
+      try {
+        const from = dateFrom || getTodayPacific();
+        const to = dateTo || getTodayPacific();
+        const res = await fetch(`/api/usage?granularity=${chartGranularity}&from=${from}&to=${to}`, {
+          headers: { 'Authorization': authHeader }
+        });
+        if (!res.ok) return;
+        const json = await res.json();
+        usageData = json.data || [];
+        renderChart();
+      } catch (e) {
+        console.error('Usage chart error:', e);
+      }
+    }
+
+    // Chart controls
+    document.getElementById('chart-controls').addEventListener('click', (e) => {
+      const btn = e.target.closest('.filter-btn');
+      if (!btn) return;
+
+      const metric = btn.dataset.metric;
+      const gran = btn.dataset.gran;
+      const action = btn.dataset.chartAction;
+      const agent = btn.dataset.chartAgent;
+
+      if (metric) {
+        chartMetric = metric;
+        document.querySelectorAll('[data-metric]').forEach(b => b.classList.toggle('active', b.dataset.metric === metric));
+        renderChart();
+      } else if (gran) {
+        chartGranularity = gran;
+        document.querySelectorAll('[data-gran]').forEach(b => b.classList.toggle('active', b.dataset.gran === gran));
+        loadUsageData();
+      } else if (action === 'total') {
+        chartMode = 'total';
+        chartSelectedAgents.clear();
+        document.querySelectorAll('[data-chart-action]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('[data-chart-agent]').forEach(b => b.classList.remove('active'));
+        renderChart();
+      } else if (action === 'all') {
+        chartMode = 'individual';
+        agentKeys.forEach(a => chartSelectedAgents.add(a));
+        document.querySelectorAll('[data-chart-action]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('[data-chart-agent]').forEach(b => b.classList.add('active'));
+        renderChart();
+      } else if (action === 'none') {
+        chartMode = 'individual';
+        chartSelectedAgents.clear();
+        document.querySelectorAll('[data-chart-action]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('[data-chart-agent]').forEach(b => b.classList.remove('active'));
+        renderChart();
+      } else if (agent) {
+        chartMode = 'individual';
+        if (chartSelectedAgents.has(agent)) {
+          chartSelectedAgents.delete(agent);
+          btn.classList.remove('active');
+        } else {
+          chartSelectedAgents.add(agent);
+          btn.classList.add('active');
+        }
+        // Update action buttons
+        document.querySelectorAll('[data-chart-action]').forEach(b => b.classList.remove('active'));
+        if (chartSelectedAgents.size === agentKeys.length) {
+          document.querySelector('[data-chart-action="all"]').classList.add('active');
+        } else if (chartSelectedAgents.size === 0) {
+          document.querySelector('[data-chart-action="none"]').classList.add('active');
+        }
+        renderChart();
+      }
+    });
+
+    // Initialize chart and load data
+    initChart();
+    loadUsageData();
+
   </script>
 </body>
 </html>
