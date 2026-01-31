@@ -70,19 +70,6 @@
     .filter-btn.active { background: #333; color: #fff; border-color: #555; }
     .filter-btn:hover:not(.active) { background: #222; }
 
-    /* Date Range */
-    .date-range { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
-    .date-range-label { font-size: 0.75rem; color: #666; margin-right: 4px; }
-    .date-input {
-      padding: 4px 8px;
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 4px;
-      color: #fff;
-      font-size: 0.75rem;
-    }
-    .date-input::-webkit-calendar-picker-indicator { filter: invert(1); }
-
     /* Activity Table */
     .activity-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; margin-bottom: 16px; }
     .activity-table th {
@@ -164,7 +151,8 @@
       overflow: hidden;
       position: relative;
     }
-    .chart-controls { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; align-items: center; }
+    .chart-controls { display: flex; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; align-items: center; }
+    .chart-controls-row { display: flex; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; align-items: center; }
     .chart-controls .separator { color: #333; margin: 0 4px; }
     .chart-agent-btn { min-width: unset; }
     .chart-agent-btn.active { color: #fff; }
@@ -270,31 +258,34 @@
     <h2>Usage Over Time</h2>
     <div class="chart-section">
       <div class="chart-controls" id="chart-controls">
-        <span class="filters-label">Metric:</span>
-        <button class="filter-btn active" data-metric="cost">Cost</button>
-        <button class="filter-btn" data-metric="tokens">Tokens</button>
-        <span class="separator">|</span>
-        <span class="filters-label">Zoom:</span>
-        <button class="filter-btn active" data-zoom="day">Day</button>
-        <button class="filter-btn" data-zoom="week">Week</button>
-        <button class="filter-btn" data-zoom="now">Now</button>
-        <span class="separator">|</span>
-        <input type="datetime-local" class="chart-datetime-input" id="chart-from" step="60">
-        <span style="color:#666;">to</span>
-        <input type="datetime-local" class="chart-datetime-input" id="chart-to" step="60">
-        <span class="separator">|</span>
-        <button class="filter-btn active" data-chart-action="total">Total</button>
-        <button class="filter-btn" data-chart-action="all">All</button>
-        <button class="filter-btn" data-chart-action="none">None</button>
-        <span class="separator">|</span>
-        <button class="filter-btn chart-agent-btn" data-chart-agent="thea" style="border-color:#22c55e;">Thea</button>
-        <button class="filter-btn chart-agent-btn" data-chart-agent="lucas" style="border-color:#60a5fa;">Lucas</button>
-        <button class="filter-btn chart-agent-btn" data-chart-agent="alex" style="border-color:#a855f7;">Alex</button>
-        <button class="filter-btn chart-agent-btn" data-chart-agent="taylor" style="border-color:#eab308;">Taylor</button>
-        <button class="filter-btn chart-agent-btn" data-chart-agent="dana" style="border-color:#f97316;">Dana</button>
-        <button class="filter-btn chart-agent-btn" data-chart-agent="jordan" style="border-color:#ec4899;">Jordan</button>
-        <button class="filter-btn chart-agent-btn" data-chart-agent="dominic" style="border-color:#2dd4bf;">Dominic</button>
-        <button class="filter-btn chart-agent-btn" data-chart-agent="nathan" style="border-color:#f43f5e;">Nathan</button>
+        <div class="chart-controls-row">
+          <span class="filters-label">Metric:</span>
+          <button class="filter-btn active" data-metric="cost">Cost</button>
+          <button class="filter-btn" data-metric="tokens">Tokens</button>
+          <span class="separator">|</span>
+          <span class="filters-label">Zoom:</span>
+          <button class="filter-btn active" data-zoom="day">Day</button>
+          <button class="filter-btn" data-zoom="week">Week</button>
+          <button class="filter-btn" data-zoom="now">Now</button>
+          <span class="separator">|</span>
+          <input type="datetime-local" class="chart-datetime-input" id="chart-from" step="60">
+          <span style="color:#666;">to</span>
+          <input type="datetime-local" class="chart-datetime-input" id="chart-to" step="60">
+        </div>
+        <div class="chart-controls-row">
+          <button class="filter-btn active" data-chart-action="total">Total</button>
+          <button class="filter-btn" data-chart-action="all">All</button>
+          <button class="filter-btn" data-chart-action="none">None</button>
+          <span class="separator">|</span>
+          <button class="filter-btn chart-agent-btn" data-chart-agent="thea" style="border-color:#22c55e;">Thea</button>
+          <button class="filter-btn chart-agent-btn" data-chart-agent="lucas" style="border-color:#60a5fa;">Lucas</button>
+          <button class="filter-btn chart-agent-btn" data-chart-agent="alex" style="border-color:#a855f7;">Alex</button>
+          <button class="filter-btn chart-agent-btn" data-chart-agent="taylor" style="border-color:#eab308;">Taylor</button>
+          <button class="filter-btn chart-agent-btn" data-chart-agent="dana" style="border-color:#f97316;">Dana</button>
+          <button class="filter-btn chart-agent-btn" data-chart-agent="jordan" style="border-color:#ec4899;">Jordan</button>
+          <button class="filter-btn chart-agent-btn" data-chart-agent="dominic" style="border-color:#2dd4bf;">Dominic</button>
+          <button class="filter-btn chart-agent-btn" data-chart-agent="nathan" style="border-color:#f43f5e;">Nathan</button>
+        </div>
       </div>
       <div class="chart-container">
         <canvas id="usage-chart"></canvas>
@@ -309,15 +300,6 @@
     </div>
 
     <h2>Activity</h2>
-    <div class="date-range">
-      <span class="date-range-label">Date Range:</span>
-      <button class="filter-btn active" id="date-today">Today</button>
-      <button class="filter-btn" id="date-week">This Week</button>
-      <span style="color:#333; margin: 0 4px;">|</span>
-      <input type="date" class="date-input" id="date-from">
-      <span style="color:#666;">to</span>
-      <input type="date" class="date-input" id="date-to">
-    </div>
     <div class="filters" id="filters">
       <span class="filters-label">Filter:</span>
       <button class="filter-btn" data-action="all">All</button>
@@ -368,59 +350,19 @@
       return now.toLocaleDateString('en-CA', { timeZone: 'America/Los_Angeles' });
     }
 
-    function getWeekStartPacific() {
-      const now = new Date();
-      const pacific = new Date(now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
-      const day = pacific.getDay();
-      const diff = pacific.getDate() - day;
-      pacific.setDate(diff);
-      return pacific.toISOString().split('T')[0];
-    }
 
     function initDateRange() {
       const today = getTodayPacific();
       dateFrom = today;
       dateTo = today;
-      document.getElementById('date-from').value = today;
-      document.getElementById('date-to').value = today;
     }
 
-    function setDateRangeToday() {
-      const today = getTodayPacific();
-      dateFrom = today;
-      dateTo = today;
-      document.getElementById('date-from').value = today;
-      document.getElementById('date-to').value = today;
-      document.getElementById('date-today').classList.add('active');
-      document.getElementById('date-week').classList.remove('active');
-      displayedCount = 10;
-      renderActivity();
-    }
-
-    function setDateRangeWeek() {
-      const today = getTodayPacific();
-      const weekStart = getWeekStartPacific();
-      dateFrom = weekStart;
-      dateTo = today;
-      document.getElementById('date-from').value = weekStart;
-      document.getElementById('date-to').value = today;
-      document.getElementById('date-today').classList.remove('active');
-      document.getElementById('date-week').classList.add('active');
-      displayedCount = 10;
-      renderActivity();
-    }
-
-    function onDateChange() {
-      dateFrom = document.getElementById('date-from').value;
-      dateTo = document.getElementById('date-to').value;
-      // Clear preset buttons
-      document.getElementById('date-today').classList.remove('active');
-      document.getElementById('date-week').classList.remove('active');
-      // Check if it matches today
-      const today = getTodayPacific();
-      if (dateFrom === today && dateTo === today) {
-        document.getElementById('date-today').classList.add('active');
-      }
+    // Called by the chart whenever visible range changes — syncs activity table
+    function syncActivityDateRange() {
+      if (typeof getChartVisibleRange !== 'function' || !usageChart || !usageChart.scales.x) return;
+      const { min, max } = getChartVisibleRange();
+      dateFrom = new Date(min).toISOString().split('T')[0];
+      dateTo = new Date(max).toISOString().split('T')[0];
       displayedCount = 10;
       renderActivity();
     }
@@ -601,12 +543,6 @@
       renderActivity();
     });
 
-    // Date range controls
-    document.getElementById('date-today').addEventListener('click', setDateRangeToday);
-    document.getElementById('date-week').addEventListener('click', setDateRangeWeek);
-    document.getElementById('date-from').addEventListener('change', onDateChange);
-    document.getElementById('date-to').addEventListener('change', onDateChange);
-
     function matchesDateRange(item) {
       if (!dateFrom || !dateTo) return true;
       const itemDate = item.created_at ? item.created_at.split('T')[0] : null;
@@ -744,6 +680,7 @@
     let chartMetric = 'cost';
     let chartMode = 'total';
     let chartSelectedAgents = new Set();
+    let lastClickedAgent = null; // last agent toggled on — renders on top
     let usageData = []; // raw bucketed data from API
     let usageChart = null;
     let chartDataMin = null; // earliest timestamp in loaded data
@@ -777,8 +714,19 @@
           scales: {
             x: {
               type: 'time',
-              time: { tooltipFormat: 'MMM d, h:mm a' },
-              ticks: { color: '#666', maxTicksLimit: 12, autoSkip: true },
+              time: {
+                tooltipFormat: 'EEE MMM d, h:mm a',
+                displayFormats: {
+                  minute: 'h:mm a',
+                  hour: 'h a',
+                  day: 'EEE MMM d',
+                },
+              },
+              ticks: {
+                color: '#666',
+                maxTicksLimit: 12,
+                autoSkip: true,
+              },
               grid: { color: '#222' },
             },
             y: {
@@ -813,6 +761,8 @@
     function onChartViewChanged() {
       activeZoomPreset = null;
       updateZoomButtons();
+      const { min, max } = getChartVisibleRange();
+      updateTimeUnit(min, max);
       syncDatetimeInputsFromChart();
       updateRangeSlider();
     }
@@ -822,9 +772,21 @@
       return { min: scale.min, max: scale.max };
     }
 
+    function updateTimeUnit(min, max) {
+      const span = max - min;
+      if (span <= DAY_MS * 1.5) {
+        usageChart.options.scales.x.time.unit = 'hour';
+      } else if (span <= WEEK_MS * 1.5) {
+        usageChart.options.scales.x.time.unit = 'day';
+      } else {
+        usageChart.options.scales.x.time.unit = 'day';
+      }
+    }
+
     function setChartVisibleRange(min, max, noAnimation) {
       usageChart.options.scales.x.min = min;
       usageChart.options.scales.x.max = max;
+      updateTimeUnit(min, max);
       usageChart.update(noAnimation ? 'none' : undefined);
       syncDatetimeInputsFromChart();
       updateRangeSlider();
@@ -834,6 +796,8 @@
       const { min, max } = getChartVisibleRange();
       document.getElementById('chart-from').value = toLocalInput(new Date(min));
       document.getElementById('chart-to').value = toLocalInput(new Date(max));
+      // Sync activity table date range
+      syncActivityDateRange();
     }
 
     function updateZoomButtons() {
@@ -887,7 +851,12 @@
           pointRadius: 2,
         });
       } else {
-        const showAgents = [...chartSelectedAgents];
+        // Put lastClickedAgent last so it renders on top
+        const showAgents = [...chartSelectedAgents].sort((a, b) => {
+          if (a === lastClickedAgent) return 1;
+          if (b === lastClickedAgent) return -1;
+          return 0;
+        });
         showAgents.forEach(agent => {
           datasets.push({
             label: agent.charAt(0).toUpperCase() + agent.slice(1),
@@ -957,6 +926,30 @@
       }
     }
 
+    // ========== Horizontal scroll to pan ==========
+    document.getElementById('usage-chart').addEventListener('wheel', (e) => {
+      // Handle horizontal scroll (wheel tilt / trackpad horizontal swipe)
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && e.deltaX !== 0) {
+        e.preventDefault();
+        const { min, max } = getChartVisibleRange();
+        const span = max - min;
+        const panAmount = span * 0.05 * Math.sign(e.deltaX);
+        setChartVisibleRange(min + panAmount, max + panAmount, true);
+        activeZoomPreset = null;
+        updateZoomButtons();
+      }
+      // Shift+wheel vertical also pans
+      if (e.shiftKey && Math.abs(e.deltaY) > 0) {
+        e.preventDefault();
+        const { min, max } = getChartVisibleRange();
+        const span = max - min;
+        const panAmount = span * 0.05 * Math.sign(e.deltaY);
+        setChartVisibleRange(min + panAmount, max + panAmount, true);
+        activeZoomPreset = null;
+        updateZoomButtons();
+      }
+    }, { passive: false });
+
     // ========== Range Slider ==========
     const rangeSlider = document.getElementById('range-slider');
     const rangeSelected = document.getElementById('range-selected');
@@ -964,6 +957,7 @@
     let sliderDragStartX = 0;
     let sliderDragStartLeft = 0;
     let sliderDragStartRight = 0;
+    let sliderDragStartWidth = 0;
 
     function getSliderWidth() { return rangeSlider.getBoundingClientRect().width; }
 
@@ -998,16 +992,16 @@
       const rect = rangeSlider.getBoundingClientRect();
       sliderDragStartX = e.clientX;
 
+      sliderDragStartLeft = parseFloat(rangeSelected.style.left) || 0;
+      sliderDragStartWidth = parseFloat(rangeSelected.style.width) || 10;
+      sliderDragStartRight = sliderDragStartLeft + sliderDragStartWidth;
+
       if (target.id === 'range-handle-left') {
         sliderDragging = 'left';
-        sliderDragStartLeft = parseFloat(rangeSelected.style.left) || 0;
       } else if (target.id === 'range-handle-right') {
         sliderDragging = 'right';
-        sliderDragStartLeft = parseFloat(rangeSelected.style.left) || 0;
-        sliderDragStartRight = sliderDragStartLeft + parseFloat(rangeSelected.style.width || 0);
       } else if (target.id === 'range-selected') {
         sliderDragging = 'middle';
-        sliderDragStartLeft = parseFloat(rangeSelected.style.left) || 0;
       } else {
         // Click on track — jump the window center there
         const clickPct = ((e.clientX - rect.left) / rect.width) * 100;
@@ -1029,34 +1023,35 @@
       if (!sliderDragging) return;
       const rect = rangeSlider.getBoundingClientRect();
       const dx = ((e.clientX - sliderDragStartX) / rect.width) * 100;
-      const widthPct = parseFloat(rangeSelected.style.width) || 10;
 
       if (sliderDragging === 'left') {
-        let newLeft = Math.max(0, Math.min(sliderDragStartLeft + widthPct - 1, sliderDragStartLeft + dx));
-        let newWidth = (sliderDragStartLeft + widthPct) - newLeft;
+        // Move left edge, right edge stays fixed at sliderDragStartRight
+        let newLeft = Math.max(0, Math.min(sliderDragStartRight - 1, sliderDragStartLeft + dx));
+        let newWidth = sliderDragStartRight - newLeft;
         rangeSelected.style.left = newLeft + '%';
         rangeSelected.style.width = newWidth + '%';
         const newMin = sliderPctToTime(newLeft / 100);
-        const max = sliderPctToTime((newLeft + newWidth) / 100);
+        const fixedMax = sliderPctToTime(sliderDragStartRight / 100);
         usageChart.options.scales.x.min = newMin;
-        usageChart.options.scales.x.max = max;
+        usageChart.options.scales.x.max = fixedMax;
         usageChart.update('none');
         syncDatetimeInputsFromChart();
       } else if (sliderDragging === 'right') {
+        // Move right edge, left edge stays fixed at sliderDragStartLeft
         let newRight = Math.min(100, Math.max(sliderDragStartLeft + 1, sliderDragStartRight + dx));
         let newWidth = newRight - sliderDragStartLeft;
         rangeSelected.style.width = newWidth + '%';
-        const min = sliderPctToTime(sliderDragStartLeft / 100);
+        const fixedMin = sliderPctToTime(sliderDragStartLeft / 100);
         const newMax = sliderPctToTime(newRight / 100);
-        usageChart.options.scales.x.min = min;
+        usageChart.options.scales.x.min = fixedMin;
         usageChart.options.scales.x.max = newMax;
         usageChart.update('none');
         syncDatetimeInputsFromChart();
       } else if (sliderDragging === 'middle') {
-        let newLeft = Math.max(0, Math.min(100 - widthPct, sliderDragStartLeft + dx));
+        let newLeft = Math.max(0, Math.min(100 - sliderDragStartWidth, sliderDragStartLeft + dx));
         rangeSelected.style.left = newLeft + '%';
         const newMin = sliderPctToTime(newLeft / 100);
-        const newMax = sliderPctToTime((newLeft + widthPct) / 100);
+        const newMax = sliderPctToTime((newLeft + sliderDragStartWidth) / 100);
         usageChart.options.scales.x.min = newMin;
         usageChart.options.scales.x.max = newMax;
         usageChart.update('none');
@@ -1101,6 +1096,7 @@
         renderChart();
       } else if (action === 'all') {
         chartMode = 'individual';
+        lastClickedAgent = null;
         agentKeys.forEach(a => chartSelectedAgents.add(a));
         document.querySelectorAll('[data-chart-action]').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
@@ -1118,9 +1114,11 @@
         if (chartSelectedAgents.has(agent)) {
           chartSelectedAgents.delete(agent);
           btn.classList.remove('active');
+          if (lastClickedAgent === agent) lastClickedAgent = null;
         } else {
           chartSelectedAgents.add(agent);
           btn.classList.add('active');
+          lastClickedAgent = agent;
         }
         document.querySelectorAll('[data-chart-action]').forEach(b => b.classList.remove('active'));
         if (chartSelectedAgents.size === agentKeys.length) {
