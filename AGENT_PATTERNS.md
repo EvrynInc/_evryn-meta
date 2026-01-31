@@ -254,4 +254,36 @@ Keep validation in the execution layer (where the write happens), not as a separ
 
 ---
 
+## Multi-Agent Orchestration (Production Patterns)
+
+*Source: Anthropic's internal multi-agent research system (2026-01-30).*
+
+### Effort Scaling — Match Agent Count to Task Complexity
+Don't use the same agent topology for every task. Embed explicit rules:
+- Simple queries: 1 agent, 3-10 tool calls
+- Direct comparisons: 2-4 subagents, 10-15 calls each
+- Complex research: 10+ subagents with divided responsibilities
+
+This prevents over-engineering simple tasks and under-resourcing complex ones. For us: a simple email reply doesn't need the full 8-agent briefing cascade.
+
+### Detailed Task Delegation Prevents Gaps
+When a lead agent spawns workers, it must provide: an objective, output format, tool/source guidance, and clear task boundaries. Vague delegation causes duplicated work and coverage gaps. The lead agent should think of itself as writing a brief, not just dispatching.
+
+### Breadth-First Search, Then Narrow
+Agents should start with short, broad queries, evaluate what's available, then progressively narrow focus. Overly specific initial searches miss relevant information. This applies to any agent doing research, investigation, or information gathering.
+
+### Agent Self-Improvement
+Agents that can diagnose their own failures and suggest prompt/tool improvements create compounding returns. One agent rewrote MCP tool descriptions → 40% decrease in task completion time for future agents. The pattern: give agents visibility into their own performance metrics and the ability to propose changes (with human approval).
+
+### Parallel Fan-Out Over Sequential Drain
+Spawning 3-5 subagents in parallel reduces wall-clock time by up to 90% vs sequential execution. The trade-off is coordination complexity and harder debugging. Worth it for latency-sensitive workflows (briefings). Less important for background tasks where total time doesn't matter.
+
+### Stateful Error Compounding
+Agents maintaining state across many tool calls over extended periods will see minor failures cascade into catastrophic behavioral changes. Build resumption capabilities rather than full restarts. Leverage model intelligence to adapt when tools fail rather than hard-failing the entire workflow.
+
+### End-State Evaluation Over Step Evaluation
+For agents mutating state across many turns, evaluate final outcomes rather than intermediate steps. Agents may find alternative paths to the same goal. This is especially true for self-modifying systems (notes, memory, config) — check that the end state is structurally sound, not that every intermediate step was "correct."
+
+---
+
 *Add patterns as they emerge from building evryn-team-agents and other agent work.*

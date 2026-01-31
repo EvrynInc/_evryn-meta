@@ -124,15 +124,18 @@ Full system overview: `SYSTEM_OVERVIEW.md` (this repo)
 ## Current System State
 
 **Agent infrastructure** (in `evryn-team-agents`):
-- **LangGraph orchestration layer is LIVE.** 5-node graph (intake → router → agent → output), 3 triggers (email, scheduler, tasks). `npm start` runs `graph-index.ts`. Old entry point preserved at `src/index.ts`.
-- **Phase 1 (Orchestration + Execution) is COMPLETE.** invoke_agent timing bug fixed. 34 unit test assertions passing.
-- Email trigger tested live and working. Scheduler trigger patched (3 bugs: runaway invoke_agent loop, double trigger, Haiku 404). DC ready to re-test scheduler and task triggers.
-- invoke_agent has depth=1 stopgap — child agents can't invoke further agents. Briefing workflow redesign (pre-reflection, cross-agent consultation, call budget) is future work, to be specced separately.
-- **Notes integrity fixed.** Structural validation guard in `updateAgentNotes()` auto-appends instead of overwriting when content is <50% length or missing >50% headers. Response format now warns agents that `notes_content` replaces the entire file.
+- **Phase 1 (Orchestration + Execution) is COMPLETE and VERIFIED.** LangGraph 5-node graph (intake → router → agent → output), 3 triggers (email, scheduler, tasks), all tested E2E. 10 live tests, briefing flow fully working. `npm start` runs `graph-index.ts`.
+- **Briefing flow verified:** Scheduler → Thea → 7 child agents → parent re-run → compiled email sent to Justin. All 3 triggers working.
+- invoke_agent timing bug resolved via LangGraph. depth=1 guardrail active.
+- **Model-agnostic JSON parser** — system works with any Claude model tier (Haiku, Sonnet, Opus).
+- **Rate limit retry with backoff** — handles 429 errors during burst patterns (briefings).
+- **Task lifecycle managed by trigger** — prevents infinite re-triggering (Decision 050). Live verification pending.
+- Notes integrity guard built. Prompt caching built. Budget tracking active.
 - Running locally on Justin's desktop. No cloud deployment yet.
-- Prompt caching built. Cost calc doesn't reflect cache savings yet (EVR-35).
-- Agents don't self-wake.
 - **DC architecture notes pipeline established.** DC appends to `docs/dc-architecture-notes.md`; AC drains into ARCHITECTURE.md.
+- **Test overrides active:** Haiku defaults, test scheduler times, $10 halt threshold.
+
+**Next phase: Claude Agent SDK integration.** Replace the custom `runAgent` execution loop with SDK `query()`. LangGraph stays for orchestration. Research updated 2026-01-30 — see `evryn-team-agents/docs/research/claude-agent-sdk.md` and `docs/research/orchestration-frameworks.md`. Anthropic multi-agent article validates our hybrid architecture.
 
 **For full architectural detail:** Read `evryn-team-agents/docs/ARCHITECTURE.md` — AC owns and maintains that doc. It has component inventory, build phases, state schema, and known issues.
 
