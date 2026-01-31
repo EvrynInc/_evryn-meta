@@ -49,7 +49,7 @@ export default async function handler(request: Request) {
 
   try {
     const url = new URL(request.url);
-    const granularity = url.searchParams.get('granularity') || 'hour';
+    const granularity = url.searchParams.get('granularity') || 'minute';
     const from = url.searchParams.get('from');
     const to = url.searchParams.get('to');
 
@@ -60,16 +60,19 @@ export default async function handler(request: Request) {
       });
     }
 
+    // Support both date strings (YYYY-MM-DD) and full ISO timestamps
+    const fromTs = from.includes('T') ? from : from + 'T00:00:00Z';
+    const toTs = to.includes('T') ? to : to + 'T23:59:59Z';
+
     // Fetch all API calls in the date range (max 10000 rows)
-    let query = supabase
+    const { data, error } = await supabase
       .from('agent_api_calls')
       .select('agent_name, input_tokens, output_tokens, cost_usd, created_at')
-      .gte('created_at', from + 'T00:00:00Z')
-      .lte('created_at', to + 'T23:59:59Z')
+      .gte('created_at', fromTs)
+      .lte('created_at', toTs)
       .order('created_at', { ascending: true })
       .limit(10000);
 
-    const { data, error } = await query;
     if (error) throw error;
 
     // Bucket the data
@@ -90,7 +93,7 @@ export default async function handler(request: Request) {
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([bucket, agents]) => ({ bucket, agents }));
 
-    return new Response(JSON.stringify({ granularity, from, to, data: result }), {
+    return new Response(JSON.stringify({ granularity, from: fromTs, to: toTs, data: result }), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {

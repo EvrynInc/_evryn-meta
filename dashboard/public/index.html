@@ -151,12 +151,12 @@
     .month-total { margin-top: 8px; padding-top: 8px; border-top: 1px solid #333; font-weight: 600; }
 
     /* Usage Chart */
+    .chart-section { margin-bottom: 16px; }
     .chart-container {
       background: #1a1a1a;
       border: 1px solid #333;
       border-radius: 6px;
       padding: 12px;
-      margin-bottom: 16px;
       height: 300px;
       min-height: 150px;
       max-height: 800px;
@@ -168,6 +168,53 @@
     .chart-controls .separator { color: #333; margin: 0 4px; }
     .chart-agent-btn { min-width: unset; }
     .chart-agent-btn.active { color: #fff; }
+    .chart-datetime-input {
+      padding: 4px 8px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 0.75rem;
+    }
+    .chart-datetime-input::-webkit-calendar-picker-indicator { filter: invert(1); }
+
+    /* Range Slider */
+    .range-slider-container {
+      position: relative;
+      height: 32px;
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 4px;
+      margin-top: 6px;
+      margin-bottom: 12px;
+      user-select: none;
+      cursor: default;
+    }
+    .range-slider-track {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+    }
+    .range-slider-selected {
+      position: absolute;
+      top: 0; bottom: 0;
+      background: rgba(96, 165, 250, 0.15);
+      border-left: 2px solid #60a5fa;
+      border-right: 2px solid #60a5fa;
+      cursor: grab;
+    }
+    .range-slider-selected:active { cursor: grabbing; }
+    .range-slider-handle {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 8px;
+      background: #60a5fa;
+      border-radius: 2px;
+      cursor: ew-resize;
+      z-index: 2;
+    }
+    .range-slider-handle:hover { background: #93c5fd; }
+    .range-slider-handle.left { left: -4px; }
+    .range-slider-handle.right { right: -4px; }
 
     /* Misc */
     .truncate { cursor: help; }
@@ -178,6 +225,8 @@
     .timestamp { color: #666; font-size: 0.75rem; margin-bottom: 16px; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
 </head>
 <body>
   <!-- Login Overlay -->
@@ -219,31 +268,44 @@
     </div>
 
     <h2>Usage Over Time</h2>
-    <div class="chart-controls" id="chart-controls">
-      <span class="filters-label">Metric:</span>
-      <button class="filter-btn active" data-metric="cost">Cost</button>
-      <button class="filter-btn" data-metric="tokens">Tokens</button>
-      <span class="separator">|</span>
-      <span class="filters-label">Per:</span>
-      <button class="filter-btn" data-gran="minute">Minute</button>
-      <button class="filter-btn active" data-gran="hour">Hour</button>
-      <button class="filter-btn" data-gran="day">Day</button>
-      <span class="separator">|</span>
-      <button class="filter-btn active" data-chart-action="total">Total</button>
-      <button class="filter-btn" data-chart-action="all">All</button>
-      <button class="filter-btn" data-chart-action="none">None</button>
-      <span class="separator">|</span>
-      <button class="filter-btn chart-agent-btn" data-chart-agent="thea" style="border-color:#22c55e;">Thea</button>
-      <button class="filter-btn chart-agent-btn" data-chart-agent="lucas" style="border-color:#60a5fa;">Lucas</button>
-      <button class="filter-btn chart-agent-btn" data-chart-agent="alex" style="border-color:#a855f7;">Alex</button>
-      <button class="filter-btn chart-agent-btn" data-chart-agent="taylor" style="border-color:#eab308;">Taylor</button>
-      <button class="filter-btn chart-agent-btn" data-chart-agent="dana" style="border-color:#f97316;">Dana</button>
-      <button class="filter-btn chart-agent-btn" data-chart-agent="jordan" style="border-color:#ec4899;">Jordan</button>
-      <button class="filter-btn chart-agent-btn" data-chart-agent="dominic" style="border-color:#2dd4bf;">Dominic</button>
-      <button class="filter-btn chart-agent-btn" data-chart-agent="nathan" style="border-color:#f43f5e;">Nathan</button>
-    </div>
-    <div class="chart-container">
-      <canvas id="usage-chart"></canvas>
+    <div class="chart-section">
+      <div class="chart-controls" id="chart-controls">
+        <span class="filters-label">Metric:</span>
+        <button class="filter-btn active" data-metric="cost">Cost</button>
+        <button class="filter-btn" data-metric="tokens">Tokens</button>
+        <span class="separator">|</span>
+        <span class="filters-label">Zoom:</span>
+        <button class="filter-btn active" data-zoom="day">Day</button>
+        <button class="filter-btn" data-zoom="week">Week</button>
+        <button class="filter-btn" data-zoom="now">Now</button>
+        <span class="separator">|</span>
+        <input type="datetime-local" class="chart-datetime-input" id="chart-from" step="60">
+        <span style="color:#666;">to</span>
+        <input type="datetime-local" class="chart-datetime-input" id="chart-to" step="60">
+        <span class="separator">|</span>
+        <button class="filter-btn active" data-chart-action="total">Total</button>
+        <button class="filter-btn" data-chart-action="all">All</button>
+        <button class="filter-btn" data-chart-action="none">None</button>
+        <span class="separator">|</span>
+        <button class="filter-btn chart-agent-btn" data-chart-agent="thea" style="border-color:#22c55e;">Thea</button>
+        <button class="filter-btn chart-agent-btn" data-chart-agent="lucas" style="border-color:#60a5fa;">Lucas</button>
+        <button class="filter-btn chart-agent-btn" data-chart-agent="alex" style="border-color:#a855f7;">Alex</button>
+        <button class="filter-btn chart-agent-btn" data-chart-agent="taylor" style="border-color:#eab308;">Taylor</button>
+        <button class="filter-btn chart-agent-btn" data-chart-agent="dana" style="border-color:#f97316;">Dana</button>
+        <button class="filter-btn chart-agent-btn" data-chart-agent="jordan" style="border-color:#ec4899;">Jordan</button>
+        <button class="filter-btn chart-agent-btn" data-chart-agent="dominic" style="border-color:#2dd4bf;">Dominic</button>
+        <button class="filter-btn chart-agent-btn" data-chart-agent="nathan" style="border-color:#f43f5e;">Nathan</button>
+      </div>
+      <div class="chart-container">
+        <canvas id="usage-chart"></canvas>
+      </div>
+      <div class="range-slider-container" id="range-slider">
+        <div class="range-slider-track" id="range-track"></div>
+        <div class="range-slider-selected" id="range-selected">
+          <div class="range-slider-handle left" id="range-handle-left"></div>
+          <div class="range-slider-handle right" id="range-handle-right"></div>
+        </div>
+      </div>
     </div>
 
     <h2>Activity</h2>
@@ -333,7 +395,6 @@
       document.getElementById('date-week').classList.remove('active');
       displayedCount = 10;
       renderActivity();
-      if (typeof loadUsageData === 'function') loadUsageData();
     }
 
     function setDateRangeWeek() {
@@ -347,7 +408,6 @@
       document.getElementById('date-week').classList.add('active');
       displayedCount = 10;
       renderActivity();
-      if (typeof loadUsageData === 'function') loadUsageData();
     }
 
     function onDateChange() {
@@ -363,7 +423,6 @@
       }
       displayedCount = 10;
       renderActivity();
-      if (typeof loadUsageData === 'function') loadUsageData();
     }
 
     function toggleMonthSpend() {
@@ -683,42 +742,135 @@
     };
     const agentKeys = Object.keys(agentColors);
     let chartMetric = 'cost';
-    let chartGranularity = 'hour';
-    let chartMode = 'total'; // 'total', 'individual'
+    let chartMode = 'total';
     let chartSelectedAgents = new Set();
-    let usageData = [];
+    let usageData = []; // raw bucketed data from API
     let usageChart = null;
+    let chartDataMin = null; // earliest timestamp in loaded data
+    let chartDataMax = null; // latest timestamp in loaded data
+    let activeZoomPreset = 'day'; // 'day', 'week', or null if manually adjusted
+
+    const DAY_MS = 24 * 60 * 60 * 1000;
+    const WEEK_MS = 7 * DAY_MS;
+
+    // Get "now" in Pacific time as a Date
+    function nowPacific() {
+      return new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+    }
+
+    // Format a Date to datetime-local input value (YYYY-MM-DDTHH:MM)
+    function toLocalInput(d) {
+      const pad = n => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
 
     function initChart() {
       const ctx = document.getElementById('usage-chart').getContext('2d');
       usageChart = new Chart(ctx, {
         type: 'line',
-        data: { labels: [], datasets: [] },
+        data: { datasets: [] },
         options: {
           responsive: true,
           maintainAspectRatio: false,
+          animation: { duration: 200 },
           interaction: { mode: 'index', intersect: false },
           scales: {
-            x: { ticks: { color: '#666', maxTicksLimit: 20 }, grid: { color: '#222' } },
-            y: { ticks: { color: '#666' }, grid: { color: '#222' }, beginAtZero: true }
+            x: {
+              type: 'time',
+              time: { tooltipFormat: 'MMM d, h:mm a' },
+              ticks: { color: '#666', maxTicksLimit: 12, autoSkip: true },
+              grid: { color: '#222' },
+            },
+            y: {
+              ticks: { color: '#666' },
+              grid: { color: '#222' },
+              beginAtZero: true,
+            }
           },
-          plugins: { legend: { display: true, labels: { color: '#888', boxWidth: 12 } } }
-        }
+          plugins: {
+            legend: { display: true, labels: { color: '#888', boxWidth: 12 } },
+            zoom: {
+              pan: {
+                enabled: true,
+                mode: 'x',
+                onPanComplete: () => onChartViewChanged(),
+              },
+              zoom: {
+                wheel: {
+                  enabled: true,
+                  modifierKey: null,
+                },
+                mode: 'x',
+                onZoomComplete: () => onChartViewChanged(),
+              },
+            },
+          },
+        },
       });
     }
 
-    function formatBucketLabel(bucket, gran) {
-      const d = new Date(bucket);
-      if (gran === 'day') return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      if (gran === 'hour') return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-      return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    // Called after zoom/pan from plugin — sync UI
+    function onChartViewChanged() {
+      activeZoomPreset = null;
+      updateZoomButtons();
+      syncDatetimeInputsFromChart();
+      updateRangeSlider();
     }
 
-    function renderChart() {
-      if (!usageChart || usageData.length === 0) return;
-      const labels = usageData.map(d => formatBucketLabel(d.bucket, chartGranularity));
+    function getChartVisibleRange() {
+      const scale = usageChart.scales.x;
+      return { min: scale.min, max: scale.max };
+    }
+
+    function setChartVisibleRange(min, max, noAnimation) {
+      usageChart.options.scales.x.min = min;
+      usageChart.options.scales.x.max = max;
+      usageChart.update(noAnimation ? 'none' : undefined);
+      syncDatetimeInputsFromChart();
+      updateRangeSlider();
+    }
+
+    function syncDatetimeInputsFromChart() {
+      const { min, max } = getChartVisibleRange();
+      document.getElementById('chart-from').value = toLocalInput(new Date(min));
+      document.getElementById('chart-to').value = toLocalInput(new Date(max));
+    }
+
+    function updateZoomButtons() {
+      document.querySelectorAll('[data-zoom]').forEach(b => {
+        if (b.dataset.zoom === 'now') return; // Now is never "active" state
+        b.classList.toggle('active', b.dataset.zoom === activeZoomPreset);
+      });
+    }
+
+    function applyZoomPreset(preset) {
+      const now = nowPacific().getTime();
+      let min, max;
+      if (preset === 'day') {
+        max = now + DAY_MS * 0.02; // small padding right
+        min = max - DAY_MS;
+      } else if (preset === 'week') {
+        max = now + DAY_MS * 0.1;
+        min = max - WEEK_MS;
+      }
+      activeZoomPreset = preset;
+      updateZoomButtons();
+      usageChart.resetZoom();
+      setChartVisibleRange(min, max);
+    }
+
+    function jumpToNow() {
+      const { min, max } = getChartVisibleRange();
+      const span = max - min;
+      const now = nowPacific().getTime();
+      const newMax = now + span * 0.02;
+      const newMin = newMax - span;
+      setChartVisibleRange(newMin, newMax);
+    }
+
+    function buildChartDatasets() {
       const datasets = [];
-      const metric = chartMetric === 'cost' ? 'cost' : 'tokens';
+      const metric = chartMetric;
 
       if (chartMode === 'total') {
         datasets.push({
@@ -726,7 +878,7 @@
           data: usageData.map(d => {
             let sum = 0;
             Object.values(d.agents).forEach(a => { sum += a[metric]; });
-            return metric === 'cost' ? parseFloat(sum.toFixed(4)) : sum;
+            return { x: new Date(d.bucket).getTime(), y: metric === 'cost' ? parseFloat(sum.toFixed(4)) : sum };
           }),
           borderColor: '#60a5fa',
           backgroundColor: 'rgba(96,165,250,0.1)',
@@ -735,15 +887,14 @@
           pointRadius: 2,
         });
       } else {
-        // Individual agent lines
-        const showAgents = chartSelectedAgents.size > 0 ? [...chartSelectedAgents] : [];
+        const showAgents = [...chartSelectedAgents];
         showAgents.forEach(agent => {
           datasets.push({
             label: agent.charAt(0).toUpperCase() + agent.slice(1),
             data: usageData.map(d => {
               const a = d.agents[agent];
-              if (!a) return 0;
-              return metric === 'cost' ? parseFloat(a[metric].toFixed(4)) : a[metric];
+              const val = a ? a[metric] : 0;
+              return { x: new Date(d.bucket).getTime(), y: metric === 'cost' ? parseFloat(val.toFixed(4)) : val };
             }),
             borderColor: agentColors[agent],
             backgroundColor: 'transparent',
@@ -752,37 +903,184 @@
           });
         });
       }
+      return datasets;
+    }
 
-      usageChart.data.labels = labels;
-      usageChart.data.datasets = datasets;
-      usageChart.options.scales.y.title = { display: true, text: metric === 'cost' ? 'USD' : 'Tokens', color: '#666' };
-      usageChart.update();
+    function renderChart() {
+      if (!usageChart) return;
+      const { min, max } = usageChart.scales.x ? getChartVisibleRange() : { min: null, max: null };
+      usageChart.data.datasets = buildChartDatasets();
+      usageChart.options.scales.y.title = { display: true, text: chartMetric === 'cost' ? 'USD' : 'Tokens', color: '#666' };
+      // Preserve current view if we have one
+      if (min && max) {
+        usageChart.options.scales.x.min = min;
+        usageChart.options.scales.x.max = max;
+      }
+      usageChart.update('none');
+      syncDatetimeInputsFromChart();
+      updateRangeSlider();
     }
 
     async function loadUsageData() {
       if (!authHeader) return;
       try {
-        const from = dateFrom || getTodayPacific();
-        const to = dateTo || getTodayPacific();
-        const res = await fetch(`/api/usage?granularity=${chartGranularity}&from=${from}&to=${to}`, {
+        // Always fetch last 30 days of minute-level data for smooth zooming
+        const now = nowPacific();
+        const from = new Date(now.getTime() - 30 * DAY_MS);
+        const fromStr = from.toISOString();
+        const toStr = new Date(now.getTime() + DAY_MS).toISOString();
+        const res = await fetch(`/api/usage?granularity=minute&from=${fromStr}&to=${toStr}`, {
           headers: { 'Authorization': authHeader }
         });
         if (!res.ok) return;
         const json = await res.json();
         usageData = json.data || [];
-        renderChart();
+        if (usageData.length > 0) {
+          chartDataMin = new Date(usageData[0].bucket).getTime();
+          chartDataMax = new Date(usageData[usageData.length - 1].bucket).getTime();
+        } else {
+          chartDataMin = from.getTime();
+          chartDataMax = now.getTime();
+        }
+        // Build datasets and apply current zoom
+        usageChart.data.datasets = buildChartDatasets();
+        usageChart.options.scales.y.title = { display: true, text: chartMetric === 'cost' ? 'USD' : 'Tokens', color: '#666' };
+        if (activeZoomPreset) {
+          applyZoomPreset(activeZoomPreset);
+        } else {
+          usageChart.update('none');
+          syncDatetimeInputsFromChart();
+          updateRangeSlider();
+        }
       } catch (e) {
         console.error('Usage chart error:', e);
       }
     }
 
-    // Chart controls
+    // ========== Range Slider ==========
+    const rangeSlider = document.getElementById('range-slider');
+    const rangeSelected = document.getElementById('range-selected');
+    let sliderDragging = null; // 'left', 'right', 'middle'
+    let sliderDragStartX = 0;
+    let sliderDragStartLeft = 0;
+    let sliderDragStartRight = 0;
+
+    function getSliderWidth() { return rangeSlider.getBoundingClientRect().width; }
+
+    function timeToSliderPct(t) {
+      if (!chartDataMin || !chartDataMax || chartDataMax === chartDataMin) return 0;
+      // Use a 30-day window for the slider
+      const now = nowPacific().getTime();
+      const sliderMin = now - 30 * DAY_MS;
+      const sliderMax = now + DAY_MS;
+      return Math.max(0, Math.min(1, (t - sliderMin) / (sliderMax - sliderMin)));
+    }
+
+    function sliderPctToTime(pct) {
+      const now = nowPacific().getTime();
+      const sliderMin = now - 30 * DAY_MS;
+      const sliderMax = now + DAY_MS;
+      return sliderMin + pct * (sliderMax - sliderMin);
+    }
+
+    function updateRangeSlider() {
+      if (!usageChart || !usageChart.scales.x) return;
+      const { min, max } = getChartVisibleRange();
+      const leftPct = timeToSliderPct(min) * 100;
+      const rightPct = timeToSliderPct(max) * 100;
+      rangeSelected.style.left = leftPct + '%';
+      rangeSelected.style.width = Math.max(0.5, rightPct - leftPct) + '%';
+    }
+
+    function onSliderMouseDown(e) {
+      e.preventDefault();
+      const target = e.target;
+      const rect = rangeSlider.getBoundingClientRect();
+      sliderDragStartX = e.clientX;
+
+      if (target.id === 'range-handle-left') {
+        sliderDragging = 'left';
+        sliderDragStartLeft = parseFloat(rangeSelected.style.left) || 0;
+      } else if (target.id === 'range-handle-right') {
+        sliderDragging = 'right';
+        sliderDragStartLeft = parseFloat(rangeSelected.style.left) || 0;
+        sliderDragStartRight = sliderDragStartLeft + parseFloat(rangeSelected.style.width || 0);
+      } else if (target.id === 'range-selected') {
+        sliderDragging = 'middle';
+        sliderDragStartLeft = parseFloat(rangeSelected.style.left) || 0;
+      } else {
+        // Click on track — jump the window center there
+        const clickPct = ((e.clientX - rect.left) / rect.width) * 100;
+        const widthPct = parseFloat(rangeSelected.style.width) || 10;
+        let newLeft = clickPct - widthPct / 2;
+        newLeft = Math.max(0, Math.min(100 - widthPct, newLeft));
+        const newMin = sliderPctToTime(newLeft / 100);
+        const newMax = sliderPctToTime((newLeft + widthPct) / 100);
+        activeZoomPreset = null;
+        updateZoomButtons();
+        setChartVisibleRange(newMin, newMax);
+        return;
+      }
+      document.addEventListener('mousemove', onSliderMouseMove);
+      document.addEventListener('mouseup', onSliderMouseUp);
+    }
+
+    function onSliderMouseMove(e) {
+      if (!sliderDragging) return;
+      const rect = rangeSlider.getBoundingClientRect();
+      const dx = ((e.clientX - sliderDragStartX) / rect.width) * 100;
+      const widthPct = parseFloat(rangeSelected.style.width) || 10;
+
+      if (sliderDragging === 'left') {
+        let newLeft = Math.max(0, Math.min(sliderDragStartLeft + widthPct - 1, sliderDragStartLeft + dx));
+        let newWidth = (sliderDragStartLeft + widthPct) - newLeft;
+        rangeSelected.style.left = newLeft + '%';
+        rangeSelected.style.width = newWidth + '%';
+        const newMin = sliderPctToTime(newLeft / 100);
+        const max = sliderPctToTime((newLeft + newWidth) / 100);
+        usageChart.options.scales.x.min = newMin;
+        usageChart.options.scales.x.max = max;
+        usageChart.update('none');
+        syncDatetimeInputsFromChart();
+      } else if (sliderDragging === 'right') {
+        let newRight = Math.min(100, Math.max(sliderDragStartLeft + 1, sliderDragStartRight + dx));
+        let newWidth = newRight - sliderDragStartLeft;
+        rangeSelected.style.width = newWidth + '%';
+        const min = sliderPctToTime(sliderDragStartLeft / 100);
+        const newMax = sliderPctToTime(newRight / 100);
+        usageChart.options.scales.x.min = min;
+        usageChart.options.scales.x.max = newMax;
+        usageChart.update('none');
+        syncDatetimeInputsFromChart();
+      } else if (sliderDragging === 'middle') {
+        let newLeft = Math.max(0, Math.min(100 - widthPct, sliderDragStartLeft + dx));
+        rangeSelected.style.left = newLeft + '%';
+        const newMin = sliderPctToTime(newLeft / 100);
+        const newMax = sliderPctToTime((newLeft + widthPct) / 100);
+        usageChart.options.scales.x.min = newMin;
+        usageChart.options.scales.x.max = newMax;
+        usageChart.update('none');
+        syncDatetimeInputsFromChart();
+      }
+      activeZoomPreset = null;
+      updateZoomButtons();
+    }
+
+    function onSliderMouseUp() {
+      sliderDragging = null;
+      document.removeEventListener('mousemove', onSliderMouseMove);
+      document.removeEventListener('mouseup', onSliderMouseUp);
+    }
+
+    rangeSlider.addEventListener('mousedown', onSliderMouseDown);
+
+    // ========== Chart Controls ==========
     document.getElementById('chart-controls').addEventListener('click', (e) => {
       const btn = e.target.closest('.filter-btn');
       if (!btn) return;
 
       const metric = btn.dataset.metric;
-      const gran = btn.dataset.gran;
+      const zoom = btn.dataset.zoom;
       const action = btn.dataset.chartAction;
       const agent = btn.dataset.chartAgent;
 
@@ -790,10 +1088,10 @@
         chartMetric = metric;
         document.querySelectorAll('[data-metric]').forEach(b => b.classList.toggle('active', b.dataset.metric === metric));
         renderChart();
-      } else if (gran) {
-        chartGranularity = gran;
-        document.querySelectorAll('[data-gran]').forEach(b => b.classList.toggle('active', b.dataset.gran === gran));
-        loadUsageData();
+      } else if (zoom === 'day' || zoom === 'week') {
+        applyZoomPreset(zoom);
+      } else if (zoom === 'now') {
+        jumpToNow();
       } else if (action === 'total') {
         chartMode = 'total';
         chartSelectedAgents.clear();
@@ -824,7 +1122,6 @@
           chartSelectedAgents.add(agent);
           btn.classList.add('active');
         }
-        // Update action buttons
         document.querySelectorAll('[data-chart-action]').forEach(b => b.classList.remove('active'));
         if (chartSelectedAgents.size === agentKeys.length) {
           document.querySelector('[data-chart-action="all"]').classList.add('active');
@@ -832,6 +1129,26 @@
           document.querySelector('[data-chart-action="none"]').classList.add('active');
         }
         renderChart();
+      }
+    });
+
+    // Datetime picker changes → update chart view
+    document.getElementById('chart-from').addEventListener('change', (e) => {
+      const min = new Date(e.target.value).getTime();
+      const { max } = getChartVisibleRange();
+      if (min < max) {
+        activeZoomPreset = null;
+        updateZoomButtons();
+        setChartVisibleRange(min, max);
+      }
+    });
+    document.getElementById('chart-to').addEventListener('change', (e) => {
+      const max = new Date(e.target.value).getTime();
+      const { min } = getChartVisibleRange();
+      if (max > min) {
+        activeZoomPreset = null;
+        updateZoomButtons();
+        setChartVisibleRange(min, max);
       }
     });
 
