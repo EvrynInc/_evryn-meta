@@ -100,13 +100,13 @@ Full system overview: `SYSTEM_OVERVIEW.md` (this repo)
 | Agent | Role |
 |-------|------|
 | Thea Mercer | Executive Assistant |
-| Lucas Everhart | CEO-in-Training |
+| Lucas Everhart | Vice Executive Officer |
 | Alex Carter | CTO (you) |
 | Taylor Cheng | COO/CFO |
 | Dana Reynolds | CPO |
 | Dominic Wolfe | Strategic Advisor |
 | Jordan Malik | CGO |
-| Nathan Rhodes | General Counsel |
+| Nathan Rhodes | Internal Counsel |
 
 ---
 
@@ -124,18 +124,19 @@ Full system overview: `SYSTEM_OVERVIEW.md` (this repo)
 ## Current System State
 
 **Agent infrastructure** (in `evryn-team-agents`):
-- **Phase 1 (Orchestration + Execution) is COMPLETE and VERIFIED.** LangGraph 5-node graph (intake → router → agent → output), 3 triggers (email, scheduler, tasks), all tested E2E. 10 live tests, briefing flow fully working. `npm start` runs `graph-index.ts`.
-- **Briefing flow verified:** Scheduler → Thea → 7 child agents → parent re-run → compiled email sent to Justin. All 3 triggers working.
+- **Phase 1 (Orchestration + Execution) is COMPLETE and VERIFIED.** LangGraph 5-node graph, 3 triggers (email, scheduler, tasks), all tested E2E. Briefing flow fully working.
+- **All trigger infrastructure verified and resilient:** Address-based email routing (6 test cases, Decision 051), PID lockfile singleton guard (Decision 052), scheduler triggers, process crash resilience (global rejection handler + trigger-level `.catch()`).
+- **Pacific timezone in agent prompts** — agents use authoritative Pacific time for notes timestamps (Decision 053).
 - invoke_agent timing bug resolved via LangGraph. depth=1 guardrail active.
-- **Model-agnostic JSON parser** — system works with any Claude model tier (Haiku, Sonnet, Opus).
-- **Rate limit retry with backoff** — handles 429 errors during burst patterns (briefings).
-- **Task lifecycle managed by trigger** — prevents infinite re-triggering (Decision 050). Live verification pending.
-- Notes integrity guard built. Prompt caching built. Budget tracking active.
+- Model-agnostic JSON parser, rate limit retry with backoff, notes integrity guard, prompt caching, budget tracking — all built and working.
+- Task lifecycle managed by trigger (Decision 050) — live verification still pending.
 - Running locally on Justin's desktop. No cloud deployment yet.
-- **DC architecture notes pipeline established.** DC appends to `docs/dc-architecture-notes.md`; AC drains into ARCHITECTURE.md.
-- **Test overrides active:** Haiku defaults, test scheduler times, $10 halt threshold.
+- DC architecture notes pipeline established and current (last drain: 2026-01-31T18:15:00-08:00).
+- **Test overrides active:** Haiku defaults, test scheduler times, $5 halt threshold, debug logging in email trigger.
+- **Agent notes bloated** — 5 files need cleanup with Justin's review.
+- **Graph OUTPUT node crashes** — bandaged with rejection handler, root cause in internals that SDK replaces.
 
-**Next phase: Claude Agent SDK integration.** Replace the custom `runAgent` execution loop with SDK `query()`. LangGraph stays for orchestration. Research updated 2026-01-30 — see `evryn-team-agents/docs/research/claude-agent-sdk.md` and `docs/research/orchestration-frameworks.md`. Anthropic multi-agent article validates our hybrid architecture.
+**Next phase: Claude Agent SDK integration.** Replace the custom `runAgent` execution loop with SDK `query()`. LangGraph stays for orchestration. Trigger infrastructure is verified and survives the migration; graph internals (AGENT, ROUTER, OUTPUT nodes) get replaced. DC has confirmed ready. Research in `evryn-team-agents/docs/research/claude-agent-sdk.md` and `docs/research/orchestration-frameworks.md`.
 
 **For full architectural detail:** Read `evryn-team-agents/docs/ARCHITECTURE.md` — AC owns and maintains that doc. It has component inventory, build phases, state schema, and known issues.
 
