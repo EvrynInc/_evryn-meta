@@ -160,6 +160,9 @@ When coordinating across instances that can't ask clarifying questions in real t
 
 ---
 
+### Operational Requirements as Spec Gates
+When an architect specs work for a builder, include an explicit "Operational Requirements" checklist — singleton enforcement, retry logic, graceful shutdown, etc. The builder gates on it: won't mark work done until every item is verified, and asks for the checklist if the spec doesn't include one. This prevents "standard procedures" from being skipped under cognitive load. The knowledge of which patterns apply lives with the architect (who sees the system), not the builder (who sees the code). Analogous to pilot checklists — smart people under load skip obvious things.
+
 ### Full Timestamps Prevent Stale-Data Confusion
 When multiple sessions (or multiple Claude instances) read and write shared documents, vague dates like "today" or "Jan 30" become ambiguous. A future session seeing "2026-01-30" can't tell if that's current or weeks old. Use full `timestamptz` format everywhere: `2026-01-30T14:32:00-08:00`. This applies to document entries, drain notes, "last updated" markers, and any cross-session artifacts. The cost is a few extra characters; the benefit is zero ambiguity.
 
