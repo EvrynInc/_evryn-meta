@@ -6,6 +6,23 @@
 
 ---
 
+## ⚠️ HANDOFF FROM PREVIOUS AC (2026-01-31T18:45:00-08:00) — DELETE AFTER READING
+
+**Immediate tasks for this session:**
+1. **Agent notes cleanup with Justin.** 5 agent notes files are bloated from zombie process runs. Read each file, show Justin the diff, trim together. Files: Alex, Lucas, Jordan, Thea, and likely others. Alex's is 161 lines of zombie-generated philosophical reflection. Justin wants to do this with AC, not DC.
+2. **Produce SDK build spec for DC.** The next build is Claude Agent SDK integration — replacing the custom `runAgent` execution loop with SDK `query()`. LangGraph stays for orchestration. DC's mailbox (`evryn-team-agents/docs/ac-to-dc.md`) already has the green light and priorities. DC is waiting for the spec (with Operational Requirements section) before coding.
+3. **DC also needs to:** test task lifecycle (Decision 050), remove debug logging from email trigger. These are in the mailbox already.
+
+**What just happened:**
+- Phase 1 fully verified: email routing (6 test cases), PID lockfile, scheduler, crash resilience
+- Operational Requirements gate pattern added to both CLAUDE.mds (AC specs include checklists, DC gates on them)
+- ARCHITECTURE.md fully drained and current (last drain: 2026-01-31T18:15:00-08:00)
+- DC architecture notes pipeline is clean
+
+**Delete this section once you've absorbed it.**
+
+---
+
 ## Who You Are
 
 You are Alex Carter, CTO of Evryn. You are **AC (Architect Claude)**, operating from `_evryn-meta`. Your job: strategic conversations with Justin, architectural oversight, cross-repo decisions. Think at 30,000 feet.

@@ -2,7 +2,7 @@
 
 The central reference document for how all the pieces of Evryn fit together.
 
-*Last updated: January 24, 2026*
+*Last updated: 2026-01-31T18:45:00-08:00*
 
 ---
 
@@ -99,40 +99,39 @@ You pay only when a connection genuinely works for you. Evryn's success and your
 - Preview: https://evryn-website.vercel.app
 - Old site (rollback): https://evryn-prelaunch.vercel.app
 
+### Evryn Team Agents (`evryn-team-agents` repo)
+**What:** AI executive team runtime — 8 agents that execute work via email, scheduled tasks, and inter-agent coordination
+**Tech:** TypeScript, LangGraph (orchestration), Claude API (execution), Gmail API, Supabase
+**Status:** Phase 1 (Orchestration + Execution) COMPLETE and VERIFIED. SDK integration next.
+
+**Runtime:** LangGraph 5-node graph (intake → router → agent → output). Three triggers: email (poll every 30s with address-based routing), scheduler (briefings, reflections), task queue. Runs locally on Justin's desktop via `npm start`.
+
+**Key capabilities:** Email send/receive, inter-agent communication (invoke_agent), working memory (notes.md per agent), budget tracking with auto-halt, prompt caching, deadline alerting, singleton process guard.
+
+**For full architectural detail:** See `evryn-team-agents/docs/ARCHITECTURE.md`.
+
 ### Evryn Backend (future `evryn-backend` repo)
-**What:** All agent logic, built by Claude Code  
-**Tech:** TBD (likely Node.js or Python - CC will determine what's best)  
-**Status:** After website
+**What:** Product backend — the Evryn relationship broker for end users
+**Tech:** TBD
+**Status:** Future — after team agents are stable and SDK migration is complete
 
-**Conversational Core:**
-- Onboarding - getting to know new users
-- Intent collection - what are you looking for?
-- Check-ins - keeping the relationship warm while waiting for matches
-- Matching - finding the right people
-- Post-match follow-up - learning from outcomes
-
-**Supporting Modules:**
-- Email intake & routing
-- Publisher agent - ensures Evryn says what we want her to say (safety, voice, no secrets leaked)
-- Deception detection - scanning for bad actors
-
-**Admin:**
-- Dashboard for monitoring and management
-
-*Note: Architecture will emerge as we build. These are the capabilities needed, not a rigid structure.*
+**Planned capabilities:** Onboarding, intent collection, matching, check-ins, post-match follow-up, email intake & routing, deception detection, publisher agent (safety/voice). Architecture will emerge as we build — team agents are the proving ground.
 
 ### Supabase Database
-**What:** PostgreSQL database  
-**Status:** Set up with initial tables
+**What:** PostgreSQL database + serverless backend
+**Status:** LIVE — actively used by team agents
 
-**Current tables:**
-- `emailmgr_items`
-- `emailmgr_queue`
-- `evryn_knowledge`
-- `messages`
-- `users`
+**Agent tables (evryn-team-agents):**
+- `agent_messages` — Every email sent/received with full body
+- `agent_api_calls` — Every Claude API call with cost, tokens, model
+- `agent_notes_history` — Snapshots of agent notes over time
+- `agent_tasks` — Tasks agents create for themselves or others
+- `agent_daily_spend` — Aggregated daily spend per agent
 
-*Schema will evolve as we build. This is where we're at, not what we're married to.*
+**Legacy/product tables:**
+- `emailmgr_items`, `emailmgr_queue`, `evryn_knowledge`, `messages`, `users`
+
+**Security:** RLS enabled on ALL tables. Only service_role key (in `.env`, never exposed) can access data. pg_cron for scheduled triggers.
 
 ### HubSpot
 **What:** CRM and email marketing  
@@ -140,9 +139,9 @@ You pay only when a connection genuinely works for you. Evryn's success and your
 **Purpose:** Waitlist capture, future email campaigns
 
 ### Claude API (Anthropic)
-**What:** AI powering all the agents  
-**Status:** Will be connected via backend code  
-**Purpose:** Classification, conversation, matching logic
+**What:** AI powering all agents + development tool (Claude Code)
+**Status:** LIVE — all 8 agents make API calls. Claude Code (with AC/DC pattern) builds the system.
+**Purpose:** Agent execution (Haiku for routing, Sonnet for standard work), prompt caching active, rate limit retry with backoff built in.
 
 ### iDenfy
 **What:** Identity verification  
@@ -233,12 +232,12 @@ FORWARD DETECTED               DIRECT MESSAGE
 
 | Repo | Purpose | Status |
 |------|---------|--------|
-| `_evryn-meta` | System-wide documentation | Active |
-| `evryn-website` | Marketing site | LIVE |
-| `evryn-team-agents` | AI executive team (C-suite agents) | Building |
+| `_evryn-meta` | CTO home base, cross-repo docs, dashboard | Active |
+| `evryn-website` | Marketing site (evryn.ai) | LIVE |
+| `evryn-team-agents` | AI executive team runtime | Phase 1 COMPLETE, SDK migration next |
 | `evryn-prelaunch-landing` | Old landing page | Archived |
 | `evryn-app` | Member product UI | Future |
-| `evryn-backend` | API, agents, admin tools | Future |
+| `evryn-backend` | Product backend | Future |
 
 ---
 
@@ -251,8 +250,9 @@ FORWARD DETECTED               DIRECT MESSAGE
 | **Supabase** | Database | Evryn |
 | **HubSpot** | CRM, waitlist | Evryn |
 | **Cloudflare** | Turnstile captcha | Evryn |
-| **Anthropic** | Claude API + Claude Code | Claude Pro subscription + API credits |
-| **Google Cloud** | Pub/Sub for Gmail push notifications | Evryn project |
+| **Anthropic** | Claude API (agent execution) + Claude Code (development) | API credits + Claude Code subscription |
+| **Google Cloud** | Gmail API (live polling), Pub/Sub (scaffolded, not wired) | Evryn project |
+| **Linear** | Backlog and issue tracking (EVR workspace) | Free tier |
 | **iDenfy** | Identity verification | Chosen, not yet integrated |
 | **Vapi** | Voice AI platform (future) | Researched, not yet integrated |
 | **Hume AI** | Emotion detection for voice (future) | Researched, not yet integrated |
@@ -300,3 +300,4 @@ FORWARD DETECTED               DIRECT MESSAGE
 | 2025-01-23 | Team agents update: AA Alex (email/API) is primary interface, CC Alex (terminal) occasional. Gmail push notifications via Pub/Sub instead of polling. Billing switch to Pro + API credits. Added Google Cloud to external services. |
 | 2025-01-23 | Gmail aliases configured on agents@evryn.ai. Catch-all routing to Thea. Voice integration researched (Vapi + Hume AI) for future Phase 4. Added voice AI platforms to external services (future). |
 | 2025-01-24 | Team structure update: AI executive team is now primary operations, human team members (Andrew, Salil, Manuele) moving to advisor roles. Added company-context.md to evryn-team-agents for agent context. |
+| 2026-01-31 | Major update: evryn-team-agents Phase 1 complete (LangGraph runtime, 3 triggers, all verified). Supabase tables updated to reflect agent infrastructure. Claude API now live. Added Linear. Updated repo statuses. |
