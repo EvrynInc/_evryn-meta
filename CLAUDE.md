@@ -20,12 +20,12 @@ Major architectural pivot: dropped LangGraph entirely, adopting Claude Agent SDK
 **What's still needed before DC can build:**
 1. AC decomposes Lucas system instructions (455 lines from handoff) into CLAUDE.md / skills / subagents / modules
 2. CLAUDE.md ownership: create DC's new home repo, migrate DC's CLAUDE.md there
-3. Permission model finalized
-4. Audit/guardrails architecture specified
-5. Memory architecture decisions
-6. Dashboard data model decided
-7. Justin reviews all team perspective profiles before they become subagent files
-8. Execute archive removal plan (after above is done)
+3. Execute archive removal plan (DC's CLAUDE.md must be migrated first)
+4. Permission model finalized
+5. Audit/guardrails architecture specified
+6. Memory architecture decisions
+7. Dashboard data model decided
+8. Justin reviews all team perspective profiles before they become subagent files
 
 **Key source material (in `evryn-team-agents/2026.02.06 Handoff/`):**
 - `2026.02.05 evryn_multilingual_framework.md` — SACRED TEXT. Preserve verbatim.
@@ -47,7 +47,7 @@ When a conversation produces build work, write it into the relevant repo's CLAUD
 | Instance | Where | What It Is |
 |----------|-------|------------|
 | **DC (Developer Claude)** | `evryn-team-agents` (or other repos) | A separate Claude Code instance. Senior developer — no CTO identity, no Alex persona. Builds what's needed. Has its own CLAUDE.md and AC/DC protocol. |
-| **AA Alex (email)** | alex@evryn.ai | Autonomous agentic Alex. Email responses, scheduled tasks. Currently limited to email. |
+| **AA Alex (email)** | alex@evryn.ai | Autonomous agentic Alex. Email responses, scheduled tasks. Currently limited to email. **Transitional:** Being replaced by Lucas (single agent on Claude Agent SDK). Alex becomes a perspective lens Lucas can channel, not a separate running agent. |
 
 ---
 
@@ -262,6 +262,7 @@ When Justin steps away and you're working autonomously at the strategic level:
 2. **Review with Justin in the morning**, then integrate into long-term docs together.
 3. **Leave things in a clean state.** If you're mid-analysis, write your current thinking clearly enough that a fresh session can pick it up.
 4. **Commit and push.** Get everything to remote so it survives power outages.
+5. **Self-review every edit to source-of-truth documents.** Before writing, ask three questions: (1) Would this mislead a future instance arriving with minimal context? (2) Am I stating something as fact that I haven't verified? (3) Am I closing a door that wasn't mine to close?
 
 ---
 
@@ -291,7 +292,8 @@ When Justin says `#lock` or it's time for a checkpoint:
 7. **Bitwarden reminder** — If `.env` was modified, remind Justin: "Hey, we updated .env — remember to re-upload to Bitwarden."
 8. **Commit and push** — Get everything to remote immediately.
 
-**Transitional items (remove when resolved):**
+**Transitional items (remove after SDK migration):**
+- **`agents/alex/notes.md`** (in `evryn-team-agents`) — For now, update with anything relevant to Alex's working context. This content will be integrated into the new agent structure during SDK migration.
 - DC mailbox note: when AC work on the build spec is complete and it's ready for DC, write to `evryn-team-agents/docs/ac-to-dc.md` to orient DC on the architecture pivot.
 - `evryn-team-agents/docs/DECISIONS.md` — old file, pending fresh start per Decision 9. New decisions go in session docs or the build spec until the fresh DECISIONS.md is created.
 
