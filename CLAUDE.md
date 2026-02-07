@@ -6,18 +6,31 @@
 
 ---
 
-## ⚠️ HANDOFF FROM PREVIOUS AC (2026-01-31T18:45:00-08:00) — DELETE AFTER READING
+## ⚠️ HANDOFF FROM PREVIOUS AC (2026-02-06T18:47:00-08:00) — DELETE AFTER READING
 
-**Immediate tasks for this session:**
-1. **Agent notes cleanup with Justin.** 5 agent notes files are bloated from zombie process runs. Read each file, show Justin the diff, trim together. Files: Alex, Lucas, Jordan, Thea, and likely others. Alex's is 161 lines of zombie-generated philosophical reflection. Justin wants to do this with AC, not DC.
-2. **Produce SDK build spec for DC.** The next build is Claude Agent SDK integration — replacing the custom `runAgent` execution loop with SDK `query()`. LangGraph stays for orchestration. DC's mailbox (`evryn-team-agents/docs/ac-to-dc.md`) already has the green light and priorities. DC is waiting for the spec (with Operational Requirements section) before coding.
-3. **DC also needs to:** test task lifecycle (Decision 050), remove debug logging from email trigger. These are in the mailbox already.
+**What happened this session (2026-02-06):**
 
-**What just happened:**
-- Phase 1 fully verified: email routing (6 test cases), PID lockfile, scheduler, crash resilience
-- Operational Requirements gate pattern added to both CLAUDE.mds (AC specs include checklists, DC gates on them)
-- ARCHITECTURE.md fully drained and current (last drain: 2026-01-31T18:15:00-08:00)
-- DC architecture notes pipeline is clean
+Major architectural pivot: dropped LangGraph entirely, adopting Claude Agent SDK as sole runtime. One agent (Lucas Everhart, Chief of Staff) replaces 8 separate agents. Old team members become perspective lenses spawned as ephemeral subagents.
+
+**Artifacts produced:**
+- `evryn-team-agents/docs/BUILD-LUCAS-SDK.md` — DRAFT build spec. Not ready for DC yet — AC must still decompose Lucas's system instructions and resolve several open questions. See the "Open Questions for AC" section in the doc.
+- `_evryn-meta/docs/2026-02-06-session-decisions.md` — 25 decisions from this session. Disposable — absorb into persistent docs during next #lock, then delete.
+- `_evryn-meta/docs/archive-removal-plan.md` — Plan for removing LangGraph artifacts from repo. Has a critical pre-flight check about migrating DC's CLAUDE.md before overwriting.
+
+**What's still needed before DC can build:**
+1. AC decomposes Lucas system instructions (455 lines from handoff) into CLAUDE.md / skills / subagents / modules
+2. CLAUDE.md ownership: create DC's new home repo, migrate DC's CLAUDE.md there
+3. Permission model finalized
+4. Audit/guardrails architecture specified
+5. Memory architecture decisions
+6. Dashboard data model decided
+7. Justin reviews all team perspective profiles before they become subagent files
+8. Execute archive removal plan (after above is done)
+
+**Key source material (in `evryn-team-agents/2026.02.06 Handoff/`):**
+- `2026.02.05 evryn_multilingual_framework.md` — SACRED TEXT. Preserve verbatim.
+- `2026.02.06 Lucas_System_Instructions - 2.33pm.md` — Source for prompt decomposition. AC work.
+- `2026.02.06 Evryn Virtual Founding Team Profiles.md` — Source for subagent configs. Justin must review first.
 
 **Delete this section once you've absorbed it.**
 
@@ -60,7 +73,7 @@ Justin says "read" to either side to trigger a read-and-respond cycle.
 
 **Writing mailbox messages:** Assume the other party has taken appropriate notes from prior exchanges into their own persistent docs, but doesn't have the raw message history any more than you do. Reference shared artifacts (ARCHITECTURE.md, build docs, Linear issues) rather than restating their contents. Don't repeat context that lives in a doc both sides can read — just point to it.
 
-**Use full timestamps everywhere.** All document entries, drain notes, and "last updated" markers should use full `timestamptz` format (e.g., `2026-01-30T14:32:00-08:00`), not vague dates like "today" or "Jan 30." A future session seeing "2026-01-30" can't tell if that's current or stale — but `2026-01-30T14:32:00-08:00` is unambiguous.
+**Use full timestamps everywhere.** All document entries, drain notes, and "last updated" markers should use full `timestamptz` format (e.g., `2026-01-30T14:32:00-08:00`), not vague dates like "today" or "Jan 30." A future session seeing "2026-01-30" can't tell if that's current or stale — but `2026-01-30T14:32:00-08:00` is unambiguous. **Never guess the time.** Always run `powershell -Command "Get-Date -Format 'yyyy-MM-ddTHH:mm:sszzz'"` (or equivalent) to get the actual current time before writing any timestamp.
 
 **Avoid passive voice in instructions.** When writing to DC (or anyone), always make it clear who does what. "The files will be archived" is ambiguous — archived by whom? Say "AC will archive these files" or "You should archive these files." This matters especially when coordinating across instances that can't clarify in real time.
 
@@ -105,25 +118,27 @@ An AI-powered relationship broker. She finds you "your people" — the rare indi
 - **Stage:** Pre-launch, building MVP
 - **Philosophy:** Stories over structures. Trust is non-negotiable. Character becomes currency. Aligned incentives.
 
-Full company context: `evryn-team-agents/agents/_global/company-context.md`
+Full company context: `evryn-team-agents/modules/company-context.md` (will be moved from `agents/_global/` during archive cleanup)
 Full system overview: `SYSTEM_OVERVIEW.md` (this repo)
 
 ---
 
 ## The AI Executive Team
 
-8 agents that execute work, not just advise. Built in `evryn-team-agents`.
+**New model (SDK era):** One primary agent — **Lucas Everhart, Chief of Staff** — with team members as perspective lenses he channels via ephemeral subagents. Built in `evryn-team-agents`.
 
-| Agent | Role |
-|-------|------|
-| Thea Mercer | Executive Assistant |
-| Lucas Everhart | Vice Executive Officer |
-| Alex Carter | CTO (you) |
-| Taylor Cheng | COO/CFO |
-| Dana Reynolds | CPO |
-| Dominic Wolfe | Strategic Advisor |
-| Jordan Malik | CGO |
-| Nathan Rhodes | Internal Counsel |
+| Agent | Role | SDK Form |
+|-------|------|----------|
+| Lucas Everhart | Chief of Staff | Primary agent (CLAUDE.md) |
+| Alex Carter | CTO (you, at AC level) | Subagent + Skill |
+| Taylor Cheng | COO/CFO | Subagent (Phase 4) |
+| Dana Reynolds | CPO | Subagent (Phase 4) |
+| Dominic Wolfe | Strategic Advisor | Subagent (Phase 4) |
+| Jordan Malik | CGO | Subagent (Phase 4, NEEDS REBUILD) |
+| Nathan Rhodes | Internal Counsel | Subagent (Phase 4) |
+| Thea Mercer | Executive Assistant | Skill (not subagent — operational discipline, not a perspective) |
+
+All profiles need Justin's review before becoming `.claude/agents/*.md` files. Source material in handoff folder.
 
 ---
 
@@ -132,7 +147,8 @@ Full system overview: `SYSTEM_OVERVIEW.md` (this repo)
 | Repo | Purpose | CLAUDE.md? |
 |------|---------|------------|
 | `_evryn-meta` | Cross-repo docs, issues, dashboard. **Alex's home.** | This file |
-| `evryn-team-agents` | Agent runtime, email gateway, scheduler | Yes — build-focused |
+| `evryn-team-agents` | Lucas's home — agent runtime, SDK agent | Yes — becomes Lucas's system context |
+| `evryn-dev-workspace` (TBD) | DC's home — build context for developer instances | Planned — DC's CLAUDE.md migrates here |
 | `evryn-website` | Marketing site (evryn.ai) | Future |
 | `evryn-backend` | Product backend (future) | Future |
 
@@ -140,22 +156,26 @@ Full system overview: `SYSTEM_OVERVIEW.md` (this repo)
 
 ## Current System State
 
-**Agent infrastructure** (in `evryn-team-agents`):
-- **Phase 1 (Orchestration + Execution) is COMPLETE and VERIFIED.** LangGraph 5-node graph, 3 triggers (email, scheduler, tasks), all tested E2E. Briefing flow fully working.
-- **All trigger infrastructure verified and resilient:** Address-based email routing (6 test cases, Decision 051), PID lockfile singleton guard (Decision 052), scheduler triggers, process crash resilience (global rejection handler + trigger-level `.catch()`).
-- **Pacific timezone in agent prompts** — agents use authoritative Pacific time for notes timestamps (Decision 053).
-- invoke_agent timing bug resolved via LangGraph. depth=1 guardrail active.
-- Model-agnostic JSON parser, rate limit retry with backoff, notes integrity guard, prompt caching, budget tracking — all built and working.
-- Task lifecycle managed by trigger (Decision 050) — live verification still pending.
-- Running locally on Justin's desktop. No cloud deployment yet.
-- DC architecture notes pipeline established and current (last drain: 2026-01-31T18:15:00-08:00).
-- **Test overrides active:** Haiku defaults, test scheduler times, $5 halt threshold, debug logging in email trigger.
-- **Agent notes bloated** — 5 files need cleanup with Justin's review.
-- **Graph OUTPUT node crashes** — bandaged with rejection handler, root cause in internals that SDK replaces.
+**Architecture pivot in progress (as of 2026-02-06T18:47:00-08:00):**
 
-**Next phase: Claude Agent SDK integration.** Replace the custom `runAgent` execution loop with SDK `query()`. LangGraph stays for orchestration. Trigger infrastructure is verified and survives the migration; graph internals (AGENT, ROUTER, OUTPUT nodes) get replaced. DC has confirmed ready. Research in `evryn-team-agents/docs/research/claude-agent-sdk.md` and `docs/research/orchestration-frameworks.md`.
+LangGraph multi-agent system is being replaced. New architecture: **single Lucas Everhart (Chief of Staff) agent on Claude Agent SDK.** Old team members become perspective lenses spawned as ephemeral subagents via SDK Task tool.
 
-**For full architectural detail:** Read `evryn-team-agents/docs/ARCHITECTURE.md` — AC owns and maintains that doc. It has component inventory, build phases, state schema, and known issues.
+**What exists now:**
+- LangGraph code still in repo (pending archive removal — see `_evryn-meta/docs/archive-removal-plan.md`)
+- Build spec DRAFT at `evryn-team-agents/docs/BUILD-LUCAS-SDK.md` — NOT ready for DC yet
+- Source material in `evryn-team-agents/2026.02.06 Handoff/` — Lucas system instructions, team profiles, multilingual framework
+- Session decisions at `_evryn-meta/docs/2026-02-06-session-decisions.md` — 25 decisions, disposable after absorption
+
+**What needs to happen before building:**
+- AC must decompose Lucas's 455-line system instructions into SDK locations (CLAUDE.md / skills / subagents / modules)
+- DC needs a new home repo so Lucas can have `evryn-team-agents/CLAUDE.md`
+- Several open architecture questions (permission model, memory, dashboarding, audit trails)
+- Justin must review all team perspective profiles before they become subagent files
+- Archive removal plan must be executed (removes LangGraph artifacts)
+
+**Running locally** on Justin's desktop. No cloud deployment yet.
+
+**For build detail:** Read `evryn-team-agents/docs/BUILD-LUCAS-SDK.md` — the spec for the new architecture.
 
 **Backlog:** [Linear (EVR workspace)](https://linear.app/evryn) — backlog bucket only, not a workflow tool. Holds small items that shouldn't be forgotten but aren't part of a current build. No projects, no AC labels, no process overhead. When AC specs a new build phase, AC pulls relevant tickets into the build doc scope and closes them when done. LINEAR_API_KEY is in `.env` (this repo) for querying.
 
@@ -202,14 +222,15 @@ This isn't about blocking Justin's ideas. It's about being a real technical part
 | `_evryn-meta/LEARNINGS.md` | Alex (CTO) | Cross-project patterns and insights |
 | `_evryn-meta/RESEARCH.md` | Alex (CTO) | Cross-project research index, pointers to repo `docs/research/` folders |
 | `_evryn-meta/AGENT_PATTERNS.md` | Alex (CTO) | Agent-building learnings for Evryn product |
-| `evryn-team-agents/CLAUDE.md` | Alex (CTO) | Build context for builder CC instance |
-| `evryn-team-agents/agents/_global/*` | Alex (CTO) | Agent framework, company context |
-| `evryn-team-agents/agents/*/instructions.md` | Alex (CTO) | Individual agent roles (Justin signs off) |
-| `evryn-team-agents/agents/*/capabilities.md` | Alex (CTO) | What each agent can/can't do now |
-| `evryn-team-agents/agents/*/notes.md` | Each agent | Working memory — agents maintain their own |
+| `evryn-team-agents/CLAUDE.md` | Alex (CTO) | Currently DC's build context. Will become Lucas's system context after DC migrates to new home repo. |
+| `evryn-team-agents/docs/BUILD-LUCAS-SDK.md` | Alex (CTO) | SDK build spec (DRAFT) |
+| `evryn-team-agents/docs/ARCHITECTURE.md` | Alex (CTO) | System architecture (needs rewrite for SDK) |
+| `evryn-team-agents/.claude/agents/*.md` | Alex (CTO) | Subagent definitions (future — Justin reviews each) |
+| `evryn-team-agents/.claude/skills/*.md` | Alex (CTO) | Skills for Lucas (future) |
+| `evryn-team-agents/modules/*` | Alex (CTO) | Rich context loaded on demand (future) |
 | Linear (EVR workspace) | Alex (CTO) | Backlog — small items to not forget |
 
-**Sync responsibility:** When company-level changes happen (team structure, mission, strategy), update both `company-context.md` AND `SYSTEM_OVERVIEW.md`. They serve different audiences (agents vs developers) but must stay consistent.
+**Sync responsibility:** When company-level changes happen (team structure, mission, strategy), update both `modules/company-context.md` (once created) AND `SYSTEM_OVERVIEW.md`. They serve different audiences (agents vs developers) but must stay consistent.
 
 ---
 
@@ -261,15 +282,18 @@ Check in with Justin periodically:
 
 When Justin says `#lock` or it's time for a checkpoint:
 
-1. **This file (CLAUDE.md)** — Refresh to reflect current state. Clean snapshot, not a log. **Cross-repo sync:** Read `evryn-team-agents/CLAUDE.md` current state section and update your own "Current System State" if anything changed.
-2. **`agents/alex/notes.md`** (in `evryn-team-agents`) — Update with anything appropriate to that doc's scope and rules.
-3. **`docs/DECISIONS.md`** (in `evryn-team-agents`) — Add any new architectural decisions, appropriate to that doc's format.
-4. **Linear** — Create tickets for small backlog items that aren't part of a current build. Don't duplicate what's in build docs or ARCHITECTURE.md.
-5. **`SYSTEM_OVERVIEW.md`** — Update only if something system-level changed.
-6. **`LEARNINGS.md`** — Add appropriate cross-project patterns or insights.
-7. **`AGENT_PATTERNS.md`** — Add appropriate agent-building learnings.
-8. **Bitwarden reminder** — If `.env` was modified, remind Justin: "Hey, we updated .env — remember to re-upload to Bitwarden."
-9. **Commit and push** — Get everything to remote immediately.
+1. **This file (CLAUDE.md)** — Refresh "Current System State" to reflect reality. Clean snapshot, not a log.
+2. **Session decisions** — If decisions were made this session, ensure they're captured in a session decisions doc (`_evryn-meta/docs/`) or absorbed into persistent docs. Session decisions docs are disposable — absorb and delete.
+3. **`SYSTEM_OVERVIEW.md`** — Update only if something system-level changed.
+4. **`LEARNINGS.md`** — Add appropriate cross-project patterns or insights.
+5. **`AGENT_PATTERNS.md`** — Add appropriate agent-building learnings.
+6. **Linear** — Create tickets for small backlog items that aren't part of a current build. Don't duplicate what's in build docs or ARCHITECTURE.md.
+7. **Bitwarden reminder** — If `.env` was modified, remind Justin: "Hey, we updated .env — remember to re-upload to Bitwarden."
+8. **Commit and push** — Get everything to remote immediately.
+
+**Transitional items (remove when resolved):**
+- DC mailbox note: when AC work on the build spec is complete and it's ready for DC, write to `evryn-team-agents/docs/ac-to-dc.md` to orient DC on the architecture pivot.
+- `evryn-team-agents/docs/DECISIONS.md` — old file, pending fresh start per Decision 9. New decisions go in session docs or the build spec until the fresh DECISIONS.md is created.
 
 ---
 

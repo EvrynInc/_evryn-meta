@@ -2,7 +2,7 @@
 
 Patterns, insights, and lessons learned that transfer across Evryn projects.
 
-*Last updated: 2026-01-30*
+*Last updated: 2026-02-06*
 
 ---
 
@@ -165,6 +165,29 @@ When an architect specs work for a builder, include an explicit "Operational Req
 
 ### Full Timestamps Prevent Stale-Data Confusion
 When multiple sessions (or multiple Claude instances) read and write shared documents, vague dates like "today" or "Jan 30" become ambiguous. A future session seeing "2026-01-30" can't tell if that's current or weeks old. Use full `timestamptz` format everywhere: `2026-01-30T14:32:00-08:00`. This applies to document entries, drain notes, "last updated" markers, and any cross-session artifacts. The cost is a few extra characters; the benefit is zero ambiguity.
+
+---
+
+## Architecture Pivots
+
+### Infrastructure Should Follow Intelligence, Not Dictate It
+The LangGraph multi-agent system (5-node graph orchestrating 8 agents) was replaced by a single agent on Claude Agent SDK because the infrastructure was dictating behavior. Agents executed blindly through a pipeline rather than intelligently assessing context. The lesson: when your orchestration layer is more complex than your actual logic, you've inverted the architecture. A smart agent that decides for itself beats a sophisticated graph that routes deterministically. The right amount of infrastructure is the minimum needed for the agent to wake up, think, and act.
+
+### One Agent With Perspectives Beats Eight Agents With Coordination
+Instead of 8 separate agents requiring inter-agent communication, routing logic, and state synchronization, one agent (Lucas) channels team perspectives as ephemeral subagents. This eliminates: routing decisions (the agent decides who to consult), state synchronization (one agent, one state), inter-agent communication overhead (internal function calls, not message passing), and identity confusion (one consistent personality with multiple lenses). The old team members aren't deleted — they're perspective lenses the agent can spawn when needed. "The old team is a team we once worked with. Lucas and Justin still have their perspectives within us."
+
+### SDK Features Replace Custom Infrastructure
+Before building custom solutions, check what the SDK provides natively. In our case, Claude Agent SDK's built-in tools (Read, Write, Edit, Bash), subagent system (Task tool), memory tool, hooks, MCP integration, and session persistence replaced: a custom execution loop, a custom tool registry, inter-agent communication, a custom state management layer, and manual context window management. The remaining custom infrastructure is minimal: cron scheduling, supervisor reliability, and MCP server configuration.
+
+---
+
+## Review Discipline
+
+### Self-Review Prevents Expensive Mistakes
+When editing source-of-truth documents autonomously, every edit should pass three questions before submission: (1) Would this mislead a future instance? (2) Am I stating something as fact that I haven't verified? (3) Am I closing a door that wasn't mine to close? Specific failure modes caught in the 2026-02-06 session: fabricating timestamps instead of running a system command to get the real time, marking something "LIVE" that hadn't been built yet, saying "only" when the decision was "primarily," and missing a dimension of a concept (information boundaries, not just tone). Each of these could have propagated confusion through downstream documents and future sessions.
+
+### Never Guess Timestamps
+Always run a system command to get the actual current time before writing any timestamp in a document. Guessing looks close enough in the moment but creates fabricated data in source-of-truth documents. A future instance has no way to know the timestamp is wrong.
 
 ---
 

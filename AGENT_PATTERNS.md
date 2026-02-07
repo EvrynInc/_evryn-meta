@@ -2,7 +2,7 @@
 
 Learnings from building AI agents that will help when building Evryn (the product).
 
-*Last updated: 2026-01-30*
+*Last updated: 2026-02-06*
 
 ---
 
@@ -283,6 +283,42 @@ Agents maintaining state across many tool calls over extended periods will see m
 
 ### End-State Evaluation Over Step Evaluation
 For agents mutating state across many turns, evaluate final outcomes rather than intermediate steps. Agents may find alternative paths to the same goal. This is especially true for self-modifying systems (notes, memory, config) — check that the end state is structurally sound, not that every intermediate step was "correct."
+
+---
+
+## Single-Agent-With-Perspectives (SDK Era)
+
+*Source: Evryn architecture pivot 2026-02-06. Replaced the 8-agent LangGraph system.*
+
+### Perspectives as Subagents, Not Separate Employees
+Instead of running 8 persistent agents with routing and coordination, run one primary agent that spawns ephemeral subagents when it needs a different perspective. Each subagent has a markdown definition (background, expertise, cognitive framing) that makes it think like that specialist. The primary agent synthesizes across perspectives. This eliminates: routing logic, state sync, inter-agent communication protocols, and identity confusion. The team members aren't gone — they're lenses the agent channels.
+
+### Skill vs. Subagent: Does It Need an Independent Voice?
+When deciding whether a capability should be a skill (loaded on demand, agent uses it directly) or a subagent (spawned as independent entity, provides its own perspective):
+- **Subagent** if: the domain has unique perspectives that the primary agent shouldn't also hold (engineering, legal, finance, product). The value is independent advocacy — the subagent might disagree with the primary agent.
+- **Skill** if: the capability is operational discipline without a unique viewpoint (EA tasks, briefing procedures, architectural analysis). The primary agent does the work itself, guided by the skill's instructions.
+
+Example: CTO perspective = subagent (engineering needs its own advocate). EA discipline = skill (tracking commitments is operational, not perspectival). The primary agent can also hold a lighter version of a subagent's capability as a skill (e.g., Architect skill for quick technical questions without spawning a full CTO subagent).
+
+### One Level Deep Is Enough
+SDK subagents cannot spawn sub-subagents. This seems limiting but is actually clarifying. For "Alex manages 5 devs," the primary agent spawns 5 dev subagents directly, with Alex's perspective guiding the delegation context. This flattens the hierarchy without losing the coordination benefit. The primary agent IS the coordinator — it doesn't delegate coordination.
+
+### Output Styles vs. Thinking Modes
+These are different levers that don't conflict:
+- **Output styles** (SDK `.claude/output-styles/`) control how the agent formats its final human-facing response. Audience-specific: executive, public, etc.
+- **Thinking modes** come from subagent definitions — each subagent thinks in its domain language naturally because its system prompt tells it to.
+
+When the agent spawns a CPO subagent, the CPO thinks in product language (thinking mode). When the agent presents the synthesis to a human, it uses executive formatting (output style). Internal communication stays in domain language; external presentation is formatted for the audience.
+
+### Public vs. Internal Output Is Two Dimensions
+When an agent communicates externally (to people or agents outside the organization), the output style needs to enforce two things, not just one:
+1. **Tone:** Professional, no internal shorthand or conventions that developed between the agent and its operator.
+2. **Information boundaries:** What can and cannot be disclosed. Internal strategy, decision-making processes, financial details, team dynamics — these stay behind the wall.
+
+This is analogous to how any employee behaves: casual internally, polished externally, and aware of what's confidential.
+
+### Trigger-Agnostic Wake Pattern
+Don't couple the agent's architecture to a specific trigger type. Design the wake interface so any trigger (cron, pub/sub, webhook, manual) can wake the agent with the same pattern: inject context about why it woke up, and let the agent decide what to do. This prevents having to refactor the agent every time you add a new trigger source.
 
 ---
 

@@ -2,7 +2,7 @@
 
 The central reference document for how all the pieces of Evryn fit together.
 
-*Last updated: 2026-01-31T18:45:00-08:00*
+*Last updated: 2026-02-06T18:47:00-08:00*
 
 ---
 
@@ -100,15 +100,17 @@ You pay only when a connection genuinely works for you. Evryn's success and your
 - Old site (rollback): https://evryn-prelaunch.vercel.app
 
 ### Evryn Team Agents (`evryn-team-agents` repo)
-**What:** AI executive team runtime — 8 agents that execute work via email, scheduled tasks, and inter-agent coordination
-**Tech:** TypeScript, LangGraph (orchestration), Claude API (execution), Gmail API, Supabase
-**Status:** Phase 1 (Orchestration + Execution) COMPLETE and VERIFIED. SDK integration next.
+**What:** Lucas Everhart (Chief of Staff) — single autonomous agent powered by Claude Agent SDK. Other team members exist as perspective lenses spawned as ephemeral subagents.
+**Tech:** TypeScript, Claude Agent SDK (`@anthropic-ai/claude-agent-sdk`), MCP servers (Slack, Gmail, Supabase), trigger infrastructure
+**Status:** Architecture pivot in progress (2026-02-06). LangGraph replaced. Build spec DRAFT at `docs/BUILD-LUCAS-SDK.md`.
 
-**Runtime:** LangGraph 5-node graph (intake → router → agent → output). Three triggers: email (poll every 30s with address-based routing), scheduler (briefings, reflections), task queue. Runs locally on Justin's desktop via `npm start`.
+**Architecture:** SDK `query()` is the sole runtime. Lucas wakes via trigger (cron for scheduled work, pub/sub for inbound email, potentially more over time), reads his state (file-based memory), decides what needs doing, acts, writes back to state. Subagents spawned via SDK Task tool for team perspectives (one level deep). Slack primary for internal communication, email primarily for external correspondence.
 
-**Key capabilities:** Email send/receive, inter-agent communication (invoke_agent), working memory (notes.md per agent), budget tracking with auto-halt, prompt caching, deadline alerting, singleton process guard.
+**Key capabilities (planned):** Autonomous briefing compilation, scheduled operations (morning/evening/weekly/monthly), perspective deliberation (#garp), persistent file-based memory, graduated autonomy model, CTO/engineering capability via Alex subagent.
 
-**For full architectural detail:** See `evryn-team-agents/docs/ARCHITECTURE.md`.
+**Previous system:** LangGraph 5-node graph with 8 separate agents — fully superseded. LangGraph code pending removal per archive plan.
+
+**For build detail:** See `evryn-team-agents/docs/BUILD-LUCAS-SDK.md`.
 
 ### Evryn Backend (future `evryn-backend` repo)
 **What:** Product backend — the Evryn relationship broker for end users
@@ -139,9 +141,9 @@ You pay only when a connection genuinely works for you. Evryn's success and your
 **Purpose:** Waitlist capture, future email campaigns
 
 ### Claude API (Anthropic)
-**What:** AI powering all agents + development tool (Claude Code)
-**Status:** LIVE — all 8 agents make API calls. Claude Code (with AC/DC pattern) builds the system.
-**Purpose:** Agent execution (Haiku for routing, Sonnet for standard work), prompt caching active, rate limit retry with backoff built in.
+**What:** AI powering Lucas agent (planned) + development tool (Claude Code)
+**Status:** Claude Code (with AC/DC pattern) actively builds the system. Lucas agent not yet running — SDK build in progress.
+**Purpose:** Agent execution (Sonnet default, Opus for hard/nuanced/multilingual thinking, Haiku for routine tasks). Claude Code for development.
 
 ### iDenfy
 **What:** Identity verification  
@@ -234,7 +236,7 @@ FORWARD DETECTED               DIRECT MESSAGE
 |------|---------|--------|
 | `_evryn-meta` | CTO home base, cross-repo docs, dashboard | Active |
 | `evryn-website` | Marketing site (evryn.ai) | LIVE |
-| `evryn-team-agents` | AI executive team runtime | Phase 1 COMPLETE, SDK migration next |
+| `evryn-team-agents` | Lucas (Chief of Staff) agent runtime | SDK architecture pivot in progress — not yet running |
 | `evryn-prelaunch-landing` | Old landing page | Archived |
 | `evryn-app` | Member product UI | Future |
 | `evryn-backend` | Product backend | Future |
@@ -266,8 +268,8 @@ FORWARD DETECTED               DIRECT MESSAGE
 - **Justin** — Founder/CEO, building everything with Claude Code
 
 **AI Executive Team (Primary Operations):**
-- See `evryn-team-agents/agents/` for the full C-suite (Thea, Taylor, Jordan, Dana, Dominic, Nathan, Lucas, Alex)
-- This is the primary operating team
+- Lucas Everhart (Chief of Staff) — primary agent, with team perspectives as subagents
+- Architecture defined, not yet built. See `evryn-team-agents/docs/BUILD-LUCAS-SDK.md`
 
 **Human Advisors:**
 - **Andrew Lester** — Operations Advisor
@@ -301,3 +303,4 @@ FORWARD DETECTED               DIRECT MESSAGE
 | 2025-01-23 | Gmail aliases configured on agents@evryn.ai. Catch-all routing to Thea. Voice integration researched (Vapi + Hume AI) for future Phase 4. Added voice AI platforms to external services (future). |
 | 2025-01-24 | Team structure update: AI executive team is now primary operations, human team members (Andrew, Salil, Manuele) moving to advisor roles. Added company-context.md to evryn-team-agents for agent context. |
 | 2026-01-31 | Major update: evryn-team-agents Phase 1 complete (LangGraph runtime, 3 triggers, all verified). Supabase tables updated to reflect agent infrastructure. Claude API now live. Added Linear. Updated repo statuses. |
+| 2026-02-06 | Architecture pivot: LangGraph multi-agent replaced by single Lucas agent on Claude Agent SDK. Updated team agents section, repos table, Claude API section, key contacts. Build spec DRAFT in progress. |
