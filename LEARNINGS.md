@@ -143,6 +143,9 @@ The builder should still have a lightweight "flag things up" principle — devs 
 ### Documents Need Scope Guardrails
 Every long-lived document should have a "how to use this" header explaining what belongs and what doesn't. Without this, documents sprawl — session logs creep into CLAUDE.md, build details creep into strategic docs, and everything gets noisy. Explicit scope = implicit discipline.
 
+### Diátaxis + Progressive Depth for AI Context Management
+CLAUDE.md (or any always-loaded file) should be an operating manual, not a capture target. Apply the Diátaxis framework: every doc is exactly one type (how-to, reference, or explanation) — don't mix types. Then add progressive depth for AI context constraints: thin index at the top (always loaded), state files one layer deeper (read on demand), build/reference docs at full depth (read only when the task requires it). The key: read ONE layer, go deeper only if needed. To prevent bloat recurrence, build a routing table directly into the operating manual that tells models where to put new context — and frame the operating manual as "finished" so models don't "helpfully" expand it. The golden bridge: don't fight the model's instinct to capture — redirect it to the right doc.
+
 ### Static Priority Lists Get Stale
 Don't duplicate a priority list from Linear into CLAUDE.md. It creates a middle layer that's always slightly wrong. Point to the source of truth (Linear for backlog, ARCHITECTURE.md for build scope) and let the active thread hold the real "what's next." Use labels to route items: `agent: alex` for meta CTO work the agent does, department labels (Engineering, Product, etc.) for categorization.
 
