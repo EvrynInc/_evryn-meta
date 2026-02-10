@@ -4,7 +4,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-09T16:58:07-08:00*
+*Last updated: 2026-02-09T18:02:17-08:00*
 
 ---
 
@@ -25,9 +25,9 @@ LangGraph multi-agent system → single Lucas agent on Claude Agent SDK. Pivot d
 
 ## Active Projects
 
-- **evryn-team-agents** — SDK build phase. Waiting on AC to finish spec work.
+- **evryn-team-agents** — Context hygiene done (state file created, CLAUDE.md slimmed). SDK build phase next — waiting on AC to finish spec work. DC CLAUDE.md cleanup deferred to era transition (captured in archive removal plan).
 - **evryn-website** — Live at evryn.ai. Justin has pending updates (content tweaks in a Claude conversation and email thread — details to be routed to evryn-website repo context).
-- **_evryn-meta** — Context hygiene complete (2026-02-09). CLAUDE.md restructured with Diátaxis + progressive depth. ADR structure created (`docs/decisions/`). Docs extracted to reference files.
+- **_evryn-meta** — Context hygiene complete (2026-02-09). CLAUDE.md restructured with Diátaxis + progressive depth. ADR structure created (`docs/decisions/`). Docs extracted to reference files. Vestigial mailbox files removed.
 
 ## Infrastructure
 
