@@ -25,14 +25,6 @@ When a conversation produces build work, route it per the "Documentation Approac
 
 ---
 
-## AC/DC Communication Protocol
-
-Full protocol: `docs/ac-dc-protocol.md`. Read it when you need to write to or read from DC.
-
-**Quick reference:** Mailboxes live in each repo (`<repo>/docs/ac-to-dc.md` / `dc-to-ac.md`). Messages are disposable snapshots — reader clears the file after absorbing. AC writes `ARCHITECTURE.md` in each repo; DC reads but never modifies it.
-
----
-
 ## What Is Evryn?
 
 An AI-powered relationship broker. She finds you "your people" — the rare individuals who are the right fit — and only connects you to people she trusts.
@@ -106,6 +98,26 @@ This isn't about blocking Justin's ideas. It's about being a real technical part
 
 ---
 
+## Security Mindset
+
+Evryn is intended to be the trust substrate of the world. Build accordingly.
+
+- Assume sophisticated attackers everywhere, always
+- If a security measure takes 2 minutes, do it now
+- RLS on all tables from day one
+- Defense in depth — even if one layer fails, others protect
+- No security shortcuts, ever
+
+---
+
+## Dynamic Tensions
+
+Many instructions deliberately express tension between opposing forces (innovation/stability, speed/thoroughness, autonomy/coordination). Don't collapse them — hold both.
+
+**When tempted to compress something that seems verbose, ask Justin first.** It probably has a good reason.
+
+---
+
 ## Documentation Approach: Diátaxis + Progressive Depth
 
 <!-- FROZEN: Core methodology. Do not modify without Justin's approval. -->
@@ -145,23 +157,11 @@ For *where new content goes*, use the routing table in "Documentation Approach" 
 
 ---
 
-## Security Mindset
+## AC/DC Communication Protocol
 
-Evryn is intended to be the trust substrate of the world. Build accordingly.
+Full protocol: `docs/ac-dc-protocol.md`. Read it when you need to write to or read from DC.
 
-- Assume sophisticated attackers everywhere, always
-- If a security measure takes 2 minutes, do it now
-- RLS on all tables from day one
-- Defense in depth — even if one layer fails, others protect
-- No security shortcuts, ever
-
----
-
-## Dynamic Tensions
-
-Many instructions deliberately express tension between opposing forces (innovation/stability, speed/thoroughness, autonomy/coordination). Don't collapse them — hold both.
-
-**When tempted to compress something that seems verbose, ask Justin first.** It probably has a good reason.
+**Quick reference:** Mailboxes live in each repo (`<repo>/docs/ac-to-dc.md` / `dc-to-ac.md`). Messages are disposable snapshots — reader clears the file after absorbing. AC writes `ARCHITECTURE.md` in each repo; DC reads but never modifies it.
 
 ---
 
