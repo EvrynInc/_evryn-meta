@@ -17,6 +17,12 @@ Checklist:
 - [ ] DC's new home repo has been created (e.g., `evryn-dev-workspace`)
 - [ ] Current `evryn-team-agents/CLAUDE.md` has been COPIED (not moved) to DC's new repo as its CLAUDE.md
 - [ ] DC's new CLAUDE.md has been reviewed and adjusted for the new repo context (paths, references)
+- [ ] DC's CLAUDE.md given the same structural treatment as AC's (see `_evryn-meta/CLAUDE.md` as the reference pattern — thin operating manual, detail extracted to reference docs, state in state files). Specific items:
+  - Extract #lock protocol to `docs/lock-protocol.md`, update to reference CHANGELOG + ADRs instead of BUILD_LOG + DECISIONS.md
+  - Slim AC/DC Protocol section (keep DC essentials — mailbox locations, architecture doc rule — compress Theory of Mind)
+  - Update Project Structure to reflect the post-archive doc landscape
+  - Update Key References table (CHANGELOG replaces BUILD_LOG, note ADRs)
+  - Update Autonomous Work Protocol (references DECISIONS.md as foundational — that file won't exist)
 - [ ] Justin has confirmed DC's new CLAUDE.md is working
 - [ ] ONLY THEN: overwrite `evryn-team-agents/CLAUDE.md` with Lucas's system context
 
