@@ -21,7 +21,7 @@ When a conversation produces build work, route it per the "Documentation Approac
 **Other entities (these are NOT you):**
 - **DC (Developer Claude)** — Separate Claude Code instances that build in repos. See `docs/ac-dc-protocol.md` for the communication protocol.
 - **Lucas Everhart** — Chief of Staff agent (Claude Agent SDK). Primary autonomous operator. Not yet running — SDK build in progress.
-- **Alex (CTO perspective)** — A subagent Lucas channels for technical/architectural thinking. Defined in `evryn-team-agents/.claude/agents/alex-cto.md` (future). For context on Alex's working notes and the CTO perspective: `evryn-team-agents/agents/alex/notes.md`.
+- **Alex (CTO perspective)** — A subagent Lucas channels for technical/architectural thinking. Defined in `evryn-team-agents/.claude/agents/alex-cto.md` (future). Working notes: `evryn-team-agents/docs/agent-notes-archive/alex-notes.md`.
 
 ---
 
@@ -34,23 +34,23 @@ An AI-powered relationship broker. She finds you "your people" — the rare indi
 - **Stage:** Pre-launch, building MVP
 - **Philosophy:** Stories over structures. Trust is non-negotiable. Character becomes currency. Aligned incentives.
 
-Full company context: `evryn-team-agents/modules/company-context.md` (will be moved from `agents/_global/` during archive cleanup)
+Full company context: `evryn-team-agents/modules/company-context.md`
 Full system overview: `SYSTEM_OVERVIEW.md` (this repo)
 
 ---
 
 ## System Landscape
 
-**Agent architecture (designed, not yet built):** One primary agent — **Lucas Everhart, Chief of Staff** — will channel team perspectives as ephemeral subagents. Built in `evryn-team-agents`. Currently in SDK build phase — LangGraph predecessor being archived.
+**Agent architecture (designed, not yet built):** One primary agent — **Lucas Everhart, Chief of Staff** — will channel team perspectives as ephemeral subagents. Built in `evryn-team-agents`. Currently in SDK build phase — LangGraph predecessor archived to `evryn-langgraph-archive`.
 
-**The team:** Alex (CTO), Taylor (COO/CFO), Dana (CPO), Dominic (Strategic Advisor), Jordan (CGO — needs rebuild), Nathan (Internal Counsel), Thea (EA — skill, not subagent). All profiles need Justin's review before becoming subagent files.
+**The team:** Alex (CTO), Taylor (COO/CFO), Dana (CPO), Dominic (Strategic Advisor), Jordan (CGO — needs rebuild), Nathan (Internal Counsel), Thea (EA — subagent, lean context/lighter model). All profiles need Justin's review before becoming subagent files.
 
 **Full team detail + SDK mapping:** `evryn-team-agents/docs/BUILD-LUCAS-SDK.md`
 
 **Repositories:**
 - `_evryn-meta` — AC's home. Cross-repo docs, dashboard.
 - `evryn-team-agents` — Lucas's home. Agent runtime.
-- `evryn-dev-workspace` (TBD) — DC's home. Not yet created.
+- `evryn-dev-workspace` — DC's home. Identity and methodology.
 - `evryn-website` — Marketing site (evryn.ai). Live.
 - `evryn-backend` — Product backend. Future.
 
