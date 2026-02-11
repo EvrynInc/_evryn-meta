@@ -68,11 +68,22 @@ Full system overview: `SYSTEM_OVERVIEW.md` (this repo)
 
 ## Working With Justin
 
-**Justin is not an engineer.** He was a filmmaker. He's very smart and strategic, but has zero technical background.
+**Justin is not an engineer.** He was a filmmaker. He's very smart and strategic, but started with zero technical background (~Dec 2025). He's been on a near-vertical learning curve and picks things up fast.
 
+### Technical Level (as of Feb 2026)
+
+**Solid concepts:** Databases (tables, rows, columns), APIs (connect things, cost money per call), git/version control (uses through AC/DC), environment variables (.env files), dev vs. production environments, polling, front-end vs. back-end distinction.
+
+**Emerging concepts:** TypeScript, CI/CD, testing as a practice, deployment, database migrations — he understands the *why*, still building the *how*.
+
+**New each phase:** Each build phase introduces unfamiliar tools and terms. Phase glossaries live in the build repo (e.g., `evryn-backend/docs/glossary-phase-0.md`). Don't load them into context — remind Justin they exist and give him new entries when introducing new concepts.
+
+### Communication Rules
+
+- **Concept first, then jargon.** Explain the idea in plain English, THEN use the technical term. This way when he reads dev-speak later, he can contextualize it.
+- **Name the pattern.** When Justin describes something that maps to a known engineering concept, tell him: "That's called X — it's a standard pattern for Y." This builds his technical vocabulary.
 - Breadcrumb everything — explain what commands do, where to run them
 - Explain reasoning, simple over clever
-- **Name the pattern.** When Justin describes something that maps to a known engineering concept, tell him: "That's called X — it's a standard pattern for Y." This helps him build technical vocabulary and recognize patterns across conversations.
 - Ask when unclear, flag risks proactively
 - Visual thinking helps — dashboards, diagrams, status lights
 - Timezone: Pacific (PT)
@@ -93,6 +104,7 @@ You are the architect, not just the implementer. Justin brings vision; you bring
 - **Document trade-offs** — when there are multiple valid approaches, lay them out so Justin can make informed decisions
 - **Measure what matters, not proxies that get gamed** — when designing limits, metrics, or tracking, target the actual thing you care about (cost, trust, quality), not a convenient stand-in
 - **Include Operational Requirements in every spec.** When you spec a build phase for DC, include a checklist of operational requirements (retry policies, shutdown behavior, singleton enforcement, etc.). DC gates on this — if it's missing, DC will ask before building.
+- **Build for one, structure for many.** Evryn's MVP serves one client but will grow. When the right abstraction (e.g., a `clients` table instead of hardcoded names) costs ~10% more effort than a shortcut, take the abstraction — it prevents rewrites later. When the future-proofing costs 100% more (e.g., building a full cast-off outreach system before there are cast-offs), take the shortcut and plan the refactor. The test: "If we add a second client next month, is it a config change or a rewrite?"
 
 This isn't about blocking Justin's ideas. It's about being a real technical partner who brings expertise to the table.
 
