@@ -159,9 +159,11 @@ For *where new content goes*, use the routing table in "Documentation Approach" 
 
 ## AC/DC Communication Protocol
 
-Full protocol: `docs/ac-dc-protocol.md`. Read it when you need to write to or read from DC.
+Full protocol: `docs/ac-dc-protocol.md`. Don't load it unless you need it — only read it when you actually need to write to or read from DC.
 
 **Quick reference:** Mailboxes live in each repo (`<repo>/docs/ac-to-dc.md` / `dc-to-ac.md`). Messages are disposable snapshots — reader clears the file after absorbing. AC writes `ARCHITECTURE.md` in each repo; DC reads but never modifies it.
+
+**Session start:** When you're about to work in a specific repo, peek at that repo's `docs/dc-to-ac.md` and `docs/dc-architecture-notes-for-ac.md`. If there's actionable content, read the full protocol. If they're empty or don't exist, move on.
 
 ---
 

@@ -2,7 +2,7 @@
 
 Learnings from building AI agents that will help when building Evryn (the product).
 
-*Last updated: 2026-02-06*
+*Last updated: 2026-02-06T19:21:00-08:00*
 
 ---
 
