@@ -4,7 +4,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-10T16:56:14-08:00*
+*Last updated: 2026-02-11T09:16:00-08:00*
 
 ---
 
@@ -15,7 +15,6 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP fo
 **Blockers before DC can build Evryn:**
 - Justin must provide Evryn v0.1 system prompt
 - Justin must provide/point to n8n prototype workflow (prior art)
-- Justin has notes to fold into SYSTEM_OVERVIEW.md
 
 **Agent build (Lucas) is in a clean pause state** — all repos cleaned, archived, documented. Ready to resume anytime.
 
@@ -25,8 +24,8 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP fo
 - **evryn-team-agents** — PAUSED. SDK transition cleanup complete. LangGraph archived. Waiting on Evryn product MVP to finish, then resume Lucas build.
 - **evryn-dev-workspace** — DC's home repo. CLAUDE.md, lock protocol. Clean.
 - **evryn-langgraph-archive** — Read-only archive. Sealed.
-- **evryn-website** — Live at evryn.ai. Justin has pending updates.
-- **_evryn-meta** — AC's home. SYSTEM_OVERVIEW.md needs Justin's updates. ADR structure, docs all current.
+- **evryn-website** — Live at evryn.ai. Orphaned assets cleaned (2026-02-11). Justin has pending updates.
+- **_evryn-meta** — AC's home. Multi-repo sweep complete (2026-02-11). All docs current.
 
 ## Infrastructure
 
