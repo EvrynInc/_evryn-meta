@@ -108,16 +108,18 @@ You pay only when a connection genuinely works for you. Evryn's success and your
 
 **Key capabilities (planned):** Autonomous briefing compilation, scheduled operations (morning/evening/weekly/monthly), perspective deliberation (#garp), persistent file-based memory, graduated autonomy model, CTO/engineering capability via Alex subagent.
 
-**Previous system:** LangGraph 5-node graph with 8 separate agents — fully superseded. LangGraph code pending removal per archive plan.
+**Previous system:** LangGraph 5-node graph with 8 separate agents — fully superseded. LangGraph code archived to `evryn-langgraph-archive` repo.
 
 **For build detail:** See `evryn-team-agents/docs/BUILD-LUCAS-SDK.md`.
 
-### Evryn Backend (future `evryn-backend` repo)
-**What:** Product backend — the Evryn relationship broker for end users
-**Tech:** TBD
-**Status:** Future — after team agents are stable and SDK migration is complete
+### Evryn Backend (`evryn-backend` repo)
+**What:** Evryn product agent — inbox matching for Mark (pilot user), then expanding
+**Tech:** TypeScript, Claude Agent SDK, Gmail API (evryn@evryn.ai — own Google account), Supabase, Slack (Justin channel)
+**Status:** Repo created 2026-02-10. Build spec DRAFT at `docs/BUILD-EVRYN-MVP.md`. Blockers: Justin must provide v0.1 system prompt and n8n prototype.
 
-**Planned capabilities:** Onboarding, intent collection, matching, check-ins, post-match follow-up, email intake & routing, deception detection, publisher agent (safety/voice). Architecture will emerge as we build — team agents are the proving ground.
+**MVP workflow:** Mark forwards emails → Evryn classifies (gold/pass/edge case with confidence scoring) → drafts notifications → Justin approves via email → Evryn sends to Mark. Evryn interviews Mark to learn what "gold" means to him. Cast-offs deferred to Phase 2 (Gmail inbox is the capture mechanism).
+
+**For build detail:** See `evryn-backend/docs/BUILD-EVRYN-MVP.md`.
 
 ### Supabase Database
 **What:** PostgreSQL database + serverless backend
@@ -234,12 +236,14 @@ FORWARD DETECTED               DIRECT MESSAGE
 
 | Repo | Purpose | Status |
 |------|---------|--------|
-| `_evryn-meta` | CTO home base, cross-repo docs, dashboard | Active |
+| `_evryn-meta` | AC home base, cross-repo docs, dashboard | Active |
 | `evryn-website` | Marketing site (evryn.ai) | LIVE |
-| `evryn-team-agents` | Lucas (Chief of Staff) agent runtime | SDK architecture pivot in progress — not yet running |
+| `evryn-team-agents` | Lucas (Chief of Staff) agent runtime | PAUSED — building Evryn product first |
+| `evryn-backend` | Evryn product agent (inbox matching for Mark) | Active — build spec ready, blockers on Justin |
+| `evryn-dev-workspace` | DC's home. Identity and methodology | Active |
+| `evryn-langgraph-archive` | Read-only archive of LangGraph-era code | Sealed |
 | `evryn-prelaunch-landing` | Old landing page | Archived |
 | `evryn-app` | Member product UI | Future |
-| `evryn-backend` | Product backend | Future |
 
 ---
 
@@ -287,7 +291,7 @@ FORWARD DETECTED               DIRECT MESSAGE
 1. ~~Where should this document live?~~ → Resolved: `_evryn-meta` repo
 2. ~~What verification provider to use?~~ → Resolved: iDenfy
 3. ~~At what scale does n8n need to be replaced with code?~~ → Resolved: Building in code from start
-4. How to handle the "cast-offs" from Mark's triage — the 999 rejected emails that could become Evryn users?
+4. ~~How to handle the "cast-offs" from Mark's triage?~~ → Resolved: Phase 2. Gmail inbox is the natural capture mechanism — don't build anything, just don't delete. Evryn processes the backlog when ready.
 
 ---
 
@@ -304,3 +308,4 @@ FORWARD DETECTED               DIRECT MESSAGE
 | 2025-01-24 | Team structure update: AI executive team is now primary operations, human team members (Andrew, Salil, Manuele) moving to advisor roles. Added company-context.md to evryn-team-agents for agent context. |
 | 2026-01-31 | Major update: evryn-team-agents Phase 1 complete (LangGraph runtime, 3 triggers, all verified). Supabase tables updated to reflect agent infrastructure. Claude API now live. Added Linear. Updated repo statuses. |
 | 2026-02-06 | Architecture pivot: LangGraph multi-agent replaced by single Lucas agent on Claude Agent SDK. Updated team agents section, repos table, Claude API section, key contacts. Build spec DRAFT in progress. |
+| 2026-02-10 | Strategic pivot: building Evryn product MVP for Mark first (Lucas paused). Created evryn-backend repo. LangGraph archived to evryn-langgraph-archive. Added evryn-dev-workspace, evryn-langgraph-archive to repos. Cast-offs resolved (Phase 2, Gmail captures). |
