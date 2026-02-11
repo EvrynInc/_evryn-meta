@@ -4,34 +4,36 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-10T15:27:36-08:00*
+*Last updated: 2026-02-10T16:56:14-08:00*
 
 ---
 
-## Architecture Transition
+## Strategic Pivot: Evryn Product First
 
-LangGraph multi-agent system → single Lucas agent on Claude Agent SDK. Pivot decided 2026-02-06. LangGraph code archived to `evryn-langgraph-archive` repo (standalone, under `Code/`). Archive cleanup complete.
+Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP for Mark (pilot user) first. Simpler, real user feedback loop, everything transfers back to agent build. See `evryn-backend/docs/BUILD-EVRYN-MVP.md`.
 
-**Build spec (DRAFT):** `evryn-team-agents/docs/BUILD-LUCAS-SDK.md` — NOT ready for DC yet.
+**Blockers before DC can build Evryn:**
+- Justin must provide Evryn v0.1 system prompt
+- Justin must provide/point to n8n prototype workflow (prior art)
+- Justin has notes to fold into SYSTEM_OVERVIEW.md
 
-**Before DC can build:**
-- AC must decompose Lucas's system instructions into SDK locations (first build task)
-- Open architecture questions (permission model, memory, dashboarding, audit trails)
-- Justin must review team perspective profiles before they become subagent files
+**Agent build (Lucas) is in a clean pause state** — all repos cleaned, archived, documented. Ready to resume anytime.
 
 ## Active Projects
 
-- **evryn-team-agents** — SDK transition cleanup complete. LangGraph artifacts archived, handoff files restructured into modules/, ARCHITECTURE.md rewritten, BUILD-LUCAS-SDK.md cleaned up. Waiting on AC to do prompt decomposition (first build task).
-- **evryn-dev-workspace** — Created 2026-02-10. DC's home repo. CLAUDE.md, lock protocol, .gitignore. Pushed to GitHub.
-- **evryn-langgraph-archive** — Created 2026-02-10. Read-only archive of LangGraph-era code, agent defs (with original unedited notes), and build docs. Pushed to GitHub.
+- **evryn-backend** — NEW (created 2026-02-10). Evryn product MVP. Build spec at `docs/BUILD-EVRYN-MVP.md`. CLAUDE.md written for DC orientation.
+- **evryn-team-agents** — PAUSED. SDK transition cleanup complete. LangGraph archived. Waiting on Evryn product MVP to finish, then resume Lucas build.
+- **evryn-dev-workspace** — DC's home repo. CLAUDE.md, lock protocol. Clean.
+- **evryn-langgraph-archive** — Read-only archive. Sealed.
 - **evryn-website** — Live at evryn.ai. Justin has pending updates.
-- **_evryn-meta** — Context hygiene complete. ADR structure created. AC CLAUDE.md needs stale ref updates (Thea, repo locations, archive status).
+- **_evryn-meta** — AC's home. SYSTEM_OVERVIEW.md needs Justin's updates. ADR structure, docs all current.
 
 ## Infrastructure
 
 - Running locally on Justin's desktop. No cloud deployment yet.
-- Supabase database live (agent tables from LangGraph era).
-- Dashboard at evryn-dashboard.vercel.app (pulls from Supabase).
+- Supabase database live (agent tables from LangGraph era + n8n prototype tables).
+- Dashboard at evryn-dashboard.vercel.app (pulls from Supabase). Will add Evryn product agent.
+- evryn@evryn.ai — Evryn's own Google account (separate from agents@evryn.ai).
 
 ## Backlog
 
