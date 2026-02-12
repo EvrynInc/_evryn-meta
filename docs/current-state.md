@@ -4,7 +4,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-11T18:02:24-08:00*
+*Last updated: 2026-02-11T18:58:56-08:00*
 
 ---
 
@@ -14,15 +14,17 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 **Blockers before DC can build Evryn:**
 - Justin must provide Evryn v0.1 system prompt (ready — needs to share with AC)
-- n8n prototype exported and analyzed (DONE — JSON in `evryn-backend/docs/n8n-prototype/`, Supabase schema queried)
-
-**Architecture decisions locked:** Claude Agent SDK, 4-layer memory, MCP tools, Railway deployment, synthetic test fixtures. Prototype Supabase schema (users/messages/emailmgr_items/evryn_knowledge) is MORE mature than build doc — build doc schema section needs rewrite to adopt it.
+- n8n prototype exported and analyzed (DONE)
 
 **Key business model insight:** Evryn is a broker, not a SaaS. Everyone is a "user" — both sides of a connection pay per-connection. No clients vs contacts distinction. One `users` table, everyone equal.
 
+## What's In Flight
+
+AC Session 1 complete. Prototype Supabase schema analyzed — MORE mature than build doc's proposed schema. Three background docs (Master Plan, two requirements drafts) in `evryn-backend/docs/` ready for AC to read and integrate. **Full handoff context: `evryn-backend/docs/session-handoff-2026-02-11.md`** — a fresh AC instance should read that before touching the build doc.
+
 ## Active Projects
 
-- **evryn-backend** — Evryn product MVP. Build spec needs schema rewrite to adopt prototype tables. n8n JSON + .env.example committed. Two Supabase projects: agent dashboard (separate) + n8n prototype (product data).
+- **evryn-backend** — Evryn product MVP. Background docs + schema analysis committed. Build spec rewrite pending background doc review.
 - **evryn-team-agents** — PAUSED. Clean pause state.
 - **evryn-dev-workspace** — DC's home repo. Clean.
 - **evryn-langgraph-archive** — Read-only archive. Sealed.
