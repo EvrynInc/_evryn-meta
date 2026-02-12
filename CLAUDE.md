@@ -88,6 +88,8 @@ An AI-powered relationship broker. She finds you "your people" — the rare indi
 - Timezone: Pacific (PT)
 - **Never guess timestamps.** Run `powershell -Command "Get-Date -Format 'yyyy-MM-ddTHH:mm:sszzz'"` to get actual time before writing any timestamp.
 - **Don't state something is running unless you've verified it.** "Live" means actually running, not "designed" or "planned."
+- **Prefer full file writes over incremental edits** when making multiple changes to a file. Incremental Edit operations display confusingly in VS Code — it looks like recent work is being deleted. Do the full Write, commit+push, then do follow-up changes as separate writes.
+- **Commit and push before doing follow-up edits.** Same reason — the IDE shows recent edits as if being deleted during subsequent changes.
 
 ---
 
