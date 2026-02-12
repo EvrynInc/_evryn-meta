@@ -4,28 +4,28 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-11T09:16:00-08:00*
+*Last updated: 2026-02-11T16:07:13-08:00*
 
 ---
 
 ## Strategic Pivot: Evryn Product First
 
-Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP for Mark (pilot user) first. Simpler, real user feedback loop, everything transfers back to agent build. See `evryn-backend/docs/BUILD-EVRYN-MVP.md`.
+Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v0.2 "Mark's Inbox") for Mark (pilot user) first. See `evryn-backend/docs/BUILD-EVRYN-MVP.md`.
 
 **Blockers before DC can build Evryn:**
-- Justin must provide Evryn v0.1 system prompt
-- Justin must provide/point to n8n prototype workflow (prior art)
+- Justin must provide Evryn v0.1 system prompt (ready — needs to share with AC)
+- Justin must export n8n prototype workflow (next up — AC will also review attached Supabase tables)
 
-**Agent build (Lucas) is in a clean pause state** — all repos cleaned, archived, documented. Ready to resume anytime.
+**Architecture decisions locked this session:** Claude Agent SDK as framework, 4-layer memory architecture, MCP-based tool kit, synthetic test fixtures (6 archetypes), Railway for deployment. Build doc rewritten with full SDK architecture, query() examples, and self-contained DC instructions.
 
 ## Active Projects
 
-- **evryn-backend** — NEW (created 2026-02-10). Evryn product MVP. Build spec at `docs/BUILD-EVRYN-MVP.md`. CLAUDE.md written for DC orientation.
-- **evryn-team-agents** — PAUSED. SDK transition cleanup complete. LangGraph archived. Waiting on Evryn product MVP to finish, then resume Lucas build.
-- **evryn-dev-workspace** — DC's home repo. CLAUDE.md, lock protocol. Clean.
+- **evryn-backend** — Evryn product MVP. Build spec rewritten (2026-02-11): technology stack, SDK architecture, memory design, testing strategy, build order. Glossary added. Ready for DC once blockers clear.
+- **evryn-team-agents** — PAUSED. Clean pause state. Ready to resume after MVP.
+- **evryn-dev-workspace** — DC's home repo. Clean.
 - **evryn-langgraph-archive** — Read-only archive. Sealed.
-- **evryn-website** — Live at evryn.ai. Orphaned assets cleaned (2026-02-11). Justin has pending updates.
-- **_evryn-meta** — AC's home. Multi-repo sweep complete (2026-02-11). All docs current.
+- **evryn-website** — Live at evryn.ai. Justin has pending updates.
+- **_evryn-meta** — AC's home. CLAUDE.md updated with Justin's technical level and "build for one, structure for many" principle.
 
 ## Infrastructure
 
