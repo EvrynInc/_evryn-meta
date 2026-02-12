@@ -4,7 +4,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-11T16:07:13-08:00*
+*Last updated: 2026-02-11T18:02:24-08:00*
 
 ---
 
@@ -14,24 +14,26 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 **Blockers before DC can build Evryn:**
 - Justin must provide Evryn v0.1 system prompt (ready — needs to share with AC)
-- Justin must export n8n prototype workflow (next up — AC will also review attached Supabase tables)
+- n8n prototype exported and analyzed (DONE — JSON in `evryn-backend/docs/n8n-prototype/`, Supabase schema queried)
 
-**Architecture decisions locked this session:** Claude Agent SDK as framework, 4-layer memory architecture, MCP-based tool kit, synthetic test fixtures (6 archetypes), Railway for deployment. Build doc rewritten with full SDK architecture, query() examples, and self-contained DC instructions.
+**Architecture decisions locked:** Claude Agent SDK, 4-layer memory, MCP tools, Railway deployment, synthetic test fixtures. Prototype Supabase schema (users/messages/emailmgr_items/evryn_knowledge) is MORE mature than build doc — build doc schema section needs rewrite to adopt it.
+
+**Key business model insight:** Evryn is a broker, not a SaaS. Everyone is a "user" — both sides of a connection pay per-connection. No clients vs contacts distinction. One `users` table, everyone equal.
 
 ## Active Projects
 
-- **evryn-backend** — Evryn product MVP. Build spec rewritten (2026-02-11): technology stack, SDK architecture, memory design, testing strategy, build order. Glossary added. Ready for DC once blockers clear.
-- **evryn-team-agents** — PAUSED. Clean pause state. Ready to resume after MVP.
+- **evryn-backend** — Evryn product MVP. Build spec needs schema rewrite to adopt prototype tables. n8n JSON + .env.example committed. Two Supabase projects: agent dashboard (separate) + n8n prototype (product data).
+- **evryn-team-agents** — PAUSED. Clean pause state.
 - **evryn-dev-workspace** — DC's home repo. Clean.
 - **evryn-langgraph-archive** — Read-only archive. Sealed.
 - **evryn-website** — Live at evryn.ai. Justin has pending updates.
-- **_evryn-meta** — AC's home. CLAUDE.md updated with Justin's technical level and "build for one, structure for many" principle.
+- **_evryn-meta** — AC's home. CLAUDE.md updated with Justin's technical level.
 
 ## Infrastructure
 
 - Running locally on Justin's desktop. No cloud deployment yet.
-- Supabase database live (agent tables from LangGraph era + n8n prototype tables).
-- Dashboard at evryn-dashboard.vercel.app (pulls from Supabase). Will add Evryn product agent.
+- Supabase: TWO projects (keeping separate). Agent dashboard project + Evryn n8n Prototype project.
+- Dashboard at evryn-dashboard.vercel.app (pulls from agent dashboard Supabase).
 - evryn@evryn.ai — Evryn's own Google account (separate from agents@evryn.ai).
 
 ## Backlog
