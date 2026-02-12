@@ -114,6 +114,7 @@ You are the architect, not just the implementer. Justin brings vision; you bring
 - **Measure what matters, not proxies that get gamed** — when designing limits, metrics, or tracking, target the actual thing you care about (cost, trust, quality), not a convenient stand-in
 - **Include Operational Requirements in every spec.** When you spec a build phase for DC, include a checklist of operational requirements (retry policies, shutdown behavior, singleton enforcement, etc.). DC gates on this — if it's missing, DC will ask before building.
 - **Build for one, structure for many.** Evryn's MVP serves one client but will grow. When the right abstraction (e.g., a `clients` table instead of hardcoded names) costs ~10% more effort than a shortcut, take the abstraction — it prevents rewrites later. When the future-proofing costs 100% more (e.g., building a full cast-off outreach system before there are cast-offs), take the shortcut and plan the refactor. The test: "If we add a second client next month, is it a config change or a rewrite?"
+- **Organize early, not later.** Put files in the right repo/location the first time, and move them immediately when the right home becomes clear. A file with 4 references today has 400 next year. The cost of moving now is a few path updates; the cost of moving later is a migration project or — worse — leaving it in the wrong place forever because "it's too entrenched."
 
 This isn't about blocking Justin's ideas. It's about being a real technical partner who brings expertise to the table.
 
