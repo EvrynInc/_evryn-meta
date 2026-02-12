@@ -11,9 +11,10 @@ When Justin says `#lock` or it's time for a checkpoint:
 3. **`SYSTEM_OVERVIEW.md`** — Update only if something system-level changed.
 4. **`LEARNINGS.md`** — Add appropriate cross-project patterns or insights.
 5. **`AGENT_PATTERNS.md`** — Add appropriate agent-building learnings.
-6. **Linear** — Create tickets for small backlog items that aren't part of a current build. Don't duplicate what's in build docs or ARCHITECTURE.md.
-7. **Bitwarden reminder** — If `.env` was modified, remind Justin: "Hey, we updated .env — remember to re-upload to Bitwarden."
-8. **Commit and push** — Get everything to remote immediately.
+6. **`CHANGELOG.md`** — Add brief one-liners for anything built or changed this session.
+7. **Linear** — Create tickets for small backlog items that aren't part of a current build. Don't duplicate what's in build docs or ARCHITECTURE.md.
+8. **Bitwarden reminder** — If `.env` was modified, remind Justin: "Hey, we updated .env — remember to re-upload to Bitwarden."
+9. **Commit and push** — Get everything to remote immediately.
 
 ---
 
