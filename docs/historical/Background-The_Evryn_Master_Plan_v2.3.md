@@ -1,6 +1,7 @@
 > **HISTORICAL DOCUMENT — FROZEN**
-> Version 2.3, dated 2025-10-15. This is the founding vision document. It is preserved as-is for historical reference and as a source of poetic/marketing language. Do not edit.
-> **Living reference:** `_evryn-meta/docs/master-plan-reference.md` (comprehensive condensation, kept current).
+> Version 2.3, dated 2025-10-15. This is the founding vision document. Preserved as-is for historical reference and as a source of poetic/marketing language. Do not edit.
+> **Living source of truth:** `_evryn-meta/docs/roadmap.md` (the Hub — loaded every session by every agent).
+> **Condensed reference:** `_evryn-meta/docs/historical/master-plan-reference.md` (611-line condensation of this document).
 
 # **Purpose of This Document**
 
