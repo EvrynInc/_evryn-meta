@@ -211,3 +211,5 @@ After a strategic conversation produces build tasks:
 3. **Don't put build details here** — this file stays at altitude
 
 DC doesn't need to know why we decided something. It needs to know what to build and any constraints.
+
+**Build docs are DC's self-contained source of truth.** By the time DC opens a build doc, every decision is already made, every relevant detail absorbed in-doc. No "go read this other thing." This affects how AC architects — every conversation that produces build work should be moving toward a self-contained spec.
