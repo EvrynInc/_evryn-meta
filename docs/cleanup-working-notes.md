@@ -6,6 +6,26 @@
 
 ---
 
+## New Items (added mid-session)
+
+### Move v0.1 system prompt to evryn-backend
+The v0.1 files (`_evryn-meta/docs/historical/Evryn_0.1_Instructions_Prompts_Scripts/`) belong in `evryn-backend/docs/historical/` — that's where DC will look for them, and they're build source material, not company-level historical docs. Move them, update references (Hub spokes list, BUILD-EVRYN-MVP.md Sources to Absorb, MPR Related Documents).
+
+### Create evryn-backend/docs/historical/
+Move background/reference docs into historical so they don't get confused with current docs:
+- `Evryn_0.1_Instructions_Prompts_Scripts/` (moving from _evryn-meta)
+- `Background-Justin_Early_November_Requirements_Draft.md`
+- `Background-Salil_Late_November_Stripped-Down_Requirements_Draft.md`
+- `prototype-schema-analysis.md`
+- `n8n-prototype/` folder (if it exists)
+- `session-handoff-2026-02-11.md`
+Keep BUILD-EVRYN-MVP.md and glossary at top level (those are active).
+
+### Hub "organic population" note
+Add a brief note to the Hub or current-state.md explaining that spokes populate organically as work demands them. The Hub is an index by design — depth lives in spokes. For the current build, BUILD-EVRYN-MVP.md IS the spoke.
+
+---
+
 ## What's Done
 
 - Hub built (`docs/roadmap.md`)
