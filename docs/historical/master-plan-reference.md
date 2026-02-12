@@ -716,14 +716,14 @@ Used during the founding team search. Listed for reference:
 ## Related Documents
 
 - **Original Master Plan:** `docs/historical/Background-The_Evryn_Master_Plan_v2.3.md` (this repo) — frozen, 3,205 lines, 2025-10-15
-- **Justin's Requirements Draft:** `evryn-backend/docs/Background-Justin_Early_November_Requirements_Draft.md` — reverse roadmap v1.0→0.3, functional requirements, Care Brain spec, milestone matrix
-- **Salil's Requirements Draft:** `evryn-backend/docs/Background-Salil_Late_November_Stripped-Down_Requirements_Draft.md` — lean MVP cut under cost constraints. Predates AI-agent pivot.
+- **Justin's Requirements Draft:** `evryn-backend/docs/historical/Background-Justin_Early_November_Requirements_Draft.md` — reverse roadmap v1.0→0.3, functional requirements, Care Brain spec, milestone matrix
+- **Salil's Requirements Draft:** `evryn-backend/docs/historical/Background-Salil_Late_November_Stripped-Down_Requirements_Draft.md` — lean MVP cut under cost constraints. Predates AI-agent pivot.
 - **Financial Model:** Spreadsheet (location TBD) — avatar details, pricing tiers, burn rate, Low/Medium/High runway scenarios. Referenced throughout the Master Plan.
 - **Deep Research Report: Market Analysis & Competitive Landscape:** Notion doc — full SWOT analysis, segment alignment, competitive deep dives. Referenced at MP lines 1406 and 1570.
-- **Evryn v0.1 System Prompt:** Two files in `docs/historical/Evryn_0.1_Instructions_Prompts_Scripts/` — Description/Instructions and Prompts/Scripts used in the Custom GPT prototype.
+- **Evryn v0.1 System Prompt:** Two files in `evryn-backend/docs/historical/Evryn_0.1_Instructions_Prompts_Scripts/` — Description/Instructions and Prompts/Scripts used in the Custom GPT prototype.
 - **"The Beautiful Language of Evryn":** Google Doc referenced in Master Plan line 330 — onboarding scripts and voice
-- **Prototype Schema:** `evryn-backend/docs/prototype-schema-analysis.md` — Supabase schema from n8n prototype
-- **Session 1 Handoff:** `evryn-backend/docs/session-handoff-2026-02-11.md` — context for the current build
+- **Prototype Schema:** `evryn-backend/docs/historical/prototype-schema-analysis.md` — Supabase schema from n8n prototype
+- **Session 1 Handoff:** `evryn-backend/docs/historical/session-handoff-2026-02-11.md` — context for the current build
 - **Notion Vault:** Contains historical drafts, longer BizOps tool rationale, and earlier versions of this plan.
 
 ---

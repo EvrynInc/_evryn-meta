@@ -85,10 +85,10 @@ For MVP (v0.2), the three brains collapse into a single agent. Separation matter
 Load only when your current task requires the depth.
 
 - **Tactical status:** `_evryn-meta/docs/current-state.md`
-- **Historical vault:** `_evryn-meta/docs/historical/` — MPR, MP v2.3, v0.1 system prompt
+- **Historical vault (_evryn-meta):** `_evryn-meta/docs/historical/` — Master Plan Reference, Master Plan v2.3
+- **Historical vault (evryn-backend):** `evryn-backend/docs/historical/` — v0.1 system prompt, requirements drafts, prototype schema, n8n prototype
 - **Evryn product build:** `evryn-backend/docs/BUILD-EVRYN-MVP.md`
 - **Lucas agent build:** `evryn-team-agents/docs/BUILD-LUCAS-SDK.md`
-- **Prototype schema:** `evryn-backend/docs/prototype-schema-analysis.md`
 - **AC/DC protocol:** `_evryn-meta/docs/ac-dc-protocol.md`
 - **Decision log:** `_evryn-meta/docs/decisions/`
 - **System overview:** `_evryn-meta/SYSTEM_OVERVIEW.md` (detailed component breakdown, external services)
