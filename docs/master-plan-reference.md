@@ -1,6 +1,6 @@
 # Evryn Master Plan — Reference
 
-**How to use this file:** Comprehensive condensation of the Evryn Master Plan (v2.3, 2025-10-15). Written by AC for cross-project use. Read this instead of the 3,205-line original. The original is frozen at `evryn-backend/docs/Background-The_Evryn_Master_Plan_v2.3.md` — go there if you need exact wording or marketing-grade poetic language.
+**How to use this file:** Comprehensive condensation of the Evryn Master Plan (v2.3, 2025-10-15). Written by AC for cross-project use. Read this instead of the 3,205-line original. The original is frozen at `docs/Background-The_Evryn_Master_Plan_v2.3.md` (this repo) — go there if you need exact wording or marketing-grade poetic language.
 
 **Who this serves:** AC (architect), the AI Team (Lucas and subagents), Evryn's knowledgebase (selectively), product builders, and any department that needs to understand the company. Consumer-specific extracts should be derived from this doc, not the original.
 
@@ -598,7 +598,7 @@ The vision: a world where the default is that relationships are high quality and
 
 ## Related Documents
 
-- **Original Master Plan:** `evryn-backend/docs/Background-The_Evryn_Master_Plan_v2.3.md` — frozen, 3,205 lines, 2025-10-15
+- **Original Master Plan:** `docs/Background-The_Evryn_Master_Plan_v2.3.md` (this repo) — frozen, 3,205 lines, 2025-10-15
 - **Justin's Requirements Draft:** `evryn-backend/docs/Background-Justin_Early_November_Requirements_Draft.md` — reverse roadmap v1.0→0.3, functional requirements, Care Brain spec, milestone matrix
 - **Salil's Requirements Draft:** `evryn-backend/docs/Background-Salil_Late_November_Stripped-Down_Requirements_Draft.md` — lean MVP cut under cost constraints. Predates AI-agent pivot.
 - **Evryn v0.1 System Prompt:** Google Doc `1eSiiA_zgbAR4FpnifiZbkwEp04tNcFbHXDlYT-P1D7A` (referenced in both requirements drafts — Justin to provide)
