@@ -4,7 +4,7 @@
 
 **Who this serves:** AC (architect), the AI Team (Lucas and subagents), Evryn's knowledgebase (selectively), product builders, and any department that needs to understand the company. Consumer-specific extracts should be derived from this doc, not the original.
 
-**What's omitted:** Stale GTM timelines (targeting Dec 2025 launch), staffing plans (assumed human team, pre-AI pivot), specific tool evaluations (BizOps appendix — mostly aged). The original has these if anyone needs them.
+**What's omitted:** Stale GTM timelines and staffing plans are breadcrumbed inline with context for why they were removed and what replaced them. BizOps tools are fully preserved. The original has everything if anyone needs deeper context.
 
 ---
 
@@ -19,6 +19,8 @@ The scope is life-wide: soulmate, cofounder, hookup, plumber, creative collabora
 Evryn is active, not passive. She starts conversations. She thinks about you in the background. She offers thoughts unprompted. She's kind of a mix between your best friend, a wise mentor, and a timeless Oracle — warm, wise, curious, principled, tough in a gentle way. She has quiet gravitas, but she knows how to laugh. She adjusts to you but she's always *her*.
 
 **Key personality trait:** Evryn runs her own shop. She's like a cool coffee shop owner — runs her own customer service, payments, emails, everything. One-woman show. The one behind the counter who remembers your name. The one who makes it right if something goes wrong. She'll give you a free cup of coffee because she can tell you need it today.
+
+**Design philosophy:** Her goal is resonance in connecting you with others, but she knows that the first resonance must be between you and her, and the ultimate resonance must always be between you and yourself. Evryn doesn't just connect you to others — she connects you more to *yourself*, by encouraging you to be clear about who you are and by filling your world with the people you're meant to be with.
 
 **Category corrections** (how to explain what Evryn is):
 - "Not a dating app. A resonance layer for life."
@@ -49,6 +51,8 @@ Trust is the operating system, not a feature. Everything in Evryn is built to ea
 3. **Trust goes both ways.** If you're honest with Evryn, she matches you well. If you're dishonest, she'll match you poorly (because she doesn't know the real you) and she'll grow to distrust you. Over time, untrustworthy people trickle away — it just doesn't work well for them.
 
 4. **Character becomes currency.** Your reputation with Evryn is behavioral, not performative. Not your resume, not your branding, not your ad spend. Just: what you've done and how it impacted those you've touched. Over time, Evryn's trust graph replaces the resume, the referral, the background check, the rating system, and the profile. "I don't care what your bio says. I care how you impact others."
+
+5. **You're always in control.** Evryn takes the wheel so you can relax, but you're ultimately the one in control. You can change direction, slow down, even go dormant. And Evryn commits to no manipulation: no auto-inviting your friends, no "accidental" opt-ins, no fake urgency, no gamification. No ads, no selling data. **You** are the customer, not an advertiser. If Evryn believes something must be shared for a connection to be ethical and you don't want to share it, the match simply won't proceed.
 
 ### What Evryn Tracks (Trust Signals)
 - Honesty
@@ -223,8 +227,40 @@ Legacy apps extract until users leave. Evryn earns because users stay. "Trust is
 
 ### Financial Model Assumptions
 - **ARPU model:** ~6 successful matches/month × ~$8/match = ~$576 ARPU/year (blended across business + consumer)
-- **User archetypes ("avatars"):** Seekers, Builders, Operators, Casual Connectors, Social Anchors, Torchbearers, Legacy Gatekeepers — each with unique trust postures and monetization curves. These are predictive archetypes based on observed behavior, not demographics.
+- **User archetypes ("avatars"):** Predictive archetypes based on observed behavior, not demographics. Each with unique trust postures and monetization curves:
+  - **Seekers** — emotionally primed, looking for meaning and belonging. Win their heart → win their loyalty.
+  - **Builders** — need trust scaffolding and long-term potential. Respond to vision.
+  - **Operators** — need reliability, speed, and frictionless delivery. Practical value first.
+  - **Casual Connectors** — thrive on usefulness and simplicity. Convert best when value is immediate and ask is minimal. Ideal for low-friction viral mechanics.
+  - **Social Anchors** — engage around belonging. Don't chase novelty, but when they believe in something, they bring their community.
+  - **Torchbearers** — need to feel chosen. Once in, they become firestarters.
+  - **Legacy Gatekeepers** — must be invited at exactly the right moment, with the right social proof already in motion.
+  - The long tail: institutions, niche personalities, quiet lurkers — they don't drive spikes, but they build the floor.
 - **Network density thresholds:** ~150 users = testing; ~300 = early magic; ~500 (diverse roles) = resonant matches common; 800+ = multi-intent matches, quality improves faster than growth
+
+### Market Size Framework
+
+Evryn uses a trust-filtered market model:
+
+- **TAM** — everyone who could benefit from high-trust introductions across life contexts (global). Intentionally left conceptual.
+- **SAM** — geographies and ecosystems actively targeted within 3-5 years (LA film, then additional city clusters).
+- **TSM (Trusted Serviceable Market)** — SAM after identity and behavior filters. ~60-70% of SAM is trust-eligible, ~15-20% soft-limited to low-stakes, ~8-12% hard-excluded. Filters shrink TAM but strengthen LTV.
+- **SOM/yr** — annual paying penetration of TSM. Varies by maturity: 35-55% (igniting), 55-75% (maturing), 70-90% (dense/steady state).
+
+| Scenario | SAM | TSM | SOM/yr | Revenue @ $576 ARPU |
+|----------|-----|-----|--------|---------------------|
+| LA Film Ecosystem | 200K | 120-140K | 84-126K | $48-73M |
+| Multi-City Creative (10 cities) | 2M | 1.2-1.4M | 660K-1.05M | $380-605M |
+| U.S. Wide (cross-context) | 40M | 24-28M | 13.2-21M | $7.6-12.1B |
+| Global First-Wave (50-75 cities) | 200M | 120-140M | 66-126M | $38-72.6B |
+
+*All figures are order-of-magnitude models for build and capital planning.*
+
+### Capital Strategy
+
+The founding capital philosophy is **user-led, backed by traditional VC as needed**. Early build funds cover foundational work. Angel funds support team formation and user acquisition. Crowdfunding (via StartEngine) is fueled by user belief, not performance marketing — closing the loop between trust, traction, and growth.
+
+> *Removed: specific dollar amounts and funding milestones from the founding capital plan (bootstrap $15K → family → angel $750K → crowdfunding). These are being revised as the build progresses under the AI-first pivot. See original lines 850-871 for the founding plan.*
 
 ---
 
@@ -259,8 +295,34 @@ Pre-launch: if you refer someone who becomes a paying customer, Evryn rewards yo
 ### Evangelist Story Loops
 When a user has a great experience, Evryn may ask: "Would you want to help others by sharing your story?" Stories appear on user's channels, Evryn's platforms, or woven into onboarding flows. Every story must reflect Evryn's tone: personal, humane, nuanced, emotionally honest.
 
+### Key Messaging Themes
+1. **The old way is broken** — dating apps string you along, professional networks are cold noise, gig platforms commoditize people, social media increases disconnection
+2. **Resonance over resemblance** — Evryn finds deeper human matches, not superficial ones
+3. **Users as owners** — literally and philosophically user-owned, not Big Tech or VC overlords
+4. **Trust and care** — would rather grow slowly with trust than rapidly with gimmicks
+5. **A relationship, not an app** — using Evryn feels like interacting with a wise friend
+6. **Share freely, she'll sort the signal** — you don't have to figure out who to trust, that's Evryn's job
+
+### Competitive Landscape (by Category)
+
+| Category | Current State | Evryn's Edge | Key Threats |
+|----------|--------------|--------------|-------------|
+| **Film & Entertainment** | Fragmented, trust-starved, gatekept (Facebook groups, Stage32, StaffMeUp) | First to unify creative matchmaking under AI trust model. Justin's network as ignition. | LinkedIn targeting creatives; cultural pushback from gatekeepers |
+| **Dating Apps** | Massive, churn-heavy, emotionally exhausted (Tinder, Hinge, Bumble) | No manipulation, no profiles, no swipes. Trust-first, outcome-focused. | Bumble pivoting into AI; Hinge copying outcome narrative |
+| **Professional Networking** | Static, self-promotional, cold (LinkedIn, Lunchclub) | Actual introductions, double opt-in, multidimensional alignment. | LinkedIn builds real AI matchmaking |
+| **Gig & Freelance** | Transactional, noisy, commoditized (Upwork, Fiverr, Uber) | Long-term trust loops. "Personal cloud" model. Match once, come back forever. | Upwork layering AI; Uber scaling personalization |
+| **Social Media** | Massive, chaotic, wrong tool for connection (Facebook, Discord, Reddit) | Quiet, curated, personal. You don't scroll — you get introduced. | Meta releases "Connections AI"; Discord layers matchmaking |
+
+> *For the full SWOT analysis per category, see the Deep Research Report (linked in Related Documents) and original lines 1568-1670.*
+
 ### Infrastructure Licensing (Long Game)
 If Evryn works, competitors may try to neutralize her. The architecture is being designed to optionally license Evryn's matchmaking layer — letting aligned platforms embed her logic. "LinkedIn — now with Evryn intros." Strategic judo: turn competition into distribution.
+
+> *Removed: month-by-month launch timeline targeting Dec 28, 2025. Dates have passed; the build plan is being rebuilt as v0.2 MVP. See original lines 921-1006 for the founding launch plan.*
+
+> *Removed: detailed outreach plan (PR strategy, community outreach at film festivals, influencer plan, ad spend approach). Being rebuilt for the v0.2 pilot phase. See original lines 1305-1337.*
+
+> *Removed: scope compression/expansion triggers calibrated for the Dec 2025 launch (runway thresholds, compute cost triggers, user count milestones). Core principle preserved: "The experience of meeting Evryn never gets compromised." See original lines 1130-1158.*
 
 ---
 
@@ -277,7 +339,11 @@ If Evryn works, competitors may try to neutralize her. The architecture is being
 
 *Note: v0.2 "Mark's Inbox" was not in the original Master Plan — it was added during the strategic pivot to build Evryn's product MVP for a pilot user before the consumer launch.*
 
-**Future capabilities to keep in mind:** Voice interface (live voice, voice messages), vision (understanding users in conversation more fully), connection coaching ("here's why you keep not getting the job/date"), long-term resiliency stubs (federation, Foundation).
+**Future capabilities to keep in mind:** Voice interface (live voice, voice messages), vision (understanding users in conversation more fully), connection coaching ("here's why you keep not getting the job/date"), group matching (small-group introductions for community-building or creative cohorts), long-term resiliency stubs (federation, Foundation).
+
+> *Removed: 12-month department plans (CEO, Product, Tech & AI, Growth, UX, BizOps, Legal, Trust & Safety, People & Culture) with staffing timelines and onboarding deadlines. These assumed a human team pre-AI pivot — the AI team (Lucas + subagents) now covers most of these functions. See original lines 1012-1127 for the founding org plan.*
+
+> *Removed: team roster as of Oct 2025 (CEO, Operations Lead, CTO, TPM, UX Designer, General Counsel). Team has shifted to AI-first with Justin as sole human operator. See original lines 1207-1220.*
 
 ---
 
@@ -577,22 +643,68 @@ Evryn's ultimate leverage: owning the trust layer of human connection. The moat 
 
 As the network grows, the network effect kicks in on multiple levels. Someone seeking a niche interest or rare collaborator finds their "needle in a haystack" at scale.
 
+**The world Evryn creates:** Mental health skyrockets — connection is vitally important for happy, healthy people. Divorce plummets and family stability soars as people are matched with genuinely resonant partners. Job fit and satisfaction improve drastically as people find employers who match their skills *and* their spirit. Social groups become more aligned and harmonious. Everyone gains a robust safety net of connections. And money becomes less necessary in more situations, as Evryn does what money was always meant to do — vouch for your past contributions and let you carry forward the value you deliver today. When connections consistently feel meaningful and serendipitous, people start to regain a sense of trust in life's possibilities.
+
 The vision: a world where the default is that relationships are high quality and people can be trusted — because they're vetted through a reliable trust broker. Connection is not a lost art. It's just been buried. Evryn is here to surface what matters.
 
 > *Marketing note: The original Master Plan's "Long View" section (lines 2971-3028) has powerful, emotionally resonant prose about the world Evryn creates — worth pulling for pitch decks, investor materials, and brand storytelling.*
 
 ---
 
-## Legal & Corporate
+## Legal, Corporate & Tools
 
 - **Entity:** Evryn Inc., Delaware Public Benefit Corporation
 - **Planned future:** Evryn Foundation (Switzerland, nonprofit) as custodian of Protocol and trust infrastructure
 - **Legal counsel:** Fenwick & West
 - **Incorporation:** via Clerky
 - **Trademark:** filed via LegalZoom
+
+### Finance & Accounting
+- **Banking:** Rho — startup-focused, no-fee digital checking
+- **Accounting:** QuickBooks Online — bookkeeping and financial records
+- **Financial planning:** Finmark (now part of BILL) — forecasting, runway, scenario analysis
+- **Payroll:** Gusto — employee and contractor pay (integrates with QuickBooks)
+- **International hiring:** Deel — EOR and contractor payments
+- **Cap table:** Google Sheets (early stage; will move to dedicated tool as investors/employees grow)
+
+### Fundraising
 - **Crowdfunding:** StartEngine (Reg CF)
-- **Payments:** Stripe + Stripe Connect
+- **Pitch deck tracking:** DocSend — share decks with tracking (views, time on slides)
+
+### Payments & Identity
+- **Payments:** Stripe + Stripe Connect (peer-to-peer)
 - **Identity verification:** iDenfy (chosen for international coverage, pay-per-success, friendly name). Salil's requirements draft proposes Jumio as alternative.
+
+### Website & Hosting
+- **Domains:** Namecheap (evryn.ai, .net, .org secured; domain broker pursuing evryn.com)
+- **Marketing site:** Webflow — no-code, visually rich (update: now Next.js on Vercel)
+- **Analytics:** Google Analytics
+- **Scale-up options:** Cloudflare Pages / Vercel / VPS (contingency)
+
+### Customer Management
+- **Email marketing:** Mailchimp (free tier for early audience) or ConvertKit (creator-focused, email-first)
+- **CRM:** HubSpot CRM (free tier may serve from the start; scales when user/investor relations grow complex)
+- **Support:** Zendesk (earmarked for post-launch; AI-driven support first)
+- **Community:** Discord (early users and supporters)
+
+### Project Management & Documentation
+- **Project management:** ClickUp (update: Linear now used for backlog)
+- **Team communication:** Slack
+- **Ideation/notes:** Notion
+- **Document storage:** Google Drive (Docs & Sheets)
+- **Flexible database:** Airtable (on the table but no specific home yet)
+
+### Product Analytics
+- **User behavior tracking:** Amplitude (deferred until beta is running)
+
+### Recruitment Platforms (Historical)
+Used during the founding team search. Listed for reference:
+- YC Co-founder Matching, CoFoundersLab, Pioneer.app, AngelList/Wellfound
+- Indie Hackers, FoundersList, Indie.vc Network, LinkedIn
+- Upwork, Fiverr, Toptal (freelance/contract work)
+- Dribbble, Behance (design talent scouting)
+
+> *The BizOps appendix in the original (lines 3104-3210) has longer rationale for each tool choice. The Notion Vault referenced there has even deeper evaluations.*
 
 ---
 
@@ -601,11 +713,14 @@ The vision: a world where the default is that relationships are high quality and
 - **Original Master Plan:** `docs/Background-The_Evryn_Master_Plan_v2.3.md` (this repo) — frozen, 3,205 lines, 2025-10-15
 - **Justin's Requirements Draft:** `evryn-backend/docs/Background-Justin_Early_November_Requirements_Draft.md` — reverse roadmap v1.0→0.3, functional requirements, Care Brain spec, milestone matrix
 - **Salil's Requirements Draft:** `evryn-backend/docs/Background-Salil_Late_November_Stripped-Down_Requirements_Draft.md` — lean MVP cut under cost constraints. Predates AI-agent pivot.
-- **Evryn v0.1 System Prompt:** Google Doc `1eSiiA_zgbAR4FpnifiZbkwEp04tNcFbHXDlYT-P1D7A` (referenced in both requirements drafts — Justin to provide)
+- **Financial Model:** Spreadsheet (location TBD) — avatar details, pricing tiers, burn rate, Low/Medium/High runway scenarios. Referenced throughout the Master Plan.
+- **Deep Research Report: Market Analysis & Competitive Landscape:** Notion doc — full SWOT analysis, segment alignment, competitive deep dives. Referenced at MP lines 1406 and 1570.
+- **Evryn v0.1 System Prompt:** Two files in `docs/historical/Evryn_0.1_Instructions_Prompts_Scripts/` — Description/Instructions and Prompts/Scripts used in the Custom GPT prototype.
 - **"The Beautiful Language of Evryn":** Google Doc referenced in Master Plan line 330 — onboarding scripts and voice
 - **Prototype Schema:** `evryn-backend/docs/prototype-schema-analysis.md` — Supabase schema from n8n prototype
 - **Session 1 Handoff:** `evryn-backend/docs/session-handoff-2026-02-11.md` — context for the current build
+- **Notion Vault:** Contains historical drafts, longer BizOps tool rationale, and earlier versions of this plan.
 
 ---
 
-*Reference complete. Comprehensive condensation from 3,205-line original by AC, 2026-02-12. Second pass: broadened from build-filtered to company-wide.*
+*Reference complete. Comprehensive condensation from 3,205-line original by AC, 2026-02-12. Third pass: verification against full MP, added breadcrumbs for omissions, expanded BizOps tools, added market size framework, avatar descriptions, competitive landscape, societal long view, capital strategy, user agency principle, and external references.*
