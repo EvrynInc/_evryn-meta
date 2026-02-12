@@ -37,6 +37,15 @@ An AI-powered relationship broker. She finds you "your people" — the rare indi
 Full company context: `evryn-team-agents/modules/company-context.md`
 Full system overview: `SYSTEM_OVERVIEW.md` (this repo)
 
+### Company Knowledge Hierarchy
+
+The Evryn Master Plan is the founding vision document. It feeds the product build, the AI team, and Evryn's own knowledgebase.
+
+- **Living reference (read this):** `docs/master-plan-reference.md` — comprehensive condensation (~600 lines), kept current. This is what AC and department heads should load.
+- **Historical original (don't load unless you need exact wording or poetic language):** `evryn-backend/docs/Background-The_Evryn_Master_Plan_v2.3.md` — frozen at v2.3 (2025-10-15), 3,205 lines. Will consume most of your context. Contains marketing-grade prose worth pulling for pitch/growth materials.
+- **Requirements drafts (historical):** `evryn-backend/docs/Background-Justin_Early_November_Requirements_Draft.md` (reverse roadmap, v1.0→0.3) and `Background-Salil_Late_November_Stripped-Down_Requirements_Draft.md` (lean MVP cut). Both predate the v0.2 pivot.
+- **Prototype analysis:** `evryn-backend/docs/prototype-schema-analysis.md` — Supabase schema from n8n prototype, foundation for the build.
+
 ---
 
 ## System Landscape
