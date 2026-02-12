@@ -34,17 +34,7 @@ An AI-powered relationship broker. She finds you "your people" — the rare indi
 - **Stage:** Pre-launch, building MVP
 - **Philosophy:** Stories over structures. Trust is non-negotiable. Character becomes currency. Aligned incentives.
 
-Full company context: `evryn-team-agents/modules/company-context.md`
-Full system overview: `SYSTEM_OVERVIEW.md` (this repo)
-
-### Company Knowledge Hierarchy
-
-The Evryn Master Plan is the founding vision document. It feeds the product build, the AI team, and Evryn's own knowledgebase.
-
-- **Living reference (read this):** `docs/master-plan-reference.md` — comprehensive condensation (~600 lines), kept current. This is what AC and department heads should load.
-- **Historical original (don't load unless you need exact wording or poetic language):** `docs/Background-The_Evryn_Master_Plan_v2.3.md` — frozen at v2.3 (2025-10-15), 3,205 lines. Will consume most of your context. Contains marketing-grade prose worth pulling for pitch/growth materials.
-- **Requirements drafts (historical):** `evryn-backend/docs/Background-Justin_Early_November_Requirements_Draft.md` (reverse roadmap, v1.0→0.3) and `Background-Salil_Late_November_Stripped-Down_Requirements_Draft.md` (lean MVP cut). Both predate the v0.2 pivot.
-- **Prototype analysis:** `evryn-backend/docs/prototype-schema-analysis.md` — Supabase schema from n8n prototype, foundation for the build.
+**Start here every session:** `docs/roadmap.md` (the Hub) — the single living source of company truth. It has pointers to all spokes (build docs, historical vault, tactical status, etc.).
 
 ---
 
@@ -114,7 +104,7 @@ You are the architect, not just the implementer. Justin brings vision; you bring
 - **Measure what matters, not proxies that get gamed** — when designing limits, metrics, or tracking, target the actual thing you care about (cost, trust, quality), not a convenient stand-in
 - **Include Operational Requirements in every spec.** When you spec a build phase for DC, include a checklist of operational requirements (retry policies, shutdown behavior, singleton enforcement, etc.). DC gates on this — if it's missing, DC will ask before building.
 - **Build for one, structure for many.** Evryn's MVP serves one client but will grow. When the right abstraction (e.g., a `clients` table instead of hardcoded names) costs ~10% more effort than a shortcut, take the abstraction — it prevents rewrites later. When the future-proofing costs 100% more (e.g., building a full cast-off outreach system before there are cast-offs), take the shortcut and plan the refactor. The test: "If we add a second client next month, is it a config change or a rewrite?"
-- **Organize early, not later.** Put files in the right repo/location the first time, and move them immediately when the right home becomes clear. A file with 4 references today has 400 next year. The cost of moving now is a few path updates; the cost of moving later is a migration project or — worse — leaving it in the wrong place forever because "it's too entrenched."
+- **Organize early, not later.** Put files in the right repo/location the first time, and move them immediately when the right home becomes clear. A file with 4 references today has 400 next year. The cost of moving now is a few path updates; the cost of moving later is a migration project or — worse — leaving it in the wrong place forever because "it's too entrenched." **When you move a file, grep for every reference to the old path and update them in the same commit.** Stale paths are silent bugs.
 
 This isn't about blocking Justin's ideas. It's about being a real technical partner who brings expertise to the table.
 

@@ -715,7 +715,7 @@ Used during the founding team search. Listed for reference:
 
 ## Related Documents
 
-- **Original Master Plan:** `docs/Background-The_Evryn_Master_Plan_v2.3.md` (this repo) — frozen, 3,205 lines, 2025-10-15
+- **Original Master Plan:** `docs/historical/Background-The_Evryn_Master_Plan_v2.3.md` (this repo) — frozen, 3,205 lines, 2025-10-15
 - **Justin's Requirements Draft:** `evryn-backend/docs/Background-Justin_Early_November_Requirements_Draft.md` — reverse roadmap v1.0→0.3, functional requirements, Care Brain spec, milestone matrix
 - **Salil's Requirements Draft:** `evryn-backend/docs/Background-Salil_Late_November_Stripped-Down_Requirements_Draft.md` — lean MVP cut under cost constraints. Predates AI-agent pivot.
 - **Financial Model:** Spreadsheet (location TBD) — avatar details, pricing tiers, burn rate, Low/Medium/High runway scenarios. Referenced throughout the Master Plan.
