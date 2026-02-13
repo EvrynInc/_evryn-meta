@@ -49,7 +49,7 @@ Evryn is a **broker**, not a SaaS. Everyone is a "user" — both sides pay per-c
 - **v0.2 "Mark's Inbox":** Pilot user Mark forwards emails → Evryn classifies (gold/pass/edge case) → drafts notifications → Justin approves via email → Evryn delivers.
 - **Lucas (Chief of Staff agent) PAUSED** — building Evryn product first. Everything transfers back.
 - **Website** live at evryn.ai.
-- **GTM:** LA film industry first (tight-knit, high need, Justin's network). Bottom-up wave strategy. Invite-only "whisper cascade." Grow by solving, proving, and being invited forward.
+- **GTM:** LA film industry first. Why: acute need (everyone either clamoring for attention or drowning in it), dense network (each customer knows hundreds of prime leads), founder advantage (Justin's 78K+ second-gen industry contacts). Two parallel channels: **top-down** via gatekeepers like Mark — high-volume connectors whose ~1,000 weekly cast-offs become Evryn users; **bottom-up** via invite-only "whisper cascade" — grow by solving, proving, and being invited forward.
 - **Growth is conversationally embedded.** The ideal landing page is "talk to Evryn." She pitches from the user's vantage point while demonstrating value.
 
 ## Technical Architecture
