@@ -138,34 +138,11 @@
 
 ---
 
-## Current Priorities
+## Product Roadmap Sequence
 
-### Priority 1: Website ✅ COMPLETE
-Get a landing page Justin is proud to share.
-- New visual identity (aqua/teal, Seed of Life)
-- Simplified copy (finalized)
-- HubSpot waitlist integration (with Cloudflare Turnstile captcha)
-- **Status:** LIVE at evryn.ai
-
-### Priority 2: Mark's Triage MVP
-Prove the "gatekeeper" concept works.
-- Mark forwards his 200 daily emails to Evryn
-- Evryn classifies: gold vs. services spam vs. other
-- Evryn surfaces ~1-2 "gold" opportunities per week
-- Mark provides feedback to improve accuracy
-
-**Two pathways when Evryn receives email from Mark:**
-1. **Forward detected** → Triage pathway (classify, route, surface gold)
-2. **Direct message from Mark** → Conversation pathway (talk to him directly)
-
-**Success criteria:** Mark stops manually sorting and trusts Evryn to surface what matters.
-
-### Priority 3: Member Interface
-Let users talk to Evryn through a web/mobile interface rather than email.
-- Built by Claude Code
-- Mobile-responsive from day one (PWA for "app-like" experience)
-- Native apps (App Store) deferred until user demand warrants it
-- Includes verification flow (iDenfy)
+1. **Website** — ✅ COMPLETE. LIVE at evryn.ai. See swim lane in Components above.
+2. **Mark's Triage MVP (v0.2)** — IN PROGRESS. Prove the gatekeeper concept works. Full detail in `evryn-backend/docs/BUILD-EVRYN-MVP.md`.
+3. **Member Interface** — FUTURE. Web/mobile interface (PWA, mobile-responsive from day one). Native apps deferred until user demand warrants it. Includes iDenfy verification flow.
 
 ---
 
