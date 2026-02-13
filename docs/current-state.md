@@ -18,7 +18,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 - **BUILD-EVRYN-MVP.md rewrite** — DC's self-contained source of truth. Absorb prototype analysis, schema docs, all decisions in-doc. No "go read this other thing."
 - **BUILD-LUCAS-SDK.md note** — Hub replaces scattered system-level refs. Internal/external firewalling architecture needed for Lucas.
-- **Cross-repo cleanup** — DEFERRED until Hub is stable. SYSTEM_OVERVIEW.md and company-context.md may contain unique details — read during cleanup, don't assume redundant.
+- **Cross-repo cleanup** — company-context.md retired (content absorbed into Hub). SYSTEM_OVERVIEW.md tightening in progress.
 
 ## Active Projects
 

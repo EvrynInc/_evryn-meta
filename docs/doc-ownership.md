@@ -23,4 +23,4 @@
 | `evryn-team-agents/modules/*` | AC | Rich context loaded on demand (future) |
 | Linear (EVR workspace) | AC | Backlog — small items to not forget |
 
-**Sync responsibility:** When company-level changes happen (team structure, mission, strategy), update both `modules/company-context.md` (once created) AND `SYSTEM_OVERVIEW.md`. They serve different audiences (agents vs developers) but must stay consistent.
+**Sync responsibility:** When company-level changes happen (team structure, mission, strategy), update the Hub (`_evryn-meta/docs/roadmap.md`) — it's the single source of company truth. `SYSTEM_OVERVIEW.md` is a technical spoke and should stay consistent with the Hub.
