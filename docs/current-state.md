@@ -4,7 +4,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-12T13:39:26-08:00*
+*Last updated: 2026-02-13T07:08:02-08:00*
 
 ---
 
@@ -16,17 +16,17 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **BUILD-EVRYN-MVP.md rewrite** — DC's self-contained source of truth. Absorb prototype analysis, schema docs, all decisions in-doc. No "go read this other thing."
-- **BUILD-LUCAS-SDK.md note** — Hub replaces scattered system-level refs. Internal/external firewalling architecture needed for Lucas.
-- **Cross-repo cleanup** — company-context.md retired (content absorbed into Hub). SYSTEM_OVERVIEW.md tightening in progress.
+- **BUILD-EVRYN-MVP.md rewrite (Pre-Work #10)** — The critical path item. AC reads each source, absorbs into build doc so DC gets a self-contained spec. Sources identified, pre-work checklist updated.
+- **Write Evryn's triage system prompt (Pre-Work #6)** — The creative/strategic work. After source absorption.
+- **Update DC's CLAUDE.md (Pre-Work #9)** — Testing mandate, build principles. After source absorption.
 
 ## Active Projects
 
-- **_evryn-meta** — Hub created (`docs/roadmap.md`). Hub-and-spoke document architecture established. Historical vault populated. CLAUDE.md updated.
-- **evryn-backend** — Evryn product MVP. All blockers cleared (v0.1 prompt analyzed, prototype schema analyzed). Build spec rewrite is next.
-- **evryn-team-agents** — PAUSED. Clean pause state.
-- **evryn-dev-workspace** — DC's home repo. Clean.
-- **evryn-website** — Live at evryn.ai. Justin has pending updates.
+- **_evryn-meta** — Hub enriched (problem statement, Why Now, Trust & Fit, GTM synthesis). SYSTEM_OVERVIEW tightened (swim lanes, Hub duplicates stripped). company-context retired. Doc architecture clean.
+- **evryn-backend** — Evryn product MVP. All blockers cleared. Sources to Absorb documented. Build spec rewrite (Pre-Work #10) is next.
+- **evryn-team-agents** — PAUSED. company-context deleted (absorbed into Hub). Clean pause state.
+- **evryn-dev-workspace** — DC's home repo. Company context pointer updated to Hub.
+- **evryn-website** — Live at evryn.ai. Justin has pending updates — see `evryn-website/2026.02.12_Website_Changes_Spec`.
 - **evryn-langgraph-archive** — Read-only archive. Sealed.
 
 ## Infrastructure

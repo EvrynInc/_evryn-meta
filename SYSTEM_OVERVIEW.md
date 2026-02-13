@@ -199,14 +199,14 @@ FORWARD DETECTED               DIRECT MESSAGE
 
 | Date | Change |
 |------|--------|
-| 2025-01-16 | Initial document created |
-| 2025-01-20 | Removed n8n - all backend built in code via Claude Code. Added _evryn-meta repo. Updated architecture diagram. Aligned "brains" with PRD concepts. Added iDenfy rationale. Updated Supabase tables to current state. Added two-pathway flow for Mark's triage. |
-| 2025-01-21 | Website LIVE at evryn.ai. Updated Vercel project info. Added Cloudflare to external services. Priority 1 marked complete. |
-| 2025-01-22 | Added evryn-team-agents repo (AI executive team). Created LEARNINGS.md and AGENT_PATTERNS.md for cross-project knowledge capture. Architecture complete. Code scaffolded overnight - ready for credentials and testing. |
-| 2025-01-23 | Team agents update: AA Alex (email/API) is primary interface, CC Alex (terminal) occasional. Gmail push notifications via Pub/Sub instead of polling. Billing switch to Pro + API credits. Added Google Cloud to external services. |
-| 2025-01-23 | Gmail aliases configured on agents@evryn.ai. Catch-all routing to Thea. Voice integration researched (Vapi + Hume AI) for future Phase 4. Added voice AI platforms to external services (future). |
-| 2025-01-24 | Team structure update: AI executive team is now primary operations, human team members (Andrew, Salil, Manuele) moving to advisor roles. Added company-context.md to evryn-team-agents for agent context. |
+| 2026-01-16 | Initial document created |
+| 2026-01-20 | Removed n8n - all backend built in code via Claude Code. Added _evryn-meta repo. Updated architecture diagram. Aligned "brains" with PRD concepts. Added iDenfy rationale. Updated Supabase tables to current state. Added two-pathway flow for Mark's triage. |
+| 2026-01-21 | Website LIVE at evryn.ai. Updated Vercel project info. Added Cloudflare to external services. Priority 1 marked complete. |
+| 2026-01-22 | Added evryn-team-agents repo (AI executive team). Created LEARNINGS.md and AGENT_PATTERNS.md for cross-project knowledge capture. Architecture complete. Code scaffolded overnight - ready for credentials and testing. |
+| 2026-01-23 | Team agents update: AA Alex (email/API) is primary interface, CC Alex (terminal) occasional. Gmail push notifications via Pub/Sub instead of polling. Billing switch to Pro + API credits. Added Google Cloud to external services. |
+| 2026-01-23 | Gmail aliases configured on agents@evryn.ai. Catch-all routing to Thea. Voice integration researched (Vapi + Hume AI) for future Phase 4. Added voice AI platforms to external services (future). |
+| 2026-01-24 | Team structure update: AI executive team is now primary operations, human team members (Andrew, Salil, Manuele) moving to advisor roles. Added company-context.md to evryn-team-agents for agent context. |
 | 2026-01-31 | Major update: evryn-team-agents Phase 1 complete (LangGraph runtime, 3 triggers, all verified). Supabase tables updated to reflect agent infrastructure. Claude API now live. Added Linear. Updated repo statuses. |
 | 2026-02-06 | Architecture pivot: LangGraph multi-agent replaced by single Lucas agent on Claude Agent SDK. Updated team agents section, repos table, Claude API section, key contacts. Build spec DRAFT in progress. |
 | 2026-02-10 | Strategic pivot: building Evryn product MVP for Mark first (Lucas paused). Created evryn-backend repo. LangGraph archived to evryn-langgraph-archive. Added evryn-dev-workspace, evryn-langgraph-archive to repos. Cast-offs resolved (Phase 2, Gmail captures). |
-| 2026-02-12 | Tightened: stripped Hub-duplicate sections (philosophy, brains, contacts, repos, open questions). Added swim lane status (Done/Next) to each component. Updated Supabase to show two projects. Current Priorities kept as-is pending build doc absorption. |
+| 2026-02-12 | Tightened: stripped Hub-duplicate sections (philosophy, brains, contacts, repos, open questions). Added swim lane status (Done/Next) to each component. Updated Supabase to show two projects. Slimmed Current Priorities to Product Roadmap Sequence. |

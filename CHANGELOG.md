@@ -4,6 +4,19 @@
 
 ---
 
+## 2026-02-13
+
+- Hub enriched: problem statement, Why Now, renamed Trust Architecture → Trust & Fit, GTM synthesis (gatekeeper + wave), Fenwick & West, flywheel in business model
+- Retired `company-context.md` — unique content absorbed into Hub, all references updated across 4 repos, file deleted
+- SYSTEM_OVERVIEW tightened: stripped Hub-duplicate sections, added swim lane status (Done/Next) per component, slimmed Current Priorities to Product Roadmap Sequence
+- Created `evryn-backend/docs/historical/` — moved background docs, prototype, n8n, session handoff, v0.1 system prompt
+- Moved v0.1 system prompt files from `_evryn-meta` to `evryn-backend/docs/historical/`
+- Sources to Absorb section written in BUILD-EVRYN-MVP.md (pre-work checklist updated)
+- Success criteria added to BUILD-EVRYN-MVP.md workflow section
+- ADR-001: added Thea subagent reversal note
+- MEMORY.md cleaned (removed ~70 lines of stale/completed content)
+- Deleted cleanup-working-notes.md (all tasks complete)
+
 ## 2026-02-12
 
 - Established hub-and-spoke document architecture: Hub (`docs/roadmap.md`) as single living source of company truth
