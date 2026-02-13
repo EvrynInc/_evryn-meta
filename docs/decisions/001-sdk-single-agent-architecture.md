@@ -18,7 +18,7 @@ Additionally, the LangGraph dependency added complexity, opacity, and debugging 
 
 3. **Alex is a subagent, not just a skill.** Engineering needs its own independent advocate in deliberation. Lucas should not play conductor AND instruments simultaneously. But Lucas may also hold an Architect skill for direct CTO-level thinking when he doesn't need an independent voice.
 
-4. **Thea becomes a Skill, not a subagent.** EA operational discipline doesn't have unique domain perspectives. Thea's functions (tracking commitments, following up, preventing drops) are skills Lucas employs. If things start dropping, reconsider making Thea a subagent with independent voice.
+4. **Thea becomes a Skill, not a subagent.** EA operational discipline doesn't have unique domain perspectives. Thea's functions (tracking commitments, following up, preventing drops) are skills Lucas employs. If things start dropping, reconsider making Thea a subagent with independent voice. *(Reversed 2026-02-10 — Thea is now a subagent. Resource allocation: don't burn Lucas's full context on EA work. Lucas carries the discipline, Thea does the work. See BUILD-LUCAS-SDK.md.)*
 
 5. **Subagents are one level deep** (SDK limitation). "Alex manages 5 devs" = Lucas spawns 5 dev subagents directly, with Alex's perspective guiding.
 

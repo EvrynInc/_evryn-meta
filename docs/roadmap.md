@@ -7,17 +7,26 @@
 
 ## What Evryn Is
 
-An AI-powered relationship broker. She finds you "your people" — the rare individuals who are the right fit — and only connects you to people she trusts. Not a dating app, not a networking tool, not a marketplace. A trust-based connection engine across all life domains: soulmate, cofounder, plumber, creative collaborator, hookup, someone who'd pay $100 for the thing you were about to throw away.
+Today's connection tools optimize for engagement metrics (swipes, scrolls, clicks), not real outcomes. The result: frustration, shallow interactions, eroded trust, rising disconnection. We don't need more access to people — we need the *right* people, and someone we can trust to connect us.
+
+Evryn is an AI-powered relationship broker. She finds you "your people" — the rare individuals who are the right fit — and only connects you to people she trusts. Not a dating app, not a networking tool, not a marketplace. A trust-based connection engine across all life domains: soulmate, cofounder, plumber, creative collaborator, hookup, someone who'd pay $100 for the thing you were about to throw away.
 
 **Design philosophy:** Stories over structures. Trust is non-negotiable. Character becomes currency. Aligned incentives. The first resonance is between you and Evryn; the ultimate resonance is between you and yourself.
 
 **Entity:** Evryn Inc., Delaware Public Benefit Corporation. Mission-locked.
 
-## Trust Architecture
+## Why Now
 
-Trust is the operating system, not a feature. Evryn only connects people in proportion to how much she trusts them.
+- **AI can finally be a trusted presence**, not just a tool
+- **Cultural fatigue** with extraction, manipulation, and addiction-driven platforms
+- **Loneliness epidemic** + professional displacement = acute demand for trusted connection
+- **Competitors can't follow** — incumbents are trapped by models that require keeping things broken; upstarts can't catch up to compounding trust
 
-- **Trust is a story, not a score.** Multi-dimensional, context-specific. Structured as a document in the user profile, not a number.
+## Trust & Fit
+
+Trust and fit are the operating system, not features. Evryn only connects people in proportion to how much she trusts them — and only when the fit is genuinely right.
+
+- **Trust and fit are a story, not a score.** Multi-dimensional, context-specific. Structured as a document in the user profile, not a number. Some dimensions bleed across contexts; others are domain-specific.
 - **Character becomes currency.** Behavioral, not performative. What you've done and how it impacted others.
 - **You're always in control.** No manipulation, no auto-invites, no fake urgency, no gamification, no ads, no data selling.
 - **Behavioral filtering, not belief filtering.** Filters predatory behavior, deception, coercion — not politics or worldview.
@@ -31,6 +40,7 @@ Evryn is a **broker**, not a SaaS. Everyone is a "user" — both sides pay per-c
 - **Trust-based pricing:** Users pay what they believe is fair. 100% satisfaction guarantee.
 - **Three revenue streams:** (1) Match payments, (2) Post-match transactions (Stripe Connect), (3) Participant-based business access ("ads without ads").
 - **Structural moat:** Trust compounds. LTV is exponential — each success drives more demand. Legacy platforms profit from churn; Evryn profits from success.
+- **The flywheel:** Value compounds after a connection, not just during. You seek a soulmate → then a wedding planner → then a midwife → a babysitter → a new job. The more Evryn knows you, the more verticals open up. Every success fuels growth.
 
 ## Current Strategy
 
@@ -67,6 +77,7 @@ For MVP (v0.2), the three brains collapse into a single agent. Separation matter
 - **Lucas Everhart** — Chief of Staff agent (Claude Agent SDK). Primary autonomous operator. Paused for Evryn build.
 - **AI Team** (Lucas subagents): Alex (CTO), Taylor (COO/CFO), Dana (CPO), Dominic (Strategic Advisor), Jordan (CGO), Nathan (Internal Counsel), Thea (EA — separate subagent).
 - **Human Advisors:** Andrew Lester (Operations), Salil Chatrath (Product), Manuele Capacci (Design), Megan Griffiths (Film Industry).
+- **Legal:** Fenwick & West (strategic legal partner).
 - **Pilot User:** Mark (August Island Pictures / Eva's Wild).
 
 ## Repositories
@@ -92,7 +103,6 @@ Load only when your current task requires the depth.
 - **AC/DC protocol:** `_evryn-meta/docs/ac-dc-protocol.md`
 - **Decision log:** `_evryn-meta/docs/decisions/`
 - **System overview:** `_evryn-meta/SYSTEM_OVERVIEW.md` (detailed component breakdown, external services)
-- **Company context (for Lucas):** `evryn-team-agents/modules/company-context.md`
 
 ---
 
