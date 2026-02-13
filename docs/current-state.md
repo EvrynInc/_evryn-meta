@@ -4,7 +4,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-13T07:08:02-08:00*
+*Last updated: 2026-02-13T15:02:11-08:00*
 
 ---
 
@@ -12,27 +12,27 @@
 
 Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v0.2 "Mark's Inbox") for Mark (pilot user) first. See `evryn-backend/docs/BUILD-EVRYN-MVP.md`.
 
-**Key business model insight:** Evryn is a broker, not a SaaS. Everyone is a "user" — both sides of a connection pay per-connection. No clients vs contacts distinction. One `users` table, everyone equal.
+**Key framing:** Evryn is a broker, not a SaaS. v0.2 surfaces connections from Mark's inbox — not sorting email, brokering connections. Everyone is a "user," both sides pay per-connection. Connections tracked as such from day one.
 
 ## What's Next
 
-- **BUILD-EVRYN-MVP.md rewrite (Pre-Work #10)** — The critical path item. AC reads each source, absorbs into build doc so DC gets a self-contained spec. Sources identified, pre-work checklist updated.
-- **Write Evryn's triage system prompt (Pre-Work #6)** — The creative/strategic work. After source absorption.
-- **Update DC's CLAUDE.md (Pre-Work #9)** — Testing mandate, build principles. After source absorption.
+- **Pre-Work #10: Build doc rewrite + ARCHITECTURE.md creation** — The critical path item. AC has read all source documents. Next step: split architecture sections out of BUILD-EVRYN-MVP.md into `evryn-backend/docs/ARCHITECTURE.md`, then absorb sources into both docs. Key insights to incorporate: connections table is v0.2 scope, user isolation model, Justin-as-publisher, proactive behavior, `profile_jsonb` structure from Dec 2 historical doc.
+- **Pre-Work #6: Write Evryn's triage system prompt** — After source absorption. v0.1 system prompt patterns identified (Dream with me, Smart Curiosity, dual-track processing).
+- **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. After source absorption.
 
 ## Active Projects
 
-- **_evryn-meta** — Hub enriched (problem statement, Why Now, Trust & Fit, GTM synthesis). SYSTEM_OVERVIEW tightened (swim lanes, Hub duplicates stripped). company-context retired. Doc architecture clean.
-- **evryn-backend** — Evryn product MVP. All blockers cleared. Sources to Absorb documented. Build spec rewrite (Pre-Work #10) is next.
-- **evryn-team-agents** — PAUSED. company-context deleted (absorbed into Hub). Clean pause state.
-- **evryn-dev-workspace** — DC's home repo. Company context pointer updated to Hub.
+- **_evryn-meta** — Hub reframed (connections not classification, hub hygiene guidance, user isolation, agent council stubs). SYSTEM_OVERVIEW reframed (connection brokering data flow, Evryn architecture principles).
+- **evryn-backend** — All sources read. Build doc rewrite (#10) is next. Will produce ARCHITECTURE.md (new) + revised BUILD-EVRYN-MVP.md.
+- **evryn-team-agents** — PAUSED. Clean pause state.
+- **evryn-dev-workspace** — DC's home repo.
 - **evryn-website** — Live at evryn.ai. Justin has pending updates — see `evryn-website/2026.02.12_Website_Changes_Spec`.
 - **evryn-langgraph-archive** — Read-only archive. Sealed.
 
 ## Infrastructure
 
 - Running locally on Justin's desktop. No cloud deployment yet.
-- Supabase: TWO projects (keeping separate). Agent dashboard project + Evryn n8n Prototype project.
+- Supabase: TWO projects (keeping separate). Agent dashboard project + Evryn product project (was "n8n Prototype" — to be renamed).
 - Dashboard at evryn-dashboard.vercel.app (pulls from agent dashboard Supabase).
 - evryn@evryn.ai — Evryn's own Google account (separate from agents@evryn.ai).
 

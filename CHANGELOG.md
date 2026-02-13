@@ -6,6 +6,10 @@
 
 ## 2026-02-13
 
+- Hub: added hygiene guidance (fidelity over brevity), reframed v0.2 as connection brokering, added user isolation principle, agent council stubs, ARCHITECTURE.md spoke
+- SYSTEM_OVERVIEW: reframed data flow as "Connection Brokering" (not triage), added Evryn architecture principles (user isolation, publisher, proactive behavior), updated Evryn Backend section
+- Read all Pre-Work #10 source documents + Dec 2 historical doc; nuance captured in session handoff
+- Reviewed LEARNINGS.md and AGENT_PATTERNS.md for Evryn-transferable patterns
 - Hub enriched: problem statement, Why Now, renamed Trust Architecture → Trust & Fit, GTM synthesis (gatekeeper + wave), Fenwick & West, flywheel in business model
 - Retired `company-context.md` — unique content absorbed into Hub, all references updated across 4 repos, file deleted
 - SYSTEM_OVERVIEW tightened: stripped Hub-duplicate sections, added swim lane status (Done/Next) per component, slimmed Current Priorities to Product Roadmap Sequence
