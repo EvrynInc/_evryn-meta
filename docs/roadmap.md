@@ -2,7 +2,7 @@
 
 > **Living source of truth.** Loaded every session by every agent. If your notes contradict this document, flag the discrepancy — don't silently override.
 >
-> **Hub hygiene:** This doc is loaded into every session — every line costs tokens. But the goal isn't brevity, it's *fidelity*. After reading the Hub, an agent should have the right mental model of Evryn at a high altitude — enough that nothing in the sub-docs is a substantive surprise. More detail, yes. Different understanding, never. When maintaining this doc: (1) If a section is growing, move detail to a spoke and leave a hint here that sets the right expectation. (2) If reading the Hub could leave a wrong impression about something important, fix it — even if that makes it longer. (3) Every time you read this, ask: is it succeeding? If not, improve it.
+> **Hub hygiene:** This doc is loaded into every session — every line costs tokens. But the goal isn't brevity, it's *fidelity*. After reading the Hub, an agent should have the right mental model of Evryn at a high altitude — enough that nothing in the sub-docs is a substantive surprise. More detail, yes. Different understanding, never. **Only Justin edits this document.** If you think something here is wrong or incomplete, tell Justin — do not rewrite it yourself. When maintaining this doc with Justin: (1) If a section is growing, move detail to a spoke and leave a hint here that sets the right expectation. (2) If reading the Hub could leave a wrong impression about something important, fix it — even if that makes it longer. (3) Every time you read this, ask: is it succeeding? If not, flag it.
 >
 > **Tactical status:** `_evryn-meta/docs/current-state.md` (what's in flight, blockers, infrastructure).
 
