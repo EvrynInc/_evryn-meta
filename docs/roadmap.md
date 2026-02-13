@@ -1,6 +1,9 @@
 # Evryn — The Hub
 
 > **Living source of truth.** Loaded every session by every agent. If your notes contradict this document, flag the discrepancy — don't silently override.
+>
+> **Hub hygiene:** This doc is loaded into every session — every line costs tokens. But the goal isn't brevity, it's *fidelity*. After reading the Hub, an agent should have the right mental model of Evryn at a high altitude — enough that nothing in the sub-docs is a substantive surprise. More detail, yes. Different understanding, never. When maintaining this doc: (1) If a section is growing, move detail to a spoke and leave a hint here that sets the right expectation. (2) If reading the Hub could leave a wrong impression about something important, fix it — even if that makes it longer. (3) Every time you read this, ask: is it succeeding? If not, improve it.
+>
 > **Tactical status:** `_evryn-meta/docs/current-state.md` (what's in flight, blockers, infrastructure).
 
 ---
@@ -46,7 +49,7 @@ Evryn is a **broker**, not a SaaS. Everyone is a "user" — both sides pay per-c
 
 **Build stages:** v0.1 (Custom GPT PoC) done → **v0.2 (Mark's Inbox)** ← current → v0.3 (live onboarding) → v0.4 (wizard-of-oz matching) → v1.0 (full matching).
 
-- **v0.2 "Mark's Inbox":** Pilot user Mark forwards emails → Evryn classifies (gold/pass/edge case) → drafts notifications → Justin approves via email → Evryn delivers.
+- **v0.2 "Mark's Inbox":** Evryn surfaces connections from Mark's inbox. Mark forwards emails → Evryn identifies who's worth Mark's time (gold/pass/edge case) → drafts notification → Justin approves via email → Evryn delivers. These are connections being brokered, not emails being sorted — tracked as such from day one.
 - **Lucas (Chief of Staff agent) PAUSED** — building Evryn product first. Everything transfers back.
 - **Website** live at evryn.ai.
 - **GTM:** LA film industry first. Why: acute need (everyone either clamoring for attention or drowning in it), dense network (each customer knows hundreds of prime leads), founder advantage (Justin's 78K+ second-gen industry contacts). Two parallel channels: **top-down** via gatekeepers like Mark — high-volume connectors whose ~1,000 weekly cast-offs become Evryn users; **bottom-up** via invite-only "whisper cascade" — grow by solving, proving, and being invited forward.
@@ -63,7 +66,9 @@ Evryn is a **broker**, not a SaaS. Everyone is a "user" — both sides pay per-c
 
 **Dual-track processing:** Warm human conversation + structured metadata collection running in parallel. Analytical layer invisible to the user.
 
-For MVP (v0.2), the three brains collapse into a single agent. Separation matters for scaling.
+For MVP (v0.2), the three brains collapse into a single agent. At scale, they separate into a council of specialized subagents — plus a **publisher** (safety gate that checks everything before it goes out) and **deception detection**. Detail in `SYSTEM_OVERVIEW.md`.
+
+**User isolation is absolute.** Each user's conversation is its own track. Evryn never reveals one user's information to another. Multi-channel conversations (email, chat, voice) interleave *within* a user by time — same as a real friendship across channels — but never bleed *between* users. Admin access to user data must be heavily gated even from Evryn's own operators (future architecture requirement).
 
 **Script-as-skill, not script-as-constraint.** Evryn receives onboarding scripts + the reasoning behind them, then flows naturally while hitting the same targets. Not a script-follower — a skilled agent who understands the technique.
 
@@ -98,7 +103,8 @@ Load only when your current task requires the depth.
 - **Tactical status:** `_evryn-meta/docs/current-state.md`
 - **Historical vault (_evryn-meta):** `_evryn-meta/docs/historical/` — Master Plan Reference, Master Plan v2.3
 - **Historical vault (evryn-backend):** `evryn-backend/docs/historical/` — v0.1 system prompt, requirements drafts, prototype schema, n8n prototype
-- **Evryn product build:** `evryn-backend/docs/BUILD-EVRYN-MVP.md`
+- **Evryn product architecture:** `evryn-backend/docs/ARCHITECTURE.md` (how Evryn works as a system — schema, memory, pipelines, firewalling)
+- **Evryn product build:** `evryn-backend/docs/BUILD-EVRYN-MVP.md` (what to build, phase by phase)
 - **Lucas agent build:** `evryn-team-agents/docs/BUILD-LUCAS-SDK.md`
 - **AC/DC protocol:** `_evryn-meta/docs/ac-dc-protocol.md`
 - **Decision log:** `_evryn-meta/docs/decisions/`
