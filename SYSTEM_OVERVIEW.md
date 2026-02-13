@@ -88,14 +88,20 @@
 **Next (when resumed):** SDK build per `evryn-team-agents/docs/BUILD-LUCAS-SDK.md`. Team profiles need Justin's review.
 
 ### Evryn Backend (`evryn-backend` repo)
-**What:** Evryn product agent — inbox matching for Mark (pilot user), then expanding
+**What:** Evryn product agent — connection broker, starting with Mark's inbox as the first source
 **Tech:** TypeScript, Claude Agent SDK, Gmail API (evryn@evryn.ai — own Google account), Supabase, Slack (Justin channel)
-**Status:** Active — AC pre-work in progress, preparing build spec for DC
+**Status:** Active — AC pre-work in progress, preparing build spec and architecture doc for DC
 
-**MVP workflow:** Mark forwards emails → Evryn classifies (gold/pass/edge case with confidence scoring) → drafts notifications → Justin approves via email → Evryn sends to Mark. Evryn interviews Mark to learn what "gold" means to him. Cast-offs deferred to Phase 2 (Gmail inbox is the capture mechanism).
+**MVP workflow:** Evryn surfaces connections from Mark's inbox. Mark forwards emails → Evryn identifies who's worth Mark's time (gold/pass/edge case) → drafts notification → Justin approves via email → Evryn sends to Mark. These are connections being brokered — tracked as such from day one. Evryn interviews Mark to learn what "gold" means to him. Cast-offs deferred to Phase 2 (Gmail inbox is the capture mechanism).
+
+**Architectural principles (detail in `evryn-backend/docs/ARCHITECTURE.md`):**
+- **User isolation is absolute** — conversations never bleed between users. Multi-channel interleaves within one user by time, never across users.
+- **For MVP, Justin is the publisher** — approves all outbound. At scale, an automated publisher subagent takes over (safety checklist: inappropriate content, user info leaks, tone).
+- **Proactive behavior is core** — even in v0.2, Evryn should notice if Mark goes quiet and reach out. She's not Evryn if she only reacts.
+- **Three Brains collapse for MVP, separate at scale** — see Hub for the conceptual model.
 
 **Done:** Repo created (2026-02-10), build spec drafted, all blockers cleared (v0.1 prompt analyzed, prototype analyzed, schema analyzed).
-**Next:** AC pre-work (build spec rewrite, source absorption) → DC builds Phase 0 → Phases 1-3.
+**Next:** AC pre-work (build spec rewrite, source absorption, ARCHITECTURE.md creation) → DC builds Phase 0 → Phases 1-3.
 
 **For build detail:** See `evryn-backend/docs/BUILD-EVRYN-MVP.md`.
 
@@ -141,12 +147,12 @@
 ## Product Roadmap Sequence
 
 1. **Website** — ✅ COMPLETE. LIVE at evryn.ai. See swim lane in Components above.
-2. **Mark's Triage MVP (v0.2)** — IN PROGRESS. Prove the gatekeeper concept works. Full detail in `evryn-backend/docs/BUILD-EVRYN-MVP.md`.
+2. **Mark's Inbox MVP (v0.2)** — IN PROGRESS. Evryn surfaces connections from Mark's inbox — proving the gatekeeper pathway works. Full detail in `evryn-backend/docs/BUILD-EVRYN-MVP.md`, architecture in `evryn-backend/docs/ARCHITECTURE.md`.
 3. **Member Interface** — FUTURE. Web/mobile interface (PWA, mobile-responsive from day one). Native apps deferred until user demand warrants it. Includes iDenfy verification flow.
 
 ---
 
-## Data Flow: Mark's Triage (Planned)
+## Data Flow: Mark's Inbox — Connection Brokering (Planned)
 
 ```
 1. Email arrives at evryn@evryn.ai from Mark
@@ -161,17 +167,21 @@ FORWARD DETECTED               DIRECT MESSAGE
  he forwarded to Evryn)              │
    │                                 │
    ▼                                 ▼
-3a. Triage Pathway             3b. Conversation Pathway
+3a. Connection Discovery       3b. Conversation Pathway
    • Extract original sender       • Respond to Mark directly
-   • Write to triage_queue         • Normal Evryn conversation
-   • Classify: gold/spam/other
+   • Sender → users table          • Normal Evryn conversation
+   • Identify connection fit:
+     gold / pass / edge case
    • Score confidence
    │
    ▼
-4. Review & Surface
-   • High-confidence gold → Notify Mark
-   • Edge cases → Flag for review
-   • Mark's feedback → Improves classification
+4. Surface & Broker
+   • Gold + edge case → Draft notification → Justin approves → Mark receives
+     (edge cases include Evryn's reasoning and uncertainty)
+   • Pass → No notification to Mark (for now)
+   • Connection tracked (identified → pending_approval → surfaced → connected/declined)
+   • Mark's feedback → Evryn learns, improves
+   • Every sender is a new Evryn user — finding Mark is just their first connection
 ```
 
 ---
