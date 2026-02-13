@@ -1,34 +1,8 @@
 # Evryn System Overview
 
-The central reference document for how all the pieces of Evryn fit together.
+> **What this doc is:** Technical component breakdown, swim lane status, and infrastructure reference. For company strategy, business model, and team, see [the Hub](docs/roadmap.md).
 
-*Last updated: 2026-02-10T19:16:00-08:00*
-
----
-
-## What is Evryn?
-
-Evryn is an AI-powered relationship broker. She finds you "your people" — the rare individuals who are just the right fit for you in any domain of life — and only connects you to people she trusts.
-
-**Company:** Evryn Inc. (Public Benefit Corporation)  
-**Founder:** Justin  
-**Stage:** Pre-launch, building MVP
-
----
-
-## Core Philosophy
-
-**"Stories over structures"**  
-We capture the *feel* of a person through narrative-based profiles, not checkboxes and filters.
-
-**Trust is non-negotiable**  
-Evryn only connects people she trusts. She gets to know each user, evaluates character in relation to the type of connection. Verification (proving you're a real person) is part of the core offering.
-
-**Character becomes currency**  
-In Evryn's world, who you are matters more than what you have.
-
-**Aligned incentives**  
-You pay only when a connection genuinely works for you. Evryn's success and your success are always the same thing.
+*Last updated: 2026-02-12T16:52:22-08:00*
 
 ---
 
@@ -92,48 +66,56 @@ You pay only when a connection genuinely works for you. Evryn's success and your
 **What:** Public marketing site at evryn.ai
 **Tech:** Next.js 15 on Vercel
 **Status:** LIVE
-**Purpose:** Explain what Evryn is, capture waitlist signups
 
 **URLs:**
 - Production: https://evryn.ai
 - Preview: https://evryn-website.vercel.app
 - Old site (rollback): https://evryn-prelaunch.vercel.app
 
+**Done:** Landing page, visual identity, HubSpot waitlist (with Cloudflare Turnstile), SEO/analytics, Open Graph images.
+**Next:** Justin has pending updates — see `evryn-website/2026.02.12_Website_Changes_Spec`.
+
 ### Evryn Team Agents (`evryn-team-agents` repo)
 **What:** Lucas Everhart (Chief of Staff) — single autonomous agent powered by Claude Agent SDK. Other team members exist as perspective lenses spawned as ephemeral subagents.
 **Tech:** TypeScript, Claude Agent SDK (`@anthropic-ai/claude-agent-sdk`), MCP servers (Slack, Gmail, Supabase), trigger infrastructure
-**Status:** Architecture pivot in progress (2026-02-06). LangGraph replaced. Build spec DRAFT at `docs/BUILD-LUCAS-SDK.md`.
+**Status:** PAUSED — building Evryn product first. Everything transfers back.
 
 **Architecture:** SDK `query()` is the sole runtime. Lucas wakes via trigger (cron for scheduled work, pub/sub for inbound email, potentially more over time), reads his state (file-based memory), decides what needs doing, acts, writes back to state. Subagents spawned via SDK Task tool for team perspectives (one level deep). Slack primary for internal communication, email primarily for external correspondence.
 
 **Key capabilities (planned):** Autonomous briefing compilation, scheduled operations (morning/evening/weekly/monthly), perspective deliberation (#garp), persistent file-based memory, graduated autonomy model, CTO/engineering capability via Alex subagent.
 
-**Previous system:** LangGraph 5-node graph with 8 separate agents — fully superseded. LangGraph code archived to `evryn-langgraph-archive` repo.
-
-**For build detail:** See `evryn-team-agents/docs/BUILD-LUCAS-SDK.md`.
+**Done:** Architecture defined (ADR-001), LangGraph archived to `evryn-langgraph-archive`, build spec drafted.
+**Next (when resumed):** SDK build per `evryn-team-agents/docs/BUILD-LUCAS-SDK.md`. Team profiles need Justin's review.
 
 ### Evryn Backend (`evryn-backend` repo)
 **What:** Evryn product agent — inbox matching for Mark (pilot user), then expanding
 **Tech:** TypeScript, Claude Agent SDK, Gmail API (evryn@evryn.ai — own Google account), Supabase, Slack (Justin channel)
-**Status:** Repo created 2026-02-10. Build spec DRAFT at `docs/BUILD-EVRYN-MVP.md`. Blockers: Justin must provide v0.1 system prompt and n8n prototype.
+**Status:** Active — AC pre-work in progress, preparing build spec for DC
 
 **MVP workflow:** Mark forwards emails → Evryn classifies (gold/pass/edge case with confidence scoring) → drafts notifications → Justin approves via email → Evryn sends to Mark. Evryn interviews Mark to learn what "gold" means to him. Cast-offs deferred to Phase 2 (Gmail inbox is the capture mechanism).
+
+**Done:** Repo created (2026-02-10), build spec drafted, all blockers cleared (v0.1 prompt analyzed, prototype analyzed, schema analyzed).
+**Next:** AC pre-work (build spec rewrite, source absorption) → DC builds Phase 0 → Phases 1-3.
 
 **For build detail:** See `evryn-backend/docs/BUILD-EVRYN-MVP.md`.
 
 ### Supabase Database
 **What:** PostgreSQL database + serverless backend
-**Status:** LIVE — actively used by team agents
+**Status:** LIVE — two separate projects
 
-**Agent tables (evryn-team-agents):**
+**Agent dashboard project (evryn-team-agents):**
 - `agent_messages` — Every email sent/received with full body
 - `agent_api_calls` — Every Claude API call with cost, tokens, model
 - `agent_notes_history` — Snapshots of agent notes over time
 - `agent_tasks` — Tasks agents create for themselves or others
 - `agent_daily_spend` — Aggregated daily spend per agent
+- Dashboard at evryn-dashboard.vercel.app
 
-**Legacy/product tables:**
+**Evryn n8n prototype project (evryn-backend):**
 - `emailmgr_items`, `emailmgr_queue`, `evryn_knowledge`, `messages`, `users`
+- Schema analysis at `evryn-backend/docs/historical/prototype-schema-analysis.md`
+- Product tables will evolve during build — schema finalized in build spec
+- **Note:** This project should be renamed to "evryn-backend" and appropriated for the product build — existing tables are likely usable as-is
 
 **Security:** RLS enabled on ALL tables. Only service_role key (in `.env`, never exposed) can access data. pg_cron for scheduled triggers.
 
@@ -187,21 +169,6 @@ Let users talk to Evryn through a web/mobile interface rather than email.
 
 ---
 
-## The Evryn Brains (Conceptual Architecture)
-
-The full Evryn vision involves specialized "brains" working together:
-
-| Brain | Role | Description |
-|-------|------|-------------|
-| **Dialogue Brain** | Conversation | The voice of Evryn - listens, responds, feels like a wise friend |
-| **Care Brain** | Relational intelligence | Remembers context, notices silence, knows when to check in or hold space |
-| **Connection Brain** | Matchmaking | Finds mutual fits based on deep resonance, not just similarity |
-| **Trust Graph** | Memory of character | Tracks who treats others well, gates who gets connected |
-
-These are conceptual. Building starts simple and evolves toward this architecture.
-
----
-
 ## Data Flow: Mark's Triage (Planned)
 
 ```
@@ -232,21 +199,6 @@ FORWARD DETECTED               DIRECT MESSAGE
 
 ---
 
-## Repositories
-
-| Repo | Purpose | Status |
-|------|---------|--------|
-| `_evryn-meta` | AC home base, cross-repo docs, dashboard | Active |
-| `evryn-website` | Marketing site (evryn.ai) | LIVE |
-| `evryn-team-agents` | Lucas (Chief of Staff) agent runtime | PAUSED — building Evryn product first |
-| `evryn-backend` | Evryn product agent (inbox matching for Mark) | Active — build spec ready, blockers on Justin |
-| `evryn-dev-workspace` | DC's home. Identity and methodology | Active |
-| `evryn-langgraph-archive` | Read-only archive of LangGraph-era code | Sealed |
-| `evryn-prelaunch-landing` | Old landing page | Archived |
-| `evryn-app` | Member product UI | Future |
-
----
-
 ## External Services
 
 | Service | Purpose | Account/Project |
@@ -266,35 +218,6 @@ FORWARD DETECTED               DIRECT MESSAGE
 
 ---
 
-## Key Contacts
-
-**Leadership:**
-- **Justin** — Founder/CEO, building everything with Claude Code
-
-**AI Executive Team (Primary Operations):**
-- Lucas Everhart (Chief of Staff) — primary agent, with team perspectives as subagents
-- Architecture defined, not yet built. See `evryn-team-agents/docs/BUILD-LUCAS-SDK.md`
-
-**Human Advisors:**
-- **Andrew Lester** — Operations Advisor
-- **Salil Chatrath** — Product Advisor
-- **Manuele Capacci** — Design Advisor
-- **Megan Griffiths** — Film Industry Advisor
-
-**Pilot Users:**
-- **Mark** — First gatekeeper user (August Island Pictures, Eva's Wild)
-
----
-
-## Open Questions
-
-1. ~~Where should this document live?~~ → Resolved: `_evryn-meta` repo
-2. ~~What verification provider to use?~~ → Resolved: iDenfy
-3. ~~At what scale does n8n need to be replaced with code?~~ → Resolved: Building in code from start
-4. ~~How to handle the "cast-offs" from Mark's triage?~~ → Resolved: Phase 2. Gmail inbox is the natural capture mechanism — don't build anything, just don't delete. Evryn processes the backlog when ready.
-
----
-
 ## Revision History
 
 | Date | Change |
@@ -309,3 +232,4 @@ FORWARD DETECTED               DIRECT MESSAGE
 | 2026-01-31 | Major update: evryn-team-agents Phase 1 complete (LangGraph runtime, 3 triggers, all verified). Supabase tables updated to reflect agent infrastructure. Claude API now live. Added Linear. Updated repo statuses. |
 | 2026-02-06 | Architecture pivot: LangGraph multi-agent replaced by single Lucas agent on Claude Agent SDK. Updated team agents section, repos table, Claude API section, key contacts. Build spec DRAFT in progress. |
 | 2026-02-10 | Strategic pivot: building Evryn product MVP for Mark first (Lucas paused). Created evryn-backend repo. LangGraph archived to evryn-langgraph-archive. Added evryn-dev-workspace, evryn-langgraph-archive to repos. Cast-offs resolved (Phase 2, Gmail captures). |
+| 2026-02-12 | Tightened: stripped Hub-duplicate sections (philosophy, brains, contacts, repos, open questions). Added swim lane status (Done/Next) to each component. Updated Supabase to show two projects. Current Priorities kept as-is pending build doc absorption. |
