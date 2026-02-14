@@ -6,6 +6,8 @@
 
 ## 2026-02-13
 
+- Created `evryn-backend/docs/ARCHITECTURE.md` (v4) — system blueprint: user model, data model, memory architecture, pipeline design, agent architecture, security, system diagram
+- Lock protocol: added ARCHITECTURE.md as step 3 (update when anything architectural changes)
 - Hub: added hygiene guidance (fidelity over brevity), reframed v0.2 as connection brokering, added user isolation principle, agent council stubs, ARCHITECTURE.md spoke
 - SYSTEM_OVERVIEW: reframed data flow as "Connection Brokering" (not triage), added Evryn architecture principles (user isolation, publisher, proactive behavior), updated Evryn Backend section
 - Read all Pre-Work #10 source documents + Dec 2 historical doc; nuance captured in session handoff

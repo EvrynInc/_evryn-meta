@@ -4,7 +4,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-13T15:02:11-08:00*
+*Last updated: 2026-02-13T17:51:19-08:00*
 
 ---
 
@@ -16,14 +16,14 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Pre-Work #10: Build doc rewrite + ARCHITECTURE.md creation** — The critical path item. AC has read all source documents. Next step: split architecture sections out of BUILD-EVRYN-MVP.md into `evryn-backend/docs/ARCHITECTURE.md`, then absorb sources into both docs. Key insights to incorporate: connections table is v0.2 scope, user isolation model, Justin-as-publisher, proactive behavior, `profile_jsonb` structure from Dec 2 historical doc.
-- **Pre-Work #6: Write Evryn's triage system prompt** — After source absorption. v0.1 system prompt patterns identified (Dream with me, Smart Curiosity, dual-track processing).
-- **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. After source absorption.
+- **Pre-Work #10 (in progress): Build doc rewrite** — ARCHITECTURE.md complete (v4, committed). Next: rewrite BUILD-EVRYN-MVP.md — absorb sources, fix terminology ("clients" → "users"), trim architecture sections (point to ARCHITECTURE.md), update schema section. Session handoff doc (`_evryn-meta/docs/session-handoff-2026-02-13.md`) still has content for the build doc rewrite — delete after full absorption.
+- **Pre-Work #6: Write Evryn's triage system prompt** — After #10. v0.1 system prompt patterns identified (Dream with me, Smart Curiosity, dual-track processing).
+- **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. After #10.
 
 ## Active Projects
 
-- **_evryn-meta** — Hub reframed (connections not classification, hub hygiene guidance, user isolation, agent council stubs). SYSTEM_OVERVIEW reframed (connection brokering data flow, Evryn architecture principles).
-- **evryn-backend** — All sources read. Build doc rewrite (#10) is next. Will produce ARCHITECTURE.md (new) + revised BUILD-EVRYN-MVP.md.
+- **_evryn-meta** — Hub reframed, SYSTEM_OVERVIEW reframed, lock protocol updated (added ARCHITECTURE.md step). Current session: #lock cleanup.
+- **evryn-backend** — ARCHITECTURE.md created (v4). BUILD-EVRYN-MVP.md rewrite is next. Session handoff doc still needed for build doc rewrite.
 - **evryn-team-agents** — PAUSED. Clean pause state.
 - **evryn-dev-workspace** — DC's home repo.
 - **evryn-website** — Live at evryn.ai. Justin has pending updates — see `evryn-website/2026.02.12_Website_Changes_Spec`.
