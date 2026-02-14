@@ -34,7 +34,7 @@ An AI-powered relationship broker. She finds you "your people" — the rare indi
 - **Stage:** Pre-launch, building MVP
 - **Philosophy:** Stories over structures. Trust is non-negotiable. Character becomes currency. Aligned incentives.
 
-**Start here every session:** `docs/roadmap.md` (the Hub) — the single living source of company truth. It has pointers to all spokes (build docs, historical vault, tactical status, etc.).
+**Read these before doing anything else:** `docs/roadmap.md` (the Hub) and `SYSTEM_OVERVIEW.md`. The Hub is company truth — what Evryn is, the business model, the philosophy. SYSTEM_OVERVIEW is the technical landscape — what exists, how repos connect, what's built vs. planned. Evryn is a multi-repo, multi-agent system with non-obvious architectural decisions. Without both of these loaded, you will misframe problems, propose things that already exist, or contradict decisions that were carefully made. Read them first. Every time.
 
 ---
 
