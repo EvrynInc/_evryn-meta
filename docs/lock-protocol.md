@@ -8,13 +8,14 @@ When Justin says `#lock` or it's time for a checkpoint:
 
 1. **`docs/current-state.md`** — Refresh to reflect current reality. Clean snapshot, not a log.
 2. **Session decisions** — If decisions were made this session, ensure they're captured in a session decisions doc (`_evryn-meta/docs/`) or absorbed into persistent docs. Session decisions docs are disposable — absorb and delete.
-3. **`SYSTEM_OVERVIEW.md`** — Update only if something system-level changed.
-4. **`LEARNINGS.md`** — Add appropriate cross-project patterns or insights.
-5. **`AGENT_PATTERNS.md`** — Add appropriate agent-building learnings.
-6. **`CHANGELOG.md`** — Add brief one-liners for anything built or changed this session.
-7. **Linear** — Create tickets for small backlog items that aren't part of a current build. Don't duplicate what's in build docs or ARCHITECTURE.md.
-8. **Bitwarden reminder** — If `.env` was modified, remind Justin: "Hey, we updated .env — remember to re-upload to Bitwarden."
-9. **Commit and push** — Get everything to remote immediately.
+3. **`ARCHITECTURE.md`** — Update the appropriate repo's ARCHITECTURE.md if anything architectural changed (schema, pipelines, user model, security patterns).
+4. **`SYSTEM_OVERVIEW.md`** — Update only if something system-level changed.
+5. **`LEARNINGS.md`** — Add appropriate cross-project patterns or insights.
+6. **`AGENT_PATTERNS.md`** — Add appropriate agent-building learnings.
+7. **`CHANGELOG.md`** — Add brief one-liners for anything built or changed this session.
+8. **Linear** — Create tickets for small backlog items that aren't part of a current build. Don't duplicate what's in build docs or ARCHITECTURE.md.
+9. **Bitwarden reminder** — If `.env` was modified, remind Justin: "Hey, we updated .env — remember to re-upload to Bitwarden."
+10. **Commit and push** — Get everything to remote immediately.
 
 ---
 
