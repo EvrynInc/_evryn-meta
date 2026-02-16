@@ -4,6 +4,14 @@
 
 ---
 
+## 2026-02-16
+
+- Created `docs/legal/` directory for legal team documents
+- Privacy & Terms questionnaire for Fenwick: 3 drafts, covers all 7 questions + "Additional Context" section (trust assessment, safety imprint, user isolation, age, sensitive data, cross-border, Swiss foundation)
+- Created `docs/legal/clarifications-for-system-docs.md` — tracks architectural decisions surfaced during legal work that need to flow to ARCHITECTURE.md, BUILD docs, and system prompts
+- Hub: clarified Master Plan spokes (relationship between Reference and v2.3)
+- Open decisions captured: gatekeeper first-right-of-refusal, ID verification retention, age requirement (16 vs 18), safety imprint approach, data export process
+
 ## 2026-02-13
 
 - Created `evryn-backend/docs/ARCHITECTURE.md` (v4) — system blueprint: user model, data model, memory architecture, pipeline design, agent architecture, security, system diagram

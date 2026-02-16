@@ -4,7 +4,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-13T17:51:19-08:00*
+*Last updated: 2026-02-16T15:45:34-08:00*
 
 ---
 
@@ -19,10 +19,11 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 - **Pre-Work #10 (in progress): Build doc rewrite** — ARCHITECTURE.md complete (v4, committed). Next: rewrite BUILD-EVRYN-MVP.md — absorb sources, fix terminology ("clients" → "users"), trim architecture sections (point to ARCHITECTURE.md), update schema section. Session handoff doc (`_evryn-meta/docs/session-handoff-2026-02-13.md`) still has content for the build doc rewrite — delete after full absorption.
 - **Pre-Work #6: Write Evryn's triage system prompt** — After #10. v0.1 system prompt patterns identified (Dream with me, Smart Curiosity, dual-track processing).
 - **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. After #10.
+- **Legal: Privacy & Terms questionnaire** — Third draft at `docs/legal/privacy-and-terms-questionnaire.md`. Open decisions: gatekeeper first-right-of-refusal, ID verification retention, age requirement (16 vs 18), safety imprint technical approach. Clarifications tracker at `docs/legal/clarifications-for-system-docs.md`.
 
 ## Active Projects
 
-- **_evryn-meta** — Hub reframed, SYSTEM_OVERVIEW reframed, lock protocol updated (added ARCHITECTURE.md step). Current session: #lock cleanup.
+- **_evryn-meta** — Legal questionnaire in progress. Hub updated (Master Plan spokes clarified). Clarifications tracker created for items that need to flow to system/arch docs.
 - **evryn-backend** — ARCHITECTURE.md created (v4). BUILD-EVRYN-MVP.md rewrite is next. Session handoff doc still needed for build doc rewrite.
 - **evryn-team-agents** — PAUSED. Clean pause state.
 - **evryn-dev-workspace** — DC's home repo.
