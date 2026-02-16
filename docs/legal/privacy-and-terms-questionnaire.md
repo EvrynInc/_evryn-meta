@@ -4,7 +4,7 @@
 >
 > **Owner:** Justin (with AC research support)
 >
-> **Status:** Second draft — 2026-02-16
+> **Status:** Third draft — 2026-02-16T13:42-08:00
 
 ---
 
@@ -47,7 +47,7 @@ We'd like to preserve the option to change AI providers if needed. The AI landsc
 | Service | What it does | What data flows through it |
 |---------|-------------|---------------------------|
 | **Google (Gmail / Google Workspace)** | Email infrastructure. Our pilot gatekeeper forwards emails to Evryn's Gmail address (evryn@evryn.ai). Evryn reads, processes, and sends email through her own Google account. | Full email content — sender names, email addresses, message bodies, attachments (metadata only for now — we note that attachments exist but don't process their contents yet). |
-| **Anthropic (Claude API)** | AI processing. Email content, user conversations, and user profile data are sent to Anthropic's API so Evryn can read, understand context, and compose responses. | Email content, user conversations, profile data, classification reasoning. Anthropic's API usage policy states they do not train on API-submitted data. |
+| **Anthropic (Claude API)** | AI processing. Email content, user conversations, and user profile data are sent to Anthropic's API so Evryn can read, understand context, and compose responses. | Email content, user conversations, profile data, and Evryn's analysis of whether people are good connections. Anthropic's API usage policy states they do not train on API-submitted data. |
 | **Supabase** | Hosted PostgreSQL database. All user records, conversation history, connection records, and user profiles are stored here. | All persistent user data. Supabase provides SOC2 compliance, encryption at rest and in transit, and row-level security (which we enforce on all tables). |
 | **Vercel** | Hosts the marketing website (evryn.ai). | Waitlist form submissions (name, email). Standard web server logs (IP addresses, user agent, etc.). |
 | **HubSpot** | CRM and email marketing. Captures waitlist signups from the website. Will be used for email campaigns. | Names, email addresses, signup metadata. |
@@ -82,7 +82,7 @@ We're researching the feasibility of letting Evryn communicate with users on the
 
 | Data type | How it's collected | Purpose |
 |-----------|-------------------|---------|
-| **Name and contact information** (email address, phone number, and potentially other contact methods as we add communication channels) | During onboarding, when they contact Evryn, or when provided in conversation | Identity, communication |
+| **Name and contact information** (email address, phone number, and potentially other contact methods as we add communication channels) | During onboarding, when they contact Evryn, when provided in conversation, or when referred by another user (e.g., "my friend would love to hear from you" — always with the referring user's explicit intent to connect, never scraped or collected without context) | Identity, communication |
 | **Conversation content** | Everything users tell Evryn in conversation — their interests, goals, preferences, personal stories, what they're looking for, who they know | Building a deep understanding of who they are so Evryn can find the right connections |
 | **Feedback on connections** | Users tell Evryn how a connection went — what was good, what was wrong, what was surprising | Evryn learns and improves her judgment |
 | **Payment amounts** | Users propose a price they believe is fair — for the connection and for the relationship they want to build with Evryn (trust-based pricing model) | Revenue; pricing behavior is also a signal about character (see trust assessment below) |
@@ -104,7 +104,7 @@ This is important and somewhat unusual — Evryn doesn't just store what users t
 This is architecturally important and we'd like the legal team's guidance:
 
 - **Personal data is purged** — conversations, profile, story, preferences, contact information.
-- **A non-reversible, salted hash of the verified identity is retained.** This hash serves a safety function: it allows Evryn to recognize if a previously verified person creates a new account, and to remember our willingness to do business with them — without retaining any personal information. The hash cannot be reversed to recover names, emails, or any identifying data. It only tells us: "We've encountered this verified identity before, and here is what we remember about our willingness to do business with them again."
+- **A non-reversible, salted hash of the verified identity is retained.** This hash serves a safety function: it allows Evryn to recognize if a previously verified person creates a new account, and to remember our willingness to do business with them — without retaining any personal information. The hash cannot be reversed to recover names, emails, or any identifying data. It only tells us: "We've encountered this verified identity before, and here is what we remember about our willingness to do business with them again." See "Safety imprint on account deletion" in the Additional Context section below for how we'd like to frame this legally.
 - **Shared relational data persists where it belongs to other users.** If User A told Evryn they know User B, and then User A deletes their account, the fact that User B has this connection in their graph remains — it's part of User B's data now, not just User A's. User A's personal details are still purged.
 
 We'd like the legal team to advise on how to disclose the safety hash and shared relational data, and how to ensure these are compatible with GDPR right to erasure, CCPA deletion rights, and similar regulations.
@@ -268,4 +268,4 @@ This is likely many months away from implementation, but the legal team should b
 
 ---
 
-*Draft prepared 2026-02-16. Second pass incorporating founder review.*
+*Draft prepared 2026-02-16. Third pass: referral pathway, clarity pass, redundancy cleanup.*
