@@ -101,7 +101,7 @@ For MVP (v0.2), the three brains collapse into a single agent. At scale, they se
 Load only when your current task requires the depth.
 
 - **Tactical status:** `_evryn-meta/docs/current-state.md`
-- **Historical vault (_evryn-meta):** `_evryn-meta/docs/historical/` — Master Plan Reference, Master Plan v2.3
+- **Historical vault (_evryn-meta):** `_evryn-meta/docs/historical/` — **Master Plan Reference** is the one to read (comprehensive condensation, ~730 lines). **Master Plan v2.3** is the original founding vision document (~3,200 lines, Oct 2025) — go there for exact wording, marketing prose, or full competitive analysis. Both are frozen; the Hub supersedes them as living truth.
 - **Historical vault (evryn-backend):** `evryn-backend/docs/historical/` — v0.1 system prompt, requirements drafts, prototype schema, n8n prototype
 - **Evryn product architecture:** `evryn-backend/docs/ARCHITECTURE.md` (how Evryn works as a system — schema, memory, pipelines, firewalling)
 - **Evryn product build:** `evryn-backend/docs/BUILD-EVRYN-MVP.md` (what to build, phase by phase)
