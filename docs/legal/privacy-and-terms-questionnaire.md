@@ -175,7 +175,7 @@ The following items weren't covered by your questions, but they're architectural
 
 ### A note on tone and trust
 
-This document needs to be a legal document first and foremost. But it also needs to faithfully represent Evryn's trust ethos — the Terms and Privacy Policy are one of the first things a thoughtful user will read, and the language needs to signal who we are. Legal robustness and trust are not at odds. We'd ask the legal team to keep this in mind when drafting: if there's a way to say something that's both legally sound and transparent about our reasoning, we prefer that over standard boilerplate.
+While of course this document needs to be a legal document first and foremost, user trust is unusually critical to Evryn's core offering, so it also needs to faithfully represent Evryn's trust ethos — the Terms and Privacy Policy are one of the first things a thoughtful user will read, and the language needs to signal who we are. Legal robustness and trust are not at odds. We'd ask the legal team to keep this in mind when drafting: if there's a way to say something that's both legally sound and supports our trust-first posture, we prefer that over standard boilerplate.
 
 ### AI-powered automated decision-making
 
@@ -224,7 +224,7 @@ We'd like to set a minimum age of **18** for using Evryn. Given the nature of th
 
 Questions for the legal team:
 - Are there jurisdictions where 18 isn't sufficient and a higher age applies?
-- Long-term, we may want to consider offering the service to younger users (16–17), potentially with accounts administered by a parent or guardian (parent controls the account, approves connections). This isn't near-term, but if there's language we should include now to leave room for it, we'd want to know.
+- Long-term, we may want to consider offering the service to younger users, potentially with accounts administered by a parent or guardian (parent controls the account, approves connections). This isn't near-term, but if there's language we should include now to leave room for it, we'd want to know.
 
 ### Sensitive personal data
 
