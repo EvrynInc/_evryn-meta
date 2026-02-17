@@ -7,10 +7,11 @@
 ## 2026-02-16
 
 - Created `docs/legal/` directory for legal team documents
-- Privacy & Terms questionnaire for Fenwick: 3 drafts, covers all 7 questions + "Additional Context" section (trust assessment, safety imprint, user isolation, age, sensitive data, cross-border, Swiss foundation)
-- Created `docs/legal/clarifications-for-system-docs.md` — tracks architectural decisions surfaced during legal work that need to flow to ARCHITECTURE.md, BUILD docs, and system prompts
+- Privacy & Terms questionnaire for Fenwick: 4 drafts. Covers all 7 questions + "Additional Context" section (trust assessment, safety imprint, user isolation, age, sensitive data, cross-border, Swiss foundation, mutual matching principle, connection types disclaimers, tone-and-trust framing)
+- Decisions made: age=18, verification=pass-through model, safety identifier generalized, data export via support email
+- Created `docs/legal/clarifications-for-system-docs.md` — tracks architectural decisions surfaced during legal work that need to flow to ARCHITECTURE.md, BUILD docs, and system prompts. Updated with resolved items and gatekeeper first-right-of-refusal discussion.
 - Hub: clarified Master Plan spokes (relationship between Reference and v2.3)
-- Open decisions captured: gatekeeper first-right-of-refusal, ID verification retention, age requirement (16 vs 18), safety imprint approach, data export process
+- Open decisions: gatekeeper first-right-of-refusal (substantial discussion, "channel not ownership" framing captured), safety imprint technical mechanism
 
 ## 2026-02-13
 

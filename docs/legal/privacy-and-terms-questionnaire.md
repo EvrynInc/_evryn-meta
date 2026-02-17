@@ -135,7 +135,7 @@ Our platform will evolve in stages:
 
 Our primary growth strategy is organic and relational, not ad-driven:
 
-- **Top-down (gatekeeper partnerships):** Partnerships with gatekeepers — high-volume connectors in specific industries who route their inbound to Evryn. Each gatekeeper provides a large pool of people — many of whom aren't the right fit for *them* specifically but are real people with real needs. Both those we connect with the gatekeeper, as well as their "cast-offs," become full Evryn users who we can continue to connect to others. Gatekeepers come in different sizes, but our current gatekeeper is likely representative at ~1,000 new potential users per week.
+- **Top-down (gatekeeper partnerships):** Partnerships with gatekeepers — high-volume connectors in specific industries who route their inbound to Evryn. Each gatekeeper provides a large pool of people — many of whom aren't the best *mutual* fit for that gatekeeper specifically but are real people with real needs. Both those we connect with the gatekeeper, as well as their "cast-offs," become full Evryn users who we can continue to connect to others. Gatekeepers come in different sizes, but our current gatekeeper is likely representative at ~1,000 new potential users per week.
 - **Bottom-up (whisper cascade):** Invite-only growth — we grow by solving, proving, and being invited forward.
 - **Organic outreach:** Content creation (blog posts, thought leadership), organic presence on platforms (Reddit, social media), community engagement in target industries.
 - **Events:** Presence at industry events and gatherings.
@@ -176,6 +176,10 @@ The following items weren't covered by your questions, but they're architectural
 ### A note on tone and trust
 
 While of course this document needs to be a legal document first and foremost, user trust is unusually critical to Evryn's core offering, so it also needs to faithfully represent Evryn's trust ethos — the Terms and Privacy Policy are one of the first things a thoughtful user will read, and the language needs to signal who we are. Legal robustness and trust are not at odds. We'd ask the legal team to keep this in mind when drafting: if there's a way to say something that's both legally sound and supports our trust-first posture, we prefer that over standard boilerplate.
+
+### Mutual matching — a foundational principle
+
+Evryn finds the best <u>*mutual*</u> match. This is not a detail — it's foundational to how the Terms should treat all user relationships — including the gatekeeper relationship. When a gatekeeper routes inbound to Evryn, we surface the best *mutual* matches for that gatekeeper. People who aren't the best mutual fit for that gatekeeper become full Evryn users in their own right — they are not "the gatekeeper's leads." The same person may reach multiple gatekeepers simultaneously; Evryn's obligation is to find each person the best connection, regardless of which inbox surfaced them first. **The Terms must not create or imply any ownership or priority rights for gatekeepers over the people in their inbound.**
 
 ### AI-powered automated decision-making
 

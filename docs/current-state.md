@@ -4,7 +4,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-16T15:45:34-08:00*
+*Last updated: 2026-02-16T16:55:07-08:00*
 
 ---
 
@@ -19,7 +19,8 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 - **Pre-Work #10 (in progress): Build doc rewrite** — ARCHITECTURE.md complete (v4, committed). Next: rewrite BUILD-EVRYN-MVP.md — absorb sources, fix terminology ("clients" → "users"), trim architecture sections (point to ARCHITECTURE.md), update schema section. Session handoff doc (`_evryn-meta/docs/session-handoff-2026-02-13.md`) still has content for the build doc rewrite — delete after full absorption.
 - **Pre-Work #6: Write Evryn's triage system prompt** — After #10. v0.1 system prompt patterns identified (Dream with me, Smart Curiosity, dual-track processing).
 - **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. After #10.
-- **Legal: Privacy & Terms questionnaire** — Third draft at `docs/legal/privacy-and-terms-questionnaire.md`. Open decisions: gatekeeper first-right-of-refusal, ID verification retention, age requirement (16 vs 18), safety imprint technical approach. Clarifications tracker at `docs/legal/clarifications-for-system-docs.md`.
+- **Legal: Privacy & Terms questionnaire** — Fourth draft at `docs/legal/privacy-and-terms-questionnaire.md`. Decisions made: age=18, verification=pass-through (Evryn never holds ID data), safety identifier generalized (mechanism TBD). Remaining open: gatekeeper first-right-of-refusal (substantial discussion, not yet resolved). Next: fresh-instance verification pass against all system docs.
+- **Legal clarifications → system docs** — `docs/legal/clarifications-for-system-docs.md` has resolved items that need to be written into ARCHITECTURE.md, BUILD docs, and system prompts. Needs a dedicated pass to flow all decisions into the right places.
 
 ## Active Projects
 
