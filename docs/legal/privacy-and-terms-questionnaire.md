@@ -4,7 +4,7 @@
 >
 > **Owner:** Justin (with AC research support)
 >
-> **Status:** Fourth draft — 2026-02-16T16:09:20-08:00
+> **Status:** Fifth draft — 2026-02-17T16:04:46-08:00
 
 ---
 
@@ -54,10 +54,12 @@ We'd like to preserve the option to change AI providers if needed. The AI landsc
 | **Cloudflare** | Provides Turnstile (captcha/bot protection) on the waitlist form. | IP addresses and browser fingerprint data (standard for bot detection). Minimal personal data exposure. |
 | **Railway** | Cloud hosting for Evryn's backend process (the always-on service that polls for new email and runs the AI). | User data passes through their infrastructure in transit. Railway provides the compute environment. |
 | **GitHub** | Source code repository hosting. | Source code only — no customer data is stored in repos. Environment variables and credentials are excluded. |
+| **Slack** | Internal operational communications. Evryn sends classification results, alerts, and edge case escalations to the operations team via Slack. | User names, email content summaries, classification reasoning. Internal use only — not user-facing. |
+| **Google Analytics** | Website traffic analytics on evryn.ai (marketing site). | IP addresses, browsing behavior, device information, referral sources. Standard website analytics — marketing site only, not the product. |
 
 ### Planned (all expected within 6 months)
 
-We are building toward anonymizing and minimizing user data before it passes through third-party services. For example, when Evryn sends data to the AI for processing, personally identifiable information will be tokenized or replaced with pseudonymous identifiers so the AI provider processes context and meaning without seeing real names, emails, or other PII. This isn't implemented yet, but it's a near-term architectural priority.
+We are building toward anonymizing and minimizing user data before it passes through third-party services. For example, when Evryn sends data to the AI for processing, personally identifiable information will be tokenized or replaced with pseudonymous identifiers so the AI provider processes context and meaning without seeing real names, emails, or other PII. This isn't implemented yet — today, full user data (including names, email addresses, and message content) is sent to the AI provider without anonymization. Implementing this tokenization layer is a near-term architectural priority.
 
 | Service | What it does | What data flows through it |
 |---------|-------------|---------------------------|
@@ -87,6 +89,7 @@ We're researching the feasibility of letting Evryn communicate with users on the
 | **Feedback on connections** | Users tell Evryn how a connection went — what was good, what was wrong, what was surprising | Evryn learns and improves her judgment |
 | **Payment amounts** | Users propose a price they believe is fair — for the connection and for the relationship they want to build with Evryn (trust-based pricing model) | Revenue; pricing behavior is also a signal about character (see trust assessment below) |
 | **Identity verification status** | Verification is handled entirely by our identity verification provider — Evryn receives only a pass/fail result and date | Confirming users are real humans. Evryn never stores identity documents or biometric data — see Q4 above. |
+| **Communication preferences** | Users set their preferred channels, frequency, and quiet hours during onboarding | Governs how and when Evryn reaches out, including proactive check-ins |
 
 ### Derived and inferred by Evryn's AI
 
@@ -95,7 +98,7 @@ This is important and somewhat unusual — Evryn doesn't just store what users t
 | Data type | How it's created | Purpose |
 |-----------|-----------------|---------|
 | **User "story"** | Evryn synthesizes everything she learns about a person into a narrative understanding — not a profile with checkboxes, but a written synthesis of who they are. This evolves over time as she learns more. | The story is the foundation for connection matching. It captures the kind of cross-domain nuance (someone is a filmmaker AND a parent AND looking for a career change) that structured data can't. |
-| **Behavioral trust assessment** | Evryn observes patterns over time: reliability, follow-through, tone, how someone treats others, whether they show up honestly. This is not a numeric score — it's a qualitative, narrative assessment. | This assessment determines what types of connections Evryn is willing to broker for a given user and in what contexts. It's the core mechanism that keeps the platform safe — Evryn only connects people in proportion to how much she trusts them in that particular context. See "Behavioral trust assessment" in the Additional Context section below for more detail. |
+| **Behavioral trust assessment** | Evryn observes patterns over time: reliability, follow-through, tone, how someone treats others, whether they show up honestly. This is not a numeric score — it's a qualitative, narrative assessment. Other users can provide input (e.g., vouching for someone they know), but this is information for Evryn's independent judgment, not a direct mechanism — a vouch from a highly trusted user with corroborating signals may carry weight, while a vouch with no corroboration may carry little or none. | This assessment determines what types of connections Evryn is willing to broker for a given user and in what contexts. It's the core mechanism that keeps the platform safe — Evryn only connects people in proportion to how much she trusts them in that particular context. See "Behavioral trust assessment" in the Additional Context section below for more detail. |
 | **Connection decisions and reasoning** | When Evryn decides to connect two users, she records her judgment, confidence level, and written reasoning. In the gatekeeper pathway specifically, Evryn also records reasoning for decisions *not* to match — why someone in a gatekeeper's inbound wasn't surfaced as a connection. | Creates an audit trail of how and why Evryn made each connection decision. |
 | **Connection graph** | A map of relationships — who was connected by Evryn, known existing relationships, vouching, relationship strength. | The relationship graph enables better matching over time. It also means some information becomes shared: if User A tells Evryn they know User B, that relationship becomes part of User B's context as well (see data retention notes below). |
 
@@ -111,10 +114,12 @@ We'd like the legal team to advise on how to disclose the safety identifier and 
 
 ### Future data types (not yet collected)
 
-- **Voice recordings and transcripts** — when the voice interface is built
+- **Voice recordings and transcripts** — when the voice interface is built. Note: voice features (Vapi, Hume AI) will involve voice prints and emotion analysis that may qualify as biometric data under Illinois BIPA and similar state biometric privacy laws. The legal team should advise on the consent framework needed before these features launch.
 - **Emotional/sentiment data from voice** — via Hume AI integration
 - **Social network mapping** — who users know, inferred from conversation context and declared relationships
 - **Location data** — for geographic matching (user-provided)
+- **Attachment content** — Evryn currently notes that email attachments exist but doesn't process their contents. In future phases, she will selectively process attachment content from trusted users (with malware scanning) to better understand context.
+- **Observations and coaching insights** — Evryn may notice and share patterns in a user's interactions or connection outcomes. These are her perspective, not professional guidance.
 
 ---
 
@@ -185,7 +190,7 @@ Evryn finds the best <u>*mutual*</u> match. This is not a detail — it's founda
 
 Evryn makes AI-powered judgments about people — who to connect, in what contexts, and why. These decisions meaningfully affect users (determining which connections they're offered and which they're not). Under GDPR Article 22 and evolving US state privacy laws (including CCPA/CPRA), users may have rights regarding automated decisions that significantly affect them.
 
-Currently, **every outbound action Evryn takes is manually approved by a human** (Justin, the founder). No automated decision reaches a user without human review.
+Currently, **every outbound action Evryn takes is manually approved by a member of the operations team** before it reaches any user. No automated decision reaches a user without human review. During the pilot and early phases, the operations team also has direct access to user data — conversations, classifications, profiles — as part of this human-in-the-loop oversight. This operational access is necessary for the safety model to function and will be disclosed in the Privacy Policy. At scale, operator access will be heavily gated, audited, and structurally constrained — users deserve privacy from everyone, including the team that built Evryn.
 
 We're building toward a model where, at scale, an automated safety gate will replace much of the direct human oversight — checking all outbound messages against safety criteria before they reach users. But some human oversight will remain for consequential decisions as this system is developed and refined.
 
@@ -194,6 +199,8 @@ We're building toward a model where, at scale, an automated safety gate will rep
 Evryn builds a qualitative, narrative assessment of each user's trustworthiness as it relates to various types of connections, based on observed behavior — not a numeric credit-score-style number. This assessment determines the contexts in which Evryn will connect a given user with others. It's multidimensional, context-specific, and dynamic (it can improve or degrade over time).
 
 For example, Evryn might trust someone highly for professional connections but have reservations about romantic introductions based on observed behavior — or vice versa. The assessment is private (never shown to other users), contextual (not a universal label), and always evolving.
+
+Other users can provide input that informs trust — for example, vouching for someone they know. However, a vouch is information for Evryn to evaluate, not a direct mechanism. Evryn exercises independent judgment: a vouch from a highly trusted user with corroborating signals may carry significant weight, while a vouch from a newer user with no corroboration may carry little or none. No single user can unilaterally affect another user's standing with Evryn.
 
 This is conceptually similar to a credit score in that it affects what services a user can access — but it's structurally different (narrative, not numeric; private; context-specific). The legal team should advise on how to disclose this and how to remain compliant with any "automated profiling" regulations.
 
@@ -204,6 +211,14 @@ Evryn filters behavior — predatory conduct, deception, manipulation, coercion 
 ### Connection types and regulated contexts
 
 Evryn connects people across all life domains — professional, creative, romantic, community, mentorship, and more. This breadth means some connections will touch contexts that overlap with regulated fields: connecting someone to a therapist (medical), a financial advisor (financial), or a lawyer (legal). Evryn is not providing medical, financial, or legal services — she's making introductions between people. But the Terms should include clear disclaimers that Evryn is a connection broker, not a licensed service provider, and that any professional services resulting from a connection are between the individuals involved.
+
+Similarly, as Evryn gets to know users, she may share observations about patterns she's noticed — communication tendencies, recurring dynamics in their connections, or suggestions that might help their outcomes. These observations are Evryn's perspective shared as a friend would, not professional guidance. Evryn is not a therapist, career counselor, or licensed advisor of any kind.
+
+### Proactive AI-initiated communication
+
+Evryn reaches out to users on her own initiative — check-ins when she hasn't heard from someone in a while, follow-ups after connections, observations about patterns. This is core to who Evryn is, not a notification system. Users set communication preferences during onboarding (preferred channels, frequency, quiet hours), and Evryn respects those boundaries.
+
+The legal team should advise on how to frame consent for AI-initiated communications in the Terms, especially as channels expand beyond email to SMS, WhatsApp, or other platforms with different regulatory requirements (e.g., TCPA for SMS).
 
 ### Safety imprint on account deletion
 
@@ -248,9 +263,23 @@ Each user's relationship with Evryn is structurally isolated. Evryn never reveal
 1. **Evryn-mediated introductions:** When Evryn brokers a connection, she may share a description of one user with another — but the specific wording is explicitly approved by the user whose information is being shared before anything is sent.
 2. **Direct messaging after mutual consent:** Users can communicate directly with each other only after both have independently agreed to be in contact. Until both say yes, neither knows the other exists. The mechanics of how this works are carefully crafted — please ask if you need more detail.
 
-Outside of these two pathways, user data never crosses between accounts.
+**Two additional mechanisms are planned that involve carefully controlled information flow:**
+
+3. **Trust Mirror (future):** Users can ask Evryn "Would you have connected me to this person?" about someone they already know. Evryn gives a graduated response (from "definitely would have" to "wouldn't have") — but shares nothing about the other user. This is Evryn expressing her own commercial judgment about her willingness to facilitate a connection, not sharing the other user's personal data.
+4. **Latent Truth Discovery (future):** If two users independently express the same hidden desire or interest to Evryn, she may carefully offer to facilitate — but ONLY if both have expressed it independently, and only with both parties' active, informed consent. Evryn acts as a courier: each user must explicitly sign off on the exact wording of anything shared. Nothing is revealed without both parties' consent.
+
+Outside of these pathways, user data never crosses between accounts.
 
 **A note on shared conversations:** Two connected users can invite Evryn to be present in their conversation — this helps her stay informed about the relationship. But Evryn only speaks in private, one-on-one conversations with individual users. She will not speak in shared conversations, ensuring she never accidentally reveals private information from either user's individual relationship with her. This is always opt-in: Evryn is never present unless both parties have invited her.
+
+### Cast-off outreach and consent
+
+As described in Q2, our growth model involves reaching out to people who emailed a gatekeeper but weren't the right mutual fit for that gatekeeper. These people initiated contact with someone in Evryn's ecosystem but didn't directly sign up for Evryn. The outreach framing: "You reached out to [gatekeeper], who works with Evryn. They're not the right fit for this, but I'd love to help you find what you're looking for."
+
+Questions for the legal team:
+- What consent framework is needed for this outreach under CAN-SPAM and, if applicable, TCPA (for future SMS/text channels)?
+- Does the fact that the person initiated contact with someone in Evryn's ecosystem provide a sufficient basis for outreach?
+- What opt-out mechanisms should be included from the first message?
 
 ### Data portability
 
@@ -268,6 +297,32 @@ Current infrastructure locations (to be confirmed with each provider):
 
 Currently all users are US-based (LA film industry pilot). If/when we serve users in the EU or other jurisdictions with data transfer restrictions, we'll need to address cross-border data flows. The legal team should advise on whether Standard Contractual Clauses or other mechanisms are needed now or can wait until international expansion.
 
+### Payments architecture and pre-purchases
+
+All monetary transactions are processed through Stripe — Evryn never holds, transmits, or has access to user funds. Peer-to-peer payments (e.g., if a connection leads to a freelance engagement) flow through Stripe Connect, where Stripe handles the entire payment lifecycle.
+
+Users may pre-purchase connections or receive Evryn Credit (non-monetary, non-withdrawable promotional value used within the platform). Pre-purchases are completed transactions, not held funds. Evryn Credit functions as a promotional or reward mechanism, not a financial instrument.
+
+Questions for the legal team:
+- Does this structure (Stripe handles all money, Evryn tracks completed purchases and non-monetary credits) avoid money transmitter licensing requirements?
+- Are there state-level stored value or gift card regulations that apply to Evryn Credit?
+
+### Participant-Based Business Access
+
+One of Evryn's planned revenue streams involves businesses becoming Evryn users. A business is introduced to an individual user only when Evryn judges them to be the best fit for what the user is looking for — and only with the user's explicit, per-introduction consent. Users can exclude any or all businesses. There is no boosting, no buying visibility, and no sharing of user data with the business without the user's active approval in the moment.
+
+Questions for the legal team:
+- What FTC disclosure requirements apply when a connection involves a paying business?
+- Under CCPA's broad definition of "sale," does facilitating a per-intro, user-consented introduction between a user and a paying business constitute a "sale" of personal information?
+
+### Emerging regulatory considerations
+
+The legal team should be aware of the following frameworks as they may affect how the Terms and Privacy Policy are drafted:
+
+- **EU AI Act:** Evryn's automated matching decisions — particularly in employment and romantic contexts — may fall under high-risk AI system requirements as we expand internationally.
+- **FCRA:** The behavioral trust assessment determines what connections a user can access. If trust assessments ever inform third-party decisions (e.g., a business deciding whether to engage with a user based on Evryn's willingness to broker the connection), FCRA requirements could apply.
+- **Anti-discrimination laws:** Evryn connects across all life domains, including contexts that touch housing and employment. Fair housing (FHA), equal employment (Title VII), and equal credit opportunity laws may apply to how matching decisions are made in those contexts. Evryn's behavioral filtering approach (behavior, not belief/identity) is designed to avoid discriminatory matching, but the legal team should confirm this provides adequate protection.
+
 ### Long-term jurisdictional architecture (future)
 
 Our long-term architectural vision includes creating a **Swiss foundation** (separate nonprofit entity) as the custodian of Evryn's trust graph and behavioral memory. This structure is designed to maximize user privacy — the US operating company (Evryn Inc.) would access trust data only through narrow, consent-governed APIs, and even the company's own operators would be structurally unable to access private user trust data. The foundation would be governed by a multinational board under a mission-locked charter, benefiting from Switzerland's strong privacy protections.
@@ -280,4 +335,4 @@ This is likely many months away from implementation, but the legal team should b
 
 ---
 
-*Draft prepared 2026-02-16. Fourth pass: age to 18, verification pass-through model, safety identifier generalization, ElevenLabs data flow, connection types disclaimers, tone-and-trust note, shared conversation note, data retention refinements, Jumio transition, data portability simplification.*
+*Draft prepared 2026-02-16. Fifth pass: added Slack and Google Analytics to integrations, clarified current PII anonymization state, added communication preferences and coaching insights to data types, added biometric privacy note for voice features, expanded operator access disclosure, added vouching mechanics to trust assessment, added Trust Mirror and Latent Truth Discovery to user isolation pathways, added proactive outreach and cast-off consent sections, added payments architecture and Participant-Based Business Access, added emerging regulatory considerations (EU AI Act, FCRA, anti-discrimination), added attachment content to future data types, organizational language throughout.*
