@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-02-17
+
+- Legal questionnaire: verification pass — read all system docs (ARCHITECTURE.md, BUILD-EVRYN-MVP.md, master-plan-reference.md, Hub, SYSTEM_OVERVIEW) against questionnaire. 16 gaps identified, all integrated.
+- Questionnaire evolved from fourth → sixth draft: cast-off outreach consent, payments architecture (Stripe), StartEngine/crowdfunding, Trust Mirror + Latent Truth Discovery pathways, vouching mechanics, proactive outreach, biometric privacy, connection coaching, Participant-Based Business Access, emerging regulatory frameworks (EU AI Act, FCRA, anti-discrimination), PII anonymization current state, operator access disclosure
+- Clarifications doc: added "Surfaced during verification pass" section with 15 items, each with "Needs to flow to" targets
+- Decisions made: Evryn Credit = non-monetary promotional value (not stored value), StartEngine = pass-through model for securities compliance, Trust Mirror = Evryn's commercial judgment (not user data), behavioral filtering framing for anti-discrimination
+
 ## 2026-02-16
 
 - Created `docs/legal/` directory for legal team documents
