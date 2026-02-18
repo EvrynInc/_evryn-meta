@@ -2,9 +2,9 @@
 
 > **How to use this file:** Draft responses to Fenwick's questionnaire for building Evryn's Terms & Conditions and Privacy Policy. This is a working document — answers will be refined through discussion with legal counsel. Maintained in the repo so we can update it as the product evolves.
 >
-> **Owner:** Justin (with AC research support)
+> **Owner:** Justin McGowan (with AC research support)
 >
-> **Status:** Sixth draft — 2026-02-17T16:04:46-08:00
+> **Status:** Seventh draft — 2026-02-17
 
 ---
 
@@ -131,7 +131,7 @@ Our platform will evolve in stages:
 1. **Current:** Email-only. Evryn communicates via email. No app, no web interface for end users.
 2. **Near-term:** Responsive web application (mobile-friendly from day one, but accessed via browser, not an app store).
 3. **Later:** Native mobile apps (iOS, Android) — only when user demand warrants the investment.
-4. **Multi-channel communication (under research):** We're exploring having Evryn communicate on the user's preferred platform — email, text, WhatsApp, etc. This is technically feasible but we're evaluating the security and legal angles carefully. Each channel is a different security surface and potentially different regulatory framework.
+4. **Multi-channel communication (under research):** As described in Q4 — we're exploring additional communication channels (SMS, WhatsApp, etc.) but evaluating the security and regulatory implications of each before committing.
 
 ---
 
@@ -141,7 +141,7 @@ Our platform will evolve in stages:
 
 Our primary growth strategy is organic and relational, not ad-driven:
 
-- **Top-down (gatekeeper partnerships):** Partnerships with gatekeepers — high-volume connectors in specific industries who route their inbound to Evryn. Each gatekeeper provides a large pool of people — many of whom aren't the best *mutual* fit for that gatekeeper specifically but are real people with real needs. Both those we connect with the gatekeeper, as well as their "cast-offs," become full Evryn users who we can continue to connect to others. Gatekeepers come in different sizes, but our current gatekeeper is likely representative at ~1,000 new potential users per week.
+- **Top-down (gatekeeper partnerships):** As described in Q2 — gatekeepers are high-volume connectors who route their inbound to Evryn. Each provides a large pool of potential users, most of whom aren't the best *mutual* fit for that gatekeeper specifically but are real people with real needs. Our current gatekeeper is likely representative at ~1,000 new potential users per week.
 - **Bottom-up (whisper cascade):** Invite-only growth — we grow by solving, proving, and being invited forward.
 - **Organic outreach:** Content creation (blog posts, thought leadership), organic presence on platforms (Reddit, social media), community engagement in target industries.
 - **Events:** Presence at industry events and gatherings.
@@ -185,7 +185,7 @@ While of course this document needs to be a legal document first and foremost, u
 
 ### Mutual matching — a foundational principle
 
-Evryn finds the best <u>*mutual*</u> match. This is not a detail — it's foundational to how the Terms should treat all user relationships — including the gatekeeper relationship. When a gatekeeper routes inbound to Evryn, we surface the best *mutual* matches for that gatekeeper. People who aren't the best mutual fit for that gatekeeper become full Evryn users in their own right — they are not "the gatekeeper's leads." The same person may reach multiple gatekeepers simultaneously; Evryn's obligation is to find each person the best connection, regardless of which inbox surfaced them first. **The Terms must not create or imply any ownership or priority rights for gatekeepers over the people in their inbound.**
+Evryn finds the best <u>*mutual*</u> match. This is not a detail — it's foundational to how the Terms should treat all user relationships — including the gatekeeper relationship. When a gatekeeper routes inbound to Evryn, we surface the best *mutual* matches for that gatekeeper. People who aren't the best mutual fit become full Evryn users in their own right (as described in Q2) — they are not "the gatekeeper's leads." The same person may reach multiple gatekeepers simultaneously; Evryn's obligation is to find each person the best connection, regardless of which inbox surfaced them first. **The Terms must not create or imply any ownership or priority rights for gatekeepers over the people in their inbound.**
 
 ### AI-powered automated decision-making
 
@@ -197,11 +197,9 @@ We're building toward a model where, at scale, an automated safety gate will rep
 
 ### Behavioral trust assessment (not a "score")
 
-Evryn builds a qualitative, narrative assessment of each user's trustworthiness as it relates to various types of connections, based on observed behavior — not a numeric credit-score-style number. This assessment determines the contexts in which Evryn will connect a given user with others. It's multidimensional, context-specific, and dynamic (it can improve or degrade over time).
+The trust assessment described in Q5 is worth expanding on for legal purposes. It's multidimensional, context-specific, and dynamic — for example, Evryn might trust someone highly for professional connections but have reservations about romantic introductions based on observed behavior, or vice versa. The assessment is private (never shown to other users), contextual (not a universal label), and always evolving.
 
-For example, Evryn might trust someone highly for professional connections but have reservations about romantic introductions based on observed behavior — or vice versa. The assessment is private (never shown to other users), contextual (not a universal label), and always evolving.
-
-Other users can provide input that informs trust — for example, vouching for someone they know. However, a vouch is information for Evryn to evaluate, not a direct mechanism. Users do not *directly* affect another user's standing with Evryn. Evryn takes in a variety of signals and exercises her own judgment.
+As noted in Q5, users can provide input (such as vouching), but users do not *directly* affect another user's standing with Evryn. Evryn takes in a variety of signals and exercises her own judgment.
 
 This is conceptually similar to a credit score in that it affects what services a user can access — but it's structurally different (narrative, not numeric; private; context-specific). The legal team should advise on how to disclose this and how to remain compliant with any "automated profiling" regulations.
 
@@ -213,17 +211,17 @@ Evryn filters behavior — predatory conduct, deception, manipulation, coercion 
 
 Evryn connects people across all life domains — professional, creative, romantic, community, mentorship, and more. This breadth means some connections will touch contexts that overlap with regulated fields: connecting someone to a therapist (medical), a financial advisor (financial), or a lawyer (legal). Evryn is not providing medical, financial, or legal services — she's making introductions between people. But the Terms should include clear disclaimers that Evryn is a connection broker, not a licensed service provider, and that any professional services resulting from a connection are between the individuals involved.
 
-Similarly, as Evryn gets to know users, she may share observations about patterns she's noticed — communication tendencies, recurring dynamics in their connections, or suggestions that might help their outcomes. These observations are Evryn's perspective shared as a friend would, not professional guidance. Evryn is not a therapist, career counselor, or licensed advisor of any kind.
+Similarly, Evryn may share observations about patterns she's noticed in a user's interactions (also listed as a future data type in Q5). These observations are Evryn's perspective shared as a friend would, not professional guidance. Evryn is not a therapist, career counselor, or licensed advisor of any kind.
 
 ### Proactive AI-initiated communication
 
 Evryn reaches out to users on her own initiative — check-ins when she hasn't heard from someone in a while, follow-ups after connections, observations about patterns. This is core to who Evryn is, not a notification system. Evryn has default communication policies to respect users' boundaries, but users are also able to set communication preferences during onboarding (preferred channels, frequency, quiet hours), and Evryn respects those boundaries.
 
-The legal team should advise on how to frame consent for AI-initiated communications in the Terms, especially as channels expand beyond email to SMS, WhatsApp, or other platforms with different regulatory requirements (e.g., TCPA for SMS).
+The legal team should advise on how to frame consent for AI-initiated communications in the Terms, especially as channels expand beyond email (see multi-channel research in Q4) to platforms with different regulatory requirements (e.g., TCPA for SMS).
 
 ### Safety imprint on account deletion
 
-Covered in Q5 above. When a user deletes their account, personal data is purged but a safety identifier is retained that allows Evryn to recognize a returning identity and remember the nature of our willingness to do business with them — without retaining any personal information. The technical implementation will ensure that no personal data can be recovered from this identifier. It functions similarly to how any business reserves the right to decide what relationship they're willing to offer a returning customer, but implemented with privacy-preserving technology so that no personal data needs to be stored to exercise that right.
+The technical details are described in Q5 above. The legal framing we'd like: this functions similarly to how any business reserves the right to decide what relationship they're willing to offer a returning customer, but implemented with privacy-preserving technology so that no personal data needs to be stored to exercise that right.
 
 The legal team should advise on how to disclose this, and how to ensure the framing as a standard commercial right (reserving the right to determine the terms on which we do business with a given individual) provides adequate legal basis under GDPR, CCPA, and similar frameworks.
 
@@ -300,7 +298,7 @@ Currently all users are US-based (LA film industry pilot). If/when we serve user
 
 ### Payments architecture and pre-purchases
 
-All monetary transactions are processed through Stripe — Evryn never holds, transmits, or has access to user funds. Peer-to-peer payments (e.g., if a connection leads to a freelance engagement) flow through Stripe Connect, where Stripe handles the entire payment lifecycle.
+Stripe handles all monetary transactions (see Q4 above) — Evryn never holds, transmits, or has access to user funds. Peer-to-peer payments flow through Stripe Connect, where Stripe handles the entire payment lifecycle.
 
 Users may pre-purchase connections or receive Evryn Credit (non-monetary, non-withdrawable promotional value used within the platform). Pre-purchases are completed transactions (processed through Stripe), not held funds. Evryn Credit functions as a promotional or reward mechanism, not a financial instrument.
 
@@ -310,7 +308,7 @@ Questions for the legal team:
 
 ### Crowdfunding and investment
 
-We plan to solicit investment from users and the broader community through **StartEngine**, a registered crowdfunding platform operating under Reg CF. StartEngine handles the full securities offering — investor verification, investment limits, escrow, compliance, and record-keeping. Evryn directs interested people to StartEngine's platform; StartEngine manages the investor relationship and regulatory requirements. This is a pass-through model (similar to how we use iDenfy for identity verification): the expertise and regulatory burden stays with the registered intermediary.
+StartEngine handles the full securities offering as a pass-through model (detailed in Q4 above) — the expertise and regulatory burden stays with the registered intermediary, similar to how we use iDenfy for identity verification.
 
 Evryn may invite users to pre-purchase connections or learn about the investment opportunity when they express genuine enthusiasm for the service — for example, when a user says something like "this whole approach sounds amazing, I want to be part of this." These invitations are conversational and responsive to the user's expressed interest, not timed to moments of vulnerability or emotional distress. However, we want to surface this for the legal team: the fact that an AI may make commercial invitations — including mentioning a securities offering — within an ongoing conversational relationship is novel enough that it warrants review.
 
@@ -332,8 +330,8 @@ Questions for the legal team:
 The legal team should be aware of the following frameworks as they may affect how the Terms and Privacy Policy are drafted:
 
 - **EU AI Act:** Evryn's automated matching decisions — particularly in employment and romantic contexts — may fall under high-risk AI system requirements as we expand internationally.
-- **FCRA:** The behavioral trust assessment determines what connections a user can access. If trust assessments ever inform third-party decisions (e.g., a business deciding whether to engage with a user based on Evryn's willingness to broker the connection), FCRA requirements could apply.
-- **Anti-discrimination laws:** Evryn connects across all life domains, including contexts that touch housing and employment. Fair housing (FHA), equal employment (Title VII), and equal credit opportunity laws may apply to how matching decisions are made in those contexts. Evryn's behavioral filtering approach (behavior, not belief/identity) is designed to avoid discriminatory matching, but the legal team should confirm this provides adequate protection.
+- **FCRA:** The behavioral trust assessment (see above) determines what connections a user can access. If trust assessments ever inform third-party decisions (e.g., a business deciding whether to engage with a user based on Evryn's willingness to broker the connection), FCRA requirements could apply.
+- **Anti-discrimination laws:** Evryn connects across all life domains, including contexts that touch housing and employment. Fair housing (FHA), equal employment (Title VII), and equal credit opportunity laws may apply to how matching decisions are made in those contexts. Evryn's behavioral filtering approach (see "Behavioral filtering" section above) is designed to avoid discriminatory matching, but the legal team should confirm this provides adequate protection.
 
 ### Long-term jurisdictional architecture (future)
 
@@ -347,4 +345,4 @@ This is likely many months away from implementation, but the legal team should b
 
 ---
 
-*Draft prepared 2026-02-16. Sixth pass: added StartEngine (crowdfunding) to integrations, added crowdfunding and investment section with AI solicitation edge case, refined behavioral trust assessment language (vouching as signal not mechanism), refined proactive communication defaults, refined Latent Truth Discovery framing, refined cast-off outreach language and questions, clarified Participant-Based Business Access data handling, expanded CCPA question with contact-exchange clarification.*
+*Draft prepared 2026-02-16. Seventh pass: redundancy cleanup — trimmed repeated descriptions, added cross-references between sections for readability.*
