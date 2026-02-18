@@ -4,7 +4,7 @@
 >
 > **Owner:** AC
 >
-> **Status:** Active — updated 2026-02-16T16:55:07-08:00
+> **Status:** Active — updated 2026-02-17T16:04:46-08:00
 
 ---
 
@@ -66,6 +66,75 @@
 **Decision:** Users email support@evryn.com to request data export. No need to specify format at this stage. Full export provided on request.
 **Needs to flow to:** Terms of Service, support processes
 
+## Surfaced during verification pass (2026-02-17)
+
+The following clarifications emerged when AC did a verification pass — reading all system docs against the questionnaire to find gaps. Items below were resolved directly into the questionnaire (sixth draft) and are documented here for flow-through to other docs.
+
+### Vouching mechanics
+**Surfaced:** Verification pass — master plan reference describes vouching system
+**Clarification:** Users can vouch for people they know, but a vouch is input for Evryn's independent judgment, not a direct mechanism. Evryn evaluates vouches in context: a vouch from a highly trusted user with corroborating signals may carry significant weight; one from a newer user with no corroboration may carry little or none. Key language: "Users do not *directly* affect another user's standing with Evryn. Evryn takes in a variety of signals and exercises her own judgment."
+**Needs to flow to:** ARCHITECTURE.md (trust model), Evryn system prompt
+
+### Proactive outreach — default policies + user preferences
+**Surfaced:** Verification pass — ARCHITECTURE.md describes proactive behavior as core
+**Clarification:** Evryn has default communication policies (she won't spam people) AND users can set preferences during onboarding. Both layers exist. This is relevant for TCPA/consent framing as channels expand beyond email.
+**Needs to flow to:** ARCHITECTURE.md (proactive behavior section), Evryn system prompt
+
+### Trust Mirror — Evryn's commercial judgment, not user data
+**Surfaced:** Verification pass — master plan reference describes Trust Mirror feature
+**Clarification:** When a user asks "Would Evryn have connected me to this person?", Evryn gives a graduated response but shares nothing about the other user. This is framed as Evryn expressing her own commercial judgment about willingness to facilitate, not sharing the other user's personal data. Added to questionnaire as a third controlled information pathway (future).
+**Needs to flow to:** ARCHITECTURE.md (user isolation), Terms of Service
+
+### Latent Truth Discovery — courier model with explicit consent
+**Surfaced:** Verification pass — master plan reference describes this feature
+**Clarification:** If two users independently express the same hidden desire/interest, Evryn may offer to facilitate — but ONLY if both have independently expressed it. Evryn acts as a courier: each user must explicitly sign off on exact wording. Justin's framing: this could be a checkbox or submit button — something where Evryn is basically a courier on their behalf, only carrying messages they've explicitly approved. Added to questionnaire as a fourth controlled information pathway (future).
+**Needs to flow to:** ARCHITECTURE.md (user isolation), Terms of Service
+
+### Cast-off outreach consent framework
+**Surfaced:** Verification pass — BUILD-EVRYN-MVP.md describes ~1,000 cast-offs/week
+**Clarification:** These people emailed a gatekeeper (not Evryn) and didn't opt in to hearing from Evryn. However, they initiated contact with someone in Evryn's ecosystem. CAN-SPAM is navigable (doesn't require prior consent for email, requires opt-out mechanism). Framing: "You reached out to [gatekeeper], who works with Evryn. They're not the right fit for this, but if you'd like, I'd be happy to help you find what you're looking for." Legal team asked to advise on consent framework, best practices, and opt-out mechanisms.
+**Needs to flow to:** BUILD-EVRYN-MVP.md (cast-off handling), Evryn system prompt (outreach templates)
+
+### Operator access to user data
+**Surfaced:** Verification pass — ARCHITECTURE.md describes Justin-as-operator track
+**Clarification:** During pilot and early phases, the operations team has direct access to all user data as part of human-in-the-loop oversight. This is necessary for the safety model but must be disclosed in the Privacy Policy. At scale, operator access will be heavily gated and audited. Questionnaire now uses organizational language ("operations team") rather than naming individuals.
+**Needs to flow to:** Privacy Policy (disclosure), ARCHITECTURE.md (operator access constraints at scale)
+
+### PII anonymization — current state vs. target
+**Surfaced:** Verification pass — master plan describes Privacy Gateway, not yet built
+**Clarification:** Today, full user data goes to Anthropic's API without any anonymization or tokenization. The questionnaire now explicitly states this current state alongside the planned tokenization approach.
+**Needs to flow to:** ARCHITECTURE.md (security section — note current gap)
+
+### Biometric data laws for voice features
+**Surfaced:** Verification pass — voice features (Vapi, Hume) may trigger BIPA
+**Clarification:** Voice prints and emotion analysis from voice may qualify as biometric data under Illinois BIPA and similar state laws. BIPA has a private right of action and statutory damages of $1,000-$5,000 per violation. Legal team asked to advise on consent framework before voice features launch.
+**Needs to flow to:** ARCHITECTURE.md (voice integration section, when written)
+
+### Connection coaching — not professional advice
+**Surfaced:** Verification pass — this will emerge organically, not as a built feature
+**Clarification:** Evryn will naturally start sharing observations about patterns she notices ("your emails tend to come across as aggressive" or "I've noticed you rush in romantic connections"). These are her perspective shared as a friend would, not professional guidance. She is not a therapist, career counselor, or licensed advisor. Justin: "this will organically grow — it's not a feature in the traditional sense." Stubbed into questionnaire now so the Terms cover it from day one.
+**Needs to flow to:** Terms of Service (disclaimer), Evryn system prompt (coaching guardrails)
+
+### Payments architecture — Stripe handles everything
+**Surfaced:** Verification pass — master plan describes Evryn Wallet with stored value
+**Clarification:** Justin's instinct: keep all actual monetary value in Stripe. Pre-purchases are completed transactions (processed through Stripe), not held funds. Evryn Credit is non-monetary promotional value — like store credit, not held funds. Peer-to-peer via Stripe Connect means Evryn never touches money in transit. Legal team asked to confirm this avoids money transmitter licensing.
+**Needs to flow to:** ARCHITECTURE.md (payments section, when written)
+
+### Crowdfunding and AI-initiated investment solicitation
+**Surfaced:** Verification pass + Justin direction — StartEngine not previously in questionnaire
+**Clarification:** Evryn plans to solicit investment through StartEngine (Reg CF). StartEngine handles all securities compliance — pass-through model like iDenfy. Evryn may conversationally invite users to invest when they express genuine enthusiasm (not vulnerability). The novelty of an AI making investment solicitations within a conversational product is flagged as an edge case for legal review. Pre-sales (pre-purchasing connections) are also surfaced.
+**Needs to flow to:** Terms of Service, any future crowdfunding campaign materials
+
+### Participant-Based Business Access — data stays in Evryn's system
+**Surfaced:** Verification pass — master plan describes "Ads Without Ads" revenue stream
+**Clarification:** When Evryn connects a user to a paying business, she doesn't hand over the user's information. She puts them in contact through Evryn's system — they would need to exchange external contact info themselves. User must give explicit per-introduction consent. Legal team asked about FTC disclosure requirements and CCPA "sale" definition.
+**Needs to flow to:** ARCHITECTURE.md (business user model, when designed), Terms of Service
+
+### Emerging regulatory frameworks
+**Surfaced:** Verification pass — system docs describe features touching multiple regulated domains
+**Clarification:** Three frameworks flagged for legal team awareness: (1) EU AI Act — automated matching in employment/romantic contexts may be high-risk AI, (2) FCRA — trust assessments could function like consumer reports if they inform third-party decisions, (3) Anti-discrimination — matching in housing/employment contexts must comply with FHA, Title VII, ECOA. Evryn's behavioral filtering (behavior, not belief/identity) is the right approach but needs legal confirmation.
+**Needs to flow to:** Terms of Service, ARCHITECTURE.md (compliance section, when written)
+
 ---
 
-*Created 2026-02-16 during legal questionnaire session.*
+*Created 2026-02-16 during legal questionnaire session. Updated 2026-02-17 with verification pass findings.*

@@ -4,7 +4,7 @@
 >
 > **Owner:** Justin (with AC research support)
 >
-> **Status:** Fifth draft — 2026-02-17T16:04:46-08:00
+> **Status:** Sixth draft — 2026-02-17T16:04:46-08:00
 
 ---
 
@@ -71,6 +71,7 @@ We are building toward anonymizing and minimizing user data before it passes thr
 | **Hume AI** | Emotion/sentiment detection during voice conversations — helps Evryn understand tone and emotional context. | Voice audio analyzed for emotional signals. |
 | **ElevenLabs** | Voice synthesis — gives Evryn a speaking voice. | Text of Evryn's spoken responses — which can contain user information from conversations (e.g., names, locations, context about people being discussed). |
 | **Amplitude** | Product analytics — understanding how users interact with the web/mobile interface. | User behavior data (screens viewed, actions taken, time spent). |
+| **StartEngine** | Crowdfunding platform (Reg CF). Users and prospective users may be invited to invest in Evryn through this registered intermediary. | StartEngine handles the full securities offering — investor identity verification, investment limits, escrow, compliance, and record-keeping. Evryn directs interested users to StartEngine's platform; StartEngine manages the investor relationship. Evryn receives investment records (who invested, amounts) for cap table purposes. |
 
 ### Multi-channel communication (under research)
 
@@ -200,7 +201,7 @@ Evryn builds a qualitative, narrative assessment of each user's trustworthiness 
 
 For example, Evryn might trust someone highly for professional connections but have reservations about romantic introductions based on observed behavior — or vice versa. The assessment is private (never shown to other users), contextual (not a universal label), and always evolving.
 
-Other users can provide input that informs trust — for example, vouching for someone they know. However, a vouch is information for Evryn to evaluate, not a direct mechanism. Evryn exercises independent judgment: a vouch from a highly trusted user with corroborating signals may carry significant weight, while a vouch from a newer user with no corroboration may carry little or none. No single user can unilaterally affect another user's standing with Evryn.
+Other users can provide input that informs trust — for example, vouching for someone they know. However, a vouch is information for Evryn to evaluate, not a direct mechanism. Users do not *directly* affect another user's standing with Evryn. Evryn takes in a variety of signals and exercises her own judgment.
 
 This is conceptually similar to a credit score in that it affects what services a user can access — but it's structurally different (narrative, not numeric; private; context-specific). The legal team should advise on how to disclose this and how to remain compliant with any "automated profiling" regulations.
 
@@ -216,7 +217,7 @@ Similarly, as Evryn gets to know users, she may share observations about pattern
 
 ### Proactive AI-initiated communication
 
-Evryn reaches out to users on her own initiative — check-ins when she hasn't heard from someone in a while, follow-ups after connections, observations about patterns. This is core to who Evryn is, not a notification system. Users set communication preferences during onboarding (preferred channels, frequency, quiet hours), and Evryn respects those boundaries.
+Evryn reaches out to users on her own initiative — check-ins when she hasn't heard from someone in a while, follow-ups after connections, observations about patterns. This is core to who Evryn is, not a notification system. Evryn has default communication policies to respect users' boundaries, but users are also able to set communication preferences during onboarding (preferred channels, frequency, quiet hours), and Evryn respects those boundaries.
 
 The legal team should advise on how to frame consent for AI-initiated communications in the Terms, especially as channels expand beyond email to SMS, WhatsApp, or other platforms with different regulatory requirements (e.g., TCPA for SMS).
 
@@ -266,7 +267,7 @@ Each user's relationship with Evryn is structurally isolated. Evryn never reveal
 **Two additional mechanisms are planned that involve carefully controlled information flow:**
 
 3. **Trust Mirror (future):** Users can ask Evryn "Would you have connected me to this person?" about someone they already know. Evryn gives a graduated response (from "definitely would have" to "wouldn't have") — but shares nothing about the other user. This is Evryn expressing her own commercial judgment about her willingness to facilitate a connection, not sharing the other user's personal data.
-4. **Latent Truth Discovery (future):** If two users independently express the same hidden desire or interest to Evryn, she may carefully offer to facilitate — but ONLY if both have expressed it independently, and only with both parties' active, informed consent. Evryn acts as a courier: each user must explicitly sign off on the exact wording of anything shared. Nothing is revealed without both parties' consent.
+4. **Latent Truth Discovery (future):** If two users independently express the same hidden desire or interest to Evryn, she may carefully offer to facilitate — but ONLY if both have expressed it independently, and only with both parties' active, informed consent. Ultimately, Evryn effectively acts as a courier: each user must explicitly sign off on the exact wording of anything shared. Nothing is revealed without both parties' consent.
 
 Outside of these pathways, user data never crosses between accounts.
 
@@ -274,11 +275,11 @@ Outside of these pathways, user data never crosses between accounts.
 
 ### Cast-off outreach and consent
 
-As described in Q2, our growth model involves reaching out to people who emailed a gatekeeper but weren't the right mutual fit for that gatekeeper. These people initiated contact with someone in Evryn's ecosystem but didn't directly sign up for Evryn. The outreach framing: "You reached out to [gatekeeper], who works with Evryn. They're not the right fit for this, but I'd love to help you find what you're looking for."
+As described in Q2, our growth model involves reaching out to people who emailed a gatekeeper but weren't the right mutual fit for that gatekeeper. These people initiated contact with someone in Evryn's ecosystem but didn't directly sign up for Evryn. The outreach framing: "You reached out to [gatekeeper], who works with Evryn. They're not the right fit for this, but if you'd like, I'd be happy to help you find what you're looking for."
 
 Questions for the legal team:
 - What consent framework is needed for this outreach under CAN-SPAM and, if applicable, TCPA (for future SMS/text channels)?
-- Does the fact that the person initiated contact with someone in Evryn's ecosystem provide a sufficient basis for outreach?
+- Does the fact that the person initiated contact with someone in Evryn's ecosystem provide a sufficient basis for outreach, and are there best practices we should keep in mind as we craft these approaches?
 - What opt-out mechanisms should be included from the first message?
 
 ### Data portability
@@ -301,19 +302,30 @@ Currently all users are US-based (LA film industry pilot). If/when we serve user
 
 All monetary transactions are processed through Stripe — Evryn never holds, transmits, or has access to user funds. Peer-to-peer payments (e.g., if a connection leads to a freelance engagement) flow through Stripe Connect, where Stripe handles the entire payment lifecycle.
 
-Users may pre-purchase connections or receive Evryn Credit (non-monetary, non-withdrawable promotional value used within the platform). Pre-purchases are completed transactions, not held funds. Evryn Credit functions as a promotional or reward mechanism, not a financial instrument.
+Users may pre-purchase connections or receive Evryn Credit (non-monetary, non-withdrawable promotional value used within the platform). Pre-purchases are completed transactions (processed through Stripe), not held funds. Evryn Credit functions as a promotional or reward mechanism, not a financial instrument.
 
 Questions for the legal team:
 - Does this structure (Stripe handles all money, Evryn tracks completed purchases and non-monetary credits) avoid money transmitter licensing requirements?
 - Are there state-level stored value or gift card regulations that apply to Evryn Credit?
 
+### Crowdfunding and investment
+
+We plan to solicit investment from users and the broader community through **StartEngine**, a registered crowdfunding platform operating under Reg CF. StartEngine handles the full securities offering — investor verification, investment limits, escrow, compliance, and record-keeping. Evryn directs interested people to StartEngine's platform; StartEngine manages the investor relationship and regulatory requirements. This is a pass-through model (similar to how we use iDenfy for identity verification): the expertise and regulatory burden stays with the registered intermediary.
+
+Evryn may invite users to pre-purchase connections or learn about the investment opportunity when they express genuine enthusiasm for the service — for example, when a user says something like "this whole approach sounds amazing, I want to be part of this." These invitations are conversational and responsive to the user's expressed interest, not timed to moments of vulnerability or emotional distress. However, we want to surface this for the legal team: the fact that an AI may make commercial invitations — including mentioning a securities offering — within an ongoing conversational relationship is novel enough that it warrants review.
+
+Questions for the legal team:
+- What disclosures or guardrails are required when an AI conversationally invites users to invest through a Reg CF offering?
+- Are there specific rules about AI-initiated investment solicitation within a conversational product?
+- What language should the Terms include regarding pre-purchases and the distinction between purchasing a service vs. investing in the company?
+
 ### Participant-Based Business Access
 
-One of Evryn's planned revenue streams involves businesses becoming Evryn users. A business is introduced to an individual user only when Evryn judges them to be the best fit for what the user is looking for — and only with the user's explicit, per-introduction consent. Users can exclude any or all businesses. There is no boosting, no buying visibility, and no sharing of user data with the business without the user's active approval in the moment.
+One of Evryn's planned revenue streams involves businesses becoming Evryn users. A business is introduced to an individual user only when Evryn judges them to be the best fit for what the user is looking for — and only with the user's explicit, per-introduction consent. Users can exclude any or all businesses. There is no boosting, no buying visibility, and no sharing of user data with the business without the user's explicit approval in the moment.
 
 Questions for the legal team:
 - What FTC disclosure requirements apply when a connection involves a paying business?
-- Under CCPA's broad definition of "sale," does facilitating a per-intro, user-consented introduction between a user and a paying business constitute a "sale" of personal information?
+- Under CCPA's broad definition of "sale," does facilitating a per-intro, user-consented introduction between a user and a paying business constitute a "sale" of personal information? And to be clear: we don't independently give either user the other user's info — we simply pass whatever information they've explicitly approved for sharing with the other, then put them into contact with each other through our system. They would need to exchange any external contact information themselves.
 
 ### Emerging regulatory considerations
 
@@ -335,4 +347,4 @@ This is likely many months away from implementation, but the legal team should b
 
 ---
 
-*Draft prepared 2026-02-16. Fifth pass: added Slack and Google Analytics to integrations, clarified current PII anonymization state, added communication preferences and coaching insights to data types, added biometric privacy note for voice features, expanded operator access disclosure, added vouching mechanics to trust assessment, added Trust Mirror and Latent Truth Discovery to user isolation pathways, added proactive outreach and cast-off consent sections, added payments architecture and Participant-Based Business Access, added emerging regulatory considerations (EU AI Act, FCRA, anti-discrimination), added attachment content to future data types, organizational language throughout.*
+*Draft prepared 2026-02-16. Sixth pass: added StartEngine (crowdfunding) to integrations, added crowdfunding and investment section with AI solicitation edge case, refined behavioral trust assessment language (vouching as signal not mechanism), refined proactive communication defaults, refined Latent Truth Discovery framing, refined cast-off outreach language and questions, clarified Participant-Based Business Access data handling, expanded CCPA question with contact-exchange clarification.*
