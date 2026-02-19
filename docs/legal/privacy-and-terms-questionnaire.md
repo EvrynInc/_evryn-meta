@@ -192,7 +192,7 @@ Post-connection adjustments are part of the model: if a connection was better th
 
 This pricing model is also a trust signal, and a natural way to increase the quality of the user base. How someone prices is part of how Evryn comes to understand how they reciprocate value in relationships — if Evryn believes that a user is trying to exploit her through pricing, Evryn will trust them less, and will therefore be considerably less willing to connect them to others.
 
-**Reframed introductions:** Evryn may also surface a new *type* of connection between people who already know each other — someone you met as a friend might now be a perfect hire, or vice versa. This may involve a new connection fee for the new context. The Terms should address how this works so users understand they may be charged for new connection contexts with existing connections.
+**Reframed introductions:** Evryn may also surface a new *type* of connection between people who already know each other — someone you met as a friend might now be a perfect hire, or vice versa. This may involve a new connection fee for the new context.
 
 ### Mutual matching — a foundational principle
 
@@ -200,7 +200,7 @@ Evryn finds the best <u>*mutual*</u> match — not just the best match for one s
 
 Everyone who comes through a gatekeeper's inbound becomes a full Evryn user (as described in Q2) — whether or not they're a good mutual fit for that gatekeeper. Evryn may connect them with that gatekeeper, but she may also connect them with other people across all life domains. Evryn's obligation is to each user individually, not to the gatekeeper who surfaced them.
 
-The same person may have reached out to multiple gatekeepers simultaneously, but each gatekeeper will naturally assume these are "their leads." **The Terms need to make clear that they are not** — and must explicitly disclaim any ownership or priority rights over the people in a gatekeeper's inbound. 
+The same person may have reached out to multiple gatekeepers simultaneously, but each gatekeeper will naturally assume these are "their leads." **They are not** — we'd want the Terms to be clear about this and disclaim any ownership or priority rights over the people in a gatekeeper's inbound.
 
 Having said all of this, these gatekeeper relationships are very valuable to us, so the language should be honest and clear while doing all we can not to scare gatekeepers off.
 
@@ -222,22 +222,22 @@ This is conceptually similar to a credit score in that it affects what services 
 
 ### Behavioral filtering, not belief filtering
 
-Evryn filters behavior — predatory conduct, deception, manipulation, coercion — not politics, identity, religion, or worldview. We don't ban users; Evryn simply doesn't connect users beyond what their demonstrated trustworthiness warrants. This distinction is intentional and should be reflected in the Terms.
+Evryn filters behavior — predatory conduct, deception, manipulation, coercion — not politics, identity, religion, or worldview. We don't ban users; Evryn simply doesn't connect users beyond what their demonstrated trustworthiness warrants.
 
 ### Connection types and regulated contexts
 
-Evryn connects people across all life domains — professional, creative, romantic, community, mentorship, and more. This breadth means some connections will touch contexts that overlap with regulated fields: connecting someone to a therapist (medical), a financial advisor (financial), or a lawyer (legal). Evryn is not providing medical, financial, or legal services — she's making introductions between people. But the Terms should include clear disclaimers that Evryn is a connection broker, not a licensed service provider, and that any professional services resulting from a connection are between the individuals involved.
+Evryn connects people across all life domains — professional, creative, romantic, community, mentorship, and more. This breadth means some connections will touch contexts that overlap with regulated fields: connecting someone to a therapist (medical), a financial advisor (financial), or a lawyer (legal). Evryn is not providing medical, financial, or legal services — she's making introductions between people. We'd want the Terms to make clear that Evryn is a connection broker, not a licensed service provider, and that any professional services resulting from a connection are between the individuals involved.
 
 Similarly, Evryn may share observations about patterns she's noticed in a user's interactions (also listed as a future data type in Q5). These observations are Evryn's perspective, shared as a friend would - not professional guidance. Evryn is not a therapist, career counselor, or licensed advisor of any kind.
 
 ### Crisis and safety escalation
 
-Because Evryn builds deep conversational relationships, users may disclose mental health crises (e.g., suicidal ideation) or illegal activity (e.g., threats of violence). The Terms should address how Evryn handles these situations:
+Because Evryn builds deep conversational relationships, users may disclose mental health crises (e.g., suicidal ideation) or illegal activity (e.g., threats of violence). Here's how Evryn handles these situations:
 
 - **Mental health crises:** Evryn shifts to a supportive posture, shares relevant resources (crisis hotlines, etc.), and may escalate to a human member of the operations team.
 - **Illegal activity or threats of harm:** Evryn disengages from the conversation and escalates to legal review. There may be circumstances where we have a duty to report.
 
-In both cases, Evryn may act outside the normal privacy model — for example, flagging a conversation for human review that would otherwise be private. The Terms should disclose this and frame it as a safety commitment, not surveillance.
+In both cases, Evryn may act outside the normal privacy model — for example, flagging a conversation for human review that would otherwise be private. We'd want to make sure this is framed as a safety commitment and not surveillance.
 
 ### Proactive AI-initiated communication
 
@@ -325,7 +325,7 @@ Currently all users are US-based (LA film industry pilot). If/when we serve user
 
 ### Payments architecture and pre-purchases
 
-Stripe handles all monetary transactions (see Q4 above) — Evryn never holds, transmits, or has access to user funds. Peer-to-peer payments flow through Stripe Connect, where Stripe handles the entire payment lifecycle. When users pay each other through Stripe Connect (e.g., follow-up work, tipping, repeat engagements that grew out of an Evryn connection), Evryn may take a small commission. The Terms should disclose this.
+Stripe handles all monetary transactions (see Q4 above) — Evryn never holds, transmits, or has access to user funds. Peer-to-peer payments flow through Stripe Connect, where Stripe handles the entire payment lifecycle. When users pay each other through Stripe Connect (e.g., follow-up work, tipping, repeat engagements that grew out of an Evryn connection), Evryn may take a small commission.
 
 Users may pre-purchase connections or receive Evryn Credit (non-monetary, non-withdrawable promotional value used within the platform). Pre-purchases are completed transactions (processed through Stripe), not held funds. Evryn Credit functions as a promotional or reward mechanism, not a financial instrument.
 
@@ -362,7 +362,7 @@ Questions for the legal team:
 
 ### User stories and content rights
 
-When a user has a great experience with a connection, Evryn may ask if they'd like to share their story — "Would you want to help others by sharing your experience?" With permission, these stories may appear on Evryn's platforms (website, onboarding flows) or on the user's own channels. The Terms should include appropriate content licensing language covering how user-submitted stories may be used, and what rights the user retains.
+When a user has a great experience with a connection, Evryn may ask if they'd like to share their story. With permission, these stories may appear on Evryn's platforms (website, onboarding flows) or on the user's own channels. Do we need the Terms to include content licensing language covering how user-submitted stories may be used and what rights the user retains?
 
 ### Emerging regulatory considerations
 
