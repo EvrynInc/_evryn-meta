@@ -4,7 +4,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-19T12:29:36-08:00*
+*Last updated: 2026-02-19T13:17:19-08:00*
 
 ---
 
@@ -19,7 +19,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 - **Pre-Work #10 (in progress): Build doc rewrite** — ARCHITECTURE.md complete (v4, committed). Next: rewrite BUILD-EVRYN-MVP.md — absorb sources, fix terminology ("clients" → "users"), trim architecture sections (point to ARCHITECTURE.md), update schema section. Session handoff doc (`_evryn-meta/docs/session-handoff-2026-02-13.md`) still has content for the build doc rewrite — delete after full absorption.
 - **Pre-Work #6: Write Evryn's triage system prompt** — After #10. v0.1 system prompt patterns identified (Dream with me, Smart Curiosity, dual-track processing).
 - **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. After #10.
-- **Legal: Privacy & Terms questionnaire** — Final review in progress at `docs/legal/privacy-and-terms-questionnaire.md`. Trust Mirror dropped (membership leakage, coercion, honesty poisoning). Mutual matching section rewritten with explicit gatekeeper non-ownership. Anthropic DPA/ZDR details added. Justin reading through for final pass before sending to Fenwick.
+- **Legal: Privacy & Terms questionnaire** — Final review draft complete at `docs/legal/privacy-and-terms-questionnaire.md`. Trust Mirror dropped, canary principle established. Ready to send to Fenwick.
 - **MPR → Hub port** — Living content in master-plan-reference.md (historical) keeps needing updates (Trust Mirror reversal is latest). Needs full port into Hub so MPR can truly be frozen. Near-term, right after questionnaire.
 - **Legal clarifications → system docs** — `docs/legal/clarifications-for-system-docs.md` now has 16 items (Trust Mirror reversal added). Needs a dedicated pass to flow decisions into roadmap.md, ARCHITECTURE.md, BUILD docs, system prompts, Terms of Service.
 

@@ -4,7 +4,7 @@
 >
 > **Owner:** Justin McGowan (with AC research support)
 >
-> **Status:** Seventh draft — 2026-02-17
+> **Status:** Final review draft — 2026-02-19
 
 ---
 
@@ -268,11 +268,11 @@ Each user's relationship with Evryn is structurally isolated. Evryn never reveal
 
 3. **Latent Truth Discovery (future):** If two users independently express the same hidden desire or interest to Evryn, she may carefully offer to facilitate — but ONLY if both have expressed it independently, and only with both parties' active, informed consent. Ultimately, Evryn effectively acts as a courier: each user must explicitly sign off on the exact wording of anything shared. Nothing is revealed without both parties' consent.
 
-**Evaluating existing relationships:** Users will inevitably ask Evryn to evaluate someone they already know — "Would you have connected me to my husband?" Evryn doesn't do this. She's a broker — she finds you the best match. She doesn't evaluate your existing relationships. Any answer about a specific person risks revealing whether they're on the platform, and the question itself can be used coercively. If a user wants to know whether someone is the best mutual match for them, that's the standard matching process — both people engage independently.
-
 Outside of these pathways, user data never crosses between accounts.
 
 **A note on shared conversations:** Two connected users can invite Evryn to be present in their conversation — this helps her stay informed about the relationship. But Evryn only speaks in private, one-on-one conversations with individual users. She will not speak in shared conversations, ensuring she never accidentally reveals private information from either user's individual relationship with her. This is always opt-in: Evryn is never present unless both parties have invited her.
+
+**Evaluating specific people:** Users will inevitably ask Evryn to evaluate someone they already know — "Would you have connected me to my husband?" Evryn never comments on specific named individuals, because doing so risks leaking private information about other users (we can explain the mechanism in detail if helpful). All she does is find you the best mutual match — so if a user wants to know whether someone is right for them, that's the standard matching process, and both people engage with Evryn independently.
 
 ### Cast-off outreach and consent
 
@@ -306,14 +306,14 @@ Stripe handles all monetary transactions (see Q4 above) — Evryn never holds, t
 Users may pre-purchase connections or receive Evryn Credit (non-monetary, non-withdrawable promotional value used within the platform). Pre-purchases are completed transactions (processed through Stripe), not held funds. Evryn Credit functions as a promotional or reward mechanism, not a financial instrument.
 
 Questions for the legal team:
-- Does this structure (Stripe handles all money, Evryn tracks completed purchases and non-monetary credits) avoid money transmitter licensing requirements?
-- Are there state-level stored value or gift card regulations that apply to Evryn Credit?
+- Does this structure (Stripe handles all money, Evryn tracks completed purchases and non-monetary credits) avoid money transmitter licensing requirements for Evryn?
+- Are there stored value or gift card regulations that apply to Evryn Credit?
 
 ### Crowdfunding and investment
 
 StartEngine handles the full securities offering as a pass-through model (detailed in Q4 above) — the expertise and regulatory burden stays with the registered intermediary, similar to how we use iDenfy for identity verification.
 
-Evryn may invite users to pre-purchase connections or learn about the investment opportunity when they express genuine enthusiasm for the service — for example, when a user says something like "this whole approach sounds amazing, I want to be part of this." These invitations are conversational and responsive to the user's expressed interest, not timed to moments of vulnerability or emotional distress. However, we want to surface this for the legal team: the fact that an AI may make commercial invitations — including mentioning a securities offering — within an ongoing conversational relationship is novel enough that it warrants review.
+Evryn may invite users to pre-purchase connections or learn about the investment opportunity when they express genuine enthusiasm for the service — for example, when a user says something like "this whole approach sounds amazing, I want to be part of this." These invitations are conversational and responsive to the user's expressed interest/general enthusiasm level, definitely *not* timed to moments of vulnerability or emotional distress, however we want to surface this for the legal team: the fact that an AI may make commercial invitations — including mentioning a securities offering — within an ongoing conversational relationship is novel enough that we'd just want advice on navigating this properly.
 
 Questions for the legal team:
 - What disclosures or guardrails are required when an AI conversationally invites users to invest through a Reg CF offering?
@@ -332,20 +332,18 @@ Questions for the legal team:
 
 The legal team should be aware of the following frameworks as they may affect how the Terms and Privacy Policy are drafted:
 
-- **EU AI Act:** Evryn's automated matching decisions — particularly in employment and romantic contexts — may fall under high-risk AI system requirements as we expand internationally.
+- **EU AI Act:** We're aware that Evryn's automated matching decisions — particularly in employment and romantic contexts — may fall under high-risk AI system requirements as we expand internationally. We could give a list of the types of connections, but ultimately the answer to that is "everything". If there are areas that we *must* stay away from, or areas that we want to avoid until we're much bigger and can deal with the regulatory nightmare, we want to know. Otherwise, we just need to know where the landmines are.
 - **FCRA:** The behavioral trust assessment (see above) determines what connections a user can access. If trust assessments ever inform third-party decisions (e.g., a business deciding whether to engage with a user based on Evryn's willingness to broker the connection), FCRA requirements could apply.
-- **Anti-discrimination laws:** Evryn connects across all life domains, including contexts that touch housing and employment. Fair housing (FHA), equal employment (Title VII), and equal credit opportunity laws may apply to how matching decisions are made in those contexts. Evryn's behavioral filtering approach (see "Behavioral filtering" section above) is designed to avoid discriminatory matching, but the legal team should confirm this provides adequate protection.
+- **Anti-discrimination laws:** Evryn connects across all life domains, including contexts that touch housing and employment. Fair housing (FHA), equal employment (Title VII), and equal credit opportunity laws may apply. Evryn's approach: she filters behavior, not identity (see "Behavioral filtering" section above), and she surfaces mutual fits — the actual housing, employment, or engagement decisions are made by the individuals involved, not by Evryn. The legal team should confirm this framing provides adequate protection.
 
 ### Long-term jurisdictional architecture (future)
 
-Our long-term architectural vision includes creating a **Swiss foundation** (separate nonprofit entity) as the custodian of Evryn's trust graph and behavioral memory. This structure is designed to maximize user privacy — the US operating company (Evryn Inc.) would access trust data only through narrow, consent-governed APIs, and even the company's own operators would be structurally unable to access private user trust data. The foundation would be governed by a multinational board under a mission-locked charter, benefiting from Switzerland's strong privacy protections.
+Our long-term architectural vision includes the strong likelihood of creating a **Swiss foundation** (separate nonprofit entity) as the custodian of Evryn's trust graph and behavioral memory. This structure is designed to maximize user privacy — the US operating company (Evryn Inc.) would access trust data only through narrow, consent-governed APIs, and even the company's own operators would be structurally unable to access private user trust data. The foundation would be governed by a multinational board under a mission-locked charter, benefiting from Switzerland's uniquely strong privacy protections.
 
-This is likely many months away from implementation, but the legal team should be aware it's in the architectural roadmap. It may influence how we structure the Terms and Privacy Policy now — for example, reserving the right to transfer trust data to a mission-locked custodial entity dedicated to user privacy protection.
+This is likely many months away from implementation, but the legal team should be aware of its place in the architectural roadmap. It may influence how we structure the Terms and Privacy Policy now — for example, reserving the right to transfer trust data to a mission-locked custodial entity dedicated to user privacy protection.
 
 ### Entity structure
 
 **Evryn Inc.** — Delaware Public Benefit Corporation. Mission statement: "to foster trusted human connection for our users by developing systems that create high-resonance connections, responsibly steward personal information and insights, and structurally protect emotional wellbeing, informed consent, and relational alignment and trust across every interaction."
 
 ---
-
-*Draft prepared 2026-02-16. Seventh pass: redundancy cleanup — trimmed repeated descriptions, added cross-references between sections for readability.*

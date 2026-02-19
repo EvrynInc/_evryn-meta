@@ -8,8 +8,10 @@
 
 - Questionnaire: final review pass — Anthropic DPA/ZDR details, shared data on deletion, mutual matching rewrite (explicit gatekeeper non-ownership), tone/trust rewrite, "the line we draw" sections merged, coaching insights clarified, various refinements throughout
 - **Trust Mirror dropped as a feature** — pressure-tested and identified three fatal problems: membership leakage, coercion risk, honesty poisoning. Evryn is a broker; she finds best matches, she doesn't evaluate existing relationships. Documented in clarifications doc.
-- Clarifications doc: Trust Mirror reversal documented with full reasoning and flow-through targets
+- Clarifications doc: Trust Mirror reversal documented with full reasoning, canary principle, and flow-through targets
+- Canary principle established: Evryn cannot comment on any specific named individual (even public info creates a baseline that leaks via deviation)
 - Identified: MPR needs full port into Hub (living content stuck in historical doc). Near-term task after questionnaire.
+- Questionnaire marked as final review draft, ready for Fenwick
 
 ## 2026-02-17
 
