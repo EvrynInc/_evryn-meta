@@ -4,7 +4,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-17T16:46:53-08:00*
+*Last updated: 2026-02-19T12:29:36-08:00*
 
 ---
 
@@ -19,12 +19,13 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 - **Pre-Work #10 (in progress): Build doc rewrite** — ARCHITECTURE.md complete (v4, committed). Next: rewrite BUILD-EVRYN-MVP.md — absorb sources, fix terminology ("clients" → "users"), trim architecture sections (point to ARCHITECTURE.md), update schema section. Session handoff doc (`_evryn-meta/docs/session-handoff-2026-02-13.md`) still has content for the build doc rewrite — delete after full absorption.
 - **Pre-Work #6: Write Evryn's triage system prompt** — After #10. v0.1 system prompt patterns identified (Dream with me, Smart Curiosity, dual-track processing).
 - **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. After #10.
-- **Legal: Privacy & Terms questionnaire** — Sixth draft at `docs/legal/privacy-and-terms-questionnaire.md`. Verification pass complete — all system docs cross-referenced, 15 new items surfaced and integrated. Key additions: cast-off outreach consent framework, payments/Stripe architecture, StartEngine crowdfunding, Trust Mirror + Latent Truth Discovery pathways, biometric privacy for voice, emerging regulatory frameworks (EU AI Act, FCRA, anti-discrimination). Remaining open: gatekeeper first-right-of-refusal.
-- **Legal clarifications → system docs** — `docs/legal/clarifications-for-system-docs.md` updated with 15 verification-pass findings. All resolved for the questionnaire; each item tagged with "Needs to flow to" targets for ARCHITECTURE.md, BUILD docs, system prompts, Terms of Service. Needs a dedicated pass to flow decisions into the right places.
+- **Legal: Privacy & Terms questionnaire** — Final review in progress at `docs/legal/privacy-and-terms-questionnaire.md`. Trust Mirror dropped (membership leakage, coercion, honesty poisoning). Mutual matching section rewritten with explicit gatekeeper non-ownership. Anthropic DPA/ZDR details added. Justin reading through for final pass before sending to Fenwick.
+- **MPR → Hub port** — Living content in master-plan-reference.md (historical) keeps needing updates (Trust Mirror reversal is latest). Needs full port into Hub so MPR can truly be frozen. Near-term, right after questionnaire.
+- **Legal clarifications → system docs** — `docs/legal/clarifications-for-system-docs.md` now has 16 items (Trust Mirror reversal added). Needs a dedicated pass to flow decisions into roadmap.md, ARCHITECTURE.md, BUILD docs, system prompts, Terms of Service.
 
 ## Active Projects
 
-- **_evryn-meta** — Legal questionnaire sixth draft complete (verification pass done). Clarifications tracker has 15 items to flow to system/arch docs.
+- **_evryn-meta** — Legal questionnaire in final review (Trust Mirror dropped, many refinements). Clarifications tracker has 16 items to flow to system/arch docs. MPR→Hub port queued.
 - **evryn-backend** — ARCHITECTURE.md created (v4). BUILD-EVRYN-MVP.md rewrite is next. Session handoff doc still needed for build doc rewrite.
 - **evryn-team-agents** — PAUSED. Clean pause state.
 - **evryn-dev-workspace** — DC's home repo.

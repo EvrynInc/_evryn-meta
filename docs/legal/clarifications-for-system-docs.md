@@ -80,10 +80,11 @@ The following clarifications emerged when AC did a verification pass — reading
 **Clarification:** Evryn has default communication policies (she won't spam people) AND users can set preferences during onboarding. Both layers exist. This is relevant for TCPA/consent framing as channels expand beyond email.
 **Needs to flow to:** ARCHITECTURE.md (proactive behavior section), Evryn system prompt
 
-### Trust Mirror — Evryn's commercial judgment, not user data
+### Trust Mirror — DROPPED as a feature
 **Surfaced:** Verification pass — master plan reference describes Trust Mirror feature
-**Clarification:** When a user asks "Would Evryn have connected me to this person?", Evryn gives a graduated response but shares nothing about the other user. This is framed as Evryn expressing her own commercial judgment about willingness to facilitate, not sharing the other user's personal data. Added to questionnaire as a third controlled information pathway (future).
-**Needs to flow to:** ARCHITECTURE.md (user isolation), Terms of Service
+**Original design:** When a user asks "Would Evryn have connected me to this person?", Evryn gives a graduated response expressing commercial judgment.
+**Decision (2026-02-17):** Feature dropped after pressure-testing. Evryn is a broker — she finds you the best match. She doesn't evaluate existing relationships. Three fatal problems: (1) **Membership leakage** — any answer about a specific person risks confirming they're on the platform. (2) **Coercion risk** — becomes a tool for controlling partners. (3) **Honesty poisoning** — if private disclosures can be leveraged, users stop confiding in Evryn. If a user wants to know whether someone is the best mutual match, that's the standard matching process — both people engage independently.
+**Needs to flow to:** Hub (Trust Mirror is currently described in the MPR, which needs to be fully ported into Hub — this reversal should be captured during that port), ARCHITECTURE.md (user isolation — remove as controlled pathway), Evryn system prompt (line to hold: "I find you the best match — I don't evaluate your existing relationships")
 
 ### Latent Truth Discovery — courier model with explicit consent
 **Surfaced:** Verification pass — master plan reference describes this feature

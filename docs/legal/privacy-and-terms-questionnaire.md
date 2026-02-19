@@ -47,7 +47,7 @@ We'd like to preserve the option to change AI providers if needed. The AI landsc
 | Service | What it does | What data flows through it |
 |---------|-------------|---------------------------|
 | **Google (Gmail / Google Workspace)** | Email infrastructure. Our pilot gatekeeper forwards emails to Evryn's Gmail address (evryn@evryn.ai). Evryn reads, processes, and sends email through her own Google account. | Full email content — sender names, email addresses, message bodies, attachments (metadata only for now — we note that attachments exist but don't process their contents yet). |
-| **Anthropic (Claude API)** | AI processing. Email content, user conversations, and user profile data are sent to Anthropic's API so Evryn can read, understand context, and compose responses. | Email content, user conversations, profile data, and Evryn's analysis of whether people are good connections. Anthropic's API usage policy states they do not train on API-submitted data. |
+| **Anthropic (Claude API)** | AI processing. Email content, user conversations, and user profile data are sent to Anthropic's API so Evryn can read, understand context, and compose responses. | Email content, user conversations, profile data, and Evryn's analysis of whether people are good connections. Governed by Anthropic's commercial API terms and Data Processing Addendum (DPA). Anthropic does not train on API-submitted data, does not retain inputs/outputs beyond 30 days, and provides SOC 2 Type II compliance. |
 | **Supabase** | Hosted PostgreSQL database. All user records, conversation history, connection records, and user profiles are stored here. | All persistent user data. Supabase provides SOC2 compliance, encryption at rest and in transit, and row-level security (which we enforce on all tables). |
 | **Vercel** | Hosts the marketing website (evryn.ai). | Waitlist form submissions (name, email). Standard web server logs (IP addresses, user agent, etc.). |
 | **HubSpot** | CRM and email marketing. Captures waitlist signups from the website. Will be used for email campaigns. | Names, email addresses, signup metadata. |
@@ -59,7 +59,9 @@ We'd like to preserve the option to change AI providers if needed. The AI landsc
 
 ### Planned (all expected within 6 months)
 
-We are building toward anonymizing and minimizing user data before it passes through third-party services. For example, when Evryn sends data to the AI for processing, personally identifiable information will be tokenized or replaced with pseudonymous identifiers so the AI provider processes context and meaning without seeing real names, emails, or other PII. This isn't implemented yet — today, full user data (including names, email addresses, and message content) is sent to the AI provider without anonymization. Implementing this tokenization layer is a near-term architectural priority.
+We are building toward anonymizing and minimizing user data before it passes through third-party services. For example, when Evryn sends data to the AI service provider for processing, personally identifiable information will be tokenized or replaced with pseudonymous identifiers so the AI provider processes context and meaning without seeing real names, emails, or other PII. This isn't implemented yet — today, full user data (including names, email addresses, and message content) is sent to the AI provider without anonymization. Implementing this tokenization layer is a near-term architectural priority.
+
+We also plan to pursue Anthropic's **Zero Data Retention (ZDR)** arrangement, under which Anthropic commits to not storing any inputs or outputs after the API response is returned — data is processed in real-time and immediately discarded. This is a contractual arrangement available to commercial API customers who handle sensitive data. Combined with the tokenization layer above, the target state is: anonymized data in, zero retention on the other end.
 
 | Service | What it does | What data flows through it |
 |---------|-------------|---------------------------|
@@ -75,7 +77,7 @@ We are building toward anonymizing and minimizing user data before it passes thr
 
 ### Multi-channel communication (under research)
 
-We're researching the feasibility of letting Evryn communicate with users on their preferred platform — email, text (SMS/MMS), WhatsApp, etc. Technically straightforward to implement, but we're carefully considering the security and legal implications of each channel before committing. Each new channel means a new integration partner handling user message content, and potentially a different regulatory framework.
+We're researching the feasibility of letting Evryn communicate with users on their preferred platform — email for now, and soon our app, but expanding to text (SMS/MMS), Telegram, WhatsApp, etc. Technically straightforward to implement, but we're carefully considering the security and legal implications of each channel before committing. Each new channel means a new integration partner handling user message content, and potentially a different regulatory framework.
 
 ---
 
@@ -94,7 +96,7 @@ We're researching the feasibility of letting Evryn communicate with users on the
 
 ### Derived and inferred by Evryn's AI
 
-This is important and somewhat unusual — Evryn doesn't just store what users tell her. She builds an evolving understanding of each person.
+Evryn doesn't just store what users tell her. She builds an evolving understanding of each person.
 
 | Data type | How it's created | Purpose |
 |-----------|-----------------|---------|
@@ -109,7 +111,7 @@ This is architecturally important and we'd like the legal team's guidance:
 
 - **Personal data is purged** — conversations, profile, story, preferences, contact information.
 - **A safety identifier is retained.** When an account is deleted, Evryn retains the ability to recognize if the same verified person creates a new account in the future — and to remember the nature of our willingness to do business with them — without retaining any personal information. The identifier is designed so that it cannot be reversed to recover names, emails, or any identifying data. It only tells Evryn: "We've encountered this verified identity before, and here is what we remember about the nature of our willingness to do business with them again." See "Safety imprint on account deletion" in the Additional Context section below for how we'd like to frame this legally.
-- **Shared relational data persists where it belongs to other users.** If User A told Evryn they know User B, and then User A deletes their account, the fact that User B has this connection in their graph remains — it's part of User B's data now, not just User A's. User A's personal details are still purged.
+- **Shared data persists where it belongs to other users.** Conversations between two connected users are part of both users' data — if User A deletes their account, User B's record of their conversations remains intact. Similarly, if User A told Evryn they know User B, that connection remains in User B's graph. User A's personal details are still purged from Evryn's systems, but the other user's own data (including their side of shared interactions) is not affected by the deletion.
 
 We'd like the legal team to advise on how to disclose the safety identifier and shared relational data, and how to ensure these are compatible with GDPR right to erasure, CCPA deletion rights, and similar regulations.
 
@@ -118,9 +120,9 @@ We'd like the legal team to advise on how to disclose the safety identifier and 
 - **Voice recordings and transcripts** — when the voice interface is built. Note: voice features (Vapi, Hume AI) will involve voice prints and emotion analysis that may qualify as biometric data under Illinois BIPA and similar state biometric privacy laws. The legal team should advise on the consent framework needed before these features launch.
 - **Emotional/sentiment data from voice** — via Hume AI integration
 - **Social network mapping** — who users know, inferred from conversation context and declared relationships
-- **Location data** — for geographic matching (user-provided)
+- **Location data** — for geographic matching (primarily user-provided, but I can imagine scenarios where it would be valuable for the app to be able to detect a user's current location - this would of course be opt-in)
 - **Attachment content** — Evryn currently notes that email attachments exist but doesn't process their contents. In future phases, she will selectively process attachment content from trusted users (with malware scanning) to better understand context.
-- **Observations and coaching insights** — Evryn may notice and share patterns in a user's interactions or connection outcomes. These are her perspective, not professional guidance.
+- **Observations and coaching insights** — Evryn may share observations with a user about patterns in their interactions or connection outcomes. These are Evryn's perspective, shared as a friend would, not professional guidance.
 
 ---
 
@@ -139,13 +141,13 @@ Our platform will evolve in stages:
 
 ### Marketing approach
 
-Our primary growth strategy is organic and relational, not ad-driven:
+Our primary growth strategy is organic and relational, not primarily ad-driven:
 
 - **Top-down (gatekeeper partnerships):** As described in Q2 — gatekeepers are high-volume connectors who route their inbound to Evryn. Each provides a large pool of potential users, most of whom aren't the best *mutual* fit for that gatekeeper specifically but are real people with real needs. Our current gatekeeper is likely representative at ~1,000 new potential users per week.
 - **Bottom-up (whisper cascade):** Invite-only growth — we grow by solving, proving, and being invited forward.
 - **Organic outreach:** Content creation (blog posts, thought leadership), organic presence on platforms (Reddit, social media), community engagement in target industries.
 - **Events:** Presence at industry events and gatherings.
-- **Paid advertising:** We will also run paid ads to support awareness and growth.
+- **Paid advertising:** In addition, where necessary, we will also run paid ads to support awareness and growth.
 
 ### Analytics — current
 
@@ -158,20 +160,14 @@ Our primary growth strategy is organic and relational, not ad-driven:
 - **Amplitude** — product analytics for understanding how users interact with the web/mobile interface once it exists.
 - **Retargeting pixels on the marketing site** — we expect to use standard tracking pixels (Google, potentially Meta) on **evryn.ai** (the marketing website) to retarget website visitors with ads. This is standard website-level retargeting — "this person visited our website, show them a reminder ad."
 
-### The line we draw: marketing site vs. product experience
+### The line we draw
 
 This distinction is important to how Evryn operates:
 
 - **Marketing site (evryn.ai):** Standard retargeting pixels are acceptable. Someone visited our website — we can remind them we exist. This is no different from any other company's marketing website.
-- **Product experience (conversations with Evryn, the app, anything inside the user's relationship with Evryn):** Zero third-party tracking. What users tell Evryn is private. No advertising platform gets any signal from inside the product. No third-party ad-tech code (SDKs, pixels, or otherwise) runs inside the product experience.
-
-**Broader tracking within the product** would only ever be for product improvement, and would only ever be opt-in.
-
-### What we will NOT do
-
+- **Product experience (conversations with Evryn, the app, anything inside the user's relationship with Evryn):** Zero third-party tracking. What users tell Evryn is private. No advertising platform gets any signal from inside the product. We will not embed Facebook SDK, Google Ads SDK, TikTok SDK, or any similar third-party advertising packages inside the product experience.
 - **No selling user data.** Ever. To anyone.
-- **No ad-tech code inside the product.** We will not embed Facebook SDK, Google Ads SDK, TikTok SDK, or any similar third-party advertising packages inside the product experience.
-- **Product analytics are for product improvement only.** When we add analytics tools, they're to understand how the product is used so we can improve it — not to build advertising profiles.
+- **Product analytics are for product improvement only** — understanding how the product is used so we can improve it, not building advertising profiles. Always opt-in.
 
 ---
 
@@ -181,19 +177,25 @@ The following items weren't covered by your questions, but they're architectural
 
 ### A note on tone and trust
 
-While of course this document needs to be a legal document first and foremost, user trust is unusually critical to Evryn's core offering, so it also needs to faithfully represent Evryn's trust ethos — the Terms and Privacy Policy are one of the first things a thoughtful user will read, and the language needs to signal who we are. Legal robustness and trust are not at odds. We'd ask the legal team to keep this in mind when drafting: if there's a way to say something that's both legally sound and supports our trust-first posture, we prefer that over standard boilerplate.
+While of course these need to be legal documents first and foremost, user trust is unusually critical to Evryn's core offering — the Terms and Privacy Policy are one of the first things a thoughtful user will read, and if the language sounds extractive or adversarial, it undermines the product itself. We'd ask the legal team to keep this trust-first posture in mind when drafting, and beware of instances where standard boilerplate might inadvertently undermine it. We've tried to be specific throughout this document, but we can't anticipate every scenario — so we wanted to note the principle as a guide.
 
 ### Mutual matching — a foundational principle
 
-Evryn finds the best <u>*mutual*</u> match. This is not a detail — it's foundational to how the Terms should treat all user relationships — including the gatekeeper relationship. When a gatekeeper routes inbound to Evryn, we surface the best *mutual* matches for that gatekeeper. People who aren't the best mutual fit become full Evryn users in their own right (as described in Q2) — they are not "the gatekeeper's leads." The same person may reach multiple gatekeepers simultaneously; Evryn's obligation is to find each person the best connection, regardless of which inbox surfaced them first. **The Terms must not create or imply any ownership or priority rights for gatekeepers over the people in their inbound.**
+Evryn finds the best <u>*mutual*</u> match — not just the best match for one side. This principle governs all user relationships, including with gatekeepers.
+
+Everyone who comes through a gatekeeper's inbound becomes a full Evryn user (as described in Q2) — whether or not they're a good mutual fit for that gatekeeper. Evryn may connect them with that gatekeeper, but she may also connect them with other people across all life domains. Evryn's obligation is to each user individually, not to the gatekeeper who surfaced them.
+
+The same person may have reached out to multiple gatekeepers simultaneously, but each gatekeeper will naturally assume these are "their leads." **The Terms need to make clear that they are not** — and must explicitly disclaim any ownership or priority rights over the people in a gatekeeper's inbound. 
+
+Having said all of this, these gatekeeper relationships are very valuable to us, so the language should be honest and clear while doing all we can not to scare gatekeepers off.
 
 ### AI-powered automated decision-making
 
 Evryn makes AI-powered judgments about people — who to connect, in what contexts, and why. These decisions meaningfully affect users (determining which connections they're offered and which they're not). Under GDPR Article 22 and evolving US state privacy laws (including CCPA/CPRA), users may have rights regarding automated decisions that significantly affect them.
 
-Currently, **every outbound action Evryn takes is manually approved by a member of the operations team** before it reaches any user. No automated decision reaches a user without human review. During the pilot and early phases, the operations team also has direct access to user data — conversations, classifications, profiles — as part of this human-in-the-loop oversight. This operational access is necessary for the safety model to function and will be disclosed in the Privacy Policy. At scale, operator access will be heavily gated, audited, and structurally constrained — users deserve privacy from everyone, including the team that built Evryn.
+Currently, **every outbound action Evryn takes is manually approved by a member of the operations team** before it reaches any user. No automated decision reaches a user without human review. During the pilot and early phases, the operations team also has direct access to user data — conversations, classifications, profiles — as part of this human-in-the-loop oversight. This operational access is necessary for the safety model to function and should be disclosed in the Privacy Policy. 
 
-We're building toward a model where, at scale, an automated safety gate will replace much of the direct human oversight — checking all outbound messages against safety criteria before they reach users. But some human oversight will remain for consequential decisions as this system is developed and refined.
+But we believe users deserve privacy from everyone, including the team that built Evryn. So at scale, operator access will be heavily gated, audited, and structurally constrained. And we're building toward a model where an automated safety gate will replace much of the direct human oversight — checking all outbound messages against safety criteria before they reach users. But some human oversight will remain for consequential decisions as this system is developed and refined.
 
 ### Behavioral trust assessment (not a "score")
 
@@ -211,11 +213,11 @@ Evryn filters behavior — predatory conduct, deception, manipulation, coercion 
 
 Evryn connects people across all life domains — professional, creative, romantic, community, mentorship, and more. This breadth means some connections will touch contexts that overlap with regulated fields: connecting someone to a therapist (medical), a financial advisor (financial), or a lawyer (legal). Evryn is not providing medical, financial, or legal services — she's making introductions between people. But the Terms should include clear disclaimers that Evryn is a connection broker, not a licensed service provider, and that any professional services resulting from a connection are between the individuals involved.
 
-Similarly, Evryn may share observations about patterns she's noticed in a user's interactions (also listed as a future data type in Q5). These observations are Evryn's perspective shared as a friend would, not professional guidance. Evryn is not a therapist, career counselor, or licensed advisor of any kind.
+Similarly, Evryn may share observations about patterns she's noticed in a user's interactions (also listed as a future data type in Q5). These observations are Evryn's perspective, shared as a friend would - not professional guidance. Evryn is not a therapist, career counselor, or licensed advisor of any kind.
 
 ### Proactive AI-initiated communication
 
-Evryn reaches out to users on her own initiative — check-ins when she hasn't heard from someone in a while, follow-ups after connections, observations about patterns. This is core to who Evryn is, not a notification system. Evryn has default communication policies to respect users' boundaries, but users are also able to set communication preferences during onboarding (preferred channels, frequency, quiet hours), and Evryn respects those boundaries.
+Evryn reaches out to users on her own initiative — check-ins when she hasn't heard from someone in a while, follow-ups after connections, observations about patterns. This is core to the relationship Evryn builds with each user, it's not a notification system. Evryn has default communication policies to respect users' boundaries, but users are also able to set communication preferences during onboarding (preferred channels, frequency, quiet hours), and Evryn respects those boundaries.
 
 The legal team should advise on how to frame consent for AI-initiated communications in the Terms, especially as channels expand beyond email (see multi-channel research in Q4) to platforms with different regulatory requirements (e.g., TCPA for SMS).
 
@@ -242,7 +244,7 @@ We'd like to set a minimum age of **18** for using Evryn. Given the nature of th
 
 Questions for the legal team:
 - Are there jurisdictions where 18 isn't sufficient and a higher age applies?
-- Long-term, we may want to consider offering the service to younger users, potentially with accounts administered by a parent or guardian (parent controls the account, approves connections). This isn't near-term, but if there's language we should include now to leave room for it, we'd want to know.
+- Long-term, we may want to consider offering the service to younger users, potentially with accounts administered by a parent or guardian. This isn't near-term, but if there's language we should include now to leave room for it, we'd want to include it.
 
 ### Sensitive personal data
 
@@ -250,22 +252,23 @@ Users will tell Evryn about deeply personal topics — romantic preferences, hea
 
 - What sensitive categories Evryn may process
 - That this data is used exclusively to serve the user (finding better connections)
-- That it is never sold, never used for advertising, never shared with other users without explicit permission
+- That it is never sold, never used for advertising, never shared with anyone - including other users, without explicit permission
 - How it's protected (encryption, access controls, user isolation)
 
 ### User isolation as an architectural principle
 
-Each user's relationship with Evryn is structurally isolated. Evryn never reveals one user's information to another — this is enforced at the database level (row-level security), not just by AI instruction. Even if Evryn's AI were somehow confused or manipulated, the architecture prevents data leakage between users because the system physically cannot access User B's data while processing User A's conversation.
+Each user's relationship with Evryn is structurally isolated. Evryn never reveals one user's information to another — this is enforced at the database level (row-level security), not just by AI instruction. Even if Evryn's AI were somehow confused or manipulated, the architecture prevents data leakage between users because the system physically cannot access User B's data while processing User A's conversations.
 
 **There are precisely two controlled pathways where information can cross between users:**
 
 1. **Evryn-mediated introductions:** When Evryn brokers a connection, she may share a description of one user with another — but the specific wording is explicitly approved by the user whose information is being shared before anything is sent.
-2. **Direct messaging after mutual consent:** Users can communicate directly with each other only after both have independently agreed to be in contact. Until both say yes, neither knows the other exists. The mechanics of how this works are carefully crafted — please ask if you need more detail.
+2. **Direct messaging after mutual consent:** Users can communicate directly with each other only after both have independently agreed to be in contact. Until both say yes, neither knows the other exists in the system. The mechanics of how this works are carefully crafted — please ask if you need more detail.
 
-**Two additional mechanisms are planned that involve carefully controlled information flow:**
+**One additional mechanism is planned that involves carefully controlled information flow:**
 
-3. **Trust Mirror (future):** Users can ask Evryn "Would you have connected me to this person?" about someone they already know. Evryn gives a graduated response (from "definitely would have" to "wouldn't have") — but shares nothing about the other user. This is Evryn expressing her own commercial judgment about her willingness to facilitate a connection, not sharing the other user's personal data.
-4. **Latent Truth Discovery (future):** If two users independently express the same hidden desire or interest to Evryn, she may carefully offer to facilitate — but ONLY if both have expressed it independently, and only with both parties' active, informed consent. Ultimately, Evryn effectively acts as a courier: each user must explicitly sign off on the exact wording of anything shared. Nothing is revealed without both parties' consent.
+3. **Latent Truth Discovery (future):** If two users independently express the same hidden desire or interest to Evryn, she may carefully offer to facilitate — but ONLY if both have expressed it independently, and only with both parties' active, informed consent. Ultimately, Evryn effectively acts as a courier: each user must explicitly sign off on the exact wording of anything shared. Nothing is revealed without both parties' consent.
+
+**Evaluating existing relationships:** Users will inevitably ask Evryn to evaluate someone they already know — "Would you have connected me to my husband?" Evryn doesn't do this. She's a broker — she finds you the best match. She doesn't evaluate your existing relationships. Any answer about a specific person risks revealing whether they're on the platform, and the question itself can be used coercively. If a user wants to know whether someone is the best mutual match for them, that's the standard matching process — both people engage independently.
 
 Outside of these pathways, user data never crosses between accounts.
 
