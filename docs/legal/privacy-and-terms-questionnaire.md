@@ -176,8 +176,11 @@ This distinction is important to how Evryn operates:
 The following items weren't covered by your questions, but they're architecturally significant to Evryn and likely relevant for the Terms & Conditions and/or Privacy Policy. Evryn's structure is unusual enough that some of these wouldn't be obvious to ask about — we want to surface them proactively so the Terms and Privacy Policy can be built with the full picture.
 
 ### A note on tone and trust
+While of course these need to be legal documents first and foremost, user trust is unusually critical to Evryn's core offering:
 
-While of course these need to be legal documents first and foremost, user trust is unusually critical to Evryn's core offering — the Terms and Privacy Policy are one of the first things a thoughtful user will read, and if the language sounds extractive or adversarial, it undermines the product itself. We'd ask the legal team to keep this trust-first posture in mind when drafting, and beware of instances where standard boilerplate might inadvertently undermine it. We've tried to be specific throughout this document, but we can't anticipate every scenario — so we wanted to note the principle as a guide.
+Evryn Inc. is a Delaware Public Benefit Corporation. Mission statement: "to foster trusted human connection for our users by developing systems that create high-resonance connections, responsibly steward personal information and insights, and structurally protect emotional wellbeing, informed consent, and relational alignment and trust across every interaction."
+
+So the Terms and Privacy Policy are one of the first things a thoughtful user will read, and if the language sounds extractive or adversarial, it undermines the product itself. We'd ask the legal team to keep this trust-first posture in mind when drafting, and beware of instances where standard boilerplate might inadvertently undermine it. We've tried to be specific throughout this document, but we can't anticipate every scenario — so we wanted to note the principle as a guide.
 
 ### Mutual matching — a foundational principle
 
@@ -341,9 +344,5 @@ The legal team should be aware of the following frameworks as they may affect ho
 Our long-term architectural vision includes the strong likelihood of creating a **Swiss foundation** (separate nonprofit entity) as the custodian of Evryn's trust graph and behavioral memory. This structure is designed to maximize user privacy — the US operating company (Evryn Inc.) would access trust data only through narrow, consent-governed APIs, and even the company's own operators would be structurally unable to access private user trust data. The foundation would be governed by a multinational board under a mission-locked charter, benefiting from Switzerland's uniquely strong privacy protections.
 
 This is likely many months away from implementation, but the legal team should be aware of its place in the architectural roadmap. It may influence how we structure the Terms and Privacy Policy now — for example, reserving the right to transfer trust data to a mission-locked custodial entity dedicated to user privacy protection.
-
-### Entity structure
-
-**Evryn Inc.** — Delaware Public Benefit Corporation. Mission statement: "to foster trusted human connection for our users by developing systems that create high-resonance connections, responsibly steward personal information and insights, and structurally protect emotional wellbeing, informed consent, and relational alignment and trust across every interaction."
 
 ---
