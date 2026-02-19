@@ -190,7 +190,9 @@ Evryn has no subscriptions, no tiers, no paywalls, and no fixed pricing. Users p
 
 Post-connection adjustments are part of the model: if a connection was better than expected, the user can increase their payment. If worse, they can decrease it — all the way to zero if that's fair. As a point of integrity, Evryn may insist on a full refund if a connection went badly enough. This is a 100% satisfaction guarantee.
 
-This pricing model is also a trust signal, and a natural way to increase the quality of the user base. How someone prices is part of how Evryn comes to understand how they reciprocate value in relationships — if Evryn believes that a user is trying to exploit her through pricing, Evryn will trust them less, and will therefore be considerably less willing to connect them to others. 
+This pricing model is also a trust signal, and a natural way to increase the quality of the user base. How someone prices is part of how Evryn comes to understand how they reciprocate value in relationships — if Evryn believes that a user is trying to exploit her through pricing, Evryn will trust them less, and will therefore be considerably less willing to connect them to others.
+
+**Reframed introductions:** Evryn may also surface a new *type* of connection between people who already know each other — someone you met as a friend might now be a perfect hire, or vice versa. This may involve a new connection fee for the new context. The Terms should address how this works so users understand they may be charged for new connection contexts with existing connections.
 
 ### Mutual matching — a foundational principle
 
@@ -227,6 +229,15 @@ Evryn filters behavior — predatory conduct, deception, manipulation, coercion 
 Evryn connects people across all life domains — professional, creative, romantic, community, mentorship, and more. This breadth means some connections will touch contexts that overlap with regulated fields: connecting someone to a therapist (medical), a financial advisor (financial), or a lawyer (legal). Evryn is not providing medical, financial, or legal services — she's making introductions between people. But the Terms should include clear disclaimers that Evryn is a connection broker, not a licensed service provider, and that any professional services resulting from a connection are between the individuals involved.
 
 Similarly, Evryn may share observations about patterns she's noticed in a user's interactions (also listed as a future data type in Q5). These observations are Evryn's perspective, shared as a friend would - not professional guidance. Evryn is not a therapist, career counselor, or licensed advisor of any kind.
+
+### Crisis and safety escalation
+
+Because Evryn builds deep conversational relationships, users may disclose mental health crises (e.g., suicidal ideation) or illegal activity (e.g., threats of violence). The Terms should address how Evryn handles these situations:
+
+- **Mental health crises:** Evryn shifts to a supportive posture, shares relevant resources (crisis hotlines, etc.), and may escalate to a human member of the operations team.
+- **Illegal activity or threats of harm:** Evryn disengages from the conversation and escalates to legal review. There may be circumstances where we have a duty to report.
+
+In both cases, Evryn may act outside the normal privacy model — for example, flagging a conversation for human review that would otherwise be private. The Terms should disclose this and frame it as a safety commitment, not surveillance.
 
 ### Proactive AI-initiated communication
 
@@ -314,13 +325,21 @@ Currently all users are US-based (LA film industry pilot). If/when we serve user
 
 ### Payments architecture and pre-purchases
 
-Stripe handles all monetary transactions (see Q4 above) — Evryn never holds, transmits, or has access to user funds. Peer-to-peer payments flow through Stripe Connect, where Stripe handles the entire payment lifecycle.
+Stripe handles all monetary transactions (see Q4 above) — Evryn never holds, transmits, or has access to user funds. Peer-to-peer payments flow through Stripe Connect, where Stripe handles the entire payment lifecycle. When users pay each other through Stripe Connect (e.g., follow-up work, tipping, repeat engagements that grew out of an Evryn connection), Evryn may take a small commission. The Terms should disclose this.
 
 Users may pre-purchase connections or receive Evryn Credit (non-monetary, non-withdrawable promotional value used within the platform). Pre-purchases are completed transactions (processed through Stripe), not held funds. Evryn Credit functions as a promotional or reward mechanism, not a financial instrument.
 
 Questions for the legal team:
 - Does this structure (Stripe handles all money, Evryn tracks completed purchases and non-monetary credits) avoid money transmitter licensing requirements for Evryn?
 - Are there stored value or gift card regulations that apply to Evryn Credit?
+
+### Referral rewards
+
+Users who refer someone to Evryn may receive Evryn Credit as a reward — but only after the referred user completes their first paid connection. This ties rewards to real engagement, not just signups. The referral reward is non-monetary Evryn Credit (same as described above), not cash.
+
+Questions for the legal team:
+- Are there FTC or state-level requirements for disclosing referral incentive programs?
+- Any regulatory considerations around tying rewards to a third party's commercial activity (the referred user's first paid connection)?
 
 ### Crowdfunding and investment
 
@@ -340,6 +359,10 @@ One of Evryn's planned revenue streams involves businesses becoming Evryn users.
 Questions for the legal team:
 - What FTC disclosure requirements apply when a connection involves a paying business?
 - Under CCPA's broad definition of "sale," does facilitating a per-intro, user-consented introduction between a user and a paying business constitute a "sale" of personal information? And to be clear: we don't independently give either user the other user's info — we simply pass whatever information they've explicitly approved for sharing with the other, then put them into contact with each other through our system. They would need to exchange any external contact information themselves.
+
+### User stories and content rights
+
+When a user has a great experience with a connection, Evryn may ask if they'd like to share their story — "Would you want to help others by sharing your experience?" With permission, these stories may appear on Evryn's platforms (website, onboarding flows) or on the user's own channels. The Terms should include appropriate content licensing language covering how user-submitted stories may be used, and what rights the user retains.
 
 ### Emerging regulatory considerations
 
