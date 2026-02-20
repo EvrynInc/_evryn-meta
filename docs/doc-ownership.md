@@ -2,6 +2,8 @@
 
 **How to use this file:** Reference table for who owns what document across Evryn repos. Check this before creating or modifying documents to ensure you're writing to the right place.
 
+**Do not edit without Justin's approval.** Propose changes; don't make them directly.
+
 **Rule:** Every document must have a "how to use this" header explaining what belongs in it and what doesn't. This prevents scope creep and sprawl.
 
 **Note:** Once Lucas/Alex is running, many of these docs will be jointly owned by AC and Lucas. AC retains authority for architectural decisions; Lucas maintains operational state. Ownership table will be updated at that transition.

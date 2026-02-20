@@ -1,6 +1,8 @@
 # Trust & Safety
 
 > **How to use this file:** Full depth on Evryn's trust architecture, moderation, and safety systems. The Hub carries principle-level trust content; this spoke carries the mechanics. Read this when you need to understand how trust works in detail, or when building features that touch trust, safety, or moderation.
+>
+> **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 
 ---
 

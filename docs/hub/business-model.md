@@ -1,6 +1,8 @@
 # Business Model
 
 > **How to use this file:** Full depth on how Evryn makes money and the financial model behind it. The Hub carries the business model shape (broker, per-connection, three streams); this spoke carries pricing mechanics, wallet structure, market sizing, and financial assumptions. Read this when working on anything related to payments, pricing, growth financials, or competitive positioning.
+>
+> **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 
 ---
 

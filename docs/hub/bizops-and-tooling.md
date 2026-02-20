@@ -3,6 +3,8 @@
 > **How to use this file:** Reference doc for Evryn's business operations tools, legal entities, and vendor choices. One place to look up what tool we use for what. Read this when evaluating a new tool, checking what we already use, or onboarding someone who needs the operational picture.
 >
 > **Product/tech stack** lives in `SYSTEM_OVERVIEW.md` and `evryn-backend/docs/ARCHITECTURE.md`. This spoke covers business operations only.
+>
+> **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 
 ---
 

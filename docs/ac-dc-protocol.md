@@ -2,6 +2,8 @@
 
 **How to use this file:** Reference doc (how-to guide) for how AC and DC communicate. Read this when you need to write to DC, read from DC, or hand off build work. You do NOT need this for normal AC conversations with Justin.
 
+**Do not edit without Justin's approval.** Propose changes; don't make them directly.
+
 ---
 
 ## Overview

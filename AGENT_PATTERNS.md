@@ -2,6 +2,8 @@
 
 Learnings from building AI agents that will help when building Evryn (the product).
 
+**Do not edit without Justin's approval.** Propose changes; don't make them directly.
+
 *Last updated: 2026-02-06T19:21:00-08:00*
 
 ---

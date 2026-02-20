@@ -1,6 +1,8 @@
 # User Experience
 
 > **How to use this file:** Full depth on how users interact with Evryn — from first contact through after-care. Covers onboarding, connection flows, conversation patterns, and interface philosophy. The Hub carries principle-level UX content; this spoke carries the full flows. Read this when building or modifying any user-facing feature.
+>
+> **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 
 ---
 

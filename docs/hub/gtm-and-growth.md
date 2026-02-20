@@ -1,6 +1,8 @@
 # Go-to-Market & Growth
 
 > **How to use this file:** Full depth on Evryn's GTM strategy, growth mechanics, and competitive landscape. The Hub carries current strategy and brief GTM summary; this spoke carries the full reasoning, wave strategy, messaging, and competitive analysis. Read this when working on growth features, outreach, or competitive positioning.
+>
+> **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 
 ---
 

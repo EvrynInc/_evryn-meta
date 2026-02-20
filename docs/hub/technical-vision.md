@@ -1,6 +1,8 @@
 # Technical Vision
 
 > **How to use this file:** Evryn's aspirational technical architecture at scale — the "CTO mental model." This is distinct from `evryn-backend/docs/ARCHITECTURE.md` (how we're building v0.2) and `SYSTEM_OVERVIEW.md` (what exists and how it's connected). This spoke carries the long-term technical thinking: three brains in detail, matchmaking engine design, data pipelines, privacy architecture, and learning systems. Read this when thinking about future capabilities, scalability, or architectural direction.
+>
+> **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 
 ---
 

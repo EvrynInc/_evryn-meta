@@ -2,6 +2,8 @@
 
 **How to use this file:** Step-by-step checklist for when Justin says `#lock` or it's time for a checkpoint. Follow the steps in order.
 
+**Do not edit without Justin's approval.** Propose changes; don't make them directly.
+
 ---
 
 When Justin says `#lock` or it's time for a checkpoint:

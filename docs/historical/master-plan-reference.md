@@ -1,7 +1,7 @@
 > **HISTORICAL DOCUMENT — FROZEN**
-> Comprehensive condensation of the Evryn Master Plan v2.3, created 2026-02-11, finalized 2026-02-12. Superseded by the Hub. Do not edit.
-> **Living source of truth:** `_evryn-meta/docs/hub/roadmap.md` (the Hub — loaded every session by every agent).
-> **Original Master Plan:** `_evryn-meta/docs/historical/Background-The_Evryn_Master_Plan_v2.3.md` (founding vision, marketing prose).
+> Both this document and the original Master Plan v2.3 are fully superseded by the Hub (`docs/hub/roadmap.md`) and its domain spokes (`docs/hub/*.md`). All content has been reorganized, corrected, and expanded there. Do not edit. Do not reference — use the Hub instead.
+> **Living source of truth:** `_evryn-meta/docs/hub/roadmap.md` (the Hub — loaded every session by every agent). Domain depth: `docs/hub/` spokes.
+> **Original Master Plan:** `_evryn-meta/docs/historical/Background-The_Evryn_Master_Plan_v2.3.md` (founding vision, marketing prose — also superseded).
 
 # Evryn Master Plan — Reference
 

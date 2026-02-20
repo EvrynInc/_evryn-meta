@@ -2,6 +2,8 @@
 
 Patterns, insights, and lessons learned that transfer across Evryn projects.
 
+**Do not edit without Justin's approval.** Propose changes; don't make them directly.
+
 *Last updated: 2026-02-20T14:05:44-08:00*
 
 ---

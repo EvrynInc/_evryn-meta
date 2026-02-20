@@ -1,6 +1,8 @@
 # Long-Term Vision
 
 > **How to use this file:** Evryn's long-term architectural and civilizational vision — federation, the Swiss Foundation, risk mitigations, and the world Evryn creates. This is future thinking that shapes present decisions. Read this when evaluating architectural choices that have long-term implications, or when communicating Evryn's larger purpose.
+>
+> **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 
 ---
 

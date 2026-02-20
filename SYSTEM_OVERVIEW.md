@@ -1,6 +1,8 @@
 # Evryn System Overview
 
 > **What this doc is:** Technical component breakdown, swim lane status, and infrastructure reference. For company strategy, business model, and team, see [the Hub](docs/hub/roadmap.md).
+>
+> **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 
 *Last updated: 2026-02-12T16:52:22-08:00*
 

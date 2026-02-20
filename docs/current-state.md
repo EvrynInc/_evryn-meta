@@ -2,6 +2,8 @@
 
 **How to use this file:** Snapshot of current project status across all Evryn repos. NOT a log — each update replaces the previous state. Updated during #lock by whoever is active (AC or Lucas). Read this to orient on what's happening now.
 
+**Do not edit without Justin's approval.** Propose changes; don't make them directly.
+
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
 *Last updated: 2026-02-20T14:05:44-08:00*
