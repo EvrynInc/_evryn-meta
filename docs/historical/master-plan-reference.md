@@ -1,13 +1,13 @@
 > **HISTORICAL DOCUMENT — FROZEN**
 > Comprehensive condensation of the Evryn Master Plan v2.3, created 2026-02-11, finalized 2026-02-12. Superseded by the Hub. Do not edit.
-> **Living source of truth:** `_evryn-meta/docs/roadmap.md` (the Hub — loaded every session by every agent).
+> **Living source of truth:** `_evryn-meta/docs/hub/roadmap.md` (the Hub — loaded every session by every agent).
 > **Original Master Plan:** `_evryn-meta/docs/historical/Background-The_Evryn_Master_Plan_v2.3.md` (founding vision, marketing prose).
 
 # Evryn Master Plan — Reference
 
 **How to use this file:** Comprehensive condensation of the Evryn Master Plan (v2.3, 2025-10-15). Written by AC for cross-project use. The original is frozen at `docs/historical/Background-The_Evryn_Master_Plan_v2.3.md` (this repo) — go there if you need exact wording or marketing-grade poetic language.
 
-**Who this serves:** Historical reference. For the living company truth, see the Hub (`docs/roadmap.md`). This document was the bridge between the original Master Plan and the Hub.
+**Who this serves:** Historical reference. For the living company truth, see the Hub (`docs/hub/roadmap.md`). This document was the bridge between the original Master Plan and the Hub.
 
 **What's omitted:** Stale GTM timelines and staffing plans are breadcrumbed inline with context for why they were removed and what replaced them. BizOps tools are fully preserved. The original has everything if anyone needs deeper context.
 
