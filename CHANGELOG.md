@@ -10,7 +10,12 @@
 - ADR-008: Trust Mirror dropped (canary principle) — full reasoning documented
 - Evryn company context module stubbed in BUILD-EVRYN-MVP.md (public-safe loadable module, not loaded every query, freshness requirement)
 - Renamed `docs/session-handoff-2026-02-13.md` → `evryn-backend/docs/historical/build-doc-absorption-notes.md` (clearer purpose)
-- #lock checkpoint mid-Hub-build
+- 7 domain spokes created in `docs/hub/`: trust-and-safety, user-experience, business-model, gtm-and-growth, technical-vision, long-term-vision, bizops-and-tooling
+- Hub expanded: ethos/personality, "How Connections Work", "Safety & Moderation", "The Long View" sections added; inline links to spokes throughout
+- Hub moved from `docs/roadmap.md` → `docs/hub/roadmap.md`
+- Edit-approval policy decided: all source-of-truth docs require explicit Justin approval before edits (implementation pending)
+- Justin feedback applied: salted hash restored in trust spoke (was over-generalized for legal audience), GTM intro added (AI-first pivot changes burn/launch calculus), stale tools noted, age nuance added, "not a traditional SaaS" fix
+- #lock checkpoint (second)
 
 ## 2026-02-19
 
