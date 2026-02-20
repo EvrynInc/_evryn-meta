@@ -4,7 +4,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-19T13:17:19-08:00*
+*Last updated: 2026-02-20T10:22:38-08:00*
 
 ---
 
@@ -16,20 +16,20 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Pre-Work #10 (in progress): Build doc rewrite** — ARCHITECTURE.md complete (v4, committed). Next: rewrite BUILD-EVRYN-MVP.md — absorb sources, fix terminology ("clients" → "users"), trim architecture sections (point to ARCHITECTURE.md), update schema section. Session handoff doc (`_evryn-meta/docs/session-handoff-2026-02-13.md`) still has content for the build doc rewrite — delete after full absorption.
-- **Pre-Work #6: Write Evryn's triage system prompt** — After #10. v0.1 system prompt patterns identified (Dream with me, Smart Curiosity, dual-track processing).
+- **Hub restructuring (IN PROGRESS)** — Porting MPR content into hub-and-spokes wiki. Hub + domain spokes (`docs/hub/*.md`). MPR becomes truly frozen. Working notes: `docs/session-hub-build-2026-02-20.md`. ADR-008 (Trust Mirror dropped) written.
+- **Pre-Work #10: Build doc rewrite** — ARCHITECTURE.md complete (v4). Next: rewrite BUILD-EVRYN-MVP.md — absorb sources, fix terminology, update schema. Absorption notes at `evryn-backend/docs/historical/build-doc-absorption-notes.md`.
+- **Pre-Work #6: Write Evryn's triage system prompt** — After #10. v0.1 patterns captured in `evryn-backend/docs/ARCHITECTURE.md` (Onboarding Patterns section). Also creates Evryn's company context module.
 - **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. After #10.
-- **Legal: Privacy & Terms questionnaire** — Final review draft complete at `docs/legal/privacy-and-terms-questionnaire.md`. Trust Mirror dropped, canary principle established. Ready to send to Fenwick.
-- **MPR → Hub port** — Living content in master-plan-reference.md (historical) keeps needing updates (Trust Mirror reversal is latest). Needs full port into Hub so MPR can truly be frozen. Near-term, right after questionnaire.
-- **Legal clarifications → system docs** — `docs/legal/clarifications-for-system-docs.md` now has 16 items (Trust Mirror reversal added). Needs a dedicated pass to flow decisions into roadmap.md, ARCHITECTURE.md, BUILD docs, system prompts, Terms of Service.
+- **Legal: Privacy & Terms questionnaire** — Sent to Fenwick. They'll start next week.
+- **Legal clarifications → system docs** — `docs/legal/clarifications-for-system-docs.md` has 16 items. Many will be resolved during Hub restructuring; remainder needs a dedicated pass.
 
 ## Active Projects
 
-- **_evryn-meta** — Legal questionnaire in final review (Trust Mirror dropped, many refinements). Clarifications tracker has 16 items to flow to system/arch docs. MPR→Hub port queued.
-- **evryn-backend** — ARCHITECTURE.md created (v4). BUILD-EVRYN-MVP.md rewrite is next. Session handoff doc still needed for build doc rewrite.
+- **_evryn-meta** — Hub restructuring in progress. ADR-008 written. Legal questionnaire sent to Fenwick.
+- **evryn-backend** — ARCHITECTURE.md created (v4). BUILD-EVRYN-MVP.md updated (Evryn company context module added). Build doc rewrite is next after Hub.
 - **evryn-team-agents** — PAUSED. Clean pause state.
 - **evryn-dev-workspace** — DC's home repo.
-- **evryn-website** — Live at evryn.ai. Justin has pending updates — see `evryn-website/2026.02.12_Website_Changes_Spec`.
+- **evryn-website** — Live at evryn.ai. Immediate updates done; lower-priority updates pending.
 - **evryn-langgraph-archive** — Read-only archive. Sealed.
 
 ## Infrastructure

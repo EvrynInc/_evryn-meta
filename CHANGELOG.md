@@ -4,6 +4,14 @@
 
 ---
 
+## 2026-02-20
+
+- Hub restructuring started: MPR → hub-and-spokes wiki. Created `docs/hub/` directory for domain spokes. Working notes at `docs/session-hub-build-2026-02-20.md`.
+- ADR-008: Trust Mirror dropped (canary principle) — full reasoning documented
+- Evryn company context module stubbed in BUILD-EVRYN-MVP.md (public-safe loadable module, not loaded every query, freshness requirement)
+- Renamed `docs/session-handoff-2026-02-13.md` → `evryn-backend/docs/historical/build-doc-absorption-notes.md` (clearer purpose)
+- #lock checkpoint mid-Hub-build
+
 ## 2026-02-19
 
 - Questionnaire: final review pass — Anthropic DPA/ZDR details, shared data on deletion, mutual matching rewrite (explicit gatekeeper non-ownership), tone/trust rewrite, "the line we draw" sections merged, coaching insights clarified, various refinements throughout
