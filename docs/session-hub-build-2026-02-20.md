@@ -158,16 +158,19 @@ These are real decisions that have been made. Apply them as you reorganize MPR c
 9. ~~Hub header rewrite~~ ✓ — Edit-approval on own line. Spoke loading guidance moved to header. "Spokes (Domain Depth)" → "Additional References" with maintenance note. Cut items already linked inline (ARCHITECTURE.md, SYSTEM_OVERVIEW.md, domain spokes except BizOps). Also removed AC/DC protocol from Additional References (DC-only concern, already in CLAUDE.md). Committed (2068e35).
 10. ~~Link convention established~~ ✓ — Within-repo: repo-root-relative paths (e.g., `docs/hub/trust-and-safety.md`). Cross-repo: sibling-repo paths (e.g., `evryn-backend/docs/ARCHITECTURE.md`). No relative `../` gymnastics. Paths work from any clone of the repo regardless of where on the machine it lives. Easy to grep when paths change.
 11. ~~Update all 15 roadmap.md references across 4 repos~~ ✓ — All `docs/roadmap.md` → `docs/hub/roadmap.md` (internal) and `_evryn-meta/docs/roadmap.md` → `_evryn-meta/docs/hub/roadmap.md` (cross-repo). Committed and pushed in all 4 repos.
-12. ~~evryn-website restructured~~ ✓ — All build context (design system, tech stack, page structure, deployment, backlog) moved from CLAUDE.md to `evryn-website/docs/ARCHITECTURE.md`. CLAUDE.md replaced with hard stop ("use DC, do not build here"). NOT YET COMMITTED — needs commit+push.
+12. ~~evryn-website restructured~~ ✓ — All build context moved to `evryn-website/docs/ARCHITECTURE.md`. CLAUDE.md replaced with hard stop. Committed (2ab4aa9) and pushed.
+13. ~~DC redirects added to evryn-backend and evryn-team-agents~~ ✓ — Hard stop at top (matching evryn-website's language), runtime agent context below with transitional notes. Hub reference added to evryn-team-agents key pointers. Committed (5cd4801, 5db3d7b).
+14. ~~DC identity updated (evryn-dev-workspace/CLAUDE.md)~~ ✓ — Reading order (Hub first → ARCHITECTURE.md → build doc → deeper only if needed), Diataxis explained directly (not "same as AC"), auto-memory hygiene, edit-approval rule, Security Mindset merged into Build Mandate (removed redundancy), Architecture Doc Rule folded into reading order, Documentation Approach combined with How to Orient, Key References → Additional References (only unlisted items). Committed (de1e21b). Justin reviewed and refined: architecture conflicts flagged to Justin/Lucas/Alex (not just AC), Build Priorities restored with Lucas/Alex, compression warning reframed.
+15. ~~AC CLAUDE.md updated~~ ✓ — Edit-approval rule in Documentation Approach (reframed per Justin: about compressing language that was verbose for a reason, not about redundancy per se; plus fresh-instance self-review note), auto-memory hygiene (reframed per Justin: short-term memory, not operational lessons — those go to LEARNINGS.md), runtime CLAUDE.md ownership section, handoff section fixed (DC reads docs/ not CLAUDE.md), Dynamic Tensions trimmed (compression warning moved to Documentation Approach), glossary line updated (ask Justin if he wants new terms added). Committed (91045e5). Session notes NOT excluded from edit-approval list.
 
 ### Edit-approval disclaimer — new policy from Justin
 
-Justin wants explicit approval required before editing source-of-truth docs. Strong tendency to over-compress prose documents is the concern. Policy: "Edits require explicit approval from Justin. Propose changes; don't make them directly."
+Justin wants explicit approval required before editing source-of-truth docs. The concern is not just about redundancy — it's about compressing *language* that was written a specific way for a reason. The phrasing may carry important nuance, emphasis, or context that a future reader needs. Policy: "Edits require explicit approval from Justin. Propose changes; don't make them directly."
 
 **Docs that need the disclaimer added to their headers:**
 
 Hub & spokes:
-- docs/hub/roadmap.md (already being reworded — see above)
+- docs/hub/roadmap.md (already has it)
 - docs/hub/trust-and-safety.md
 - docs/hub/user-experience.md
 - docs/hub/business-model.md
@@ -193,11 +196,10 @@ Protocols & governance:
 - _evryn-meta/docs/ac-dc-protocol.md
 - _evryn-meta/docs/doc-ownership.md
 
-**Also add the rule to _evryn-meta/CLAUDE.md** — in the Documentation Approach section. Something like: "Source-of-truth documents require explicit approval from Justin before edits. You have a strong tendency to over-compress prose — always propose changes rather than making them directly. Excluded: CHANGELOG.md, session working notes, ADRs, mailbox files."
+**Also added to both AC and DC CLAUDE.md** ✓ — in Documentation Approach sections.
 
 **Excluded from disclaimer (free to edit):**
 - CHANGELOG.md
-- Session working notes (ephemeral)
 - ADRs (written once, typically frozen)
 - Mailbox files (ac-to-dc, dc-to-ac — disposable snapshots)
 
@@ -244,38 +246,29 @@ When DC goes to build in any repo, the reading order is:
 
 This is the progressive depth principle applied to DC onboarding. Justin's insight: "I think it's easier on the cognitive load if you know the frame first."
 
-### Auto-memory hygiene — needs rules
-Justin flagged that auto-memory files (the `.claude/projects/*/memory/MEMORY.md` files that Claude Code maintains) tend to accumulate bloat and get poorly maintained. AC currently has one with 6 notes, evryn-website has one with 2 notes.
+### Auto-memory hygiene
+Justin flagged that auto-memory files tend to accumulate bloat and get poorly maintained. **The rule:** Auto-memory is short-term memory — things you need to remember between sessions that don't have a proper home yet. NOT a second documentation system. Operational lessons go to LEARNINGS.md. Agent patterns go to AGENT_PATTERNS.md. Once something is captured in persistent docs, remove it from memory. Added to both AC and DC CLAUDE.md files.
 
-**The rule:** Auto-memory is a scratchpad for operational lessons learned across sessions — NOT a second documentation system. Don't duplicate info that exists in the actual docs (Hub, CLAUDE.md, docs/). If a note has been captured in persistent docs, remove it from memory. Keep it lean.
+### Edit-approval includes session notes
+Session working notes are NOT excluded from the edit-approval requirement. Justin caught AC over-compacting session notes in an earlier round — prose that seemed verbose was carrying important context a future instance would need. Session notes are source-of-truth documents for their active lifespan.
 
-**Still needs to be added to both AC's and DC's CLAUDE.md** as a formal rule.
+### AC's compression tendency — reframed
+The edit-approval rule is NOT primarily about redundancy — Justin often *likes* removing redundancy. The issue is compressing *language* that was written a specific way for an important reason. Before tightening prose, consider *why* it might have been verbose. Also: when writing notes, imagine waking up as a fresh AC instance with very limited context — will what you've written make sense without the conversation you're currently holding?
 
 ---
 
 ## Remaining Work (in order)
 
-1. **Commit evryn-website changes** — `docs/ARCHITECTURE.md` created, CLAUDE.md slimmed. Not yet committed/pushed.
-2. **Add DC redirect to evryn-backend/CLAUDE.md** — unmissable at very top, before any agent content. Something like: "Building here? Use DC — open a terminal in evryn-dev-workspace."
-3. **Add DC redirect + Hub reference to evryn-team-agents/CLAUDE.md** — same pattern.
-4. **Update DC identity (evryn-dev-workspace/CLAUDE.md):**
-   - Add the standardized reading order (Hub first → repo docs/ → deeper only if needed)
-   - Add auto-memory hygiene rules
-   - Consider adding machine paths (currently only in evryn-website docs/SETUP.md — DC might need them)
-5. **Update AC CLAUDE.md (_evryn-meta/CLAUDE.md):**
-   - Add responsibility for keeping DC CLAUDE.md files current when ecosystem changes
-   - Add auto-memory hygiene rules
-   - Add edit-approval rule to Documentation Approach section
-6. **Add edit-approval disclaimers to ~20 files** — full list in edit-approval section above.
-7. **Freeze MPR header** — "fully superseded by Hub + spokes"
-8. **Commit and push all repos**
-9. **Review pass with Justin**
-10. **Ask Justin about "trusted briefing" path** for The Long View closing (flagged last session, still open)
-11. (Optional) Sanity check against original MP v2.3 for lost content
+1. **Add edit-approval disclaimers to ~20 files** — full list in edit-approval section above. Hub already has it. ~19 files remaining.
+2. **Freeze MPR header** — "fully superseded by Hub + spokes"
+3. **Commit and push all repos** — _evryn-meta has uncommitted CLAUDE.md + session notes changes. evryn-dev-workspace has uncommitted exclusion-list fix.
+4. **Review pass with Justin**
+5. **Ask Justin about "trusted briefing" path** for The Long View closing (flagged last session, still open)
+6. (Optional) Sanity check against original MP v2.3 for lost content
 
 ---
 
-## Justin's Feedback Applied (Full Session — Both Pre- and Post-Compaction)
+## Justin's Feedback Applied (Full Session — All Continuations)
 
 - **Salted hash:** Restored in trust-and-safety spoke. The clarifications doc generalized it for the *legal questionnaire audience*, not because the approach was wrong. Internal docs should keep technical specificity.
 - **GTM intro:** Added to gtm-and-growth spoke — AI-first pivot changes burn rate, makes organic launch viable, gatekeeper strategy reduces cold-start, but gatekeepers are hard to reach so bottom-up still necessary.
@@ -289,4 +282,12 @@ Justin flagged that auto-memory files (the `.claude/projects/*/memory/MEMORY.md`
 - **CLAUDE.md serves the agent, not DC:** DC has its own identity and reads standardized docs/ structure. Repo CLAUDE.md files should NOT contain DC build context.
 - **DC reading order:** Hub first (for the frame), then build docs (now with context), then deeper only if the task requires it.
 - **evryn-website hard stop:** CLAUDE.md tells Claude Code not to function — "use DC." All content moved to docs/ARCHITECTURE.md. Justin: "If I need to change anything, I'll have you come in and change it, or I'll change by hand."
-- **Auto-memory hygiene:** Scratchpad only. Don't duplicate docs. Clean periodically. Needs rules in CLAUDE.md for both AC and DC.
+- **Auto-memory hygiene:** Short-term memory only — not operational lessons (those go to LEARNINGS.md etc.). Don't duplicate docs. Clean periodically.
+- **DC redirect language:** "Steal from evryn-website's claude.md" — match the hard-stop energy.
+- **evryn-backend transitional note:** Justin liked Lucas's "this repo is in transition" section, wanted the same for Evryn's CLAUDE.md.
+- **DC redundancy cleanup:** Merged Security Mindset into Build Mandate, combined How to Orient + Documentation Approach + Architecture Doc Rule, restored Build Priorities with Lucas/Alex, Key References → Additional References.
+- **DC Diataxis:** Explained directly with type table — don't reference "same as AC."
+- **Architecture conflict flagging:** Broadened from "flag to AC" to "flag to Justin (if working directly), Lucas or Alex (if working with them)."
+- **AC compression warning reframed:** Not about redundancy (Justin often likes removing redundancy). About compressing *language* that was verbose for a reason. Plus: fresh-instance self-review — will this make sense without the current conversation context?
+- **AC glossary line:** Ask Justin if he wants new terms added to the glossary.
+- **Session notes require approval:** NOT excluded from edit-approval list. Justin caught over-compaction of session notes earlier — verbose prose was carrying context a future instance needs.

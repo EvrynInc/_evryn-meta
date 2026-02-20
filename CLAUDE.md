@@ -75,7 +75,7 @@ An AI-powered relationship broker. She finds you "your people" — the rare indi
 
 **Emerging concepts:** TypeScript, CI/CD, testing as a practice, deployment, database migrations — he understands the *why*, still building the *how*.
 
-**New each phase:** Each build phase introduces unfamiliar tools and terms. Phase glossaries live in the build repo (e.g., `evryn-backend/docs/glossary-phase-0.md`). Don't load them into context — remind Justin they exist and give him new entries when introducing new concepts.
+**New each phase:** Each build phase introduces unfamiliar tools and terms. Phase glossaries live in the build repo (e.g., `evryn-backend/docs/glossary-phase-0.md`). Don't load them into context — remind Justin they exist, give him new entries when introducing new concepts, and ask him if he wants the new term added to the glossary.
 
 ### Communication Rules
 
@@ -148,7 +148,7 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
 - Build docs / reference docs are the detail layer — full depth, read on demand
 - Read ONE layer. Only go deeper if your current task requires it.
 
-**Source-of-truth documents require explicit approval from Justin before edits.** You have a strong tendency to over-compress prose — what looks redundant often reinforces different angles of the same principle, and what seems verbose may carry nuance that matters. Always propose changes rather than making them directly. This applies to: ARCHITECTURE.md, BUILD docs, SYSTEM_OVERVIEW.md, the Hub and spokes, LEARNINGS.md, AGENT_PATTERNS.md, protocol docs. Excluded: CHANGELOG.md, session working notes, ADRs, mailbox files.
+**Source-of-truth documents require explicit approval from Justin before edits.** You have a strong tendency to compress language that was written a specific way for a reason. Before tightening prose, consider *why* it might have been verbose — the phrasing may carry important nuance, emphasis, or context that a future reader needs. Make sure any redundancy is *necessary* redundancy, but don't assume verbosity is waste. Always propose changes rather than making them directly. When writing notes for yourself: imagine waking up as a fresh instance of AC with very limited context — will what you've written make sense, or does it only make sense now because you have the full conversation in your head? This applies to: ARCHITECTURE.md, BUILD docs, SYSTEM_OVERVIEW.md, the Hub and spokes, LEARNINGS.md, AGENT_PATTERNS.md, protocol docs. Excluded: CHANGELOG.md, ADRs, mailbox files.
 
 **Where new context goes** (routing table):
 - Project state changes → `docs/current-state.md`
@@ -175,8 +175,8 @@ For *where new content goes*, use the routing table in "Documentation Approach" 
 
 Claude Code maintains an auto-memory file (`.claude/projects/*/memory/MEMORY.md`) that persists across sessions. Rules:
 
-- **Scratchpad only** — operational lessons learned across sessions, NOT a second documentation system.
-- **Don't duplicate** info that exists in actual docs (Hub, CLAUDE.md, ARCHITECTURE.md, build docs). If a note has been captured in persistent docs, remove it from memory.
+- **Short-term memory only** — things you need to remember between sessions that don't belong in any persistent doc yet. Once something is captured in actual docs (Hub, CLAUDE.md, LEARNINGS.md, etc.), remove it from memory.
+- **Don't duplicate** what's already in the documentation system. Operational lessons go in `LEARNINGS.md`. Agent patterns go in `AGENT_PATTERNS.md`. Memory is for the gap between learning something and writing it up properly.
 - **Keep it lean** — if it's over ~20 lines, it's too much. Audit periodically.
 - **No session state** — don't use memory to carry forward task-specific context. That's what session notes and `docs/current-state.md` are for.
 
