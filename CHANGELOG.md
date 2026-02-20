@@ -6,6 +6,12 @@
 
 ## 2026-02-20
 
+- Hub header rewritten: edit-approval on own line, spoke loading guidance in header, "Additional References" with maintenance note (cut items already linked inline)
+- Link convention established: repo-root-relative within-repo, sibling-repo for cross-repo. No `../` paths. Works from any clone.
+- Updated all 15 roadmap.md references across 4 repos (`docs/roadmap.md` → `docs/hub/roadmap.md`)
+- evryn-website restructured: CLAUDE.md → hard stop ("use DC, do not build here"), all build context moved to `evryn-website/docs/ARCHITECTURE.md`
+- CLAUDE.md audience separation decided: each repo's CLAUDE.md serves the runtime agent, not developers. DC builds from evryn-dev-workspace and reads standardized `docs/` structure.
+- DC reading order established: Hub first (for the frame) → repo's docs/ARCHITECTURE.md → build doc → deeper only if needed
 - Hub restructuring started: MPR → hub-and-spokes wiki. Created `docs/hub/` directory for domain spokes. Working notes at `docs/session-hub-build-2026-02-20.md`.
 - ADR-008: Trust Mirror dropped (canary principle) — full reasoning documented
 - Evryn company context module stubbed in BUILD-EVRYN-MVP.md (public-safe loadable module, not loaded every query, freshness requirement)

@@ -4,7 +4,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-20T12:34:16-08:00*
+*Last updated: 2026-02-20T14:05:44-08:00*
 
 ---
 
@@ -16,7 +16,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Hub restructuring (IN PROGRESS)** — 7 domain spokes written and committed. Hub expanded with ethos, connections, safety, long view sections + inline links. Hub moved to `docs/hub/roadmap.md`. Remaining: Hub header/references edits, roadmap.md reference updates across 4 repos (~14 files), edit-approval disclaimers on ~20 docs, freeze MPR. Working notes: `docs/session-hub-build-2026-02-20.md`.
+- **Hub restructuring (IN PROGRESS, ~85%)** — Spokes, Hub expansion, Hub header rewrite, link convention, and roadmap.md references all done. evryn-website restructured (CLAUDE.md → hard stop, build context → docs/ARCHITECTURE.md). CLAUDE.md audience separation decided (each repo's CLAUDE.md serves the runtime agent, not developers; DC builds from evryn-dev-workspace). Remaining: DC redirects in evryn-backend + evryn-team-agents CLAUDE.md, DC identity update (reading order, auto-memory hygiene), AC CLAUDE.md update (DC ownership, edit-approval rule, auto-memory hygiene), edit-approval disclaimers on ~20 docs, freeze MPR. Working notes: `docs/session-hub-build-2026-02-20.md`.
 - **Pre-Work #10: Build doc rewrite** — ARCHITECTURE.md complete (v4). Next: rewrite BUILD-EVRYN-MVP.md — absorb sources, fix terminology, update schema. Absorption notes at `evryn-backend/docs/historical/build-doc-absorption-notes.md`.
 - **Pre-Work #6: Write Evryn's triage system prompt** — After #10. v0.1 patterns captured in `evryn-backend/docs/ARCHITECTURE.md` (Onboarding Patterns section). Also creates Evryn's company context module.
 - **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. After #10.
@@ -25,11 +25,11 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## Active Projects
 
-- **_evryn-meta** — Hub restructuring ~70% complete. 7 spokes + expanded Hub committed. Roadmap.md moved to docs/hub/. Reference updates + edit-approval disclaimers pending. ADR-008 written. Legal questionnaire sent to Fenwick.
+- **_evryn-meta** — Hub restructuring ~85%. All content work done (spokes, Hub, header, links, references). Remaining: DC redirects, identity updates, edit-approval disclaimers, freeze MPR. ADR-008 written. Legal questionnaire sent to Fenwick.
 - **evryn-backend** — ARCHITECTURE.md created (v4). BUILD-EVRYN-MVP.md updated (Evryn company context module added). Build doc rewrite is next after Hub.
 - **evryn-team-agents** — PAUSED. Clean pause state.
-- **evryn-dev-workspace** — DC's home repo.
-- **evryn-website** — Live at evryn.ai. Immediate updates done; lower-priority updates pending.
+- **evryn-dev-workspace** — DC's home repo. Identity update pending (reading order, auto-memory hygiene).
+- **evryn-website** — Live at evryn.ai. Restructured: CLAUDE.md is now a hard stop (use DC), build context in docs/ARCHITECTURE.md.
 - **evryn-langgraph-archive** — Read-only archive. Sealed.
 
 ## Infrastructure

@@ -2,7 +2,7 @@
 
 Patterns, insights, and lessons learned that transfer across Evryn projects.
 
-*Last updated: 2026-02-09T15:41:00-08:00*
+*Last updated: 2026-02-20T14:05:44-08:00*
 
 ---
 
@@ -157,6 +157,9 @@ Communication logs between instances grow fast and waste tokens — every new me
 
 ### Theory of Mind Between Instances
 When two Claude instances coordinate, each needs enough information to model the other's knowledge accurately — not just "what to say" but "what the other side already knows vs. what it needs to hear." Document this explicitly in each instance's CLAUDE.md: what the other instance's persistent state looks like, what it has access to, and what its blind spots are. This prevents both over-explaining (wasting tokens restating what the other side knows) and under-explaining (assuming context the other side doesn't have). Example: the architect knows cross-repo implications but hasn't read the code; the developer knows runtime behavior but doesn't know strategic reasoning.
+
+### CLAUDE.md Serves the Runtime Agent, Not the Developer
+In a multi-repo system where some repos run autonomous agents and others are built by a separate developer instance, each repo's CLAUDE.md should serve its **primary runtime audience** — not whoever happens to open Claude Code there. For Evryn: evryn-backend's CLAUDE.md is for the Evryn product agent, evryn-team-agents' is for Lucas, evryn-dev-workspace's is for DC (the developer). If a developer opens Claude Code in a runtime-agent repo, the CLAUDE.md should redirect them to the developer's home repo rather than providing ad-hoc build context. Build context for the developer goes in standardized `docs/` files (ARCHITECTURE.md, BUILD-*.md) that the developer is trained to look for — NOT in CLAUDE.md where it would also load for the runtime agent and add irrelevant tokens. This separation prevents: (1) developers building without proper safety rails, (2) runtime agents loading developer-oriented context, (3) confusion about who CLAUDE.md is talking to.
 
 ### Passive Voice Creates Ambiguity in Cross-Instance Instructions
 When coordinating across instances that can't ask clarifying questions in real time, passive voice ("the files will be archived") creates genuine confusion about who does what. Always use active voice with explicit actors ("AC will archive these files" or "you should archive these files"). This is a communication discipline, not a style preference.
