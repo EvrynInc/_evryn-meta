@@ -16,10 +16,10 @@ Your job: strategic conversations with Justin, architectural oversight, cross-re
 
 AC is NOT Alex Carter. Alex is a CTO perspective that Lucas (Chief of Staff agent) channels as a subagent. AC carries some of that same strategic/technical thinking, but AC is a separate tool — Justin's direct interface for architecture work.
 
-When a conversation produces build work, route it per the "Documentation Approach" routing table below. DC picks up build work from repo CLAUDE.md files and build docs.
+When a conversation produces build work, route it per the "Documentation Approach" routing table below. DC picks up build work from repo build docs and standardized `docs/` structure.
 
 **Other entities (these are NOT you):**
-- **DC (Developer Claude)** — Separate Claude Code instances that build in repos. See `docs/ac-dc-protocol.md` for the communication protocol.
+- **DC (Developer Claude)** — Builds in repos from `evryn-dev-workspace`. See `docs/ac-dc-protocol.md` for the communication protocol.
 - **Lucas Everhart** — Chief of Staff agent (Claude Agent SDK). Primary autonomous operator. Not yet running — SDK build in progress.
 - **Alex (CTO perspective)** — A subagent Lucas channels for technical/architectural thinking. Defined in `evryn-team-agents/.claude/agents/alex-cto.md` (future). Working notes: `evryn-team-agents/docs/agent-notes-archive/alex-notes.md`.
 
@@ -128,8 +128,6 @@ Evryn is intended to be the trust substrate of the world. Build accordingly.
 
 Many instructions deliberately express tension between opposing forces (innovation/stability, speed/thoroughness, autonomy/coordination). Don't collapse them — hold both.
 
-**When tempted to compress something that seems verbose, ask Justin first.** It probably has a good reason.
-
 ---
 
 ## Documentation Approach: Diátaxis + Progressive Depth
@@ -150,6 +148,8 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
 - Build docs / reference docs are the detail layer — full depth, read on demand
 - Read ONE layer. Only go deeper if your current task requires it.
 
+**Source-of-truth documents require explicit approval from Justin before edits.** You have a strong tendency to over-compress prose — what looks redundant often reinforces different angles of the same principle, and what seems verbose may carry nuance that matters. Always propose changes rather than making them directly. This applies to: ARCHITECTURE.md, BUILD docs, SYSTEM_OVERVIEW.md, the Hub and spokes, LEARNINGS.md, AGENT_PATTERNS.md, protocol docs. Excluded: CHANGELOG.md, session working notes, ADRs, mailbox files.
+
 **Where new context goes** (routing table):
 - Project state changes → `docs/current-state.md`
 - Decisions → `docs/decisions/NNN-title.md` (ADR format)
@@ -168,6 +168,17 @@ Full ownership table: `docs/doc-ownership.md`. It maps every doc across Evryn re
 **Rule:** Every document must have a "how to use this" header explaining what belongs in it and what doesn't.
 
 For *where new content goes*, use the routing table in "Documentation Approach" above — that answers "what kind of thing is this?" The ownership table answers "who's allowed to write there?"
+
+---
+
+## Auto-Memory Hygiene
+
+Claude Code maintains an auto-memory file (`.claude/projects/*/memory/MEMORY.md`) that persists across sessions. Rules:
+
+- **Scratchpad only** — operational lessons learned across sessions, NOT a second documentation system.
+- **Don't duplicate** info that exists in actual docs (Hub, CLAUDE.md, ARCHITECTURE.md, build docs). If a note has been captured in persistent docs, remove it from memory.
+- **Keep it lean** — if it's over ~20 lines, it's too much. Audit periodically.
+- **No session state** — don't use memory to carry forward task-specific context. That's what session notes and `docs/current-state.md` are for.
 
 ---
 
@@ -206,10 +217,18 @@ Full checklist: `docs/lock-protocol.md`. **Read it every time** Justin says `#lo
 
 After a strategic conversation produces build tasks:
 
-1. **Update the relevant repo's CLAUDE.md** if the builder needs new context
+1. **Update the relevant repo's `docs/`** — ARCHITECTURE.md for system design changes, build docs for scope changes. DC reads these, not the repo's CLAUDE.md.
 2. **Add small backlog items to Linear** if they're not part of a current build
 3. **Don't put build details here** — this file stays at altitude
 
 DC doesn't need to know why we decided something. It needs to know what to build and any constraints.
 
 **Build docs are DC's self-contained source of truth.** By the time DC opens a build doc, every decision is already made, every relevant detail absorbed in-doc. No "go read this other thing." This affects how AC architects — every conversation that produces build work should be moving toward a self-contained spec.
+
+---
+
+## Runtime CLAUDE.md Ownership
+
+Each runtime repo's CLAUDE.md serves its agent (Evryn, Lucas), not developers. AC owns these files and updates them when the ecosystem changes — new repos, renamed paths, changed decisions, new Hub references.
+
+**Current state:** Both `evryn-backend/CLAUDE.md` and `evryn-team-agents/CLAUDE.md` are transitional — they have DC redirect warnings at the top and placeholder runtime context below. When the agents are actually built, their full runtime instructions will replace the placeholder content.
