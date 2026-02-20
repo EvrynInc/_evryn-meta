@@ -2,11 +2,15 @@
 
 > **Living source of truth.** Loaded every session by every agent. If your notes contradict this document, flag the discrepancy — don't silently override.
 >
-> **Hub hygiene:** This doc is loaded into every session — every line costs tokens. But the goal isn't brevity, it's *fidelity*. After reading the Hub, an agent should have the right mental model of Evryn at a high altitude — enough that nothing in the sub-docs is a substantive surprise. More detail, yes. Different understanding, never. **Only Justin edits this document.** If you think something here is wrong or incomplete, tell Justin — do not rewrite it yourself. When maintaining this doc with Justin: (1) If a section is growing, move detail to a spoke and leave a hint here that sets the right expectation. (2) If reading the Hub could leave a wrong impression about something important, fix it — even if that makes it longer. (3) Every time you read this, ask: is it succeeding? If not, flag it.
+> **Do not edit this document without explicit approval from Justin.** If you think something here is wrong or incomplete, tell Justin — do not rewrite it yourself.
+>
+> **Hub hygiene:** This doc is loaded into every session — every line costs tokens. But the goal isn't brevity, it's *fidelity*. After reading the Hub, an agent should have the right mental model of Evryn at a high altitude — enough that nothing in the sub-docs is a substantive surprise. More detail, yes. Different understanding, never. When maintaining this doc with Justin: (1) If a section is growing, move detail to a spoke and leave a hint here that sets the right expectation. (2) If reading the Hub could leave a wrong impression about something important, fix it — even if that makes it longer. (3) Every time you read this, ask: is it succeeding? If not, flag it.
+>
+> **Domain spokes** (`docs/hub/`) carry full depth on each topic — load them only when your current task requires that depth. Most sections below link to their spoke inline.
 >
 > **Downstream dependency:** When this document changes substantively, the Evryn company context module (`evryn_knowledge`, slug: `company-context`) should be refreshed — it's a public-safe derivative of Hub content. See `evryn-backend/docs/BUILD-EVRYN-MVP.md` Memory Architecture.
 >
-> **Tactical status:** `_evryn-meta/docs/current-state.md` (what's in flight, blockers, infrastructure).
+> **Tactical status:** `docs/current-state.md` (what's in flight, blockers, infrastructure).
 
 ---
 
@@ -33,7 +37,7 @@ Evryn is active, not passive. She starts conversations. She thinks about you in 
 
 ## Trust & Fit
 
-Trust and fit are the operating system, not features. Evryn only connects people in proportion to how much she trusts them — and only when the fit is genuinely right. Full depth: [trust-and-safety spoke](docs/hub/trust-and-safety.md).
+Trust and fit are the operating system, not features. Evryn only connects people in proportion to how much she trusts them — and only when the fit is genuinely right. Full depth: `docs/hub/trust-and-safety.md`.
 
 - **Trust and fit are a story, not a score.** Multi-dimensional, context-specific. Structured as a document in the user profile, not a number. Some dimensions bleed across contexts; others are domain-specific.
 - **Character becomes currency.** Behavioral, not performative. What you've done and how it impacted others.
@@ -41,11 +45,11 @@ Trust and fit are the operating system, not features. Evryn only connects people
 - **Behavioral filtering, not belief filtering.** Filters predatory behavior, deception, coercion — not politics or worldview.
 - **Trust imprint on deletion.** Personal data purged; non-reversible salted hash anchors trust memory so bad actors can't reset.
 - **Identity verification** before connections. Relational framing, not bureaucratic. Pass-through model — Evryn never stores documents or biometrics.
-- **The canary principle.** Evryn never evaluates or comments on specific named individuals — any response creates a baseline where deviation leaks information. See [ADR-008](docs/decisions/008-trust-mirror-dropped.md).
+- **The canary principle.** Evryn never evaluates or comments on specific named individuals — any response creates a baseline where deviation leaks information. See `docs/decisions/008-trust-mirror-dropped.md`.
 
 ## How Connections Work
 
-Everyone who interacts with Evryn is a "user" — whether they came through a gatekeeper's inbox, an invite, or direct signup. Finding the gatekeeper was just their first connection; Evryn will find them everything else they need. Full depth: [user-experience spoke](docs/hub/user-experience.md).
+Everyone who interacts with Evryn is a "user" — whether they came through a gatekeeper's inbox, an invite, or direct signup. Finding the gatekeeper was just their first connection; Evryn will find them everything else they need. Full depth: `docs/hub/user-experience.md`.
 
 - **Double opt-in.** Evryn proposes a match, each person approves what's shared at every step. Either can say no at any point — Evryn softens any rejection. Neither knows the other exists until both have agreed.
 - **Evryn is the broker, not the sorter.** She explains *why* someone matters, not just *that* they match. Connection quality is the product.
@@ -54,7 +58,7 @@ Everyone who interacts with Evryn is a "user" — whether they came through a ga
 
 ## Business Model
 
-Evryn is a **broker**, not a traditional SaaS. Everyone is a "user" — both sides pay per-connection. Full depth: [business-model spoke](docs/hub/business-model.md).
+Evryn is a **broker**, not a traditional SaaS. Everyone is a "user" — both sides pay per-connection. Full depth: `docs/hub/business-model.md`.
 
 - **Trust-based pricing:** Users pay what they believe is fair. 100% satisfaction guarantee.
 - **Three revenue streams:** (1) Match payments, (2) Post-match transactions (Stripe Connect), (3) Participant-based business access ("ads without ads").
@@ -63,7 +67,7 @@ Evryn is a **broker**, not a traditional SaaS. Everyone is a "user" — both sid
 
 ## Safety & Moderation
 
-Safety is structural, not bolted on. Full depth: [trust-and-safety spoke](docs/hub/trust-and-safety.md).
+Safety is structural, not bolted on. Full depth: `docs/hub/trust-and-safety.md`.
 
 - **No open messaging.** Users can't see or contact each other unless Evryn initiates and both opt in. No feeds, no forums, no comment threads.
 - **Evryn stays present.** After making a connection, she quietly observes early exchanges. Can intervene, end chats, or remove users from future consideration.
@@ -76,12 +80,12 @@ Safety is structural, not bolted on. Full depth: [trust-and-safety spoke](docs/h
 - **v0.2 "Mark's Inbox":** Evryn surfaces connections from Mark's inbox. Mark forwards emails → Evryn identifies who's worth Mark's time (gold/pass/edge case) → drafts notification → Justin approves via email → Evryn delivers. These are connections being brokered, not emails being sorted — tracked as such from day one.
 - **Lucas (Chief of Staff agent) PAUSED** — building Evryn product first. Everything transfers back.
 - **Website** live at evryn.ai.
-- **GTM:** LA film industry first. Why: acute need (everyone either clamoring for attention or drowning in it), dense network (each customer knows hundreds of prime leads), founder advantage (Justin's 78K+ second-gen industry contacts). Two parallel channels: **top-down** via gatekeepers like Mark — high-volume connectors whose ~1,000 weekly cast-offs become Evryn users; **bottom-up** via invite-only "whisper cascade" — grow by solving, proving, and being invited forward. Full depth: [gtm-and-growth spoke](docs/hub/gtm-and-growth.md).
+- **GTM:** LA film industry first. Why: acute need (everyone either clamoring for attention or drowning in it), dense network (each customer knows hundreds of prime leads), founder advantage (Justin's 78K+ second-gen industry contacts). Two parallel channels: **top-down** via gatekeepers like Mark — high-volume connectors whose ~1,000 weekly cast-offs become Evryn users; **bottom-up** via invite-only "whisper cascade" — grow by solving, proving, and being invited forward. Full depth: `docs/hub/gtm-and-growth.md`.
 - **Growth is conversationally embedded.** The ideal landing page is "talk to Evryn." She pitches from the user's vantage point while demonstrating value.
 
 ## Technical Architecture
 
-**Stack:** Claude Agent SDK + Supabase (PostgreSQL) + TypeScript. Anthropic Claude for all AI (Sonnet default, Opus for nuance, Haiku for routine). Full depth: [technical-vision spoke](docs/hub/technical-vision.md) (aspirational), [ARCHITECTURE.md](../evryn-backend/docs/ARCHITECTURE.md) (current v0.2), [SYSTEM_OVERVIEW.md](SYSTEM_OVERVIEW.md) (cross-repo components).
+**Stack:** Claude Agent SDK + Supabase (PostgreSQL) + TypeScript. Anthropic Claude for all AI (Sonnet default, Opus for nuance, Haiku for routine). Full depth: `docs/hub/technical-vision.md` (aspirational), `evryn-backend/docs/ARCHITECTURE.md` (current v0.2), `SYSTEM_OVERVIEW.md` (cross-repo components).
 
 **Three Brains (conceptual model):**
 1. **Dialogue Brain** — Evryn's voice. Conversation, tone, emotional arcs.
@@ -102,7 +106,7 @@ For MVP (v0.2), the three brains collapse into a single agent. At scale, they se
 
 ## The Long View
 
-Trust compounds. Evryn's ultimate leverage: owning the trust layer of human connection. The moat is built not just on AI, but on accumulated human outcomes that only Evryn has visibility into. Full depth: [long-term-vision spoke](docs/hub/long-term-vision.md).
+Trust compounds. Evryn's ultimate leverage: owning the trust layer of human connection. The moat is built not just on AI, but on accumulated human outcomes that only Evryn has visibility into. Full depth: `docs/hub/long-term-vision.md`.
 
 The vision: a world where the default is that relationships are high quality and people can be trusted — because they're vetted through a reliable trust broker. Evryn doesn't just connect you to others — she connects you more to yourself. Connection is not a lost art. It's just been buried. Evryn is here to surface what matters.
 
@@ -126,29 +130,15 @@ The vision: a world where the default is that relationships are high quality and
 | `evryn-dev-workspace` | DC's home. Identity & methodology | Active |
 | `evryn-langgraph-archive` | LangGraph-era code archive | Sealed |
 
-## Spokes (Domain Depth)
+## Additional References
 
-Load only when your current task requires the depth.
+Most domain spokes are linked inline in the sections above. When adding new references, prefer inline links in the relevant section — this list is for cross-context items and non-spoke docs.
 
-**Domain spokes** (`docs/hub/`):
-- [Trust & Safety](docs/hub/trust-and-safety.md) — full trust architecture, moderation, canary principle, crisis protocols
-- [User Experience](docs/hub/user-experience.md) — onboarding, connection flows, conversation patterns, interface philosophy
-- [Business Model](docs/hub/business-model.md) — pricing mechanics, wallet, market sizing, financial model, capital strategy
-- [Go-to-Market & Growth](docs/hub/gtm-and-growth.md) — LA film ignition, wave strategy, competitive landscape, cast-off outreach
-- [Technical Vision](docs/hub/technical-vision.md) — aspirational architecture at scale (three brains, matchmaking engine, privacy gateway, sovereign memory)
-- [Long-Term Vision](docs/hub/long-term-vision.md) — Swiss Foundation, federation, risks, the world Evryn creates
-- [BizOps & Tooling](docs/hub/bizops-and-tooling.md) — legal entities, finance, vendors, operational tools
-
-**Build & architecture docs:**
-- **Evryn product architecture:** `evryn-backend/docs/ARCHITECTURE.md` (how Evryn works as a system — schema, memory, pipelines, firewalling)
+- **BizOps & Tooling:** `docs/hub/bizops-and-tooling.md` — legal entities, finance, vendors, operational tools
 - **Evryn product build:** `evryn-backend/docs/BUILD-EVRYN-MVP.md` (what to build, phase by phase)
 - **Lucas agent build:** `evryn-team-agents/docs/BUILD-LUCAS-SDK.md`
-- **System overview:** `_evryn-meta/SYSTEM_OVERVIEW.md` (detailed component breakdown, external services)
-
-**Reference & protocol docs:**
-- **AC/DC protocol:** `_evryn-meta/docs/ac-dc-protocol.md`
-- **Decision log:** `_evryn-meta/docs/decisions/`
-- **Historical vault (_evryn-meta):** `_evryn-meta/docs/historical/` — Master Plan Reference (~730 lines, frozen), Master Plan v2.3 (~3,200 lines, frozen original). Go to the original for exact wording, marketing prose, or full competitive analysis.
+- **Decision log:** `docs/decisions/`
+- **Historical vault (_evryn-meta):** `docs/historical/` — Master Plan Reference (~730 lines, frozen), Master Plan v2.3 (~3,200 lines, frozen original). Go to the original for exact wording, marketing prose, or full competitive analysis.
 - **Historical vault (evryn-backend):** `evryn-backend/docs/historical/` — v0.1 system prompt, requirements drafts, prototype schema, n8n prototype
 
 ---
