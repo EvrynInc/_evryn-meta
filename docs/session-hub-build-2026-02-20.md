@@ -154,49 +154,11 @@ These are real decisions that have been made. Apply them as you reorganize MPR c
 5. ~~Company context update cadence note~~ ✓ — added "Downstream dependency" to Hub header.
 6. ~~#lock checkpoint~~ ✓ — current-state.md, CHANGELOG.md updated.
 7. ~~Rename session-handoff-2026-02-13~~ ✓ — moved to evryn-backend/docs/historical/build-doc-absorption-notes.md.
-
-## In Progress: roadmap.md Move + Edit Policy
-
-**File moved but not yet committed:** `git mv docs/roadmap.md docs/hub/roadmap.md` was run. The Hub file is now at `docs/hub/roadmap.md` but this hasn't been committed yet.
-
-### Hub content edits still needed (before committing the move):
-
-1. **Header rewrite:**
-   - "Only Justin edits this document" → own line, reworded to: "**Do not edit this document without explicit approval from Justin.** If you think something here is wrong or incomplete, tell Justin — do not rewrite it yourself."
-   - Move "Load domain spokes only when your current task requires the depth" into the header area (was at bottom under Spokes).
-
-2. **Inline spoke link paths:** Since the Hub is now IN `docs/hub/`, the inline links to spokes need checking. VS Code uses workspace-root-relative paths, so `docs/hub/trust-and-safety.md` still works. Cross-repo link `../evryn-backend/docs/ARCHITECTURE.md` may need adjustment (now `../../evryn-backend/...`). The `SYSTEM_OVERVIEW.md` link may need `../../SYSTEM_OVERVIEW.md`. Test these.
-
-3. **References section rewrite:** Rename "Spokes (Domain Depth)" → "Additional References". Cut the 7 domain spokes (already linked inline). Keep: BizOps spoke (cross-context, not linked inline), build docs (BUILD-EVRYN-MVP, BUILD-LUCAS-SDK), AC/DC protocol, decisions, historical vaults. Cut: ARCHITECTURE.md and SYSTEM_OVERVIEW.md (already linked inline from Technical Architecture section). Add maintenance note: "Domain spokes are linked inline throughout the sections above. When adding new references, prefer inline links in the relevant section."
-
-4. **"Not a SaaS" fix:** Already done — changed to "not a traditional SaaS".
-
-5. **Long View closing:** Justin said "connection is a lost art/buried/what matters" is weak. He wanted to link to a "trusted briefing" he keeps updated. **I don't have the path to this file yet** — need to ask Justin.
-
-### Reference updates needed across repos (14 files):
-
-All references change from `docs/roadmap.md` → `docs/hub/roadmap.md` (internal) or `_evryn-meta/docs/roadmap.md` → `_evryn-meta/docs/hub/roadmap.md` (cross-repo).
-
-**_evryn-meta:**
-- SYSTEM_OVERVIEW.md:3
-- CLAUDE.md:37
-- CHANGELOG.md:61 (historical, low priority)
-- docs/doc-ownership.md:26
-- docs/session-hub-build-2026-02-20.md:9,67 (this file — ephemeral)
-- docs/historical/master-plan-reference.md:3,10
-- docs/historical/Background-The_Evryn_Master_Plan_v2.3.md:3
-
-**evryn-backend:**
-- CLAUDE.md:27
-- docs/BUILD-EVRYN-MVP.md:23,66,359,487
-- docs/ARCHITECTURE.md:532
-- docs/historical/build-doc-absorption-notes.md:84
-
-**evryn-team-agents:**
-- docs/BUILD-LUCAS-SDK.md:118
-
-**evryn-dev-workspace:**
-- CLAUDE.md:34
+8. ~~Move roadmap.md~~ ✓ — `git mv docs/roadmap.md docs/hub/roadmap.md`. Committed (1340525).
+9. ~~Hub header rewrite~~ ✓ — Edit-approval on own line. Spoke loading guidance moved to header. "Spokes (Domain Depth)" → "Additional References" with maintenance note. Cut items already linked inline (ARCHITECTURE.md, SYSTEM_OVERVIEW.md, domain spokes except BizOps). Also removed AC/DC protocol from Additional References (DC-only concern, already in CLAUDE.md). Committed (2068e35).
+10. ~~Link convention established~~ ✓ — Within-repo: repo-root-relative paths (e.g., `docs/hub/trust-and-safety.md`). Cross-repo: sibling-repo paths (e.g., `evryn-backend/docs/ARCHITECTURE.md`). No relative `../` gymnastics. Paths work from any clone of the repo regardless of where on the machine it lives. Easy to grep when paths change.
+11. ~~Update all 15 roadmap.md references across 4 repos~~ ✓ — All `docs/roadmap.md` → `docs/hub/roadmap.md` (internal) and `_evryn-meta/docs/roadmap.md` → `_evryn-meta/docs/hub/roadmap.md` (cross-repo). Committed and pushed in all 4 repos.
+12. ~~evryn-website restructured~~ ✓ — All build context (design system, tech stack, page structure, deployment, backlog) moved from CLAUDE.md to `evryn-website/docs/ARCHITECTURE.md`. CLAUDE.md replaced with hard stop ("use DC, do not build here"). NOT YET COMMITTED — needs commit+push.
 
 ### Edit-approval disclaimer — new policy from Justin
 
@@ -239,25 +201,92 @@ Protocols & governance:
 - ADRs (written once, typically frozen)
 - Mailbox files (ac-to-dc, dc-to-ac — disposable snapshots)
 
+## Decisions Made This Session (Continuation — After Second Compaction)
+
+### Link convention (decided with Justin)
+- **Within-repo:** repo-root-relative paths (e.g., `docs/hub/trust-and-safety.md`)
+- **Cross-repo:** sibling-repo paths (e.g., `evryn-backend/docs/ARCHITECTURE.md`)
+- **Why this matters:** Paths work from any clone of the repo, regardless of machine or environment (local, GitHub, Railway). When we need to find all references to a file, we grep the path and get a clean list. The old `../` relative paths were fragile — they broke when the Hub moved into `docs/hub/`.
+
+### Hub lives in git — no special deployment needed
+- Agents access the Hub by having the repos cloned in their environment, which is already how any deployment works (Railway pulls from GitHub, Claude Code clones repos).
+- Flow: Justin and AC work locally → push to git → agents (wherever they run) pull from git.
+- The question of WHERE agents run (Railway? local?) doesn't need to be solved now — the Hub works in any environment that has a clone.
+
+### CLAUDE.md audience separation — this is critical
+Each repo's CLAUDE.md serves its **primary audience**, which is the runtime agent — NOT a developer opening Claude Code:
+- **evryn-backend/CLAUDE.md** — for the Evryn product agent at runtime
+- **evryn-team-agents/CLAUDE.md** — for Lucas at runtime
+- **evryn-website/CLAUDE.md** — hard stop (no runtime agent here, and DC builds the website, not ad-hoc Claude Code)
+- **evryn-dev-workspace/CLAUDE.md** — for DC (the builder who works ACROSS repos)
+
+**The problem this solves:** evryn-website's CLAUDE.md had been functioning as an ad-hoc DC for months — it had Working Style, Context Checkpoints, #lock, design specs, everything a builder would need. But now that DC has a dedicated identity in evryn-dev-workspace, that ad-hoc setup creates confusion. Someone opens Claude Code in evryn-website, gets a full builder context, and starts building without DC's safety rails (edit approval rules, build mandate, AC/DC protocol awareness, etc.).
+
+**Justin's decision:** evryn-website CLAUDE.md should be a hard stop — "Do not build here, use DC." If Justin needs changes, he has AC make them or does it by hand. The CLAUDE.md does NOT tell the Claude instance what the repo is or point it at context — that would encourage it to start building ad-hoc.
+
+### DC doesn't read other repos' CLAUDE.md files — this drives the docs/ structure
+DC loads from evryn-dev-workspace. When it goes to build in another repo, it does NOT load that repo's CLAUDE.md. So any build context in a repo's CLAUDE.md is invisible to DC. BUT we also can't tell DC "go read each repo's CLAUDE.md" because then it would pull in agent runtime context from evryn-backend and evryn-team-agents — exactly what we don't want.
+
+**Solution:** Standardize the `docs/` structure across all repos. DC knows to look for:
+- `docs/ARCHITECTURE.md` — how the system works (or design system for website)
+- `docs/BUILD-*.md` — what to build (where applicable)
+- `docs/DECISIONS.md` — decisions made
+- `docs/SETUP.md` — dev setup
+
+This way DC has a predictable pattern everywhere it goes, without ever touching CLAUDE.md.
+
+### DC reading order — Hub first for the frame
+When DC goes to build in any repo, the reading order is:
+1. **The Hub** (`_evryn-meta/docs/hub/roadmap.md`) — company context first, so DC has the frame. When the build doc says "trust-based pricing" or "canary principle," DC already knows what those mean.
+2. **That repo's `docs/ARCHITECTURE.md`** — how the system works
+3. **That repo's build doc** (`docs/BUILD-*.md`) — what to build
+4. **Other docs/ files and Hub spoke links only if needed** — don't bloat by following every link. If the build doc references something deeper, DC follows the link then, not preemptively.
+
+This is the progressive depth principle applied to DC onboarding. Justin's insight: "I think it's easier on the cognitive load if you know the frame first."
+
+### Auto-memory hygiene — needs rules
+Justin flagged that auto-memory files (the `.claude/projects/*/memory/MEMORY.md` files that Claude Code maintains) tend to accumulate bloat and get poorly maintained. AC currently has one with 6 notes, evryn-website has one with 2 notes.
+
+**The rule:** Auto-memory is a scratchpad for operational lessons learned across sessions — NOT a second documentation system. Don't duplicate info that exists in the actual docs (Hub, CLAUDE.md, docs/). If a note has been captured in persistent docs, remove it from memory. Keep it lean.
+
+**Still needs to be added to both AC's and DC's CLAUDE.md** as a formal rule.
+
+---
+
 ## Remaining Work (in order)
 
-1. Finish Hub content edits (header, references section, link paths)
-2. Commit the roadmap.md move + Hub edits
-3. Update all 14 reference files across 4 repos
-4. Add edit-approval disclaimers to all ~20 files listed above
-5. Add edit-approval rule to CLAUDE.md
-6. Freeze MPR header ("fully superseded by Hub + spokes")
-7. Commit and push all repos
-8. Ask Justin about the "trusted briefing" path for The Long View closing
-9. Review pass with Justin
-10. (Optional) Sanity check against original MP v2.3 for lost content
+1. **Commit evryn-website changes** — `docs/ARCHITECTURE.md` created, CLAUDE.md slimmed. Not yet committed/pushed.
+2. **Add DC redirect to evryn-backend/CLAUDE.md** — unmissable at very top, before any agent content. Something like: "Building here? Use DC — open a terminal in evryn-dev-workspace."
+3. **Add DC redirect + Hub reference to evryn-team-agents/CLAUDE.md** — same pattern.
+4. **Update DC identity (evryn-dev-workspace/CLAUDE.md):**
+   - Add the standardized reading order (Hub first → repo docs/ → deeper only if needed)
+   - Add auto-memory hygiene rules
+   - Consider adding machine paths (currently only in evryn-website docs/SETUP.md — DC might need them)
+5. **Update AC CLAUDE.md (_evryn-meta/CLAUDE.md):**
+   - Add responsibility for keeping DC CLAUDE.md files current when ecosystem changes
+   - Add auto-memory hygiene rules
+   - Add edit-approval rule to Documentation Approach section
+6. **Add edit-approval disclaimers to ~20 files** — full list in edit-approval section above.
+7. **Freeze MPR header** — "fully superseded by Hub + spokes"
+8. **Commit and push all repos**
+9. **Review pass with Justin**
+10. **Ask Justin about "trusted briefing" path** for The Long View closing (flagged last session, still open)
+11. (Optional) Sanity check against original MP v2.3 for lost content
 
-## Justin's Feedback Applied (This Session, Post-Compaction)
+---
+
+## Justin's Feedback Applied (Full Session — Both Pre- and Post-Compaction)
 
 - **Salted hash:** Restored in trust-and-safety spoke. The clarifications doc generalized it for the *legal questionnaire audience*, not because the approach was wrong. Internal docs should keep technical specificity.
 - **GTM intro:** Added to gtm-and-growth spoke — AI-first pivot changes burn rate, makes organic launch viable, gatekeeper strategy reduces cold-start, but gatekeepers are hard to reach so bottom-up still necessary.
 - **Stale tools:** Noted pivots in bizops-and-tooling (Webflow→Next.js, ClickUp→Linear, Mailchimp→HubSpot).
 - **Age nuance:** Added to bizops — "May consider younger users with parent-administered accounts, once there's team and revenue."
 - **"Not a SaaS":** Changed to "not a traditional SaaS" — technically is a SaaS, just unconventional model.
-- **Spoke duplication in Hub:** Domain spokes were listed both inline AND at bottom. Justin flagged as bloat. Being resolved — inline links stay, bottom section becomes "Additional References" for cross-context items only.
-- **"Only Justin edits" → edit-approval policy:** Justin wants this expanded to all source-of-truth docs, with own line, explicit approval language. See full list above.
+- **Spoke duplication in Hub:** Domain spokes were listed both inline AND at bottom. Justin flagged as bloat. Resolved — inline links stay, bottom section became "Additional References" for cross-context items only.
+- **"Only Justin edits" → edit-approval policy:** Expanded to all source-of-truth docs, with own line, explicit approval language. See full list in edit-approval section above.
+- **Link convention:** Repo-root-relative within repo, sibling-repo for cross-repo. No relative `../` paths.
+- **Hub stays in git:** No special deployment — agents clone/pull from any environment.
+- **CLAUDE.md serves the agent, not DC:** DC has its own identity and reads standardized docs/ structure. Repo CLAUDE.md files should NOT contain DC build context.
+- **DC reading order:** Hub first (for the frame), then build docs (now with context), then deeper only if the task requires it.
+- **evryn-website hard stop:** CLAUDE.md tells Claude Code not to function — "use DC." All content moved to docs/ARCHITECTURE.md. Justin: "If I need to change anything, I'll have you come in and change it, or I'll change by hand."
+- **Auto-memory hygiene:** Scratchpad only. Don't duplicate docs. Clean periodically. Needs rules in CLAUDE.md for both AC and DC.
