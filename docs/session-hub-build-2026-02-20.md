@@ -145,15 +145,119 @@ These are real decisions that have been made. Apply them as you reorganize MPR c
 
 ---
 
-## Remaining Work (in order)
+## Completed Work
 
 1. ~~Write this working notes file~~ ✓
-2. Write ADR-008 (Trust Mirror dropped — canary principle)
-3. Write all 7 spoke files (trust-and-safety, user-experience, business-model, gtm-and-growth, technical-vision, long-term-vision, bizops-and-tooling)
-4. Write expanded Hub (draft for Justin's review — he approves all Hub edits)
-5. Freeze MPR header (update to "fully superseded by Hub + spokes")
-6. Update references (CLAUDE.md spoke pointers, current-state.md, SYSTEM_OVERVIEW.md)
-7. Add note to Hub about Evryn company context update cadence (AC's responsibility)
-8. Commit and push
+2. ~~Write ADR-008~~ ✓ — at `docs/decisions/008-trust-mirror-dropped.md`
+3. ~~Write all 7 spoke files~~ ✓ — all in `docs/hub/`. Committed and pushed (68fe095).
+4. ~~Write expanded Hub~~ ✓ — Hub expanded with ethos, connections, safety, long view sections + inline links to spokes. Committed and pushed.
+5. ~~Company context update cadence note~~ ✓ — added "Downstream dependency" to Hub header.
+6. ~~#lock checkpoint~~ ✓ — current-state.md, CHANGELOG.md updated.
+7. ~~Rename session-handoff-2026-02-13~~ ✓ — moved to evryn-backend/docs/historical/build-doc-absorption-notes.md.
+
+## In Progress: roadmap.md Move + Edit Policy
+
+**File moved but not yet committed:** `git mv docs/roadmap.md docs/hub/roadmap.md` was run. The Hub file is now at `docs/hub/roadmap.md` but this hasn't been committed yet.
+
+### Hub content edits still needed (before committing the move):
+
+1. **Header rewrite:**
+   - "Only Justin edits this document" → own line, reworded to: "**Do not edit this document without explicit approval from Justin.** If you think something here is wrong or incomplete, tell Justin — do not rewrite it yourself."
+   - Move "Load domain spokes only when your current task requires the depth" into the header area (was at bottom under Spokes).
+
+2. **Inline spoke link paths:** Since the Hub is now IN `docs/hub/`, the inline links to spokes need checking. VS Code uses workspace-root-relative paths, so `docs/hub/trust-and-safety.md` still works. Cross-repo link `../evryn-backend/docs/ARCHITECTURE.md` may need adjustment (now `../../evryn-backend/...`). The `SYSTEM_OVERVIEW.md` link may need `../../SYSTEM_OVERVIEW.md`. Test these.
+
+3. **References section rewrite:** Rename "Spokes (Domain Depth)" → "Additional References". Cut the 7 domain spokes (already linked inline). Keep: BizOps spoke (cross-context, not linked inline), build docs (BUILD-EVRYN-MVP, BUILD-LUCAS-SDK), AC/DC protocol, decisions, historical vaults. Cut: ARCHITECTURE.md and SYSTEM_OVERVIEW.md (already linked inline from Technical Architecture section). Add maintenance note: "Domain spokes are linked inline throughout the sections above. When adding new references, prefer inline links in the relevant section."
+
+4. **"Not a SaaS" fix:** Already done — changed to "not a traditional SaaS".
+
+5. **Long View closing:** Justin said "connection is a lost art/buried/what matters" is weak. He wanted to link to a "trusted briefing" he keeps updated. **I don't have the path to this file yet** — need to ask Justin.
+
+### Reference updates needed across repos (14 files):
+
+All references change from `docs/roadmap.md` → `docs/hub/roadmap.md` (internal) or `_evryn-meta/docs/roadmap.md` → `_evryn-meta/docs/hub/roadmap.md` (cross-repo).
+
+**_evryn-meta:**
+- SYSTEM_OVERVIEW.md:3
+- CLAUDE.md:37
+- CHANGELOG.md:61 (historical, low priority)
+- docs/doc-ownership.md:26
+- docs/session-hub-build-2026-02-20.md:9,67 (this file — ephemeral)
+- docs/historical/master-plan-reference.md:3,10
+- docs/historical/Background-The_Evryn_Master_Plan_v2.3.md:3
+
+**evryn-backend:**
+- CLAUDE.md:27
+- docs/BUILD-EVRYN-MVP.md:23,66,359,487
+- docs/ARCHITECTURE.md:532
+- docs/historical/build-doc-absorption-notes.md:84
+
+**evryn-team-agents:**
+- docs/BUILD-LUCAS-SDK.md:118
+
+**evryn-dev-workspace:**
+- CLAUDE.md:34
+
+### Edit-approval disclaimer — new policy from Justin
+
+Justin wants explicit approval required before editing source-of-truth docs. Strong tendency to over-compress prose documents is the concern. Policy: "Edits require explicit approval from Justin. Propose changes; don't make them directly."
+
+**Docs that need the disclaimer added to their headers:**
+
+Hub & spokes:
+- docs/hub/roadmap.md (already being reworded — see above)
+- docs/hub/trust-and-safety.md
+- docs/hub/user-experience.md
+- docs/hub/business-model.md
+- docs/hub/gtm-and-growth.md
+- docs/hub/technical-vision.md
+- docs/hub/long-term-vision.md
+- docs/hub/bizops-and-tooling.md
+
+Architecture / build / system:
+- _evryn-meta/SYSTEM_OVERVIEW.md
+- evryn-backend/docs/ARCHITECTURE.md
+- evryn-backend/docs/BUILD-EVRYN-MVP.md
+- evryn-team-agents/docs/ARCHITECTURE.md
+- evryn-team-agents/docs/BUILD-LUCAS-SDK.md
+
+State & learnings:
+- _evryn-meta/docs/current-state.md
+- _evryn-meta/LEARNINGS.md
+- _evryn-meta/AGENT_PATTERNS.md
+
+Protocols & governance:
+- _evryn-meta/docs/lock-protocol.md
+- _evryn-meta/docs/ac-dc-protocol.md
+- _evryn-meta/docs/doc-ownership.md
+
+**Also add the rule to _evryn-meta/CLAUDE.md** — in the Documentation Approach section. Something like: "Source-of-truth documents require explicit approval from Justin before edits. You have a strong tendency to over-compress prose — always propose changes rather than making them directly. Excluded: CHANGELOG.md, session working notes, ADRs, mailbox files."
+
+**Excluded from disclaimer (free to edit):**
+- CHANGELOG.md
+- Session working notes (ephemeral)
+- ADRs (written once, typically frozen)
+- Mailbox files (ac-to-dc, dc-to-ac — disposable snapshots)
+
+## Remaining Work (in order)
+
+1. Finish Hub content edits (header, references section, link paths)
+2. Commit the roadmap.md move + Hub edits
+3. Update all 14 reference files across 4 repos
+4. Add edit-approval disclaimers to all ~20 files listed above
+5. Add edit-approval rule to CLAUDE.md
+6. Freeze MPR header ("fully superseded by Hub + spokes")
+7. Commit and push all repos
+8. Ask Justin about the "trusted briefing" path for The Long View closing
 9. Review pass with Justin
 10. (Optional) Sanity check against original MP v2.3 for lost content
+
+## Justin's Feedback Applied (This Session, Post-Compaction)
+
+- **Salted hash:** Restored in trust-and-safety spoke. The clarifications doc generalized it for the *legal questionnaire audience*, not because the approach was wrong. Internal docs should keep technical specificity.
+- **GTM intro:** Added to gtm-and-growth spoke — AI-first pivot changes burn rate, makes organic launch viable, gatekeeper strategy reduces cold-start, but gatekeepers are hard to reach so bottom-up still necessary.
+- **Stale tools:** Noted pivots in bizops-and-tooling (Webflow→Next.js, ClickUp→Linear, Mailchimp→HubSpot).
+- **Age nuance:** Added to bizops — "May consider younger users with parent-administered accounts, once there's team and revenue."
+- **"Not a SaaS":** Changed to "not a traditional SaaS" — technically is a SaaS, just unconventional model.
+- **Spoke duplication in Hub:** Domain spokes were listed both inline AND at bottom. Justin flagged as bloat. Being resolved — inline links stay, bottom section becomes "Additional References" for cross-context items only.
+- **"Only Justin edits" → edit-approval policy:** Justin wants this expanded to all source-of-truth docs, with own line, explicit approval language. See full list above.

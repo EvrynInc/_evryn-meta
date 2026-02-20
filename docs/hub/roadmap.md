@@ -54,7 +54,7 @@ Everyone who interacts with Evryn is a "user" — whether they came through a ga
 
 ## Business Model
 
-Evryn is a **broker**, not a SaaS. Everyone is a "user" — both sides pay per-connection. Full depth: [business-model spoke](docs/hub/business-model.md).
+Evryn is a **broker**, not a traditional SaaS. Everyone is a "user" — both sides pay per-connection. Full depth: [business-model spoke](docs/hub/business-model.md).
 
 - **Trust-based pricing:** Users pay what they believe is fair. 100% satisfaction guarantee.
 - **Three revenue streams:** (1) Match payments, (2) Post-match transactions (Stripe Connect), (3) Participant-based business access ("ads without ads").
