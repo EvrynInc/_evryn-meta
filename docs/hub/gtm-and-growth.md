@@ -25,8 +25,9 @@ The plan targets Los Angeles film industry first because:
 - Highest need for quality introductions — everyone is either clamoring for attention they can't get or drowning in attention they don't want
 - Highly collaborative — no one makes a movie alone — mixing business, creative, social, romantic, and big money
 - Very tight-knit — each new user knows 300-5,000 qualified leads
-- Current tools are woefully inadequate (Facebook threads, job boards, DM chains)
+- Current tools are woefully inadequate (Facebook threads, job boards, DM chains, referral lists)
 - Justin's extensive reach (78,000+ second-gen contacts)
+- **Industry in transition:** Between film advisor Megan Griffiths and independent research, we're discovering that the film industry is evaporating faster than expected with the rise of AI video tools. This makes Evryn more urgent, not less — film professionals need to (1) find their best connections in a shrinking landscape, and (2) find their *next* opportunities as film work becomes fewer and further between. Evryn helps with both.
 - Capturing LA film opens up: rest of LA (everyone is connected to film), rest of the film industry globally, and the entertainment industry megaphone
 
 ---
@@ -59,7 +60,7 @@ People who emailed a gatekeeper but weren't the right mutual fit didn't opt in t
 
 **Framing:** "You reached out to [gatekeeper], who works with Evryn. They're not the right fit for this, but if you'd like, I'd be happy to help you find what you're looking for."
 
-Consent framework for channels beyond email (SMS, etc.) needs legal guidance — see `docs/legal/clarifications-for-system-docs.md`.
+Consent framework for channels beyond email (SMS, etc.) needs legal guidance — flagged in `docs/legal/privacy-and-terms-questionnaire.md` (sent to Fenwick).
 
 ---
 

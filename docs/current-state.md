@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-20T15:59:53-08:00*
+*Last updated: 2026-02-20T17:38:00-08:00*
 
 ---
 
@@ -18,16 +18,16 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Hub restructuring — COMPLETE.** Hub + 7 spokes written, all CLAUDE.md files restructured (AC/DC identities, hard-stop redirects), edit-approval disclaimers on 18 files, MPR frozen. Justin review pass pending. Working notes: `docs/session-hub-build-2026-02-20.md` (delete after review).
+- **Hub restructuring — COMPLETE.** Hub + 7 spokes written, all CLAUDE.md files restructured (AC/DC identities, hard-stop redirects), edit-approval disclaimers on 18 files, MPR frozen. V2.3 sanity check next (dedicated AC session).
 - **Pre-Work #10: Build doc rewrite** — ARCHITECTURE.md complete (v4). Next: rewrite BUILD-EVRYN-MVP.md — absorb sources, fix terminology, update schema. Absorption notes at `evryn-backend/docs/historical/build-doc-absorption-notes.md`.
 - **Pre-Work #6: Write Evryn's triage system prompt** — After #10. v0.1 patterns captured in `evryn-backend/docs/ARCHITECTURE.md` (Onboarding Patterns section). Also creates Evryn's company context module.
 - **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. After #10.
 - **Legal: Privacy & Terms questionnaire** — Sent to Fenwick. They'll start next week.
-- **Legal clarifications → system docs** — `docs/legal/clarifications-for-system-docs.md` has flow-through status section. Most items spoke-captured; technical flow-through (ARCHITECTURE.md, BUILD doc, system prompt) will resolve during Pre-Work #10 and #6. Two items still need decisions (gatekeeper rules, safety imprint mechanism).
+- **Legal clarifications doc — ABSORBED AND DELETED.** All items routed to absorption notes checklist (`evryn-backend/docs/historical/build-doc-absorption-notes.md`). Flow-through resolves during Pre-Work #10 and #6. Two open decisions remain: gatekeeper final rules, safety imprint mechanism.
 
 ## Active Projects
 
-- **_evryn-meta** — Hub restructuring complete. ADR-008 written. Legal questionnaire sent to Fenwick.
+- **_evryn-meta** — Hub restructuring complete. ADR-008 written. Legal questionnaire sent to Fenwick. Trusted partner briefing verified against spokes. Questionnaire cross-referenced against internal docs (gaps routed to absorption notes).
 - **evryn-backend** — ARCHITECTURE.md created (v4). BUILD-EVRYN-MVP.md updated. Build doc rewrite is next.
 - **evryn-team-agents** — PAUSED. Clean pause state. CLAUDE.md updated (hard stop + runtime context).
 - **evryn-dev-workspace** — DC's home repo. Identity updated (reading order, Diataxis, auto-memory hygiene, edit-approval).

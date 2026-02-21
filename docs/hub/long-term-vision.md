@@ -118,7 +118,6 @@ Evryn is a Delaware PBC, legally mission-locked: "to foster trusted human connec
 
 To keep in mind as architecture evolves:
 
-- **Voice interface** — live voice, voice messages. Note: voice prints and emotion analysis (via Vapi, Hume AI) may qualify as biometric data under BIPA and similar state laws. Legal guidance needed before launch — see `docs/legal/clarifications-for-system-docs.md`.
 - **Vision** — understanding users more fully in conversation
 - **Connection coaching** — "here's why you keep not getting the job/date." Evryn's perspective as a friend, not professional advice — see [user-experience spoke](user-experience.md).
 - **Group matching** — small-group introductions for community-building or creative cohorts

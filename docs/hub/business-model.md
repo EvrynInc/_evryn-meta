@@ -14,6 +14,8 @@ Evryn monetizes transformation, not attention. **She only gets paid when she hel
 
 ## Trust-Based Pricing
 
+Uniform pricing and subscriptions don't fit Evryn's model. A casual introduction might be worth $1 (or free), while an executive connection could be worth $10,000 — the price points are essentially infinite. Subscriptions simultaneously overprice low-value users (causing churn) and radically underprice high-value connections (losing substantial upside). Trust-based pricing captures the full spectrum.
+
 Users pay what they believe is fair for each connection — for both the particular connection *and* the ongoing relationship they want to build with Evryn. There is no minimum and no maximum. If it seems fair to Evryn, she takes it. If not, she works with you to find something right for both.
 
 Users who find it stressful to name their own price can ask Evryn for a suggested price.
@@ -113,9 +115,9 @@ Evryn uses a trust-filtered market model:
 
 ## Capital Strategy
 
-The founding capital philosophy is **user-led, backed by traditional VC as needed**. Early build funds cover foundational work. Angel funds support team formation and user acquisition. Crowdfunding (via StartEngine, Reg CF) is fueled by user belief, not performance marketing — closing the loop between trust, traction, and growth. StartEngine handles all securities compliance as a pass-through model.
+**Raised to date:** $40K ($15K founder capital + $25K early angel investor).
 
-> *Removed: specific dollar amounts and funding milestones from the founding capital plan (being revised under AI-first pivot). See original Master Plan lines 850-871.*
+The founding capital philosophy is **user-led, backed by traditional VC as needed**. The plan had been to pursue a very-carefully-vetted set of angels and VCs, though the approach is being reconsidered in light of the AI-first pivot (dramatically lower burn changes the calculus — see GTM spoke for context). Crowdfunding (via StartEngine, Reg CF) is fueled by user belief, not performance marketing — closing the loop between trust, traction, and growth. StartEngine handles all securities compliance as a pass-through model.
 
 ---
 

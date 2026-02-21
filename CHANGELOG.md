@@ -14,7 +14,12 @@
 - DC redirects added to evryn-backend and evryn-team-agents CLAUDE.md (hard stop + runtime agent context)
 - Auto-memory trimmed (removed items now captured in persistent docs)
 - doc-ownership.md restructured: added 7 spokes, split by repo, updated CLAUDE.md descriptions, added evryn-website + evryn-dev-workspace
-- Legal clarifications: added flow-through status section — most items spoke-captured, technical flow-through pending Pre-Work #10/#6
+- Legal clarifications doc fully absorbed into absorption notes checklist, then deleted
+- Questionnaire cross-referenced against internal docs — 4 gaps routed to absorption notes (age requirement, identity verification pass-through, cross-border data, shared data on deletion)
+- Trusted partner briefing v1.4 verified against Hub spokes — one gap found (anti-subscription reasoning), added to business-model spoke
+- Spoke edits: business-model (anti-subscription reasoning, capital strategy), bizops (Fenwick strategic value), GTM (film industry transition, referral lists, file reference update), long-term-vision (voice bullet removed — near-term, not long-term)
+- Voice integration items moved to absorption notes as near-term ARCHITECTURE.md items
+- Session doc (session-hub-build) deleted — all items resolved or properly routed
 - Session doc trimmed (294 → 95 lines)
 - Hub header rewritten: edit-approval on own line, spoke loading guidance in header, "Additional References" with maintenance note (cut items already linked inline)
 - Link convention established: repo-root-relative within-repo, sibling-repo for cross-repo. No `../` paths. Works from any clone.
