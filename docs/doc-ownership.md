@@ -10,19 +10,69 @@
 
 ---
 
+## _evryn-meta
+
 | Document | Owner | Purpose |
 |----------|-------|---------|
-| `_evryn-meta/CLAUDE.md` | AC | Operating manual (AC's identity and methodology) |
-| `_evryn-meta/SYSTEM_OVERVIEW.md` | AC | Technical architecture, repos, services |
-| `_evryn-meta/LEARNINGS.md` | AC | Cross-project patterns and insights |
-| `_evryn-meta/RESEARCH.md` | AC | Cross-project research index, pointers to repo `docs/research/` folders |
-| `_evryn-meta/AGENT_PATTERNS.md` | AC | Agent-building learnings for Evryn product |
-| `evryn-team-agents/CLAUDE.md` | AC | Currently DC's build context. Will become Lucas's system context after DC migrates. |
-| `evryn-team-agents/docs/BUILD-LUCAS-SDK.md` | AC | SDK build spec (DRAFT) |
-| `evryn-team-agents/docs/ARCHITECTURE.md` | AC | System architecture (needs rewrite for SDK) |
-| `evryn-team-agents/.claude/agents/*.md` | AC | Subagent definitions (future — Justin reviews each) |
-| `evryn-team-agents/.claude/skills/*.md` | AC | Skills for Lucas (future) |
-| `evryn-team-agents/modules/*` | AC | Rich context loaded on demand (future) |
+| `CLAUDE.md` | AC | Operating manual (AC's identity and methodology) |
+| `SYSTEM_OVERVIEW.md` | AC | Technical architecture, repos, services |
+| `LEARNINGS.md` | AC | Cross-project patterns and insights |
+| `AGENT_PATTERNS.md` | AC | Agent-building learnings for Evryn product |
+| `CHANGELOG.md` | AC | What was built/changed (free to edit) |
+| `docs/hub/roadmap.md` | Justin | The Hub — company truth, loaded every session |
+| `docs/hub/trust-and-safety.md` | AC (Justin approves) | Spoke: trust architecture, moderation, safety |
+| `docs/hub/user-experience.md` | AC (Justin approves) | Spoke: onboarding through after-care, Evryn's voice |
+| `docs/hub/business-model.md` | AC (Justin approves) | Spoke: pricing, revenue, wallet, financial model |
+| `docs/hub/gtm-and-growth.md` | AC (Justin approves) | Spoke: GTM strategy, growth mechanics, competitive |
+| `docs/hub/technical-vision.md` | AC (Justin approves) | Spoke: aspirational architecture at scale |
+| `docs/hub/long-term-vision.md` | AC (Justin approves) | Spoke: federation, foundation, civilizational vision |
+| `docs/hub/bizops-and-tooling.md` | AC (Justin approves) | Spoke: legal, finance, vendors reference |
+| `docs/current-state.md` | AC | Cross-project status snapshot |
+| `docs/lock-protocol.md` | AC | #lock checkpoint procedure |
+| `docs/ac-dc-protocol.md` | AC | AC/DC communication protocol |
+| `docs/doc-ownership.md` | AC | This file — who owns what |
+| `docs/decisions/*.md` | AC | ADRs (written once, typically frozen) |
+| `docs/legal/*` | AC | Legal clarifications and questionnaire docs |
+| `docs/historical/*` | Frozen | MPR, MP v2.3, other archived docs |
+
+## evryn-team-agents
+
+| Document | Owner | Purpose |
+|----------|-------|---------|
+| `CLAUDE.md` | AC | Hard stop for developers + Lucas's runtime context (transitional) |
+| `docs/BUILD-LUCAS-SDK.md` | AC | SDK build spec (DRAFT) |
+| `docs/ARCHITECTURE.md` | AC | System architecture (needs rewrite for SDK) |
+| `.claude/agents/*.md` | AC | Subagent definitions (future — Justin reviews each) |
+| `.claude/skills/*.md` | AC | Skills for Lucas (future) |
+| `modules/*` | AC | Rich context loaded on demand (future) |
+
+## evryn-backend
+
+| Document | Owner | Purpose |
+|----------|-------|---------|
+| `CLAUDE.md` | AC | Hard stop for developers + Evryn's runtime context (transitional) |
+| `docs/ARCHITECTURE.md` | AC | Technical blueprint for Evryn product |
+| `docs/BUILD-EVRYN-MVP.md` | AC | Build spec for v0.2 |
+
+## evryn-dev-workspace
+
+| Document | Owner | Purpose |
+|----------|-------|---------|
+| `CLAUDE.md` | DC | Operating manual (DC's identity and methodology) |
+
+## evryn-website
+
+| Document | Owner | Purpose |
+|----------|-------|---------|
+| `CLAUDE.md` | AC | Hard stop — "use DC" |
+| `docs/ARCHITECTURE.md` | AC | Design system and site structure |
+
+## Cross-repo
+
+| Resource | Owner | Purpose |
+|----------|-------|---------|
 | Linear (EVR workspace) | AC | Backlog — small items to not forget |
 
-**Sync responsibility:** When company-level changes happen (team structure, mission, strategy), update the Hub (`_evryn-meta/docs/hub/roadmap.md`) — it's the single source of company truth. `SYSTEM_OVERVIEW.md` is a technical spoke and should stay consistent with the Hub.
+---
+
+**Sync responsibility:** When company-level changes happen (team structure, mission, strategy), update the Hub (`_evryn-meta/docs/hub/roadmap.md`) — it's the single source of company truth. `SYSTEM_OVERVIEW.md` is a technical reference and should stay consistent with the Hub.

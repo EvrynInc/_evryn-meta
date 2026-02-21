@@ -4,7 +4,28 @@
 >
 > **Owner:** AC
 >
-> **Status:** Active — updated 2026-02-17T16:04:46-08:00
+> **Status:** Active — updated 2026-02-20T15:59:53-08:00
+
+---
+
+## Flow-Through Status (added 2026-02-20)
+
+During Hub restructuring, most clarifications below were captured in the appropriate **spokes** (`docs/hub/*.md`). However, many still need flow-through to their final destinations (ARCHITECTURE.md, BUILD-EVRYN-MVP.md, Evryn's system prompt, Terms of Service). These will naturally resolve during:
+
+- **Pre-Work #10** (build doc rewrite) — catches ARCHITECTURE.md and BUILD-EVRYN-MVP.md items
+- **Pre-Work #6** (Evryn's system prompt) — catches system prompt items
+- **Fenwick deliverables** — catches Terms of Service and Privacy Policy items
+
+**Items fully resolved (spoke-captured, no further flow-through needed):**
+- Trust stance in Terms & PP (guidance sent with questionnaire)
+- Data export process (Terms of Service task for Fenwick)
+
+**Items spoke-captured but still need technical flow-through:**
+- Most items below — the *knowledge* is in spokes, but ARCHITECTURE.md / BUILD doc / system prompt updates are pending. Track during pre-work phases.
+
+**Items still needing decisions:**
+- Gatekeeper first-right-of-refusal (framing resolved, final rules before gatekeeper agreements TBD)
+- Safety imprint technical mechanism (legal doc generalized, architecture approach TBD)
 
 ---
 
