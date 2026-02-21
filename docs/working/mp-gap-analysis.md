@@ -15,26 +15,26 @@
 - No gaps. Captured in trust-and-safety spoke "The Globally Scalable Honor Economy" section including the culture table and strategic implications.
 
 ## What Evryn is Like / User Interface & Flows (lines 279-424)
-- **Gap:** Chat interface UX details — small bubbles, pauses, ability to interrupt, "like texting" — not captured anywhere. → belongs in user-experience spoke (UI Philosophy section)
-- **Gap:** Persistent footer with 'Share Evryn', 'Pre-Buy', 'Become an Owner' buttons mentioned as core UI element. Not captured. → user-experience spoke
-- **Gap:** Evryn tags and records info for CRM during onboarding, captures preferred contact method. Not captured as a mechanic. → user-experience spoke or ARCHITECTURE.md (onboarding data flow)
-- **Gap:** Growth ask timing — Evryn chooses the right emotional moment to invite users to share/pre-buy/invest; three specific CTAs (share, pre-purchase with 30% credit, become an owner via StartEngine). The pre-purchase credit mechanic (30%) is not in the business-model spoke. → business-model spoke (referral/pre-purchase section)
-- **Gap:** After-care detail — Evryn continues thinking about next connections and keeps user in the loop ("so you don't ever think she's forgotten you, and so that when she arrives with a new connection, you're very excited"). This proactive anticipation-building between matches is not explicitly captured. → user-experience spoke (After Care section)
+- **Gap:** Chat interface UX details (lines 309-311) — small bubbles, pauses, ability to interrupt, "like texting" — not captured anywhere. → belongs in user-experience spoke (UI Philosophy section)
+- **Gap:** Persistent footer (line 309) with 'Share Evryn', 'Pre-Buy', 'Become an Owner' buttons mentioned as core UI element. Not captured. → user-experience spoke
+- **Gap:** Evryn tags and records info for CRM during onboarding (line 333), captures preferred contact method. Not captured as a mechanic. → user-experience spoke or ARCHITECTURE.md (onboarding data flow)
+- **Gap:** Growth ask timing (lines 337-355) — Evryn chooses the right emotional moment to invite users to share/pre-buy/invest; three specific CTAs (share, pre-purchase with 30% credit at line 340, become an owner via StartEngine). The pre-purchase credit mechanic (30%) is not in the business-model spoke. → business-model spoke (referral/pre-purchase section)
+- **Gap:** After-care detail (line 416) — Evryn continues thinking about next connections and keeps user in the loop ("so you don't ever think she's forgotten you, and so that when she arrives with a new connection, you're very excited"). This proactive anticipation-building between matches is not explicitly captured. → user-experience spoke (After Care section)
 
 ## Additional UX Details (lines 418-700)
 - **Gap:** "Revealing What's Already There" / Trust Mirror concept (lines 564-599) — the Hub notes it was dropped (ADR-008), but the *latent truth discovery* mechanic IS captured in user-experience spoke. However, the "Would she have connected me to them?" mechanic for existing non-Evryn contacts (lines 564-581) is a separate concept from latent truth discovery. It was presumably dropped with Trust Mirror, but if any part of it survives, it's not captured. → verify with ADR-008; if fully dropped, no gap
 - **Gap:** Shared conversations — "two connected users can invite Evryn to be present" is in user-experience spoke. But the MP's detail about connection summary cards (line 397-398: "short summary of the connection: who they are, why Evryn connected you") with user-editable notes is not captured. → user-experience spoke (Connection Conversations section)
 - **Gap:** Legal clarity section (lines 683-701) — explicit user disclosures ("no guarantees of a match", "system doesn't owe you visibility, it owes the community safety") appear in Terms of Service language. Not captured in any current doc. → trust-and-safety spoke or bizops-and-tooling spoke (legal section), or flagged for Fenwick work
-- **Gap:** Peer-to-peer wallet detail — "Evryn Credit cannot be used to pay other users" (Cash only for P2P) is captured in business-model spoke. But the wallet visibility detail ("wallet remains visible at all times and acts as a subtle cue of user engagement and future connection potential") is not. Minor UX point. → user-experience spoke
-- **Gap:** Evryn as main spokesperson on marketing site — "she has high-level training in ethical, value-based sales techniques" for converting prospects. The "always-on channel" where users can voice dreams/concerns and see she's listening. Concept exists in Hub ("growth is conversationally embedded") but the sales technique angle is not captured. → gtm-and-growth spoke or Evryn CLAUDE.md (when built)
+- **Gap:** Peer-to-peer wallet detail — "Evryn Credit cannot be used to pay other users" (Cash only for P2P) is captured in business-model spoke. But the wallet visibility detail (lines 648-649: "wallet remains visible at all times and acts as a subtle cue of user engagement and future connection potential") is not. Minor UX point. → user-experience spoke
+- **Gap:** Evryn as main spokesperson on marketing site (lines 1244-1248) — "she has high-level training in ethical, value-based sales techniques" for converting prospects. The "always-on channel" where users can voice dreams/concerns and see she's listening. Concept exists in Hub ("growth is conversationally embedded") but the sales technique angle is not captured. → gtm-and-growth spoke or Evryn CLAUDE.md (when built)
 
 ## Revenue Model & Monetization (lines 705-848)
-- **Gap:** "Match Types & Value Mapping" — MP references seven general categories of match value from casual help to life-changing introductions, and a "blended trust-weighted revenue curve." Neither the categories nor the curve concept appear in business-model spoke. → business-model spoke (financial model section)
+- **Gap:** "Match Types & Value Mapping" (lines 721-725) — MP references seven general categories of match value from casual help to life-changing introductions, and a "blended trust-weighted revenue curve." Neither the categories nor the curve concept appear in business-model spoke. → business-model spoke (financial model section)
 - **Gap (better phrasing):** The "casino model" competitive framing (lines 773-848) is noted as existing in the Hub's business-model spoke via a marketing note reference (line 76), but the spoke itself only captures a compressed version. The MP's prose here is materially more compelling for investor pitches — the spoke's note correctly points back to MP lines 770-848 for this. Not a content gap, but worth noting the reference is working as intended.
 
 ## Financial Posture & Capital Strategy (lines 851-873)
-- **Gap:** Financial Model details — Low/Medium/High cases, $188K bridge funding floor, toggleable scenarios. Not captured in business-model spoke beyond the brief "Capital Strategy" section. The specific funding ask structure ($15K + $25K + $48K family + $750K angels) is partially captured ($40K raised to date) but the full breakdown and contingency reasoning is not. → business-model spoke (capital strategy section) — though some of this may be intentionally omitted as stale
-- **Gap:** Pre-loaded wallet funds as working capital ("gives us working capital to provide services before they're delivered") — a financing mechanic, not just UX. Not captured. → business-model spoke
+- **Gap:** Financial Model details (lines 855-870) — Low/Medium/High cases, $188K bridge funding floor, toggleable scenarios. Not captured in business-model spoke beyond the brief "Capital Strategy" section. The specific funding ask structure ($15K + $25K + $48K family + $750K angels) is partially captured ($40K raised to date) but the full breakdown and contingency reasoning is not. → business-model spoke (capital strategy section) — though some of this may be intentionally omitted as stale
+- **Gap:** Pre-loaded wallet funds as working capital (line 872: "gives us working capital to provide services before they're delivered") — a financing mechanic, not just UX. Not captured. → business-model spoke
 
 ## L.A. Film Industry Launch (lines 874-1000)
 - **Gap:** Industry in transition detail — "film industry is evaporating faster than expected with the rise of AI video tools" is captured in gtm-and-growth spoke. But the MP's specific argument that this makes Evryn MORE urgent (find best connections in shrinking landscape + find next opportunities) is better stated in the spoke. No gap.
@@ -43,7 +43,7 @@
 
 ## Department Overviews / Launch Timeline / Scope Triggers (lines 1000-1160)
 - Stale staffing plans and timelines — intentionally not flagged per instructions.
-- **Gap:** Scope compression/expansion trigger *principle* — the concept of having codified go/no-go conditions and scope flex triggers as a launch discipline. The gtm-and-growth spoke has a "Removed" note preserving the core principle ("experience of meeting Evryn never gets compromised") but the *pattern itself* (codified triggers that reshape scope rather than cancel launch) is not captured as a reusable discipline. → gtm-and-growth spoke or build doc (as a launch readiness pattern)
+- **Gap:** Scope compression/expansion trigger *principle* (lines 1131-1159) — the concept of having codified go/no-go conditions and scope flex triggers as a launch discipline. The gtm-and-growth spoke has a "Removed" note preserving the core principle ("experience of meeting Evryn never gets compromised") but the *pattern itself* (codified triggers that reshape scope rather than cancel launch) is not captured as a reusable discipline. → gtm-and-growth spoke or build doc (as a launch readiness pattern)
 
 ## Technical Milestones & Build Cadence / Where We Are Now (lines 1163-1222)
 - Stale timelines — not flagged.
@@ -54,7 +54,7 @@
 
 ## Messaging / Outreach / Referrals / Segment Alignment (lines 1231-1407)
 - Outreach details (PR strategy, film festivals, forums, influencer plan, ad spend) — gtm-and-growth spoke correctly has "Removed" notes pointing back to MP. No gap.
-- **Gap:** StartEngine seeding strategy — "$50K from friendly sources for social proof" and the narrative control rationale ("keeping it within family of users, we control the narrative"). Not captured. → business-model spoke (capital strategy) or gtm-and-growth spoke
+- **Gap:** StartEngine seeding strategy (line 1364) — "$50K from friendly sources for social proof" and the narrative control rationale ("keeping it within family of users, we control the narrative"). Not captured. → business-model spoke (capital strategy) or gtm-and-growth spoke
 - **Gap:** Segment-to-avatar mapping table (lines 1384-1401) — the detailed mapping of market segments (Film Creators, Disillusioned Daters, Network-Burnout Professionals, Creative Collaborators, Gig-Weary Seekers) to financial model avatars with strategic GTM roles. Business-model spoke has the avatars but not this mapping. → business-model spoke or gtm-and-growth spoke
 - **Gap:** "Precision-targeted belief ladders, calibrated to the jobs these users actually hired their current platforms to do" (line 1403) — sharp framing of the JTBD approach to growth. Not captured. → gtm-and-growth spoke
 
@@ -69,7 +69,7 @@
 ## Technical Architecture (lines 1674-2000)
 - **Gap:** "Five imperatives" checklist (lines 1677-1686) — Trusted Intelligence, Attuned Presence, Resonant Matching, Continuous Learning, Structural Safety — crisp list of what the system must deliver. Not captured as a list in any current doc. → technical-vision spoke or ARCHITECTURE.md
 - **Gap:** "Five critical conditions" (lines 1690-1703) — structural requirements that, if missed, the system breaks (network density, high-fidelity user understanding, real-time memory + consent-aware logic, trust graph integrity, system stability under load). Not captured as a checklist. → technical-vision spoke
-- **Gap:** Client interface — texting-style chat with streaming in bursts, interrupt gracefully halting rendering, partial thread recovery, "Trust & Account" page for ToS/billing/data management. → user-experience spoke
+- **Gap:** Client interface (lines 1787-1795) — texting-style chat with streaming in bursts, interrupt gracefully halting rendering, partial thread recovery, "Trust & Account" page for ToS/billing/data management. → user-experience spoke
 - **Gap:** "Focused Mode" vs "Open Door" notification setting for user-user conversations (line 1803). → user-experience spoke
 - **Gap:** Training Data Pipeline (lines 1884-1886) — periodic aggregation of anonymized user profile snapshots + behavior metadata + match outcomes into training datasets for model tuning. Not captured. → technical-vision spoke (How Evryn Learns)
 - **Gap:** Consent-based growth retargeting cookie for incomplete onboardings (line 1936-1937). → technical-vision spoke or gtm-and-growth spoke
@@ -111,7 +111,7 @@
 
 ## Appendix: Terms of Service (lines 3036-3101)
 - Trust Mirror — dropped per ADR-008. Not a gap.
-- **Gap:** ToS provisions as reusable legal language: "Right to withhold matching," "No guaranteed access or earnings," "Referral rewards are conditional," "Evryn Credit is not cash." Not captured in any current doc. → bizops-and-tooling spoke (legal section) or a future Terms of Service draft
+- **Gap:** ToS provisions as reusable legal language (lines 3054-3064): "Right to withhold matching," "No guaranteed access or earnings," "Referral rewards are conditional," "Evryn Credit is not cash." Not captured in any current doc. → bizops-and-tooling spoke (legal section) or a future Terms of Service draft
 - **Gap:** StartEngine compliance framing — explicitly structured for Reg CF/SEC, GDPR/CCPA profiling laws, FTC standards. The reasoning for how investment invitations avoid regulatory issues (lines 3082-3101). Not captured. → bizops-and-tooling spoke (fundraising section) or legal docs
 
 ## Appendix: Tools & Svcs for BizOps (lines 3104-3210)

@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-20T17:38:00-08:00*
+*Last updated: 2026-02-20T20:52:00-08:00*
 
 ---
 
@@ -18,7 +18,8 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Hub restructuring — COMPLETE.** Hub + 7 spokes written, all CLAUDE.md files restructured (AC/DC identities, hard-stop redirects), edit-approval disclaimers on 18 files, MPR frozen. V2.3 sanity check next (dedicated AC session).
+- **Hub restructuring — COMPLETE.** Hub + 7 spokes written, all CLAUDE.md files restructured (AC/DC identities, hard-stop redirects), edit-approval disclaimers on 18 files, MPR frozen. V2.3 sanity check COMPLETE (~36 gaps in `docs/working/mp-gap-analysis.md`).
+- **Spoke integration pass** — Integrate high-priority gaps from MP v2.3 gap analysis into spokes. 7 high, 22 medium, 7 low priority. Most are 2-5 line additions.
 - **Pre-Work #10: Build doc rewrite** — ARCHITECTURE.md complete (v4). Next: rewrite BUILD-EVRYN-MVP.md — absorb sources, fix terminology, update schema. Absorption notes at `evryn-backend/docs/historical/build-doc-absorption-notes.md`.
 - **Pre-Work #6: Write Evryn's triage system prompt** — After #10. v0.1 patterns captured in `evryn-backend/docs/ARCHITECTURE.md` (Onboarding Patterns section). Also creates Evryn's company context module.
 - **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. After #10.
@@ -27,7 +28,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## Active Projects
 
-- **_evryn-meta** — Hub restructuring complete. ADR-008 written. Legal questionnaire sent to Fenwick. Trusted partner briefing verified against spokes. Questionnaire cross-referenced against internal docs (gaps routed to absorption notes).
+- **_evryn-meta** — Hub restructuring complete. MP v2.3 gap analysis written; spoke integration pending. ADR-008 written. Legal questionnaire sent to Fenwick. Trusted partner briefing verified against spokes. Questionnaire cross-referenced against internal docs (gaps routed to absorption notes).
 - **evryn-backend** — ARCHITECTURE.md created (v4). BUILD-EVRYN-MVP.md updated. Build doc rewrite is next.
 - **evryn-team-agents** — PAUSED. Clean pause state. CLAUDE.md updated (hard stop + runtime context).
 - **evryn-dev-workspace** — DC's home repo. Identity updated (reading order, Diataxis, auto-memory hygiene, edit-approval).
