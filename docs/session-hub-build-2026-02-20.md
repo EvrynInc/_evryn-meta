@@ -29,6 +29,8 @@ All corrections from recent work (clarifications doc, legal questionnaire) were 
 - **evryn-website** restructured — build context in `docs/ARCHITECTURE.md`, CLAUDE.md is hard stop
 - **Auto-memory trimmed** (removed items now captured in persistent docs)
 - **Session doc trimmed** (294 → 95 lines, now further updated)
+- **doc-ownership.md** restructured for Hub structure (7 spokes, per-repo tables, updated CLAUDE.md descriptions)
+- **Legal clarifications** flow-through status added — most spoke-captured, technical flow-through pending Pre-Work #10/#6
 
 ---
 

@@ -13,6 +13,8 @@
 - DC CLAUDE.md updated: reading order, Diataxis, auto-memory hygiene, redundancy cleanup, Build Priorities restored
 - DC redirects added to evryn-backend and evryn-team-agents CLAUDE.md (hard stop + runtime agent context)
 - Auto-memory trimmed (removed items now captured in persistent docs)
+- doc-ownership.md restructured: added 7 spokes, split by repo, updated CLAUDE.md descriptions, added evryn-website + evryn-dev-workspace
+- Legal clarifications: added flow-through status section — most items spoke-captured, technical flow-through pending Pre-Work #10/#6
 - Session doc trimmed (294 → 95 lines)
 - Hub header rewritten: edit-approval on own line, spoke loading guidance in header, "Additional References" with maintenance note (cut items already linked inline)
 - Link convention established: repo-root-relative within-repo, sibling-repo for cross-repo. No `../` paths. Works from any clone.

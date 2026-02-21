@@ -23,7 +23,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 - **Pre-Work #6: Write Evryn's triage system prompt** — After #10. v0.1 patterns captured in `evryn-backend/docs/ARCHITECTURE.md` (Onboarding Patterns section). Also creates Evryn's company context module.
 - **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. After #10.
 - **Legal: Privacy & Terms questionnaire** — Sent to Fenwick. They'll start next week.
-- **Legal clarifications → system docs** — `docs/legal/clarifications-for-system-docs.md` has 16 items. Many resolved during Hub restructuring; remainder needs a dedicated pass.
+- **Legal clarifications → system docs** — `docs/legal/clarifications-for-system-docs.md` has flow-through status section. Most items spoke-captured; technical flow-through (ARCHITECTURE.md, BUILD doc, system prompt) will resolve during Pre-Work #10 and #6. Two items still need decisions (gatekeeper rules, safety imprint mechanism).
 
 ## Active Projects
 
