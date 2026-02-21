@@ -6,6 +6,14 @@
 
 ## 2026-02-20
 
+- Hub restructuring COMPLETE — all content, identity, disclaimers, and MPR freeze done. Justin review pass pending.
+- Edit-approval disclaimers added to 18 source-of-truth files across 3 repos
+- MPR header frozen: both v2.3 and condensation marked fully superseded by Hub + spokes
+- AC CLAUDE.md updated: edit-approval rule (compression reframe), auto-memory hygiene, runtime CLAUDE.md ownership, glossary line
+- DC CLAUDE.md updated: reading order, Diataxis, auto-memory hygiene, redundancy cleanup, Build Priorities restored
+- DC redirects added to evryn-backend and evryn-team-agents CLAUDE.md (hard stop + runtime agent context)
+- Auto-memory trimmed (removed items now captured in persistent docs)
+- Session doc trimmed (294 → 95 lines)
 - Hub header rewritten: edit-approval on own line, spoke loading guidance in header, "Additional References" with maintenance note (cut items already linked inline)
 - Link convention established: repo-root-relative within-repo, sibling-repo for cross-repo. No `../` paths. Works from any clone.
 - Updated all 15 roadmap.md references across 4 repos (`docs/roadmap.md` → `docs/hub/roadmap.md`)
