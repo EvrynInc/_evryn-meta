@@ -28,6 +28,8 @@ A minimal "Trust & Account" page provides direct access to Terms of Service, Pri
 
 **Design principle: present but not pressing.** Features should never feel surprising when you discover them or frustrating when you need them. Before a feature is relevant, it can appear in a muted or inactive state with enough context that users understand the system's shape. Once relevant, it's always one tap away — easy to find the moment you need it, but never tripping over it. The primary experience is always the conversation with Evryn; everything else is infrastructure she makes available when the moment is right.
 
+*The five system imperatives that drive these UX principles — Trusted Intelligence, Attuned Presence, Resonant Matching, Continuous Learning, Structural Safety — are defined in the [technical-vision spoke](technical-vision.md) (What the System Must Deliver).*
+
 ---
 
 ## Onboarding

@@ -6,6 +6,30 @@
 
 ---
 
+## What the System Must Deliver
+
+**Five imperatives** — what the system must deliver to make the relationship feel genuine, safe, and worth returning to:
+
+1. **Trusted Intelligence** — understand users quickly, speak with emotional precision, protect privacy by design. Interpret nuance, honor consent, align guidance with user values.
+2. **Attuned Presence** — feel *with* the user. Track their journey, remember what matters, know when to engage or hold space. Not always active, but always aware.
+3. **Resonant Matching** — introduce people who feel uniquely right and worth paying for. Deep understanding, real constraint handling, judgment calls that earn belief.
+4. **Continuous Learning** — improve with every conversation, every match, every outcome. The model of each user should get sharper over time.
+5. **Structural Safety** — protect users from harm, deception, and noise. Filter out what doesn't belong. Maintain a space where trust compounds.
+
+**Five critical conditions** — structural requirements that, if missed, break the system:
+
+1. **Ecosystem-level network density** — minimum viable density within key interaction zones (e.g., particular clusters within LA film). Sparse networks = failed matches = belief collapse.
+2. **High-fidelity user understanding** — deep conversational intake, behavioral signal extraction, and emotional calibration from day one. Evryn can't match well if users aren't richly profiled.
+3. **Real-time memory + consent-aware logic** — remember what matters, forget what doesn't, respect privacy and consent. Without memory scaffolding, Evryn becomes generic. Without consent scaffolding, she becomes unsafe.
+4. **Trust graph integrity** — trust signals must be consistent, protected, and impossible to bypass. If bad actors can reset or manipulate identity, the entire safety layer collapses.
+5. **System stability under load** — when users hit their first "magic moment," they're most likely to share. Infrastructure, queueing, and load management must be rock-solid during spikes.
+
+If these five conditions hold, everything else can iterate. If they don't, no amount of charm or polish will save it.
+
+*These imperatives and conditions also appear at build altitude in `evryn-backend/docs/ARCHITECTURE.md`, where they inform specific v0.2 design decisions. For how they manifest in user-facing experience, see the [user-experience spoke](user-experience.md).*
+
+---
+
 ## Three Brains (Detailed)
 
 Evryn's intelligence is conceptualized as three interlocking systems. For MVP (v0.2), all three collapse into a single agent. At scale, they separate.
@@ -73,6 +97,30 @@ Users are represented as adaptive multi-dimensional embeddings that capture tone
 
 Traditional platforms optimize for superficial compatibility. Evryn's model recognizes that sometimes people grow, adapt, and surprise each other — especially when deep resonance and the conditions for trust and curiosity are right. She scouts for resonance ("does this person call out something real in you?") and maps growth vectors ("is this someone who helps you become who you truly want to become?"). She doesn't help you "settle" — she helps you more deeply understand what you want and need.
 
+### Cross-Domain Matching Intelligence
+
+Evryn maintains a holistic understanding of each user, but matching happens through intent-specific projections. For a romantic match, for example, professional credentials are mostly de-emphasized — but not excluded, because for just the right person, a shared niche skill or unexpected interest might be the connection point. The system constructs sub-profiles tuned to each intent: what to emphasize, what to de-emphasize, what to surface only when confidence is high.
+
+**Open design question:** Whether to also match full personas across intents (catching unexpected resonance at the cost of noise), or to rely on intent-specific projections with cross-domain checks only when confidence clears a threshold. The answer likely evolves as the matching engine matures — start with intent-specific projections, observe what the full-persona space reveals, and calibrate.
+
+Four design principles govern this architecture regardless of approach:
+1. **Model clarity** — matching logic stays focused and legible per domain
+2. **Data hygiene** — signals don't bleed across domains without strong evidence
+3. **Cognitive coherence** — Evryn's reasoning stays consistent even navigating overlapping needs
+4. **User control** — she flags when she's making a cross-domain leap
+
+We call this principle **coherence-calibrated modularity** — cross-domain intelligence without fracturing the user's experience of Evryn or obscuring the rationale behind her recommendations.
+
+### Dynamic Weight Adjustment
+
+Parts of the matching model can be fine-tuned based on emerging behavioral trends — if a shift in user behavior is detected, match scoring adjusts to reflect it. These adjustments are:
+- **Localized** (not global retrains)
+- **Reversible**
+- **Personalized**
+- **Bounded by safety constraints**
+
+Initially, weight adjustments are human-reviewed and human-applied — the system surfaces the data, the team makes the call. As confidence in the calibration patterns grows, Evryn may take on more of this autonomously within bounded parameters.
+
 ---
 
 ## Data & Knowledge Layers
@@ -95,6 +143,10 @@ Six conceptual data stores (mapping to actual Supabase tables noted):
 - **Events** — mode changes, introductions, match feedback, reports logged as discrete events tied to pseudonymous IDs
 - **Contextual tagging** — data tagged by connection type (professional, romantic, social) so Evryn weights traits appropriately per context
 
+### Training Data Pipeline
+
+User profile snapshots, behavior metadata, and match outcomes are periodically aggregated into training datasets for model tuning. These are fully anonymized (randomized IDs, no raw PII) before use. This allows Evryn to learn from user behavior while protecting user identity — even during AI evolution.
+
 ---
 
 ## Privacy & Security Architecture
@@ -109,11 +161,36 @@ Six conceptual data stores (mapping to actual Supabase tables noted):
 
 **Data minimization:** Only store what's necessary, only as long as needed. Verification artifacts (ID photos) discarded after confirmation. Users can request deletion, export, or corrections at any time.
 
-**No surveillance infrastructure.** No ad tech, no third-party tracking, no behavioral retargeting, no silent collection. Analytics are in-house, product-focused only.
+**No dark surveillance infrastructure.** Analytics are in-house, product-focused only. The sole purpose of any analytics is to create more value for users. Two constrained exceptions exist within this philosophy:
+
+1. **Consent-based growth support:** If a visitor doesn't complete onboarding, a limited-scope retargeting cookie on the marketing site may invite them back. Isolated to the marketing funnel, never tied to deeper user data.
+2. **User-approved contextual assistance (future):** Users may explicitly opt in to let Evryn observe external digital behavior (browser, calendar, social app usage) to deepen support. Transparent, revocable, designed solely for user benefit.
+
+Even where tracking is used: Evryn-controlled, user-consented, purpose-limited.
 
 **Sensitive data ethics:** Health, trauma, identity info used only when it helps the user and only in ways they understand.
 
 **Information firewalling (architectural principle):** Sensitive data processing happens in pipelines that are structurally separate from the front-facing conversational agent. The conversational Evryn receives only sanitized outputs — she literally never has access to certain raw data. This is security by construction, not by instruction. Even under prompt injection or confusion, she can't leak what she never had.
+
+### Security Monitoring
+
+- API rate limiting and anomaly detection
+- Admin access audit logs
+- Penetration testing and dependency scanning
+- Role-based access for internal tools
+
+### Incident Response
+
+Should a breach occur: isolate, diagnose, contain, notify. Encryption, segmentation, and anonymization reduce real-world exposure — but any incident triggers user notification and resolution workflows. Trust demands it.
+
+### Compliance Alignment
+
+Evryn aligns with GDPR, CCPA, and similar frameworks:
+- User data export, deletion, correction
+- Clear terms and consent mechanisms
+- Appointed DPO function
+
+*Full legal treatment lives in `docs/legal/privacy-and-terms-questionnaire.md` (sent to Fenwick).*
 
 ---
 
@@ -133,6 +210,19 @@ The LLM is wrapped in a disciplined stack, not used as a monolith:
 **Real-time adaptation (inference layer):** As users speak, Evryn infers traits, intentions, tone shifts, and unmet needs. These become metadata tagged to the user profile and matchmaking graph. No explicit feedback needed — just talking teaches her.
 
 **Batch learning (reflection layer):** At intervals, Evryn aggregates match success/failure signals, conversation tone maps, behavioral patterns (ghosting, engagement, response timing). These inform updates to matchmaking logic, conversation strategies, and timing calibration. This is what makes her feel both deeply present and quietly evolving.
+
+### Pre-Training with Simulated Data
+
+At the outset, Evryn's matchmaking logic is pre-trained using simulated data and expert-tagged scenarios — fictional profiles, controlled conversations, and labeled match outcomes. This provides a working baseline before any live data enters the system. As soon as closed beta begins, real user interaction data (under explicit consent) replaces simulation. Even early match attempts — successful or not — generate labeled datapoints for future tuning.
+
+### Model Deployment Discipline
+
+Every model update is treated like a code release:
+- Spot-checked
+- A/B tested
+- Rollback-enabled
+
+If performance degrades, revert immediately. This protects user experience while allowing rapid iteration.
 
 ### Privacy Gateway (Target State)
 
@@ -165,6 +255,18 @@ When confidence is low, Evryn flags it: "I'm going out on a limb here — but I 
 ### Exploratory Matching
 
 When not fully confident but seeing low-risk potential, Evryn may propose tentative introductions. Curiosity as a training tool.
+
+---
+
+## Resilience Design Principles
+
+Three goals govern how Evryn handles pressure:
+
+1. **Fail safely** — degrade thoughtfully, not abruptly
+2. **Recover quickly** — restore service fast, with user-first communication
+3. **Scale with integrity** — grow without degrading trust or experience
+
+*For how Evryn communicates system strain to users, see [user-experience spoke](user-experience.md) (Graceful Degradation).*
 
 ---
 
