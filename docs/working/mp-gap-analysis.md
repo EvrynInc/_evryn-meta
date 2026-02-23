@@ -15,17 +15,17 @@
 - No gaps. Captured in trust-and-safety spoke "The Globally Scalable Honor Economy" section including the culture table and strategic implications.
 
 ## What Evryn is Like / User Interface & Flows (lines 279-424)
-- **Gap:** Chat interface UX details (lines 309-311) — small bubbles, pauses, ability to interrupt, "like texting" — not captured anywhere. → belongs in user-experience spoke (UI Philosophy section)
-- **Gap:** Persistent footer (line 309) with 'Share Evryn', 'Pre-Buy', 'Become an Owner' buttons mentioned as core UI element. Not captured. → user-experience spoke
-- **Gap:** Evryn tags and records info for CRM during onboarding (line 333), captures preferred contact method. Not captured as a mechanic. → user-experience spoke or ARCHITECTURE.md (onboarding data flow)
+- ~~**Gap:** Chat interface UX details (lines 309-311) — small bubbles, pauses, ability to interrupt, "like texting" — not captured anywhere. → belongs in user-experience spoke (UI Philosophy section)~~ ✓ *Integrated into user-experience spoke (Interface Philosophy)*
+- ~~**Gap:** Persistent footer (line 309) with 'Share Evryn', 'Pre-Buy', 'Become an Owner' buttons mentioned as core UI element. Not captured. → user-experience spoke~~ ✓ *Integrated into user-experience spoke (Interface Philosophy)*
+- ~~**Gap:** Evryn tags and records info for CRM during onboarding (line 333), captures preferred contact method. Not captured as a mechanic. → user-experience spoke or ARCHITECTURE.md (onboarding data flow)~~ ✓ *Integrated into user-experience spoke (Onboarding — CRM capture)*
 - ~~**Gap:** Growth ask timing (lines 337-355) — Evryn chooses the right emotional moment to invite users to share/pre-buy/invest; three specific CTAs (share, pre-purchase with 30% credit at line 340, become an owner via StartEngine). The pre-purchase credit mechanic (30%) is not in the business-model spoke. → business-model spoke (referral/pre-purchase section)~~ ✓ *Pre-purchase credit bonus integrated into business-model spoke (Evryn Wallet). Growth ask timing integrated into gtm-and-growth spoke (Growth Mechanics).*
-- **Gap:** After-care detail (line 416) — Evryn continues thinking about next connections and keeps user in the loop ("so you don't ever think she's forgotten you, and so that when she arrives with a new connection, you're very excited"). This proactive anticipation-building between matches is not explicitly captured. → user-experience spoke (After Care section)
+- ~~**Gap:** After-care detail (line 416) — Evryn continues thinking about next connections and keeps user in the loop ("so you don't ever think she's forgotten you, and so that when she arrives with a new connection, you're very excited"). This proactive anticipation-building between matches is not explicitly captured. → user-experience spoke (After Care section)~~ ✓ *Integrated into user-experience spoke (After Care)*
 
 ## Additional UX Details (lines 418-700)
-- **Gap:** "Revealing What's Already There" / Trust Mirror concept (lines 564-599) — the Hub notes it was dropped (ADR-008), but the *latent truth discovery* mechanic IS captured in user-experience spoke. However, the "Would she have connected me to them?" mechanic for existing non-Evryn contacts (lines 564-581) is a separate concept from latent truth discovery. It was presumably dropped with Trust Mirror, but if any part of it survives, it's not captured. → verify with ADR-008; if fully dropped, no gap
-- **Gap:** Shared conversations — "two connected users can invite Evryn to be present" is in user-experience spoke. But the MP's detail about connection summary cards (line 397-398: "short summary of the connection: who they are, why Evryn connected you") with user-editable notes is not captured. → user-experience spoke (Connection Conversations section)
+- ~~**Gap:** "Revealing What's Already There" / Trust Mirror concept (lines 564-599) — the Hub notes it was dropped (ADR-008), but the *latent truth discovery* mechanic IS captured in user-experience spoke. However, the "Would she have connected me to them?" mechanic for existing non-Evryn contacts (lines 564-581) is a separate concept from latent truth discovery. It was presumably dropped with Trust Mirror, but if any part of it survives, it's not captured. → verify with ADR-008; if fully dropped, no gap~~ ✓ *Verified against ADR-008: Trust Mirror fully dropped (lines 564-581 = Trust Mirror). Latent Truth Discovery (lines 583-599) already captured in user-experience spoke. No gap.*
+- ~~**Gap:** Shared conversations — "two connected users can invite Evryn to be present" is in user-experience spoke. But the MP's detail about connection summary cards (line 397-398: "short summary of the connection: who they are, why Evryn connected you") with user-editable notes is not captured. → user-experience spoke (Connection Conversations section)~~ ✓ *Integrated into user-experience spoke (Connection Conversations — summary cards)*
 - ~~**Gap:** Legal clarity section (lines 683-701) — explicit user disclosures ("no guarantees of a match", "system doesn't owe you visibility, it owes the community safety") appear in Terms of Service language. Not captured in any current doc. → trust-and-safety spoke or bizops-and-tooling spoke (legal section), or flagged for Fenwick work~~ ✓ *Integrated into trust-and-safety spoke (User Disclosures)*
-- **Gap:** Peer-to-peer wallet detail — "Evryn Credit cannot be used to pay other users" (Cash only for P2P) is captured in business-model spoke. But the wallet visibility detail (lines 648-649: "wallet remains visible at all times and acts as a subtle cue of user engagement and future connection potential") is not. Minor UX point. → user-experience spoke
+- ~~**Gap:** Peer-to-peer wallet detail — "Evryn Credit cannot be used to pay other users" (Cash only for P2P) is captured in business-model spoke. But the wallet visibility detail (lines 648-649: "wallet remains visible at all times and acts as a subtle cue of user engagement and future connection potential") is not. Minor UX point. → user-experience spoke~~ ✓ *Integrated into user-experience spoke (Progressive Interface Reveal — wallet visibility on Trust & Account page with muted pre-activation state)*
 - ~~**Gap:** Evryn as main spokesperson on marketing site (lines 1244-1248) — "she has high-level training in ethical, value-based sales techniques" for converting prospects. The "always-on channel" where users can voice dreams/concerns and see she's listening. Concept exists in Hub ("growth is conversationally embedded") but the sales technique angle is not captured. → gtm-and-growth spoke or Evryn CLAUDE.md (when built)~~ ✓ *Integrated into gtm-and-growth spoke (Growth Mechanics — "Growth is conversationally embedded")*
 
 ## Revenue Model & Monetization (lines 705-848)
@@ -67,10 +67,10 @@
 - Well captured in gtm-and-growth spoke. No gaps beyond what's already noted with "see original MP lines" references.
 
 ## Technical Architecture (lines 1674-2000)
-- **Gap:** "Five imperatives" checklist (lines 1677-1686) — Trusted Intelligence, Attuned Presence, Resonant Matching, Continuous Learning, Structural Safety — crisp list of what the system must deliver. Not captured as a list in any current doc. → technical-vision spoke or ARCHITECTURE.md
+- **Gap:** "Five imperatives" checklist (lines 1677-1686) — Trusted Intelligence, Attuned Presence, Resonant Matching, Continuous Learning, Structural Safety — crisp list of what the system must deliver. Not captured as a list in any current doc. → technical-vision spoke + `evryn-backend/docs/ARCHITECTURE.md`
 - **Gap:** "Five critical conditions" (lines 1690-1703) — structural requirements that, if missed, the system breaks (network density, high-fidelity user understanding, real-time memory + consent-aware logic, trust graph integrity, system stability under load). Not captured as a checklist. → technical-vision spoke
-- **Gap:** Client interface (lines 1787-1795) — texting-style chat with streaming in bursts, interrupt gracefully halting rendering, partial thread recovery, "Trust & Account" page for ToS/billing/data management. → user-experience spoke
-- **Gap:** "Focused Mode" vs "Open Door" notification setting for user-user conversations (line 1803). → user-experience spoke
+- ~~**Gap:** Client interface (lines 1787-1795) — texting-style chat with streaming in bursts, interrupt gracefully halting rendering, partial thread recovery, "Trust & Account" page for ToS/billing/data management. → user-experience spoke~~ ✓ *Integrated into user-experience spoke (Interface Philosophy — chat UX streaming, Trust & Account page)*
+- ~~**Gap:** "Focused Mode" vs "Open Door" notification setting for user-user conversations (line 1803). → user-experience spoke~~ ✓ *Integrated into user-experience spoke (Connection Conversations — notification control)*
 - **Gap:** Training Data Pipeline (lines 1884-1886) — periodic aggregation of anonymized user profile snapshots + behavior metadata + match outcomes into training datasets for model tuning. Not captured. → technical-vision spoke (How Evryn Learns)
 - **Gap:** Consent-based growth retargeting cookie for incomplete onboardings (line 1936-1937). → technical-vision spoke or gtm-and-growth spoke
 - **Gap:** User-approved contextual assistance — opt-in to let Evryn observe external digital behavior (calendar, social app usage) for deeper support (line 1937). Future concept, not captured. → technical-vision spoke (future capabilities) or long-term-vision spoke
@@ -93,7 +93,7 @@
 
 ## Scalability, Resilience & Disaster Recovery (lines 2614-2694)
 - Infrastructure details largely stale (pre-AI-pivot). Not flagging specifics.
-- **Gap:** Graceful degradation UX messaging — "I've got a lot going on right now, but I promise I'll get back to you shortly" and "Something's gone a bit sideways on my end" (lines 2633-2636, 2670-2674). These are UX principles for how Evryn communicates system issues to users. Not captured. → user-experience spoke or ARCHITECTURE.md (operational patterns)
+- ~~**Gap:** Graceful degradation UX messaging — "I've got a lot going on right now, but I promise I'll get back to you shortly" and "Something's gone a bit sideways on my end" (lines 2633-2636, 2670-2674). These are UX principles for how Evryn communicates system issues to users. Not captured. → user-experience spoke or ARCHITECTURE.md (operational patterns)~~ ✓ *Integrated into user-experience spoke (Graceful Degradation)*
 - **Gap:** Resilience design principles — "Fail safely, recover quickly, scale with integrity" as a named triad (lines 2619-2622). Not captured as a principle set. → technical-vision spoke
 
 ## Future Directions & Roadmap (lines 2696-2886)
@@ -135,17 +135,17 @@
 7. ~~"AI to detect AI" — deepfake and inauthenticity detection as an explicit capability (trust-and-safety spoke)~~ ✓ *Integrated*
 
 **Medium priority (useful detail or sharper phrasing for existing concepts):**
-8. Chat UX details — small bubbles, pauses, interrupt, "like texting" (user-experience spoke)
-9. "Focused Mode" vs "Open Door" notification setting (user-experience spoke)
+8. ~~Chat UX details — small bubbles, pauses, interrupt, "like texting" (user-experience spoke)~~ ✓ *Integrated into user-experience spoke (Interface Philosophy)*
+9. ~~"Focused Mode" vs "Open Door" notification setting (user-experience spoke)~~ ✓ *Integrated into user-experience spoke (Connection Conversations)*
 10. ~~Pre-purchase 30% credit mechanic (business-model spoke)~~ ✓ *Integrated into business-model spoke (Evryn Wallet — pre-purchase credit bonus)*
-11. Wallet visibility as engagement cue (user-experience spoke)
+11. ~~Wallet visibility as engagement cue (user-experience spoke)~~ ✓ *Integrated into user-experience spoke (Progressive Interface Reveal — wallet on Trust & Account page)*
 12. ~~Growth ask timing — three specific CTAs and emotional moment selection (gtm-and-growth spoke)~~ ✓ *Integrated into gtm-and-growth spoke (Growth Mechanics)*
 13. ~~StartEngine seeding strategy — $50K social proof + narrative control (business-model spoke)~~ ✓ *Dropped — leaner capital path now*
 14. v0.4 Wizard-of-Oz mechanic — two candidates per match for faster learning (Hub or build doc)
 15. ~~"Precision-targeted belief ladders" / JTBD framing (gtm-and-growth spoke)~~ ✓ *Integrated into gtm-and-growth spoke (Segment-to-Avatar Mapping)*
 16. ~~Follow-through as connective tissue for film industry (gtm-and-growth spoke)~~ ✓ *Integrated into both business-model spoke (Three Revenue Streams) and gtm-and-growth spoke (LA Film Industry)*
 17. ~~Referral decay mitigation — same warm welcome for Nth-generation referrals (gtm-and-growth spoke)~~ ✓ *Integrated into gtm-and-growth spoke (Referral Mechanics)*
-18. Graceful degradation UX messages (user-experience spoke)
+18. ~~Graceful degradation UX messages (user-experience spoke)~~ ✓ *Integrated into user-experience spoke (Graceful Degradation)*
 19. Dynamic Weight Adjustment in matching (technical-vision spoke)
 20. Model deployment discipline (technical-vision spoke)
 21. Training Data Pipeline / simulated pre-training (technical-vision spoke)
@@ -157,11 +157,9 @@
 27. ~~Rejected match history in Trust Core data list (long-term-vision spoke)~~ ✓ *Integrated*
 28. ~~Scope flex trigger pattern as reusable discipline (gtm-and-growth or build doc)~~ ✓ *Integrated into gtm-and-growth spoke (Launch Readiness Discipline)*
 29. ~~"When the Magic Starts" projection methodology (business-model spoke)~~ ✓ *Integrated into business-model spoke (Financial Model Assumptions — Match quality progression modeling)*
-
-**Low priority (minor UX detail, phrasing improvements, or very future-looking):**
-30. Connection summary cards with user-editable notes (user-experience spoke)
+30. ~~Connection summary cards with user-editable notes (user-experience spoke)~~ ✓ *Integrated into user-experience spoke (Connection Conversations)*
 31. ~~Legal clarity / ToS disclosure language for users (trust-and-safety spoke)~~ ✓ *Integrated*
-32. After-care anticipation-building detail (user-experience spoke)
+32. ~~After-care anticipation-building detail (user-experience spoke)~~ ✓ *Integrated into user-experience spoke (After Care)*
 33. ~~Evryn as ethical salesperson on marketing site (gtm-and-growth spoke)~~ ✓ *Integrated into gtm-and-growth spoke (Growth Mechanics)*
 34. ~~"Rhizomatic growth" metaphor — sharper than current phrasing (gtm-and-growth spoke)~~ ✓ *Integrated into gtm-and-growth spoke (Growth Mechanics opening)*
 35. Consent-based retargeting cookie / user-approved contextual assistance (technical-vision spoke)
@@ -172,4 +170,3 @@
 The high-priority gaps should be addressed in the next spoke maintenance pass. Most are additions of 2-5 lines to existing sections. The "coherence-calibrated modularity" concept is the largest single gap — it's a genuine architectural idea that shapes how multi-domain matching works and has no home in current docs. The risk gaps (#4, #6, #7) are quick additions to existing lists. The segment-to-avatar mapping (#3) is a table that could go in either the business-model or gtm-and-growth spoke.
 
 Medium-priority items can be batched into a "spoke enrichment" pass. Low-priority items can wait until relevant sections are being worked on anyway.
-
