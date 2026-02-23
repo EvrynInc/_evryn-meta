@@ -18,6 +18,18 @@ Evryn is active, not passive. She starts conversations. She thinks about you in 
 
 ---
 
+## Interface Philosophy
+
+The interface is like texting with Evryn: thoughts come in small bubbles, she pauses, you can interrupt her. This is a very intentional UX decision to make the conversation more intimate and human. Messages are streamed in bursts and rendered incrementally — if a user interrupts, ongoing rendering halts gracefully, and the system tracks partial threads for later recovery.
+
+Until voice capability is built, the main interface is a chat pane with a subtle persistent footer carrying growth actions ('Share Evryn', 'Pre-Buy', 'Become an Owner'). All other functionality — customer service, referrals, pausing matchmaking — surfaces conversationally within the chat.
+
+A minimal "Trust & Account" page provides direct access to Terms of Service, Privacy Policy, billing history, saved payment methods, wallet, and data management tools (export, delete) — the small set of things that need a page, not a conversation.
+
+**Design principle: present but not pressing.** Features should never feel surprising when you discover them or frustrating when you need them. Before a feature is relevant, it can appear in a muted or inactive state with enough context that users understand the system's shape. Once relevant, it's always one tap away — easy to find the moment you need it, but never tripping over it. The primary experience is always the conversation with Evryn; everything else is infrastructure she makes available when the moment is right.
+
+---
+
 ## Onboarding
 
 No sign-ups, no forms — just a conversation with Evryn. She's delighted you're here and curious about you. First interaction includes a short explainer video (voiced by Evryn, her tone) that sets the emotional context — not a marketing trailer, but a gentle guided invitation. Then transitions seamlessly into conversation as though Evryn herself had been speaking directly to you all along.
@@ -27,6 +39,8 @@ Early in the relationship, Evryn tells you how she's different: trust-based spac
 **"The first meeting should feel like a good first date"** — engaging, emotionally resonant, full of potential. You leave curious, seen, open.
 
 **Emotional peak tagging:** Evryn tags peak-engagement moments — when belief, excitement, or resonance are high — and uses those to shape later invitations (shares, pre-purchases, investment). Not as transactions — as story beats. The moment of conversion isn't a CTA. It's a payoff.
+
+**CRM capture:** Evryn records information shared during onboarding, tags it for CRM purposes, and captures a preferred way to keep in touch — email, phone, whatever the user prefers.
 
 **Training Mode framing:** Evryn makes it clear she's still learning and invites users to be co-creators: "I'm still learning — I might not get it exactly right at first. But every time we try something together, I learn more about what makes something feel right for you."
 
@@ -67,15 +81,18 @@ When Evryn finds a match:
 
 After a connection conversation, users return to Evryn's main interface. She greets them: "Welcome back. How did that feel?" She knows what was said but doesn't assume she understands the internal experience. Follows up a day or two later. This produces high-quality feedback for calibration.
 
+All the while, Evryn is continuing to think about what connections to offer next — and she keeps the user in the loop. This serves two purposes: so they never think she's forgotten them, and so that when she arrives with a new connection, they're genuinely excited. This proactive anticipation-building between matches deepens trust and keeps engagement organic.
+
 ---
 
 ## Progressive Interface Reveal
 
 At first, Evryn is just a conversation — no dashboards, feeds, or buttons. Features emerge conversationally when appropriate:
 - Connections screen appears after first match
-- Wallet shows up when a payment is in play
 - Share/Pre-Buy/Invest buttons arrive at the right emotional moment
 - Feature access is user-specific — what one person sees may not be offered to another
+
+**Wallet visibility:** Before activation, the wallet appears on the Trust & Account page in a muted/inactive state with a brief contextual note (e.g., "Your wallet activates when your first connection is in play"). Once active, it's accessible from the same page — easy to find when you need it, never cluttering the primary experience.
 
 This keeps the experience emotionally clean and conversational. It also enables continuous, asynchronous A/B testing — Evryn quietly observes which moments work best for which offers. "Evryn doesn't need to announce a feature. She just starts offering it — to the people who are ready."
 
@@ -87,6 +104,9 @@ This keeps the experience emotionally clean and conversational. It also enables 
 - 3-second send delay on messages (cancel window)
 - Evryn stays present but gives room — "like a matchmaker who gives you room to talk but only closes the door part-way"
 - After connecting, users can choose when/if to share contact info (can remain safely anonymous, with Evryn having vouched for each)
+- Each connection includes a summary card: who they are, why Evryn connected you. Evryn keeps this updated as the relationship evolves, and users can add their own notes.
+
+**Notification control:** When in a conversation with another user, notifications from other threads appear as contextual, color-coded alerts. Users can control this via a "Focused Mode" vs "Open Door" setting — Focused suppresses notifications during active conversations, Open Door lets them through.
 
 ### Making Every Connection Healthier
 
@@ -123,6 +143,18 @@ Someone you met as a friend might now be a perfect hire. Evryn can surface new *
 ## Multi-Channel
 
 Evryn's interface extends to email, SMS, and eventually other channels. All communications pull into the chat stream for continuity. Each message includes a source tag (email, SMS, in-app) but is rendered inline. Single conversational memory regardless of channel.
+
+---
+
+## Graceful Degradation
+
+When system capacity is strained, Evryn doesn't crash or go silent — she communicates in character:
+
+*"I've got a lot going on right now, but I promise I'll get back to you shortly."*
+
+*"Something's gone a bit sideways on my end — just taking a short pause. I'll follow up when things are stable."*
+
+And she does — right where the conversation left off. This preserves the relationship even under strain.
 
 ---
 
