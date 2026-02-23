@@ -6,6 +6,17 @@
 
 ## 2026-02-23
 
+- **Spoke integration pass COMPLETE** — 34 gaps integrated, 1 dropped (StartEngine seeding) across 7 spokes + ARCHITECTURE.md. Gap analysis file deleted (recoverable from git).
+- business-model spoke: pre-purchase credit bonus (targeting 30%), match types & value mapping, working capital with structural note (completed transactions, not stored value), sensitivity analysis framing (replaces stale Low/Medium/High), match quality progression, follow-through, segment-to-avatar cross-reference. StartEngine seeding dropped (leaner path).
+- gtm-and-growth spoke: segment-to-avatar mapping table, precision-targeted belief ladders, growth ask timing (emotional intelligence framing), follow-through as film differentiator, referral chain resilience, rhizomatic growth metaphor, ethical salesperson ("the close is the relationship"), launch readiness discipline (sacred launch conditions + scope flex triggers)
+- user-experience spoke: Interface Philosophy section (chat UX, persistent footer, Trust & Account page), "present but not pressing" design principle, CRM capture, after-care anticipation-building, connection summary cards, wallet visibility (muted pre-activation on Trust & Account page), Focused/Open Door notification control, graceful degradation. Trust Mirror verified fully dropped per ADR-008. Cross-link to five imperatives added.
+- technical-vision spoke: "What the System Must Deliver" section (five imperatives + five critical conditions), cross-domain matching intelligence (coherence-calibrated modularity — evolved to intent-specific projections from holistic user understanding, open design question noted), dynamic weight adjustment (human-first framing), training data pipeline, security monitoring, incident response, compliance alignment, "no dark surveillance" with two constrained exceptions, model deployment discipline, pre-training with simulated data, resilience design triad
+- ARCHITECTURE.md (evryn-backend): Design Drivers section (five imperatives at build altitude), Matching Calibration planned section (wizard-of-oz two-candidate offers to users for comparative training signal + operator reasoning review, schema implications for earlier versions)
+- Fenwick questionnaire delta list: expanded from 3 to 5 items (added training data pipeline, incident response/breach notification). Justin captured into email draft.
+- Trusted Partner Briefing v1.4 marked as "fully ingested"
+- current-state.md: clarifications doc stale reference replaced with specific open design decisions (gatekeeper agreement terms, safety imprint mechanism)
+
+Previously this session (before context compaction):
 - Spoke integration pass: 11 of ~35 gaps integrated across 3 spokes (long-term-vision, trust-and-safety, BizOps). All 7 high-priority gaps complete.
 - long-term-vision spoke: added "Rejected match history" to Trust Core list, "The AI Can't Deliver" and "Black Box Decisions" risks
 - trust-and-safety spoke: added "Evryn Is a Witness, Not a Mirror" section (with GDPR/EU AI Act implementation note), "Regulatory Alignment" (EU DSA), "User Disclosures", "Preventing Platform Abuse", expanded AI detection in "Detecting Harm and Deception"

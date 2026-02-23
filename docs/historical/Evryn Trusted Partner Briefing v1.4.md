@@ -1,5 +1,7 @@
 # Evryn \- The Trust Layer for Human Connection
 
+This document has been fully ingested.
+
 ***Trusted introductions at scale***
 
 Evryn is your personal AI guide who finds you those people who are ***just the right fit for you****.* No searching, no swiping, no scrolling, no feed \- not even a public profile. You just talk to her, she gets to know you and what you need…and then:

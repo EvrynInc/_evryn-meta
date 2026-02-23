@@ -199,4 +199,9 @@ Always run a system command to get the actual current time before writing any ti
 
 ---
 
+### Cross-Reference Newest Thinking Before Backfilling
+When integrating older content (e.g., Master Plan) into newer structures (Hub spokes), always cross-reference the most recently evolved version of thinking first — such as a legal questionnaire drafted after the source doc, or a conversation where the founder refined the concept. The newer source may have more careful framing, resolved ambiguities, or superseded positions that the older source doesn't reflect. Backfilling without this check risks regressing to stale thinking. Example: the MP's StartEngine emotional-timing framing was superseded by the questionnaire's more careful position; the MP's "context-isolated memory buffers" was superseded by evolved intent-specific-projection thinking.
+
+---
+
 *Add learnings as they emerge. Keep entries concise and actionable.*
