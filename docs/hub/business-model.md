@@ -29,7 +29,7 @@ This is also a trust signal: if someone lowballs consistently, Evryn notices. A 
 ## Three Revenue Streams
 
 1. **Trust-Based Match Payments** — per-connection, user-named price, 100% satisfaction guarantee. Payment = trust signal.
-2. **Post-Match Transactions** — user-to-user payments (via Stripe Connect) for follow-up work, tipping, repeat gigs. Evryn takes a small, trust-aligned commission. She's a relationship steward, not a marketplace.
+2. **Post-Match Transactions** — user-to-user payments (via Stripe Connect) for follow-up work, tipping, repeat gigs. Evryn takes a small, trust-aligned commission. She's a relationship steward, not a marketplace. Introductions aren't enough — follow-through matters. By facilitating payments and re-engagements, Evryn becomes not just the introducer, but the connective tissue for real working relationships. Evryn doesn't vanish after the match.
 3. **Participant-Based Business Access ("Ads Without Ads")** — companies become users. They're introduced only if they're the best fit for what you're asking for. Users can exclude any or all companies. No boosting, no buying visibility. Businesses earn access, they don't buy it. Data stays in Evryn's system — Evryn doesn't hand over user information. Users give explicit per-introduction consent.
 
 ---
@@ -38,7 +38,7 @@ This is also a trust signal: if someone lowballs consistently, Evryn notices. A 
 
 **Stripe handles all monetary transactions.** Evryn never holds, transmits, or has access to user funds.
 
-- **Pre-purchases** are completed transactions (processed through Stripe), not held funds.
+- **Pre-purchases** are completed transactions (processed through Stripe), not held funds. Pre-purchases also serve as working capital — because these are *purchases, not deposits*, the funds belong to Evryn at the point of transaction. Evryn is not storing user value; the user has bought future connections, and the transaction is complete. This gives Evryn capital to provide services before they're delivered without triggering stored-value or custodial regulations.
 - **Peer-to-peer payments** flow through Stripe Connect — Stripe handles the entire payment lifecycle. Evryn takes a small commission.
 - **Evryn Credit** is non-monetary promotional value — like store credit, not a financial instrument. Not withdrawable. Can be used to pay for connections, can be re-gifted. Cannot be used for peer-to-peer payments (Cash only for those).
 
@@ -50,6 +50,8 @@ Users maintain a wallet balance (USD denominated) with three types:
 - **Locked Evryn Credit** — unlocks based on conditions (referral rewards, etc.)
 
 Supports: pre-purchases, microtransactions, tipping, refunds, peer-to-peer payments.
+
+**Pre-purchase credit bonus:** We're targeting a 30% Evryn Credit bonus on pre-purchases — a user who pre-purchases $100 in connections would get $130 in wallet value ($100 Cash + $30 Available Evryn Credit). This rewards early commitment and aligns incentives: users who believe in what's coming get more value for acting on that belief. The exact percentage is not finalized.
 
 ### Refunds & Disputes
 
@@ -80,6 +82,7 @@ Legacy apps extract until users leave. Evryn earns because users stay. "Trust is
 ## Financial Model Assumptions
 
 - **ARPU model:** ~6 successful matches/month × ~$8/match = ~$576 ARPU/year (blended across business + consumer)
+- **Match Types & Value Mapping:** Evryn models match value internally across seven general categories — from casual help to life-changing introductions. Because monetization is moment-based (not subscription-based), there's no simple "conversion rate." Instead, Evryn tracks a blended trust-weighted revenue curve — factoring avatar behavior, payment likelihood, and match type economics.
 - **User archetypes ("avatars"):** Predictive archetypes based on observed behavior, not demographics. Each with unique trust postures and monetization curves:
   - **Seekers** — emotionally primed, looking for meaning. Win their heart → win their loyalty.
   - **Builders** — need trust scaffolding and long-term potential. Respond to vision.
@@ -89,7 +92,9 @@ Legacy apps extract until users leave. Evryn earns because users stay. "Trust is
   - **Torchbearers** — need to feel chosen. Once in, they become firestarters.
   - **Legacy Gatekeepers** — must be invited at the right moment with the right social proof.
   - The long tail: institutions, niche personalities, quiet lurkers — they build the floor.
+  - The segment-to-avatar mapping — linking market segments to financial model avatars and their strategic GTM roles — lives in the [GTM spoke](gtm-and-growth.md).
 - **Network density thresholds:** ~150 = testing; ~300 = early magic; ~500 (diverse roles) = resonant matches common; 800+ = multi-intent matches, quality improves faster than growth
+- **Match quality progression modeling:** Evryn models match quality improvement over time within a dense launch cluster. The framework projects early "shockingly right" matches from high-signal, low-hanging-fruit fits (15-20% within days), rising to meaningful/resonant matches for most active users within two weeks as feedback tunes the model. An average of four near-misses before something lands is built into our expectations — and each refusal is treated as a gift that helps Evryn sharpen her sense of fit. As long as matches feel plausible, not random, belief stays intact and Evryn improves fast. The framework is calibrated to specific launch assumptions (see Financial Model spreadsheet); the principle is that trained, compounding intelligence powered by real-world behavior produces predictable match quality at density.
 
 ---
 
@@ -118,6 +123,8 @@ Evryn uses a trust-filtered market model:
 **Raised to date:** $40K ($15K founder capital + $25K early angel investor).
 
 The founding capital philosophy is **user-led, backed by traditional VC as needed**. The plan had been to pursue a very-carefully-vetted set of angels and VCs, though the approach is being reconsidered in light of the AI-first pivot (dramatically lower burn changes the calculus — see GTM spoke for context). Crowdfunding (via StartEngine, Reg CF) is fueled by user belief, not performance marketing — closing the loop between trust, traction, and growth. StartEngine handles all securities compliance as a pass-through model.
+
+The Financial Model includes detailed sensitivity analysis, testing viability across a range of traction and monetization scenarios — from deliberately conservative stress tests to expected-case projections. Conservative scenarios don't prove upside; they test whether the model survives under real constraint (stalled traction, lagged belief, underdelivered early monetization). The core launch plan reflects actual expectations around user psychology, early avatar mix, and referral velocity, with fallback triggers if key metrics underperform.
 
 ---
 

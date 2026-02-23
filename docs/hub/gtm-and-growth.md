@@ -28,6 +28,7 @@ The plan targets Los Angeles film industry first because:
 - Current tools are woefully inadequate (Facebook threads, job boards, DM chains, referral lists)
 - Justin's extensive reach (78,000+ second-gen contacts)
 - **Industry in transition:** Between film advisor Megan Griffiths and independent research, we're discovering that the film industry is evaporating faster than expected with the rise of AI video tools. This makes Evryn more urgent, not less — film professionals need to (1) find their best connections in a shrinking landscape, and (2) find their *next* opportunities as film work becomes fewer and further between. Evryn helps with both.
+- **Follow-through as differentiator:** In the film industry, introductions aren't enough — follow-through matters. By facilitating payments and re-engagements, Evryn becomes not just the introducer, but the connective tissue for real working relationships. This is a core differentiator at launch.
 - Capturing LA film opens up: rest of LA (everyone is connected to film), rest of the film industry globally, and the entertainment industry megaphone
 
 ---
@@ -66,17 +67,51 @@ Consent framework for channels beyond email (SMS, etc.) needs legal guidance —
 
 ## Growth Mechanics
 
-**Quality over quantity.** Personal outreach and warm introductions, not cold ads. Each invite feels special because it is. Referrals, pre-purchases, and ownership (via crowdfunding) are part of the user journey but never as pressure — only at the right emotional moment.
+The growth model is **rhizomatic** — like the roots of a great tree, spreading strong and unseen until suddenly the canopy is everywhere. Every early user should feel like a co-founder of a mission-driven community.
 
-**Growth is conversationally embedded.** The ideal landing page is "talk to Evryn." She pitches from the user's vantage point while demonstrating value.
+**Quality over quantity.** Personal outreach and warm introductions, not cold ads. Each invite feels special because it is.
+
+**Growth asks are emotionally intelligent.** Evryn uses her emotional intelligence to tag peak-engagement moments — when belief, excitement, or resonance are high — and shapes later invitations to share, pre-purchase (see [business-model spoke](business-model.md) for the credit bonus), or become an owner via StartEngine. Not as transactions, but as story beats. The moment of conversion isn't a CTA — it's a payoff.
+
+**Growth is conversationally embedded.** Evryn and users are our main spokespeople. When people land on the site, they talk to Evryn. She has training in ethical, value-based sales techniques — she demonstrates value and earns attention, but never uses pushy or manipulative tactics. The real close is the relationship — when someone feels seen, heard, and welcomed into Evryn's house, everything else follows naturally: intent, contact info, shares, pre-sales, investment. Since Evryn gets to know each user personally, she has an always-on channel where they can voice their dreams and concerns and see that she's listening.
 
 ### Referral Mechanics
 
 Pre-launch: if you refer someone who becomes a paying customer, Evryn rewards you with Evryn Credit (non-monetary). Credit only unlocks after the referred user completes their first paid connection — rewards tied to real engagement. Post-launch: sharing should reflect belief in the product, not incentives.
 
+**Referral chain resilience:** A known challenge in viral growth is decay across generations — by the 4th or 5th share, interest cools. Evryn mitigates this by ensuring each referred user gets the same warm welcome and context as the referrer did. Her narrative to new signups remains consistent and inspiring, so even someone hearing about it fifth-hand understands the vision they're joining — and feels like it's first-hand, once they meet Evryn. By anchoring on personal connection, meaning, and results (not gimmicks), each new user should feel as compelled to share as the person who invited them.
+
 ### Evangelist Story Loops
 
 When a user has a great experience, Evryn may ask: "Would you want to help others by sharing your story?" Stories appear on user's channels, Evryn's platforms, or woven into onboarding flows. Every story must reflect Evryn's tone: personal, humane, nuanced, emotionally honest. Users retain rights to their stories; licensing language needed in Terms.
+
+---
+
+## Segment-to-Avatar Mapping
+
+Evryn's avatar system (see [business-model spoke](business-model.md)) is modeled directly from observed user pain. Each core market segment maps onto one or more avatars, informing everything from customer acquisition cost to referral lift to match volume per persona.
+
+| Market Segment | Evryn Financial Model Avatars | Strategic Role in GTM |
+|---|---|---|
+| **Film Creators & Crews** | Builders, Operators, Seekers, Legacy Gatekeepers | Ignition point. High-trust, high-stakes matches in a tightly-networked industry. The entry wedge and the signal boost. |
+| **Disillusioned Daters** | Seekers, Casual Connectors, Social Anchors, Torchbearers | Emotionally resonant, high ARPU, naturally viral. These users evangelize when they feel seen. |
+| **Network-Burnout Professionals** | Operators, Builders | Mid-funnel utility users. They anchor credibility, respond well to value-first intros, and drive monetization through trust. |
+| **Creative Collaborators** | Builders, Operators, Casual Connectors, Social Anchors | CAC-efficient cohort. They retain when matched well and often escalate into repeat interactions. |
+| **Gig-Weary Seekers** (Uber/Fiverr disillusionment) | Operators | Emerging layer. Their expectations are shaped by speed and availability — but Evryn can surprise them with consistency and trust. Over time, they build "personal clouds" of go-tos. |
+
+We're not building generalized funnels. We're building **precision-targeted belief ladders**, calibrated to the jobs these users actually hired their current platforms to do — and were let down by.
+
+---
+
+## Launch Readiness Discipline
+
+The Master Plan established two related patterns worth preserving:
+
+**Sacred launch conditions** — codified go/no-go criteria that must be met before launch. The specific conditions (team, funding, tech/legal stability, minimum network density) need updating for the AI-first pivot, but the principle of having explicit, non-negotiable launch gates is sound.
+
+**Scope flex triggers** — if traction or capital drops below key thresholds, scope compresses to protect launch integrity. If traction outperforms, scope expands. These triggers don't cancel launch — they reshape it. The core is non-negotiable: **the experience of meeting Evryn never gets compromised.**
+
+*Specific thresholds from the Master Plan (runway floors, user counts, compute costs) are stale post-AI-pivot. Updated triggers will be defined as v0.2 approaches launch readiness. See original Master Plan lines 969-978 and 1131-1158.*
 
 ---
 
@@ -110,8 +145,6 @@ If Evryn works, competitors may try to neutralize her. The architecture is desig
 > *Removed: month-by-month launch timeline targeting Dec 2025. Dates passed; being rebuilt as v0.2 pilot. See original Master Plan lines 921-1006.*
 
 > *Removed: detailed outreach plan (PR strategy, community outreach at film festivals, influencer plan, ad spend approach). Being rebuilt for pilot phase. See original lines 1305-1337.*
-
-> *Removed: scope compression/expansion triggers calibrated for Dec 2025 launch (runway thresholds, compute cost triggers, user count milestones). Core principle preserved: "The experience of meeting Evryn never gets compromised." See original lines 1130-1158.*
 
 > *Removed: 12-month department plans with staffing timelines. Assumed human team pre-AI pivot. See original lines 1012-1127.*
 
