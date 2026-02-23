@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-23T13:37:08-08:00*
+*Last updated: 2026-02-23T14:57:53-08:00*
 
 ---
 
@@ -20,7 +20,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 - **Spoke integration pass — COMPLETE.** All ~35 MP v2.3 gaps integrated across 7 spokes + ARCHITECTURE.md (34 integrated, 1 dropped). Gap analysis file deleted (recoverable from git history).
 - **Fenwick email addendum** — 5 delta items not in questionnaire. Justin has captured these into email draft.
-- **Set up Google Drive MCP server for AC** — next strategic task. Enables AC to read/write Sheets (sensitivity analysis, financial model) and other Drive files directly. Scoped credentials TBD.
+- **Sheets work goes through Claude.ai** — AC gets read-only CSV snapshots locally for context. No MCP server needed. Justin does Sheets editing in Claude.ai (native Drive integration) or directly in Sheets.
 - **Pre-Work #10: Build doc rewrite** — ARCHITECTURE.md complete (v4, now with Design Drivers + Matching Calibration sections). Next: rewrite BUILD-EVRYN-MVP.md — absorb sources, fix terminology, update schema. Absorption notes at `evryn-backend/docs/historical/build-doc-absorption-notes.md`.
 - **Pre-Work #6: Write Evryn's triage system prompt** — After #10. v0.1 patterns captured in `evryn-backend/docs/ARCHITECTURE.md` (Onboarding Patterns section). Also creates Evryn's company context module.
 - **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. After #10.

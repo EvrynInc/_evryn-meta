@@ -204,4 +204,9 @@ When integrating older content (e.g., Master Plan) into newer structures (Hub sp
 
 ---
 
+### First Principles for Third-Party Tool Access
+When you need a new capability (e.g., editing Google Sheets from Claude Code), the instinct is to find a plugin or integration. The right first question is: "What's the simplest path using tools I already trust?" Evaluate from a security-first perspective: a single-author npm package running with your OAuth tokens is real supply chain risk — a compromised update silently exfiltrates your entire Drive. Often the answer avoids the dependency entirely. In this case: Claude.ai has native Drive integration for the write path, and local CSV snapshots cover the read path for AC. No MCP server, no new credentials on disk, no third-party code touching sensitive accounts. The general principle: split capabilities across tools that are each strong at their part, rather than adding a mediocre bridge that creates a new attack surface.
+
+---
+
 *Add learnings as they emerge. Keep entries concise and actionable.*

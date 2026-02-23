@@ -13,6 +13,7 @@
 - technical-vision spoke: "What the System Must Deliver" section (five imperatives + five critical conditions), cross-domain matching intelligence (coherence-calibrated modularity — evolved to intent-specific projections from holistic user understanding, open design question noted), dynamic weight adjustment (human-first framing), training data pipeline, security monitoring, incident response, compliance alignment, "no dark surveillance" with two constrained exceptions, model deployment discipline, pre-training with simulated data, resilience design triad
 - ARCHITECTURE.md (evryn-backend): Design Drivers section (five imperatives at build altitude), Matching Calibration planned section (wizard-of-oz two-candidate offers to users for comparative training signal + operator reasoning review, schema implications for earlier versions)
 - Fenwick questionnaire delta list: expanded from 3 to 5 items (added training data pipeline, incident response/breach notification). Justin captured into email draft.
+- Google Drive MCP server evaluated and rejected — supply chain risk (single-author npm package with OAuth token access) not justified. Decision: Sheets editing via Claude.ai (native Drive integration), AC gets read-only CSV snapshots locally. current-state.md updated.
 - Trusted Partner Briefing v1.4 marked as "fully ingested"
 - current-state.md: clarifications doc stale reference replaced with specific open design decisions (gatekeeper agreement terms, safety imprint mechanism)
 
