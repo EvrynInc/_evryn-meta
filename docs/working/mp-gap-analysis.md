@@ -3,6 +3,8 @@
 **Source:** `docs/historical/master-plan-v2.3.md` (~3,200 lines)
 **Checked against:** Hub + 7 spokes, `evryn-backend/docs/ARCHITECTURE.md`, `evryn-backend/docs/BUILD-EVRYN-MVP.md`
 
+**Status: Integration pass complete (2026-02-23).** All ~35 gaps addressed across 7 spokes + ARCHITECTURE.md. Two items remain open (see bottom). One item dropped (StartEngine seeding — leaner path).
+
 ---
 
 ## Ethos & User Experience / Who is Evryn? (lines 23-127)
@@ -30,14 +32,14 @@
 
 ## Revenue Model & Monetization (lines 705-848)
 - ~~**Gap:** "Match Types & Value Mapping" (lines 721-725) — MP references seven general categories of match value from casual help to life-changing introductions, and a "blended trust-weighted revenue curve." Neither the categories nor the curve concept appear in business-model spoke. → business-model spoke (financial model section)~~ ✓ *Integrated into business-model spoke (Financial Model Assumptions)*
-- **Gap (better phrasing):** The "casino model" competitive framing (lines 773-848) is noted as existing in the Hub's business-model spoke via a marketing note reference (line 76), but the spoke itself only captures a compressed version. The MP's prose here is materially more compelling for investor pitches — the spoke's note correctly points back to MP lines 770-848 for this. Not a content gap, but worth noting the reference is working as intended.
+- **Not a gap:** The "casino model" competitive framing (lines 773-848) is noted as existing in the Hub's business-model spoke via a marketing note reference (line 76), but the spoke itself only captures a compressed version. The MP's prose here is materially more compelling for investor pitches — the spoke's note correctly points back to MP lines 770-848 for this. Reference is working as intended.
 
 ## Financial Posture & Capital Strategy (lines 851-873)
 - ~~**Gap:** Financial Model details (lines 855-870) — Low/Medium/High cases, $188K bridge funding floor, toggleable scenarios. Not captured in business-model spoke beyond the brief "Capital Strategy" section. The specific funding ask structure ($15K + $25K + $48K family + $750K angels) is partially captured ($40K raised to date) but the full breakdown and contingency reasoning is not. → business-model spoke (capital strategy section) — though some of this may be intentionally omitted as stale~~ ✓ *Integrated into business-model spoke (Capital Strategy) — reframed as sensitivity analysis per current Financial Model evolution. Specific MP-era dollar amounts intentionally omitted as stale.*
 - ~~**Gap:** Pre-loaded wallet funds as working capital (line 872: "gives us working capital to provide services before they're delivered") — a financing mechanic, not just UX. Not captured. → business-model spoke~~ ✓ *Integrated into business-model spoke (Payments Architecture) with structural note explaining completed-transaction framing*
 
 ## L.A. Film Industry Launch (lines 874-1000)
-- **Gap:** Industry in transition detail — "film industry is evaporating faster than expected with the rise of AI video tools" is captured in gtm-and-growth spoke. But the MP's specific argument that this makes Evryn MORE urgent (find best connections in shrinking landscape + find next opportunities) is better stated in the spoke. No gap.
+- **Not a gap:** Industry in transition detail — "film industry is evaporating faster than expected with the rise of AI video tools" is captured in gtm-and-growth spoke. The MP's specific argument that this makes Evryn MORE urgent is better stated in the spoke now.
 - ~~**Gap:** "Sacred Launch Conditions" concept (lines 969-978) — 4 conditions for go/no-go. Stale dates, but the *principle* of having launch conditions isn't captured. May be worth preserving as a pattern for v0.2 launch. → gtm-and-growth spoke or build doc~~ ✓ *Integrated into gtm-and-growth spoke (Launch Readiness Discipline — sacred launch conditions + scope flex triggers)*
 - ~~**Gap:** The follow-through argument for film (line 920: "introductions aren't enough — follow-through matters. By facilitating payments and re-engagements, Evryn becomes not just the introducer, but the connective tissue for real working relationships") — this is a crisp articulation of post-match value that's not stated this clearly anywhere. → gtm-and-growth spoke (LA Film section) or business-model spoke~~ ✓ *Integrated into both: business-model spoke (Three Revenue Streams, Post-Match Transactions) and gtm-and-growth spoke (LA Film Industry — follow-through as differentiator)*
 
@@ -47,7 +49,7 @@
 
 ## Technical Milestones & Build Cadence / Where We Are Now (lines 1163-1222)
 - Stale timelines — not flagged.
-- **Gap:** v0.4 Wizard-of-Oz concept (line 1192-1194) — "quietly begin human-in-the-loop matchmaking... offer two potential matches for each match to learn faster" — is referenced in Hub build stages as "v0.4 (wizard-of-oz matching)" but the specific mechanic (two candidates per match for faster learning) is not captured. → Hub build stages note or build doc
+- ~~**Gap:** v0.4 Wizard-of-Oz concept (line 1192-1194) — "quietly begin human-in-the-loop matchmaking... offer two potential matches for each match to learn faster" — is referenced in Hub build stages as "v0.4 (wizard-of-oz matching)" but the specific mechanic (two candidates per match for faster learning) is not captured. → Hub build stages note or build doc~~ ✓ *Integrated into `evryn-backend/docs/ARCHITECTURE.md` (Matching Calibration — planned). Two-candidate offers to users for comparative training signal + operator reasoning review. Schema implications noted for earlier versions.*
 
 ## Growth Ethos (lines 1225-1230)
 - ~~**Gap:** "Rhizomatic growth" metaphor — "like the roots of a great tree, spreading strong and unseen until suddenly the canopy is everywhere." Sharper than anything in the current docs. The concept exists but the metaphor is missing. → gtm-and-growth spoke (growth mechanics section) — a phrasing improvement, not a missing idea~~ ✓ *Integrated into gtm-and-growth spoke (Growth Mechanics opening)*
@@ -67,23 +69,23 @@
 - Well captured in gtm-and-growth spoke. No gaps beyond what's already noted with "see original MP lines" references.
 
 ## Technical Architecture (lines 1674-2000)
-- **Gap:** "Five imperatives" checklist (lines 1677-1686) — Trusted Intelligence, Attuned Presence, Resonant Matching, Continuous Learning, Structural Safety — crisp list of what the system must deliver. Not captured as a list in any current doc. → technical-vision spoke + `evryn-backend/docs/ARCHITECTURE.md`
-- **Gap:** "Five critical conditions" (lines 1690-1703) — structural requirements that, if missed, the system breaks (network density, high-fidelity user understanding, real-time memory + consent-aware logic, trust graph integrity, system stability under load). Not captured as a checklist. → technical-vision spoke
+- ~~**Gap:** "Five imperatives" checklist (lines 1677-1686) — Trusted Intelligence, Attuned Presence, Resonant Matching, Continuous Learning, Structural Safety — crisp list of what the system must deliver. Not captured as a list in any current doc. → technical-vision spoke + `evryn-backend/docs/ARCHITECTURE.md`~~ ✓ *Integrated into technical-vision spoke (What the System Must Deliver) and ARCHITECTURE.md (Design Drivers) at build altitude. Cross-linked from user-experience spoke.*
+- ~~**Gap:** "Five critical conditions" (lines 1690-1703) — structural requirements that, if missed, the system breaks (network density, high-fidelity user understanding, real-time memory + consent-aware logic, trust graph integrity, system stability under load). Not captured as a checklist. → technical-vision spoke~~ ✓ *Integrated into technical-vision spoke (What the System Must Deliver) and ARCHITECTURE.md (Design Drivers)*
 - ~~**Gap:** Client interface (lines 1787-1795) — texting-style chat with streaming in bursts, interrupt gracefully halting rendering, partial thread recovery, "Trust & Account" page for ToS/billing/data management. → user-experience spoke~~ ✓ *Integrated into user-experience spoke (Interface Philosophy — chat UX streaming, Trust & Account page)*
 - ~~**Gap:** "Focused Mode" vs "Open Door" notification setting for user-user conversations (line 1803). → user-experience spoke~~ ✓ *Integrated into user-experience spoke (Connection Conversations — notification control)*
-- **Gap:** Training Data Pipeline (lines 1884-1886) — periodic aggregation of anonymized user profile snapshots + behavior metadata + match outcomes into training datasets for model tuning. Not captured. → technical-vision spoke (How Evryn Learns)
-- **Gap:** Consent-based growth retargeting cookie for incomplete onboardings (line 1936-1937). → technical-vision spoke or gtm-and-growth spoke
-- **Gap:** User-approved contextual assistance — opt-in to let Evryn observe external digital behavior (calendar, social app usage) for deeper support (line 1937). Future concept, not captured. → technical-vision spoke (future capabilities) or long-term-vision spoke
-- **Gap:** Security monitoring specifics — API rate limiting, anomaly detection, pen testing, dependency scanning, role-based internal access (lines 1951-1956). → technical-vision spoke (Privacy & Security)
-- **Gap:** Incident response protocol concept — isolate, diagnose, contain, notify users (lines 1958-1960). → technical-vision spoke
-- **Gap:** Compliance alignment — GDPR/CCPA/similar, user data export/deletion/correction, DPO function (lines 1962-1968). Partially covered by data minimization section but not as explicit compliance list. → technical-vision spoke ~~or bizops-and-tooling spoke~~ (BizOps side resolved — legal content centralized in Fenwick questionnaire with reference link in spoke)
+- ~~**Gap:** Training Data Pipeline (lines 1884-1886) — periodic aggregation of anonymized user profile snapshots + behavior metadata + match outcomes into training datasets for model tuning. Not captured. → technical-vision spoke (How Evryn Learns)~~ ✓ *Integrated into technical-vision spoke (Data & Knowledge Layers — Training Data Pipeline)*
+- ~~**Gap:** Consent-based growth retargeting cookie for incomplete onboardings (line 1936-1937). → technical-vision spoke or gtm-and-growth spoke~~ ✓ *Integrated into technical-vision spoke (Privacy & Security Architecture — consent-based growth support)*
+- ~~**Gap:** User-approved contextual assistance — opt-in to let Evryn observe external digital behavior (calendar, social app usage) for deeper support (line 1937). Future concept, not captured. → technical-vision spoke (future capabilities) or long-term-vision spoke~~ ✓ *Integrated into technical-vision spoke (Privacy & Security Architecture — user-approved contextual assistance, future)*
+- ~~**Gap:** Security monitoring specifics — API rate limiting, anomaly detection, pen testing, dependency scanning, role-based internal access (lines 1951-1956). → technical-vision spoke (Privacy & Security)~~ ✓ *Integrated into technical-vision spoke (Security Monitoring)*
+- ~~**Gap:** Incident response protocol concept — isolate, diagnose, contain, notify users (lines 1958-1960). → technical-vision spoke~~ ✓ *Integrated into technical-vision spoke (Incident Response)*
+- ~~**Gap:** Compliance alignment — GDPR/CCPA/similar, user data export/deletion/correction, DPO function (lines 1962-1968). Partially covered by data minimization section but not as explicit compliance list. → technical-vision spoke ~~or bizops-and-tooling spoke~~ (BizOps side resolved — legal content centralized in Fenwick questionnaire with reference link in spoke)~~ ✓ *Integrated into technical-vision spoke (Compliance Alignment) with Fenwick questionnaire reference*
 
 ## AI Architecture continued (lines 2000-2406)
 - Three brains, LLM transition, dual-mode learning, knowledge retrieval — all well captured in technical-vision spoke. No gaps on core concepts.
-- **Gap:** "Coherence-calibrated modularity" (lines 2227-2252) — cross-domain intelligence architecture: context-isolated memory buffers per intent domain (romantic, professional, platonic), centralized compatibility engine, threshold-based checks for cross-domain suggestions, and the four design principles (model clarity, data hygiene, cognitive coherence, user control). Not captured. → technical-vision spoke (Matchmaking Engine or Three Brains section)
-- **Gap:** Dynamic Weight Adjustment (lines 2298-2309) — real-time fine-tuning of matching model that is localized (not global retrains), reversible, personalized, bounded by safety constraints. Not captured as a distinct concept. → technical-vision spoke (Matchmaking Engine)
-- **Gap:** Model deployment discipline — "every model update treated like a code release: spot-checked, A/B tested, rollback-enabled" (lines 2272-2278). Not captured. → technical-vision spoke (How Evryn Learns)
-- **Gap:** Pre-training with simulated data (lines 2212-2223) — simulated profiles, controlled conversations, labeled match outcomes as working baseline before live data. Not captured as an approach. → technical-vision spoke or build doc
+- ~~**Gap:** "Coherence-calibrated modularity" (lines 2227-2252) — cross-domain intelligence architecture: context-isolated memory buffers per intent domain (romantic, professional, platonic), centralized compatibility engine, threshold-based checks for cross-domain suggestions, and the four design principles (model clarity, data hygiene, cognitive coherence, user control). Not captured. → technical-vision spoke (Matchmaking Engine or Three Brains section)~~ ✓ *Integrated into technical-vision spoke (Cross-Domain Matching Intelligence). Reframed from MP's "context-isolated memory buffers" to intent-specific projections from a holistic user understanding — reflecting evolved architectural thinking. Four design principles preserved. Full-persona vs. sub-profile matching noted as open design question.*
+- ~~**Gap:** Dynamic Weight Adjustment (lines 2298-2309) — real-time fine-tuning of matching model that is localized (not global retrains), reversible, personalized, bounded by safety constraints. Not captured as a distinct concept. → technical-vision spoke (Matchmaking Engine)~~ ✓ *Integrated into technical-vision spoke (Dynamic Weight Adjustment). Added human-first framing: team applies adjustments initially, Evryn may take over within bounded parameters as confidence grows.*
+- ~~**Gap:** Model deployment discipline — "every model update treated like a code release: spot-checked, A/B tested, rollback-enabled" (lines 2272-2278). Not captured. → technical-vision spoke (How Evryn Learns)~~ ✓ *Integrated into technical-vision spoke (Model Deployment Discipline)*
+- ~~**Gap:** Pre-training with simulated data (lines 2212-2223) — simulated profiles, controlled conversations, labeled match outcomes as working baseline before live data. Not captured as an approach. → technical-vision spoke or build doc~~ ✓ *Integrated into technical-vision spoke (Pre-Training with Simulated Data)*
 
 ## Moderation and Safety Systems (lines 2408-2612)
 - Core moderation captured well in trust-and-safety spoke.
@@ -94,7 +96,7 @@
 ## Scalability, Resilience & Disaster Recovery (lines 2614-2694)
 - Infrastructure details largely stale (pre-AI-pivot). Not flagging specifics.
 - ~~**Gap:** Graceful degradation UX messaging — "I've got a lot going on right now, but I promise I'll get back to you shortly" and "Something's gone a bit sideways on my end" (lines 2633-2636, 2670-2674). These are UX principles for how Evryn communicates system issues to users. Not captured. → user-experience spoke or ARCHITECTURE.md (operational patterns)~~ ✓ *Integrated into user-experience spoke (Graceful Degradation)*
-- **Gap:** Resilience design principles — "Fail safely, recover quickly, scale with integrity" as a named triad (lines 2619-2622). Not captured as a principle set. → technical-vision spoke
+- ~~**Gap:** Resilience design principles — "Fail safely, recover quickly, scale with integrity" as a named triad (lines 2619-2622). Not captured as a principle set. → technical-vision spoke~~ ✓ *Integrated into technical-vision spoke (Resilience Design Principles)*
 
 ## Future Directions & Roadmap (lines 2696-2886)
 - Feature growth items captured in long-term-vision spoke (group matching, federation, etc.).
@@ -121,52 +123,27 @@
 
 ## Summary
 
-**Total gaps found: ~35**
+**Total gaps found: ~35. Status: 34 integrated, 1 dropped. Integration pass complete.**
 
-### Priority Ranking
+### Integration Map (completed)
 
-**High priority (substantive ideas/mechanics not captured anywhere):**
-1. "Coherence-calibrated modularity" — cross-domain matching architecture with intent-isolated memory buffers (technical-vision spoke)
-2. "Five imperatives" + "Five critical conditions" checklists — what the system must deliver and what breaks it if missing (technical-vision spoke)
-3. ~~Segment-to-avatar mapping table — links market segments to financial model avatars with strategic GTM roles (business-model or gtm-and-growth spoke)~~ ✓ *Integrated into gtm-and-growth spoke (Segment-to-Avatar Mapping). Business-model spoke cross-references.*
-4. ~~"AI can't deliver" + "Black Box decisions" risks — two risk categories missing from long-term-vision spoke~~ ✓ *Integrated*
-5. ~~EU Digital Services Act alignment / appeal path / transparency reporting (trust-and-safety or bizops spoke)~~ ✓ *Integrated*
-6. ~~"Evryn is a witness, not a mirror" — framing for how Evryn relates to her own assessments (trust-and-safety spoke)~~ ✓ *Integrated*
-7. ~~"AI to detect AI" — deepfake and inauthenticity detection as an explicit capability (trust-and-safety spoke)~~ ✓ *Integrated*
+| Spoke | Gaps Integrated |
+|-------|----------------|
+| long-term-vision | 3 (rejected match history, AI can't deliver, Black Box) |
+| trust-and-safety | 5 (platform abuse, DSA, witness framing, legal clarity, AI detection) |
+| bizops-and-tooling | 3 (ToS provisions, StartEngine compliance, legal questionnaire routing) |
+| business-model | 6 + 1 dropped (credit bonus, match types, working capital, sensitivity analysis, match progression, follow-through, ~~SE seeding~~) |
+| gtm-and-growth | 9 (segment mapping, belief ladders, growth asks, follow-through, referral decay, rhizomatic, salesperson, launch readiness, scope triggers) |
+| user-experience | 10 (chat UX, footer, CRM, after-care, summary cards, wallet, Focused/Open Door, graceful degradation, Trust Mirror verified, client interface) |
+| technical-vision | 13 (five imperatives, five conditions, coherence modularity, dynamic weights, training pipeline, retargeting, contextual assistance, security monitoring, incident response, compliance, model deployment, pre-training, resilience triad) |
+| ARCHITECTURE.md | 2 (five imperatives at build altitude — Design Drivers; wizard-of-oz matching calibration — planned) |
 
-**Medium priority (useful detail or sharper phrasing for existing concepts):**
-8. ~~Chat UX details — small bubbles, pauses, interrupt, "like texting" (user-experience spoke)~~ ✓ *Integrated into user-experience spoke (Interface Philosophy)*
-9. ~~"Focused Mode" vs "Open Door" notification setting (user-experience spoke)~~ ✓ *Integrated into user-experience spoke (Connection Conversations)*
-10. ~~Pre-purchase 30% credit mechanic (business-model spoke)~~ ✓ *Integrated into business-model spoke (Evryn Wallet — pre-purchase credit bonus)*
-11. ~~Wallet visibility as engagement cue (user-experience spoke)~~ ✓ *Integrated into user-experience spoke (Progressive Interface Reveal — wallet on Trust & Account page)*
-12. ~~Growth ask timing — three specific CTAs and emotional moment selection (gtm-and-growth spoke)~~ ✓ *Integrated into gtm-and-growth spoke (Growth Mechanics)*
-13. ~~StartEngine seeding strategy — $50K social proof + narrative control (business-model spoke)~~ ✓ *Dropped — leaner capital path now*
-14. v0.4 Wizard-of-Oz mechanic — two candidates per match for faster learning (Hub or build doc)
-15. ~~"Precision-targeted belief ladders" / JTBD framing (gtm-and-growth spoke)~~ ✓ *Integrated into gtm-and-growth spoke (Segment-to-Avatar Mapping)*
-16. ~~Follow-through as connective tissue for film industry (gtm-and-growth spoke)~~ ✓ *Integrated into both business-model spoke (Three Revenue Streams) and gtm-and-growth spoke (LA Film Industry)*
-17. ~~Referral decay mitigation — same warm welcome for Nth-generation referrals (gtm-and-growth spoke)~~ ✓ *Integrated into gtm-and-growth spoke (Referral Mechanics)*
-18. ~~Graceful degradation UX messages (user-experience spoke)~~ ✓ *Integrated into user-experience spoke (Graceful Degradation)*
-19. Dynamic Weight Adjustment in matching (technical-vision spoke)
-20. Model deployment discipline (technical-vision spoke)
-21. Training Data Pipeline / simulated pre-training (technical-vision spoke)
-22. ~~Platform abuse prevention specifics (trust-and-safety spoke)~~ ✓ *Integrated*
-23. Incident response protocol concept (technical-vision spoke)
-24. Compliance alignment as explicit list (technical-vision spoke)
-25. ~~ToS provisions as legal language templates (bizops spoke)~~ ✓ *Resolved — in Fenwick questionnaire + email addendum*
-26. ~~StartEngine compliance framing (bizops spoke)~~ ✓ *Integrated*
-27. ~~Rejected match history in Trust Core data list (long-term-vision spoke)~~ ✓ *Integrated*
-28. ~~Scope flex trigger pattern as reusable discipline (gtm-and-growth or build doc)~~ ✓ *Integrated into gtm-and-growth spoke (Launch Readiness Discipline)*
-29. ~~"When the Magic Starts" projection methodology (business-model spoke)~~ ✓ *Integrated into business-model spoke (Financial Model Assumptions — Match quality progression modeling)*
-30. ~~Connection summary cards with user-editable notes (user-experience spoke)~~ ✓ *Integrated into user-experience spoke (Connection Conversations)*
-31. ~~Legal clarity / ToS disclosure language for users (trust-and-safety spoke)~~ ✓ *Integrated*
-32. ~~After-care anticipation-building detail (user-experience spoke)~~ ✓ *Integrated into user-experience spoke (After Care)*
-33. ~~Evryn as ethical salesperson on marketing site (gtm-and-growth spoke)~~ ✓ *Integrated into gtm-and-growth spoke (Growth Mechanics)*
-34. ~~"Rhizomatic growth" metaphor — sharper than current phrasing (gtm-and-growth spoke)~~ ✓ *Integrated into gtm-and-growth spoke (Growth Mechanics opening)*
-35. Consent-based retargeting cookie / user-approved contextual assistance (technical-vision spoke)
-36. Resilience design triad (technical-vision spoke)
+### Fenwick Questionnaire Deltas
 
-### Recommendation
+Items integrated into spokes that are NOT in the Fenwick questionnaire and may need legal treatment:
 
-The high-priority gaps should be addressed in the next spoke maintenance pass. Most are additions of 2-5 lines to existing sections. The "coherence-calibrated modularity" concept is the largest single gap — it's a genuine architectural idea that shapes how multi-domain matching works and has no home in current docs. The risk gaps (#4, #6, #7) are quick additions to existing lists. The segment-to-avatar mapping (#3) is a table that could go in either the business-model or gtm-and-growth spoke.
-
-Medium-priority items can be batched into a "spoke enrichment" pass. Low-priority items can wait until relevant sections are being worked on anyway.
+1. **Evangelist story licensing** — users sharing stories on Evryn's platforms; licensing language needed in Terms (from trust-and-safety integration)
+2. **Cast-off outreach consent** — CAN-SPAM navigable for email, but SMS/other channels need legal guidance (from gtm-and-growth integration)
+3. **Emotional peak tagging for growth invitations** — using emotional state data to time commercial invitations; consent/manipulation boundary (from gtm-and-growth integration)
+4. **Training data pipeline** — anonymized user data aggregated for internal model tuning; does anonymization provide sufficient legal basis under GDPR/CCPA? (from technical-vision integration)
+5. **Incident response / breach notification** — what are specific notification obligations under GDPR (72-hour), CCPA, and state breach laws? (from technical-vision integration)
