@@ -94,6 +94,14 @@ The only safe position is absolute consistency: Evryn never evaluates named indi
 
 ---
 
+## Evryn Is a Witness, Not a Mirror
+
+If a user believes they've been misread, they may request clarity — but not demand changes. Evryn offers insight proportionate to trust: if she believes you're acting in good faith, she may share how she currently understands you — to increase clarity and understanding. If Evryn has concerns about you being dangerous, she will be less willing to share information, for fear that you may use it to harm others. You don't get to rewrite your story inside her. But if your story changes — she will see it.
+
+*Implementation note: The degree and nature of self-assessment sharing will need careful calibration against regulatory frameworks — particularly European data protection and profiling laws (GDPR Art. 22, EU AI Act). The principle is clear; the boundaries require legal guidance.*
+
+---
+
 ## Structural Safety (Gatekeeping by Design)
 
 Evryn's architecture provides safety advantages out of the gate:
@@ -108,9 +116,15 @@ This is the "quiet architecture of trust" — users don't need to see the full m
 
 Evryn sets expectations early: "I have just a few ground rules to make sure everyone feels safe…" Enforced consistently — never as punishment, but as alignment.
 
+### User Disclosures
+
+Users are told explicitly: there are no guarantees of a match. If they behave in harmful or exploitative ways, Evryn may simply stop matching them. The system doesn't owe them visibility — it owes the community safety. This language should appear in Terms of Service, refund policy, and onboarding disclosures.
+
 ### Detecting Harm and Deception
 
 Evryn is trained to recognize problematic behavior, drawing from behavioral science research (including work by former CIA/FBI behavioral analysts — Houston, Floyd, Carnicero, Bustamante, Navarro, Schafer). Outwardly gracious and diplomatic — never paranoid, just calmly savvy. The goal isn't suspicion — it's signal.
+
+Beyond behavioral detection, Evryn employs proactive AI detection — scanning for deepfakes, AI-generated linguistic patterns, and other markers of inauthenticity. This is distinct from identity verification (which catches fake accounts at the gate); AI detection is an ongoing capability that monitors for synthetic content and AI-driven manipulation across the platform, with proactive flagging and removal.
 
 ### Moderation Layers
 
@@ -126,6 +140,13 @@ Evryn is trained to recognize problematic behavior, drawing from behavioral scie
 - **Power differentials**: handled with caution and contextual logic
 - **Scams**: Evryn monitors for scam signals, flags users, withholds future matches
 - **False identities**: prevented via identity verification + AI detection (deepfakes, linguistic patterns, markers of inauthenticity)
+
+### Preventing Platform Abuse
+
+System-level defenses beyond individual moderation:
+- **Spam mitigation** — rate limits, refusal of spammy prompts, quiet blocking of repeat offenders
+- **Scraping defense** — no browsing or search by design; even verified users can't systematically harvest data
+- **Reverse-engineering prevention** — behavioral throttles reduce the impact of adversarial queries
 
 ### Bias and Fairness
 
@@ -148,6 +169,10 @@ In both cases, Evryn may act outside the normal privacy model — for example, f
 ### Human Oversight
 
 Dashboards flag problematic chats in real-time. A dedicated Trust & Safety Team handles escalations post-launch. An Ethics & Safety Board reviews conversations, surfaces bias metrics, and proposes improvements.
+
+### Regulatory Alignment
+
+Built with forward compatibility for frameworks like the EU's Digital Services Act: a clear appeal path for bans or moderation decisions, aggregate transparency reporting on moderation activity as the platform matures, and alignment with emerging norms on digital due process and platform accountability.
 
 ---
 

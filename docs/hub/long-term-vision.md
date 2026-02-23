@@ -39,6 +39,7 @@ A planned nonprofit entity operating the **Privacy-Sovereign Trust Core**. Switz
 - Match rationale logs (including rejection logic)
 - Structured psychological profiles and archetype impressions
 - Consent-aware contact, timing, and availability data
+- Rejected match history and sensitive social signals
 - Abuse pattern detection and protective risk models
 - AI inference logs that inform trust-based decisions
 - Encrypted session summaries and evolving reputation scores
@@ -90,6 +91,12 @@ Digital credits or barter currency — collapse-optional, not collapse-only. Ear
 
 ### Category Confusion
 Messaging emphasizes what Evryn is *not* as well as what she is. Cross-domain connections demonstrate breadth.
+
+### The AI Can't Deliver
+Mitigated by making this the singular technical focus. Early adopters are sold on the vision with the understanding that quality will continue to improve as network density grows.
+
+### Black Box Decisions
+Risk: users blindly rely on Evryn and lose their ability to trust their own judgment. Mitigated by design — the user always makes the ultimate decision. Evryn handles the heavy lifting; she never decides for you.
 
 ### Invisible Social Credit Scoring
 Evryn's opinion is nuanced, multidimensional, and dynamic — not a single score. Filtering is user-match specific, not global. If broadly de-prioritized, Evryn tries to give a chance to explain or improve. **"Filter out bad behavior, but don't judge human worth with a single score."**

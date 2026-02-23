@@ -4,6 +4,16 @@
 
 ---
 
+## 2026-02-23
+
+- Spoke integration pass: 11 of ~35 gaps integrated across 3 spokes (long-term-vision, trust-and-safety, BizOps). All 7 high-priority gaps complete.
+- long-term-vision spoke: added "Rejected match history" to Trust Core list, "The AI Can't Deliver" and "Black Box Decisions" risks
+- trust-and-safety spoke: added "Evryn Is a Witness, Not a Mirror" section (with GDPR/EU AI Act implementation note), "Regulatory Alignment" (EU DSA), "User Disclosures", "Preventing Platform Abuse", expanded AI detection in "Detecting Harm and Deception"
+- BizOps spoke: legal/compliance content centralized to Fenwick questionnaire (spoke links to it), StartEngine compliance framing added to Fundraising section (using questionnaire's more careful framing over MP's emotional-timing language)
+- Decision: ToS/PP legal content centralized in Fenwick questionnaire, not scattered across spokes. BizOps spoke references questionnaire; when ToS/PP are drafted, they supersede.
+- Fenwick email addendum drafted: 3 delta items not in questionnaire (self-assessment sharing regulatory implications, system-level abuse prevention practices, AI authenticity monitoring as ongoing practice). Justin holding email pending further spoke integration findings.
+- MP's StartEngine emotional-timing framing (line 3090) superseded by questionnaire's more careful position: invitations responsive to expressed interest/general enthusiasm, never timed to vulnerability or distress
+
 ## 2026-02-20
 
 - MP v2.3 gap analysis: line references backfilled for all 14 gaps that were missing specific MP line numbers

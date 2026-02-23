@@ -17,6 +17,7 @@
 - **Incorporation:** via Clerky
 - **Trademark:** filed via LegalZoom
 - **Age requirement:** 18+ for launch. May consider serving younger users in the future with parent-administered accounts, once there's team and revenue to handle the compliance requirements.
+- **Terms of Service & Privacy Policy:** In progress with Fenwick. Full legal context, data practices, compliance questions, and regulatory considerations are centralized in the [Fenwick questionnaire](../legal/privacy-and-terms-questionnaire.md). Once the ToS and Privacy Policy are drafted, they will supersede the questionnaire as the authoritative legal documents and be linked here.
 
 ---
 
@@ -39,6 +40,8 @@
 |------|---------|-------|
 | **StartEngine** | Crowdfunding (Reg CF) | Pass-through model — handles all securities compliance |
 | **DocSend** | Pitch deck tracking | Share decks with view/time-on-slide tracking |
+
+**StartEngine compliance framing:** Investment invitations are offered through StartEngine under Regulation Crowdfunding (Reg CF). Invitations are conversational and responsive to the user's expressed interest and/or general enthusiasm — never timed to moments of vulnerability or emotional distress. Participation is always optional and non-transactional; users access all platform features without investing. Users can opt out of future investment prompts at any time. This ensures compliance with Reg CF/SEC guidelines (no coercion, exclusivity, or misrepresentation), GDPR/CCPA profiling laws (full disclosure and control), and FTC standards (no manipulation, urgency, or baiting). See the [Fenwick questionnaire](../legal/privacy-and-terms-questionnaire.md) (Crowdfunding and investment section) for the full legal framing including open questions about AI-initiated investment solicitation.
 
 ---
 

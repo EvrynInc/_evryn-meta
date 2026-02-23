@@ -24,7 +24,7 @@
 ## Additional UX Details (lines 418-700)
 - **Gap:** "Revealing What's Already There" / Trust Mirror concept (lines 564-599) — the Hub notes it was dropped (ADR-008), but the *latent truth discovery* mechanic IS captured in user-experience spoke. However, the "Would she have connected me to them?" mechanic for existing non-Evryn contacts (lines 564-581) is a separate concept from latent truth discovery. It was presumably dropped with Trust Mirror, but if any part of it survives, it's not captured. → verify with ADR-008; if fully dropped, no gap
 - **Gap:** Shared conversations — "two connected users can invite Evryn to be present" is in user-experience spoke. But the MP's detail about connection summary cards (line 397-398: "short summary of the connection: who they are, why Evryn connected you") with user-editable notes is not captured. → user-experience spoke (Connection Conversations section)
-- **Gap:** Legal clarity section (lines 683-701) — explicit user disclosures ("no guarantees of a match", "system doesn't owe you visibility, it owes the community safety") appear in Terms of Service language. Not captured in any current doc. → trust-and-safety spoke or bizops-and-tooling spoke (legal section), or flagged for Fenwick work
+- ~~**Gap:** Legal clarity section (lines 683-701) — explicit user disclosures ("no guarantees of a match", "system doesn't owe you visibility, it owes the community safety") appear in Terms of Service language. Not captured in any current doc. → trust-and-safety spoke or bizops-and-tooling spoke (legal section), or flagged for Fenwick work~~ ✓ *Integrated into trust-and-safety spoke (User Disclosures)*
 - **Gap:** Peer-to-peer wallet detail — "Evryn Credit cannot be used to pay other users" (Cash only for P2P) is captured in business-model spoke. But the wallet visibility detail (lines 648-649: "wallet remains visible at all times and acts as a subtle cue of user engagement and future connection potential") is not. Minor UX point. → user-experience spoke
 - **Gap:** Evryn as main spokesperson on marketing site (lines 1244-1248) — "she has high-level training in ethical, value-based sales techniques" for converting prospects. The "always-on channel" where users can voice dreams/concerns and see she's listening. Concept exists in Hub ("growth is conversationally embedded") but the sales technique angle is not captured. → gtm-and-growth spoke or Evryn CLAUDE.md (when built)
 
@@ -76,7 +76,7 @@
 - **Gap:** User-approved contextual assistance — opt-in to let Evryn observe external digital behavior (calendar, social app usage) for deeper support (line 1937). Future concept, not captured. → technical-vision spoke (future capabilities) or long-term-vision spoke
 - **Gap:** Security monitoring specifics — API rate limiting, anomaly detection, pen testing, dependency scanning, role-based internal access (lines 1951-1956). → technical-vision spoke (Privacy & Security)
 - **Gap:** Incident response protocol concept — isolate, diagnose, contain, notify users (lines 1958-1960). → technical-vision spoke
-- **Gap:** Compliance alignment — GDPR/CCPA/similar, user data export/deletion/correction, DPO function (lines 1962-1968). Partially covered by data minimization section but not as explicit compliance list. → technical-vision spoke or bizops-and-tooling spoke
+- **Gap:** Compliance alignment — GDPR/CCPA/similar, user data export/deletion/correction, DPO function (lines 1962-1968). Partially covered by data minimization section but not as explicit compliance list. → technical-vision spoke ~~or bizops-and-tooling spoke~~ (BizOps side resolved — legal content centralized in Fenwick questionnaire with reference link in spoke)
 
 ## AI Architecture continued (lines 2000-2406)
 - Three brains, LLM transition, dual-mode learning, knowledge retrieval — all well captured in technical-vision spoke. No gaps on core concepts.
@@ -87,9 +87,9 @@
 
 ## Moderation and Safety Systems (lines 2408-2612)
 - Core moderation captured well in trust-and-safety spoke.
-- **Gap:** "Preventing Platform Abuse" specifics (lines 2509-2515) — spam mitigation (rate limits, refusal of spammy prompts, quiet blocking), scraping defense (no browsing by design), reverse-engineering prevention (behavioral throttles). Only partially captured. → trust-and-safety spoke
-- **Gap:** EU Digital Services Act alignment — appeal path for bans/moderation decisions, aggregate transparency reporting (lines 2550-2556). Not captured. → trust-and-safety spoke or bizops-and-tooling spoke (legal)
-- **Gap:** "Evryn is not a mirror; she is a witness" framing (lines 2863-2875) — users may request clarity on how Evryn sees them but may not demand changes. Evryn shares her truth proportionate to trust. If flagged/dangerous, she goes quiet. Distinct from the dropped Trust Mirror — this is about Evryn's relationship to her own assessments. Not captured. → trust-and-safety spoke or user-experience spoke
+- ~~**Gap:** "Preventing Platform Abuse" specifics (lines 2509-2515) — spam mitigation (rate limits, refusal of spammy prompts, quiet blocking), scraping defense (no browsing by design), reverse-engineering prevention (behavioral throttles). Only partially captured. → trust-and-safety spoke~~ ✓ *Integrated*
+- ~~**Gap:** EU Digital Services Act alignment — appeal path for bans/moderation decisions, aggregate transparency reporting (lines 2550-2556). Not captured. → trust-and-safety spoke or bizops-and-tooling spoke (legal)~~ ✓ *Integrated into trust-and-safety spoke (Regulatory Alignment)*
+- ~~**Gap:** "Evryn is not a mirror; she is a witness" framing (lines 2863-2875) — users may request clarity on how Evryn sees them but may not demand changes. Evryn shares her truth proportionate to trust. If flagged/dangerous, she goes quiet. Distinct from the dropped Trust Mirror — this is about Evryn's relationship to her own assessments. Not captured. → trust-and-safety spoke or user-experience spoke~~ ✓ *Integrated into trust-and-safety spoke (Evryn Is a Witness, Not a Mirror)*
 
 ## Scalability, Resilience & Disaster Recovery (lines 2614-2694)
 - Infrastructure details largely stale (pre-AI-pivot). Not flagging specifics.
@@ -98,21 +98,21 @@
 
 ## Future Directions & Roadmap (lines 2696-2886)
 - Feature growth items captured in long-term-vision spoke (group matching, federation, etc.).
-- **Gap:** "Rejected match history and sensitive social signals" as data inside the Trust Core (line 2823). The long-term-vision spoke's Trust Core data list omits "rejected match history and sensitive social signals." → long-term-vision spoke (Trust Core list)
+- ~~**Gap:** "Rejected match history and sensitive social signals" as data inside the Trust Core (line 2823). The long-term-vision spoke's Trust Core data list omits "rejected match history and sensitive social signals." → long-term-vision spoke (Trust Core list)~~ ✓ *Integrated*
 
 ## Key Risks (lines 2889-2973)
 - Most risks captured in long-term-vision spoke.
-- **Gap:** "The AI can't deliver" risk + mitigation (lines 2916-2921) — selling early adopters on the dream while being transparent about needing collective buy-in to reach critical mass. Not captured. → long-term-vision spoke (Key Risks)
-- **Gap:** "Black Box decisions" risk (lines 2923-2927) — users losing ability to trust own judgment by over-relying on Evryn. Mitigation: user has ultimate control. Not captured. → long-term-vision spoke (Key Risks)
-- **Gap:** "AI to detect AI" — deepfake detection, linguistic pattern analysis, markers of inauthenticity (line 2962). Mentioned as part of exploitation prevention but not captured in current docs. → trust-and-safety spoke (Detecting Harm and Deception)
+- ~~**Gap:** "The AI can't deliver" risk + mitigation (lines 2916-2921) — selling early adopters on the dream while being transparent about needing collective buy-in to reach critical mass. Not captured. → long-term-vision spoke (Key Risks)~~ ✓ *Integrated*
+- ~~**Gap:** "Black Box decisions" risk (lines 2923-2927) — users losing ability to trust own judgment by over-relying on Evryn. Mitigation: user has ultimate control. Not captured. → long-term-vision spoke (Key Risks)~~ ✓ *Integrated*
+- ~~**Gap:** "AI to detect AI" — deepfake detection, linguistic pattern analysis, markers of inauthenticity (line 2962). Mentioned as part of exploitation prevention but not captured in current docs. → trust-and-safety spoke (Detecting Harm and Deception)~~ ✓ *Integrated — expanded in Detecting Harm and Deception section; also present in Edge Cases (False identities)*
 
 ## Long View (lines 2976-3034)
 - Well captured in long-term-vision spoke. No gaps.
 
 ## Appendix: Terms of Service (lines 3036-3101)
 - Trust Mirror — dropped per ADR-008. Not a gap.
-- **Gap:** ToS provisions as reusable legal language (lines 3054-3064): "Right to withhold matching," "No guaranteed access or earnings," "Referral rewards are conditional," "Evryn Credit is not cash." Not captured in any current doc. → bizops-and-tooling spoke (legal section) or a future Terms of Service draft
-- **Gap:** StartEngine compliance framing — explicitly structured for Reg CF/SEC, GDPR/CCPA profiling laws, FTC standards. The reasoning for how investment invitations avoid regulatory issues (lines 3082-3101). Not captured. → bizops-and-tooling spoke (fundraising section) or legal docs
+- ~~**Gap:** ToS provisions as reusable legal language (lines 3054-3064): "Right to withhold matching," "No guaranteed access or earnings," "Referral rewards are conditional," "Evryn Credit is not cash." Not captured in any current doc. → bizops-and-tooling spoke (legal section) or a future Terms of Service draft~~ ✓ *Resolved — substantive content already in Fenwick questionnaire; draft provisions routed to Fenwick via email addendum*
+- ~~**Gap:** StartEngine compliance framing — explicitly structured for Reg CF/SEC, GDPR/CCPA profiling laws, FTC standards. The reasoning for how investment invitations avoid regulatory issues (lines 3082-3101). Not captured. → bizops-and-tooling spoke (fundraising section) or legal docs~~ ✓ *Integrated into BizOps spoke (Fundraising section) with questionnaire link*
 
 ## Appendix: Tools & Svcs for BizOps (lines 3104-3210)
 - Well captured in bizops-and-tooling spoke with pivots noted. No gaps.
@@ -129,10 +129,10 @@
 1. "Coherence-calibrated modularity" — cross-domain matching architecture with intent-isolated memory buffers (technical-vision spoke)
 2. "Five imperatives" + "Five critical conditions" checklists — what the system must deliver and what breaks it if missing (technical-vision spoke)
 3. Segment-to-avatar mapping table — links market segments to financial model avatars with strategic GTM roles (business-model or gtm-and-growth spoke)
-4. "AI can't deliver" + "Black Box decisions" risks — two risk categories missing from long-term-vision spoke
-5. EU Digital Services Act alignment / appeal path / transparency reporting (trust-and-safety or bizops spoke)
-6. "Evryn is a witness, not a mirror" — framing for how Evryn relates to her own assessments (trust-and-safety spoke)
-7. "AI to detect AI" — deepfake and inauthenticity detection as an explicit capability (trust-and-safety spoke)
+4. ~~"AI can't deliver" + "Black Box decisions" risks — two risk categories missing from long-term-vision spoke~~ ✓ *Integrated*
+5. ~~EU Digital Services Act alignment / appeal path / transparency reporting (trust-and-safety or bizops spoke)~~ ✓ *Integrated*
+6. ~~"Evryn is a witness, not a mirror" — framing for how Evryn relates to her own assessments (trust-and-safety spoke)~~ ✓ *Integrated*
+7. ~~"AI to detect AI" — deepfake and inauthenticity detection as an explicit capability (trust-and-safety spoke)~~ ✓ *Integrated*
 
 **Medium priority (useful detail or sharper phrasing for existing concepts):**
 8. Chat UX details — small bubbles, pauses, interrupt, "like texting" (user-experience spoke)
@@ -149,18 +149,18 @@
 19. Dynamic Weight Adjustment in matching (technical-vision spoke)
 20. Model deployment discipline (technical-vision spoke)
 21. Training Data Pipeline / simulated pre-training (technical-vision spoke)
-22. Platform abuse prevention specifics (trust-and-safety spoke)
+22. ~~Platform abuse prevention specifics (trust-and-safety spoke)~~ ✓ *Integrated*
 23. Incident response protocol concept (technical-vision spoke)
 24. Compliance alignment as explicit list (technical-vision spoke)
-25. ToS provisions as legal language templates (bizops spoke)
-26. StartEngine compliance framing (bizops spoke)
-27. Rejected match history in Trust Core data list (long-term-vision spoke)
+25. ~~ToS provisions as legal language templates (bizops spoke)~~ ✓ *Resolved — in Fenwick questionnaire + email addendum*
+26. ~~StartEngine compliance framing (bizops spoke)~~ ✓ *Integrated*
+27. ~~Rejected match history in Trust Core data list (long-term-vision spoke)~~ ✓ *Integrated*
 28. Scope flex trigger pattern as reusable discipline (gtm-and-growth or build doc)
 29. "When the Magic Starts" projection methodology (business-model spoke)
 
 **Low priority (minor UX detail, phrasing improvements, or very future-looking):**
 30. Connection summary cards with user-editable notes (user-experience spoke)
-31. Legal clarity / ToS disclosure language for users (trust-and-safety spoke)
+31. ~~Legal clarity / ToS disclosure language for users (trust-and-safety spoke)~~ ✓ *Integrated*
 32. After-care anticipation-building detail (user-experience spoke)
 33. Evryn as ethical salesperson on marketing site (gtm-and-growth spoke)
 34. "Rhizomatic growth" metaphor — sharper than current phrasing (gtm-and-growth spoke)
