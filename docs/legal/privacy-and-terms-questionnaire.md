@@ -379,3 +379,23 @@ Our long-term architectural vision includes the strong likelihood of creating a 
 This is likely many months away from implementation, but the legal team should be aware of its place in the architectural roadmap. It may influence how we structure the Terms and Privacy Policy now — for example, reserving the right to transfer trust data to a mission-locked custodial entity dedicated to user privacy protection.
 
 ---
+
+## Follow-Up Email Addendum (2026-02-23)
+
+> *Sent to Fenwick after the questionnaire. Items not covered above — flagged so they're in scope when drafting.*
+
+As we've been working through our internal documentation, a few items came up that we realized aren't covered in the questionnaire we sent over. Flagging them now so they're on your radar when drafting:
+
+1. **Self-assessment sharing:** Evryn may, at a user's request, share how she currently understands them — her impression of who they are and what she's observed. This is Evryn offering insight proportionate to trust, not a data access request. But it does involve sharing AI-generated profiling assessments back to individual users, which likely has implications under GDPR Art. 22 and the EU AI Act. We'd want guidance on how to frame this in the Terms and what boundaries we need.
+
+2. **System-level abuse prevention practices:** Evryn employs rate limits on interactions, behavioral throttles against adversarial queries, and quiet blocking of repeat offenders as platform-level defenses. These may need to be reflected in the Terms as prohibited-use provisions or platform rights.
+
+3. **AI-driven authenticity monitoring:** Beyond identity verification at signup, Evryn continuously scans for deepfakes, AI-generated linguistic patterns, and other markers of inauthenticity as an ongoing practice. This is distinct from the identity verification service (iDenfy/Jumio) described in the questionnaire — it's Evryn's own AI doing ongoing monitoring, and may need disclosure in the Privacy Policy.
+
+4. **Training data pipeline:** Evryn will periodically aggregate anonymized user profile snapshots, behavior metadata, and match outcomes into training datasets for internal model tuning. All data is anonymized (randomized IDs, no raw PII) before use. Legal question: Does "anonymized" provide sufficient legal basis under GDPR/CCPA for this use? Do we need explicit consent for model training even with anonymized data, or does anonymization take it outside personal data scope?
+
+5. **Incident response / breach notification:** We plan to isolate, diagnose, contain, and notify users in the event of a breach. Legal question: What are our specific notification obligations under GDPR (72-hour window), CCPA, and state breach notification laws? Should we document a formal incident response plan now, or is a principle-level commitment sufficient for this stage?
+
+None of these are urgent — just wanted to make sure they're in scope as you draft — and also to have clarification: some of these we don't have to fully work out right now (EU-specific stuff), but we'd rather build in a way that doesn't completely paint us into a compliance corner later.
+
+---
