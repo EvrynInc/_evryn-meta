@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-24T12:52:20-08:00*
+*Last updated: 2026-02-24T13:25:30-08:00*
 
 ---
 
@@ -26,7 +26,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## Active Projects
 
-- **_evryn-meta** — Research centralized in `docs/research/` (7 reports). Research routing convention established across all CLAUDE.md files. LEARNINGS.md hygiene protocol added. Fenwick questionnaire + email addendum sent.
+- **_evryn-meta** — Research centralized in `docs/research/` (8 reports — voice-ai-stack added). All research breadcrumbed into consuming docs (zero dead research). First LEARNINGS.md hygiene pass complete (17 entries promoted to stubs). Fenwick questionnaire + email addendum sent.
 - **evryn-backend** — Pre-Work #10 DONE. ARCHITECTURE.md current (v4 + legal flow-through). BUILD doc aligned. Next: Pre-Work #6 (system prompt).
 - **evryn-team-agents** — PAUSED. Clean pause state. CLAUDE.md updated (hard stop + runtime context).
 - **evryn-dev-workspace** — DC's home repo. Identity updated (reading order, Diataxis, auto-memory hygiene, edit-approval).

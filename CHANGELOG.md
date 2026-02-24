@@ -6,6 +6,10 @@
 
 ## 2026-02-24
 
+- SDK research breadcrumbs placed: 8 new breadcrumbs across 4 docs for 6 research files (claude-agent-sdk, memory-systems, orchestration-frameworks, tools-and-workflows, linear-project-management, misc). Zero dead research — all 8 reports now linked.
+- 2 stale `docs/research/` references fixed in team-agents ARCHITECTURE.md (communication-channels path + Related Documents table)
+- Voice AI Stack moved from LEARNINGS.md to `docs/research/voice-ai-stack.md` (8th research report). Breadcrumbed in evryn-backend BUILD-EVRYN-MVP.md Voice section.
+- First LEARNINGS.md hygiene pass: 17 entries promoted to one-line stubs, Voice section moved to research. ~226 → ~145 active lines.
 - OpenClaw research report created (`docs/research/openclaw-research.md`) — 12-section pattern library from open-source AI assistant, with scope disclaimer
 - Research breadcrumb convention established: italicized inline references in build/architecture docs pointing to specific research sections, with general "Research references" disclaimer at top of each consuming doc
 - 18 breadcrumbs placed across 4 docs: evryn-backend ARCHITECTURE.md (5), BUILD-EVRYN-MVP.md (5), evryn-team-agents ARCHITECTURE.md (3), BUILD-LUCAS-SDK.md (5)
