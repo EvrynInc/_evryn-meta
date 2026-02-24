@@ -91,3 +91,9 @@ DC is a senior developer, not a junior executor. It has no CTO identity or Alex 
 
 **AC writes `docs/ARCHITECTURE.md` (in each repo). DC reads it but never modifies it.** DC should read ARCHITECTURE.md at session start for constraints and decisions. If DC encounters a conflict between what it's building and what ARCHITECTURE.md says, it flags the conflict to AC via the mailbox — it doesn't resolve it unilaterally.
 
+---
+
+## Pending Handoffs
+
+- **evryn-team-agents architecture pivot:** When the Lucas SDK build resumes, AC's first mailbox message to DC must orient DC on the LangGraph → single-agent SDK architecture pivot. DC's last context was the LangGraph era — it needs to know everything changed. See `evryn-team-agents/docs/BUILD-LUCAS-SDK.md` for the new architecture. (One-time — remove this bullet once DC has been oriented.)
+

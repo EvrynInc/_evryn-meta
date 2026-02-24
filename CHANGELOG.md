@@ -10,6 +10,13 @@
 - 2 stale `docs/research/` references fixed in team-agents ARCHITECTURE.md (communication-channels path + Related Documents table)
 - Voice AI Stack moved from LEARNINGS.md to `docs/research/voice-ai-stack.md` (8th research report). Breadcrumbed in evryn-backend BUILD-EVRYN-MVP.md Voice section.
 - First LEARNINGS.md hygiene pass: 17 entries promoted to one-line stubs, Voice section moved to research. ~226 → ~145 active lines.
+- LEARNINGS fully promoted: all 33 entries now stubs. Header rewritten as "temporary holding pen." Numbered stubs for stable referencing.
+- AC CLAUDE.md: 3 Architectural Mandate bullets (lowest-risk, trust+guardrails, latency), 1 Security Mindset bullet (first principles for tool access), split source-of-truth approval from writing discipline, softened full-file-writes rule, fixed stale evryn-backend status.
+- DC CLAUDE.md: writing discipline paragraph added (survive context loss + active voice).
+- SYSTEM_OVERVIEW.md: Anthropic billing note (subscription vs API separation).
+- Lock protocols: auto-memory hygiene step added (AC + DC). Bitwarden reminder rationale added (AC).
+- DC pivot notification moved from lock-protocol transitional items → AC/DC protocol doc "Pending Handoffs" section.
+- Pre-Work #6 session doc: context notes added for fresh instance orientation.
 - OpenClaw research report created (`docs/research/openclaw-research.md`) — 12-section pattern library from open-source AI assistant, with scope disclaimer
 - Research breadcrumb convention established: italicized inline references in build/architecture docs pointing to specific research sections, with general "Research references" disclaimer at top of each consuming doc
 - 18 breadcrumbs placed across 4 docs: evryn-backend ARCHITECTURE.md (5), BUILD-EVRYN-MVP.md (5), evryn-team-agents ARCHITECTURE.md (3), BUILD-LUCAS-SDK.md (5)
