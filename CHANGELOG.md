@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-02-24
+
+- OpenClaw research report created (`docs/research/openclaw-research.md`) — 12-section pattern library from open-source AI assistant, with scope disclaimer
+- Research breadcrumb convention established: italicized inline references in build/architecture docs pointing to specific research sections, with general "Research references" disclaimer at top of each consuming doc
+- 18 breadcrumbs placed across 4 docs: evryn-backend ARCHITECTURE.md (5), BUILD-EVRYN-MVP.md (5), evryn-team-agents ARCHITECTURE.md (3), BUILD-LUCAS-SDK.md (5)
+- current-state.md updated (Pre-Work #6 research prep done)
+
 ## 2026-02-23 (evening session)
 
 - Fenwick email addendum appended to privacy questionnaire (5 items: self-assessment sharing, abuse prevention, authenticity monitoring, training data pipeline, incident response)

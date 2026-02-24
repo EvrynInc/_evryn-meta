@@ -209,4 +209,14 @@ When you need a new capability (e.g., editing Google Sheets from Claude Code), t
 
 ---
 
+## Research References as Build Breadcrumbs
+
+### Study Material ≠ Implementation Spec
+When referencing external projects or prior research in build docs, use a two-layer defense: (1) each research report carries its own disclaimer in its header explaining scope differences, and (2) each consuming doc has a general "Research references" note explaining how to treat all research links. This prevents a builder from cargo-culting patterns from a different context. The instruction is always: study the approach, understand the trade-offs, then design for *our* constraints.
+
+### Place Breadcrumbs at Decision Points
+Research references are most valuable when placed exactly where someone is actively designing something the research informs — not clustered at the top as a reading list. An inline italicized note pointing to a specific section (e.g., "§4 Memory Architecture") at the right moment in a build doc changes the quality of thinking. A bibliography at the top gets skimmed and forgotten.
+
+---
+
 *Add learnings as they emerge. Keep entries concise and actionable.*

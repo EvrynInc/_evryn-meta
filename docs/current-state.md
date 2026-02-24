@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-23T16:54:19-08:00*
+*Last updated: 2026-02-24T11:11:48-08:00*
 
 ---
 
@@ -19,7 +19,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 ## What's Next
 
 - **Pre-Work #10 — DONE.** All sources absorbed into ARCHITECTURE.md and BUILD doc. Legal flow-through landed. Historical artifacts deleted. Status markers updated.
-- **Pre-Work #6: Write Evryn's triage system prompt** — Next up. v0.1 patterns in ARCHITECTURE.md (Onboarding Patterns). Also creates Evryn's company context module.
+- **Pre-Work #6: Write Evryn's triage system prompt** — Next up. v0.1 patterns in ARCHITECTURE.md (Onboarding Patterns). Also creates Evryn's company context module. *Research prep done:* OpenClaw research report placed in `_evryn-meta/docs/research/`, breadcrumbs placed in all 4 build/architecture docs.
 - **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. After #6.
 - **Legal: Privacy & Terms questionnaire** — Sent to Fenwick. Email addendum sent (5 items). They'll start next week.
 - **Sheets work goes through Claude.ai** — AC gets read-only CSV snapshots locally for context.
