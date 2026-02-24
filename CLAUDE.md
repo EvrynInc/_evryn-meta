@@ -157,7 +157,13 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
 - Learnings & patterns → `LEARNINGS.md` or `AGENT_PATTERNS.md`
 - Session working notes → `docs/` (session doc, absorbed later)
 - Build details → the relevant build doc in the relevant repo
-- **This file (CLAUDE.md) → changes only when the operating model changes. Requires Justin's explicit approval.**
+- **Research routing:**
+  - Strategic/cross-cutting (SDK evaluations, memory architectures, framework comparisons) → `_evryn-meta/docs/research/`
+  - Build methodology (how to approach classes of problems) → `evryn-dev-workspace/docs/research/`
+  - Repo-specific build research (implementation-level) → `[repo]/docs/build-research/`
+  - When in doubt, default to `_evryn-meta/docs/research/` — it's easier to find there.
+
+**Rule: Research without breadcrumbs is dead research.** When you create a research file, place breadcrumbs in the build/architecture docs where that research would change the quality of thinking. Even preliminary breadcrumbs — they ensure the research gets discovered at the right moment instead of sitting unread in a folder.
 
 ---
 
