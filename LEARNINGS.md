@@ -4,6 +4,10 @@ Patterns, insights, and lessons learned that transfer across Evryn projects.
 
 **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 
+**Hygiene:** Dedicated passes happen on a regular schedule — not during normal work sessions. During a hygiene pass, promote learnings to appropriate new homes: behavioral rules → the relevant CLAUDE.md (AC, DC, or repo-specific), build patterns → build docs or ARCHITECTURE.md, context management insights → wherever they'll be read at the right moment. Once promoted, condense the original entry to a one-line stub pointing to where it now lives. Stubs stay so future hygiene passes can cross-pollinate to new repos or contexts. Goal: keep active (un-promoted) entries under ~150 lines so #lock reads stay cheap.
+
+**Promoted entries look like:** *Promoted → AC CLAUDE.md ("Never guess timestamps").* Just enough to know what it was and where to find the full version.
+
 *Last updated: 2026-02-20T14:05:44-08:00*
 
 ---
