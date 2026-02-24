@@ -136,6 +136,7 @@
 **What:** AI powering Lucas agent (planned) + development tool (Claude Code)
 **Status:** Claude Code (with AC/DC pattern) actively builds the system. Lucas agent not yet running — SDK build in progress.
 **Purpose:** Agent execution (Sonnet default, Opus for hard/nuanced/multilingual thinking, Haiku for routine tasks). Claude Code for development.
+**Billing:** Subscription (Pro/Team/Max) and API are completely separate billing buckets. Subscription covers Claude.ai + Claude Code usage. API is pay-per-use for programmatic agent execution — subscription tokens cannot be used. For mixed workloads (occasional interactive + autonomous agents), a lower subscription tier + API budget is often more cost-effective than a high subscription tier.
 
 ### iDenfy
 **What:** Identity verification  

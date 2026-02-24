@@ -16,8 +16,9 @@ When Justin says `#lock` or it's time for a checkpoint:
 6. **`AGENT_PATTERNS.md`** — Add appropriate agent-building learnings.
 7. **`CHANGELOG.md`** — Add brief one-liners for anything built or changed this session.
 8. **Linear** — Create tickets for small backlog items that aren't part of a current build. Don't duplicate what's in build docs or ARCHITECTURE.md.
-9. **Bitwarden reminder** — If `.env` was modified, remind Justin: "Hey, we updated .env — remember to re-upload to Bitwarden."
-10. **Commit and push** — Get everything to remote immediately.
+9. **Bitwarden reminder** — If `.env` was modified, remind Justin: "Hey, we updated .env — remember to re-upload to Bitwarden." (Files in `.gitignore` exist only on the local machine — git won't save them. Most credentials can be regenerated from service dashboards, but it's time-consuming. Prevention beats cure.)
+10. **Auto-memory hygiene** — Check `.claude/projects/*/memory/MEMORY.md`. Promote anything that belongs in persistent docs (LEARNINGS.md, CLAUDE.md, etc.), then remove it from memory. Keep memory under ~20 lines — it's a scratchpad, not a second documentation system.
+11. **Commit and push** — Get everything to remote immediately.
 
 ---
 
