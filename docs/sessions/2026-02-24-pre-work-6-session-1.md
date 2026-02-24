@@ -312,15 +312,7 @@ When we start writing the identity documents, these are the sources to draw from
 
 - **Research breadcrumbs are now in all build docs.** All 8 research files in `_evryn-meta/docs/research/` have been breadcrumbed into their consuming build/architecture docs. This means the #6 work list needs rethinking — the fresh instance will encounter research pointers inline where it's designing, rather than needing to discover them separately.
 
-- **LEARNINGS.md is fully promoted.** All 33 entries are stubs — nothing active remains. The file is now a temporary holding pen (header updated to say so).
-
 - **AGENT_PATTERNS.md has NOT been reviewed for Evryn build yet.** Justin flagged this as a #6 task: review what transfers, breadcrumb it into the build docs, and note in ARCHITECTURE.md that it was incorporated. There's substantial overlap with the "Transferable Patterns" section already in this session doc (lines 174-228), but AGENT_PATTERNS.md has additional material (multi-agent orchestration patterns, voice/emotion, safety/self-modification) that should be evaluated.
-
-- **AC + DC CLAUDE.md files updated** with promoted learnings (writing discipline, architectural mandate bullets, security principles). Source-of-truth editing rules split into approval requirement + writing discipline as separate concerns.
-
-- **Stale reference audit complete.** All active repos clean. Only broken links are in the sealed archive (low priority).
-
-**For the fresh #6 instance:** Start by reading this session doc (architecture decisions), then `evryn-backend/docs/BUILD-EVRYN-MVP.md` and `evryn-backend/docs/ARCHITECTURE.md` (which now have research breadcrumbs inline). Review `AGENT_PATTERNS.md` for transferable patterns before writing identity content.
 
 ---
 
