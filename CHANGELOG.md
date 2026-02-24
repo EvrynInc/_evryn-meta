@@ -4,6 +4,11 @@
 
 ---
 
+## 2026-02-23 (evening session)
+
+- Fenwick email addendum appended to privacy questionnaire (5 items: self-assessment sharing, abuse prevention, authenticity monitoring, training data pipeline, incident response)
+- current-state.md: removed two open design questions (gatekeeper agreement terms → pre-launch checkpoint in ARCHITECTURE.md; safety imprint → parked in legal flow-through, surfaces during design)
+
 ## 2026-02-23
 
 - **Spoke integration pass COMPLETE** — 34 gaps integrated, 1 dropped (StartEngine seeding) across 7 spokes + ARCHITECTURE.md. Gap analysis file deleted (recoverable from git).

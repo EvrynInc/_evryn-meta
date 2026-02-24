@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-23T14:57:53-08:00*
+*Last updated: 2026-02-23T16:49:10-08:00*
 
 ---
 
@@ -18,19 +18,16 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Spoke integration pass — COMPLETE.** All ~35 MP v2.3 gaps integrated across 7 spokes + ARCHITECTURE.md (34 integrated, 1 dropped). Gap analysis file deleted (recoverable from git history).
-- **Fenwick email addendum** — 5 delta items not in questionnaire. Justin has captured these into email draft.
-- **Sheets work goes through Claude.ai** — AC gets read-only CSV snapshots locally for context. No MCP server needed. Justin does Sheets editing in Claude.ai (native Drive integration) or directly in Sheets.
-- **Pre-Work #10: Build doc rewrite** — ARCHITECTURE.md complete (v4, now with Design Drivers + Matching Calibration sections). Next: rewrite BUILD-EVRYN-MVP.md — absorb sources, fix terminology, update schema. Absorption notes at `evryn-backend/docs/historical/build-doc-absorption-notes.md`.
-- **Pre-Work #6: Write Evryn's triage system prompt** — After #10. v0.1 patterns captured in `evryn-backend/docs/ARCHITECTURE.md` (Onboarding Patterns section). Also creates Evryn's company context module.
-- **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. After #10.
-- **Legal: Privacy & Terms questionnaire** — Sent to Fenwick. They'll start next week.
-- **Open design decisions:** (1) Gatekeeper agreement terms — "channel not ownership" framing resolved in GTM spoke, but formal contractual rules needed before onboarding Mark. (2) Safety imprint technical mechanism — the non-reversible hash that lets Evryn recognize banned users after account deletion. Concept defined in Fenwick privacy questionnaire (`docs/legal/privacy-and-terms-questionnaire.md`) and trust-and-safety spoke; implementation design (hashing approach, iDenfy integration, what signals feed it) TBD for `evryn-backend/docs/ARCHITECTURE.md`.
+- **Pre-Work #10 — SUBSTANTIALLY COMPLETE.** BUILD doc aligned with ARCHITECTURE.md (terminology, schema, source absorption). Legal flow-through items absorbed into ARCHITECTURE.md. Historical session artifacts deleted (fully absorbed, recoverable from git). Remaining: minor polish only.
+- **Pre-Work #6: Write Evryn's triage system prompt** — Next up. v0.1 patterns in ARCHITECTURE.md (Onboarding Patterns). Also creates Evryn's company context module.
+- **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. After #6.
+- **Legal: Privacy & Terms questionnaire** — Sent to Fenwick. Email addendum sent (5 items). They'll start next week.
+- **Sheets work goes through Claude.ai** — AC gets read-only CSV snapshots locally for context.
 
 ## Active Projects
 
-- **_evryn-meta** — Spoke integration pass COMPLETE. All 7 spokes enriched from MP v2.3. Fenwick email addendum at 5 items. Legal questionnaire sent.
-- **evryn-backend** — ARCHITECTURE.md updated (Design Drivers, Matching Calibration). BUILD-EVRYN-MVP.md rewrite is next.
+- **_evryn-meta** — Spoke integration pass COMPLETE. Fenwick questionnaire + email addendum sent. Legal questionnaire captured in `docs/legal/privacy-and-terms-questionnaire.md`.
+- **evryn-backend** — Pre-Work #10 substantially complete. ARCHITECTURE.md current (v4 + legal flow-through). BUILD doc aligned. Next: Pre-Work #6 (system prompt).
 - **evryn-team-agents** — PAUSED. Clean pause state. CLAUDE.md updated (hard stop + runtime context).
 - **evryn-dev-workspace** — DC's home repo. Identity updated (reading order, Diataxis, auto-memory hygiene, edit-approval).
 - **evryn-website** — Live at evryn.ai. CLAUDE.md is hard stop, build context in docs/ARCHITECTURE.md.
