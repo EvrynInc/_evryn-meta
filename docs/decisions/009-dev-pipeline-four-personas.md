@@ -35,6 +35,10 @@ Four specialized Claude Code personas, each in its own repo:
 
 Role contamination is real. Architects start thinking about implementation details, builders second-guess design, and nobody's dedicated job is to find problems. Separate CLAUDE.md files = separate cognitive modes = each persona does one job well instead of four jobs poorly.
 
+### Alternative Considered: Single Repo with Persona Files
+
+We considered keeping all personas in `_evryn-meta` — a minimal CLAUDE.md router ("user will tell you which persona to be") plus a `claude-personas/` folder with `ac.md`, `dc.md`, `qc.md`, `oc.md`. Architecturally cleaner (one repo, one place to maintain everything). **Rejected** because of operational reality: Justin runs multiple Claude Code instances simultaneously (AC architecting while DC builds while QC tests). Separate repos = separate VS Code windows, which is how you keep 3-5 concurrent sessions straight. Tabs within one repo would be unmanageable with multiple DCs plus AC plus QC all running.
+
 QC specifically needs access to `docs/decisions/` — so it knows what's *intentional* vs. what's a bug. Without that, QC would flag deliberate design choices as problems.
 
 ### Timing
