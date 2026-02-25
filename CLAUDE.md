@@ -217,13 +217,19 @@ When Justin steps away and you're working autonomously at the strategic level:
 
 ## #lock Protocol
 
-Checkpoint checklist: `docs/lock-protocol.md`. **Read it every time** Justin says `#lock`.
+Session-level checkpoint — capture what changed this session into persistent docs. Checklist: `docs/lock-protocol.md`. **Read it every time** Justin says `#lock`.
 
 ---
 
 ## #sweep Protocol
 
-Periodic hygiene checklist: `docs/sweep-protocol.md`. **Read it when** Justin says `#sweep`.
+Weekly consistency check — do our docs agree with each other across repos? Checklist: `docs/sweep-protocol.md`. **Read it when** Justin says `#sweep`.
+
+---
+
+## #align Protocol
+
+Principles-to-practice integration — does what we're building actually embody what we believe? Checklist: `docs/align-protocol.md`. **Read it when** Justin says `#align`.
 
 ---
 

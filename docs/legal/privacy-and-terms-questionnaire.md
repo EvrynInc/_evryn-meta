@@ -399,3 +399,17 @@ As we've been working through our internal documentation, a few items came up th
 None of these are urgent — just wanted to make sure they're in scope as you draft — and also to have clarification: some of these we don't have to fully work out right now (EU-specific stuff), but we'd rather build in a way that doesn't completely paint us into a compliance corner later.
 
 ---
+
+## Second Addendum (2026-02-25)
+
+> *Flagged during spoke readthrough of Trust & Safety documentation.*
+
+Maybe this would be boilerplate anyway, but we just want to make sure we include language covering:
+
+1. **No guarantee of matches.** There are no guarantees of a match.
+2. **Right to stop matching.** If a user behaves in harmful or exploitative ways, Evryn may stop matching them without explanation.
+3. **Balancing individual and community obligations.** Evryn balances its obligation to each individual user with its obligation to protect the safety of the broader community — and when those obligations conflict, safety takes priority.
+
+We want this to be clear enough that users understand the arrangement upfront, and defensible enough that we're not exposed if someone claims they were unfairly excluded.
+
+---
