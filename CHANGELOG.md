@@ -6,6 +6,11 @@
 
 ## 2026-02-25
 
+- Trust-and-safety spoke readthrough complete with Justin: safety identifier ↔ trust imprint hash linkage, "Honor Economy" → "Cultural Trust Fluency" (design constraint framing), section reorder (Forgiving Skepticism after Behavioral Filtering), "Canary Principle" → "Why Evryn Never Evaluates Named Individuals with Other Users", named-individuals mechanics clarified, User-AI moderation expanded from MP source, multiple tightening edits throughout
+- `#align` protocol created (`docs/align-protocol.md`): weekly principles-to-practice integration checklist
+- CLAUDE.md: one-line purpose descriptions restored for #lock, #sweep, #align protocols
+- Hub: named-individuals reference updated to match spoke retitle
+- Fenwick questionnaire: second addendum (match guarantees, exclusion language, safety-priority framing)
 - Hub final pass: identity verification, business model, growth, security, long view, Fenwick — all sections reviewed and tightened with Justin
 - SYSTEM_OVERVIEW.md retired: content absorbed into bizops-and-tooling, trust-and-safety, and technical-vision spokes. Moved to `docs/historical/`. All cross-repo references updated (4 repos, 8 files).
 - doc-ownership.md retired: ownership enforcement handled by doc headers + CLAUDE.md. Moved to `docs/historical/`.
