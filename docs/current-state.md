@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-24T14:29:40-08:00*
+*Last updated: 2026-02-24T16:49-08:00*
 
 ---
 
@@ -19,15 +19,15 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 ## What's Next
 
 - **Pre-Work #10 — DONE.** All sources absorbed into ARCHITECTURE.md and BUILD doc. Legal flow-through landed. Historical artifacts deleted. Status markers updated.
-- **Pre-Work #6: Write Evryn's triage system prompt** — Next up. v0.1 patterns in ARCHITECTURE.md (Onboarding Patterns). Also creates Evryn's company context module. *Research prep done:* OpenClaw research report placed in `_evryn-meta/docs/research/`, breadcrumbs placed in all 4 build/architecture docs.
+- **Pre-Work #6: Evryn identity architecture + content** — IN PROGRESS. Session 1 designed composable identity (core + modules). Session 2 verified SDK research + AGENT_PATTERNS integration, read Anthropic cookbooks, surfaced SDK-native alternative to raw systemPrompt composition. **Blocking question:** verify TypeScript SDK behavior (`systemPrompt` + `setting_sources` — supplement or replace?). Session doc: `_evryn-meta/docs/sessions/2026-02-24-pre-work-6-session-1.md`. Justin's Vertex AI workshop notes pending → research doc.
 - **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. After #6.
 - **Legal: Privacy & Terms questionnaire** — Sent to Fenwick. Email addendum sent (5 items). They'll start next week.
 - **Sheets work goes through Claude.ai** — AC gets read-only CSV snapshots locally for context.
 
 ## Active Projects
 
-- **_evryn-meta** — Research centralized in `docs/research/` (8 reports). All research breadcrumbed (zero dead research). LEARNINGS fully promoted (33 stubs, zero active). AC + DC CLAUDE.md updated (writing discipline, arch mandate, security). Lock protocols updated (auto-memory hygiene). Fenwick questionnaire + email addendum sent.
-- **evryn-backend** — Pre-Work #10 DONE. ARCHITECTURE.md current (v4 + legal flow-through). BUILD doc aligned. Next: Pre-Work #6 (system prompt).
+- **_evryn-meta** — Research centralized in `docs/research/` (8 reports). All research breadcrumbed (zero dead research). LEARNINGS fully promoted. Session doc has full #6 context (2 sessions). Cookbook research surfaced new SDK patterns. Verification pass complete (SDK research + AGENT_PATTERNS cross-referenced against build docs — gaps documented in session doc).
+- **evryn-backend** — Pre-Work #10 DONE. ARCHITECTURE.md current (v4 + legal flow-through). BUILD doc aligned. Next: Pre-Work #6 identity content (blocked on SDK behavior verification + architectural approach decision).
 - **evryn-team-agents** — PAUSED. Clean pause state. CLAUDE.md updated (hard stop + runtime context).
 - **evryn-dev-workspace** — DC's home repo. Identity updated (writing discipline, lock protocol auto-memory step).
 - **evryn-website** — Live at evryn.ai. CLAUDE.md is hard stop, build context in docs/ARCHITECTURE.md.
