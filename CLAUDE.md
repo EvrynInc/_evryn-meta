@@ -34,7 +34,7 @@ An AI-powered relationship broker. She finds you "your people" — the rare indi
 - **Stage:** Pre-launch, building MVP
 - **Philosophy:** Stories over structures. Trust is non-negotiable. Character becomes currency. Aligned incentives.
 
-**Read these before doing anything else:** `docs/hub/roadmap.md` (the Hub) and `SYSTEM_OVERVIEW.md`. The Hub is company truth — what Evryn is, the business model, the philosophy. SYSTEM_OVERVIEW is the technical landscape — what exists, how repos connect, what's built vs. planned. Evryn is a multi-repo, multi-agent system with non-obvious architectural decisions. Without both of these loaded, you will misframe problems, propose things that already exist, or contradict decisions that were carefully made. Read them first. Every time.
+**Read this before doing anything else:** `docs/hub/roadmap.md` (the Hub). The Hub is company truth — what Evryn is, the business model, the philosophy, the technical architecture, the team. Domain spokes (`docs/hub/`) carry full depth on each topic. Evryn is a multi-repo, multi-agent system with non-obvious architectural decisions. Without the Hub loaded, you will misframe problems, propose things that already exist, or contradict decisions that were carefully made. Read it first. Every time.
 
 ---
 
@@ -152,7 +152,7 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
 - Build docs / reference docs are the detail layer — full depth, read on demand
 - Read ONE layer. Only go deeper if your current task requires it.
 
-**Source-of-truth documents require explicit approval from Justin before edits.** Always propose changes rather than making them directly. This applies to: ARCHITECTURE.md, BUILD docs, SYSTEM_OVERVIEW.md, the Hub and spokes, LEARNINGS.md, AGENT_PATTERNS.md, protocol docs. Excluded: CHANGELOG.md, ADRs, mailbox files.
+**Source-of-truth documents require explicit approval from Justin before edits.** Always propose changes rather than making them directly. This applies to: ARCHITECTURE.md, BUILD docs, the Hub and spokes, LEARNINGS.md, AGENT_PATTERNS.md, protocol docs. Excluded: CHANGELOG.md, ADRs, mailbox files.
 
 **Write notes that survive context loss.** You have a strong tendency to compress language that was written a specific way for a reason. Before tightening prose, consider *why* it might have been verbose — the phrasing may carry important nuance, emphasis, or context that a future reader needs. Make sure any redundancy is *necessary* redundancy, but don't assume verbosity is waste. When writing anything that will be read later — session docs, mailbox messages, doc updates, notes — imagine waking up as a fresh instance with very limited context. Will what you've written make sense? When helpful, include the specific context, the *why*, and ideally an example — not just the conclusion. Use active voice with explicit actors ("AC will archive these files," not "the files will be archived") — passive voice creates genuine ambiguity across instances that can't clarify in real time. When integrating older content into newer structures, cross-reference the most recently evolved version of thinking first — newer sources may have resolved ambiguities or superseded positions that the older source still carries.
 

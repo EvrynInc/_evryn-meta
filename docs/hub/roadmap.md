@@ -87,7 +87,7 @@ Safety is structural, not bolted on. Full depth: `docs/hub/trust-and-safety.md`.
 
 ## Technical Architecture
 
-**Stack:** Claude Agent SDK + Supabase (PostgreSQL) + TypeScript. Anthropic Claude for all AI (Sonnet default, Opus for nuance, Haiku for routine). Full depth: `docs/hub/technical-vision.md` (aspirational), `evryn-backend/docs/ARCHITECTURE.md` (current v0.2), `SYSTEM_OVERVIEW.md` (cross-repo components).
+**Stack:** Claude Agent SDK + Supabase (PostgreSQL) + TypeScript. Anthropic Claude for all AI (Sonnet default, Opus for nuance, Haiku for routine). Full depth: `docs/hub/technical-vision.md` (aspirational), `evryn-backend/docs/ARCHITECTURE.md` (current v0.2).
 
 **Three Brains (conceptual model):**
 1. **Dialogue Brain** — Evryn's voice. Conversation, tone, emotional arcs.
@@ -96,7 +96,7 @@ Safety is structural, not bolted on. Full depth: `docs/hub/trust-and-safety.md`.
 
 **Dual-track processing:** Warm human conversation + structured metadata collection running in parallel. Analytical layer invisible to the user.
 
-For MVP (v0.2), the three brains collapse into a single agent. At scale, they separate into a council of specialized subagents — plus a **publisher** (safety gate that checks everything before it goes out) and **deception detection**. Detail in `SYSTEM_OVERVIEW.md`.
+For MVP (v0.2), the three brains collapse into a single agent. At scale, they separate into a council of specialized subagents — plus a **publisher** (safety gate that checks everything before it goes out) and **deception detection**. Detail in `docs/hub/technical-vision.md`.
 
 **User isolation is absolute.** Each user's conversation is its own track. Evryn never reveals one user's information to another. Multi-channel conversations (email, chat, voice) interleave *within* a user by time — same as a real friendship across channels — but never bleed *between* users. Admin access to user data must be heavily gated even from Evryn's own operators (future architecture requirement).
 

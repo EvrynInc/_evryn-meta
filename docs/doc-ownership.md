@@ -15,7 +15,7 @@
 | Document | Owner | Purpose |
 |----------|-------|---------|
 | `CLAUDE.md` | AC | Operating manual (AC's identity and methodology) |
-| `SYSTEM_OVERVIEW.md` | AC | Technical architecture, repos, services |
+| `SYSTEM_OVERVIEW.md` | — | **RETIRED** — content absorbed into Hub, spokes, and ARCHITECTURE.md. Moved to `docs/historical/`. |
 | `LEARNINGS.md` | AC | Cross-project patterns and insights |
 | `AGENT_PATTERNS.md` | AC | Agent-building learnings for Evryn product |
 | `CHANGELOG.md` | AC | What was built/changed (free to edit) |
@@ -75,4 +75,4 @@
 
 ---
 
-**Sync responsibility:** When company-level changes happen (team structure, mission, strategy), update the Hub (`_evryn-meta/docs/hub/roadmap.md`) — it's the single source of company truth. `SYSTEM_OVERVIEW.md` is a technical reference and should stay consistent with the Hub.
+**Sync responsibility:** When company-level changes happen (team structure, mission, strategy), update the Hub (`_evryn-meta/docs/hub/roadmap.md`) — it's the single source of company truth. Domain spokes carry full depth; `evryn-backend/docs/ARCHITECTURE.md` carries the build-level architecture.

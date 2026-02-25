@@ -1,8 +1,66 @@
 # Technical Vision
 
-> **How to use this file:** Evryn's aspirational technical architecture at scale — the "CTO mental model." This is distinct from `evryn-backend/docs/ARCHITECTURE.md` (how we're building v0.2) and `SYSTEM_OVERVIEW.md` (what exists and how it's connected). This spoke carries the long-term technical thinking: three brains in detail, matchmaking engine design, data pipelines, privacy architecture, and learning systems. Read this when thinking about future capabilities, scalability, or architectural direction.
+> **How to use this file:** Evryn's aspirational technical architecture at scale — the "CTO mental model." This is distinct from `evryn-backend/docs/ARCHITECTURE.md` (how we're building v0.2). This spoke carries the long-term technical thinking: three brains in detail, matchmaking engine design, data pipelines, privacy architecture, and learning systems. Also includes the system landscape diagram for visual orientation. Read this when thinking about future capabilities, scalability, or architectural direction.
 >
 > **Do not edit without Justin's approval.** Propose changes; don't make them directly.
+
+---
+
+## System Landscape
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                           EVRYN SYSTEM                                  │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│   ┌─────────────────┐                         ┌─────────────────┐      │
+│   │  EVRYN WEBSITE  │                         │    SUPABASE     │      │
+│   │  (evryn.ai)     │                         │    DATABASE     │      │
+│   │                 │                         │                 │      │
+│   │  • Landing page │                         │  Two projects:  │      │
+│   │  • Waitlist     │                         │  Agent dashboard│      │
+│   │                 │                         │  + Evryn product│      │
+│   │  Repo: evryn-   │                         │                 │      │
+│   │  website        │                         │                 │      │
+│   │                 │                         │                 │      │
+│   │  Tech: Next.js  │                         │                 │      │
+│   │  Host: Vercel   │                         └────────┬────────┘      │
+│   └─────────────────┘                                  │                │
+│                                                        │                │
+│   ┌─────────────────────────────────────────┐          │                │
+│   │          EVRYN BACKEND                  │          │                │
+│   │          (built by Claude Code)         │◄─────────┘                │
+│   │                                         │                           │
+│   │  Conversational Core:                   │     ┌─────────────────┐  │
+│   │  • Onboarding & intake                  │     │   ANTHROPIC     │  │
+│   │  • Intent collection                    │     │   (Claude API)  │  │
+│   │  • Check-ins & relationship warmth      │◄────│                 │  │
+│   │  • Matching                             │     │  AI brain for   │  │
+│   │  • Post-match follow-up & learning      │     │  all agents     │  │
+│   │                                         │     └─────────────────┘  │
+│   │  Supporting Modules:                    │                           │
+│   │  • Email intake & routing               │                           │
+│   │  • Safety/voice (publisher agent)       │                           │
+│   │  • Deception detection                  │                           │
+│   │                                         │                           │
+│   │  Admin:                                 │                           │
+│   │  • Dashboard & monitoring               │                           │
+│   └─────────────────────────────────────────┘                           │
+│                                                                         │
+│   ┌─────────────────┐     ┌─────────────────┐                          │
+│   │    HUBSPOT      │     │     iDENFY      │                          │
+│   │                 │     │                 │                          │
+│   │  • Waitlist     │     │  • ID verify    │                          │
+│   │  • Email mktg   │     │  • Trust layer  │                          │
+│   │                 │     │                 │                          │
+│   └─────────────────┘     └─────────────────┘                          │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### Member Interface (Future)
+
+Web/mobile interface — PWA, mobile-responsive from day one. Native apps deferred until user demand warrants it. Includes identity verification flow.
 
 ---
 

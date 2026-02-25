@@ -1,8 +1,8 @@
 # BizOps & Tooling
 
-> **How to use this file:** Reference doc for Evryn's business operations tools, legal entities, and vendor choices. One place to look up what tool we use for what. Read this when evaluating a new tool, checking what we already use, or onboarding someone who needs the operational picture.
+> **How to use this file:** Reference doc for Evryn's business operations tools, infrastructure services, legal entities, and vendor choices. One place to look up what tool we use for what. Read this when evaluating a new tool, checking what we already use, or onboarding someone who needs the operational picture.
 >
-> **Product/tech stack** lives in `SYSTEM_OVERVIEW.md` and `evryn-backend/docs/ARCHITECTURE.md`. This spoke covers business operations only.
+> **Product architecture** lives in `evryn-backend/docs/ARCHITECTURE.md`. **Aspirational technical vision** lives in `docs/hub/technical-vision.md`. This spoke covers business operations and infrastructure services.
 >
 > **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 
@@ -51,7 +51,7 @@
 |------|---------|-------|
 | **Stripe + Stripe Connect** | All payment processing | Evryn never holds or transmits user funds. P2P via Connect. |
 | **iDenfy** | Identity verification (current) | Pass-through: Evryn stores only verified flag + date + safety identifier. International coverage, pay-per-success. |
-| **Jumio** | Identity verification (at scale) | Being evaluated as alternative to iDenfy |
+| **Jumio** | Identity verification (long-term) | Almost certainly the right choice at scale (more robust feature set, expanded capabilities). Minimum contract was cost-prohibitive at current stage. iDenfy is more than adequate for now. Revisit when scale justifies it. |
 
 ---
 
@@ -60,8 +60,20 @@
 | Tool | Purpose | Notes |
 |------|---------|-------|
 | **Namecheap** | Domain registrar | evryn.ai, .net, .org secured; domain broker pursuing evryn.com |
-| **Vercel** | Marketing site hosting | Next.js. Pivoted from Webflow (no-code) to Next.js for more control. |
+| **Vercel** | Marketing site hosting | Next.js 15. Production: evryn.ai. Preview: evryn-website.vercel.app. Old rollback: evryn-prelaunch.vercel.app. |
+| **Cloudflare** | Turnstile captcha | Waitlist spam protection |
 | **Google Analytics** | Website traffic analytics | Marketing site only — never inside the product experience |
+
+---
+
+## Infrastructure & Platform Services
+
+| Tool | Purpose | Notes |
+|------|---------|-------|
+| **Anthropic (Claude API)** | AI for all agents | Sonnet default, Opus for nuance, Haiku for routine. API billing is separate from Claude Code subscription — different buckets entirely. |
+| **Supabase** | PostgreSQL database + serverless backend | TWO separate projects: (1) Agent dashboard project (evryn-team-agents), dashboard at evryn-dashboard.vercel.app; (2) Evryn product project (evryn-backend, was "n8n Prototype" — to be renamed). RLS on all tables. |
+| **Google Cloud** | Gmail API + Pub/Sub | Gmail API live polling for evryn@evryn.ai. Pub/Sub scaffolded but not yet wired. |
+| **GitHub** | Code repositories | EvrynInc organization |
 
 ---
 
@@ -79,7 +91,7 @@
 
 | Tool | Purpose | Notes |
 |------|---------|-------|
-| **Linear** | Backlog and task tracking | Replaced ClickUp. |
+| **Linear** | Backlog and task tracking | Replaced ClickUp. EVR workspace. Free tier. |
 | **Slack** | Team communication | |
 | **Notion** | Ideation/notes, historical vault | |
 | **Google Drive** | Document storage (Docs & Sheets) | |
@@ -95,6 +107,16 @@
 
 ---
 
+## Voice AI (Future)
+
+| Tool | Purpose | Notes |
+|------|---------|-------|
+| **Vapi** | Voice AI platform | Researched, not yet integrated. See `docs/research/` for voice research. |
+| **Hume AI** | Emotion detection for voice | Researched, not yet integrated |
+| **ElevenLabs** | Voice synthesis | Researched, not yet integrated |
+
+---
+
 ## Recruitment Platforms (Historical)
 
 Used during the founding team search. Listed for reference:
@@ -107,4 +129,4 @@ Used during the founding team search. Listed for reference:
 
 ---
 
-*Spoke created 2026-02-20 by AC. Reorganized from MPR Legal, Corporate & Tools section. Tool statuses updated where known (pivots noted inline).*
+*Spoke created 2026-02-20 by AC. Reorganized from MPR Legal, Corporate & Tools section. Updated 2026-02-25: absorbed infrastructure services from SYSTEM_OVERVIEW.md (retired), fixed iDenfy/Jumio rationale, added Voice AI section.*

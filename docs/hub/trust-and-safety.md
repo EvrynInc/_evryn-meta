@@ -34,7 +34,7 @@ Evryn observes: honesty, kindness and respect, reliability and follow-through, t
 
 Every user is verified before connections (not before exploration). The framing is relational, not bureaucratic: "I only connect people I trust. Part of that is knowing they're real." Verification is presented as protection for both users — "Would you feel comfortable if I connected you to someone I didn't really know?"
 
-**Pass-through model:** Evryn never stores identity documents, photos, or biometric data. Verification is handled entirely by the verification service (currently iDenfy, likely Jumio at scale). Evryn stores only: a verified/not-verified flag, the date of verification, and a safety identifier. The expertise stays with the experts; liability is limited; the privacy story is simple.
+**Pass-through model:** Evryn never stores identity documents, photos, or biometric data. Verification is handled entirely by a third-party service (currently iDenfy; Jumio at scale — see [bizops spoke](bizops-and-tooling.md) for rationale). Evryn stores only: a verified/not-verified flag, the date of verification, and a safety identifier. The expertise stays with the experts; liability is limited; the privacy story is simple.
 
 ### Social Trust (Vouching)
 
