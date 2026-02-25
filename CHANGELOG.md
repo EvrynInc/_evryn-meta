@@ -4,6 +4,16 @@
 
 ---
 
+## 2026-02-25
+
+- Hub final pass: identity verification, business model, growth, security, long view, Fenwick — all sections reviewed and tightened with Justin
+- SYSTEM_OVERVIEW.md retired: content absorbed into bizops-and-tooling, trust-and-safety, and technical-vision spokes. Moved to `docs/historical/`. All cross-repo references updated (4 repos, 8 files).
+- doc-ownership.md retired: ownership enforcement handled by doc headers + CLAUDE.md. Moved to `docs/historical/`.
+- Technical-vision diagram: alignment fixed (26 lines were 1 char short, causing wavy right border)
+- `#sweep` protocol created (`docs/sweep-protocol.md`): weekly hygiene checklist with resolution hierarchy
+- `#lock` protocol updated: added Hub/spokes consistency step (step 4), fixed numbering gap
+- CLAUDE.md slimmed: #lock "in short" removed (dead tokens — protocol file gets read anyway), Document Ownership section → Document Hygiene (kept rules, removed pointer to retired file), #sweep pointer added
+
 ## 2026-02-24 (evening — Session 2)
 
 - Pre-Work #6 Session 2: verification pass + cookbook research. Cross-referenced all 8 research files + AGENT_PATTERNS against ARCHITECTURE.md and BUILD doc — gaps documented in session doc.

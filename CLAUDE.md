@@ -217,9 +217,13 @@ When Justin steps away and you're working autonomously at the strategic level:
 
 ## #lock Protocol
 
-Full checklist: `docs/lock-protocol.md`. **Read it every time** Justin says `#lock` — it's the step-by-step procedure for saving state across all docs.
+Checkpoint checklist: `docs/lock-protocol.md`. **Read it every time** Justin says `#lock`.
 
-**In short:** Update `docs/current-state.md`, capture decisions, update learnings if applicable, commit and push to remote.
+---
+
+## #sweep Protocol
+
+Periodic hygiene checklist: `docs/sweep-protocol.md`. **Read it when** Justin says `#sweep`.
 
 ---
 

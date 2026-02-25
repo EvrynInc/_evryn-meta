@@ -1,6 +1,6 @@
 # Cross-Project Learnings
 
-**Temporary holding pen.** Learnings land here first, but nothing should stay. Every entry should be promoted to where it will actually be read and enacted at the right moment — the relevant CLAUDE.md, protocol doc, build doc, SYSTEM_OVERVIEW, or ADR (with proper breadcrumbing so the ADR gets discovered at the right moment, not buried). Once promoted, condense to a one-line stub. Stubs stay for cross-pollination to new repos or contexts.
+**Temporary holding pen.** Learnings land here first, but nothing should stay. Every entry should be promoted to where it will actually be read and enacted at the right moment — the relevant CLAUDE.md, Hub/spoke, protocol doc, build doc, or ADR (with proper breadcrumbing so the ADR gets discovered at the right moment, not buried). Once promoted, condense to a one-line stub. Stubs stay for cross-pollination to new repos or contexts.
 
 **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 

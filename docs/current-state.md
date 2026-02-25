@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-24T16:49-08:00*
+*Last updated: 2026-02-25T13:08-08:00*
 
 ---
 
@@ -26,7 +26,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## Active Projects
 
-- **_evryn-meta** — Research centralized in `docs/research/` (8 reports). All research breadcrumbed (zero dead research). LEARNINGS fully promoted. Session doc has full #6 context (2 sessions). Cookbook research surfaced new SDK patterns. Verification pass complete (SDK research + AGENT_PATTERNS cross-referenced against build docs — gaps documented in session doc).
+- **_evryn-meta** — Hub final pass complete. Spoke readthrough in progress (Hub done, spokes next). SYSTEM_OVERVIEW retired (absorbed into spokes), doc-ownership retired. `#sweep` protocol created (weekly hygiene). `#lock` updated with Hub/spokes consistency step. Cross-repo S_O references updated in all 4 repos. Research: 8 reports, all breadcrumbed. LEARNINGS fully promoted. Pre-Work #6 session doc has full context (2 sessions).
 - **evryn-backend** — Pre-Work #10 DONE. ARCHITECTURE.md current (v4 + legal flow-through). BUILD doc aligned. Next: Pre-Work #6 identity content (blocked on SDK behavior verification + architectural approach decision).
 - **evryn-team-agents** — PAUSED. Clean pause state. CLAUDE.md updated (hard stop + runtime context).
 - **evryn-dev-workspace** — DC's home repo. Identity updated (writing discipline, lock protocol auto-memory step).

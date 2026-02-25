@@ -1,6 +1,6 @@
 # #sweep Protocol
 
-**How to use this file:** Weekly hygiene checklist. Justin triggers this with `#sweep` (ideally once a week). AC works through the checklist and produces a short report: what's consistent, what needs attention.
+**How to use this file:** Periodic hygiene checklist. Justin triggers this with `#sweep` (ideally at least once a week). AC works through the checklist in one pass and produces a report.
 
 **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 
@@ -8,13 +8,28 @@
 
 ---
 
+## How to Resolve Inconsistencies
+
+When docs (or sections) disagree with each other, attempt to determine which one(s) are right and offer the fix. If you can't determine with reasonable confidence, just flag it for Justin.
+
+**Resolution hierarchy (company truth flows down):**
+- **Hub** anchors spokes. If a spoke contradicts the Hub on a company-level claim, the Hub is probably right.
+- **Spokes** anchor architecture and build docs on their domain. A spoke carries the full-depth thinking; downstream docs should be consistent with it.
+- **ARCHITECTURE.md** anchors build docs on system design.
+- **Build docs** scope what to build next, informed by architecture.
+- **current-state.md** reflects reality — if it contradicts an architecture or build doc, reality wins and the design doc is likely stale.
+
+**Recency is a strong signal.** Check `git log` — whichever doc was updated more recently is usually the authority. The other one drifted.
+
+---
+
 ## Checklist
 
-Work through these in order. For each item, note whether it's clean or needs attention.
+Read the Hub (it will already be loaded), then work through these in one pass. Read each document in full — this is a dedicated session, not a quick glance.
 
 ### 1. Hub / Spoke Consistency
 
-Read the Hub (`docs/hub/roadmap.md`) — it will already be loaded. Then read every spoke file under `docs/hub/` in full. For each spoke, check:
+Read every file under `docs/hub/` in full. For each spoke, check:
 - Does the Hub's hint for this spoke accurately describe what the spoke contains?
 - Does the spoke contradict or extend beyond what the Hub implies?
 - Has anything changed (in sessions, builds, or decisions) that should be reflected in the spoke but isn't?
@@ -37,7 +52,7 @@ Read `docs/current-state.md`. Does it match reality? Check against recent commit
 
 ### 6. Cross-Repo Reference Integrity
 
-As you work through the steps above, compile a running list of cross-repo references that seem high-risk for inconsistency — recently changed areas, references to docs that were moved or retired, or anything where a change in one place likely should have rippled to others. Once you've finished the other checks, go verify those references. Don't spot-check randomly; be intentional about where drift is most likely.
+As you work through the steps above, compile a running list of cross-repo references that are high-risk for inconsistency — recently changed areas, references to docs that were moved or retired, or anything where a change in one place likely should have rippled to others. Once you've finished the other checks, go verify those references. Be intentional about where drift is most likely.
 
 ---
 
@@ -55,4 +70,6 @@ After working through the checklist, give Justin a brief summary:
 - Cross-repo refs: [clean / N issues]
 ```
 
-Then detail any flagged items with what needs fixing and a proposed fix.
+For each item, state the inconsistency and your proposed fix. Group by confidence:
+- **Confident fixes** — you know which doc is the authority and what the fix should be. Present these as ready to apply.
+- **Flagged for Justin** — genuinely ambiguous, or a company-level judgment call. State which doc you think is the authority (and why), but let Justin decide.
