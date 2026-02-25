@@ -173,13 +173,11 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
 
 ---
 
-## Document Ownership
-
-Full ownership table: `docs/doc-ownership.md`. It maps every doc across Evryn repos to its owner and purpose. **Read it when** you're about to create a new document or modify one you haven't touched before — it tells you whether you have authority and what the doc is for.
+## Document Hygiene
 
 **Rule:** Every document must have a "how to use this" header explaining what belongs in it and what doesn't.
 
-For *where new content goes*, use the routing table in "Documentation Approach" above — that answers "what kind of thing is this?" The ownership table answers "who's allowed to write there?"
+For *where new content goes*, use the routing table in "Documentation Approach" above.
 
 ---
 
