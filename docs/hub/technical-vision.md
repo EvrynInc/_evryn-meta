@@ -13,31 +13,31 @@
 │                           EVRYN SYSTEM                                  │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                         │
-│   ┌─────────────────┐                         ┌─────────────────┐      │
-│   │  EVRYN WEBSITE  │                         │    SUPABASE     │      │
-│   │  (evryn.ai)     │                         │    DATABASE     │      │
-│   │                 │                         │                 │      │
-│   │  • Landing page │                         │  Two projects:  │      │
-│   │  • Waitlist     │                         │  Agent dashboard│      │
-│   │                 │                         │  + Evryn product│      │
-│   │  Repo: evryn-   │                         │                 │      │
-│   │  website        │                         │                 │      │
-│   │                 │                         │                 │      │
-│   │  Tech: Next.js  │                         │                 │      │
-│   │  Host: Vercel   │                         └────────┬────────┘      │
+│   ┌─────────────────┐                         ┌─────────────────┐       │
+│   │  EVRYN WEBSITE  │                         │    SUPABASE     │       │
+│   │  (evryn.ai)     │                         │    DATABASE     │       │
+│   │                 │                         │                 │       │
+│   │  • Landing page │                         │  Two projects:  │       │
+│   │  • Waitlist     │                         │  Agent dashboard│       │
+│   │                 │                         │  + Evryn product│       │
+│   │  Repo: evryn-   │                         │                 │       │
+│   │  website        │                         │                 │       │
+│   │                 │                         │                 │       │
+│   │  Tech: Next.js  │                         │                 │       │
+│   │  Host: Vercel   │                         └────────┬────────┘       │
 │   └─────────────────┘                                  │                │
 │                                                        │                │
 │   ┌─────────────────────────────────────────┐          │                │
 │   │          EVRYN BACKEND                  │          │                │
 │   │          (built by Claude Code)         │◄─────────┘                │
 │   │                                         │                           │
-│   │  Conversational Core:                   │     ┌─────────────────┐  │
-│   │  • Onboarding & intake                  │     │   ANTHROPIC     │  │
-│   │  • Intent collection                    │     │   (Claude API)  │  │
-│   │  • Check-ins & relationship warmth      │◄────│                 │  │
-│   │  • Matching                             │     │  AI brain for   │  │
-│   │  • Post-match follow-up & learning      │     │  all agents     │  │
-│   │                                         │     └─────────────────┘  │
+│   │  Conversational Core:                   │     ┌─────────────────┐   │
+│   │  • Onboarding & intake                  │     │   ANTHROPIC     │   │
+│   │  • Intent collection                    │     │   (Claude API)  │   │
+│   │  • Check-ins & relationship warmth      │◄────│                 │   │
+│   │  • Matching                             │     │  AI brain for   │   │
+│   │  • Post-match follow-up & learning      │     │  all agents     │   │
+│   │                                         │     └─────────────────┘   │
 │   │  Supporting Modules:                    │                           │
 │   │  • Email intake & routing               │                           │
 │   │  • Safety/voice (publisher agent)       │                           │
@@ -47,13 +47,13 @@
 │   │  • Dashboard & monitoring               │                           │
 │   └─────────────────────────────────────────┘                           │
 │                                                                         │
-│   ┌─────────────────┐     ┌─────────────────┐                          │
-│   │    HUBSPOT      │     │     iDENFY      │                          │
-│   │                 │     │                 │                          │
-│   │  • Waitlist     │     │  • ID verify    │                          │
-│   │  • Email mktg   │     │  • Trust layer  │                          │
-│   │                 │     │                 │                          │
-│   └─────────────────┘     └─────────────────┘                          │
+│   ┌─────────────────┐     ┌─────────────────┐                           │
+│   │    HUBSPOT      │     │     iDENFY      │                           │
+│   │                 │     │                 │                           │
+│   │  • Waitlist     │     │  • ID verify    │                           │
+│   │  • Email mktg   │     │  • Trust layer  │                           │
+│   │                 │     │                 │                           │
+│   └─────────────────┘     └─────────────────┘                           │
 │                                                                         │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
