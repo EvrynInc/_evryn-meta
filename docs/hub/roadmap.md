@@ -4,11 +4,13 @@
 >
 > **Do not edit this document without explicit approval from Justin.** If you think something here is wrong or incomplete, tell Justin — do not rewrite it yourself.
 >
-> **Hub hygiene:** This doc is loaded into every session — every line costs tokens. But the goal isn't brevity, it's *fidelity*. After reading the Hub, an agent should have the right mental model of Evryn at a high altitude — enough that nothing in the sub-docs is a substantive surprise. More detail, yes. Different understanding, never. When maintaining this doc with Justin: (1) If a section is growing, move detail to a spoke and leave a hint here that sets the right expectation. (2) If reading the Hub could leave a wrong impression about something important, fix it — even if that makes it longer. (3) Every time you read this, ask: is it succeeding? If not, flag it.
+> **Hub hygiene:** This doc is loaded into every session — every line costs tokens. But the goal isn't brevity, it's *fidelity*. After reading the Hub, an agent should have the right mental model of Evryn at a high altitude — enough that nothing in the sub-docs is a substantive surprise. More detail, yes. Different understanding, never. When maintaining this doc with Justin: (1) If a section is growing, move detail to a spoke and leave a hint here that sets the right expectation. (2) If reading the Hub could leave a wrong impression about something important, make sure it gets fixed — even if that makes it longer. (3) Every time you read this, ask: is it succeeding? If not, flag it.
 >
 > **Domain spokes** (`docs/hub/`) carry full depth on each topic — load them only when your current task requires that depth. Most sections below link to their spoke inline.
 >
-> **Downstream dependency:** When this document changes substantively, the Evryn company context module (`evryn_knowledge`, slug: `company-context`) should be refreshed — it's a public-safe derivative of Hub content. See `evryn-backend/docs/BUILD-EVRYN-MVP.md` Memory Architecture.
+> **Downstream dependency:** When this document changes substantively, the Evryn company context module (`evryn_knowledge`, slug: `company-context`) should be refreshed — it's a **public-safe** derivative of Hub content. See `evryn-backend/docs/BUILD-EVRYN-MVP.md` Memory Architecture.
+>
+> **Every word in this document is load-bearing.** Nothing here is filler — every phrase was chosen to convey specifically what we mean. If something reads like fluff, pause and consider what it might mean if it isn't.
 >
 > **Tactical status:** `docs/current-state.md` (what's in flight, blockers, infrastructure).
 
@@ -26,14 +28,14 @@ Evryn is active, not passive. She starts conversations. She thinks about you in 
 
 **What Evryn is NOT:** Not a dating app ("a resonance layer for life"). Not a chatbot ("a relational intelligence with judgment"). Not another network ("a trust-based connection engine"). Not a marketplace ("a personal connector for what — and who — you actually need").
 
-**Entity:** Evryn Inc., Delaware Public Benefit Corporation. Mission-locked.
+**Entity:** Evryn Inc., Delaware Public Benefit Corporation. Mission-locked to "*foster trusted human connection for our users by developing systems that create high-resonance connections, responsibly steward personal information and insights, and structurally protect emotional wellbeing, informed consent, and relational alignment and trust across every interaction*".
 
 ## Why Now
 
 - **AI can finally be a trusted presence**, not just a tool
 - **Cultural fatigue** with extraction, manipulation, and addiction-driven platforms
 - **Loneliness epidemic** + professional displacement = acute demand for trusted connection
-- **Competitors can't follow** — incumbents are trapped by models that require keeping things broken; upstarts can't catch up to compounding trust
+- **Competitors can't follow** — incumbents are trapped by their financial dependence on models that require keeping things broken; upstarts can't catch up to compounding trust
 
 ## Trust & Fit
 
@@ -44,8 +46,8 @@ Trust and fit are the operating system, not features. Evryn only connects people
 - **You're always in control.** No manipulation, no auto-invites, no fake urgency, no gamification, no ads, no data selling.
 - **Behavioral filtering, not belief filtering.** Filters predatory behavior, deception, coercion — not politics or worldview.
 - **Trust imprint on deletion.** Personal data purged; non-reversible salted hash anchors trust memory so bad actors can't reset.
-- **Identity verification** before connections. Relational framing, not bureaucratic. Pass-through model — Evryn never stores documents or biometrics.
-- **The canary principle.** Evryn never evaluates or comments on specific named individuals — any response creates a baseline where deviation leaks information. See `docs/decisions/008-trust-mirror-dropped.md`.
+- **Identity verification** before connections — "I only connect people I trust, and part of that is knowing they're real." Evryn never stores ID documents or biometrics — a third-party service handles verification; Evryn only stores verified or not.
+- **The canary principle.** Evryn never evaluates or comments on specific named individuals — because *any* response would create a baseline where deviation leaks information. See `docs/decisions/008-trust-mirror-dropped.md`.
 
 ## How Connections Work
 
@@ -58,19 +60,19 @@ Everyone who interacts with Evryn is a "user" — whether they came through a ga
 
 ## Business Model
 
-Evryn is a **broker**, not a traditional SaaS. Everyone is a "user" — both sides pay per-connection. Full depth: `docs/hub/business-model.md`.
+Evryn is a **broker**, not a subscription platform — she gets paid when she delivers, not for access. Everyone is a "user" — both sides pay per-connection. Full depth: `docs/hub/business-model.md`.
 
-- **Trust-based pricing:** Users pay what they believe is fair. 100% satisfaction guarantee.
+- **Trust-based pricing:** Connections span from a free favor to a $10,000 executive match — any fixed pricing leaves money on the table or prices people out. And how the user shows up in the exchange tells Evryn something about how they show up in relationships. Evryn notices.
 - **Three revenue streams:** (1) Match payments, (2) Post-match transactions (Stripe Connect), (3) Participant-based business access ("ads without ads").
-- **Structural moat:** Trust compounds. LTV is exponential — each success drives more demand. Legacy platforms profit from churn; Evryn profits from success.
 - **The flywheel:** Value compounds after a connection, not just during. You seek a soulmate → then a wedding planner → then a midwife → a babysitter → a new job. The more Evryn knows you, the more verticals open up. Every success fuels growth.
+- **Structural moat:** Legacy platforms are structurally incentivized to keep you *almost* satisfied — solving your problem kills their subscription. Evryn only gets paid when the connection works. Trust compounds; LTV is exponential.
 
 ## Safety & Moderation
 
 Safety is structural, not bolted on. Full depth: `docs/hub/trust-and-safety.md`.
 
 - **No open messaging.** Users can't see or contact each other unless Evryn initiates and both opt in. No feeds, no forums, no comment threads.
-- **Evryn stays present.** After making a connection, she quietly observes early exchanges. Can intervene, end chats, or remove users from future consideration.
+- **Evryn stays present.** After making a connection, she will quietly observe early exchanges, only if both users agree. Can intervene, end chats, or remove users from future consideration.
 - **Crisis protocols.** Mental health crises → support mode + resources + may escalate to human. Illegal activity → disengage + legal review.
 
 ## Current Strategy
@@ -81,7 +83,7 @@ Safety is structural, not bolted on. Full depth: `docs/hub/trust-and-safety.md`.
 - **Lucas (Chief of Staff agent) PAUSED** — building Evryn product first. Everything transfers back.
 - **Website** live at evryn.ai.
 - **GTM:** LA film industry first. Why: acute need (everyone either clamoring for attention or drowning in it), dense network (each customer knows hundreds of prime leads), founder advantage (Justin's 78K+ second-gen industry contacts). Two parallel channels: **top-down** via gatekeepers like Mark — high-volume connectors whose ~1,000 weekly cast-offs become Evryn users; **bottom-up** via invite-only "whisper cascade" — grow by solving, proving, and being invited forward. Full depth: `docs/hub/gtm-and-growth.md`.
-- **Growth is conversationally embedded.** The ideal landing page is "talk to Evryn." She pitches from the user's vantage point while demonstrating value.
+- **Growth is conversationally embedded.** The ideal landing page is "talk to Evryn." She demonstrates value by tailoring to the user's specific needs.
 
 ## Technical Architecture
 
@@ -100,15 +102,19 @@ For MVP (v0.2), the three brains collapse into a single agent. At scale, they se
 
 **Script-as-skill, not script-as-constraint.** Evryn receives onboarding scripts + the reasoning behind them, then flows naturally while hitting the same targets. Not a script-follower — a skilled agent who understands the technique.
 
-**Security:** Information firewalling by construction (not instruction). Front-facing Evryn is structurally blind to sensitive data. Zero-trust, defense in depth. "46-inch titanium."
+**Security:** Information firewalling by construction (not just instruction). Front-facing Evryn is structurally blind to sensitive data. Zero-trust, defense in depth.
 
-**Internal/external firewalling for Lucas.** Lucas operates both internally (team coordination) and externally (via Evryn). The Hub is internal company truth. Any external-facing derivative must be firewalled so internal-only information cannot leak.
+**Internal/external firewalling for Lucas.** Lucas operates both internally (team coordination) and externally (via Evryn). The Hub is internal company truth; externally, Lucas references only Evryn's public-safe company context module (`evryn_knowledge`). Internal-only information must never leak.
 
 ## The Long View
 
 Trust compounds. Evryn's ultimate leverage: owning the trust layer of human connection. The moat is built not just on AI, but on accumulated human outcomes that only Evryn has visibility into. Full depth: `docs/hub/long-term-vision.md`.
 
-The vision: a world where the default is that relationships are high quality and people can be trusted — because they're vetted through a reliable trust broker. Evryn doesn't just connect you to others — she connects you more to yourself. Connection is not a lost art. It's just been buried. Evryn is here to surface what matters.
+The vision: a world where the *default* would be that people can be trusted and relationships actually work — because there's a reliable trust broker. Mental health improves. Divorce drops. Job satisfaction rises. Money becomes less necessary as Evryn does what money was always meant to do — vouch for your contributions and let you carry forward value.
+
+**Target state:**
+1. Trust data held by an independent Swiss foundation, structurally inaccessible even to Evryn Inc.
+2. Evryn's trust layer is designed to optionally become infrastructure — competitors could embed it rather than compete with it.
 
 ## Team
 
@@ -116,7 +122,7 @@ The vision: a world where the default is that relationships are high quality and
 - **Lucas Everhart** — Chief of Staff agent (Claude Agent SDK). Primary autonomous operator. Paused for Evryn build.
 - **AI Team** (Lucas subagents): Alex (CTO), Taylor (COO/CFO), Dana (CPO), Dominic (Strategic Advisor), Jordan (CGO), Nathan (Internal Counsel), Thea (EA — separate subagent).
 - **Human Advisors:** Andrew Lester (Operations), Salil Chatrath (Product), Manuele Capacci (Design), Megan Griffiths (Film Industry).
-- **Legal:** Fenwick & West (strategic legal partner).
+- **Legal:** Fenwick & West (legal and strategic partner).
 - **Pilot User:** Mark (August Island Pictures / Eva's Wild).
 
 ## Repositories
