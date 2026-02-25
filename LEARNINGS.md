@@ -32,8 +32,8 @@
 20. *Promoted → AC CLAUDE.md Architectural Mandate ("Start with the Lowest-Risk Component").*
 21. *Promoted → AC CLAUDE.md Architectural Mandate ("Trust + Guardrails > Micromanagement").*
 22. *Promoted → ADR-006 + BUILD-LUCAS-SDK.md ("SDK Features Replace Custom Infrastructure").*
-23. *Promoted → SYSTEM_OVERVIEW.md Anthropic section ("Subscription Tokens ≠ API Tokens").*
-24. *Promoted → SYSTEM_OVERVIEW.md Anthropic section ("Right-Size Your Subscription").*
+23. *Promoted → SYSTEM_OVERVIEW.md Anthropic section ("Subscription Tokens ≠ API Tokens"). (SYSTEM_OVERVIEW retired; content absorbed into bizops-and-tooling spoke.)*
+24. *Promoted → SYSTEM_OVERVIEW.md Anthropic section ("Right-Size Your Subscription"). (SYSTEM_OVERVIEW retired; content absorbed into bizops-and-tooling spoke.)*
 25. *Promoted → AC CLAUDE.md Architectural Mandate ("Latency Matters for Primary Interfaces").*
 26. *Promoted → lock-protocol.md Bitwarden reminder (".env Files Need Their Own Backup Strategy").*
 27. *Promoted → lock-protocol.md Bitwarden reminder ("Credentials Are Recoverable, But Annoying").*

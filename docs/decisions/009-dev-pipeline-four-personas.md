@@ -57,5 +57,5 @@ When Lucas/Alex comes back online, these personas can become subagent perspectiv
 
 - Two new repos to create (AC's responsibility, triggered by BUILD doc milestones)
 - Mailbox protocol docs need to account for four-way communication
-- SYSTEM_OVERVIEW.md needs updating when repos are created
+- Hub repos table and bizops-and-tooling spoke need updating when repos are created (SYSTEM_OVERVIEW.md retired 2026-02-24, content absorbed into spokes)
 - Hub spoke on dev pipeline may be warranted once the full pipeline is running
