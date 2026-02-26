@@ -1,6 +1,6 @@
 # Technical Vision
 
-> **How to use this file:** Evryn's aspirational technical architecture at scale — the "CTO mental model." This is distinct from `evryn-backend/docs/ARCHITECTURE.md` (how we're building v0.2). This spoke carries the long-term technical thinking: three brains in detail, matchmaking engine design, data pipelines, privacy architecture, and learning systems. Also includes the system landscape diagram for visual orientation. Read this when thinking about future capabilities, scalability, or architectural direction.
+> **How to use this file:** The widest lens on Evryn's technical architecture — the north star that shapes every build decision. Covers three brains in detail, matchmaking engine design, data pipelines, privacy architecture, and learning systems. Also includes the system landscape diagram for visual orientation. Zooms out to where Evryn is heading long-term; anchors down into `evryn-backend/docs/ARCHITECTURE.md` (product architecture, v0.2–v1.0) where the build gets specific. Read this when thinking about future capabilities, scalability, or architectural direction.
 >
 > **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 
@@ -39,12 +39,14 @@
 │   │  • Post-match follow-up & learning      │     │  all agents     │   │
 │   │                                         │     └─────────────────┘   │
 │   │  Supporting Modules:                    │                           │
-│   │  • Email intake & routing               │                           │
-│   │  • Safety/voice (publisher agent)       │                           │
-│   │  • Deception detection                  │                           │
-│   │                                         │                           │
-│   │  Admin:                                 │                           │
-│   │  • Dashboard & monitoring               │                           │
+│   │  • Email intake & routing               │     ┌─────────────────┐   │
+│   │  • Safety/voice (publisher agent)       │◄────│  GOOGLE CLOUD   │   │
+│   │  • Deception detection                  │     │                 │   │
+│   │                                         │     │  • Gmail API    │   │
+│   │  Admin:                                 │     │  • Pub/Sub      │   │
+│   │  • Dashboard & monitoring               │     │                 │   │
+│   │                                         │     └─────────────────┘   │
+│   │  Host: Railway                          │                           │
 │   └─────────────────────────────────────────┘                           │
 │                                                                         │
 │   ┌─────────────────┐     ┌─────────────────┐                           │
@@ -57,6 +59,8 @@
 │                                                                         │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
+
+**Where we are now:** v0.2 "Gatekeeper's Inbox" — email-based, single agent, single gatekeeper. Everything below is the architecture Evryn is growing into. Current build details: `evryn-backend/docs/ARCHITECTURE.md`. Build phases: `evryn-backend/docs/BUILD-EVRYN-MVP.md`.
 
 ### Member Interface (Future)
 
@@ -271,9 +275,9 @@ The LLM is wrapped in a disciplined stack, not used as a monolith:
 
 **Batch learning (reflection layer):** At intervals, Evryn aggregates match success/failure signals, conversation tone maps, behavioral patterns (ghosting, engagement, response timing). These inform updates to matchmaking logic, conversation strategies, and timing calibration. This is what makes her feel both deeply present and quietly evolving.
 
-### Pre-Training with Simulated Data
+### Simulated Data Strategy
 
-At the outset, Evryn's matchmaking logic is pre-trained using simulated data and expert-tagged scenarios — fictional profiles, controlled conversations, and labeled match outcomes. This provides a working baseline before any live data enters the system. As soon as closed beta begins, real user interaction data (under explicit consent) replaces simulation. Even early match attempts — successful or not — generate labeled datapoints for future tuning.
+Synthetic data plays a role at every stage, but the purpose evolves. Early on, synthetic test fixtures validate Evryn's email classification judgment — realistic scenarios covering the full spectrum from clear gold to tricky edge cases. As matching goes live (v0.3+), simulated data shifts to pre-training the matchmaking engine — fictional profiles, controlled conversations, and labeled match outcomes that provide a working baseline before real matching data exists. As real user data accumulates (under explicit consent), it progressively replaces simulation. Even early match attempts — successful or not — generate labeled datapoints for future tuning.
 
 ### Model Deployment Discipline
 

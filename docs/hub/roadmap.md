@@ -77,9 +77,9 @@ Safety is structural, not bolted on. Full depth: `docs/hub/trust-and-safety.md`.
 
 ## Current Strategy
 
-**Build stages:** v0.1 (Custom GPT PoC) done → **v0.2 (Mark's Inbox)** ← current → v0.3 (cast-off outreach + onboarding) → v0.4 (wizard-of-oz matching) → v1.0 (full matching).
+**Build stages:** v0.1 (Custom GPT PoC) done → **v0.2 (Gatekeeper's Inbox)** ← current → v0.3 (cast-off outreach + onboarding) → v0.4 (wizard-of-oz matching) → v1.0 (full matching).
 
-- **v0.2 "Mark's Inbox":** Evryn surfaces connections from Mark's inbox. Mark forwards emails → Evryn identifies who's worth Mark's time (gold/pass/edge case) → drafts notification → Justin approves via email → Evryn delivers. These are connections being brokered, not emails being sorted — tracked as such from day one.
+- **v0.2 "Gatekeeper's Inbox":** Evryn surfaces connections from a gatekeeper's inbox. Gatekeeper forwards emails → Evryn identifies who's worth their time (gold/pass/edge case) → drafts notification → Justin approves via email → Evryn delivers. Pilot gatekeeper: Mark. These are connections being brokered, not emails being sorted — tracked as such from day one.
 - **Lucas (Chief of Staff agent) PAUSED** — building Evryn product first. Everything transfers back.
 - **Website** live at evryn.ai.
 - **GTM:** LA film industry first. Why: acute need (everyone either clamoring for attention or drowning in it), dense network (each customer knows hundreds of prime leads), founder advantage (Justin's 78K+ second-gen industry contacts). Two parallel channels: **top-down** via gatekeepers like Mark — high-volume connectors whose ~1,000 weekly cast-offs become Evryn users; **bottom-up** via invite-only "whisper cascade" — grow by solving, proving, and being invited forward. Full depth: `docs/hub/gtm-and-growth.md`.
@@ -87,7 +87,7 @@ Safety is structural, not bolted on. Full depth: `docs/hub/trust-and-safety.md`.
 
 ## Technical Architecture
 
-**Stack:** Claude Agent SDK + Supabase (PostgreSQL) + TypeScript. Anthropic Claude for all AI (Sonnet default, Opus for nuance, Haiku for routine). Full depth: `docs/hub/technical-vision.md` (aspirational), `evryn-backend/docs/ARCHITECTURE.md` (current v0.2).
+**Stack:** Claude Agent SDK + Supabase (PostgreSQL) + TypeScript. Anthropic Claude for all AI (Sonnet default, Opus for nuance, Haiku for routine). Full depth: `docs/hub/technical-vision.md` (north star), `evryn-backend/docs/ARCHITECTURE.md` (product architecture, v0.2–v1.0).
 
 **Three Brains (conceptual model):**
 1. **Dialogue Brain** — Evryn's voice. Conversation, tone, emotional arcs.
@@ -130,7 +130,7 @@ The vision: a world where the *default* would be that people can be trusted and 
 | Repo | Purpose | Status |
 |------|---------|--------|
 | `_evryn-meta` | AC's home. Hub, cross-repo docs | Active |
-| `evryn-backend` | Evryn product agent (Mark's Inbox) | Active — building |
+| `evryn-backend` | Evryn product agent (Gatekeeper's Inbox) | Active — building |
 | `evryn-team-agents` | Lucas (Chief of Staff) runtime | Paused |
 | `evryn-website` | Marketing site (evryn.ai) | Live |
 | `evryn-dev-workspace` | DC's home. Identity & methodology | Active |
