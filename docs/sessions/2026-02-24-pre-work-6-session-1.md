@@ -1,8 +1,8 @@
 # Pre-Work #6: Sessions — Evryn Identity Architecture
-**Dates:** Session 1: 2026-02-23 evening | Session 2: 2026-02-24 evening
+**Dates:** Session 1: 2026-02-23 evening | Session 2: 2026-02-24 evening | Session 3: 2026-02-24 late evening
 **Participants:** Justin + AC
-**Status:** In progress — architecture decided in S1, S2 surfaced a potentially better SDK-native approach from cookbook research. Identity content writing NOT started — waiting on architectural resolution.
-**Post-compaction orientation:** Read this ENTIRE doc (both sessions). Session 2 findings may change the composable identity approach from Session 1. Key new sources: Anthropic cookbooks (Chief of Staff Agent, Memory, Compaction). The architectural decisions from Session 1 are directionally correct but Session 2 opened an SDK-native alternative that needs resolution before writing begins.
+**Status:** In progress — S1 architecture decided, S2 surfaced SDK-native alternative, S3 resolved major architectural questions (module stacking, operator security, Python vs TypeScript, context management philosophy). Identity content writing NOT started — waiting on SDK behavior verification + remaining decisions.
+**Post-compaction orientation:** Read this ENTIRE doc (all sessions). Session 1 established composable identity architecture. Session 2 surfaced SDK-native alternative from cookbooks. Session 3 advanced significantly: confirmed Option C (hybrid), evolved module architecture from flat list to situation×activity matrix, resolved operator security (Slack only), established Python vs TypeScript direction (TS for agent runtime, Python for ML services), confirmed context management philosophy (curated memory > brute-force history). Key remaining blocker: verify TypeScript SDK behavior (`systemPrompt` + `setting_sources` — supplement or replace?).
 
 > **How to use this file:** Session document capturing all decisions, research findings, and architectural conclusions from the first Pre-Work #6 working session. Next session picks up where this leaves off. This is a working document — absorb into permanent docs when the work is complete.
 
@@ -650,3 +650,217 @@ Everything from Session 1's inventory (lines 232-264 above) PLUS:
 ---
 
 *Session 2 captured 2026-02-24T16:44-08:00 by AC.*
+*Session 3 added 2026-02-24T17:41-08:00 by AC.*
+
+---
+
+# Session 3 — Architectural Decisions + Python vs TypeScript (2026-02-24)
+
+**Goal:** Justin reviewed Session 2 content and provided detailed notes. This session resolved several major architectural questions and surfaced one potentially load-bearing decision (language choice) that needs an ADR.
+
+**What happened:** Justin walked through Session 2's verification results and cookbook findings with detailed feedback. Six decision areas addressed: operator security, Option A/B/C resolution, module stacking architecture, publisher subagent design, Python vs TypeScript, and context management philosophy.
+
+---
+
+## Justin's Notes on Session 2
+
+### On OpenClaw
+
+Justin clarified: OpenClaw is strictly a reference library for ideas — not a blueprint. We cherry-pick and adapt what's useful to our stack. Nothing is required to be implemented. The current state of research is a "grab bag" that #6 is sorting.
+
+### On Composable Identity — Justin Needed the Big Picture
+
+Justin requested a low-resolution visual of the overall architecture before diving into pieces. He thinks visually — needs the shape before the components make sense. AC provided a layered diagram:
+
+```
+EVERY TIME EVRYN WAKES UP:
+  Trigger Script (detects what happened)
+    → Layer 1: Core Identity (always — who Evryn IS)
+    → Layer 2: The Right Module (varies — what job right now)
+    → Layer 3: Context (varies — who is she talking to, from Supabase)
+    → Claude wakes up, reads the packet, IS Evryn for this task.
+```
+
+Key framing: Claude wakes up with amnesia every time. The composable identity is "building the right packet for this specific task." The security model is structural — operator content only loads when the code decided to load it, not when Evryn decided.
+
+### On Memory Tiers
+
+Justin asked about the relationship between "two types of memory," "tiered memory," and the "4-tier system." AC clarified: they're the same architecture at different zoom levels. The 4-tier system in `memory-systems.md` is the most complete:
+
+1. **Core Memory** — small curated index, always in context (like a wallet)
+2. **Working Memory** — today's context, current conversation (like a desk)
+3. **Long-Term Memory** — searchable archive in Supabase with semantic search (like a filing cabinet)
+4. **Consolidation** — background process that moves working → long-term, detects patterns (like cleaning your desk at end of day)
+
+Mapped to SDK components in BUILD-LUCAS-SDK.md. Not yet landed in Evryn product ARCHITECTURE.md — identified as a gap to close.
+
+---
+
+## Decisions Made in Session 3
+
+### Decision 1: Operator Module — Slack Only (v0.2)
+
+**Decision:** Only Justin's verified Slack user ID loads the operator module. Email from Justin goes through the normal conversation module — Evryn knows who she's talking to but doesn't load admin tools.
+
+**Reasoning:** Slack authentication is robust (OAuth, verified user IDs, SOC 2). Email is more vulnerable (spoofing, header forgery, prompt injection in forwarded bodies). The operator module contains admin capabilities that should have the highest security bar.
+
+**Nuance:** If Justin's email arrives from his verified Gmail, Evryn can be warm (she knows it's Justin) but operates in conversation mode, not operator mode. "She knows who she's talking to, but the kitchen door stays closed unless you come in through Slack."
+
+**At scale (v0.3+):** Could add a custom internal app with 2FA/hardware key if needed. Slack is sufficient for v0.2.
+
+### Decision 2: Option C (Hybrid) Confirmed
+
+**Decision:** Use `setting_sources` for CLAUDE.md (core identity), output styles, hooks, and agent definitions. Use `systemPrompt` for mode-specific module injection.
+
+**Status:** Still needs TypeScript SDK verification (does `systemPrompt` supplement or replace CLAUDE.md?). If it replaces, fall back to Option A.
+
+### Decision 3: Module Architecture — Situation × Activity Matrix
+
+**Decision:** Modules evolve from a flat list to two types that stack:
+
+- **Situation modules** — who is this person and why are they here? (gatekeeper, gold contact, cast-off, unknown new user)
+- **Activity modules** — what is Evryn doing right now? (onboarding, conversation, triage, operator)
+
+**Why:** Justin's insight: onboarding is shared across situations. The same rapport-building, question-asking, signal-listening content applies whether you're onboarding a gatekeeper, a gold contact, or a cast-off. The *situation* provides the customization (handle with care vs. doesn't know they were screened).
+
+**Trigger composition becomes:** `Core + situation(who) + activity(what) + user context from Supabase`
+
+**Updated file structure:**
+
+```
+identity/
+├── core.md                          ← Always loaded (via CLAUDE.md or systemPrompt)
+├── situations/
+│   ├── gatekeeper.md                ← Mark-type context (v0.2)
+│   ├── gold-contact.md              ← v0.3
+│   └── cast-off.md                  ← v0.3
+├── activities/
+│   ├── onboarding.md                ← Getting to know someone (shared across situations)
+│   ├── conversation.md              ← Ongoing relationship
+│   ├── triage.md                    ← Sorting inbound email
+│   └── operator.md                  ← Justin mode (Slack-only trigger)
+└── knowledge/
+    └── company-context.md           ← On-demand
+```
+
+**Impact on v0.2:** Only one situation (gatekeeper = Mark) and a few activities. But structuring this way means v0.3 adds situation modules without rewriting activity modules.
+
+### Decision 4: Publisher Subagent — Narrow Context + Flag-Back Pattern
+
+**Decision:** Publisher is a separate subagent with deliberately limited context. It does NOT get full conversation history.
+
+**Publisher receives:**
+- The draft outbound message
+- Short context summary (who's the recipient, what mode, what triggered this)
+- Recipient's basic profile summary
+- Hard rules checklist (never reveal user info, never evaluate named individuals, tone check)
+
+**Publisher does NOT receive:**
+- Full conversation history
+- Evryn's internal reasoning
+- Other users' data
+
+**Publisher output:** Either "Clear" or "Flag: [specific concern]. Suggestion: [alternative]." Flags go back to the primary agent, which HAS full context and either adjusts or makes the case. If the primary agent can't address the concern, it escalates to Justin.
+
+**Key insight (from Justin, prior session):** Publisher can't possibly have enough context, so it's not a censor — it's a thoughtful editor. The narrow scope is a *feature*, not a limitation. It forces evaluation of the message on its face, avoids the "reviewing your own work with the same biases" problem. Token cost is ~10-15% overhead per outbound message, not 100%.
+
+**For v0.2:** Justin IS the publisher (the approval gate in Phase 1d). Publisher subagent is v0.3+.
+
+**Source:** Publisher role is defined in `_evryn-meta/docs/hub/technical-vision.md` line 69: "Deliberately narrow context — doesn't carry Evryn's full conversational state."
+
+### Decision 5: Python vs TypeScript — AC Recommendation (Pending Justin's Approval)
+
+**AC's recommendation:** TypeScript for the agent runtime. Python for ML services when the time comes (v0.3+).
+
+**The question is not "Python or TypeScript for Evryn"** — it's whether the agent runtime (talks to Claude, reads emails, manages conversations) should be the same language as future ML services (trains models, generates embeddings, runs similarity search).
+
+**Why separate services regardless of language:**
+- Different lifecycles (agent runtime updates weekly, models update quarterly with A/B testing)
+- Different scaling patterns (agent = horizontal/I/O-bound, ML = vertical/GPU-bound)
+- Different reliability profiles (ML training crash shouldn't kill email processing)
+- Industry standard pattern (Netflix, Spotify, Uber all use multi-language service architectures)
+
+**Why TypeScript for agent runtime specifically:**
+- TypeScript SDK is more mature (v0.2.51 vs Python's v0.1.41 alpha)
+- More complete hook coverage (SessionStart/End, Notification hooks missing in Python)
+- V2 preview interface available in TypeScript
+- 1.85M weekly downloads vs alpha-status Python SDK
+- Single `query()` interface vs Python's split between `query()` and `ClaudeSDKClient`
+
+**Why Python for ML services (when needed):**
+- PyTorch, scikit-learn, sentence-transformers, FAISS, NumPy — no TypeScript equivalents
+- Technical vision demands: complementarity vectors, HLM scoring, AIM learning, model training, embedding generation
+- This work starts v0.3+, not now
+
+**The strongest dissent (captured for completeness):** "Evryn is an AI company, not a web app that uses AI. The entire AI ecosystem — models, libraries, research papers, community, hiring pool — is Python. The two-language tax compounds: every new developer needs both, every API boundary adds latency and failure points, every cookbook pattern needs translation. The Python SDK will mature. Build in the language of AI."
+
+**Counter to dissent:** The two-language architecture is separation of concerns, not a tax. It's the same reason you don't put the kitchen in the dining room. The TypeScript SDK maturity advantage is real TODAY — building on an alpha SDK for future ecosystem convenience is choosing hope over evidence. The ML work doesn't start until v0.3+. And the "1 line in Python vs 50 lines across two services" argument assumes tight coupling, which is bad architecture for systems with different scaling and reliability profiles.
+
+**Safeguard:** Re-check SDK maturity before DC starts Phase 1. If Python SDK reaches feature parity, re-evaluate. This decision should be recorded as an ADR.
+
+**Status:** AC recommendation made. Awaiting Justin's decision.
+
+### Decision 6: Context Management Philosophy — Curated Memory > Brute-Force History
+
+**Decision:** The UX goal is "Evryn genuinely knows you." This is achieved through curated understanding (the 4-tier memory system), not brute-force recall (200k tokens of raw conversation history).
+
+**Why curated is better:**
+- A story (distilled understanding) IS knowing someone. Raw history is just recording.
+- The right information surfaced at the right moment > everything present and Claude sorting through it
+- Dramatically lower token cost
+- The 4-tier system provides the safety net: Core memory (always there) + Working memory (recent) + Long-term memory (searchable archive for details the story didn't carry) + Consolidation (keeps the story fresh)
+
+**The risk (acknowledged):** Synthesis quality. If consolidation drops a detail that mattered (e.g., Mark's daughter's piano recital), Evryn draws a blank when he references it. This is worse than never remembering, because the expectation was set.
+
+**The mitigation:** Semantic retrieval (Tier 3) catches what the story missed. "Piano recital" → retrieves the relevant memory → Evryn responds naturally. The guardrail is: the consolidation process must be high-quality — intelligent, nuanced, preserve-the-piano-recital good.
+
+**Infrastructure approach confirmed:** SDK handles plumbing + compaction as safety net (never crash from context overflow). We handle context composition (what Evryn knows per query). Custom > generic because we know our domain.
+
+**Justin's framing:** "Whatever allows her to feel seen, heard, *known* — that's the direction we go. I'd rather gamble on higher costs if it gets us the soul and connection of Evryn."
+
+---
+
+## Updated Remaining Work Items for #6
+
+### Must Do Before Writing Identity Content
+
+1. ~~Resolve SDK-native vs raw composition~~ → **Option C confirmed.** Still need TypeScript SDK verification.
+2. **Verify TypeScript SDK behavior** — does `systemPrompt` + `setting_sources=["project"]` result in both CLAUDE.md and systemPrompt loaded? (BLOCKING)
+3. **Get Justin's approval** on Python vs TypeScript recommendation → record as ADR
+4. **Update ARCHITECTURE.md and BUILD doc** with:
+   - Option C hybrid approach (once SDK verified)
+   - Situation × Activity module structure
+   - Operator security model (Slack only)
+   - Publisher subagent design (narrow context + flag-back)
+   - Explicit "short SDK sessions" principle
+   - OpenClaw §3 breadcrumb (token budgeting, injection order)
+   - Prompt caching architecture (static/dynamic split)
+   - Hooks design (audit logging, security gates)
+   - Vertex AI as future deployment option
+   - 4-tier memory system (from memory-systems.md research)
+5. **Land AGENT_PATTERNS concepts into identity structure:**
+   - Guidance vs Rules → shapes core.md
+   - Dynamic Tensions → goes in core.md
+   - Two Dimensions → shapes module separation + output styles
+6. **Justin drops Vertex AI workshop notes** → AC creates research doc
+7. **Justin's remaining notes on Session 2 content** (if any)
+
+### Can Do In Parallel / After
+
+8. Review Beautiful Language scripts — breadcrumb, mark as ingested
+9. Breadcrumb visual identity to Growth/UX spokes
+10. Breadcrumb growth invitation scripts to v0.3 locations
+11. Read cookbooks more deeply for DC-relevant patterns
+12. Create research doc from Vertex AI workshop notes
+
+### The Actual Writing (After Architecture Is Resolved)
+
+13. Write core identity (core.md)
+14. Write situation modules (gatekeeper for v0.2; gold-contact, cast-off as stubs for v0.3)
+15. Write activity modules (onboarding, conversation, triage, operator)
+16. Write company context module
+17. Pre-Work #9 (DC CLAUDE.md update) — can proceed in parallel
+
+---
+
+*Session 3 captured 2026-02-24T17:41-08:00 by AC.*

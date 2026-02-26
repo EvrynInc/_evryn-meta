@@ -413,3 +413,23 @@ Maybe this would be boilerplate anyway, but we just want to make sure we include
 We want this to be clear enough that users understand the arrangement upfront, and defensible enough that we're not exposed if someone claims they were unfairly excluded.
 
 ---
+
+## Meeting Notes (2026-02-26)
+
+**Attendees:** Justin McGowan, Andrea Louie, Natalie Kim, Ana Razmazma (Fenwick & West)
+
+**Outcome:** Fenwick will put together a follow-up set of questions to bore deeper into the mechanics.
+
+### Follow-Up Email from Justin (post-meeting)
+
+> Here's the doc [Evryn Trusted Partner Briefing] I was talking about that should orient you pretty well to the bigger picture — it's more capital and strategic partner facing, but I think it gives a reasonably concise sense of what we're about.
+>
+> And if you want an even more condensed picture of what the standard user experience is, I think our website does a decent job of tightly laying out the mental model.
+>
+> So those should get you pretty oriented, and then I look forward to deep-diving into whatever questions you have for me.
+>
+> Oh, one thing: we had discussed at the end that it should be fine to have Mark sign something saying he agrees to the Terms as they are on the website, but I just realized: we only have Privacy Policy up. Is there a reasonable boilerplate we should put up in the short term, or how would you suggest we go forward with Mark?
+>
+> And also: once Mark is stabilized (hopefully within a few weeks), we'll be expanding this out to other gatekeepers, so maybe we want to make sure that any Mark approach can work more broadly with them?
+
+---
