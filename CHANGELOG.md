@@ -6,6 +6,8 @@
 
 ## 2026-02-25
 
+- User-experience spoke readthrough complete with Justin: 20+ edits — Interface Philosophy (v0.2 current-state nod, "Trust & Account" → "Account" + status confirmations, "Present But Not Pressing" named principle), Connection Mode (courier model note, narrative framing separation, "Making Every Connection Healthier" moved in), Connection Conversations expanded from MP source (safety framing, input field names, spatial metaphor, connection list detail), Shared Conversations folded into Connection Conversations, Latent Truth Discovery moved up, Evryn Wallet tightened with business-model cross-ref, multiple wording fixes throughout
+- Technical-vision: conversational rendering detail added to Member Interface section
 - Trust-and-safety spoke readthrough complete with Justin: safety identifier ↔ trust imprint hash linkage, "Honor Economy" → "Cultural Trust Fluency" (design constraint framing), section reorder (Forgiving Skepticism after Behavioral Filtering), "Canary Principle" → "Why Evryn Never Evaluates Named Individuals with Other Users", named-individuals mechanics clarified, User-AI moderation expanded from MP source, multiple tightening edits throughout
 - `#align` protocol created (`docs/align-protocol.md`): weekly principles-to-practice integration checklist
 - CLAUDE.md: one-line purpose descriptions restored for #lock, #sweep, #align protocols
