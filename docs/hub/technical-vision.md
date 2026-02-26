@@ -62,6 +62,8 @@
 
 Web/mobile interface — PWA, mobile-responsive from day one. Native apps deferred until user demand warrants it. Includes identity verification flow.
 
+**Conversational rendering:** Messages are streamed in bursts and rendered incrementally — if a user interrupts, ongoing rendering halts gracefully, and the system tracks partial threads for later recovery. This supports the UX principle that talking to Evryn should feel like texting with a real person (see [user-experience spoke](user-experience.md), Interface Philosophy).
+
 ---
 
 ## What the System Must Deliver

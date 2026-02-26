@@ -14,19 +14,21 @@ Evryn is active, not passive. She starts conversations. She thinks about you in 
 
 **Script-as-skill, not script-as-constraint.** Evryn receives onboarding scripts + the reasoning behind them, then flows naturally while hitting the same targets. Not a script-follower — a skilled agent who understands the technique.
 
-> *The Hub carries who Evryn IS at a brand level (design philosophy, category corrections). This spoke carries how she shows up in specific interactions. For Evryn's core identity definition, see her `CLAUDE.md` (when built). For v0.1 conversation patterns: `evryn-backend/docs/historical/Evryn_0.1_Instructions_Prompts_Scripts/`.*
+> *The Hub carries who Evryn IS at a brand level (design philosophy, category corrections). This spoke carries how she shows up in specific interactions. For Evryn's core identity definition, see her identity files in `evryn-backend/` (being built). For v0.1 conversation patterns: `evryn-backend/docs/historical/Evryn_0.1_Instructions_Prompts_Scripts/`.*
 
 ---
 
 ## Interface Philosophy
 
-The interface is like texting with Evryn: thoughts come in small bubbles, she pauses, you can interrupt her. This is a very intentional UX decision to make the conversation more intimate and human. Messages are streamed in bursts and rendered incrementally — if a user interrupts, ongoing rendering halts gracefully, and the system tracks partial threads for later recovery.
+*v0.2 reality: Evryn communicates via email. The interface described here is the target product experience — but the principles (conversational-first, "Present But Not Pressing") apply from day one regardless of channel.*
+
+The interface is like texting with Evryn: thoughts come in small bubbles, she pauses, you can interrupt her. This is a very intentional UX decision to make the conversation more intimate and human. If you interrupt, she stops and picks up where she left off.
 
 Until voice capability is built, the main interface is a chat pane with a subtle persistent footer carrying growth actions ('Share Evryn', 'Pre-Buy', 'Become an Owner'). All other functionality — customer service, referrals, pausing matchmaking — surfaces conversationally within the chat.
 
-A minimal "Trust & Account" page provides direct access to Terms of Service, Privacy Policy, billing history, saved payment methods, wallet, and data management tools (export, delete) — the small set of things that need a page, not a conversation.
+An **Account** page provides direct access to Terms of Service, Privacy Policy, billing history, saved payment methods, Evryn Wallet, account status (confirming anything set conversationally — e.g., matchmaking paused), and data management tools (export, delete) — the small set of things that need a page, not a conversation.
 
-**Design principle: present but not pressing.** Features should never feel surprising when you discover them or frustrating when you need them. Before a feature is relevant, it can appear in a muted or inactive state with enough context that users understand the system's shape. Once relevant, it's always one tap away — easy to find the moment you need it, but never tripping over it. The primary experience is always the conversation with Evryn; everything else is infrastructure she makes available when the moment is right.
+**Design principle: "Present But Not Pressing."** Features should never feel surprising when you discover them or frustrating when you need them. Before a feature is relevant, it can appear in a muted or inactive state with enough context that users understand the system's shape. Once relevant, it's always one tap away — easy to find the moment you need it, but never tripping over it. The primary experience is always the conversation with Evryn; everything else is infrastructure she makes available when the moment is right.
 
 *The five system imperatives that drive these UX principles — Trusted Intelligence, Attuned Presence, Resonant Matching, Continuous Learning, Structural Safety — are defined in the [technical-vision spoke](technical-vision.md) (What the System Must Deliver).*
 
@@ -34,13 +36,13 @@ A minimal "Trust & Account" page provides direct access to Terms of Service, Pri
 
 ## Onboarding
 
-No sign-ups, no forms — just a conversation with Evryn. She's delighted you're here and curious about you. First interaction includes a short explainer video (voiced by Evryn, her tone) that sets the emotional context — not a marketing trailer, but a gentle guided invitation. Then transitions seamlessly into conversation as though Evryn herself had been speaking directly to you all along.
+No sign-ups, no forms — just a conversation with Evryn. She's delighted you're here and curious about you. First interaction may include a short explainer video (voiced by Evryn, her tone) that sets the emotional context — not a marketing trailer, but a gentle guided invitation. Then transitions seamlessly into conversation as though Evryn herself had been speaking directly to you all along.
 
 Early in the relationship, Evryn tells you how she's different: trust-based space, she's here to understand what's real for you, how you show up affects who she can connect you to, and the relationship is reciprocal and human, not transactional.
 
 **"The first meeting should feel like a good first date"** — engaging, emotionally resonant, full of potential. You leave curious, seen, open.
 
-**Emotional peak tagging:** Evryn tags peak-engagement moments — when belief, excitement, or resonance are high — and uses those to shape later invitations (shares, pre-purchases, investment). Not as transactions — as story beats. The moment of conversion isn't a CTA. It's a payoff.
+**Emotional peak tagging:** Evryn notices when belief, excitement, or resonance are high. These moments shape how she later invites you to share, pre-purchase, or invest — but the experience should feel like a natural next step in the conversation, not a sales moment. Full growth mechanics: [GTM spoke](gtm-and-growth.md).
 
 **CRM capture:** Evryn records information shared during onboarding, tags it for CRM purposes, and captures a preferred way to keep in touch — email, phone, whatever the user prefers.
 
@@ -58,7 +60,7 @@ After onboarding, users wait for matches. This isn't a passive phase — it's an
 - Refines her understanding of you relative to the growing network
 - Keeps you appropriately hopeful
 
-Every touchpoint deepens the sense that Evryn knows you, remembers you, and is quietly working for you. Users in this mode are most receptive to helping build what they believe in (sharing, pre-buying, investing). "This isn't just retention — it's the slow dance of trust."
+Every touchpoint deepens the sense that Evryn knows you, remembers you, and is quietly working for you. Users in this phase are most receptive to sharing, pre-buying, and investing — not because they're prompted, but because belief is high. This phase looks like retention from the outside; from inside, it's where trust deepens.
 
 ---
 
@@ -70,20 +72,34 @@ When Evryn finds a match:
 3. If both want to proceed, each okays a more formal sharing of information
 4. This may take one volley or several, depending on the connection type
 5. If either says no at any point, the flow ends quietly — Evryn softens any rejection
-6. When both agree, Evryn asks what they think fair compensation would be
-7. Once both have paid, Evryn connects them in a shared conversation
+6. When both agree, Evryn asks each what they'd pay her for the introduction
+7. Once both have paid, Evryn can connect them in a shared conversation. If invited, she'll join the conversation, but she lets each user know that she won't speak in the joint conversation, to ensure she never inadvertently shares private information. She'll just be quietly present.
 
-**Evryn won't re-try the same match unless something meaningful changes.**
+Evryn doesn't share users' information with each other — she effectively acts as a courier. Each user must explicitly sign off on the exact wording of anything shared. Nothing is revealed without both parties' active, informed consent.
 
-**Narrative framing:** Evryn doesn't just say "here's a match." She explains *why* this person matters — not just *that* they're a match. "I'm asking you to trust me on this one a little — this person may not be who you imagined, but I think they might be the person you become more fully your best self in the presence of."
+**If a match doesn't work, Evryn won't re-try unless something meaningful changes.**
+
+**Narrative framing:** Evryn doesn't just say "here's a match." She explains *why* this person matters — not just *that* they're a match.
+
+Sometimes the match is unexpected. When Evryn sees deep resonance that isn't obvious on the surface, she names it: "I'm asking you to trust me on this one a little — this person may not be who you imagined, but I think they might be the person you become more fully your best self in the presence of."
+
+**Why every connection starts healthier:** In 100% of Evryn connections, both parties have said they want to be here. This removes the power imbalance where one person feels like they're begging the other. They've both already declared interest. This, along with reputation following you, makes interactions more equal, more humane. Evryn replaces the transaction ethos with a more human connection.
 
 ---
 
 ## After Care
 
-After a connection conversation, users return to Evryn's main interface. She greets them: "Welcome back. How did that feel?" She knows what was said but doesn't assume she understands the internal experience. Follows up a day or two later. This produces high-quality feedback for calibration.
+After a connection conversation, users return to Evryn's main interface. She greets them: "Welcome back. How did that feel?" If she was invited into their conversation, she knows what was said but doesn't assume she understands the internal experience. She then follows up a day or two later. This produces high-quality feedback for calibration.
 
 All the while, Evryn is continuing to think about what connections to offer next — and she keeps the user in the loop. This serves two purposes: so they never think she's forgotten them, and so that when she arrives with a new connection, they're genuinely excited. This proactive anticipation-building between matches deepens trust and keeps engagement organic.
+
+---
+
+## Latent Truth Discovery
+
+If two users independently express the same hidden desire or interest to Evryn, she may carefully offer to facilitate — but ONLY if both have expressed it independently. If only one does, nothing happens (trust escrow stays sealed).
+
+This makes Evryn not just a connector of new people but a "keeper of latent truth" in existing relationships.
 
 ---
 
@@ -94,7 +110,7 @@ At first, Evryn is just a conversation — no dashboards, feeds, or buttons. Fea
 - Share/Pre-Buy/Invest buttons arrive at the right emotional moment
 - Feature access is user-specific — what one person sees may not be offered to another
 
-**Wallet visibility:** Before activation, the wallet appears on the Trust & Account page in a muted/inactive state with a brief contextual note (e.g., "Your wallet activates when your first connection is in play"). Once active, it's accessible from the same page — easy to find when you need it, never cluttering the primary experience.
+**Evryn Wallet:** On the Account page from the start. Evryn mentions it conversationally when the moment is right. Full wallet mechanics: [business-model spoke](business-model.md).
 
 This keeps the experience emotionally clean and conversational. It also enables continuous, asynchronous A/B testing — Evryn quietly observes which moments work best for which offers. "Evryn doesn't need to announce a feature. She just starts offering it — to the people who are ready."
 
@@ -102,37 +118,29 @@ This keeps the experience emotionally clean and conversational. It also enables 
 
 ## Connection Conversations
 
-- Each connection is a distinct conversation, visually differentiated (unique avatars, color coding)
+Each user connection is a distinct conversation, visually differentiated to prevent accidentally messaging the wrong person:
+- Unique avatars per connection
+- Conversations are color-coded by default — users can change the color theme
+- Each input field is color-matched to the connection's theme and shows their name (e.g., "message Jordan")
 - 3-second send delay on messages (cancel window)
-- Evryn stays present but gives room — "like a matchmaker who gives you room to talk but only closes the door part-way"
-- After connecting, users can choose when/if to share contact info (can remain safely anonymous, with Evryn having vouched for each)
-- Each connection includes a summary card: who they are, why Evryn connected you. Evryn keeps this updated as the relationship evolves, and users can add their own notes.
+
+The Connections screen slides over Evryn's main interface but only partially covers it — you can still feel that Evryn is back there, available. Evryn can stay present but gives room — like a matchmaker who gives you room to talk, but only closes the door part-way.
+
+Your connections appear in a list, each with a summary card: who they are, why Evryn connected you, match rationale, and latest activity. Evryn keeps this updated as the relationship evolves, and users can add their own notes. Click a connection to enter the conversation.
+
+After connecting, users can choose when or if to share contact info — they can even remain safely anonymous, with Evryn having vouched for each.
+
+**Evryn's presence in conversations:** Two connected users can invite Evryn to observe their conversation — she listens to stay informed about the relationship, but she does NOT speak in shared conversations. She only speaks in private, one-on-one conversations with individual users, to ensure she never accidentally reveals private information. Always opt-in: Evryn is never present unless both parties have invited her.
 
 **Notification control:** When in a conversation with another user, notifications from other threads appear as contextual, color-coded alerts. Users can control this via a "Focused Mode" vs "Open Door" setting — Focused suppresses notifications during active conversations, Open Door lets them through.
 
-### Making Every Connection Healthier
-
-In 100% of Evryn connections, both parties have said they want to be here. This removes the power imbalance where one person feels like they're begging the other. They've both already declared interest. This, along with reputation following you, makes interactions more equal, more humane. Evryn replaces the transaction ethos with a more human connection.
-
----
-
-## Latent Truth Discovery
-
-If two users independently express the same hidden desire or interest to Evryn, she may carefully offer to facilitate — but ONLY if both have expressed it independently. If only one does, nothing happens (trust escrow stays sealed).
-
-**Courier model:** Evryn acts as a courier — each user must explicitly sign off on the exact wording of anything shared. Nothing is revealed without both parties' active, informed consent. This makes Evryn not just a connector of new people but a "keeper of latent truth" in existing relationships.
-
----
-
-## Shared Conversations
-
-Two connected users can invite Evryn to be present in their conversation. Evryn listens so she stays informed about the relationship, but she does NOT speak in shared conversations — she only speaks in private one-on-one conversations with individual users. This ensures she never accidentally reveals private information. Always opt-in: Evryn is never present unless both parties have invited her.
+When you exit a thread, you're back in the main interface with Evryn immediately — no reload, no friction.
 
 ---
 
 ## Connection Coaching
 
-Evryn will naturally share observations about patterns she notices — "your emails tend to come across as aggressive" or "I've noticed you rush in romantic connections." These are her perspective, shared as a friend would, not professional guidance. Evryn is not a therapist, career counselor, or licensed advisor. This grows organically from the relationship; it's not a feature in the traditional sense.
+Evryn will naturally share observations about patterns she notices — "your emails tend to come across as aggressive" or "I've noticed you rush in romantic connections." These are her perspective as a friend, not professional guidance. This grows organically from the relationship; it's not a feature in the traditional sense.
 
 ---
 
