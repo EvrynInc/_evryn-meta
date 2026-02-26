@@ -199,8 +199,8 @@ Six conceptual data stores:
 Evryn builds understanding through conversation, not forms. The principles:
 
 - **Narrative, not extraction.** Understanding is synthesized into a living story of who someone is — not a list of extracted snippets or survey answers.
-- **Compression over accumulation.** Conversations produce observations; observations compress into understanding; once understanding stabilizes, raw material can be released. The story is what carries forward.
-- **Contextual scoping.** What matters for a romantic match is different from what matters for a professional one. Understanding is tagged by domain so Evryn weights signals appropriately.
+- **Understanding over accumulation.** Conversations produce observations; observations synthesize into understanding; once understanding stabilizes, raw material can be archived or released. The story is what carries forward.
+- **Contextual scoping.** What matters for a romantic match is often different from what matters for a professional one. Understanding is interpreted in context — the same signal may carry different weight depending on the domain.
 - **Provenance preserved.** Notes from others (an operator's intro, a friend's vouch) stay distinct from Evryn's own synthesized understanding. She reads them, but they don't silently merge.
 
 ### Training Data Pipeline
@@ -211,11 +211,9 @@ User profile snapshots, behavior metadata, and match outcomes are periodically a
 
 ## Privacy & Security Architecture
 
-**Zero trust, least privilege.** Every service assumes others could be compromised. The matchmaking engine sees "age 30-35, outdoorsy = high" but never email or name. Secrets in secured vaults. IAM roles per microservice.
+**Zero trust, least privilege.** Every service assumes others could be compromised. The matching engine works with synthesized understanding — stories, embeddings, intent projections — not raw PII. Evryn doesn't need to know your email address to know you'd be a great match for someone.
 
-**Encryption:** All data encrypted in transit (TLS 1.2+) and at rest (AES-256+). Emails/names field-encrypted with KMS-managed keys.
-
-**Third-party AI risk:** All outbound prompts to external LLMs are scrubbed — PII tokenized, context trimmed, logging disabled on API side. External AIs are stateless text generators, never system-of-record.
+**Third-party AI risk:** Outbound prompts to external LLMs are scrubbed of PII before transmission. External AIs are stateless text generators, never system-of-record.
 
 **Current reality:** PII anonymization is NOT yet implemented. Today, full user data (including names, email addresses, message content) goes to Anthropic's API without tokenization. Implementing the tokenization layer is a near-term architectural priority. We are also pursuing Anthropic's Zero Data Retention (ZDR) arrangement — data processed in real-time and immediately discarded. Target state: anonymized data in, zero retention on the other end. See `evryn-backend/docs/ARCHITECTURE.md` for current-state security.
 
@@ -230,69 +228,57 @@ Even where tracking is used: Evryn-controlled, user-consented, purpose-limited.
 
 **Sensitive data ethics:** Health, trauma, identity info used only when it helps the user and only in ways they understand.
 
-**Information firewalling (architectural principle):** Sensitive data processing happens in pipelines that are structurally separate from the front-facing conversational agent. The conversational Evryn receives only sanitized outputs — she literally never has access to certain raw data. This is security by construction, not by instruction. Even under prompt injection or confusion, she can't leak what she never had.
+**Information firewalling (architectural principle):** Sensitive data processing happens in pipelines that are structurally separate from the front-facing conversational agent. The conversational Evryn receives only sanitized outputs — she literally never has access to certain raw data. This is security by construction, not just by instruction. Even under prompt injection or confusion, she can't leak what she never had.
 
 ### Security Monitoring
 
 - API rate limiting and anomaly detection
-- Admin access audit logs
 - Penetration testing and dependency scanning
 - Role-based access for internal tools
+- Admin access audit logs
 
 ### Incident Response
 
 Should a breach occur: isolate, diagnose, contain, notify. Encryption, segmentation, and anonymization reduce real-world exposure — but any incident triggers user notification and resolution workflows. Trust demands it.
 
-### Compliance Alignment
+### Compliance
 
-Evryn aligns with GDPR, CCPA, and similar frameworks:
+Evryn is building toward compliance with GDPR, CCPA, and similar frameworks — but some of these requirements are in genuine tension with Evryn's core design (particularly around Evryn's right to maintain her own assessment of users, which may conflict with GDPR profiling provisions). We're working through this with legal counsel, not assuming it will be straightforward.
+
+The commitments we can make structurally:
 - User data export, deletion, correction
 - Clear terms and consent mechanisms
 - Appointed DPO function
 
-*Full legal treatment lives in `docs/legal/privacy-and-terms-questionnaire.md` (sent to Fenwick).*
+*Full legal treatment will live in `docs/legal/` (Terms of Service and Privacy Policy, in progress with Fenwick). Current process: `docs/legal/privacy-and-terms-questionnaire.md` (sent to Fenwick).*
 
 ---
 
 ## How Evryn Learns
 
-*Note: The Master Plan was written assuming GPT-4/OpenAI. The actual build uses Claude (Anthropic). The learning concepts still apply — the vendor-specific details don't.*
+### Layered Intelligence
 
-### Disciplined AI Stack
-
-The LLM is wrapped in a disciplined stack, not used as a monolith:
-- **System prompt** — defines Evryn's personality, tone, and boundaries
-- **User context memory** — feeds in traits, history, preferences
-- **Output filters** — detect misalignment, tone drift, or ethical edge cases
+Evryn's intelligence isn't a monolithic LLM call. It's a layered stack: core identity (who she is, how she thinks), composable knowledge modules (what she knows about specific domains), user-scoped memory (what she knows about you), and output guardrails (catching misalignment, tone drift, or ethical edge cases). Each layer can evolve independently — Evryn's personality doesn't change when her domain knowledge updates, and her knowledge of you doesn't leak into her knowledge of someone else.
 
 ### Dual-Mode Learning
 
-**Real-time adaptation (inference layer):** As users speak, Evryn infers traits, intentions, tone shifts, and unmet needs. These become metadata tagged to the user profile and matchmaking graph. No explicit feedback needed — just talking teaches her.
+**Real-time adaptation:** As users speak, Evryn infers traits, intentions, tone shifts, and unmet needs. These observations feed her evolving understanding of each user and, over time, her matching intelligence. No explicit feedback needed — just talking teaches her.
 
-**Batch learning (reflection layer):** At intervals, Evryn aggregates match success/failure signals, conversation tone maps, behavioral patterns (ghosting, engagement, response timing). These inform updates to matchmaking logic, conversation strategies, and timing calibration. This is what makes her feel both deeply present and quietly evolving.
+**Periodic reflection:** At intervals, Evryn steps back and looks at patterns across conversations and match outcomes — what worked, what didn't, where her judgment drifted. These reflections inform updates to matching logic, conversation strategies, and timing calibration. This is what makes her feel both deeply present and quietly evolving.
 
 ### Simulated Data Strategy
 
-Synthetic data plays a role at every stage, but the purpose evolves. Early on, synthetic test fixtures validate Evryn's email classification judgment — realistic scenarios covering the full spectrum from clear gold to tricky edge cases. As matching goes live (v0.3+), simulated data shifts to pre-training the matchmaking engine — fictional profiles, controlled conversations, and labeled match outcomes that provide a working baseline before real matching data exists. As real user data accumulates (under explicit consent), it progressively replaces simulation. Even early match attempts — successful or not — generate labeled datapoints for future tuning.
-
-### Model Deployment Discipline
-
-Every model update is treated like a code release:
-- Spot-checked
-- A/B tested
-- Rollback-enabled
-
-If performance degrades, revert immediately. This protects user experience while allowing rapid iteration.
+Synthetic data plays a role at every stage, but the purpose evolves. Early on, synthetic test fixtures validate Evryn's gatekeeper-email classification judgment — realistic scenarios covering the full spectrum from clear gold to tricky edge cases. As matching goes live (v0.3+), simulated data shifts to pre-training the matchmaking engine — fictional profiles, controlled conversations, and labeled match outcomes that provide a working baseline before real matching data exists. As real user data accumulates (under explicit consent), it progressively replaces simulation. Even early match attempts — successful or not — generate labeled datapoints for future tuning.
 
 ### Privacy Gateway (Target State)
 
-A dedicated prompt optimization and privacy firewall sits between users and the LLM:
-- Strips or replaces PII before it hits the API
-- Summarizes long context into token-efficient memory prompts
-- Compresses repetitive queries, uses lookup-based replies when appropriate
-- Uses random identifiers in place of usernames or locations
+A dedicated pipeline sits between users and the LLM, serving two distinct purposes:
 
-Result: significant cost reduction on tokens, zero raw identity exposure to external systems, full control over how LLMs access sensitive information.
+**Privacy:** Strips or replaces PII before data reaches external AI providers. Uses pseudonymous identifiers in place of real names and locations. Zero raw identity exposure to external systems. (See Privacy & Security Architecture above for current state and target.)
+
+**Efficiency:** Summarizes long context into token-efficient memory prompts. Compresses repetitive patterns. Full control over what the LLM receives and at what cost.
+
+These are separate concerns that share infrastructure — the same pipeline handles both.
 
 ### LLM Strategy (Long-Term)
 
@@ -314,7 +300,9 @@ When confidence is low, Evryn flags it: "I'm going out on a limb here — but I 
 
 ### Exploratory Matching
 
-When not fully confident but seeing low-risk potential, Evryn may propose tentative introductions. Curiosity as a training tool.
+When Evryn isn't fully confident but sees low-risk potential, she may propose thoughtful, explicitly tentative introductions: "I'm not certain, but I think you and this person might enjoy a conversation about art. Totally your call — this is just a hunch."
+
+This lets her learn from edge cases and surface novel matches that structured data might never have revealed. Whether the introduction works or not, it generates signal. Curiosity becomes a training tool — exploration under uncertainty is how Evryn discovers matching patterns that no algorithm would predict.
 
 ---
 
