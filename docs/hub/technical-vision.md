@@ -1,6 +1,6 @@
 # Technical Vision
 
-> **How to use this file:** The widest lens on Evryn's technical architecture — the north star that shapes every build decision. Covers three brains in detail, matchmaking engine design, data pipelines, privacy architecture, and learning systems. Also includes the system landscape diagram for visual orientation. Zooms out to where Evryn is heading long-term; anchors down into `evryn-backend/docs/ARCHITECTURE.md` (product architecture, v0.2–v1.0) where the build gets specific. Read this when thinking about future capabilities, scalability, or architectural direction.
+> **How to use this file:** The widest lens on Evryn's technical architecture — the north star that shapes every build decision. Covers three domains of intelligence, matching design, data pipelines, privacy architecture, and learning systems. Also includes the system landscape diagram for visual orientation. Zooms out to where Evryn is heading long-term; anchors down into `evryn-backend/docs/ARCHITECTURE.md` (product architecture, v0.2–v1.0) where the build gets specific. Read this when thinking about future capabilities, scalability, or architectural direction.
 >
 > **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 
@@ -134,27 +134,21 @@ Current module design for v0.2: `evryn-backend/docs/ARCHITECTURE.md` (Agent Arch
 
 ---
 
-## Matchmaking Engine (RBM + HLM + AIM)
+## How Matching Works
 
-Three-layer hybrid matching:
+Matching is Evryn's core act — the thing she gets paid for, the thing that builds trust. The engine must deliver four capabilities at increasing sophistication:
 
-### 1. Rule-Based Matching (RBM)
+**Hard constraints come first.** Geography, age, intent mismatch, ethical guardrails (no minors with adults). These are gates, not scores — they filter before intelligence runs. Hard stops *unless flagged otherwise*: a user who says "only Seattle" but mentions dreaming of SF might be prompted to reconsider for an exceptional match.
 
-First-pass hard constraints: geography, age, intent mismatch, ethical guardrails (no minors with adults). Hard stops *unless flagged otherwise* — e.g., a user who says "only Seattle" but mentions dreaming of SF might be prompted to reconsider for an exceptional match.
+**Then multi-dimensional fit.** Users are represented as adaptive multi-dimensional embeddings capturing tone, values, behavior, and connection goals. Matching is based on *fit*, not similarity — how well two people's vectors balance or activate each other. Critically, Evryn matches *profiles to intents*, not people to people. Person A's profile might score against B's need for a cofounder, C's need for a math tutor, and D's need for a creative collaborator — simultaneously, across completely different dimensions. The bidirectional shape: does A's profile fit B's intent *and* does B's profile fit A's intent? This is fundamentally different from holistic person-to-person matching.
 
-### 2. Heuristic Layer Matching (HLM)
+**Then narrative judgment on top.** Evryn doesn't just score — she explains *why* someone matters. Not "87% match" but the story of the match. When judgment catches something the scoring misses — or raises a flag the numbers don't — judgment overrides. May surface candidates with little overlap on paper but high complementarity.
 
-Lightweight AI scoring on soft signals: personality fit, conversational tone, values alignment, communication energy, inferred intent. Uses user embeddings (complementarity vectors) to calculate resonance. Includes narrative framing: "why this person" — not just scoring, but the story of the match. May surface candidates with little overlap on paper but high complementarity.
+**Then learning from outcomes.** Every match attempt (successful or not) is training signal. Initially, Evryn observes outcomes without automatically adjusting — the team makes the calls. Over time, as calibration patterns stabilize, she takes on more of this autonomously within bounded parameters.
 
-### 3. Adaptive Intelligence Matching (AIM)
+**Day-one reality:** The scoring layer has no data and the learning layer has no outcomes. Evryn starts with judgment alone — reasoning about who matters to whom and why. Even pure judgment produces meaningful introductions in a dense ecosystem. Computational layers develop as data accumulates.
 
-Learns over time from match outcomes, feedback, and behavioral patterns. Initially observes without controlling output (human-reviewed). Over time becomes a tuning layer that adjusts HLM weighting based on what actually works.
-
-**Day-one reality:** AIM has no data, HLM is still calibrating. Evryn starts with RBM alone, learning by doing. Even basic constraint matching produces meaningful introductions in a dense ecosystem.
-
-### Complementarity Vectors
-
-Users are represented as adaptive multi-dimensional embeddings that capture tone, values, behavior, and connection goals. Matching is based on *fit*, not similarity — how well two people's vectors balance or activate each other.
+*Implementation detail: `evryn-backend/docs/ARCHITECTURE.md` (Judgment & Matching, Embedding Strategy, Matching Calibration).*
 
 ### Asymmetric Starts, Symmetric Resolution
 
@@ -164,20 +158,19 @@ Traditional platforms optimize for superficial compatibility. Evryn's model reco
 
 Evryn maintains a holistic understanding of each user, but matching happens through intent-specific projections. For a romantic match, for example, professional credentials are mostly de-emphasized — but not excluded, because for just the right person, a shared niche skill or unexpected interest might be the connection point. The system constructs sub-profiles tuned to each intent: what to emphasize, what to de-emphasize, what to surface only when confidence is high.
 
-**Open design question:** Whether to also match full personas across intents (catching unexpected resonance at the cost of noise), or to rely on intent-specific projections with cross-domain checks only when confidence clears a threshold. The answer likely evolves as the matching engine matures — start with intent-specific projections, observe what the full-persona space reveals, and calibrate.
+When matching runs, each intent searches across the full profile pool — both focused sub-profiles (tuned for targeted matching) and raw holistic profiles (the full person). Every intent scores against both. The sub-profiles increase the hit rate for high-confidence, on-target matches. The holistic profiles surface unexpected candidates — people whose full picture resonates with the intent in ways a focused sub-profile would never capture. The analytical layer then sorts what comes back: some unexpected results are clearly noise (a surface-level numerical catch, but the real fit isn't there), while others are genuine discoveries — resonance that neither person would have thought to look for, but that Evryn can see because she holds the whole picture.
 
-Four design principles govern this architecture regardless of approach:
+Four design principles govern this — what we call **coherence-calibrated modularity** (cross-domain intelligence without fracturing the user's experience of Evryn or obscuring the rationale behind her recommendations):
+
 1. **Model clarity** — matching logic stays focused and legible per domain
-2. **Data hygiene** — signals don't bleed across domains without strong evidence
+2. **Data hygiene** — signals don't bleed across domains without a compelling reason
 3. **Cognitive coherence** — Evryn's reasoning stays consistent even navigating overlapping needs
 4. **User control** — she flags when she's making a cross-domain leap
-
-We call this principle **coherence-calibrated modularity** — cross-domain intelligence without fracturing the user's experience of Evryn or obscuring the rationale behind her recommendations.
 
 ### Dynamic Weight Adjustment
 
 Parts of the matching model can be fine-tuned based on emerging behavioral trends — if a shift in user behavior is detected, match scoring adjusts to reflect it. These adjustments are:
-- **Localized** (not global retrains)
+- **Right-scaled** — scoped to an individual, a cluster, or the whole model, depending on what the signal warrants
 - **Reversible**
 - **Personalized**
 - **Bounded by safety constraints**
@@ -188,23 +181,27 @@ Initially, weight adjustments are human-reviewed and human-applied — the syste
 
 ## Data & Knowledge Layers
 
-Six conceptual data stores (mapping to actual Supabase tables noted):
+Six conceptual data stores:
 
-1. **Evryn Self-Knowledge** — personality, ethos, SOPs, company knowledge → `evryn_knowledge` table
-2. **Human Connection Knowledge Graph** — learned patterns of what makes good matches, relationship archetypes, complementarity patterns → future, not MVP
-3. **World/Domain Knowledge** — industry expertise, domain context → initially via web search tools, later `evryn_knowledge`
-4. **User Data Store** — account details, verification, dynamic profiles built over time → `users` table (`profile_jsonb`)
-5. **Social Graph Layer** — known relationships (declared and inferred) for redundancy filtering, safety, trust calibration → future, not MVP
-6. **Trust Graph** — verification status, reputation data, behavioral signals → future, incorporated into `users.profile_jsonb` for MVP
+1. **Evryn Self-Knowledge** — personality, ethos, SOPs, company knowledge
+2. **Global Connection Intelligence** — learned patterns of what makes good matches, relationship archetypes, complementarity patterns. This is accumulated matching wisdom, not a map of specific people.
+3. **World/Domain Knowledge** — industry expertise, domain context. Initially via web search tools; grows into a curated knowledge base over time.
+4. **User Data** — account details, verification, dynamic profiles built through conversation over time
+5. **Relationship Graph** — known relationships between specific people (declared and inferred). Used for redundancy filtering, safety, trust calibration.
+6. **Trust Graph** — verification status, reputation data, behavioral signals
 
-**Critical separation:** User Data and Conversation Logs are separated from the Trust Graph and Insight Store by design. Users may delete their personal data, but not Evryn's system-level learnings.
+**Critical separation:** User data and conversation logs are separated from the Trust Graph and Global Connection Intelligence by design. Users may delete their personal data, but not Evryn's system-level learnings.
 
-### User Data Pipeline
+*Schema mappings: `evryn-backend/docs/ARCHITECTURE.md` (Data Model).*
 
-- **Dynamic profiles** — not front-end profiles. Back-end living structures enriched via conversation: basic attributes, stated preferences, extracted traits from behavior/tone, complementarity vectors
-- **Memory distillation** — conversations are logged, then important insights (traits, goals, patterns) are extracted into structured fields. Raw transcripts are encrypted and archived for re-contextualization, then discarded once understanding stabilizes
-- **Events** — mode changes, introductions, match feedback, reports logged as discrete events tied to pseudonymous IDs
-- **Contextual tagging** — data tagged by connection type (professional, romantic, social) so Evryn weights traits appropriately per context
+### How User Understanding Builds
+
+Evryn builds understanding through conversation, not forms. The principles:
+
+- **Narrative, not extraction.** Understanding is synthesized into a living story of who someone is — not a list of extracted snippets or survey answers.
+- **Compression over accumulation.** Conversations produce observations; observations compress into understanding; once understanding stabilizes, raw material can be released. The story is what carries forward.
+- **Contextual scoping.** What matters for a romantic match is different from what matters for a professional one. Understanding is tagged by domain so Evryn weights signals appropriately.
+- **Provenance preserved.** Notes from others (an operator's intro, a friend's vouch) stay distinct from Evryn's own synthesized understanding. She reads them, but they don't silently merge.
 
 ### Training Data Pipeline
 
