@@ -94,44 +94,43 @@ If these five conditions hold, everything else can iterate. If they don't, no am
 
 ---
 
-## Three Brains (Detailed)
+## Three Domains of Intelligence
 
-Evryn's intelligence is conceptualized as three interlocking systems. For MVP (v0.2), all three collapse into a single agent. At scale, they separate.
+Evryn's intelligence covers three interlocking domains. These are not agents or modules — they're categories of capability that Evryn must deliver. How they're implemented varies by stage: for MVP (v0.2), a single agent handles all three. As complexity grows, these domains separate into independent modules — some may be subagents, some deterministic processes, some separate runtimes. The separation is driven by what each domain needs, not by a predetermined architecture.
 
-### 1. Dialogue Brain (Conversational AI)
+### Conversation & Voice
 
 Evryn's voice. Listens deeply, speaks wisely, adapts to each user's energy and emotional state. Handles all real-time conversation, tone detection, emotional arcs, and personality alignment.
 
-### 2. Connection Brain (Matchmaking AI)
+### Judgment & Matching
 
 Evryn's judgment. Builds multidimensional understanding of each user, handles constraint filtering, soft compatibility scoring, and dynamic readiness. Never surfaces someone who hasn't been explicitly invited.
 
-### 3. Care Brain (Relational Intelligence)
+### Intuition & Care
 
-Evryn's intuition. Watches over time. Notices if you've gone quiet after a hard moment. Remembers open arcs. Decides when to reach out or hold space. Doesn't generate dialogue or matches — tells the other brains *when* they should act.
+Watches over time. Notices if you've gone quiet after a hard moment. Remembers open arcs. Decides when to reach out or hold space. Doesn't generate dialogue or matches — tells the other domains *when* they should act.
 
-- **What it handles:** curiosity prompts, warm check-ins, pacing, after-care, moment readiness
-- **What it does NOT:** pick people to introduce (Connection Brain), reveal sensitive info, pressure users, transgress message limits/quiet hours
+- **What it covers:** curiosity prompts, warm check-ins, pacing, after-care, moment readiness, proactive outreach scheduling
+- **What it does NOT do:** pick people to introduce, reveal sensitive info, pressure users, transgress message limits or quiet hours
 - **When it acts:** belief moments, silence/dormancy, open arcs/contradictions, new promising leads with missing details
 - **How it shows up:** short, respectful, easy to decline. One question at a time. Tone-matched to user.
-- **KPIs:** healthy reply rates, very few opt-outs after first prompt, most intros get a brief debrief
+
+Proactive outreach includes intelligent scheduling: context-aware triggers, per-user frequency caps, quiet hours by locale, snooze/opt-out. Whether this is implemented as rules, LLM judgment, or a hybrid is a build decision — the principle is that Evryn reaches out when the moment is right and stays quiet when it isn't.
 
 ### The Loop
 
-These three run in constant conversation: Care Brain might tell Connection Brain to pause; Connection Brain might ask Dialogue Brain to gently explore a blind spot; Dialogue Brain might flag something requiring deeper reflection. The loop: Conversation reveals identity → Identity informs connection → Connection evolves care → Care drives better conversation.
+These three domains run in constant conversation: intuition might tell judgment to pause; judgment might ask conversation to gently explore a blind spot; conversation might flag something requiring deeper reflection. The loop: Conversation reveals identity → Identity informs connection → Connection evolves care → Care drives better conversation.
 
-### Check-in Orchestrator
+### Module Separation Principles
 
-Rules-based check-in coordination that integrates with Care Brain:
-- **Triggers:** context-aware, time-based, event-based (match pending, refund, silence), belief moment tags
-- **Controls:** per-user frequency caps, quiet hours by locale, global throttle, snooze/opt-out
-- **Content:** short templates with variables, routed through Care Brain for Evryn's voice
+When volume and complexity demand it, Evryn's intelligence separates into independent modules. The principles governing that separation:
 
-### Agent Council (At Scale)
+- **Safety gates must have narrow context and independent judgment.** The publisher module's only job is a checklist before anything goes out (inappropriate content? user info leaks? tone check?). It deliberately does NOT carry Evryn's full conversational state — this is security by construction, not just a filter.
+- **Deception detection is a separate concern from conversation.** Trust verification and behavioral analysis run independently of the dialogue.
+- **Modules separate when they need different things:** different context windows, different model tiers, different schedules, or structural isolation from each other.
+- **The boundary between subagent and deterministic process is a build decision, not an architectural one.** Some intelligence needs LLM judgment; some is better served by rules. This vision doc doesn't prescribe which.
 
-When volume demands it, the three brains separate into specialized subagents plus:
-- **Publisher** — safety gate. Only job: checklist before anything goes out (inappropriate content? user info leaks? tone check?). Deliberately narrow context — doesn't carry Evryn's full conversational state. This is a subagent, not a skill — it needs independent judgment.
-- **Deception detection** — trust verification, behavioral analysis
+Current module design for v0.2: `evryn-backend/docs/ARCHITECTURE.md` (Agent Architecture). Earlier module architecture thinking from the n8n prototype era: `docs/research/2025-12-01-n8n-module-architecture.md`.
 
 ---
 

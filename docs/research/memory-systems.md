@@ -157,7 +157,7 @@ pgvector, same 4-layer model. The porting work is adding the scale/trust layer:
 - Prompt caching at scale (90% cost reduction on repeated per-user context)
 - Multi-channel normalization (email + web + voice unified by time)
 - Audit trail for compliance (cold transcript layer — verbatim history, never loaded into context, always searchable)
-- Aggregation layer for cross-user insights (anonymized, feeds Connection Brain)
+- Aggregation layer for cross-user insights (anonymized, feeds Evryn's matching intelligence)
 - The core memory/working/long-term/consolidation logic stays the same — it was
   designed for this transfer. What changes is isolation, concurrency, and compliance.
 

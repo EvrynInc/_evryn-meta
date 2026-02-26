@@ -89,14 +89,14 @@ Safety is structural, not bolted on. Full depth: `docs/hub/trust-and-safety.md`.
 
 **Stack:** Claude Agent SDK + Supabase (PostgreSQL) + TypeScript. Anthropic Claude for all AI (Sonnet default, Opus for nuance, Haiku for routine). Full depth: `docs/hub/technical-vision.md` (north star), `evryn-backend/docs/ARCHITECTURE.md` (product architecture, v0.2–v1.0).
 
-**Three Brains (conceptual model):**
-1. **Dialogue Brain** — Evryn's voice. Conversation, tone, emotional arcs.
-2. **Connection Brain** — Evryn's judgment. Matching, constraint filtering, readiness.
-3. **Care Brain** — Evryn's intuition. Watches over time, knows when to act or hold space.
+**Three domains of intelligence (conceptual model):**
+1. **Conversation & voice** — how Evryn talks. Tone, emotional arcs, personality alignment.
+2. **Judgment & matching** — how Evryn decides. Constraint filtering, compatibility, readiness.
+3. **Intuition & care** — how Evryn watches over time. Knows when to act or hold space.
 
 **Dual-track processing:** Warm human conversation + structured metadata collection running in parallel. Analytical layer invisible to the user.
 
-For MVP (v0.2), the three brains collapse into a single agent. At scale, they separate into a council of specialized subagents — plus a **publisher** (safety gate that checks everything before it goes out) and **deception detection**. Detail in `docs/hub/technical-vision.md`.
+For MVP (v0.2), a single agent handles all three domains. As complexity grows, they separate into independent modules — some subagents, some deterministic processes, some separate runtimes — plus a **publisher** (safety gate that checks everything before it goes out) and **deception detection**. Detail in `docs/hub/technical-vision.md`.
 
 **User isolation is absolute.** Each user's conversation is its own track. Evryn never reveals one user's information to another. Multi-channel conversations (email, chat, voice) interleave *within* a user by time — same as a real friendship across channels — but never bleed *between* users. Admin access to user data must be heavily gated even from Evryn's own operators (future architecture requirement).
 

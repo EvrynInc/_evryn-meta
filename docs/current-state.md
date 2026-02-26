@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-25T17:32-08:00*
+*Last updated: 2026-02-26T14:08-08:00*
 
 ---
 
@@ -28,8 +28,8 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## Active Projects
 
-- **_evryn-meta** — Hub final pass complete. Spoke readthrough in progress (trust-and-safety + user-experience complete, technical-vision in progress — header/diagram/simulated data done, "What the System Must Deliver" onward unreviewed). `#align` protocol created (weekly principles-to-practice integration). SYSTEM_OVERVIEW retired (absorbed into spokes), doc-ownership retired. `#sweep` protocol created (weekly hygiene). `#lock` updated with Hub/spokes consistency step. Cross-repo S_O references updated in all 4 repos. Research: 8 reports, all breadcrumbed. LEARNINGS fully promoted. Pre-Work #6 session doc has full context (2 sessions).
-- **evryn-backend** — Pre-Work #10 DONE. ARCHITECTURE.md current (v4 + legal flow-through, header reframed as zoom-stack). BUILD doc aligned. Next: Pre-Work #6 identity content (blocked on SDK behavior verification + architectural approach decision).
+- **_evryn-meta** — Hub final pass complete. Spoke readthrough in progress (trust-and-safety + user-experience complete, technical-vision in progress — "Three Brains" rewritten as "Three Domains of Intelligence" + Module Separation Principles, remaining flags + "What the System Must Deliver" onward still to review with Justin). n8n-era module architecture preserved as research doc (`docs/research/2025-12-01-n8n-module-architecture.md`), all substantive concepts absorbed into living docs. Research: 9 reports, all breadcrumbed.
+- **evryn-backend** — Pre-Work #10 DONE. ARCHITECTURE.md updated: Three Domains rename, module separation alignment, multi-vector embeddings stub, state-vs-trait in Story Model, labels-as-hypotheses in profile_jsonb, cross-thread awareness note, stale Workflowy TODO resolved. Next: Pre-Work #6 identity content (blocked on SDK behavior verification + architectural approach decision).
 - **evryn-team-agents** — PAUSED. Clean pause state. CLAUDE.md updated (hard stop + runtime context).
 - **evryn-dev-workspace** — DC's home repo. Identity updated (writing discipline, lock protocol auto-memory step).
 - **evryn-website** — Live at evryn.ai. CLAUDE.md is hard stop, build context in docs/ARCHITECTURE.md.

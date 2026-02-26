@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-02-26
+
+- Technical-vision spoke readthrough continued: "Three Brains" → "Three Domains of Intelligence" (Conversation & Voice, Judgment & Matching, Intuition & Care). Check-in Orchestrator folded into Intuition & Care. Agent Council → Module Separation Principles (encode principles, not specific module lists). Hub updated to match.
+- ARCHITECTURE.md (evryn-backend): Three Domains rename, "subconscious/conscious" → "algorithmic/analytical", Module Separation aligned with tech-vision principles, multi-vector embedding stub (holistic + intent-shaped projections), state-vs-trait note in Story Model, labels-as-hypotheses design principle in profile_jsonb, cross-thread awareness note in Pipeline Design, stale Workflowy TODO resolved.
+- Created `docs/research/2025-12-01-n8n-module-architecture.md` — n8n-era Workflowy export preserved as research artifact with editorial notes on what's been absorbed where.
+- memory-systems.md: updated stale "Connection Brain" reference.
+
 ## 2026-02-25
 
 - Technical-vision spoke readthrough in progress: header reframed as zoom-stack ("north star → ARCHITECTURE.md → BUILD doc"), system landscape diagram updated (added Google Cloud/Gmail API + Railway hosting), current-phase anchor added after diagram, "Pre-Training with Simulated Data" → "Simulated Data Strategy" (anchored v0.2 classification testing vs v0.3+ matching pre-training)
