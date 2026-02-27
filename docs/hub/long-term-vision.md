@@ -61,7 +61,13 @@ The Foundation exists to serve the Evryn mission, not Evryn Inc. specifically. I
 
 **The tie:** The Foundation is bound to Inc. as long as Inc. operates within its Public Benefit Corporation charter. This isn't a voluntary partnership — it's structural. The Foundation doesn't shop for the best operator; it serves the mission-aligned one.
 
-**The severance trigger:** If Inc. breaks its PBC mission — as determined by the Foundation's independent board — the Trust Severance Protocol activates (see below).
+**Operational arrangement:** Inc. maintains the Foundation's infrastructure and covers costs directly — the Foundation doesn't need to raise capital independently or seek reimbursement. Inc. has visibility into the Foundation's infrastructure (necessary for maintenance and monitoring). However, the Foundation must assume that any code update from Inc. could contain exfiltration attempts — intentional or otherwise. The Foundation maintains independent code review and stripping processes for all updates touching trust-sensitive systems. Trust the relationship; verify every artifact.
+
+**Data firewall by agreement:** The licensing agreement explicitly states that the Foundation will refuse any request for raw trust data — even from Inc., even if Inc. claims legal compulsion. This is by design: if Inc. receives a government demand (e.g., a National Security Letter), Inc. forwards the request to the Foundation, and the Foundation refuses. Inc. has complied with the demand (they forwarded it); the Foundation has complied with its charter (they refused). This can happen all day.
+
+**The severance trigger:** If Inc. materially breaches its original PBC mission — *"to foster trusted human connection for our users by developing systems that create high-resonance connections, responsibly steward personal information and insights, and structurally protect emotional wellbeing, informed consent, and relational alignment and trust across every interaction"* — as determined by the Foundation's independent board, the Trust Severance Protocol activates. "Original" is key: a corrupt Inc. board cannot amend the mission and then claim compliance. The mission text is anchored at incorporation. Amendments to the mission require mutual agreement between Inc. and the Foundation — neither can unilaterally redefine what counts as alignment.
+
+**Reverse severance:** If the Foundation itself goes rogue (board capture, mission drift, operational failure), Inc. must have the ability to trigger a shutdown or transition from its side. The mechanism TBD, but the principle: neither entity should be able to hold the other hostage. Both must be accountable to the mission, not to each other.
 
 ### Cryptographic Architecture
 
