@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-02-27
+
+- **ADR-010: Canary principle revised** — opaque matching replaces absolute prohibition (ADR-008 superseded). Nine red-team vectors + one edge case. Key insights: non-event > binary response, preframing as mutual protection, both sides hear policy directly from Evryn, default posture is "needs a reason to connect, not a reason to decline."
+- Circulated ADR-010 through Hub (trust bullet), trust-and-safety spoke (section rewritten), UX spoke (specific-person requests subsection added), active session doc (Publisher hard rules updated).
+- Creation/history footers stripped from Hub and all spokes + Foundation architecture detail doc — git history covers provenance.
+- current-state.md refreshed for session checkpoint.
+
 ## 2026-02-26
 
 - v0.1 prompt files review: 4 concepts landed — pacing design constraint + not-a-chatbot boundary (user-experience spoke), early match calibration "magic of duds" (user-experience spoke), refund dishonesty feedback loop (business-model spoke).
