@@ -753,7 +753,7 @@ identity/
 - The draft outbound message
 - Short context summary (who's the recipient, what mode, what triggered this)
 - Recipient's basic profile summary
-- Hard rules checklist (never reveal user info, never evaluate named individuals, tone check)
+- Hard rules checklist (never reveal user info, never disclose evaluations of named individuals ([ADR-010](../decisions/010-canary-principle-revised.md)), tone check)
 
 **Publisher does NOT receive:**
 - Full conversation history
