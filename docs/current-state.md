@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-26T15:51-08:00*
+*Last updated: 2026-02-26T17:23-08:00*
 
 ---
 
@@ -28,7 +28,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## Active Projects
 
-- **_evryn-meta** — Hub final pass complete. Spoke readthrough in progress (trust-and-safety + user-experience complete, technical-vision nearly complete — through "How Evryn Learns", Resilience + Sovereign Memory still to review). Major rewrites this session: matching engine (RBM/HLM/AIM → profile-to-intent model), data layers (renamed stores, principle-level user understanding), privacy/security (stripped impl specs, honest GDPR tension), learning (layered intelligence, expanded exploratory matching). Research: 9 reports, all breadcrumbed.
+- **_evryn-meta** — Hub final pass complete. Technical-vision spoke readthrough COMPLETE (all sections reviewed with Justin). Long-term-vision spoke significantly expanded (cryptographic architecture, Trust Severance Protocol, trustee governance, warrant canary, honest trust surface). Remaining spoke readthroughs: business-model, gtm-and-growth, long-term-vision (rest of doc), bizops-and-tooling. Coherence pass pending: tech-vision top-to-bottom + v0.1 prompt files + Master Plan tech section. Research: 9 reports, all breadcrumbed.
 - **evryn-backend** — Pre-Work #10 DONE. ARCHITECTURE.md updated: Three Domains rename, module separation alignment, multi-vector embeddings stub, state-vs-trait in Story Model, labels-as-hypotheses in profile_jsonb, cross-thread awareness note, stale Workflowy TODO resolved. Next: Pre-Work #6 identity content (blocked on SDK behavior verification + architectural approach decision).
 - **evryn-team-agents** — PAUSED. Clean pause state. CLAUDE.md updated (hard stop + runtime context).
 - **evryn-dev-workspace** — DC's home repo. Identity updated (writing discipline, lock protocol auto-memory step).
