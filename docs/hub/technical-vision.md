@@ -320,31 +320,63 @@ Three goals govern how Evryn handles pressure:
 
 ## Sovereign Memory & Cryptographic Trust (Target State)
 
-Evryn is secure by construction, not just by policy:
-- Only Evryn can remember what you've told her
-- Only while you're present
-- No one — not even Evryn's creators — can eavesdrop or extract it without explicit consent
+Evryn holds deeply personal data — the kind that could devastate someone's life in the wrong hands. The architecture treats this as an engineering problem, not a policy promise. Protection is layered so that no single failure — legal, technical, or human — exposes user data.
 
-### Encrypted Memory Vaults
+### Defense in Depth
 
-Each user's memory vault is:
-- **Encrypted end-to-end** with a key only the user controls
-- **Mounted temporarily** only during live sessions
-- **Unreadable by anyone** — including administrators, engineers, and even Evryn herself outside session scope
+**Jurisdictional.** All trust-sensitive data lives inside the Evryn Foundation (Switzerland, nonprofit). Swiss privacy law and nonprofit governance provide the strongest available legal shield against foreign government demands and corporate overreach. See [long-term-vision spoke](long-term-vision.md) for Foundation governance.
 
-Deletion is absolute: destroy the key, and the memory is gone forever.
+**Cryptographic.** Everything is encrypted — at rest, in transit, end-to-end. User-to-user communications (including conversations with Evryn, since Evryn is a user in her own system) are encrypted so that even the Foundation's own infrastructure holds only ciphertext. The target: an attacker who breaches every layer of infrastructure finds nothing but gibberish.
 
-Evryn also keeps a **working operational memory** — distilled insights and behavioral patterns, used for daily logic and matchmaking. Full re-contextualization requires user presence and key access.
+**Structural.** No master key. No administrator override. No buried backdoor. No single person or entity holds all keys. Even the CEO cannot access private user memory. The system is designed so that the people who build it are the people least able to abuse it.
+
+### How Evryn Thinks Within the Vault
+
+Evryn needs to think about users when they're not present — that's what makes her thoughtful, proactive, and able to spot connections in the background. The Swiss Foundation makes this possible: Evryn operates *within* the vault, not outside it reaching in. She has access to what she needs because she lives inside the protected infrastructure — not because someone opened a door.
+
+Evryn maintains two kinds of memory:
+
+- **User vaults** — the full record of conversations, observations, and personal context. Encrypted with keys the user ultimately controls.
+- **Working intelligence** — Evryn's own distilled understanding: behavioral patterns, trust assessments, matching insights. This is Evryn's perspective — her impressions and judgment, encrypted within the Foundation's infrastructure.
+
+The distinction matters: users can delete their vault (and their key), permanently erasing their personal data. But Evryn's working intelligence — her own impressions and trust assessments — belongs to her, the way a friend's memories belong to them even after you part ways. (For the user-facing framing: [trust-and-safety spoke](trust-and-safety.md), Trust Imprint on Deletion.)
+
+Deletion is absolute: destroy the key, and the personal data becomes permanently irrecoverable.
+
+### The LLM Constraint (Honest Assessment)
+
+There's one hard constraint on the "gibberish all the way down" vision: LLM inference. Today, Evryn's thinking happens via an external AI provider — which means data leaves the vault during processing. This is mitigated by PII anonymization before transmission and Zero Data Retention agreements (data processed in real time, not stored). But it's not cryptographically sealed end-to-end during inference.
+
+The long-term path (see How Evryn Learns, LLM Strategy): self-hosted or hybrid models that can run *inside* the Foundation's secure infrastructure — in hardware-protected environments where even the host operating system can't read what's being processed. At that point, data never leaves the vault in plaintext at any stage. Every phase of this transition is reversible.
+
+This is real technology, not a theoretical aspiration. Secure computation environments exist today and are used in production by major platforms for exactly this kind of sensitive data processing. The constraint is cost and complexity at our scale, not physics.
 
 ### Identity Without Exposure
 
-Non-reversible trust fingerprints generated at time of verification. No names, emails, phone numbers, or IPs stored. Enforces bans and reputation carry-over without tracking.
+Evryn verifies that users are real without storing who they are. At the moment of identity verification, a non-reversible trust fingerprint is generated — a cryptographic hash that cannot be reversed to recover names, emails, phone numbers, or any identifying information. The raw identity data is never stored by Evryn; verification is handled entirely by a third-party service (see [BizOps spoke](bizops-and-tooling.md), Payments & Identity).
+
+This fingerprint serves two purposes:
+
+1. **Recognition without tracking.** Evryn can recognize a returning verified identity without knowing *who* they are. If a banned user deletes their account and tries to re-register, the fingerprint catches them.
+2. **Trust memory anchoring.** Behavioral patterns and trust signals are anchored to the fingerprint, not to personal identity. The trust graph knows "this verified person has a pattern of harmful behavior" without knowing their name.
+
+Full trust-imprint-on-deletion design: [trust-and-safety spoke](trust-and-safety.md) (Trust Imprint on Deletion).
 
 ### Legal Resilience
 
-"We can't. The data exists, but it is encrypted with a key only the user holds. It is mathematically inaccessible to us."
+The two-entity structure (see [long-term-vision spoke](long-term-vision.md)) is the backbone of legal resilience:
+
+**If a government demands data from Evryn Inc.:** Inc. doesn't have it. Trust-sensitive data — behavioral memory, trust signals, conversation content — lives in the Foundation, not Inc. Inc. accesses the Trust Core only through narrow, consent-governed APIs that return actionable instructions, never raw data. Inc. can truthfully say: *"We don't hold that data. It's held by an independent Swiss nonprofit, outside our control."*
+
+**If a government demands data from the Foundation:** The Foundation holds encrypted data with keys it doesn't control. User vaults are encrypted with user-held keys. Working intelligence is encrypted within hardware-protected infrastructure. The Foundation can truthfully say: *"The data exists, but it is encrypted with keys we do not hold. We cannot produce what we cannot read."*
+
+**If both are compelled simultaneously:** Inc. is in Delaware, the Foundation is in Switzerland — two jurisdictions, neither of which can unilaterally compel the other. And even with cooperation, the math still holds: no entity in the chain holds both the data and the keys to decrypt it.
 
 No master key. No administrator override. No buried backdoor.
+
+This structure also protects users from Evryn itself. If Inc. is acquired, the Foundation is an independent nonprofit with a mission-locked charter — the new owner still accesses the Trust Core through the same narrow APIs, under the same constraints. If Inc. breaks its PBC mission entirely, the Foundation's Trust Severance Protocol activates — a pre-defined sequence from warning to restriction to severance, with no fire sale of trust data allowed. If leadership changes, if incentives shift, if the company pivots — the Foundation holds. Trust is structural, not aspirational.
+
+*Full cryptographic architecture, trustee governance, and Trust Severance Protocol: [long-term-vision spoke](long-term-vision.md) (Jurisdictional Trust Architecture).*
 
 ---
 
