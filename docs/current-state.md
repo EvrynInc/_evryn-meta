@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-26T17:23-08:00*
+*Last updated: 2026-02-26T18:48-08:00*
 
 ---
 
@@ -20,19 +20,19 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Pre-Work #10 — DONE.** All sources absorbed into ARCHITECTURE.md and BUILD doc. Legal flow-through landed. Historical artifacts deleted. Status markers updated.
-- **Pre-Work #6: Evryn identity architecture + content** — IN PROGRESS. Session 1 designed composable identity (core + modules). Session 2 verified SDK research + AGENT_PATTERNS integration, read Anthropic cookbooks, surfaced SDK-native alternative to raw systemPrompt composition. **Blocking question:** verify TypeScript SDK behavior (`systemPrompt` + `setting_sources` — supplement or replace?). Session doc: `_evryn-meta/docs/sessions/2026-02-24-pre-work-6-session-1.md`. Justin's Vertex AI workshop notes pending → research doc.
+- **Pre-Work #10 — DONE.** All sources absorbed into ARCHITECTURE.md and BUILD doc.
+- **Pre-Work #6: Evryn identity architecture + content** — IN PROGRESS. Session 1 designed composable identity (core + modules). Session 2 verified SDK research + AGENT_PATTERNS integration, read Anthropic cookbooks. **Blocking question:** verify TypeScript SDK behavior (`systemPrompt` + `setting_sources` — supplement or replace?). Session doc: `_evryn-meta/docs/sessions/2026-02-24-pre-work-6-session-1.md`.
 - **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. After #6.
-- **Legal: Privacy & Terms questionnaire** — Sent to Fenwick. Email addendum sent (5 items). Second addendum added to questionnaire (match guarantees, exclusion language, safety-priority framing). Meeting with Fenwick 2/26 to discuss.
+- **Legal: Privacy & Terms questionnaire** — Sent to Fenwick. Meeting 2/26 to discuss.
 - **Sheets work goes through Claude.ai** — AC gets read-only CSV snapshots locally for context.
 
 ## Active Projects
 
-- **_evryn-meta** — Hub final pass complete. Technical-vision spoke readthrough COMPLETE (all sections reviewed with Justin). Long-term-vision spoke significantly expanded (cryptographic architecture, Trust Severance Protocol, trustee governance, warrant canary, honest trust surface). Remaining spoke readthroughs: business-model, gtm-and-growth, long-term-vision (rest of doc), bizops-and-tooling. Coherence pass pending: tech-vision top-to-bottom + v0.1 prompt files + Master Plan tech section. Research: 9 reports, all breadcrumbed.
-- **evryn-backend** — Pre-Work #10 DONE. ARCHITECTURE.md updated: Three Domains rename, module separation alignment, multi-vector embeddings stub, state-vs-trait in Story Model, labels-as-hypotheses in profile_jsonb, cross-thread awareness note, stale Workflowy TODO resolved. Next: Pre-Work #6 identity content (blocked on SDK behavior verification + architectural approach decision).
-- **evryn-team-agents** — PAUSED. Clean pause state. CLAUDE.md updated (hard stop + runtime context).
-- **evryn-dev-workspace** — DC's home repo. Identity updated (writing discipline, lock protocol auto-memory step).
-- **evryn-website** — Live at evryn.ai. CLAUDE.md is hard stop, build context in docs/ARCHITECTURE.md.
+- **_evryn-meta** — Tech-vision final pass IN PROGRESS. Foundation architecture extracted to `hub/detail/evryn-foundation-architecture.md` (new sub-spoke directory `hub/detail/`). Master Plan v2.3 tech section gap analysis DONE — 5 gaps landed across tech-vision, ARCHITECTURE.md, UX spoke, long-term-vision. Remaining: v0.1 prompt files review, tech-vision top-to-bottom coherence pass. Remaining spoke readthroughs: business-model, gtm-and-growth, bizops-and-tooling. Research: 9 reports, all breadcrumbed.
+- **evryn-backend** — ARCHITECTURE.md updated this session: social graph functions, insight routing pipeline. Pre-Work #6 identity content next (blocked on SDK behavior verification).
+- **evryn-team-agents** — PAUSED. Clean pause state.
+- **evryn-dev-workspace** — DC's home repo.
+- **evryn-website** — Live at evryn.ai.
 - **evryn-langgraph-archive** — Read-only archive. Sealed.
 
 ## Infrastructure

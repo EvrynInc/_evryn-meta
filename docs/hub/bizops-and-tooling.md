@@ -12,7 +12,7 @@
 
 - **Entity:** Evryn Inc., Delaware Public Benefit Corporation
 - **Mission:** "to foster trusted human connection for our users by developing systems that create high-resonance connections, responsibly steward personal information and insights, and structurally protect emotional wellbeing, informed consent, and relational alignment and trust across every interaction."
-- **Planned future:** Evryn Foundation (Switzerland, nonprofit) as custodian of Protocol and trust infrastructure — see [long-term-vision spoke](long-term-vision.md)
+- **Planned future:** Evryn Foundation (Switzerland, nonprofit) as custodian of Protocol and trust infrastructure — see [Foundation Architecture](detail/evryn-foundation-architecture.md)
 - **Legal counsel:** Fenwick & West — strategic partner, not just legal counsel. Their willingness to take on Evryn raises profile, decreases short-term burn (legal cost deferment), and increases access to strategic and capital partners.
 - **Incorporation:** via Clerky
 - **Trademark:** filed via LegalZoom

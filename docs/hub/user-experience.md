@@ -77,7 +77,7 @@ When Evryn finds a match:
 
 Evryn doesn't share users' information with each other — she effectively acts as a courier. Each user must explicitly sign off on the exact wording of anything shared. Nothing is revealed without both parties' active, informed consent.
 
-**If a match doesn't work, Evryn won't re-try unless something meaningful changes.**
+**If a match doesn't work, Evryn won't re-try unless something meaningful changes.** Users can also explicitly block a connection or request "don't match again" — Evryn respects these immediately and without question.
 
 **Narrative framing:** Evryn doesn't just say "here's a match." She explains *why* this person matters — not just *that* they're a match.
 

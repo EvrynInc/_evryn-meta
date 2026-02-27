@@ -82,7 +82,7 @@ Web/mobile interface — PWA, mobile-responsive from day one. Native apps deferr
 
 **Five critical conditions** — structural requirements that, if missed, break the system:
 
-1. **Ecosystem-level network density** — minimum viable density within key interaction zones (e.g., particular clusters within LA film). Sparse networks = failed matches = belief collapse.
+1. **Ecosystem-level network density** — minimum viable density within key interaction zones (e.g., particular clusters within LA film). Sparse networks = failed matches = belief collapse. Density doesn't need to be global — resonance emerges as soon as particular role-pairs or sub-clusters cross the threshold (e.g., enough actors and directors verified and profiled). Each viable cluster needs: a minimum pool of richly profiled users, representation across complementary roles, and shared cultural/geographic context. See [business-model spoke](business-model.md) for density thresholds; [GTM spoke](gtm-and-growth.md) for wave strategy.
 2. **High-fidelity user understanding** — deep conversational intake, behavioral signal extraction, and emotional calibration from day one. Evryn can't match well if users aren't richly profiled.
 3. **Real-time memory + consent-aware logic** — remember what matters, forget what doesn't, respect privacy and consent. Without memory scaffolding, Evryn becomes generic. Without consent scaffolding, she becomes unsafe.
 4. **Trust graph integrity** — trust signals must be consistent, protected, and impossible to bypass. If bad actors can reset or manipulate identity, the entire safety layer collapses.
@@ -144,7 +144,7 @@ Matching is Evryn's core act — the thing she gets paid for, the thing that bui
 
 **Then narrative judgment on top.** Evryn doesn't just score — she explains *why* someone matters. Not "87% match" but the story of the match. When judgment catches something the scoring misses — or raises a flag the numbers don't — judgment overrides. May surface candidates with little overlap on paper but high complementarity.
 
-**Then learning from outcomes.** Every match attempt (successful or not) is training signal. Initially, Evryn observes outcomes without automatically adjusting — the team makes the calls. Over time, as calibration patterns stabilize, she takes on more of this autonomously within bounded parameters.
+**Then learning from outcomes.** Every match attempt (successful or not) is training signal. Initially, Evryn observes outcomes without automatically adjusting — the team makes the calls. Over time, as calibration patterns stabilize, she takes on more of this autonomously within bounded parameters. As real-world data accumulates, the matching system may evolve beyond LLM judgment into trained ML models — pattern recognition across match outcomes, behavioral signals, and compatibility vectors that improve computationally with scale. The Training Data Pipeline (see How Evryn Learns) feeds this future capability; the specific ML approach is a build decision driven by data volume and observed patterns.
 
 **Day-one reality:** The scoring layer has no data and the learning layer has no outcomes. Evryn starts with judgment alone — reasoning about who matters to whom and why. Even pure judgment produces meaningful introductions in a dense ecosystem. Computational layers develop as data accumulates.
 
@@ -324,7 +324,7 @@ Evryn holds deeply personal data — the kind that could devastate someone's lif
 
 ### Defense in Depth
 
-**Jurisdictional.** All trust-sensitive data lives inside the Evryn Foundation (Switzerland, nonprofit). Swiss privacy law and nonprofit governance provide the strongest available legal shield against foreign government demands and corporate overreach. See [long-term-vision spoke](long-term-vision.md) for Foundation governance.
+**Jurisdictional.** All trust-sensitive data lives inside the Evryn Foundation (Switzerland, nonprofit). Swiss privacy law and nonprofit governance provide the strongest available legal shield against foreign government demands and corporate overreach. See [Foundation Architecture](detail/evryn-foundation-architecture.md) for Foundation governance.
 
 **Cryptographic.** Everything is encrypted — at rest, in transit, end-to-end. User-to-user communications (including conversations with Evryn, since Evryn is a user in her own system) are encrypted so that even the Foundation's own infrastructure holds only ciphertext. The target: an attacker who breaches every layer of infrastructure finds nothing but gibberish.
 
@@ -364,7 +364,7 @@ Full trust-imprint-on-deletion design: [trust-and-safety spoke](trust-and-safety
 
 ### Legal Resilience
 
-The two-entity structure (see [long-term-vision spoke](long-term-vision.md)) is the backbone of legal resilience:
+The two-entity structure (see [Foundation Architecture](detail/evryn-foundation-architecture.md)) is the backbone of legal resilience:
 
 **If a government demands data from Evryn Inc.:** Inc. doesn't have it. Trust-sensitive data — behavioral memory, trust signals, conversation content — lives in the Foundation, not Inc. Inc. accesses the Trust Core only through narrow, consent-governed APIs that return actionable instructions, never raw data. Inc. can truthfully say: *"We don't hold that data. It's held by an independent Swiss nonprofit, outside our control."*
 
@@ -376,7 +376,7 @@ No master key. No administrator override. No buried backdoor.
 
 This structure also protects users from Evryn itself. If Inc. is acquired, the Foundation is an independent nonprofit with a mission-locked charter — the new owner still accesses the Trust Core through the same narrow APIs, under the same constraints. If Inc. breaks its PBC mission entirely, the Foundation's Trust Severance Protocol activates — a pre-defined sequence from warning to restriction to severance, with no fire sale of trust data allowed. If leadership changes, if incentives shift, if the company pivots — the Foundation holds. Trust is structural, not aspirational.
 
-*Full cryptographic architecture, trustee governance, and Trust Severance Protocol: [long-term-vision spoke](long-term-vision.md) (Jurisdictional Trust Architecture).*
+*Full cryptographic architecture, trustee governance, and Trust Severance Protocol: [Foundation Architecture](detail/evryn-foundation-architecture.md).*
 
 ---
 
