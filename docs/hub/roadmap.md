@@ -148,5 +148,3 @@ Most domain spokes are linked inline in the sections above. When adding new refe
 - **Historical vault (evryn-backend):** `evryn-backend/docs/historical/` — v0.1 system prompt, requirements drafts, prototype schema, n8n prototype
 
 ---
-
-*Hub created 2026-02-12 by AC. Expanded 2026-02-20: ethos, connections, safety, long view sections added; domain spokes created; MPR content reorganized into hub-and-spokes wiki.*

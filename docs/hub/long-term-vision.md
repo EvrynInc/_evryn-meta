@@ -117,5 +117,3 @@ To keep in mind as architecture evolves:
 - **Resiliency stubs** — federation, Foundation, graceful degradation (see above)
 
 ---
-
-*Spoke created 2026-02-20 by AC. Reorganized from MPR Jurisdictional Trust, Federation & Future, Key Risks, and Long View sections. Trust Mirror reference removed (see [ADR-008](../decisions/008-trust-mirror-dropped.md)). Jurisdictional Trust Architecture section extracted to [Foundation Architecture](detail/evryn-foundation-architecture.md) 2026-02-26.*

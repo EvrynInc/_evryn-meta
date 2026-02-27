@@ -379,5 +379,3 @@ This structure also protects users from Evryn itself. If Inc. is acquired, the F
 *Full cryptographic architecture, trustee governance, and Trust Severance Protocol: [Foundation Architecture](detail/evryn-foundation-architecture.md).*
 
 ---
-
-*Spoke created 2026-02-20 by AC. Reorganized from MPR Technical Architecture, How Evryn Learns, and Sovereign Memory sections. Current-state vs. target-state annotations added where relevant.*

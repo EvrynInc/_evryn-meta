@@ -127,5 +127,3 @@ The founding capital philosophy is **user-led, backed by traditional VC as neede
 The Financial Model includes detailed sensitivity analysis, testing viability across a range of traction and monetization scenarios — from deliberately conservative stress tests to expected-case projections. Conservative scenarios don't prove upside; they test whether the model survives under real constraint (stalled traction, lagged belief, underdelivered early monetization). The core launch plan reflects actual expectations around user psychology, early avatar mix, and referral velocity, with fallback triggers if key metrics underperform.
 
 ---
-
-*Spoke created 2026-02-20 by AC. Reorganized from MPR Business Model section with corrections from clarifications doc and legal questionnaire.*

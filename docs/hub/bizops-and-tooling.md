@@ -128,5 +128,3 @@ Used during the founding team search. Listed for reference:
 > *The BizOps appendix in the original Master Plan (lines 3104-3210) has longer rationale for each tool choice. The Notion Vault has deeper evaluations.*
 
 ---
-
-*Spoke created 2026-02-20 by AC. Reorganized from MPR Legal, Corporate & Tools section. Updated 2026-02-25: absorbed infrastructure services from SYSTEM_OVERVIEW.md (retired), fixed iDenfy/Jumio rationale, added Voice AI section.*

@@ -177,5 +177,3 @@ Dashboards will flag problematic chats in real-time. A dedicated Trust & Safety 
 Built with forward compatibility for frameworks like the EU's Digital Services Act: a clear appeal path for bans or moderation decisions, aggregate transparency reporting on moderation activity as the platform matures, and alignment with emerging norms on digital due process and platform accountability.
 
 ---
-
-*Spoke created 2026-02-20 by AC. Reorganized from MPR Trust Architecture + Moderation & Safety sections with corrections from clarifications doc and legal questionnaire.*
