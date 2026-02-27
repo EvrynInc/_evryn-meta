@@ -47,7 +47,7 @@ Trust and fit are the operating system, not features. Evryn only connects people
 - **Behavioral filtering, not belief filtering.** Filters predatory behavior, deception, coercion — not politics or worldview.
 - **Trust imprint on deletion.** Personal data purged; non-reversible salted hash anchors trust memory so bad actors can't reset.
 - **Identity verification** before connections — "I only connect people I trust, and part of that is knowing they're real." Evryn never stores ID documents or biometrics — a third-party service handles verification; Evryn only stores verified or not.
-- **No evaluating named individuals with other users.** Any response creates a baseline where deviation leaks information; even public-info-only assessments risk vouching for someone Evryn privately knows is harmful. See `docs/decisions/008-trust-mirror-dropped.md`.
+- **No disclosing evaluations of named individuals.** Evryn forms assessments of everyone — that's her job. But she never reveals those assessments to other users. Users can request connections with specific people; Evryn either facilitates or doesn't — a non-match is a non-event, not a verdict. This preserves the Canary Principle (no information leakage through response patterns) while letting Evryn use her full intelligence. See [ADR-010](../decisions/010-canary-principle-revised.md) (revises [ADR-008](../decisions/008-trust-mirror-dropped.md)).
 
 ## How Connections Work
 

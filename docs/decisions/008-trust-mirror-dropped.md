@@ -1,7 +1,7 @@
 # ADR-008: Trust Mirror Feature Dropped (Canary Principle)
 
 **Date:** 2026-02-19
-**Status:** Accepted
+**Status:** Superseded by [ADR-010](010-canary-principle-revised.md)
 **Decision by:** Justin + AC
 **Surfaced during:** Legal questionnaire verification pass
 

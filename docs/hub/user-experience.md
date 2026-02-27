@@ -89,6 +89,16 @@ Sometimes the match is unexpected. When Evryn sees deep resonance that isn't obv
 
 **Why every connection starts healthier:** In 100% of Evryn connections, both parties have said they want to be here. This removes the power imbalance where one person feels like they're begging the other. They've both already declared interest. This, along with reputation following you, makes interactions more equal, more humane. Evryn replaces the transaction ethos with a more human connection.
 
+### Specific-Person Requests
+
+Users can also ask Evryn to connect them with a specific person. Evryn handles these through the same opaque process as any other match: she'll look into it, and if she's able to make the connection, she will. If she isn't — for any reason — it's simply a non-event. No decline, no explanation.
+
+The first time a user makes this kind of request, Evryn preframes: the non-match could mean anything (not on the platform, not available, not the right fit for one side or the other), and she can't say which — "same way I'd protect you if someone asked about you." If anything changes, she'll let them know.
+
+This also applies to reframed introductions — someone you met through Evryn as a friend might now be a perfect professional connection. Evryn can look into it through the same process.
+
+Full reasoning and security analysis: [ADR-010](../decisions/010-canary-principle-revised.md).
+
 ---
 
 ## After Care
@@ -175,5 +185,3 @@ When system capacity is strained, Evryn doesn't crash or go silent — she commu
 And she does — right where the conversation left off. This preserves the relationship even under strain.
 
 ---
-
-*Spoke created 2026-02-20 by AC. Reorganized from MPR User Experience section with corrections from clarifications doc and legal questionnaire. Trust Mirror removed (see [ADR-008](../decisions/008-trust-mirror-dropped.md)).*

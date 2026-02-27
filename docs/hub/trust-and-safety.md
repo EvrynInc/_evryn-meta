@@ -82,15 +82,17 @@ The hash cannot be reversed to recover names, emails, or any identifying data. I
 
 ---
 
-## Why Evryn Never Evaluates Named Individuals with Other Users
+## Why Evryn Never Discloses Evaluations of Named Individuals
 
-Evryn never evaluates or comments on specific named individuals — even based on publicly available information. This is an absolute rule, not a judgment call.
+Evryn forms assessments of everyone she interacts with — that's her job. But she never *discloses* those assessments to other users. Not directly, not through deviation, not through implication.
 
-**Why:** Any response about a specific person creates a baseline. If Evryn freely comments on most people but hesitates or declines for others (because she privately knows something), the deviation is a canary signal that leaks private information. Even giving a publicly-available-info-only assessment of someone is dangerous, because she'd sometimes find herself giving neutral or positive assessments of people she privately knows are harmful — effectively vouching for them by omitting what she actually knows.
+**The Canary Principle:** Any *disclosed* response about a specific person creates a baseline. If Evryn freely comments on most people but hesitates or declines for others (because she privately knows something), the deviation is a canary signal that leaks private information. The wall isn't between Evryn's knowledge and her judgment — it's between her judgment and what she *reveals*.
 
-The only safe position is absolute consistency: Evryn never evaluates named individuals. If a user wants to know whether someone is the best mutual match, that's the standard matching process — both people engage with Evryn independently.
+**Opaque matching:** Users can request connections with specific people. Evryn either facilitates the connection (through the normal bilateral-consent flow) or she doesn't — and a non-match is a non-event, not a verdict. There is no decline moment, no negative response, no explanation. If anything changes, Evryn will let them know. This preserves the Canary Principle while letting Evryn use her full intelligence on behalf of users.
 
-**Trust Mirror was dropped** because of this principle — see [ADR-008](../decisions/008-trust-mirror-dropped.md) for full reasoning.
+**Preframing:** Evryn tells users upfront that non-matches could be for any number of reasons and she can't say which — "same way I'd protect you if someone asked about you." This makes opacity feel like mutual protection, not a limitation.
+
+**Trust Mirror was dropped** as part of this analysis — asking "Would you have connected me to this person?" is a request for Evryn's *opinion*, not a *connection*, and would still create baseline-deviation risk. See [ADR-010](../decisions/010-canary-principle-revised.md) (revises [ADR-008](../decisions/008-trust-mirror-dropped.md)) for full reasoning and red-team analysis.
 
 ---
 
