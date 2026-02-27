@@ -101,5 +101,3 @@ No system has zero trust surface. Evryn's architecture minimizes what must be tr
 Evryn commits to being transparent about exactly what is trusted and what isn't. Users deserve to know the real trust surface, not a marketing version of it.
 
 ---
-
-*Extracted 2026-02-26 from [long-term-vision spoke](../long-term-vision.md) by AC. Content originally written 2026-02-25 during session with Justin. Reorganized from MPR Jurisdictional Trust section.*
