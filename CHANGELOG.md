@@ -4,6 +4,14 @@
 
 ---
 
+## 2026-02-27 (GTM spoke session)
+
+- **Film industry AI disruption research report** created → `docs/research/film-industry-ai-disruption-v1.md` (~4500 words, 40+ sources). Covers AI video tool landscape (Seedance 2.0, Kling 3.0, Sora 2, Runway Gen-4.5, Adobe Firefly, Veo 3.1), job displacement (41K LA jobs lost), union contract expirations (May-July 2026), "two lanes" market split, Seedance copyright battle, Chinese AI dominance, entry-level pipeline broken, geographic shift.
+- **Competitive landscape research report** created → `docs/research/competitive-landscape-v1.md` (~3500 words, 23 sources). Covers Amata, Overtone (HIGH WATCH — Hinge CEO + Match Group), Osmos, Lunchclub, Stage 32, incumbent AI features, trust-based platform trends.
+- Deleted `docs/historical/Evryn Trusted Partner Briefing v1.4.md` (superseded by v1.5, only CHANGELOG refs left as historical)
+- GTM spoke reviewed and concerns flagged — full edit plan approved. Session working doc at `docs/session-gtm-spoke-update-plan.md`. GTM spoke edits not yet started — will be continued in next session.
+- current-state.md refreshed for session checkpoint.
+
 ## 2026-02-27
 
 - **Gatekeeper Approach doc** (`hub/detail/gatekeeper-approach.md`) — operational playbook: three gatekeeper types, four-step pitch, setup menu by email client, validation period, "Evryn handles this" end state, delivery preferences, Evryn as point of contact. Breadcrumbed from GTM spoke + BUILD doc.
