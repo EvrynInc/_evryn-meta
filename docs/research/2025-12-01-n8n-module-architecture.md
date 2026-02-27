@@ -157,7 +157,7 @@ These notes contain architectural DNA that predates the Claude Agent SDK pivot b
 ### InboxMgr_Agent
 
 - Role: Judgment and prioritization.
-  - Decides what's valuable vs noise (gold, edge, trash).
+  - Decides what's valuable vs noise (gold, edge, pass).
   - Uses user-specific value_definitions.
   - Currently the core of Mark's inbox use case, but expandable to any "what deserves attention?" problem.
 

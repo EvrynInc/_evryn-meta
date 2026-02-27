@@ -12,7 +12,7 @@ The Master Plan's GTM was written assuming a traditional startup with a human te
 
 - **Dramatically lower burn.** With Justin as sole human operator building primarily with AI (Claude Code, Claude Agent SDK), monthly costs are a fraction of what a human engineering team would require. This removes the urgency to raise large rounds before proving the model.
 - **Organic launch becomes viable.** Lower burn means Evryn can grow at the pace trust requires — no need to force premature scale to justify headcount or runway.
-- **Gatekeeper strategy reduces cold-start pressure.** Each gatekeeper partnership brings ~1,000 potential users/week organically. Even one active gatekeeper generates meaningful network density without a marketing blitz.
+- **Gatekeeper strategy reduces cold-start pressure.** Each gatekeeper partnership brings ~200 potential users/day organically. Even one active gatekeeper generates meaningful network density without a marketing blitz.
 - **But gatekeepers are hard to reach.** Justin has real inroads (Mark is the pilot, and there are warm paths to others), but most gatekeepers will treat Evryn's pitch as part of their own slush pile. The bottom-up whisper cascade strategy is still essential — it builds the social proof and user base that makes gatekeepers take notice.
 
 **Bottom line:** The strategic direction below is correct — LA film first, wave strategy, whisper cascade, quality over quantity. What's evolved is the *urgency and scale assumptions*. Evryn can afford to grow more deliberately, prove the model at small scale, and let traction speak for itself. The funding milestones and launch timelines from the Master Plan are being rethought accordingly.
@@ -37,7 +37,7 @@ The plan targets Los Angeles film industry first because:
 
 ### Top-Down: Gatekeeper Partnerships
 
-High-volume connectors (like Mark, the pilot user) receive ~1,000 emails/week. They forward inbound to Evryn. Evryn identifies who's worth their time. The vast majority (~999 of 1,000) aren't the right *mutual* fit for that gatekeeper — but they're real people with real needs. They become full Evryn users.
+High-volume connectors (like Mark, the pilot user) receive ~200 emails/day. They forward inbound to Evryn. Evryn identifies who's worth their time. The vast majority aren't the right *mutual* fit for that gatekeeper — but they're real people with real needs. They become full Evryn users. Full operational playbook: [detail/gatekeeper-approach.md](detail/gatekeeper-approach.md).
 
 **Gatekeeper framing:** The gatekeeper model is a *channel*, not an ownership structure. Evryn's obligation is to *each* user, not just to the gatekeeper. If Bob emails 20 gatekeepers who all use Evryn, each gatekeeper deserves the best match, but Bob deserves the best match regardless of which inbox surfaced him. The deal: "we will find you the *best mutual* matches" — not "you own your inbound." This framing naturally transitions to the future state where gatekeepers redirect inbound to Evryn directly.
 

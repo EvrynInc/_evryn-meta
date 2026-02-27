@@ -120,7 +120,7 @@ Don't copy the code (it's tied to OpenClaw's plugin system), but the architectur
 
 **Files:** `src/auto-reply/reply/`, `src/auto-reply/dispatch/`
 
-**Relevance:** Evryn v0.3 (cast-off outreach at ~1000/week) | Evryn v1.0 (high-volume matching)
+**Relevance:** Evryn v0.3 (cast-off outreach at ~200/day) | Evryn v1.0 (high-volume matching)
 
 ### What It Does
 
@@ -135,7 +135,7 @@ The auto-reply dispatcher sits between inbound messages and the agent. It handle
 
 ### Why This Matters for Evryn
 
-Cast-off outreach (v0.3) means Evryn is contacting ~1000 people per week. Rate limiting, queuing, and debouncing become critical:
+Cast-off outreach (v0.3) means Evryn is contacting ~200 people per day. Rate limiting, queuing, and debouncing become critical:
 - Gmail has daily send limits (~500 for consumer, ~2000 for Google Workspace)
 - Evryn can't blast 200 emails in 10 minutes — needs intelligent pacing
 - When a cast-off replies, Evryn needs to debounce (wait for the full message before processing)
@@ -349,7 +349,7 @@ When designing Lucas's session management, reference for:
 
 **Evryn v0.2:** Proactive behavior is core Evryn. If Mark goes quiet, Evryn should notice and reach out. The ARCHITECTURE.md describes "Evryn-set follow-up timers per interaction" — essentially, Evryn schedules her own proactive outreach based on conversation context. OpenClaw's cron tool demonstrates exactly this: an agent that can create, modify, and manage its own scheduled actions.
 
-**Evryn v0.3:** Cast-off outreach at ~1000/week needs intelligent pacing. Not a bulk blast — staggered, personalized, rate-limited. The agent needs to schedule sends across hours and days.
+**Evryn v0.3:** Cast-off outreach at ~200/day needs intelligent pacing. Not a bulk blast — staggered, personalized, rate-limited. The agent needs to schedule sends across hours and days.
 
 **Team agents:** Lucas's wake schedule (morning briefing, evening briefing, Friday reflection, monthly review) maps directly to cron patterns. The "delivery deadline" concept (Lucas must deliver the briefing BY 6am, so he needs to start early enough) is a scheduling pattern OpenClaw doesn't address but that we need.
 
