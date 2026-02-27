@@ -22,7 +22,7 @@ Users who find it stressful to name their own price can ask Evryn for a suggeste
 
 This is also a trust signal: if someone lowballs consistently, Evryn notices. A low payment doesn't damage trust *if* there's a good reason and it feels fair. But exploitative pricing tells Evryn something about character. "If I can't even trust this person not to rip me off, I'm definitely not going to be willing to connect them to you."
 
-**Post-connection adjustments:** if the connection was better than expected, user can increase payment. If worse, they can decrease — all the way to zero if that's fair. Evryn may insist on a full refund if a connection went badly. "No worries — I've returned your payment to your Evryn Wallet. These things happen. But it will really help me if you tell me what didn't feel right." This is a 100% satisfaction guarantee.
+**Post-connection adjustments:** if the connection was better than expected, user can increase payment. If worse, they can decrease — all the way to zero if that's fair. Evryn may insist on a full refund if a connection went badly. "No worries — I've returned your payment to your Evryn Wallet. These things happen. But it will really help me if you tell me what didn't feel right." This is a 100% satisfaction guarantee. The mechanism is self-correcting: honest feedback helps Evryn calibrate future matches; dishonest refund claims (claiming a match was bad when it wasn't) degrade Evryn's understanding of what the user actually wants — which means her next matches get worse, not better. The incentive to be truthful is structural.
 
 ---
 

@@ -6,6 +6,8 @@
 
 ## 2026-02-26
 
+- v0.1 prompt files review: 4 concepts landed — pacing design constraint + not-a-chatbot boundary (user-experience spoke), early match calibration "magic of duds" (user-experience spoke), refund dishonesty feedback loop (business-model spoke).
+- Tech-vision final coherence pass: PII anonymization status inconsistency fixed (LLM Constraint now correctly reflects target-state, not current), Relationship Graph aligned with ARCHITECTURE.md (added contextual color).
 - Foundation architecture extracted from long-term-vision spoke to new sub-spoke (`docs/hub/detail/evryn-foundation-architecture.md`). Long-term-vision reduced from ~200 to ~80 lines. All cross-references updated (technical-vision ×3, bizops ×1).
 - Master Plan v2.3 tech section gap analysis (lines 1674–2889) — 5 gaps + 1 ML note landed: social graph functions (ARCHITECTURE.md), insight routing pipeline (ARCHITECTURE.md), block/don't-match-again (user-experience spoke), sub-cluster density detail (technical-vision spoke), surveillance fears + addiction-by-design risks (long-term-vision spoke), ML evolution note (technical-vision spoke).
 - Surveillance fears risk: added messaging/communication requirement — "architecture alone doesn't build perception."

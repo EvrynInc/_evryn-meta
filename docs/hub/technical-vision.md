@@ -187,7 +187,7 @@ Six conceptual data stores:
 2. **Global Connection Intelligence** — learned patterns of what makes good matches, relationship archetypes, complementarity patterns. This is accumulated matching wisdom, not a map of specific people.
 3. **World/Domain Knowledge** — industry expertise, domain context. Initially via web search tools; grows into a curated knowledge base over time.
 4. **User Data** — account details, verification, dynamic profiles built through conversation over time
-5. **Relationship Graph** — known relationships between specific people (declared and inferred). Used for redundancy filtering, safety, trust calibration.
+5. **Relationship Graph** — known relationships between specific people (declared and inferred). Used for redundancy filtering, safety filtering, trust calibration, and contextual color (surfacing relevant mutuals when helpful).
 6. **Trust Graph** — verification status, reputation data, behavioral signals
 
 **Critical separation:** User data and conversation logs are separated from the Trust Graph and Global Connection Intelligence by design. Users may delete their personal data, but not Evryn's system-level learnings.
@@ -345,7 +345,7 @@ Deletion is absolute: destroy the key, and the personal data becomes permanently
 
 ### The LLM Constraint (Honest Assessment)
 
-There's one hard constraint on the "gibberish all the way down" vision: LLM inference. Today, Evryn's thinking happens via an external AI provider — which means data leaves the vault during processing. This is mitigated by PII anonymization before transmission and Zero Data Retention agreements (data processed in real time, not stored). But it's not cryptographically sealed end-to-end during inference.
+There's one hard constraint on the "gibberish all the way down" vision: LLM inference. Today, Evryn's thinking happens via an external AI provider — which means data leaves the vault during processing. The target mitigations are PII anonymization before transmission and Zero Data Retention agreements (data processed in real time, not stored) — but anonymization is not yet implemented (see Privacy & Security Architecture above). Even with both in place, the pipeline isn't cryptographically sealed end-to-end during inference.
 
 The long-term path (see How Evryn Learns, LLM Strategy): self-hosted or hybrid models that can run *inside* the Foundation's secure infrastructure — in hardware-protected environments where even the host operating system can't read what's being processed. At that point, data never leaves the vault in plaintext at any stage. Every phase of this transition is reversible.
 
