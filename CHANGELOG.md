@@ -6,6 +6,9 @@
 
 ## 2026-02-27
 
+- **Gatekeeper Approach doc** (`hub/detail/gatekeeper-approach.md`) — operational playbook: three gatekeeper types, four-step pitch, setup menu by email client, validation period, "Evryn handles this" end state, delivery preferences, Evryn as point of contact. Breadcrumbed from GTM spoke + BUILD doc.
+- Volume standardized to ~200/day across all docs (was ~1,000/week extrapolation). Hub, GTM spoke, openclaw research, BUILD doc.
+- "trash" → "pass" terminology fix in n8n research doc.
 - **ADR-010: Canary principle revised** — opaque matching replaces absolute prohibition (ADR-008 superseded). Nine red-team vectors + one edge case. Key insights: non-event > binary response, preframing as mutual protection, both sides hear policy directly from Evryn, default posture is "needs a reason to connect, not a reason to decline."
 - Circulated ADR-010 through Hub (trust bullet), trust-and-safety spoke (section rewritten), UX spoke (specific-person requests subsection added), active session doc (Publisher hard rules updated).
 - Creation/history footers stripped from Hub and all spokes + Foundation architecture detail doc — git history covers provenance.
