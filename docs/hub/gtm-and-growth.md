@@ -4,6 +4,8 @@
 >
 > **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 
+> **⚠ Pending revision.** Phase annotations throughout are stale (old v0.3/v0.4/v1.0 — now collapsed). Whisper cascade framing needs rewrite (trust mechanics, not artificial scarcity). Competitive landscape table needs refresh. Edit plan + current thinking: `_evryn-meta/docs/sessions/2026-02-27-gtm-spoke-update-plan.md`.
+
 ---
 
 ## Strategic Context (as of Feb 2026)

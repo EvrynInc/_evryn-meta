@@ -77,7 +77,7 @@ Safety is structural, not bolted on. Full depth: `docs/hub/trust-and-safety.md`.
 
 ## Current Strategy
 
-**Build stages:** v0.1 (Custom GPT PoC) done → **v0.2 (Gatekeeper's Inbox)** ← current → v0.3 (cast-off outreach + onboarding) → v0.4 (wizard-of-oz matching) → v1.0 (full matching).
+**Build stages:** v0.1 (Custom GPT PoC) done → **v0.2 (Gatekeeper's Inbox)** ← current sprint, target March 7 → Build 2 (web app + matching + payments + cast-off outreach as acquisition channel) → Build 3 (scale: second gatekeeper, publisher module, agents). Phase labels being finalized — see `docs/sessions/2026-02-27-gtm-spoke-update-plan.md` for the restructuring rationale.
 
 - **v0.2 "Gatekeeper's Inbox":** Evryn surfaces connections from a gatekeeper's inbox. Gatekeeper forwards emails → Evryn identifies who's worth their time (gold/pass/edge case) → drafts notification → Justin approves via email → Evryn delivers. Pilot gatekeeper: Mark. These are connections being brokered, not emails being sorted — tracked as such from day one.
 - **Lucas (Chief of Staff agent) PAUSED** — building Evryn product first. Everything transfers back.
