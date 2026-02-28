@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-27T15:45-08:00*
+*Last updated: 2026-02-27T17:36-08:00*
 
 ---
 
@@ -20,17 +20,17 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Pre-Work #10 — DONE.** All sources absorbed into ARCHITECTURE.md and BUILD doc.
-- **Pre-Work #6: Evryn identity architecture + content** — IN PROGRESS. Session 1 designed composable identity (core + modules). Session 2 verified SDK research + AGENT_PATTERNS integration, read Anthropic cookbooks. **Blocking question:** verify TypeScript SDK behavior (`systemPrompt` + `setting_sources` — supplement or replace?). Session doc: `_evryn-meta/docs/sessions/2026-02-24-pre-work-6-session-1.md`.
-- **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. After #6.
+- **5-day sprint: Mark live.** Sprint plan at `evryn-backend/docs/SPRINT-MARK-LIVE.md`. Target: ready for Mark by Fri March 7. Mon–Fri, parallel AC/DC streams.
+- **Pre-Work #6: Evryn identity** — Reframed: building Evryn's full identity, not a classifier. v0.1 scripts are the foundation (adaptation, not creation). Sprint Monday AC work. Prior session: `_evryn-meta/docs/sessions/2026-02-24-pre-work-6-session-1.md`.
+- **Pre-Work #9: Update DC's CLAUDE.md** — Testing mandate, build principles. Sprint Monday.
+- **Build phases restructured.** Old v0.3/v0.4/v1.0 collapsed. Full reasoning: `_evryn-meta/docs/sessions/2026-02-27-gtm-spoke-update-plan.md`. BUILD-EVRYN-MVP.md + Hub GTM paragraph need revision (not yet done).
 - **Legal: Privacy & Terms questionnaire** — Sent to Fenwick. Meeting 2/26 to discuss.
-- **Sheets work goes through Claude.ai** — AC gets read-only CSV snapshots locally for context.
 
 ## Active Projects
 
-- **_evryn-meta** — GTM spoke update IN PROGRESS: research phase complete, edits not started. Film industry AI disruption report written + expanded (ByteDance Seedance 2.0, Kling 3.0, Adobe Firefly, "two lanes" split, copyright battle — 40+ sources). Competitive landscape report written (23 sources). Full edit plan approved — see `C:\Users\Justin\.claude\plans\serene-painting-lantern.md`. v1.4 briefing deleted. Session working doc at `docs/session-gtm-spoke-update-plan.md`. Remaining spoke readthroughs after GTM: business-model, bizops-and-tooling. Research: 11 reports, all breadcrumbed.
-- **evryn-backend** — ARCHITECTURE.md updated this session: social graph functions, insight routing pipeline. Pre-Work #6 identity content next (blocked on SDK behavior verification).
-- **evryn-team-agents** — PAUSED. Clean pause state.
+- **_evryn-meta** — GTM spoke update paused: research done, edits blocked on phase label finalization. Session doc: `docs/sessions/2026-02-27-gtm-spoke-update-plan.md`. AC designing Build 2 (graph schema, web app) in background during sprint week.
+- **evryn-backend** — **Sprint week March 3–7.** Sprint plan: `docs/SPRINT-MARK-LIVE.md`. Pre-Work #6 identity is sprint Monday.
+- **evryn-team-agents** — PAUSED. Reusable code (email polling, Gmail client, Supabase client) being adapted for evryn-backend.
 - **evryn-dev-workspace** — DC's home repo.
 - **evryn-website** — Live at evryn.ai.
 - **evryn-langgraph-archive** — Read-only archive. Sealed.
@@ -38,7 +38,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 ## Infrastructure
 
 - Running locally on Justin's desktop. No cloud deployment yet.
-- Supabase: TWO projects (keeping separate). Agent dashboard project + Evryn product project (was "n8n Prototype" — to be renamed).
+- Supabase: TWO projects (keeping separate). Agent dashboard project + Evryn product project.
 - Dashboard at evryn-dashboard.vercel.app (pulls from agent dashboard Supabase).
 - evryn@evryn.ai — Evryn's own Google account (separate from agents@evryn.ai).
 
