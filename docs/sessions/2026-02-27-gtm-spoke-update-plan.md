@@ -1,9 +1,19 @@
 # GTM Spoke Update + Build Phase Rethink — Session Working Doc
 
 > **Session:** 2026-02-27
-> **Status:** Research reports done. GTM spoke edits paused — build phases need rethinking first.
+> **Status:** Research done. Build phases restructured. 5-day sprint plan written. GTM spoke edits paused pending phase finalization.
 
-This session started as GTM spoke edits but surfaced two strategic corrections that need to land before the spoke can be drafted accurately.
+This session started as GTM spoke edits but surfaced two strategic corrections and evolved into a full build-phase rethink + sprint plan.
+
+**Key outputs this session:**
+1. Whisper cascade reframing (trust mechanics, not artificial scarcity)
+2. Build phases restructured (old v0.3/v0.4 collapsed — cast-off outreach needs matching needs vector search needs web app)
+3. Pre-Work #6 reframed: building Evryn's identity, not a classifier. v0.1 scripts are the foundation — adaptation, not creation.
+4. Evryn's conversational capability in v0.2 transfers directly to cast-off outreach — same Evryn, new audience.
+5. **5-day sprint plan written → `evryn-backend/docs/SPRINT-MARK-LIVE.md`** — Mark live by end of week of March 3.
+6. Parallel streams mapped: AC designs Build 2 (graph schema, web app) during sprint week so DC transitions immediately after.
+
+**What's NOT done:** GTM spoke draft, phase label finalization, BUILD-EVRYN-MVP.md revision, Hub GTM paragraph update.
 
 ---
 
