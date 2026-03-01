@@ -145,6 +145,7 @@ Most domain spokes are linked inline in the sections above. When adding new refe
 - **Evryn product build:** `evryn-backend/docs/BUILD-EVRYN-MVP.md` (what to build, phase by phase)
 - **Lucas agent build:** `evryn-team-agents/docs/BUILD-LUCAS-SDK.md`
 - **Decision log:** `docs/decisions/`
+- **Trusted Partner Briefing:** `docs/historical/Evryn Trusted Partner Briefing v1.6.md` — condensed pitch doc for collaborators, advisors, and capital partners. Keep updated when strategy evolves.
 - **Historical vault (_evryn-meta):** `docs/historical/` — Master Plan Reference (~730 lines, frozen), Master Plan v2.3 (~3,200 lines, frozen original). Go to the original for exact wording, marketing prose, or full competitive analysis.
 - **Historical vault (evryn-backend):** `evryn-backend/docs/historical/` — v0.1 system prompt, requirements drafts, prototype schema, n8n prototype
 
