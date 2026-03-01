@@ -4,6 +4,10 @@
 
 ---
 
+## 2026-02-28 (Cash projection refinement)
+
+- **Jul/Aug burn updated to $4,225** (agents full sprint for v0.4, not steady state $3,250). Cash projection recalculated. Aspiration note added: goal is agents online earlier than projected if build bandwidth allows.
+
 ## 2026-02-28 (BizOps cleanup + financial projections)
 
 - **BizOps spoke cleaned up** (`docs/hub/bizops-and-tooling.md`) — status indicators added to all tools, missing tools added (Google Workspace, Zoom, X, Claude Max, Bitwarden, Carta), domains updated (6 TLDs), Clerky/Toptal notes updated, n8n/Airtable removed, Canva noted.
