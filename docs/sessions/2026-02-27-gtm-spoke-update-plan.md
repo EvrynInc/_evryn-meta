@@ -1,7 +1,7 @@
 # GTM Spoke Update + Build Phase Rethink — Session Working Doc
 
 > **Session:** 2026-02-27
-> **Status:** Research done. Build phases restructured. 5-day sprint plan written. GTM spoke edits paused pending phase finalization.
+> **Status:** COMPLETE. Phase labels finalized (v0.2/v0.3/v0.4). GTM spoke fully revised (2026-02-28). Business model revision notes captured. See continuation session: `docs/sessions/2026-02-28-business-model-revision-notes.md`.
 
 This session started as GTM spoke edits but surfaced two strategic corrections and evolved into a full build-phase rethink + sprint plan.
 
@@ -13,7 +13,7 @@ This session started as GTM spoke edits but surfaced two strategic corrections a
 5. **5-day sprint plan written → `evryn-backend/docs/SPRINT-MARK-LIVE.md`** — Mark live by end of week of March 3.
 6. Parallel streams mapped: AC designs Build 2 (graph schema, web app) during sprint week so DC transitions immediately after.
 
-**What's NOT done:** GTM spoke draft, phase label finalization, BUILD-EVRYN-MVP.md revision, Hub GTM paragraph update.
+**What's NOT done:** ~~GTM spoke draft~~ (done 2026-02-28), ~~phase label finalization~~ (done 2026-02-28), BUILD-EVRYN-MVP.md revision (deferred, warning banner in place), ~~Hub GTM paragraph update~~ (done 2026-02-28).
 
 ---
 
@@ -161,10 +161,16 @@ Phase annotations can't be finalized until the revised build phases are approved
 
 ---
 
-## Open Questions for Next Session
+## Pre-Sprint Blocker (Saturday, March 1)
 
-1. **Revised build phase names/numbers.** Are we keeping v0.2/v0.3 etc. and redefining them? Or switching to Build 1/2/3? Or named phases?
-2. **Web app home.** Does it live in evryn-backend? A new repo? The evryn-website repo?
-3. **Hub GTM paragraph.** The Hub currently says "v0.3 Cast-off Outreach + Onboarding" — this needs updating when phases are revised.
-4. **BUILD-EVRYN-MVP.md.** Needs significant revision to reflect the new phasing. This is a source-of-truth doc — requires Justin's approval.
-5. **ARCHITECTURE.md.** The relationship graph "open design question" is now on the critical path for Build 2. AC needs to resolve this before DC starts.
+**Pre-Work #6 SDK question — must resolve before Monday.** The sprint plan has AC writing Evryn's system prompt on Monday. But there's an unresolved question from the Pre-Work #6 session (`docs/sessions/2026-02-24-pre-work-6-session-1.md`): in the Claude Agent SDK, does `systemPrompt` supplement or replace content loaded via `setting_sources` (like CLAUDE.md)? This determines the entire architecture of how Evryn's identity gets structured — monolithic system prompt vs. layered CLAUDE.md + prompt. If we don't answer this Saturday, Monday's AC work starts with a research detour instead of creative work.
+
+---
+
+## Open Questions — Resolution Status
+
+1. **~~Revised build phase names/numbers.~~** RESOLVED (2026-02-28): v0.2 "Gatekeeper's Inbox" / v0.3 "The Broker" / v0.4 "Scale". Soft dates added to GTM spoke and Hub.
+2. **Web app home.** Still open. Does it live in evryn-backend? A new repo? The evryn-website repo?
+3. **~~Hub GTM paragraph.~~** RESOLVED (2026-02-28): Updated with finalized phases, target dates, financial reality, geographic correction (PNW ignition).
+4. **BUILD-EVRYN-MVP.md.** Still needs revision for new phasing. Warning banner is in place. Will revise after sprint stabilizes.
+5. **ARCHITECTURE.md.** Still open. Relationship graph "open design question" is on the critical path for v0.3. AC needs to resolve before DC starts.

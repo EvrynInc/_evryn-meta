@@ -77,12 +77,13 @@ Safety is structural, not bolted on. Full depth: `docs/hub/trust-and-safety.md`.
 
 ## Current Strategy
 
-**Build stages:** v0.1 (Custom GPT PoC) done → **v0.2 (Gatekeeper's Inbox)** ← current sprint, target March 7 → Build 2 (web app + matching + payments + cast-off outreach as acquisition channel) → Build 3 (scale: second gatekeeper, publisher module, agents). Phase labels being finalized — see `docs/sessions/2026-02-27-gtm-spoke-update-plan.md` for the restructuring rationale.
+**Build stages:** v0.1 (Custom GPT PoC) done → **v0.2 "Gatekeeper's Inbox"** ← current sprint, Mark live ~March 10 → **v0.3 "The Broker"** (web app + matching + payments + cast-off outreach, target first revenue late April / early May) → **v0.4 "Scale"** (second gatekeeper, publisher module, agents, target June/July).
 
-- **v0.2 "Gatekeeper's Inbox":** Evryn surfaces connections from a gatekeeper's inbox. Gatekeeper forwards emails → Evryn identifies who's worth their time (gold/pass/edge case) → drafts notification → Justin approves via email → Evryn delivers. Pilot gatekeeper: Mark. These are connections being brokered, not emails being sorted — tracked as such from day one.
+- **v0.2 "Gatekeeper's Inbox":** Evryn surfaces connections from a gatekeeper's inbox. Gatekeeper forwards emails → Evryn identifies who's worth their time (gold/pass/edge case) → drafts notification → Justin approves via email → Evryn delivers. Pilot gatekeeper: Mark (Seattle). These are connections being brokered, not emails being sorted — tracked as such from day one.
 - **Lucas (Chief of Staff agent) PAUSED** — building Evryn product first. Everything transfers back.
 - **Website** live at evryn.ai.
-- **GTM:** LA film industry first. Why: acute need (everyone either clamoring for attention or drowning in it), dense network (each customer knows hundreds of prime leads), founder advantage (Justin's 78K+ second-gen industry contacts). Two parallel channels: **top-down** via gatekeepers like Mark — high-volume connectors whose ~200 daily cast-offs become Evryn users; **bottom-up** via invite-only "whisper cascade" — grow by solving, proving, and being invited forward. Full depth: `docs/hub/gtm-and-growth.md`.
+- **Runway:** ~$6,700 cash on hand. Additional $15K available ($5K founder + $10K angel, contingent on traction). At $3,900/mo full bore: ~5.5 months without revenue. Revenue target: late April / early May 2026.
+- **GTM:** Film industry first, Pacific Northwest ignition (Mark and key contacts are Seattle-based), LA expansion. Why film: acute need (everyone either clamoring for attention or drowning in it), dense network (each customer knows hundreds of prime leads), founder advantage (Justin's 78K+ second-gen industry contacts), industry in transition (AI disruption makes trusted connections more urgent). Two parallel channels: **top-down** via gatekeepers like Mark — high-volume connectors whose ~200 daily cast-offs become Evryn users; **bottom-up** via whisper cascade — trust mechanics as growth engine, not artificial scarcity. Full depth: `docs/hub/gtm-and-growth.md`.
 - **Growth is conversationally embedded.** The ideal landing page is "talk to Evryn." She demonstrates value by tailoring to the user's specific needs.
 
 ## Technical Architecture
