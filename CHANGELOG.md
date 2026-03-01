@@ -4,6 +4,15 @@
 
 ---
 
+## 2026-02-28 (GTM spoke session — part 2)
+
+- **GTM spoke fully revised** (`docs/hub/gtm-and-growth.md`) — two drafts, extensive Justin feedback integrated. Key changes: geographic reframe (Pacific Northwest ignition, LA expansion — not "choose one"), whisper cascade rewritten around trust mechanics (not artificial scarcity), competitive landscape refreshed (Overtone HIGH WATCH, Amata, Osmos), "Industry in Transition" expanded with 40+ source research, soft dates added to phase alignment (SIFF mid-May target), user-owned positioning woven throughout, new Outreach Playbook section, active user acquisition section (Jordan marketing + Evryn supply-side recruiting), "candy before the store opens" pre-launch framing, matching threshold note in launch readiness.
+- **Business model revision notes** created → `docs/sessions/2026-02-28-business-model-revision-notes.md`. Captures volatile strategic thinking: financial reality ($6,700 + $15K contingent runway), free/paid connection framework (full scenario table), loss leader framing, value communication patterns, gaming mitigations, active acquisition two modes, batching insight, matching threshold design (objective standard not "best available"), backlog math for v0.2→v0.3 transition, density threshold vetting, Foundation timing plan, VC positioning ("help us not need them"), geographic strategy notes.
+- **Hub updated** (`docs/hub/roadmap.md`) — finalized phase labels (v0.2 "Gatekeeper's Inbox" → v0.3 "The Broker" → v0.4 "Scale") with target dates, runway line added, geographic correction (PNW ignition), whisper cascade reframed.
+- **Phase nomenclature finalized:** v0.2/v0.3/v0.4 with descriptive names. Old "Build 2/Build 3" terminology retired.
+- Session doc (`docs/sessions/2026-02-27-gtm-spoke-update-plan.md`) marked COMPLETE, decisions resolved.
+- current-state.md refreshed for #lock checkpoint.
+
 ## 2026-02-27 (GTM spoke session)
 
 - **Film industry AI disruption research report** created → `docs/research/film-industry-ai-disruption-v1.md` (~4500 words, 40+ sources). Covers AI video tool landscape (Seedance 2.0, Kling 3.0, Sora 2, Runway Gen-4.5, Adobe Firefly, Veo 3.1), job displacement (41K LA jobs lost), union contract expirations (May-July 2026), "two lanes" market split, Seedance copyright battle, Chinese AI dominance, entry-level pipeline broken, geographic shift.
