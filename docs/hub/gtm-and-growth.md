@@ -34,6 +34,7 @@ The plan targets the film industry first because:
 - Current tools are woefully inadequate (Facebook threads, job boards, DM chains, referral lists)
 - Justin's extensive reach (~40 highly connected film people × ~2,000 contacts each ≈ 78,000 second-gen contacts, plus ~600-700 direct film/theatre/adjacent contacts)
 - **Follow-through as differentiator:** In the film industry, introductions aren't enough — follow-through matters. By facilitating payments and re-engagements, Evryn becomes not just the introducer, but the connective tissue for real working relationships. This is a core differentiator at launch.
+- **Cross-domain density in one person:** A single actor might need a casting director, an agent, a manager, a director, a coach, a photographer, a date, and a roommate — all different roles, all within the same relational ecosystem, spanning professional, creative, personal, and practical needs. This is why film is so powerful as an ignition point: one person's needs touch every domain Evryn serves.
 
 ### Where We Start: Pacific Northwest
 
@@ -66,6 +67,10 @@ The film industry is contracting faster than most people realize, and AI is acce
 5. **The contract negotiation window (May-July 2026) overlaps with v0.3's target timeline.** This is both sensitive and opportune — a moment when trusted connections matter most. We should be ready to seize the opportunity to help people find the connections that allow them to flourish in this changing landscape.
 
 Full research: `docs/research/film-industry-ai-disruption-v1.md` (refreshed Feb 2026, next refresh recommended May 2026).
+
+### Beyond Film: Adjacent Creative Ecosystems
+
+Film is the ignition point, not the boundary. Adjacent creative ecosystems — music, game dev, fashion, and the broader creative economies in Seattle and LA — share the same structural advantages: tight-knit, collaborative, high need for trusted introductions. Many film professionals already straddle multiple creative industries. Expansion to these verticals should be organic, not forced — driven by the connections Evryn is already seeing, not a top-down launch plan.
 
 ---
 
@@ -141,6 +146,10 @@ Pre-launch: if you refer someone who becomes a paying customer, Evryn rewards yo
 
 When a user has a great experience, Evryn may ask: "Would you want to help others by sharing your story?" Stories appear on user's channels, Evryn's platforms, or woven into onboarding flows. Every story must reflect Evryn's tone: personal, humane, nuanced, emotionally honest. Users retain rights to their stories; licensing language needed in Terms.
 
+### Investment as Growth Driver
+
+Users with skin in the game become champions. Pre-purchases and investment (via StartEngine, Reg CF) aren't just capital — they're growth mechanics. When belief is high, the invitation to invest feels like co-creation, not a sales pitch. Investment invitations are kept within the user community, especially early on — users who invest through Evryn's conversational channel understand the context; outside observers may not. See [bizops-and-tooling spoke](bizops-and-tooling.md) for StartEngine compliance framing.
+
 ---
 
 ## Segment-to-Avatar Mapping
@@ -198,6 +207,10 @@ Specific thresholds will be defined as each phase approaches launch readiness. T
 - **At target:** proceed as planned
 - **Above ceiling:** expand scope or accelerate next phase
 - **What never flexes:** Evryn's warmth, judgment quality, trust mechanics, user privacy
+
+### City Expansion
+
+Geographic expansion follows density, not ambition. Each new city goes live when network density thresholds are met within specific connection tags — not a global headcount. For example: when there are enough casting directors and enough actors in Portland, Evryn can go live for actors in Portland. Different connection types activate at different times in different cities. Evryn can honestly say "we haven't officially launched in your area yet" while still surprising early users with matches when they materialize.
 
 ---
 
@@ -284,5 +297,41 @@ Once the web app is live, Evryn's primary landing page is "talk to Evryn." Growt
 - Whisper cascade referrals → web app
 - evryn.ai website → conversational onboarding
 - Future: targeted ads driving to conversational landing pages, festival/event presence (SIFF as first target)
+
+### PR & Press Strategy
+
+PR is timed to validate momentum, not create it — "pour fuel on a fire that's already lit." No press blitz before there's proof.
+
+**Press narrative hooks** (to be refined as traction builds):
+- "An AI who finds you 'your people' — and is owned by its users"
+- "Founder turns to community ahead of VCs to build the anti-Tinder"
+- "The trust broker: an AI that only connects people she trusts"
+
+**Targeted outlets first:** Tech writers covering social innovation, relationship/community podcasts, local PNW press ("Seattle's answer to the loneliness epidemic"), niche film outlets. Initial coverage should recruit believers, not chase impressions.
+
+**Press trigger points:** Milestone-driven escalation to larger outlets — first gatekeeper live, first revenue, first crowdfunding milestone, SIFF presence. Each trigger comes with proof points in hand.
+
+### Community & Event Presence
+
+**SIFF (mid-May to early June) is the inaugural event target.** Both Mark and Megan are connected to SIFF; v0.3 should be in early operation by then. Other major film festivals (Sundance, SXSW) are either seasonally past or conflict with build sprints — SIFF is the right first public-facing moment. Future festival strategy expands from there.
+
+**Industry communities:** NoFilmSchool, gear forums, film school networks, and targeted forum engagement (Reddit, Facebook groups, Discord, X). This is Jordan's domain once the CGO agent comes online (v0.4), but channels should be identified and warmed before then.
+
+**Long-form content:** Once agents are operational and Justin has bandwidth, Evryn's content strategy centers on long-form writing about ethos, trust, connection philosophy, and the building journey. Evryn herself may be the primary author — consistent with her voice, her perspective, and her relationship with users. Justin and the agents contribute too. Transparent updates ("Here's what we learned from our first 100 connections") build the tribe.
+
+### Influencer Outreach
+
+Identify and cultivate relationships with influencers within the film community and adjacent creative spaces. Not paid promoters — people who genuinely resonate with Evryn's mission and have audiences that would too. One breakout story or authentic influencer mention can kick the organic engine into high gear. Be ready to amplify early wins when they happen.
+
+### Paid Channels
+
+Paid acquisition is secondary to organic growth — the hope is that warm outreach, whisper cascade, PR, and community presence bear enough fruit that ad spend stays modest. When the time is right:
+
+- **Story-driven ads** on social platforms, targeted at the film/creative community. Testimonials and press quotes as soon as they exist.
+- **Video ads / short animations** explaining "How Evryn works" — the concept is novel enough that showing is more effective than telling.
+- **Paid partnerships** — sponsoring niche newsletters or YouTube videos. Not pure ads, but qualified traffic from trusted voices.
+- **Incremental scaling:** Start small, test CAC, scale only what works.
+
+Phase alignment: Paid channels activate primarily in v0.3+ when there's a web app to land on and revenue to measure against. Before that, every dollar goes to building.
 
 ---
