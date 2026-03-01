@@ -103,26 +103,29 @@ Evryn is a **relationship engine with compounding value**:
 
 ---
 
-## Market Entry: L.A. Film Industry Launch (2026)
+## Market Entry: Film Industry Launch — Pacific Northwest First (2026)
 
-We’re launching first in **Los Angeles**, targeting the **motion picture industry**:
+We’re launching in the **motion picture industry**, igniting in the **Pacific Northwest** and expanding to **Los Angeles** once proof of concept is in hand:
 
-* **Acute Need**: in this industry, everyone is either clamoring for attention they can’t get, or drowning in attention they don’t want. Evryn solves both sides of this equation: each person finds their **needle in the haystack \- and nothing else.**  
-* **Highly Collaborative**: the industry mixes business, creative, social, romantic, and big money in ways no other industry does.  
-* **Dense Network**: each new customer knows hundreds of prime qualified leads \- and needs *many* types of connections.  
-* **Inadequate Tools**: today’s film collaboration tools are job boards, Facebook threads, DM chains, referral lists. It’s **almost entirely noise**. Evryn **clears the noise** and steps in as a **trusted connector**: someone who knows you and/or your project’s rhythm, creative style, emotional tone \- and introduces only when there’s genuine alignment.  
-* **Founder Advantage**  
-  * My network reach (78,000+ second-gen contacts in the industry) is the ignition point. Even with *conservative* funnel mechanics, this can bring our **first thousand-plus users pre-launch**, before marketing or ad spend.   
-  * My understanding of the industry’s structure and flows allows us to enter **key nodes at the right moment**, quickly spreading outward across networks and upward through verticals.  
-* **Cascade Potential**: capturing LA film opens up:  
-  * **The rest of LA** (music, startups, consumer markets all share orbits with film)  
-  * **The global film industry** (all roads lead back to LA)  
-  * **Everyone, everywhere** \- the entertainment industry megaphone effect: once stars, studios, and influencers meet Evryn, **word spreads like wildfire.**  
-* **Beyond LA**: while we’re getting proof of concept in LA, we’ll be building waitlists in several other key cities, industries, and ignition points. 
+* **Acute Need**: in this industry, everyone is either clamoring for attention they can’t get, or drowning in attention they don’t want. Evryn solves both sides of this equation: each person finds their **needle in the haystack \- and nothing else.**
+* **Highly Collaborative**: the industry mixes business, creative, social, romantic, and big money in ways no other industry does.
+* **Dense Network**: each new customer knows hundreds of prime qualified leads \- and needs *many* types of connections.
+* **Inadequate Tools**: today’s film collaboration tools are job boards, Facebook threads, DM chains, referral lists. It’s **almost entirely noise**. Evryn **clears the noise** and steps in as a **trusted connector**: someone who knows you and/or your project’s rhythm, creative style, emotional tone \- and introduces only when there’s genuine alignment.
+* **Founder Advantage**
+  * My network reach (78,000+ second-gen contacts in the industry) is the ignition point. Even with *conservative* funnel mechanics, this can bring our **first thousand-plus users pre-launch**, before marketing or ad spend.
+  * My understanding of the industry’s structure and flows allows us to enter **key nodes at the right moment**, quickly spreading outward across networks and upward through verticals.
+  * Beyond film, I have broad Seattle connections from nearly a decade in the fitness/wellness industry \- warm contacts across the city’s social fabric.
+* **Why Pacific Northwest First**: While we had initially planned to launch in Los Angeles, the rapidly-evolving film landscape \- 41,000 LA entertainment jobs lost in three years, production fleeing to other states and countries, all four major union contracts expiring mid-2026 \- made us realize that concentrating in a single volatile market would be an unnecessary risk. Our pilot gatekeeper (Mark Titus), our film industry advisor (Megan Griffiths), and my own direct contacts are primarily Seattle-based. The warmest, shortest paths to our next gatekeepers run through Seattle. We focus density where the warm paths are, let growth spread wherever it spreads, and expand to LA when connections are in hand. If LA film has contracted further by then, we won’t have put all our eggs in one basket.
+* **Seattle’s Own Acute Need**: the "Seattle Freeze" is real \- Seattle consistently ranks among America’s loneliest cities. Evryn’s positioning resonates especially hard here.
+* **Cascade Potential**: capturing the PNW film community opens up:
+  * **Los Angeles** (Justin, Mark, and Megan have many LA contacts \- and proof of concept makes the pitch)
+  * **The global film industry** (LA is still where the density lives long-term)
+  * **Everyone, everywhere** \- the entertainment industry megaphone effect: once stars, studios, and influencers meet Evryn, **word spreads like wildfire.**
+* **Beyond Film**: while we’re getting proof of concept in Seattle and LA, we’ll be building waitlists in several other key cities, industries, and ignition points.
 
 ---
 
-## Where We Are Now (2/26/26)
+## Where We Are Now (2/28/26)
 
 * The Team:  
   * **CEO**: Justin McGowan  
@@ -143,7 +146,7 @@ We’re launching first in **Los Angeles**, targeting the **motion picture indus
   * **General Counsel**:   
     * Andy Albertson and the extended team at Fenwick & West  
 * **Internal MVP Validation** prepared us for **External Pilot:** We’ve already built *Evryn 0.1* \- a working conversational prototype that **gets to know you, guides onboarding, captures structured profiles and contact info, and even runs willingness-to-pay experiments.** She asks open-ended questions, follows up to uncover real needs, and holds the trust frame throughout.   
-* **Evryn 0.2 Pilot:** We're currently in a pilot for v0.2 to test the matching proof of concept. Instead of our ultimate vision of matching many-to-many, this pilot solves the much more technologically-simple problem of matching the many to one: specifically, helping film industry gatekeepers like our pilot user Mark Titus manage overwhelming inbound volume. As a high-volume producer, Mark receives 6000+ emails every month from people seeking his attention. Evryn's job is to discover which of those people truly belong in his world. And the ones who don't aren't rejected: while not a fit for this gatekeeper, many will be excellent matches for others, so they're redirected into the platform as Evryn's first organic users.
+* **Evryn 0.2 Pilot:** We're currently in a pilot for v0.2 to test the matching proof of concept. Instead of our ultimate vision of matching many-to-many, this pilot solves the much more technologically-simple problem of matching the many to one: specifically, helping film industry gatekeepers like our pilot user Mark Titus (Seattle) manage overwhelming inbound volume. As a high-volume producer, Mark receives 6000+ emails every month from people seeking his attention. Evryn's job is to discover which of those people truly belong in his world. And the ones who don't aren't rejected: while not a fit for this gatekeeper, many will be excellent matches for others, so they're redirected into the platform as Evryn's first organic users.
 
 ---
 

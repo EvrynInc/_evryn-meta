@@ -39,12 +39,12 @@ The plan targets the film industry first because:
 
 The long-term target is LA — densest film community in the world, and capturing LA opens up the rest of the industry. But the honest ignition point is the **Pacific Northwest:**
 
-- **Mark (pilot gatekeeper) is in Seattle.** His inbound spans globally (filmmakers everywhere email him), but his personal network for gatekeeper introductions is PNW-heavy.
+- **Mark (pilot gatekeeper) is in Seattle.** His work has national and international visibility (brand films for Amazon/Microsoft/UN, films at 25+ international festivals), so his inbound likely draws broadly — but his personal network and warmest gatekeeper paths are PNW-rooted.
 - **Megan Griffiths (film advisor) is in Seattle.** She knows "a ton" of people who'd need the gatekeeper version — mostly indie producers, but also department heads and casting folks. She's very connected to SIFF and can open doors there.
-- **Justin's direct contacts are primarily Seattle.** ~600-700 film/theatre/adjacent contacts, mostly PNW. Only a few of the 40 highly-connected contacts have been approached so far.
-- **Both Mark and Megan know LA people** and can make introductions — but the shortest, warmest path to gatekeepers #2 and #3 runs through Seattle.
+- **Justin's direct contacts are primarily Seattle.** ~600-700 film/theatre/adjacent contacts, mostly PNW. Only a few of the 40 highly-connected contacts have been approached so far. Beyond film, Justin has broad Seattle connections from nearly a decade in the fitness/wellness industry — not close contacts, but warm enough that he may be within two hops of a significant slice of the city's social fabric.
+- **Justin, Mark, and Megan know LA people** and Mark and Megan can make introductions — but the shortest, warmest path to gatekeepers #2 and #3 runs through Seattle.
 
-**We don't have to choose.** There's no subscription churn — if someone in Portland or New York tries Evryn and there aren't matches in their area yet, Evryn says "we haven't officially launched in your area, but I'll keep an eye out" and surprises them later when a match materializes. Focus density efforts where the warm paths are (Seattle), let growth spread wherever it spreads, and expand to LA when connections are in hand.
+**We don't have to choose.** There's no subscription churn — if someone in Portland or New York tries Evryn and there aren't matches in their area yet, Evryn says "we haven't officially launched in your area, but I'll keep an eye out" and surprises them later when a match materializes. Focus density efforts where the warm paths are (Seattle), let growth spread wherever it spreads, and expand to LA when connections are in hand. If LA film has contracted further by then, we won't have put all our eggs in one basket.
 
 **Seattle has its own acute need.** The "Seattle Freeze" is real — Seattle consistently ranks among America's loneliest cities. The social fabric problem isn't just an abstract national trend; it may be ground zero for the loneliness epidemic. Evryn's positioning resonates especially hard here.
 
@@ -275,7 +275,7 @@ Two distinct modes of active acquisition, both essential:
 
 **Growth marketing (Jordan, CGO agent — v0.4+):** Organic outreach on forums, communities, any pathway that doesn't require ad spend. Before revenue AND after, beating the bushes is primary. Jordan finds people who might need Evryn and points them her way. This is awareness, not brokering.
 
-**Supply-side recruiting (Evryn herself — v0.3):** When a user says "I need a plumber" and Evryn doesn't have one, she goes and finds one. "Hey, your reviews look amazing — I have someone who'd love to work with you." This IS brokering — warm, personal, on-brand. The recruited person's first connection is free (they didn't ask for this), but they know what Evryn charges ("connections like this typically run about $20 — this first one is my treat"). Subsequent connections are paid. Full pricing framework: `docs/sessions/2026-02-28-business-model-revision-notes.md`.
+**Supply-side recruiting (Evryn herself — v0.3):** When a user says "I need a plumber" and Evryn doesn't have one, she goes and finds one. "Hey, your reviews look amazing — I have someone who'd love to work with you." This IS brokering — warm, personal, on-brand. The recruited person's first connection is free (they didn't ask for this), but they know what Evryn charges ("connections like this typically run about $20 — this first one is on me"). Subsequent connections are paid. Full pricing framework: `docs/sessions/2026-02-28-business-model-revision-notes.md`.
 
 ### Direct User Outreach (v0.3+)
 

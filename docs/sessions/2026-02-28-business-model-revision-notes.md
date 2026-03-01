@@ -184,4 +184,12 @@ In this environment, "no overlords" is a structural competitive advantage, not j
 
 **LA strategy isn't dead — it's the expansion target.** LA is still where the density is for long-term scale. The reasons the film industry is a good ignition point (tight-knit, high-need, collaborative) are about the INDUSTRY, not the city. But the realistic path is: prove the model in Seattle → use Seattle connections (Mark, Megan, others) to get introductions to LA gatekeepers → expand to LA with proof of concept in hand.
 
+### Justin's Broader Seattle Network (Beyond Film)
+
+Justin worked at (and eventually ran) a health club in Seattle for nearly a decade (~2000-2007, plus some time in 2011-2012). This means he knows *a lot* of people in Seattle beyond the film/theatre world — potentially thousands. Not close friends — maybe 50 are Facebook friends at most — but people who know him, and who are consistently delighted to see him when paths cross. These contacts have their own communities: yoga, fitness, social groups, and beyond.
+
+**What this might mean:** Justin could be within two hops of a very large portion of Seattle. If even a fraction of his dense contacts in this world are willing to share their communities, it opens a breadth play across the city that complements the film-specific depth play. This isn't verified or quantified — it's a new realization that needs exploration. The key question: are these warm-enough connections to activate, and how?
+
+**Not overselling it:** These aren't current relationships in most cases. But the warmth is real — "any time I run into any of them, they're always delighted to see me." The potential is in the second-hop reach: each of these people sits at the center of their own community.
+
 ---
