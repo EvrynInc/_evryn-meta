@@ -258,6 +258,8 @@ No single competitor covers Evryn's ground, but many cover pieces of it. Evryn's
 
 Full competitive research: `docs/research/competitive-landscape-v1.md` (refreshed Feb 2026, next refresh recommended May 2026).
 
+> *Pitch note: The original Master Plan has extensive competitive analysis prose (lines 770-848) — the "casino model" framing, the structural moat argument, the LTV analysis. Excellent for investor pitches and capital partner conversations.*
+
 ### Infrastructure Licensing (Long Game)
 
 If Evryn works, competitors may try to neutralize her. The architecture is designed to optionally license Evryn's matchmaking layer — letting aligned platforms embed her logic. "LinkedIn — now with Evryn intros." Strategic judo: turn competition into distribution.

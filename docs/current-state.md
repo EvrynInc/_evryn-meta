@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-28T17:43:07-08:00*
+*Last updated: 2026-02-28T19:42:32-08:00*
 
 ---
 
@@ -27,7 +27,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## Active Projects
 
-- **_evryn-meta** — GTM spoke fully revised (2026-02-28), including MP2.3 Growth section gap fill. Business model revision notes captured for next spoke update. Hub updated with phases + financial reality. AC designing v0.3 architecture (graph schema, web app) in background during sprint week.
+- **_evryn-meta** — Business model spoke fully revised (2026-02-28), absorbing session revision notes. Fenwick questionnaire: third addendum added (service agreement disclaimer). BizOps spoke cleanup pending. Hub updated with phases + financial reality. AC designing v0.3 architecture (graph schema, web app) in background during sprint week.
 - **evryn-backend** — **Sprint week March 3–7.** Sprint plan: `docs/SPRINT-MARK-LIVE.md`. Pre-Work #6 identity is sprint Monday.
 - **evryn-team-agents** — PAUSED. Reusable code (email polling, Gmail client, Supabase client) being adapted for evryn-backend.
 - **evryn-dev-workspace** — DC's home repo.

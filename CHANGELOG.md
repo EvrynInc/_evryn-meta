@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-02-28 (Business model spoke revision)
+
+- **Business model spoke fully revised** (`docs/hub/business-model.md`) — two drafts, extensive Justin feedback integrated. Key changes: free/paid connection framework (full scenario table with loss-leader framing), supply-side economics & batching section, capital strategy rewritten (burn rate components replacing $3,900 headline, contingent angel investment, "Help Us Not Need Institutional Capital"), trust-based pricing (social anchoring, not-permanent note), pre-purchase bonus 30% → 25%, avatars tightened (Enterprise added, Torchbearer framing, long-tail collapsed), network density thresholds (per-cluster not global, domain homogeneity, farmer+batch model), Foundation as competitive moat breadcrumbed, Fenwick flags added inline (stored-value question, service agreement disclaimer).
+- **GTM spoke** (`docs/hub/gtm-and-growth.md`): pitch note added to Competitive Landscape (Master Plan competitive analysis prose reference for investor pitches).
+- **Fenwick questionnaire** (`docs/legal/privacy-and-terms-questionnaire.md`): third addendum — service agreement disclaimer (Evryn not party to user-to-user service agreements).
+- current-state.md refreshed for #lock.
+
 ## 2026-02-28 (GTM spoke session — part 2)
 
 - **GTM spoke fully revised** (`docs/hub/gtm-and-growth.md`) — two drafts, extensive Justin feedback integrated. Key changes: geographic reframe (Pacific Northwest ignition, LA expansion — not "choose one"), whisper cascade rewritten around trust mechanics (not artificial scarcity), competitive landscape refreshed (Overtone HIGH WATCH, Amata, Osmos), "Industry in Transition" expanded with 40+ source research, soft dates added to phase alignment (SIFF mid-May target), user-owned positioning woven throughout, new Outreach Playbook section, active user acquisition section (Jordan marketing + Evryn supply-side recruiting), "candy before the store opens" pre-launch framing, matching threshold note in launch readiness.

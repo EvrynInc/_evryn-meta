@@ -45,7 +45,9 @@
       "Bash(git -C \"c:/Users/Justin/Evryn/Code/evryn-team-agents\" status --short)",
       "Bash(git -C \"c:/Users/Justin/Evryn/Code/evryn-dev-workspace\" status --short)",
       "Bash(git -C \"c:/Users/Justin/Evryn/Code/evryn-website\" log --oneline -5)",
-      "Bash(git -C \"c:/Users/Justin/Evryn/Code/_evryn-meta\" log --oneline -5)"
+      "Bash(git -C \"c:/Users/Justin/Evryn/Code/_evryn-meta\" log --oneline -5)",
+      "Bash(gh api:*)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ]
   }
 }

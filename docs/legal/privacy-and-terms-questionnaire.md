@@ -433,3 +433,13 @@ We want this to be clear enough that users understand the arrangement upfront, a
 > And also: once Mark is stabilized (hopefully within a few weeks), we'll be expanding this out to other gatekeepers, so maybe we want to make sure that any Mark approach can work more broadly with them?
 
 ---
+
+## Third Addendum (2026-02-28)
+
+> *Flagged during business model spoke revision.*
+
+We want to make sure the Terms clearly disclaim that Evryn is not a party to any service agreements between users. When Evryn brokers a connection and the users subsequently hire each other, enter into business arrangements, or transact for services, those agreements are entirely between the individuals involved. Evryn facilitates the introduction and may process payments through Stripe Connect, but we have no role in the service agreement itself — no guarantees about quality, delivery, or outcomes of the work.
+
+This feels like it might already be covered by standard platform terms, but given our model (where connections explicitly lead to professional engagements, freelance work, etc.), we want to make sure the language is specific enough to hold up.
+
+---
