@@ -17,6 +17,8 @@
 - Business model revision notes: Justin's health club network insight captured (potential breadth play beyond film).
 - Old GTM spoke archived to `docs/historical/LA gtm-and-growth - deprecated 2.26.md`.
 - Stale session doc path cleaned up (moved to `docs/sessions/` previously).
+- GTM session doc deleted (all content absorbed into GTM spoke, business model notes, Hub). References in evryn-backend ARCHITECTURE.md and SPRINT-MARK-LIVE.md updated to point to GTM spoke.
+- Hub: Trusted Partner Briefing added to Additional References (so it stays on the radar for updates).
 
 ## 2026-02-27 (GTM spoke session)
 
