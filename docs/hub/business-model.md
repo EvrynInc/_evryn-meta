@@ -234,6 +234,8 @@ What it costs depending on what's running:
 
 **Reading this table:** July and August run at full sprint burn ($4,225) because v0.4 requires agents running full bore. At conservative revenue estimates, the Fenwick bill in August is manageable — cash stays positive throughout. However, this depends on v0.3 launching on time (late April) and achieving ~5% cast-off conversion. If revenue underperforms by 50%, August cash drops to ~$3K — survivable but very tight. If v0.3 launches a month late, the entire revenue curve shifts right and August becomes a crisis.
 
+**Aspiration: agents earlier.** The table above conservatively ramps agents starting in June, but the goal is to get them running as soon as build capacity allows — ideally May or even late April. The agents' ROI is exceptional (they multiply Justin's output across GTM, ops, and product without adding human headcount), so earlier activation is pure upside. The cash can support it: even at full sprint burn ($4,225) starting in May instead of a gradual ramp, cash stays positive through August. The constraint isn't money — it's build bandwidth. If the SDK build lands ahead of schedule, expect this table to shift left.
+
 **Capital timing:**
 - **$5K founder injection (May):** Provides cushion during the low-revenue early months. Without it, cash drops to ~$2,775 in May before revenue ramps.
 - **$10K angel (June):** Contingent on traction — by June, v0.3 will have ~1 month of data showing user conversion and match rates. If traction lags, this may not materialize.
