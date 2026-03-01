@@ -305,7 +305,7 @@ PR is timed to validate momentum, not create it — "pour fuel on a fire that's 
 **Press narrative hooks** (to be refined as traction builds):
 - "An AI who finds you 'your people' — and is owned by its users"
 - "Founder turns to community ahead of VCs to build the anti-Tinder"
-- "The trust broker: an AI that only connects people she trusts"
+- "The trust broker: an AI who only connects people she trusts"
 
 **Targeted outlets first:** Tech writers covering social innovation, relationship/community podcasts, local PNW press ("Seattle's answer to the loneliness epidemic"), niche film outlets. Initial coverage should recruit believers, not chase impressions.
 
