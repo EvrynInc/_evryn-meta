@@ -19,6 +19,9 @@
 - Stale session doc path cleaned up (moved to `docs/sessions/` previously).
 - GTM session doc deleted (all content absorbed into GTM spoke, business model notes, Hub). References in evryn-backend ARCHITECTURE.md and SPRINT-MARK-LIVE.md updated to point to GTM spoke.
 - Hub: Trusted Partner Briefing added to Additional References (so it stays on the radar for updates).
+- **GTM spoke MP2.3 gap fill** — 8 items from Master Plan Growth section that hadn't made it into spokes: PR & press strategy, community & event presence (SIFF inaugural, NoFilmSchool, long-form content with Evryn as primary author), influencer outreach, paid channels (organic-first philosophy), investment as growth driver, adjacent creative ecosystems (music/game dev/fashion), city expansion mechanism (tag-based density thresholds), cross-domain illustration (actor's full-spectrum needs).
+- Stale session doc reference fixed in evryn-backend BUILD-EVRYN-MVP.md warning banner.
+- **ADR-011: PNW Ignition, LA Expansion** — geographic launch pivot from LA-first to Pacific Northwest first, driven by film industry contraction + pilot/contacts being Seattle-based.
 
 ## 2026-02-27 (GTM spoke session)
 
