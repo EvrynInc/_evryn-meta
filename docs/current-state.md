@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-28T19:42:32-08:00*
+*Last updated: 2026-02-28T21:50:41-08:00*
 
 ---
 
@@ -16,7 +16,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 **Key framing:** Evryn is a broker, not a SaaS. v0.2 surfaces connections from a gatekeeper's inbox — not sorting email, brokering connections. Everyone is a "user," both sides pay per-connection.
 
-**Runway:** ~$6,700 cash + $15K available ($5K founder + $10K angel contingent on traction). Revenue target: late April / early May.
+**Runway:** ~$6,125 cash + $15K available ($5K founder + $10K angel contingent on traction). Burn ~$800/mo current (agents paused); Fenwick ~$35K due August is the critical constraint. Revenue target: late April / early May.
 
 ## What's Next
 
@@ -27,7 +27,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## Active Projects
 
-- **_evryn-meta** — Business model spoke fully revised (2026-02-28), absorbing session revision notes. Fenwick questionnaire: third addendum added (service agreement disclaimer). BizOps spoke cleanup pending. Hub updated with phases + financial reality. AC designing v0.3 architecture (graph schema, web app) in background during sprint week.
+- **_evryn-meta** — Business model spoke fully revised with burn profile, revenue model, and cash runway projection (2026-02-28). BizOps spoke cleaned up (status indicators, missing tools added, burn rate reconciled). Fenwick questionnaire: third addendum (service agreement disclaimer). Hub runway line updated. Session doc absorbed and deleted.
 - **evryn-backend** — **Sprint week March 3–7.** Sprint plan: `docs/SPRINT-MARK-LIVE.md`. Pre-Work #6 identity is sprint Monday.
 - **evryn-team-agents** — PAUSED. Reusable code (email polling, Gmail client, Supabase client) being adapted for evryn-backend.
 - **evryn-dev-workspace** — DC's home repo.

@@ -4,6 +4,14 @@
 
 ---
 
+## 2026-02-28 (BizOps cleanup + financial projections)
+
+- **BizOps spoke cleaned up** (`docs/hub/bizops-and-tooling.md`) — status indicators added to all tools, missing tools added (Google Workspace, Zoom, X, Claude Max, Bitwarden, Carta), domains updated (6 TLDs), Clerky/Toptal notes updated, n8n/Airtable removed, Canva noted.
+- **Business model spoke: financial projections added** — burn profile table (cost by operational state), revenue model (user ramp from cast-off conversion, density-adjusted matches/user, all variables explicit), cash runway projection Mar–Aug with revenue + capital infusions. Fenwick ~$35K due August identified as critical constraint.
+- **Burn rate reconciled** from actual vendor costs: base ops ~$725/mo today → ~$1,000/mo with agent seats. Hub and current-state updated.
+- **Cash updated** from ~$6,700 to $6,125 (actual).
+- Business model session doc verified fully absorbed, deleted.
+
 ## 2026-02-28 (Business model spoke revision)
 
 - **Business model spoke fully revised** (`docs/hub/business-model.md`) — two drafts, extensive Justin feedback integrated. Key changes: free/paid connection framework (full scenario table with loss-leader framing), supply-side economics & batching section, capital strategy rewritten (burn rate components replacing $3,900 headline, contingent angel investment, "Help Us Not Need Institutional Capital"), trust-based pricing (social anchoring, not-permanent note), pre-purchase bonus 30% → 25%, avatars tightened (Enterprise added, Torchbearer framing, long-tail collapsed), network density thresholds (per-cluster not global, domain homogeneity, farmer+batch model), Foundation as competitive moat breadcrumbed, Fenwick flags added inline (stored-value question, service agreement disclaimer).

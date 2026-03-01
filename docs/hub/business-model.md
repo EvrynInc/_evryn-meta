@@ -117,7 +117,7 @@ When a user needs something Evryn doesn't have — "I need a plumber" — Evryn 
 
 **The batching insight:** Once there are 1,000 active users and 50 need plumbers, Evryn doesn't run 50 separate searches — she finds the 5 best plumbers and connects them to all 50. One search, many connections. API cost stays flat while revenue scales linearly.
 
-**The math:** At ~$2,950/mo steady-state operating cost, 200 plumber connections at $20 each = $4,000. One category of connection covers the entire monthly operating cost. The unit economics work even at modest scale — and this is just one connection type among many.
+**The math:** At ~$3,250/mo steady-state operating cost, 200 plumber connections at $20 each = $4,000. One category of connection covers the entire monthly operating cost. The unit economics work even at modest scale — and this is just one connection type among many.
 
 This is also why the free/paid framework works: free gatekeeper connections feed users into the system, those users express needs, Evryn recruits supply to meet those needs, and the supply-side connections generate revenue. The free layer powers the paid layer.
 
@@ -184,16 +184,59 @@ Evryn uses a trust-filtered market model:
 
 ## Capital Strategy
 
-**Financial reality (as of Feb 2026):** ~$6,700 cash on hand. The original $40K ($15K founder + $25K angel) was substantially depleted by a failed build due to a fraudulent CTO in late 2025.
+**Financial reality (as of Feb 2026):** ~$6,125 cash on hand. The original $40K ($15K founder + $25K angel) was substantially depleted by a failed build due to a fraudulent CTO in late 2025.
 
 **Burn rate components** (being refined in updated Financial Model):
-- **Base operating costs** (infrastructure, services, subscriptions): ~$700/mo
+- **Base operating costs** (infrastructure, services, subscriptions, advisor): ~$725/mo today; ~$1,000/mo once agents need their own seats (Google Workspace + Slack scaling). Itemized breakdown in [BizOps spoke](bizops-and-tooling.md).
 - **AI agents** (Lucas + team): ~$800/mo steady state; up to ~$3,500/mo during build sprints
 - **Evryn product** (API costs to serve ~500 new users/month): ~$1,450/mo once live
 
-Current phase (build sprint, product not yet serving users): ~$4,200/mo. Post-launch steady state (agents stabilized, product live): ~$2,950/mo.
+### Burn Profile
 
-**Runway:** Current cash (~$6,700) provides ~2 months at sprint pace. Additional capital is available — $5K from Justin + $10K from angel investor — but the angel investment is contingent on demonstrated traction. With that capital secured: runway extends to ~5+ months without revenue. Revenue target: late April / early May 2026. If even modest revenue materializes ($5-10K/mo by June), runway extends significantly.
+What it costs depending on what's running:
+
+| What's Running | Monthly Burn | Runway from $6,125 |
+|---------------|-------------|-------------------|
+| Base ops only (current — building, agents paused) | ~$800 | ~7.5 months |
+| Base + product live (low volume) | ~$950 | ~6.5 months |
+| Base + product (ramping, ~200 users) | ~$1,600 | ~4 months |
+| Base + product + agents steady | ~$2,800 | ~2 months |
+| Full steady state (agents + product at scale) | ~$3,250 | ~2 months |
+| Full sprint (agents sprint + product) | ~$4,225 | ~1.5 months |
+
+### Revenue Model (Conservative Estimate)
+
+*Revenue = Active Users × Matches/User × $8/match. Assumptions: 5% cast-off→paying-user conversion (~10 new paying users/day from Mark), 60% monthly retention, 2nd gatekeeper (via Megan) starting June at ~150 cast-offs/day. Matches/user ramps with network density — at 100 users matching is near-zero (below the ~150 testing threshold), at 300 it's sparse ("early magic" requires domain homogeneity), approaching steady-state 6.0 only above 800+.*
+
+| Month | New Users | Retained (60%) | Total Active | Matches/User | Revenue |
+|-------|-----------|----------------|-------------|-------------|---------|
+| **Mar** | — | — | 0 | — | $0 |
+| **Apr** (8d of v0.3) | 100 | — | 100 | ~0 | ~$0 |
+| **May** | 220 | 60 | 280 | 1.0 | ~$2,200 |
+| **Jun** (+2nd GK) | 330 | 168 | ~500 | 2.0 | ~$8,000 |
+| **Jul** | 500 | 300 | ~800 | 3.0 | ~$19,200 |
+| **Aug** | 600 | 480 | ~1,080 | 4.0 | ~$34,600 |
+
+*These are model outputs, not predictions. Revenue depends heavily on conversion rate and retention — at 2% conversion instead of 5%, August revenue drops to ~$14K. Update with actuals as they arrive.*
+
+### Cash Runway Projection
+
+*Projection as of Feb 2026. Will go stale — update monthly or when plans change.*
+
+| Month | Phase | Burn | One-Time | Capital In | Revenue | Cash (end) |
+|-------|-------|------|----------|-----------|---------|-----------|
+| **Mar** | v0.2 build → Mark live | $800 | — | — | $0 | $5,325 |
+| **Apr** | v0.3 build, v0.2 running | $950 | — | — | ~$0 | $4,375 |
+| **May** | v0.3 launch, cast-offs active | $1,600 | — | +$5K (founder) | ~$2,200 | $9,975 |
+| **Jun** | v0.4 build, agents starting | $2,800 | — | +$10K (angel) | ~$8,000 | $25,175 |
+| **Jul** | Full steady state | $3,250 | — | — | ~$19,200 | $41,125 |
+| **Aug** | Steady state | $3,250 | Fenwick ~$35K | — | ~$34,600 | $37,475 |
+
+**Reading this table:** At conservative revenue estimates, the Fenwick bill in August is manageable — cash stays positive throughout. However, this depends on v0.3 launching on time (late April) and achieving ~5% cast-off conversion. If revenue underperforms by 50%, August cash drops to ~$5K — survivable but tight. If v0.3 launches a month late, the entire revenue curve shifts right and August becomes a crisis.
+
+**Capital timing:**
+- **$5K founder injection (May):** Provides cushion during the low-revenue early months. Without it, cash drops to ~$2,775 in May before revenue ramps.
+- **$10K angel (June):** Contingent on traction — by June, v0.3 will have ~1 month of data showing user conversion and match rates. If traction lags, this may not materialize.
 
 **The AI-first advantage:** With Justin as sole human operator building with Claude Code and Claude Agent SDK, monthly costs are a fraction of what a human engineering team would require. This fundamentally changes the capital calculus — Evryn can grow at the pace trust requires without the pressure to raise large rounds before proving the model. A CTO remains desirable — the right technical partner would accelerate development and bring complementary expertise — but it's no longer a prerequisite for launch or early growth.
 
