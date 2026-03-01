@@ -12,6 +12,11 @@
 - **Phase nomenclature finalized:** v0.2/v0.3/v0.4 with descriptive names. Old "Build 2/Build 3" terminology retired.
 - Session doc (`docs/sessions/2026-02-27-gtm-spoke-update-plan.md`) marked COMPLETE, decisions resolved.
 - current-state.md refreshed for #lock checkpoint.
+- GTM spoke final notes: Mark inbound softened (verified via web search), LA hedge added ("eggs in one basket"), Justin's broader Seattle network (health club) noted, "$20 on me" wording fix.
+- **Trusted Partner Briefing v1.6** (`docs/historical/Evryn Trusted Partner Briefing v1.6.md`) — Market Entry reframed from LA-first to PNW-first with LA expansion, industry contraction rationale, Seattle's loneliness epidemic, Justin's broader Seattle network.
+- Business model revision notes: Justin's health club network insight captured (potential breadth play beyond film).
+- Old GTM spoke archived to `docs/historical/LA gtm-and-growth - deprecated 2.26.md`.
+- Stale session doc path cleaned up (moved to `docs/sessions/` previously).
 
 ## 2026-02-27 (GTM spoke session)
 
