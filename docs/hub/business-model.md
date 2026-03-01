@@ -229,10 +229,10 @@ What it costs depending on what's running:
 | **Apr** | v0.3 build, v0.2 running | $950 | — | — | ~$0 | $4,375 |
 | **May** | v0.3 launch, cast-offs active | $1,600 | — | +$5K (founder) | ~$2,200 | $9,975 |
 | **Jun** | v0.4 build, agents starting | $2,800 | — | +$10K (angel) | ~$8,000 | $25,175 |
-| **Jul** | Full steady state | $3,250 | — | — | ~$19,200 | $41,125 |
-| **Aug** | Steady state | $3,250 | Fenwick ~$35K | — | ~$34,600 | $37,475 |
+| **Jul** | v0.4 build, agents full sprint | $4,225 | — | — | ~$19,200 | $40,150 |
+| **Aug** | v0.4 scale, agents full sprint | $4,225 | Fenwick ~$35K | — | ~$34,600 | $35,525 |
 
-**Reading this table:** At conservative revenue estimates, the Fenwick bill in August is manageable — cash stays positive throughout. However, this depends on v0.3 launching on time (late April) and achieving ~5% cast-off conversion. If revenue underperforms by 50%, August cash drops to ~$5K — survivable but tight. If v0.3 launches a month late, the entire revenue curve shifts right and August becomes a crisis.
+**Reading this table:** July and August run at full sprint burn ($4,225) because v0.4 requires agents running full bore. At conservative revenue estimates, the Fenwick bill in August is manageable — cash stays positive throughout. However, this depends on v0.3 launching on time (late April) and achieving ~5% cast-off conversion. If revenue underperforms by 50%, August cash drops to ~$3K — survivable but very tight. If v0.3 launches a month late, the entire revenue curve shifts right and August becomes a crisis.
 
 **Capital timing:**
 - **$5K founder injection (May):** Provides cushion during the low-revenue early months. Without it, cash drops to ~$2,775 in May before revenue ramps.
