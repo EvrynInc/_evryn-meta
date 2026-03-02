@@ -4,6 +4,11 @@
 
 ---
 
+## 2026-03-02 (Pre-Work #6 loose ends)
+
+- **Pre-Work #6 Sessions 1-3 loose ends tied off** — Vertex AI breadcrumb added to evryn-backend ARCHITECTURE.md (External Services, evaluate at v0.3). Beautiful Language v0.9 committed to evryn-backend historical dir. Visual identity breadcrumb added to GTM spoke (video ads section → Beautiful Language source). Python/TS decision status clarified in session doc (final determination at Phase 1 start, not locked in; ADR when decided). Session doc remaining work items reconciled against current state.
+- current-state.md refreshed for #lock.
+
 ## 2026-03-02 (#align session — belief-to-build integration)
 
 - **#align completed** — full belief layer (Hub + 5 spokes) validated against build layer (both ARCHITECTURE.md files, BUILD doc, sprint plan).

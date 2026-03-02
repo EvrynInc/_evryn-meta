@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-02T11:56:32-08:00*
+*Last updated: 2026-03-02T12:26-08:00*
 *Last #sweep: 2026-03-02*
 *Last #align: 2026-03-02*
 
@@ -23,14 +23,14 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 ## What's Next
 
 - **5-day sprint: Mark live.** Sprint week March 2–6. Sprint plan at `evryn-backend/docs/SPRINT-MARK-LIVE.md`. Target: ready for Mark by Fri March 6.
-- **Pre-Work #6 (sprint Monday):** Evryn identity architecture. #align complete — belief layer validated against build layer, v0.2 breadcrumbs added, v0.3 design breadcrumbs planted. See `docs/sessions/2026-02-24-pre-work-6-session-1.md`.
+- **Pre-Work #6 (sprint Monday):** Evryn identity architecture. All loose ends from Sessions 1-3 tied off. Vertex AI breadcrumbed into ARCHITECTURE.md. Python/TS decision deferred to Phase 1 start (TypeScript default, re-check SDK maturity then). Beautiful Language file committed. Visual identity breadcrumbed to GTM spoke. Ready for identity content writing. See `docs/sessions/2026-02-24-pre-work-6-session-1.md`.
 - **Build phases finalized:** v0.2 "Gatekeeper's Inbox" (Mark live ~March 10) → v0.3 "The Broker" (web app + matching + payments, first revenue late April) → v0.4 "Scale" (second gatekeeper, publisher, agents, June/July). SIFF (mid-May) is a target for presence.
 - **Legal: Privacy & Terms questionnaire** — Under active consideration with Fenwick.
 
 ## Active Projects
 
-- **_evryn-meta** — #align completed (2026-03-02): behavioral filtering language fixed (access vs. matching distinction), OC/QC entities added to CLAUDE.md with sprint timing, #sweep/#align weekly cadence enforced, trust-and-safety spoke updated, session doc expanded with canary principle and crisis protocols.
-- **evryn-backend** — **Sprint week March 2–6.** Sprint plan: `docs/SPRINT-MARK-LIVE.md`. #align completed: gatekeeper-as-channel, no-open-messaging, witness-not-mirror breadcrumbs added to ARCHITECTURE.md. v0.3 design breadcrumbs planted (15 items from 4 spokes). QC/OC creation steps added to sprint plan.
+- **_evryn-meta** — #align completed (2026-03-02): behavioral filtering language fixed (access vs. matching distinction), OC/QC entities added to CLAUDE.md with sprint timing, #sweep/#align weekly cadence enforced, trust-and-safety spoke updated, session doc expanded with canary principle and crisis protocols. Pre-Work #6 loose ends tied off: GTM spoke visual identity breadcrumb, session doc Python/TS status clarified.
+- **evryn-backend** — **Sprint week March 2–6.** Sprint plan: `docs/SPRINT-MARK-LIVE.md`. #align completed: gatekeeper-as-channel, no-open-messaging, witness-not-mirror breadcrumbs added to ARCHITECTURE.md. v0.3 design breadcrumbs planted (15 items from 4 spokes). QC/OC creation steps added to sprint plan. Vertex AI breadcrumb added to ARCHITECTURE.md. Beautiful Language v0.9 committed to historical dir.
 - **evryn-team-agents** — PAUSED. #align flag added to ARCHITECTURE.md (do #align before resuming Lucas build). Reusable code being adapted for evryn-backend.
 - **evryn-dev-workspace** — DC's home repo. OC/QC entities added to CLAUDE.md.
 - **evryn-website** — Live at evryn.ai.
