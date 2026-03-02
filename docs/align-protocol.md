@@ -1,6 +1,6 @@
 # #align Protocol
 
-**How to use this file:** Principles-to-practice integration checklist. Justin triggers this with `#align` (ideally weekly, alongside `#sweep`). AC reads the full belief layer (Hub + spokes) and the full build layer (ARCHITECTURE.md + BUILD docs), then checks whether what we're building actually embodies what we believe.
+**How to use this file:** Principles-to-practice integration checklist. Justin triggers this with `#align` (ideally weekly, alongside `#sweep`). AC reads the full belief layer (Hub + spokes + detail docs), the full decision history (ADRs), and the full build layer (ARCHITECTURE.md + BUILD docs + sprint plans + session docs), then checks whether what we're building actually embodies what we believe.
 
 **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 
@@ -10,11 +10,17 @@
 
 ## Checklist
 
-Read the Hub and every spoke in full. Then read every active ARCHITECTURE.md and BUILD doc in full. This is a deep read, not a skim.
+Read all of the following in full. This is a deep read, not a skim.
+
+**Belief layer:** Hub (`docs/hub/roadmap.md`), every spoke, and every sub-doc (e.g., `docs/hub/detail/`).
+
+**Decision history:** All ADRs (`docs/decisions/`). These capture what we decided, what we considered, and what we rejected — the full thinking record.
+
+**Build layer:** Every active ARCHITECTURE.md, BUILD doc, sprint plan, and session doc across active repos. Session docs carry pending architectural decisions that haven't landed in permanent docs yet.
 
 ### 1. Principles → Build
 
-For each substantive principle, design constraint, or commitment in the Hub and spokes, ask:
+For each substantive principle, design constraint, or commitment in the Hub, spokes, and detail docs, ask:
 
 - Is this reflected in the current architecture or build spec?
 - If not, should it be — now, or at a defined future phase?
@@ -24,13 +30,19 @@ Flag principles that have no build-layer representation at all — not even a "p
 
 ### 2. Build → Principles
 
-For each significant build decision or architectural pattern, ask:
+For each significant build decision or architectural pattern — in landed docs, sprint plans, and session docs alike — ask:
 
 - Does this contradict or overlook any principle in the Hub or spokes?
 - Does this embody the *spirit* of the principles, or just avoid violating the letter?
 - Are there implicit assumptions in the build that the principles would challenge if surfaced?
 
-### 3. Breadcrumb Check
+### 3. Decision Integrity
+
+Read the full ADR archive. For each decision, ask: do rejected alternatives still look like the right call given our current thinking and what we're building now? Principles evolve, context shifts — a rejection that made sense six weeks ago may not hold up against how the belief layer has changed since.
+
+Flag any ADR where the reasoning feels stale or where the rejected alternative now looks more aligned with current principles.
+
+### 4. Breadcrumb Check
 
 For principles that are correctly deferred (genuinely future-state), verify that the deferral is explicit somewhere in the build layer. A principle without a breadcrumb is a principle that will be forgotten.
 
@@ -44,6 +56,7 @@ After working through the checklist, give Justin a brief summary:
 #align results:
 - Principles with no build representation: [N items / clean]
 - Build decisions that may conflict with principles: [N items / clean]
+- Decision integrity (ADR re-evaluation): [N items / clean]
 - Missing breadcrumbs for deferred principles: [N items / clean]
 ```
 
