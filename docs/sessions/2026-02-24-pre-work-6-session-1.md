@@ -798,9 +798,9 @@ identity/
 
 **Counter to dissent:** The two-language architecture is separation of concerns, not a tax. It's the same reason you don't put the kitchen in the dining room. The TypeScript SDK maturity advantage is real TODAY — building on an alpha SDK for future ecosystem convenience is choosing hope over evidence. The ML work doesn't start until v0.3+. And the "1 line in Python vs 50 lines across two services" argument assumes tight coupling, which is bad architecture for systems with different scaling and reliability profiles.
 
-**Safeguard:** Re-check SDK maturity before DC starts Phase 1. If Python SDK reaches feature parity, re-evaluate. This decision should be recorded as an ADR.
+**Safeguard:** Re-check SDK maturity before DC starts Phase 1. If Python SDK reaches feature parity, re-evaluate. Final determination at build time, not before.
 
-**Status:** AC recommendation made. Awaiting Justin's decision.
+**Status:** AC recommends TypeScript; BUILD doc defaults to TypeScript. Final decision deferred to Phase 1 start (re-check SDK maturity then). **ADR when decided** — load-bearing enough to deserve a formal decision record.
 
 ### Decision 6: Context Management Philosophy — Curated Memory > Brute-Force History
 

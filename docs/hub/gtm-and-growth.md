@@ -330,7 +330,7 @@ Identify and cultivate relationships with influencers within the film community 
 Paid acquisition is secondary to organic growth — the hope is that warm outreach, whisper cascade, PR, and community presence bear enough fruit that ad spend stays modest. When the time is right:
 
 - **Story-driven ads** on social platforms, targeted at the film/creative community. Testimonials and press quotes as soon as they exist.
-- **Video ads / short animations** explaining "How Evryn works" — the concept is novel enough that showing is more effective than telling.
+- **Video ads / short animations** explaining "How Evryn works" — the concept is novel enough that showing is more effective than telling. Visual identity source material (Evryn as a strand of light) in `evryn-backend/docs/historical/Evryn_0.1_Instructions_Prompts_Scripts/The_Beautiful_Language_of_Evryn_v0.9.md`.
 - **Paid partnerships** — sponsoring niche newsletters or YouTube videos. Not pure ads, but qualified traffic from trusted voices.
 - **Incremental scaling:** Start small, test CAC, scale only what works.
 
