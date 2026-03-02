@@ -38,19 +38,32 @@ Read every file under `docs/hub/` in full. For each spoke, check:
 
 For each repo that has a `docs/ARCHITECTURE.md`, read it and compare against `docs/current-state.md` and recent git history. Does the architecture doc reflect what's actually built and the current design?
 
-### 3. Build Doc Freshness
+### 3. Decision (ADR) Consistency
+
+Check ADRs (`docs/decisions/`) created or modified in the last two weeks. For each, verify that the decision has rippled through to the docs it should have influenced — architecture docs, build docs, spokes, current-state. ADRs are historical records, so don't re-read the full archive every week — just verify that recent decisions haven't been made and then forgotten.
+
+### 4. Build Doc Freshness
 
 For repos with active build docs (`docs/BUILD-*.md`), check: does the build doc still reflect current scope and priorities? Are completed phases marked done? Are any new scope items missing?
 
-### 4. LEARNINGS.md Promotion
+### 5. LEARNINGS.md Promotion
 
 Check `LEARNINGS.md` and `AGENT_PATTERNS.md` for items ready to be promoted to their permanent homes (CLAUDE.md, ARCHITECTURE.md, build docs, Hub/spokes). Promote what's ready, remove what's been promoted.
 
-### 5. Current State Accuracy
+### 6. Current State & Changelog Accuracy
 
 Read `docs/current-state.md`. Does it match reality? Check against recent commits and any work done since last update.
 
-### 6. Cross-Repo Reference Integrity
+Also read changelog entries from the last two weeks in each repo's `CHANGELOG.md`. The changelog is a structured record of what actually happened — if it says something was built or changed, current-state, architecture, and build docs should reflect that. Use the changelog as a ground-truth anchor: "the changelog says X happened — do the other docs agree?"
+
+### 7. Session Doc Reconciliation
+
+Check for session docs in `docs/` (working notes from individual sessions). Two things to verify:
+
+- **Stale docs:** Are there session docs from concluded sessions whose content should have been absorbed into permanent docs but wasn't? In-progress session docs from active/ongoing work are fine — just note they exist and move on. The flag is for sessions that are clearly done but never cleaned up.
+- **Completion cross-check:** Whether a session is in-progress or concluded, if a session doc marks something as completed, that should be reflected in current-state and build docs. Cross-reference completed items both ways — session docs vs. permanent docs. When there's a mismatch and it's not obvious which is right, ask Justin directly (e.g., "Did we actually complete X, or not?").
+
+### 8. Cross-Repo Reference Integrity
 
 As you work through the steps above, compile a running list of cross-repo references that are high-risk for inconsistency — recently changed areas, references to docs that were moved or retired, or anything where a change in one place likely should have rippled to others. Once you've finished the other checks, go verify those references. Be intentional about where drift is most likely.
 
@@ -64,9 +77,11 @@ After working through the checklist, give Justin a brief summary:
 #sweep results:
 - Hub/spoke consistency: [clean / N items flagged]
 - Architecture docs: [clean / N items flagged]
+- ADR consistency: [clean / N items flagged]
 - Build docs: [clean / N items flagged]
 - LEARNINGS promotion: [N items promoted / clean]
-- Current state: [accurate / updated]
+- Current state & changelogs: [accurate / N items flagged]
+- Session docs: [clean / N stale / N mismatches]
 - Cross-repo refs: [clean / N issues]
 ```
 
