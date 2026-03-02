@@ -10,6 +10,7 @@
 - **First #sweep completed** — all 8 steps clean or findings resolved. Report at `docs/sessions/2026-03-02-sweep-report.md` (temporary, deleted after findings absorbed).
 - **current-state.md refreshed** — sprint dates corrected (March 2–6, was March 3–7), Pre-Work #6 updated from "blocker" to "sprint Monday, being done today."
 - **SPRINT-MARK-LIVE.md dates corrected** (evryn-backend) — sprint March 2–6, stabilization week March 9, Build 2 ~March 16.
+- **#align protocol expanded** — added full ADR archive as decision history input, hub/detail/ to belief layer, session docs and sprint plans to build layer. New step 3 (Decision Integrity) checks whether rejected alternatives still hold up against current thinking.
 
 ## 2026-02-28 (Cash projection refinement)
 
