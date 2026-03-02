@@ -29,10 +29,10 @@ Read the Hub (it will already be loaded), then work through these in one pass. R
 
 ### 1. Hub / Spoke Consistency
 
-Read every file under `docs/hub/` in full. For each spoke, check:
+Read every file under `docs/hub/` in full, including any subdirectories (e.g., `docs/hub/detail/`). For each spoke, check:
 - Does the Hub's hint for this spoke accurately describe what the spoke contains?
 - Does the spoke contradict or extend beyond what the Hub implies?
-- Has anything changed (in sessions, builds, or decisions) that should be reflected in the spoke but isn't?
+- Has anything changed (in sessions, builds, or decisions) that should be reflected in the spoke or sub-docs but isn't (and vice versa)?
 
 ### 2. Architecture Consistency
 

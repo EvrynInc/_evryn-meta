@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-02-28T22:05:23-08:00*
+*Last updated: 2026-03-02T10:04:03-08:00*
 
 ---
 
@@ -20,15 +20,15 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **5-day sprint: Mark live.** Sprint plan at `evryn-backend/docs/SPRINT-MARK-LIVE.md`. Target: ready for Mark by Fri March 7.
-- **Pre-Sprint blocker (Sat March 1):** Pre-Work #6 SDK question — does `systemPrompt` supplement or replace CLAUDE.md? Must resolve before Monday. See `docs/sessions/2026-02-24-pre-work-6-session-1.md`.
+- **5-day sprint: Mark live.** Sprint week March 2–6. Sprint plan at `evryn-backend/docs/SPRINT-MARK-LIVE.md`. Target: ready for Mark by Fri March 6.
+- **Pre-Work #6 (sprint Monday):** Evryn identity architecture. Being done today. See `docs/sessions/2026-02-24-pre-work-6-session-1.md`.
 - **Build phases finalized:** v0.2 "Gatekeeper's Inbox" (Mark live ~March 10) → v0.3 "The Broker" (web app + matching + payments, first revenue late April) → v0.4 "Scale" (second gatekeeper, publisher, agents, June/July). SIFF (mid-May) is a target for presence.
 - **Legal: Privacy & Terms questionnaire** — Under active consideration with Fenwick.
 
 ## Active Projects
 
 - **_evryn-meta** — Business model spoke fully revised with burn profile, revenue model, and cash runway projection (2026-02-28). Jul/Aug burn updated to $4,225 (agents full sprint for v0.4). BizOps spoke cleaned up (status indicators, missing tools added, burn rate reconciled). Fenwick questionnaire: third addendum (service agreement disclaimer). Hub runway line updated. Session doc absorbed and deleted.
-- **evryn-backend** — **Sprint week March 3–7.** Sprint plan: `docs/SPRINT-MARK-LIVE.md`. Pre-Work #6 identity is sprint Monday.
+- **evryn-backend** — **Sprint week March 2–6.** Sprint plan: `docs/SPRINT-MARK-LIVE.md`. Pre-Work #6 identity is sprint Monday.
 - **evryn-team-agents** — PAUSED. Reusable code (email polling, Gmail client, Supabase client) being adapted for evryn-backend.
 - **evryn-dev-workspace** — DC's home repo.
 - **evryn-website** — Live at evryn.ai.

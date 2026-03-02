@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-03-02 (First #sweep + sprint date corrections)
+
+- **#sweep protocol expanded** — 3 new steps added (ADR consistency, changelog cross-check, session doc reconciliation). Hub/detail subdirectory added to step 1. Output template updated.
+- **First #sweep completed** — all 8 steps clean or findings resolved. Report at `docs/sessions/2026-03-02-sweep-report.md` (temporary, deleted after findings absorbed).
+- **current-state.md refreshed** — sprint dates corrected (March 2–6, was March 3–7), Pre-Work #6 updated from "blocker" to "sprint Monday, being done today."
+- **SPRINT-MARK-LIVE.md dates corrected** (evryn-backend) — sprint March 2–6, stabilization week March 9, Build 2 ~March 16.
+
 ## 2026-02-28 (Cash projection refinement)
 
 - **Jul/Aug burn updated to $4,225** (agents full sprint for v0.4, not steady state $3,250). Cash projection recalculated. Aspiration note added: goal is agents online earlier than projected if build bandwidth allows.
