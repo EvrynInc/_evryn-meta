@@ -6,7 +6,9 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-02T10:04:03-08:00*
+*Last updated: 2026-03-02T11:56:32-08:00*
+*Last #sweep: 2026-03-02*
+*Last #align: 2026-03-02*
 
 ---
 
@@ -21,16 +23,16 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 ## What's Next
 
 - **5-day sprint: Mark live.** Sprint week March 2–6. Sprint plan at `evryn-backend/docs/SPRINT-MARK-LIVE.md`. Target: ready for Mark by Fri March 6.
-- **Pre-Work #6 (sprint Monday):** Evryn identity architecture. Being done today. See `docs/sessions/2026-02-24-pre-work-6-session-1.md`.
+- **Pre-Work #6 (sprint Monday):** Evryn identity architecture. #align complete — belief layer validated against build layer, v0.2 breadcrumbs added, v0.3 design breadcrumbs planted. See `docs/sessions/2026-02-24-pre-work-6-session-1.md`.
 - **Build phases finalized:** v0.2 "Gatekeeper's Inbox" (Mark live ~March 10) → v0.3 "The Broker" (web app + matching + payments, first revenue late April) → v0.4 "Scale" (second gatekeeper, publisher, agents, June/July). SIFF (mid-May) is a target for presence.
 - **Legal: Privacy & Terms questionnaire** — Under active consideration with Fenwick.
 
 ## Active Projects
 
-- **_evryn-meta** — Business model spoke fully revised with burn profile, revenue model, and cash runway projection (2026-02-28). Jul/Aug burn updated to $4,225 (agents full sprint for v0.4). BizOps spoke cleaned up (status indicators, missing tools added, burn rate reconciled). Fenwick questionnaire: third addendum (service agreement disclaimer). Hub runway line updated. Session doc absorbed and deleted.
-- **evryn-backend** — **Sprint week March 2–6.** Sprint plan: `docs/SPRINT-MARK-LIVE.md`. Pre-Work #6 identity is sprint Monday.
-- **evryn-team-agents** — PAUSED. Reusable code (email polling, Gmail client, Supabase client) being adapted for evryn-backend.
-- **evryn-dev-workspace** — DC's home repo.
+- **_evryn-meta** — #align completed (2026-03-02): behavioral filtering language fixed (access vs. matching distinction), OC/QC entities added to CLAUDE.md with sprint timing, #sweep/#align weekly cadence enforced, trust-and-safety spoke updated, session doc expanded with canary principle and crisis protocols.
+- **evryn-backend** — **Sprint week March 2–6.** Sprint plan: `docs/SPRINT-MARK-LIVE.md`. #align completed: gatekeeper-as-channel, no-open-messaging, witness-not-mirror breadcrumbs added to ARCHITECTURE.md. v0.3 design breadcrumbs planted (15 items from 4 spokes). QC/OC creation steps added to sprint plan.
+- **evryn-team-agents** — PAUSED. #align flag added to ARCHITECTURE.md (do #align before resuming Lucas build). Reusable code being adapted for evryn-backend.
+- **evryn-dev-workspace** — DC's home repo. OC/QC entities added to CLAUDE.md.
 - **evryn-website** — Live at evryn.ai.
 
 ## Infrastructure

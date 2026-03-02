@@ -4,6 +4,18 @@
 
 ---
 
+## 2026-03-02 (#align session — belief-to-build integration)
+
+- **#align completed** — full belief layer (Hub + 5 spokes) validated against build layer (both ARCHITECTURE.md files, BUILD doc, sprint plan).
+- **Behavioral filtering language fixed** — distinguished platform *access* (behavior-filtered) from *matching* (full-picture including values/worldview). Updated trust-and-safety spoke + evryn-backend ARCHITECTURE.md breadcrumb.
+- **OC/QC entities added** to AC's and DC's CLAUDE.md with sprint timing and interaction protocol notes.
+- **#sweep/#align weekly cadence** enforced — both protocols now say "at least once a week" with proactive suggestion. Tracking dates added to current-state.md.
+- **Sprint plan updated** — QC creation step added (end of Tuesday/start of Wednesday), OC/QC protocol reference notes added to both creation steps, dev/prod safeguard added.
+- **Session doc expanded** — canary principle fix, crisis protocols, cultural trust fluency added to Pre-Work #6 session doc.
+- **evryn-backend ARCHITECTURE.md** — 3 v0.2 breadcrumbs (gatekeeper-as-channel, no-open-messaging, witness-not-mirror) + v0.3 Design Breadcrumbs section (15 items from 4 spokes).
+- **evryn-team-agents ARCHITECTURE.md** — #align flag added (do #align before resuming Lucas build).
+- **evryn-dev-workspace CLAUDE.md** — OC/QC entities + repos added, evryn-backend status updated to Active.
+
 ## 2026-03-02 (First #sweep + sprint date corrections)
 
 - **#sweep protocol expanded** — 3 new steps added (ADR consistency, changelog cross-check, session doc reconciliation). Hub/detail subdirectory added to step 1. Output template updated.

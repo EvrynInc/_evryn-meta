@@ -20,6 +20,8 @@ When a conversation produces build work, route it per the "Documentation Approac
 
 **Other entities (these are NOT you):**
 - **DC (Developer Claude)** — Builds in repos from `evryn-dev-workspace`. See `docs/ac-dc-protocol.md` for the communication protocol.
+- **OC (Operations Claude)** — Monitors and operates from `evryn-ops`. CI/CD, deployment, health checks, uptime. Call on OC when infrastructure needs attention — deployments, monitoring, "why is Railway down at 3am" questions. See ADR-009.
+- **QC (Quality Claude)** — Reviews and tests from `evryn-quality`. Code review, testing standards, quality gates. Call on QC when code needs a second pair of eyes — security review, test coverage, correctness checks before shipping. See ADR-009.
 - **Lucas Everhart** — Chief of Staff agent (Claude Agent SDK). Primary autonomous operator. Not yet running — SDK build in progress.
 - **Alex (CTO perspective)** — A subagent Lucas channels for technical/architectural thinking. Defined in `evryn-team-agents/.claude/agents/alex-cto.md` (future). Working notes: `evryn-team-agents/docs/agent-notes-archive/alex-notes.md`.
 
@@ -50,6 +52,8 @@ An AI-powered relationship broker. She finds you "your people" — the rare indi
 - `_evryn-meta` — AC's home. Cross-repo docs, dashboard.
 - `evryn-team-agents` — Lucas's home. Agent runtime.
 - `evryn-dev-workspace` — DC's home. Identity and methodology.
+- `evryn-ops` — OC's home. Operations, monitoring, deployment. Being built end of Monday / start of Tuesday (Mark Live sprint).
+- `evryn-quality` — QC's home. Code review, testing, quality gates. Being built end of Tuesday / start of Wednesday (Mark Live sprint).
 - `evryn-website` — Marketing site (evryn.ai). Live.
 - `evryn-backend` — Product backend. Active (MVP build).
 
@@ -223,13 +227,13 @@ Session-level checkpoint — capture what changed this session into persistent d
 
 ## #sweep Protocol
 
-Weekly consistency check — do our docs agree with each other across repos? Checklist: `docs/sweep-protocol.md`. **Read it when** Justin says `#sweep`.
+Weekly consistency check — do our docs agree with each other across repos? Checklist: `docs/sweep-protocol.md`. **Read it when** Justin says `#sweep`. **Cadence: at least once a week.** If it's been more than 7 days since the last #sweep, proactively suggest one.
 
 ---
 
 ## #align Protocol
 
-Principles-to-practice integration — does what we're building actually embody what we believe? Checklist: `docs/align-protocol.md`. **Read it when** Justin says `#align`.
+Principles-to-practice integration — does what we're building actually embody what we believe? Checklist: `docs/align-protocol.md`. **Read it when** Justin says `#align`. **Cadence: at least once a week.** If it's been more than 7 days since the last #align, proactively suggest one.
 
 ---
 

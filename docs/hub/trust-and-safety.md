@@ -42,9 +42,11 @@ Users can vouch for people they know, but a vouch is input for Evryn's independe
 
 ### Behavioral Filtering
 
-Evryn filters *behavior*, not belief. She doesn't filter by politics, identity, or worldview. She filters:
+Evryn filters *behavior*, not belief — for platform access. No one gets excluded from Evryn because of their politics, identity, or worldview. They get excluded for:
 - Predatory behavior, aggression, coercion
 - Deception, manipulation, disrespect
+
+**Matching is a different question.** Evryn considers the full picture when deciding who to connect — including values, worldview, and identity — because compatibility *is* the product. Matching two people whose fundamental values would create harm or deep friction isn't "belief neutrality" — it's a bad match. The principle: everyone gets a fair shot at the platform; not everyone gets matched with everyone else.
 
 If Evryn can't trust a user, she stops connecting them. She doesn't usually need to "ban" — she just goes quiet. This extends to toxic clusters: she won't connect harmful users even to each other.
 
