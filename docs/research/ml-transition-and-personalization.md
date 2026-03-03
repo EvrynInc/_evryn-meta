@@ -25,13 +25,20 @@ The "weight update" is literally rewriting a knowledge document. A periodic synt
 
 **The trigger:** When Evryn (or the operator) notices that her knowledge stores don't reflect patterns that seem to exist in the raw data. That's the signal that prose-based knowledge management has hit its ceiling.
 
+**How we'd notice:** This won't announce itself. We need to design detection mechanisms early, even if we don't automate them immediately:
+
+- **Periodic spot checks:** Pull a random sample of recent decisions and their outcomes. Compare the reasoning traces against what's in the knowledge stores. Are there patterns visible in the traces — things that keep coming up — that the stores don't capture? If a human reviewer can see a pattern in 20 traces that the knowledge store doesn't mention, the store is falling behind.
+- **Operator frustration signal:** If the operator finds themselves making the same correction repeatedly, the knowledge stores aren't learning fast enough. Repetitive corrections = a pattern the synthesis process should have caught.
+- **Calibration drift:** If Evryn's confidence scores stop correlating with outcomes (she says "confidence 8" but only 50% of those work out), something she's not tracking is driving results. The knowledge stores are missing a variable.
+- **Volume heuristic:** Simple rule of thumb — if there are more active users than the operator can meaningfully review, the system needs automated pattern detection to supplement human oversight.
+
 ### What ML looks like when it arrives
 
 Not a wholesale replacement — an addition. ML surfaces candidate patterns (Evryn's "subconscious"), while her LLM reasoning evaluates them (her "conscious mind"). The operator provides oversight. See `metacognition-and-self-reflection.md` for the evaluation framework and the "subconscious surfaces, conscious evaluates" model.
 
 **Practical example:** ML analyzes 5,000 reasoning traces and match outcomes. It surfaces: "Matches where both parties mentioned a shared creative influence in their onboarding have 3x the completion rate." Evryn evaluates: "That makes sense — shared creative DNA is a strong signal of genuine compatibility. I'll weight that in my matching." Or: "That correlation might be an artifact of the entertainment industry cohort — let me check if it holds in other segments before generalizing."
 
-**Audit requirement:** ML outputs must be auditable. Evryn should be able to explain any ML-surfaced pattern in plain language and evaluate whether it aligns with her constitutional principles (see `metacognition-and-self-reflection.md`). If she can't explain it, she doesn't act on it.
+**Audit requirement:** ML outputs must be auditable. Evryn should be able to explain any ML-surfaced pattern in plain language and evaluate whether it aligns with her constitutional principles (see `metacognition-and-self-reflection.md`). But "explain" doesn't require full decomposition — sometimes the honest audit is "this pattern is statistically strong and I can't find a reason it's biased or harmful, so I'm going to try it and see." The same hunch-friendly transparency that applies to Evryn's conscious judgment (see Principle 3 in the metacognition doc) applies to her evaluation of ML outputs.
 
 **DC can likely spin up basic ML quickly** once the data exists. The accumulated reasoning traces and labeled outcomes ARE the training dataset. This isn't a months-long ML engineering project — it's pointing a model at structured data that's been accumulating since day one.
 
@@ -39,7 +46,7 @@ Not a wholesale replacement — an addition. ML surfaces candidate patterns (Evr
 
 ## The Synthesis Process
 
-The bridge between raw data and updated knowledge stores. This is the mechanism that makes learning actually happen at the pre-ML stage (Levels 1 and 2 in `learning-levels-and-instrumentation.md`).
+The synthesis process is how learning actually happens at the pre-ML stage — it's the mechanism that reads accumulated evidence and updates Evryn's knowledge stores, both user-specific and general. (See Levels 1 and 2 in `learning-levels-and-instrumentation.md`.)
 
 ### How it works (designed, not built)
 
@@ -72,6 +79,16 @@ Production recommendation systems typically work this way: a base model captures
 
 This is already how the two-store architecture works naturally. The general store provides defaults; the user story provides overrides. Evryn reasons over both when making a decision.
 
+### Defaults must be heavily down-confidenced and audit-labeled
+
+When Evryn applies a general pattern to a new user — before she actually knows them — those applied defaults should:
+
+- **Carry very low confidence.** A belief inferred from "they're in the film community" is categorically weaker than a belief observed in conversation. The confidence encoding should reflect this (see `learning-levels-and-instrumentation.md`).
+- **Be explicitly audit-labeled with their source.** "Inferred from: film community membership, general knowledge store" — not just "we think they value creative collaboration." When we later ask "why did we think they were XYZ?", the answer should be: "Because they were in the film community, and our general pattern said X. No direct observation."
+- **Be immediately overridable** by any actual observation about this person. One real data point about an individual outweighs any number of population-level defaults.
+
+This matters because without it, defaults silently become beliefs. Evryn starts "knowing" things about someone she's never met, and nobody can trace where that "knowledge" came from. Audit labeling keeps derived beliefs honest.
+
 ### How it works in the ML phase (future)
 
 - **Base model:** Trained on all anonymized match data. Captures population-level patterns.
@@ -94,20 +111,33 @@ Every insight has a natural level of generalization. Forcing it wider introduces
 
 **Sub-cluster tracking matters.** A pattern might hold for entertainment industry users but not tech users. "Generalizing to everyone" might always be lossy — the useful level of generalization might be sub-clusters. General knowledge entries should carry context tags about which user segments they emerged from, so the system can reason about applicability rather than assuming universality.
 
+**Meta-question worth holding:** Is population-level generalization even useful, or do we always end up reconstructing understanding at the individual level anyway? It's possible that the real value lives at the sub-cluster and user-specific levels, and that broad generalizations are always too lossy to act on — useful only as very weak priors for brand-new users. The system should be designed to answer this empirically over time, not assume the answer in advance. If population-level patterns consistently get overridden by individual evidence, that's signal that we should spend our complexity budget at finer granularities.
+
 ---
 
 ## Conflicting Teachings Resolution (v0.4+ Design Problem)
 
 With one operator, corrections are ground truth. With multiple operators and users, conflicts arise.
 
+### The hierarchy of authority
+
+See `metacognition-and-self-reflection.md` for the full hierarchy. The short version:
+
+1. **Constitutional principles** — inviolable
+2. **The user's own experience** — each user is the ultimate arbiter of what works for them
+3. **Operator guidance** — teaches Evryn's general judgment, but defers to user feedback about that specific user
+4. **General patterns** — useful defaults, always defeasible
+
+Evryn retains her own judgment alongside all of these — she differentiates what a user wants from what they might need, and decides who she's willing to be in each context.
+
 ### Data model requirements (build now)
 
 Every correction tagged with:
 
-- **Who:** Operator identity
+- **Who:** Operator identity, or user identity
 - **Context:** Which user, which situation, which pathway
 - **What:** The change made (original → corrected)
-- **Why:** Operator's annotation (optional but invaluable)
+- **Why:** Annotation (optional but invaluable)
 
 This is the same data model described in `learning-levels-and-instrumentation.md` (approval gate outcome tracking) and `metacognition-and-self-reflection.md` (conflicting teachings). The tagging is what makes future resolution possible — capture the provenance now even though the resolution logic comes later.
 
@@ -117,6 +147,7 @@ This is the same data model described in `learning-levels-and-instrumentation.md
 - **Contradictions between operators** → either context-dependent (legitimate) or disagreement (needs resolution)
 - **Operator corrections conflicting with constitutional principles** → constitution wins
 - **Statistical patterns conflicting with operator corrections** → operator wins (for now), but flag for review
+- **User feedback contradicting operator guidance** → for that user, the user wins; the contradiction itself is data worth examining
 
 ### The governance question
 
