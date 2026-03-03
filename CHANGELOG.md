@@ -4,6 +4,12 @@
 
 ---
 
+## 2026-03-02 (Session doc extraction — identity writing brief ready)
+
+- **Identity writing brief** extracted to `evryn-backend/docs/identity-writing-brief.md` — all actionable content from archived session doc (file structure, structural principles, content specs, 14 source materials). Nothing actionable remains only in archive.
+- **Cookbook implementation notes** added to BUILD doc Key Cookbooks section (hook env vars, compaction_control, beta flags).
+- Session doc archive confirmed reference-only after full 1024-line audit.
+
 ## 2026-03-02 (Sprint launch — Session 4 decisions placed)
 
 - **ADR-012: Trigger-Composed Identity** — Option A confirmed. Trigger script reads identity files, concatenates into single `systemPrompt` string. No settingSources, no filesystem config. Full control over content, ordering, token budget.
