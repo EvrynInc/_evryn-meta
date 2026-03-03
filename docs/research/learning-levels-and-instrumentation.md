@@ -21,7 +21,7 @@ This is where Evryn is for v0.2. It gets surprisingly far — a well-prompted LL
 
 Explicit outcome tracking: Did the match lead to a meeting? Did the gatekeeper engage? Did the operator correct the classification? These outcomes feed back into both the user-specific story ("matches like X work for Mark") and eventually the general knowledge store ("across users, warm referrals outperform cold outreach at 2:1").
 
-The approval gate is the primary feedback interface at this level. See "The Approval Gate as Training Interface" below.
+The decision feedback flow (see below) is the primary feedback interface at this level — a multi-stage pipeline where each stage produces a different learning signal about the same classification decision.
 
 ### Level 3: Machine Learning (Target: ~20 Active Users)
 
@@ -41,9 +41,15 @@ This is the atomic unit of Evryn's learning. Everything else — feedback loops,
 
 ### What a reasoning trace looks like
 
-Rich prose, not structured fields. Example:
+Rich prose, not structured fields. Example for a clear classification:
 
 > "This feels like gold (confidence: 8/10). The sender runs a post-production house that does exactly what Mark's current project needs, they were referred by someone Mark respects, and the ask is specific and time-bounded. The only hesitation is that their website looks a bit thin — could be a small shop punching above their weight, or could be legit and just bad at web design."
+
+Example for a hunch:
+
+> "I can't fully articulate why, but something about this sender's story and Mark's current trajectory feels like a fit (confidence: 5/10, hunch-driven). The surface-level signals are ambiguous — the ask is vague and there's no obvious project alignment — but there's something in the way they describe their approach to collaborative work that resonates with what I've been learning about what Mark actually values. No conscious red flags. Flagging this as a hunch-driven edge case for the approval gate."
+
+Hunches are a valid reasoning type. Evryn will develop intuitions she can't always fully decompose, and those intuitions are often where the magic happens. The key is labeling them honestly so we can track hunch quality over time — do hunches pan out? At what rate? That's calibration data.
 
 ### Why unstructured now, structure later
 
@@ -62,6 +68,8 @@ Two dimensions, expressed numerically (0-10 scale) alongside the prose reasoning
 
 Numerical values give Evryn (and future ML) a gradient to work with. "Confidence: high" is ambiguous — confidence 7 vs. confidence 9.5 are very different "highs."
 
+**Derived and default values carry lower confidence than observations.** When Evryn applies a general pattern to a new user ("they're in the film community, so they probably value creative collaboration"), that derived belief should carry significantly lower confidence than something she observed directly in conversation. And it must be audit-labeled with its source: "inferred from: film community membership, general knowledge store." When we later ask "why did we think they valued creative collaboration?", the answer should be traceable. See `ml-transition-and-personalization.md` for how defaults work in the personalization model.
+
 ---
 
 ## What to Capture at Each Contact Surface
@@ -72,38 +80,51 @@ Currently captures: priority, categories[], summary, status.
 
 **Add:** A reasoning trace — the full reasoning for gold/pass/edge classification. Not just the label, but the signals weighed, the confidence (0-10), and any hesitations. This could be a `classification_reasoning` text field on `emailmgr_items`, or a linked record. The key: when you later ask "what patterns distinguish gold from pass?", you have Evryn's reasoning at decision time, not just the binary outcome.
 
-### 2. Approval Gate Outcome
+### 2. The Decision Feedback Flow
 
-Currently not captured as structured data.
+A classification isn't a single event — it has a lifecycle with multiple review stages, each producing a different learning signal about the same decision. These aren't separate contact surfaces; they're stages in one flow:
 
-**Add:** `approval_outcome` (approved / edited / rejected) + optional `approval_annotation` (why Justin changed it) + `reviewer_id` (who reviewed) + `review_context` (which gatekeeper, what batch). Even a one-line annotation from Justin is the highest-value learning signal in the system — expert-labeled, contextualized calibration data.
+**Stage 1: Operator review (approval gate).** Justin (or a future operator) reviews Evryn's classification and draft response. Capture:
+- `approval_outcome`: approved / edited / rejected
+- `approval_annotation`: optional — why the operator changed it (one line is valuable; a rich explanation is gold)
+- `reviewer_id`: who reviewed
+- `review_context`: which user, what batch
 
-The three-tier feedback gradient:
+The three-tier feedback gradient at this stage:
 1. **Active correction with annotation** — strongest signal. The operator says what's wrong and why.
 2. **Reviewed and approved** — moderate positive. The operator looked at it and it passed.
 3. **Auto-approved without active review** — weak positive. It didn't get corrected, but silence is ambiguous.
 
-Over time, as Evryn improves and the operator approves more without edits, the absence of correction becomes signal too — but weaker than active confirmation. This gradient gives Evryn calibration, not just binary pass/fail.
+**Stage 2: User response.** The gatekeeper (or any user receiving a match) responds — or doesn't. Capture:
+- Whether they responded at all
+- Response latency (10 minutes vs. 3 days)
+- Response depth and tone (enthusiastic paragraph vs. one-liner)
+- Explicit outcome: accepted / declined / ignored
+- Any explicit feedback they gave about the match quality
 
-### 3. Gatekeeper/User Response Signals
+In isolation, any single user response is noisy (Mark is busy; a 3-day delay might mean nothing). At scale across many users, patterns emerge — matches with fast, enthusiastic responses correlate with better outcomes. Capture it all now; let the analysis sort it out later.
 
-**Explicit:** Did they respond? Accept? Decline? Already partially captured in the connection lifecycle (discovered → notified → accepted → completed/declined).
+**Stage 3: Downstream outcome.** Did the connection actually produce value? This is the hardest signal to capture and the most delayed, but the most meaningful. Did they meet? Did it lead to a project? Did either party mention it positively later? Did it change what they asked Evryn for next?
 
-**Implicit — add:** Response latency and depth. Did Mark respond in 10 minutes with enthusiasm, or three days with a one-liner? In isolation, this is noisy (Mark is busy). At scale across many users, patterns emerge — matches with fast, enthusiastic responses correlate with better outcomes. Capture it all now; let the analysis sort it out later.
+**Why these are one flow, not separate surfaces:** All three stages are feedback on the *same* classification decision. The reasoning trace (captured at classification time) gets richer as it moves through the pipeline — the initial judgment, then the operator's assessment, then the user's reaction, then the downstream result. When Evryn later learns from this decision, she needs the complete chain, not isolated fragments.
 
-### 4. Gatekeeper Criteria Evolution
+### 3. User/Gatekeeper Criteria Evolution
 
-Mark's `profile_jsonb` holds `gatekeeper_criteria`. This should be versioned — snapshot the criteria alongside each triage batch, so you can later ask: "How did our understanding of what Mark wants change over time, and did those changes improve outcomes?"
+A user's `profile_jsonb` (including gatekeeper_criteria where applicable) evolves over time. This should be versioned — snapshot the criteria alongside each triage batch, so you can later ask: "How did our understanding of what Mark wants change over time, and did those changes improve outcomes?"
 
 **Important context:** Gatekeeper criteria will ultimately collapse into the story — gatekeepers aren't special, they're just users being matched. The pathway has a sidecar, but the data all feeds a common pipe: decision reasoning + outcome + response signal → refine the story → improve future matching. Every pathway is an on-ramp; the destination is the same.
 
-### 5. Temporal Signals
+### 4. Temporal Signals
 
 Timestamps are already on everything — capture patterns passively. When things happen, seasonality in requests, response time patterns. The signal emerges at scale.
 
-### 6. Relational Signals
+### 5. Relational Signals
 
 How people relate to each other *through* Evryn. Do warm introductions have better outcomes than cold ones? Does trust beget trust — does a good match make someone more open to the next one? Requires the relationship graph to capture enough structure to ask these questions later.
+
+### 6. Hunch Outcomes
+
+When Evryn follows a hunch (see reasoning trace principle above), the outcome is especially valuable training data. Hunches that pan out reveal patterns Evryn's conscious reasoning hasn't articulated yet — proto-patterns worth investigating. Hunches that don't pan out are equally useful for calibrating when intuition is reliable vs. when it's noise. Track hunch-flagged decisions separately so their hit rate can be measured over time.
 
 ### 7. Evryn's Confidence Calibration (Meta-Signal)
 
@@ -113,9 +134,11 @@ Over time, the most important thing to track is how well Evryn's confidence corr
 
 ## The Approval Gate as Training Interface
 
-The approval gate isn't just a safety mechanism — it's the primary training interface during early operation.
+The approval gate isn't just a safety mechanism — it's the primary training interface during early operation. And beyond the operator, the user themselves is a reviewer too — each user is the ultimate arbiter of what works for them.
 
-**Why the operator is the best teacher:** Evryn has three sources of learning signal: what users do (ambiguous), what she observes herself (limited by context), and what the operator tells her (high-fidelity, labeled, contextualized). The operator's corrections are the cleanest training data in the system.
+**Why the operator is the best teacher early on:** Evryn has three sources of learning signal: what users do (ambiguous), what she observes herself (limited by context), and what the operator tells her (high-fidelity, labeled, contextualized). The operator's corrections are the cleanest training data in the system — early on.
+
+**But the user is the ultimate authority on their own experience.** Mark's reaction to a surfaced connection teaches Evryn about Mark more reliably than Justin's prediction of how Mark would react. Over time, as Evryn builds direct relationships with users, user feedback increasingly supplements (and for that individual, supersedes) operator guidance. Evryn's job is to become wise — holding her general understanding while knowing that each person's feedback about their own experience trumps general patterns. She retains judgment about what they might *need* (within reason) and about who she's willing to be in each context, but she never overrides what a user tells her about themselves.
 
 **Quality of feedback matters.** There's a spectrum:
 
@@ -123,7 +146,7 @@ The approval gate isn't just a safety mechanism — it's the primary training in
 - "Reject this — Mark wouldn't care about brand partnerships right now." → Outcome + user-specific signal. Evryn updates her understanding of Mark.
 - "Reject this — you're overweighting specificity of ask and underweighting relationship signal, and that's probably true generally." → Outcome + user-specific + generalizable principle. Evryn learns about Mark AND about her own judgment.
 
-The richer the annotation, the faster Evryn learns.
+The richer the annotation, the faster Evryn learns. **Evryn should proactively (and gently) remind both operators and users that this kind of feedback helps her get smarter.** Not aggressively — but consistently: "If you have a moment to tell me *why* this one didn't land, it really helps me learn." For operators, who understand the training dynamic, she can be more direct. For users, it should feel natural — like a friend asking "was I off on that one?"
 
 **The operator track shifts over time:** Early on, active teaching. As Evryn improves, the shift toward passive confirmation (approve without edit = "you're getting it right"). The transition from active teaching to passive confirmation is itself a measure of how much she's learned.
 
