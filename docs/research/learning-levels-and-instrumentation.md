@@ -74,17 +74,19 @@ Numerical values give Evryn (and future ML) a gradient to work with. "Confidence
 
 ## What to Capture at Each Contact Surface
 
-### 1. Triage Classification (emailmgr_items)
+### 1. The Initial Decision (Reasoning Trace Capture)
 
-Currently captures: priority, categories[], summary, status.
+Every time Evryn makes a judgment — classifying an inbound email, proposing a match between two users, suggesting a connection — she captures a reasoning trace at the moment of decision. This is the starting point of the feedback flow below.
 
-**Add:** A reasoning trace — the full reasoning for gold/pass/edge classification. Not just the label, but the signals weighed, the confidence (0-10), and any hesitations. This could be a `classification_reasoning` text field on `emailmgr_items`, or a linked record. The key: when you later ask "what patterns distinguish gold from pass?", you have Evryn's reasoning at decision time, not just the binary outcome.
+For email triage (v0.2), the `emailmgr_items` table currently captures priority, categories[], summary, status. **Add:** a `classification_reasoning` text field (or linked record) with the full reasoning — signals weighed, confidence (0-10), hesitations. For future match proposals, the same principle applies: Evryn writes down *why* she thinks this connection is worth making, before anyone else weighs in.
 
-### 2. The Decision Feedback Flow
+The key: when you later ask "what patterns distinguish good judgments from bad ones?", you have Evryn's reasoning at decision time, not just the binary outcome.
 
-A classification isn't a single event — it has a lifecycle with multiple review stages, each producing a different learning signal about the same decision. These aren't separate contact surfaces; they're stages in one flow:
+### 2. The Decision Feedback Flow (All Pathways)
 
-**Stage 1: Operator review (approval gate).** Justin (or a future operator) reviews Evryn's classification and draft response. Capture:
+Every judgment Evryn makes — whether it's a triage classification, a match proposal, or a connection suggestion — follows the same feedback lifecycle. The pathway varies (email triage has an operator gate; a direct match proposal might not), but the pattern is universal: Evryn decides → reviewers respond → downstream outcomes emerge. Each stage produces a different learning signal about the same decision.
+
+**Stage 1: Operator review (where applicable).** For pathways with an approval gate (like v0.2 email triage), the operator reviews Evryn's judgment before it reaches the user. Capture:
 - `approval_outcome`: approved / edited / rejected
 - `approval_annotation`: optional — why the operator changed it (one line is valuable; a rich explanation is gold)
 - `reviewer_id`: who reviewed
@@ -95,18 +97,20 @@ The three-tier feedback gradient at this stage:
 2. **Reviewed and approved** — moderate positive. The operator looked at it and it passed.
 3. **Auto-approved without active review** — weak positive. It didn't get corrected, but silence is ambiguous.
 
-**Stage 2: User response.** The gatekeeper (or any user receiving a match) responds — or doesn't. Capture:
+Not every pathway will have an operator gate. As Evryn earns trust, some decisions will go directly to users. When that happens, Stage 2 becomes the first human review point, and its signal weight increases.
+
+**Stage 2: User response.** The person on the receiving end of Evryn's judgment responds — or doesn't. This applies equally to a gatekeeper seeing a surfaced email, a user receiving a match proposal, or anyone Evryn has connected with someone. Capture:
 - Whether they responded at all
 - Response latency (10 minutes vs. 3 days)
 - Response depth and tone (enthusiastic paragraph vs. one-liner)
 - Explicit outcome: accepted / declined / ignored
-- Any explicit feedback they gave about the match quality
+- Any explicit feedback they gave about the match
 
 In isolation, any single user response is noisy (Mark is busy; a 3-day delay might mean nothing). At scale across many users, patterns emerge — matches with fast, enthusiastic responses correlate with better outcomes. Capture it all now; let the analysis sort it out later.
 
 **Stage 3: Downstream outcome.** Did the connection actually produce value? This is the hardest signal to capture and the most delayed, but the most meaningful. Did they meet? Did it lead to a project? Did either party mention it positively later? Did it change what they asked Evryn for next?
 
-**Why these are one flow, not separate surfaces:** All three stages are feedback on the *same* classification decision. The reasoning trace (captured at classification time) gets richer as it moves through the pipeline — the initial judgment, then the operator's assessment, then the user's reaction, then the downstream result. When Evryn later learns from this decision, she needs the complete chain, not isolated fragments.
+**Why these are one flow, not separate surfaces:** All three stages are feedback on the *same* judgment. The reasoning trace (captured at decision time) gets richer as it moves through the pipeline — the initial judgment, then the operator's assessment (if applicable), then the user's reaction, then the downstream result. When Evryn later learns from this decision, she needs the complete chain, not isolated fragments. This holds whether the original judgment was "this email is gold for Mark" or "these two people should meet."
 
 ### 3. User/Gatekeeper Criteria Evolution
 
@@ -138,7 +142,7 @@ The approval gate isn't just a safety mechanism — it's the primary training in
 
 **Why the operator is the best teacher early on:** Evryn has three sources of learning signal: what users do (ambiguous), what she observes herself (limited by context), and what the operator tells her (high-fidelity, labeled, contextualized). The operator's corrections are the cleanest training data in the system — early on.
 
-**But the user is the ultimate authority on their own experience.** Mark's reaction to a surfaced connection teaches Evryn about Mark more reliably than Justin's prediction of how Mark would react. Over time, as Evryn builds direct relationships with users, user feedback increasingly supplements (and for that individual, supersedes) operator guidance. Evryn's job is to become wise — holding her general understanding while knowing that each person's feedback about their own experience trumps general patterns. She retains judgment about what they might *need* (within reason) and about who she's willing to be in each context, but she never overrides what a user tells her about themselves.
+**But the user is the ultimate authority on their own experience.** Mark's reaction to a surfaced connection teaches Evryn about Mark more reliably than Justin's prediction of how Mark would react. Over time, as Evryn builds direct relationships with users, user feedback increasingly supplements (and for that individual, supersedes) operator guidance. Evryn's job is to become wise — holding her general understanding while knowing that each person's feedback about their own experience trumps general patterns. She retains judgment about what they might *need* (within reason) and about who she's willing to be in each context, but she always listens closely to what a user tells her about themselves — even when her own judgment might point a different direction.
 
 **Quality of feedback matters.** There's a spectrum:
 
