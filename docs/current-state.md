@@ -23,7 +23,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 ## What's Next
 
 - **5-day sprint: Mark live.** Sprint week March 2–6. Sprint plan at `evryn-backend/docs/SPRINT-MARK-LIVE.md`. Target: ready for Mark by Fri March 6.
-- **Pre-Work #6 (sprint Monday):** Evryn identity architecture. All loose ends from Sessions 1-3 tied off. Vertex AI breadcrumbed into ARCHITECTURE.md. Python/TS decision deferred to Phase 1 start (TypeScript default, re-check SDK maturity then). Beautiful Language file committed. Visual identity breadcrumbed to GTM spoke. Ready for identity content writing. See `docs/sessions/2026-02-24-pre-work-6-session-1.md`.
+- **Pre-Work #6 (architecture complete, identity writing in progress):** All architectural decisions placed — ADRs 012-016 (trigger-composed identity, TypeScript runtime, operator Slack-only, situation×activity matrix, curated memory). ARCHITECTURE.md updated with Identity Composition section. BUILD doc updated (trigger-composed systemPrompt, memory table, query() example). Session doc fully absorbed and archived to `docs/historical/`. **Remaining:** Write identity content files (core.md + situation/activity modules) + Pre-Work #9 (DC CLAUDE.md update).
 - **Build phases finalized:** v0.2 "Gatekeeper's Inbox" (Mark live ~March 10) → v0.3 "The Broker" (web app + matching + payments, first revenue late April) → v0.4 "Scale" (second gatekeeper, publisher, agents, June/July). SIFF (mid-May) is a target for presence.
 - **Legal: Privacy & Terms questionnaire** — Under active consideration with Fenwick.
 

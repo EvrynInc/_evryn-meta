@@ -43,5 +43,5 @@ The question: should both be the same language?
 
 ## References
 
-- Session doc: `docs/sessions/2026-02-24-pre-work-6-session-1.md` (Session 3 Decision 5, Session 4 Decision 8)
+- Session doc: `docs/historical/2026-02-24-mvp-build-work-s1-4.md` (Session 3 Decision 5, Session 4 Decision 8)
 - SDK overview: platform.claude.com/docs/en/agent-sdk/overview

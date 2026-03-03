@@ -866,3 +866,158 @@ identity/
 ---
 
 *Session 3 captured 2026-02-24T17:41-08:00 by AC.*
+
+---
+
+# Session 4 — SDK Verification + Sprint Launch (2026-03-02)
+
+**Goal:** Resolve blocking SDK questions, launch the sprint, capture decisions for a fresh instance to absorb into permanent docs.
+
+**What happened:** AC verified TypeScript SDK behavior (systemPrompt + settingSources), resolved Option A/B/C with real documentation data, confirmed TypeScript for the sprint, wrote DC1 and DC2 briefs, launched the sprint's parallel work streams.
+
+---
+
+## Decisions Made in Session 4
+
+### Decision 7: Option A Confirmed (Trigger Composes Everything)
+
+**Decision:** The trigger script reads identity files (core + module), concatenates them, and passes the result as a single `systemPrompt` string to `query()`. No `settingSources`, no filesystem-based config loading.
+
+**Why Option A over Option C (hybrid):**
+1. Evryn is NOT a coding assistant. The `preset: "claude_code"` loads Claude Code's coding guidelines — wasted tokens and confusing for a relationship broker.
+2. Custom string `systemPrompt` + `settingSources: ["project"]` for CLAUDE.md is the LEAST documented SDK combination. The docs don't explicitly confirm CLAUDE.md layers on top of a custom string systemPrompt.
+3. Full control over content, ordering, and token budget. We can order for prompt caching: stable core first (cacheable), then module, then dynamic user context.
+4. No dependency on SDK layering behavior — if Anthropic changes how settingSources interacts with systemPrompt, we're unaffected.
+5. "More custom code" = reading files and concatenating strings. Trivial.
+
+**What we DON'T lose:** Hooks, MCP servers, sessions, subagents — all defined programmatically in `query()` options, work identically regardless of systemPrompt approach.
+
+**What we handle differently:** "Output styles" (user vs operator tone/info boundaries) are achieved by composing different prompts per-query via the trigger, not via SDK file-based output style configs. This is actually more powerful — Evryn switches modes email-to-email, not session-to-session.
+
+**SDK evidence:** The "Modifying system prompts" docs page (platform.claude.com/docs/en/agent-sdk/modifying-system-prompts) shows four methods. Method 4 (custom string) "replaces the default entirely." Method 1 (CLAUDE.md) is "additions only" via settingSources. The only documented combination is preset + settingSources, not custom string + settingSources.
+
+**Needs ADR:** Yes — ADR-011 or next available number.
+
+### Decision 8: TypeScript for Agent Runtime (Sprint Decision)
+
+**Decision:** TypeScript for v0.2 agent runtime. Python for ML services when needed (v0.3+).
+
+**Why now (deferred from Session 3):**
+- Session 3 deferred to "Phase 1 start, re-check SDK maturity." Today IS Phase 1 start.
+- Python SDK has matured from v0.1.41 alpha to GA (Generally Available = stable, production-ready). The alpha risk from Session 3 is resolved.
+- TypeScript SDK at v0.2.63 (was v0.2.51), has V2 preview interface Python doesn't have yet.
+- Both SDKs support all MVP features: query, MCP, hooks, sessions, permissions.
+
+**Practical argument (overwhelming):**
+- DC1 is building scaffolding in TypeScript right now
+- All reusable code from evryn-team-agents is TypeScript (email polling, Gmail client, Supabase client)
+- Switching to Python = stopping DC1 and starting over (~1-2 days rewrite, not impossible but pointless)
+- The team-agents patterns transfer cleanly in the same language
+
+**For future ML services (v0.3+):** Python remains the right choice for PyTorch, scikit-learn, sentence-transformers, FAISS, embedding generation. These run as separate services with API boundaries — different lifecycles, scaling patterns, and reliability profiles from the agent runtime.
+
+**Needs ADR:** Yes — ADR-012 or next available number.
+
+### Decision 9: Publisher Subagent — Open Question Flagged
+
+**Status:** Justin flagged concern that narrow-context publisher might not be effective enough. The argument for narrow context (forces evaluation on its face, avoids "reviewing your own work" bias, ~10-15% token overhead vs 100%) is compelling but needs hardening: what SPECIFICALLY does the publisher check for? What's the false-positive/false-negative tolerance?
+
+**For v0.2:** Justin IS the publisher (approval gate). Publisher subagent is v0.3+. Justin's editing patterns during v0.2 will inform what the automated publisher needs to catch.
+
+**Action:** Revisit publisher design when scoping v0.3. Use v0.2 approval data as input.
+
+---
+
+## SDK Verification Findings
+
+### TypeScript SDK (v0.2.63)
+
+**systemPrompt parameter has two forms:**
+1. Object: `{ type: "preset", preset: "claude_code", append?: string }` — loads Claude Code's full coding assistant prompt, optionally appends
+2. String: `"Your custom prompt"` — replaces default entirely
+
+**settingSources:** `["project"]` loads CLAUDE.md, hooks, output styles, skills, agents from filesystem. `["user"]` loads global config. `["local"]` loads local hooks. Must be explicitly specified — nothing loads by default.
+
+**Default behavior (no systemPrompt):** Minimal prompt with only tool instructions. NOT Claude Code's full prompt.
+
+**Custom presets:** Not supported. Only `claude_code` is available. Cannot define custom presets.
+
+**Key doc page:** platform.claude.com/docs/en/agent-sdk/modifying-system-prompts — comparison table of all four approaches (CLAUDE.md, output styles, preset+append, custom string).
+
+### Python SDK
+
+**Status:** GA (was alpha in Session 3). Fully documented alongside TypeScript for every feature. Not checked for exact version (pip not available on this machine).
+
+### Feature Parity
+
+Both SDKs support: query, MCP servers, hooks (callback-based), sessions (resume/fork), subagents, permissions, structured outputs. TypeScript has V2 preview interface (send/stream patterns) that Python doesn't have yet.
+
+---
+
+## Sprint Launch Status
+
+**DC1 — Scaffolding:** Brief written to `evryn-backend/docs/ac-to-dc.md`. Building: project init, email polling, Supabase client, Slack webhook, Railway deploy. Operating from `evryn-dev-workspace`.
+
+**DC2 — Synthetic Fixtures:** Brief written to `_evryn-meta/docs/tasks/dc2-synthetic-fixtures.md`. Writing 15-20 realistic test emails. Operating from `evryn-dev-workspace`.
+
+**Mark Protection:** Two safeguards baked into DC1 brief:
+1. `SEND_ENABLED=false` flag (default off, blocks all sends)
+2. `systemtest@evryn.ai` test recipient (alias on Justin's Google account — all non-production sends go here)
+
+**Communication protocol:** DC instances use Slack webhook to flag Justin when blocked. Architectural questions go to `dc-to-ac.md` mailbox + Slack ping so Justin can relay to AC.
+
+---
+
+## Remaining Work (for fresh instance)
+
+### Immediate (before identity writing)
+
+1. **Absorb this session doc into permanent docs:**
+   - Decisions 1-6 (Sessions 1-3) + Decisions 7-9 (Session 4) → ADRs
+   - Architectural content (composable identity, module matrix, memory tiers, prompt caching, SDK findings) → ARCHITECTURE.md
+   - Mental model / "how to think about this" context → inline in ARCHITECTURE.md (helps Justin AND future AC instances)
+   - Checklist items → close out in BUILD doc
+   - Archive session doc to `docs/historical/`
+
+2. **Update ARCHITECTURE.md with Session 3+4 decisions:**
+   - Option A trigger composition
+   - Situation × Activity module structure
+   - Operator security (Slack only)
+   - Short SDK sessions principle
+   - Prompt caching architecture
+   - Hooks design (programmatic, not filesystem)
+   - 4-tier memory system
+   - Add tech-vision spoke to source references (missing — Justin caught this)
+   - Add sprint plan cross-reference
+
+3. **Update BUILD doc:**
+   - Replace "CLAUDE.md loaded by SDK" with trigger-composed systemPrompt
+   - Update memory architecture table
+   - Close Pre-Work items that are done
+
+### Then: Identity Content Writing
+
+4. Write core identity (core.md)
+5. Write situation modules (gatekeeper for v0.2)
+6. Write activity modules (onboarding, conversation, triage, operator)
+7. Write company context module
+8. Pre-Work #9 (DC CLAUDE.md update)
+
+---
+
+## Justin's Feedback on Session Doc Management
+
+**Session docs are rolling working scratchpads.** Once decisions and content are absorbed into permanent homes (ADRs, ARCHITECTURE.md, BUILD doc), the session doc becomes historical reference — archived, not deleted. Git history preserves everything.
+
+**Justin wants "how we thought about this" captured in architecture docs** — not just the conclusion but the mental model. This helps future-Justin understand the thinking AND helps future-AC calibrate explanation level. AC should include inline context sections in ARCHITECTURE.md where the reasoning isn't obvious from the decision alone.
+
+**Best practices for decision capture (engineering teams):**
+- ADRs for major decisions (formal, permanent, "why we chose X over Y")
+- Architecture docs for "how to think about the system" (including simplified explanations)
+- Build docs for "what to do and when" (checklists, scope, phase gates)
+- Changelogs for "what changed" (brief, per-repo)
+- Session docs as working scratchpad → archive after absorption
+
+---
+
+*Session 4 captured 2026-03-02T15:12-08:00 by AC.*

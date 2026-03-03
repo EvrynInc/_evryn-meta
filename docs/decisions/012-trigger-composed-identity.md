@@ -78,6 +78,6 @@ Per-query composition doesn't mean siloed. Evryn's memory in Supabase spans all 
 
 ## References
 
-- Session doc: `docs/sessions/2026-02-24-pre-work-6-session-1.md` (Sessions 1-4)
+- Session doc: `docs/historical/2026-02-24-mvp-build-work-s1-4.md` (Sessions 1-4)
 - SDK docs: platform.claude.com/docs/en/agent-sdk/modifying-system-prompts
 - Related: ADR-001 (SDK single-agent architecture)

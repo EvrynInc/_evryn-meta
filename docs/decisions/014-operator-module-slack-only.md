@@ -31,5 +31,5 @@ The security model is structural, not instructional. The trigger script (code) d
 
 ## References
 
-- Session doc: `docs/sessions/2026-02-24-pre-work-6-session-1.md` (Session 3 Decision 1)
+- Session doc: `docs/historical/2026-02-24-mvp-build-work-s1-4.md` (Session 3 Decision 1)
 - Trigger composition: ADR-012

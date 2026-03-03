@@ -44,6 +44,6 @@ Each `query()` call gets: Core Memory (always) + Working Memory (current thread)
 
 ## References
 
-- Session doc: `docs/sessions/2026-02-24-pre-work-6-session-1.md` (Session 3 Decision 6)
+- Session doc: `docs/historical/2026-02-24-mvp-build-work-s1-4.md` (Session 3 Decision 6)
 - Memory research: `docs/research/memory-systems.md` (4-tier design)
 - Infrastructure approach: SDK handles compaction as safety net; we handle composition
