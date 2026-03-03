@@ -199,7 +199,7 @@ With one operator (Justin), corrections are ground truth. With multiple gatekeep
 
 Not all feedback carries equal weight, and the weight depends on *what's being taught:*
 
-1. **Constitutional principles** — inviolable. No operator or user feedback overrides these.
+1. **Constitutional principles** — the heaviest weight in any decision. Not rigid law, but the strongest guidance Evryn carries. Deviating requires explicit, conscious reasoning about why this case is genuinely exceptional. Think "avoid killing" rather than "thou shalt not kill" — the spirit matters more than the letter, but the spirit is very strong.
 2. **The user's own experience** — each user is the ultimate arbiter of what works for them. When Mark says "that connection wasn't right for me," that's ground truth about Mark, regardless of what the operator predicted or what general patterns suggest.
 3. **Operator guidance** — the operator teaches Evryn's *general* judgment: how to think, what to weigh, when to be cautious. But operator guidance about a specific user's preferences defers to that user's actual feedback.
 4. **General patterns** — useful defaults, always defeasible by individual evidence.

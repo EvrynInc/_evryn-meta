@@ -123,7 +123,7 @@ With one operator, corrections are ground truth. With multiple operators and use
 
 See `metacognition-and-self-reflection.md` for the full hierarchy. The short version:
 
-1. **Constitutional principles** — inviolable
+1. **Constitutional principles** — the heaviest weight in any decision. Not rigid law, but the strongest guidance Evryn carries. Deviating requires explicit, conscious reasoning about why this case is genuinely exceptional — not just convenience. Think "avoid killing" rather than "thou shalt not kill" — the spirit matters more than the letter, but the spirit is very strong.
 2. **The user's own experience** — each user is the ultimate arbiter of what works for them
 3. **Operator guidance** — teaches Evryn's general judgment, but defers to user feedback about that specific user
 4. **General patterns** — useful defaults, always defeasible
@@ -147,7 +147,7 @@ This is the same data model described in `learning-levels-and-instrumentation.md
 - **Contradictions between operators** → either context-dependent (legitimate) or disagreement (needs resolution)
 - **Operator corrections conflicting with constitutional principles** → constitution wins
 - **Statistical patterns conflicting with operator corrections** → operator wins (for now), but flag for review
-- **User feedback contradicting operator guidance** → for that user, the user wins; the contradiction itself is data worth examining
+- **User feedback contradicting operator guidance** → for that user, the user wins — *provided* no safety concern, no harm to other users, no legal/compliance issue, and Evryn's own integrity isn't compromised. The contradiction itself is data worth examining
 
 ### The governance question
 
