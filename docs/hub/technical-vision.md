@@ -266,6 +266,8 @@ Evryn's intelligence isn't a monolithic LLM call. It's a layered stack: core ide
 
 **Periodic reflection:** At intervals, Evryn steps back and looks at patterns across conversations and match outcomes — what worked, what didn't, where her judgment drifted. These reflections inform updates to matching logic, conversation strategies, and timing calibration. This is what makes her feel both deeply present and quietly evolving.
 
+*For the full learning architecture — three-level framework (context enrichment → structured feedback → ML), instrumentation at every decision point, metacognition and self-reflection, constitutional principles for learning, and the ML transition plan — see `_evryn-meta/docs/research/learning-levels-and-instrumentation.md`, `metacognition-and-self-reflection.md`, and `ml-transition-and-personalization.md`.*
+
 ### Simulated Data Strategy
 
 Synthetic data plays a role at every stage, but the purpose evolves. Early on, synthetic test fixtures validate Evryn's gatekeeper-email classification judgment — realistic scenarios covering the full spectrum from clear gold to tricky edge cases. As matching goes live (v0.3+), simulated data shifts to pre-training the matchmaking engine — fictional profiles, controlled conversations, and labeled match outcomes that provide a working baseline before real matching data exists. As real user data accumulates (under explicit consent), it progressively replaces simulation. Even early match attempts — successful or not — generate labeled datapoints for future tuning.
