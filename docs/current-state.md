@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-02T17:35-08:00*
+*Last updated: 2026-03-03T13:52-08:00*
 *Last #sweep: 2026-03-02*
 *Last #align: 2026-03-02*
 
@@ -29,8 +29,8 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## Active Projects
 
-- **_evryn-meta** — ADRs 012-016 written. Session doc absorbed into permanent docs, archived, and renamed. Identity writing brief extracted. All cookbook findings placed. Archive verified clean (reference-only).
-- **evryn-backend** — **Sprint week March 2–6.** Sprint plan: `docs/SPRINT-MARK-LIVE.md`. ARCHITECTURE.md updated with Identity Composition section. BUILD doc updated (trigger-composed systemPrompt, memory table, cookbook implementation notes). Identity writing brief at `docs/identity-writing-brief.md`. DC1 scaffolding in progress (package.json, src/ created). DC2 synthetic fixtures delivered (18 emails).
+- **_evryn-meta** — ADRs 012-016 written. Session doc absorbed into permanent docs, archived, and renamed. Identity writing brief extracted. All cookbook findings placed. Archive verified clean (reference-only). Three learning research docs created (`docs/research/`: learning-levels-and-instrumentation, metacognition-and-self-reflection, ml-transition-and-personalization). Breadcrumbs placed in technical-vision spoke.
+- **evryn-backend** — **Sprint week March 2–6.** Sprint plan: `docs/SPRINT-MARK-LIVE.md`. ARCHITECTURE.md updated with Identity Composition section + 3 learning breadcrumbs (reasoning traces, self-reflection, approval gate as training interface). BUILD doc updated (trigger-composed systemPrompt, memory table, cookbook implementation notes, reasoning trace + approval outcome requirements on Phase 1 steps 1c/1d). Identity writing brief at `docs/identity-writing-brief.md`. DC1 scaffolding in progress (package.json, src/ created). DC2 synthetic fixtures delivered (18 emails).
 - **evryn-team-agents** — PAUSED. #align flag added to ARCHITECTURE.md (do #align before resuming Lucas build). Reusable code being adapted for evryn-backend.
 - **evryn-dev-workspace** — DC's home repo. OC/QC entities added to CLAUDE.md.
 - **evryn-website** — Live at evryn.ai.

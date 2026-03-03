@@ -4,6 +4,11 @@
 
 ---
 
+## 2026-03-02 (Learning architecture research — three docs created)
+
+- **Three learning research docs created** in `docs/research/`: `learning-levels-and-instrumentation.md` (three-level framework, reasoning traces, decision feedback flow, approval gate as training interface), `metacognition-and-self-reflection.md` (two scopes of reflection, Advisory Council, adversarial self-examination, constitutional principles for learning, "rich context softly held"), `ml-transition-and-personalization.md` (ML transition triggers, synthesis process, personalization/correction weights, down-confidenced defaults, conflicting teachings resolution).
+- **Breadcrumbs placed** in `docs/hub/technical-vision.md` (pointer to all three research docs), `evryn-backend/docs/ARCHITECTURE.md` (3 breadcrumbs: reasoning traces in Insight Routing Pipeline, self-reflection note, approval gate as training interface), `evryn-backend/docs/BUILD-EVRYN-MVP.md` (reasoning trace requirement on Phase 1 step 1c, approval outcome tracking on step 1d).
+
 ## 2026-03-02 (Session doc extraction — identity writing brief ready)
 
 - **Identity writing brief** extracted to `evryn-backend/docs/identity-writing-brief.md` — all actionable content from archived session doc (file structure, structural principles, content specs, 14 source materials). Nothing actionable remains only in archive.
