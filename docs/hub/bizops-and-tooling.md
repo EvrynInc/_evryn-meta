@@ -27,7 +27,7 @@
 
 | Tool | Purpose | Status | Cost | Notes |
 |------|---------|--------|------|-------|
-| **Google Workspace** | Email, docs, drive — evryn.ai domain | Active | ~$18/seat/mo (2 seats: Justin + Evryn) | Will scale to ~10 seats when agents come online (~$180/mo) |
+| **Google Workspace** | Email, docs, drive — evryn.ai domain | Active | ~$18/seat/mo (2 seats: Justin + Evryn) | Team agents initially share one account (`agents@evryn.ai`) with per-agent aliases — 3 seats total when Agents come online (~$54/mo). Add individual accounts only if an agent needs account-level capabilities (own Drive, own OAuth, etc.). |
 | **Bitwarden** | Credential and secrets management | Active | Free tier | `.env` backup for all repos |
 | **Zoom** | Business phone number | Active | ~$11/mo | Phone presence only — not using for video |
 | **Canva** | Design | Active | ~$15/mo | Minimal use; kept on discounted rate |
@@ -107,7 +107,7 @@
 | Tool | Purpose | Status | Notes |
 |------|---------|--------|-------|
 | **Linear** | Backlog and task tracking | Active | Free tier. EVR workspace. Replaced ClickUp. |
-| **Slack** | Team communication | Planned | ~$4.38/seat/mo. For agents + Evryn when Lucas comes online (~10 seats = ~$44/mo). |
+| **Slack** | Team communication | Planned | ~$4.38/seat/mo (Justin only). Agents use bot tokens (free, no seat required). |
 | **Notion** | Ideation/notes, historical vault | Active | Light use — some docs still linked. Historical content from early planning. |
 | **Google Drive** | Document storage (Docs & Sheets) | Active | Via Google Workspace |
 

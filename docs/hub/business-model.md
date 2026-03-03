@@ -187,9 +187,9 @@ Evryn uses a trust-filtered market model:
 **Financial reality (as of Feb 2026):** ~$6,125 cash on hand. The original $40K ($15K founder + $25K angel) was substantially depleted by a failed build due to a fraudulent CTO in late 2025.
 
 **Burn rate components** (being refined in updated Financial Model):
-- **Base operating costs** (infrastructure, services, subscriptions, advisor): ~$725/mo today; ~$1,000/mo once agents need their own seats (Google Workspace + Slack scaling). Itemized breakdown in [BizOps spoke](bizops-and-tooling.md).
-- **AI agents** (Lucas + team): ~$800/mo steady state; up to ~$3,500/mo during build sprints
-- **Evryn product** (API costs to serve ~500 new users/month): ~$1,450/mo once live
+- **Base operating costs** (infrastructure, services, subscriptions, advisor): ~$725/mo today; ~$750/mo once agents come online (one additional Google Workspace seat for `agents@evryn.ai` aliases + still only one Slack seat — agents use bot tokens, not user seats). Itemized breakdown in [BizOps spoke](bizops-and-tooling.md).
+- **AI agents** (Anthropic API costs for Lucas + team): ~$800/mo steady state; up to ~$3,500/mo during build sprints
+- **Evryn product** (Anthropic API costs to serve ~500 new users/month): ~$1,450/mo once live
 
 ### Burn Profile
 
@@ -200,9 +200,9 @@ What it costs depending on what's running:
 | Base ops only (current — building, agents paused) | ~$800 | ~7.5 months |
 | Base + product live (low volume) | ~$950 | ~6.5 months |
 | Base + product (ramping, ~200 users) | ~$1,600 | ~4 months |
-| Base + product + agents steady | ~$2,800 | ~2 months |
-| Full steady state (agents + product at scale) | ~$3,250 | ~2 months |
-| Full sprint (agents sprint + product) | ~$4,225 | ~1.5 months |
+| Base + product + agents steady | ~$2,550 | ~2.5 months |
+| Full steady state (agents + product at scale) | ~$3,000 | ~2 months |
+| Full sprint (agents sprint + product) | ~$3,975 | ~1.5 months |
 
 ### Revenue Model (Conservative Estimate)
 
