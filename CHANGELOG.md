@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-03-02 (Sprint launch — Session 4 decisions placed)
+
+- **ADR-012: Trigger-Composed Identity** — Option A confirmed. Trigger script reads identity files, concatenates into single `systemPrompt` string. No settingSources, no filesystem config. Full control over content, ordering, token budget.
+- **ADR-013: TypeScript for Agent Runtime** — TypeScript for agent runtime (v0.2), Python for ML services (v0.3+). Separate services with API boundaries. Python SDK now GA but decision stands on ecosystem maturity + existing codebase.
+- **ADR-014: Operator Module — Slack Only** — Only Justin's verified Slack user ID loads operator module. Email from Justin → conversation mode (recognizes him, kitchen door stays closed).
+- **ADR-015: Situation × Activity Module Matrix** — Modules split into situations (who: gatekeeper, gold-contact, cast-off) and activities (what: onboarding, conversation, triage, operator). Trigger composes: Core + situation + activity + user context.
+- **ADR-016: Curated Memory Over Brute-Force History** — 4-tier memory system (core/working/long-term/consolidation). Curated understanding over raw conversation history. Semantic retrieval as safety net.
+- DC1 scaffolding brief written to `evryn-backend/docs/ac-to-dc.md` (project init, email polling, Supabase, Slack, Railway, Mark Protection)
+- DC2 synthetic fixtures brief written to `_evryn-meta/docs/tasks/dc2-synthetic-fixtures.md` (15-20 realistic test emails)
+- Session 4 captured in session doc (SDK verification, sprint launch status, remaining work items)
+
 ## 2026-03-02 (Pre-Work #6 loose ends)
 
 - **Pre-Work #6 Sessions 1-3 loose ends tied off** — Vertex AI breadcrumb added to evryn-backend ARCHITECTURE.md (External Services, evaluate at v0.3). Beautiful Language v0.9 committed to evryn-backend historical dir. Visual identity breadcrumb added to GTM spoke (video ads section → Beautiful Language source). Python/TS decision status clarified in session doc (final determination at Phase 1 start, not locked in; ADR when decided). Session doc remaining work items reconciled against current state.
