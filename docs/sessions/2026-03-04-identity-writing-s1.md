@@ -1,7 +1,7 @@
 # Session Doc: Identity Writing S1
 **Date:** 2026-03-04
 **Participants:** Justin + AC
-**Status:** In progress — core.md v3 on disk, v4 draft ready in this doc. One tiny remaining edit from Justin pending.
+**Status:** Complete — core.md v5 committed. v4 draft below is superseded; v5 adds: `*"their people"*` in opening, blockquote around vision paragraph, "Your notes must stand on their own" hard constraint.
 
 ---
 

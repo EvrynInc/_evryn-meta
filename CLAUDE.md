@@ -57,6 +57,8 @@ An AI-powered relationship broker. She finds you "your people" — the rare indi
 - `evryn-website` — Marketing site (evryn.ai). Live.
 - `evryn-backend` — Product backend. Active (MVP build).
 
+**AC's known tools (as of March 2026):** Bash/CLI access to Supabase CLI + API, Linear API key (in `_evryn-meta/.env`), GitHub `gh` CLI. This list may grow — verify current capabilities rather than assuming past limitations still hold.
+
 ---
 
 ## Current State
@@ -80,6 +82,8 @@ An AI-powered relationship broker. She finds you "your people" — the rare indi
 **Emerging concepts:** TypeScript, CI/CD, testing as a practice, deployment, database migrations — he understands the *why*, still building the *how*.
 
 **New each phase:** Each build phase introduces unfamiliar tools and terms. Phase glossaries live in the build repo (e.g., `evryn-backend/docs/glossary-phase-0.md`). Don't load them into context — remind Justin they exist, give him new entries when introducing new concepts, and ask him if he wants the new term added to the glossary.
+
+**IDE:** VS Code with GitLens.
 
 ### Communication Rules
 
@@ -158,11 +162,11 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
 
 **Source-of-truth documents require explicit approval from Justin before edits.** Always propose changes rather than making them directly. This applies to: ARCHITECTURE.md, BUILD docs, the Hub and spokes, LEARNINGS.md, AGENT_PATTERNS.md, protocol docs. Excluded: CHANGELOG.md, ADRs, mailbox files.
 
-**Write notes that survive context loss.** You have a strong tendency to compress language that was written a specific way for a reason. Before tightening prose, consider *why* it might have been verbose — the phrasing may carry important nuance, emphasis, or context that a future reader needs. Make sure any redundancy is *necessary* redundancy, but don't assume verbosity is waste. When writing anything that will be read later — session docs, mailbox messages, doc updates, notes — imagine waking up as a fresh instance with very limited context. Will what you've written make sense? When helpful, include the specific context, the *why*, and ideally an example — not just the conclusion. Use active voice with explicit actors ("AC will archive these files," not "the files will be archived") — passive voice creates genuine ambiguity across instances that can't clarify in real time. When integrating older content into newer structures, cross-reference the most recently evolved version of thinking first — newer sources may have resolved ambiguities or superseded positions that the older source still carries.
+**Write notes that survive context loss.** You have a strong tendency to compress language that was written a specific way for a reason. Before tightening prose, consider *why* it might have been verbose — the phrasing may carry important nuance, emphasis, or context that a future reader needs. Make sure any redundancy is *necessary* redundancy, but don't assume verbosity is waste. When writing anything that will be read later — session docs, mailbox messages, doc updates, notes — imagine waking up as a fresh instance with very limited context. Will what you've written make sense? When helpful, include the specific context, the *why*, and ideally an example — not just the conclusion. Use active voice with explicit actors ("AC will archive these files," not "the files will be archived") — passive voice creates genuine ambiguity across instances that can't clarify in real time. When integrating older content into newer structures, cross-reference the most recently evolved version of thinking first — newer sources may have resolved ambiguities or superseded positions that the older source still carries. This overcompression tendency applies to code too, not just prose. Don't clean, refactor, or delete code without full context of why it exists — what looks redundant or messy may be intentional. Make sure you have all of the relevant context before you make changes.
 
 **Where new context goes** (routing table):
 - Project state changes → `docs/current-state.md`
-- Decisions → `docs/decisions/NNN-title.md` (ADR format)
+- Decisions → `docs/decisions/NNN-title.md` (ADR format). **Write ADRs at decision time.** Under compaction pressure, decisions captured only in session docs get lost — the session compresses and the decision evaporates. Session docs capture the discussion; ADRs capture the decision. If a decision was made, write the ADR before the session ends.
 - What was built/changed → `CHANGELOG.md` (brief, in each repo)
 - Learnings & patterns → `LEARNINGS.md` or `AGENT_PATTERNS.md`
 - Session working notes → `docs/` (session doc, absorbed later)
@@ -187,12 +191,11 @@ For *where new content goes*, use the routing table in "Documentation Approach" 
 
 ## Auto-Memory Hygiene
 
-Claude Code maintains an auto-memory file (`.claude/projects/*/memory/MEMORY.md`) that persists across sessions. Rules:
+**Do not use the auto-memory file** (`.claude/projects/*/memory/MEMORY.md`). Claude writes memory entries too concisely — they lose context and become meaningless to future instances. Justin can't review or correct what's in auto-memory (unlike CLAUDE.md, which lives in the repo and is visible).
 
-- **Short-term memory only** — things you need to remember between sessions that don't belong in any persistent doc yet. Once something is captured in actual docs (Hub, CLAUDE.md, LEARNINGS.md, etc.), remove it from memory.
-- **Don't duplicate** what's already in the documentation system. New operational lessons land in `LEARNINGS.md` temporarily, then get promoted to their permanent homes. Agent patterns go in `AGENT_PATTERNS.md`. Memory is for the gap between learning something and writing it up properly.
-- **Keep it lean** — if it's over ~20 lines, it's too much. Audit periodically.
-- **No session state** — don't use memory to carry forward task-specific context. That's what session notes and `docs/current-state.md` are for.
+All operational learnings go directly to the appropriate repo files (proposed, with Justin's approval) — so Justin can vet the wording.
+
+The only acceptable use is truly ephemeral same-day notes (e.g., "mid-task, resuming after lunch") — and even then, prefer a session doc.
 
 ---
 
@@ -248,6 +251,8 @@ After a strategic conversation produces build tasks:
 DC doesn't need to know why we decided something. It needs to know what to build and any constraints.
 
 **Build docs are DC's self-contained source of truth.** By the time DC opens a build doc, every decision is already made, every relevant detail absorbed in-doc. No "go read this other thing." This affects how AC architects — every conversation that produces build work should be moving toward a self-contained spec.
+
+**DC instances are fast — the bottleneck is human tasks.** DC builds that AC estimated to be 2 hrs actually only took 5-7 minutes. Sprint timeline bottlenecks are human tasks (OAuth setup, credentials, service configuration), not coding. Calibrate estimates accordingly.
 
 ---
 
