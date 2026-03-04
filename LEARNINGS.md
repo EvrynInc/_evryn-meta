@@ -46,4 +46,12 @@
 
 ---
 
-*All entries promoted. This file is now a holding pen — new learnings land here temporarily before being promoted to their permanent homes.*
+---
+
+## Unpromoted
+
+34. **"Rich insights" over "structured data" in identity prompts.** Telling the model to collect "structured understanding" makes it cram into predictable fields prematurely. "Rich insights — observations, patterns, signals, emotional cues, things said and unsaid" encourages journaling. Don't structure data before you know what's signal. *(Source: identity writing session 2026-03-04. Promote to: identity-writing-brief or BUILD doc prompt engineering notes.)*
+
+35. **Soul DNA test for always-loaded context.** If it's not part of the soul DNA in *every* moment, it doesn't belong in the always-loaded file. Every token burns every turn. Test: can it be pointed to instead of included? Procedures, operational details, and scenario-specific handling all move to contextual modules. *(Source: identity writing session 2026-03-04. Promote to: AGENT_PATTERNS Modular Context Loading.)*
+
+*New learnings land here temporarily before being promoted to their permanent homes.*

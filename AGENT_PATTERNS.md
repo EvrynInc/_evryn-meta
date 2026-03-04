@@ -25,6 +25,16 @@ Agents that only respond to prompts are assistants. Agents that think ahead, not
 
 Building "proactive infrastructure" is building agency.
 
+### Script-as-Skill
+When you have carefully crafted language (scripts, disclosure arcs, trust-building sequences), don't make the agent recite them verbatim. Give the agent the script AND the reasoning behind it, then let Claude flow naturally while hitting the same targets. The agent understands the intent and adapts to each person's communication style. Verbatim scripts sound robotic; understood scripts sound genuine.
+
+### Two-Layer Pacing
+Pacing guidance splits into two layers with different homes:
+- **Within-conversation pacing** ("give a little at a time, let the person pull for more") is soul DNA — it belongs in the always-loaded core because it governs every turn.
+- **Over-time pacing** ("when to reach out, how long to wait between sessions") is operational — it belongs in activity modules or deterministic code-level timers.
+
+Mixing these layers in the same place either over-loads the core or under-specifies the modules.
+
 ---
 
 ## Cost & Efficiency
