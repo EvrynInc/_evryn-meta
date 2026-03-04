@@ -1,6 +1,6 @@
 # ADR-015: Situation × Activity Module Matrix
 
-**Status:** Accepted
+**Status:** Accepted (revised 2026-03-04)
 **Date:** 2026-03-02
 **Participants:** Justin + AC
 
@@ -20,30 +20,45 @@ Trigger composition becomes: `Core + situation(who) + activity(what) + user cont
 identity/
 ├── core.md                          ← Always loaded. Who Evryn is.
 ├── situations/
+│   ├── operator.md                  ← Justin mode (Slack-only trigger, ADR-014) (v0.2)
 │   ├── gatekeeper.md                ← Mark-type context (v0.2)
-│   ├── gold-contact.md              ← v0.3
-│   └── cast-off.md                  ← v0.3
+│   ├── gold-contact.md              ← v0.3 stub
+│   ├── cast-off.md                  ← v0.3 stub
+│   ├── regular-user.md              ← v0.3 stub
+│   └── new-contact.md               ← v0.3 stub
 ├── activities/
 │   ├── onboarding.md                ← Getting to know someone (shared across situations)
 │   ├── conversation.md              ← Ongoing relationship
-│   ├── triage.md                    ← Sorting inbound email
-│   └── operator.md                  ← Justin mode (Slack-only trigger, see ADR-014)
-└── knowledge/
-    └── company-context.md           ← On-demand, not every query
+│   └── triage.md                    ← Sorting inbound email
+├── public-knowledge/                ← Content Evryn can share with users
+│   └── company-context.md           ← On-demand, not every query
+└── internal-reference/              ← Internal procedures, never surfaced to users
+    ├── canary-procedure.md
+    ├── crisis-protocol.md
+    ├── trust-arc-scripts.md
+    ├── smart-curiosity-full.md
+    └── contact-capture.md
 ```
 
 ## Reasoning
 
 **Why a matrix, not a flat list:**
 - Onboarding a gatekeeper and onboarding a gold contact share ~80% of the same content (rapport techniques, Smart Curiosity, signal listening). A flat list means duplicating that content or maintaining an awkward "shared onboarding" section within each module.
-- The matrix is additive: v0.3 adds new situation modules (gold-contact, cast-off) without rewriting activity modules. New activities (e.g., a future "reflection" activity) work across all situations.
+- The matrix is additive: v0.3 adds new situation modules (gold-contact, cast-off, new-contact, regular-user) without rewriting activity modules. New activities (e.g., a future "reflection" activity) work across all situations.
 - Token efficiency: load exactly two modules (one situation + one activity) rather than one large monolithic module.
 
 **How to think about this:** Situation = "who am I talking to and why are they here?" Activity = "what am I doing right now?" A gatekeeper in onboarding gets `gatekeeper.md + onboarding.md`. The same gatekeeper in ongoing conversation gets `gatekeeper.md + conversation.md`. An unknown email being triaged gets `triage.md` only (no situation needed — triage IS the situation discovery).
 
-**Impact on v0.2:** Only one situation (gatekeeper = Mark) and a few activities. The structure pays off in v0.3 when new situations arrive without rewriting activities.
+**Why operator is a situation, not an activity:** Operator mode answers "who am I talking to?" — Justin, with full access and operational tone. The *activity* Justin is doing can vary: reviewing triage decisions, discussing a user, giving feedback. The operator situation opens both dimensions (tone + information boundaries); the activity it pairs with depends on what Justin is doing.
+
+**Why two on-demand directories (public-knowledge vs internal-reference):** Bright security line. `public-knowledge/` contains content Evryn can share with or paraphrase to users (e.g., "what are you?"). `internal-reference/` contains procedures that guide Evryn's behavior but are never surfaced to users (canary procedure, crisis protocols, trust arc scripts). Keeping them structurally separate makes the audience boundary impossible to miss.
+
+**Activity modules are lean, not monolithic (Option A granularity).** Activity modules carry judgment-level guidance, not detailed procedures. Detailed procedures live in `internal-reference/` and Evryn pulls them via tool when she recognizes she needs them. This keeps token budgets tight (~500-800 tokens per activity module) while detailed procedures only burn tokens when actually needed. The trigger stays simple — it doesn't need to understand conversation content to compose the prompt.
+
+**Impact on v0.2:** Two situations (gatekeeper, operator) and three activities. The structure pays off in v0.3 when new situations arrive without rewriting activities.
 
 ## References
 
 - Session doc: `docs/historical/2026-02-24-mvp-build-work-s1-4.md` (Session 3 Decision 3)
+- Identity writing S2 (operator move, granularity decision, directory rename): `docs/sessions/2026-03-04-identity-writing-s1.md`
 - Trigger composition: ADR-012

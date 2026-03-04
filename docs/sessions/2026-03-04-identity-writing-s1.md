@@ -313,10 +313,10 @@ All from identity-writing-brief.md source list:
 
 ## What's Next
 
-1. **Get Justin's last tiny edit**, apply it, write v4 to `evryn-backend/identity/core.md`, commit+push
-2. **Write remaining identity files.** Exact file list depends on module granularity decision, but at minimum: `situations/gatekeeper.md`, `activities/triage.md`, `activities/onboarding.md`, `activities/conversation.md` (lean), `activities/operator.md`, `knowledge/company-context.md`, v0.3 stubs (`situations/gold-contact.md`, `situations/cast-off.md`)
-3. **Resolve module granularity:** What's an "activity module" vs. a "contextual detail module"? How does the trigger decide what to load per turn? This affects how we write the activity modules.
+1. ~~**Get Justin's last tiny edit**, apply it, write v4 to `evryn-backend/identity/core.md`, commit+push~~ — DONE (v5 on disk)
+2. ~~**Resolve module granularity**~~ — DONE (S2). Option A: lean activity modules + `internal-reference/` for detailed procedures pulled via tool. Operator moved to situations. `knowledge/` → `public-knowledge/` + `internal-reference/`. New situation stubs: `new-contact.md`, `regular-user.md`. All docs updated.
+3. **Write remaining identity files:** `situations/operator.md`, `situations/gatekeeper.md`, `activities/triage.md`, `activities/onboarding.md`, `activities/conversation.md`, `public-knowledge/company-context.md`, `internal-reference/` files (canary-procedure, crisis-protocol, trust-arc-scripts, smart-curiosity-full, contact-capture), v0.3 stubs
 
 ---
 
-*Session in progress. Will update at #lock.*
+*S1 complete. S2 in progress — module writing.*

@@ -1,6 +1,6 @@
 # ADR-012: Trigger-Composed Identity (Option A)
 
-**Status:** Accepted
+**Status:** Accepted (file structure revised 2026-03-04)
 **Date:** 2026-03-02
 **Participants:** Justin + AC
 
@@ -25,16 +25,24 @@ Three options were evaluated over Sessions 1-4 of Pre-Work #6.
 identity/
 ├── core.md                    ← Always loaded. Who Evryn IS.
 ├── situations/
+│   ├── operator.md            ← Justin mode (Slack-only, ADR-014) (v0.2)
 │   ├── gatekeeper.md          ← Mark-type context (v0.2)
-│   ├── gold-contact.md        ← v0.3
-│   └── cast-off.md            ← v0.3
+│   ├── gold-contact.md        ← v0.3 stub
+│   ├── cast-off.md            ← v0.3 stub
+│   ├── regular-user.md        ← v0.3 stub
+│   └── new-contact.md         ← v0.3 stub
 ├── activities/
 │   ├── onboarding.md          ← Getting to know someone
 │   ├── conversation.md        ← Ongoing relationship
-│   ├── triage.md              ← Sorting inbound email
-│   └── operator.md            ← Justin mode (Slack-only)
-└── knowledge/
-    └── company-context.md     ← On-demand
+│   └── triage.md              ← Sorting inbound email
+├── public-knowledge/          ← Content Evryn can share with users
+│   └── company-context.md     ← On-demand
+└── internal-reference/        ← Internal procedures, pulled via tool when needed
+    ├── canary-procedure.md
+    ├── crisis-protocol.md
+    ├── trust-arc-scripts.md
+    ├── smart-curiosity-full.md
+    └── contact-capture.md
 ```
 
 ### Prompt composition per query:
@@ -48,10 +56,13 @@ TRIGGER SCRIPT (code-level, not prompt-level)
     │   → systemPrompt = CORE + situations/gatekeeper + activities/conversation + Mark's profile
     │
     ├─ Slack from Justin's verified user ID?
-    │   → systemPrompt = CORE + activities/operator + full data access
+    │   → systemPrompt = CORE + situations/operator + activities/conversation + full data access
     │
-    └─ Unknown sender?
-        → systemPrompt = CORE + activities/conversation (minimal)
+    ├─ Returning user? (v0.3)
+    │   → systemPrompt = CORE + situations/regular-user + activities/conversation + user profile
+    │
+    └─ Unknown sender? (v0.3)
+        → systemPrompt = CORE + situations/new-contact + activities/onboarding
 ```
 
 ## Reasoning
@@ -79,5 +90,6 @@ Per-query composition doesn't mean siloed. Evryn's memory in Supabase spans all 
 ## References
 
 - Session doc: `docs/historical/2026-02-24-mvp-build-work-s1-4.md` (Sessions 1-4)
+- Identity writing S2 (operator move, granularity, directory rename): `docs/sessions/2026-03-04-identity-writing-s1.md`
 - SDK docs: platform.claude.com/docs/en/agent-sdk/modifying-system-prompts
-- Related: ADR-001 (SDK single-agent architecture)
+- Related: ADR-001 (SDK single-agent architecture), ADR-015 (module matrix)

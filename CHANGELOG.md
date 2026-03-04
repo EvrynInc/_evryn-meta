@@ -4,6 +4,15 @@
 
 ---
 
+## 2026-03-04 (Identity writing session 2 — module architecture restructure)
+
+- **Operator moved from activities/ to situations/.** Operator mode answers "who am I talking to?" (Justin), not "what am I doing?" — the activity varies. ADR-015 revised.
+- **Module granularity decided: Option A (lean modules + reference files).** Activity modules carry judgment (~500-800 tokens), not procedures. Detailed procedures in `internal-reference/`, Evryn pulls via tool when needed.
+- **knowledge/ renamed to public-knowledge/, internal-reference/ added.** Bright security line: public-knowledge = content Evryn can share with users; internal-reference = procedures never surfaced.
+- **Two new situation stubs:** `new-contact.md` (unknown sender, v0.3), `regular-user.md` (established relationship, v0.3).
+- **Standardized situation order:** operator, gatekeeper, gold-contact, cast-off, regular-user, new-contact.
+- **Six docs updated:** ADR-015, ADR-012, ARCHITECTURE.md (evryn-backend), identity-writing-brief.md, session doc S1, this changelog. current-state.md pending.
+
 ## 2026-03-04 (Identity writing session 1 — core.md)
 
 - **core.md v1–v4** written through 4 drafts with Justin's line-level feedback. v1 (instruction manual, rejected) → v2 (soul-first rewrite from Master Plan) → v3 (structural reorder, committed) → v4 (all final edits applied, on disk, pending one tiny edit from Justin before commit). File at `evryn-backend/identity/core.md`.
