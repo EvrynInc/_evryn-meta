@@ -252,3 +252,23 @@ Justin agreed to work through these in order:
 3. **Dynamic loading** — What happens when Evryn discovers things mid-conversation that need new context? The current trigger mechanism composes everything at query start. If Evryn realizes mid-conversation she needs the crisis protocol or a different activity module, how does she get it? (She can pull `internal-reference/` files via tool already, but this may be broader than that.)
 4. **Module shape/format** (S2 Open Question #2) — What should identity modules look like structurally?
 5. **core.md check** — Ensure "gentle guide" quality and Smart Curiosity DNA are explicit enough.
+
+### Trigger Mechanism — Resolved (2026-03-05, late session)
+
+Justin confirmed the trigger mechanism is no longer a black box — the conversational explanation landed. The docs (BUILD doc lines 271-331, ARCHITECTURE.md Identity Composition section) already capture this adequately. No new writing needed.
+
+### SDK Skills Alignment — Reading List for Next Session
+
+This is the next item to tackle. It requires real analysis, not just explanation. Post-compaction, AC needs to re-read:
+
+1. **SDK Skills docs (fresh from web):**
+   - `https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview`
+   - `https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices`
+2. **`evryn-backend/docs/ARCHITECTURE.md`** — Identity Composition section (lines ~438-510) — the current trigger-composed approach + SDK digestion
+3. **`evryn-backend/docs/identity-writing-brief.md`** — the file structure and content specs, because the answer to "are identity modules skills?" depends on understanding what the modules actually contain
+4. **The completed identity files on disk** — `identity/core.md`, `identity/situations/operator.md`, `identity/situations/gatekeeper.md`, `identity/activities/triage.md` — to see what we've actually written and whether it maps to the Skills shape
+5. **`_evryn-meta/docs/research/claude-agent-sdk.md`** — SDK capabilities and limitations
+
+**The question to answer:** Our identity modules serve a fundamentally different purpose than SDK Skills (identity context vs. capability discovery). But: (a) should `internal-reference/` files be Skills that Evryn discovers on-demand? (b) Does the Skills format (concise, operational, clear workflows) inform how we should shape our modules even if we don't use the Skills loading mechanism? (c) Is there a hybrid where the trigger loads identity but Evryn discovers procedures?
+
+Also read the Required Context demands (Hub, technical-vision, trust-and-safety, user-experience) fresh — don't work from compacted versions.
