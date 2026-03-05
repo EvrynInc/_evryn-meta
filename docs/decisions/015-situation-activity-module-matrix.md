@@ -1,6 +1,6 @@
 # ADR-015: Situation × Activity Module Matrix
 
-**Status:** Accepted (revised 2026-03-04)
+**Status:** Accepted (revised 2026-03-05 — activity modules shift to on-demand)
 **Date:** 2026-03-02
 **Participants:** Justin + AC
 
@@ -12,7 +12,7 @@ Session 1 designed identity modules as a flat list: triage, conversation, gateke
 
 **Modules split into two types that stack: situations (who) and activities (what).**
 
-Trigger composition becomes: `Core + situation(who) + activity(what) + user context from Supabase`
+Trigger composition: `Core + situation(who) + person context from Supabase`. Activity modules are on-demand — Evryn pulls them via tool when the conversation needs them, guided by pointers in core.md's "available activities" section. Exception: triage is always trigger-loaded (deterministic from email headers).
 
 ### File structure
 
@@ -45,9 +45,9 @@ identity/
 **Why a matrix, not a flat list:**
 - Onboarding a gatekeeper and onboarding a gold contact share ~80% of the same content (rapport techniques, Smart Curiosity, signal listening). A flat list means duplicating that content or maintaining an awkward "shared onboarding" section within each module.
 - The matrix is additive: v0.3 adds new situation modules (gold-contact, cast-off, new-contact, regular-user) without rewriting activity modules. New activities (e.g., a future "reflection" activity) work across all situations.
-- Token efficiency: load exactly two modules (one situation + one activity) rather than one large monolithic module.
+- Token efficiency: situation modules are lean context-setters; activity modules only burn tokens when actually needed (on-demand loading).
 
-**How to think about this:** Situation = "who am I talking to and why are they here?" Activity = "what am I doing right now?" A gatekeeper in onboarding gets `gatekeeper.md + onboarding.md`. The same gatekeeper in ongoing conversation gets `gatekeeper.md + conversation.md`. An unknown email being triaged gets `triage.md` only (no situation needed — triage IS the situation discovery).
+**How to think about this:** Situation = "who am I talking to and why are they here?" (trigger-loaded). Activity = "what am I doing right now?" (on-demand — Evryn determines this from the conversation, not the trigger). A gatekeeper in onboarding: the trigger loaded `gatekeeper.md`; Evryn recognized onboarding was appropriate and pulled `onboarding.md`. The same gatekeeper with a quick question: the trigger loaded `gatekeeper.md`; Evryn answered naturally without pulling any activity module. A forwarded email being triaged: the trigger loaded `triage.md` deterministically (the only activity the trigger can always determine from email headers).
 
 **Why operator is a situation, not an activity:** Operator mode answers "who am I talking to?" — Justin, with full access and operational tone. The *activity* Justin is doing can vary: reviewing triage decisions, discussing a user, giving feedback. The operator situation opens both dimensions (tone + information boundaries); the activity it pairs with depends on what Justin is doing.
 

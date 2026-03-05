@@ -45,25 +45,29 @@ identity/
     └── contact-capture.md
 ```
 
-### Prompt composition per query:
+### Prompt composition per query (two-phase model):
+
+The trigger loads identity and context; Evryn determines her own activity from the conversation. Activity modules are on-demand except in two deterministic cases.
+
 ```
-TRIGGER SCRIPT (code-level, not prompt-level)
+PHASE 1: TRIGGER (code-level)
     │
-    ├─ Forwarded email detected?
-    │   → systemPrompt = CORE + situations/gatekeeper + activities/triage + user context
+    ├─ Always: Core.md (first, for prompt caching)
+    ├─ Identify sender → Supabase lookup → load situation module
+    ├─ Load person context from Supabase (lifecycle, recent interactions, notes)
+    └─ Deterministic activity? (only two cases)
+        ├─ Forwarded email detected → triage.md
+        └─ Operator situation → no default activity loaded
+
+PHASE 2: EVRYN (prompt-level)
     │
-    ├─ Email from Mark's verified address?
-    │   → systemPrompt = CORE + situations/gatekeeper + activities/conversation + Mark's profile
-    │
-    ├─ Slack from Justin's verified user ID?
-    │   → systemPrompt = CORE + situations/operator + activities/conversation + full data access
-    │
-    ├─ Returning user? (v0.3)
-    │   → systemPrompt = CORE + situations/regular-user + activities/conversation + user profile
-    │
-    └─ Unknown sender? (v0.3)
-        → systemPrompt = CORE + situations/new-contact + activities/onboarding
+    ├─ Reads the actual message
+    ├─ Determines appropriate activity from person context + message content
+    ├─ Pulls activity-specific guidance via tool IF needed
+    └─ Responds naturally, writes observations back to Supabase
 ```
+
+Core.md includes an "available activities" section — lightweight pointers so Evryn knows what on-demand resources exist and when to pull them.
 
 ## Reasoning
 
@@ -145,6 +149,6 @@ The SDK Skills mechanism doesn't add value for the discovery part because the ac
 **ADR-012 decision confirmed with additional evidence.** The SDK Skills framework is designed for capability discovery in a developer tool. Our identity modules serve a different purpose: identity composition for a conversational agent. We adopt Skills *format principles* for module authoring; we don't adopt the Skills *loading mechanism*.
 
 Full SDK feature usage:
-- **Use:** `query()`, hooks, MCP servers, sessions, subagents
-- **Don't use:** `settingSources`, Skills framework, presets
+- **Use:** `query()`, hooks, MCP servers, subagents
+- **Don't use:** `settingSources`, Skills framework, presets, SDK sessions for user-facing interaction continuity (relationship continuity lives in Supabase, not SDK session persistence — each `query()` call is a discrete task)
 - **Adopt as design principles:** Skills best practices for conciseness, progressive disclosure, degrees of freedom, one-level-deep references
