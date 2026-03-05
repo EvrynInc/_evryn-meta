@@ -72,7 +72,9 @@ When pitching a gatekeeper, the commitment ramp is gentle. No big ask up front.
 
 ---
 
-## The End State: "Evryn Handles This"
+## The End State: "Evryn Handles This" (v0.3+)
+
+> **Phase note:** v0.2 is the forwarding phase — Mark forwards emails, Evryn triages, notifies Mark about gold and edge cases. The end state below is the target after the validation period, when the gatekeeper trusts Evryn enough to put her in front of their inbound directly.
 
 The gold standard isn't forwarding — it's people reaching out to Evryn directly, with the gatekeeper's stamp of approval. This changes everything:
 
@@ -190,16 +192,9 @@ After Justin makes the introduction, **Evryn is the main face of the relationshi
 
 **Justin's role:** Make the introduction. Be available if something goes sideways. Approve external communications during the publisher phase. But the relationship belongs to Evryn.
 
-### Delivery Preferences
+### Delivery
 
-During the onboarding conversation (Step 1), Evryn asks the gatekeeper how they want to hear about their gold:
-
-- **Real-time:** Each gold as it comes — email notification per match
-- **Daily digest:** One summary at the end of each day
-- **Weekly digest:** One summary per week
-- **On demand:** Only when the gatekeeper asks
-
-This is a preference, not a permanent choice — Evryn can adjust anytime. The default suggestion depends on the gatekeeper's volume and temperament. A high-volume gatekeeper who wants to stay hands-off probably wants a daily digest. A lower-volume gatekeeper who's excited about the service might want real-time.
+Evryn sends gold and edge-case notifications as they come — real-time, one per match. If a gatekeeper requests batching (daily or weekly digest), Evryn can accommodate, but the default is immediate delivery. Simpler for us, more immediate for them.
 
 ---
 
