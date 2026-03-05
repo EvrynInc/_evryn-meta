@@ -284,3 +284,118 @@ Full reading list completed (Hub + 3 spokes fresh, SDK Skills docs from web, ARC
 **(c) Hybrid?** We're already doing it. Trigger loads identity; Evryn discovers procedures via tool reads guided by activity module references.
 
 **Captured in:** ADR-012 addendum (full analysis), ARCHITECTURE.md provisional note replaced with resolved note.
+
+### Dynamic Loading, Sessions, and Activity Determination — Resolved (2026-03-05, same session)
+
+This discussion started as "what happens when Evryn discovers things mid-conversation that need new context?" and expanded into a fundamental refinement of the trigger-composed architecture. Justin challenged several assumptions; the resulting model is cleaner and more flexible.
+
+#### Key Insight: The Trigger Can't Know the Activity (Most of the Time)
+
+The original architecture had the trigger deterministically selecting the activity module: forwarded email → triage, email from Mark → conversation or onboarding. Justin challenged this with a concrete scenario: Mark emails on Friday before the planned Monday onboarding start, with a quick question. The trigger sees Mark's email → looks up Supabase → finds lifecycle: "pre-onboarding." If it loads `onboarding.md`, Evryn wakes up framed as "time to onboard this person" — which is wrong. Mark just wants a quick answer.
+
+**The trigger can only deterministically know the activity in two cases:**
+- Forwarded email → triage (detectable from email headers)
+- Slack from Justin's verified user ID → operator (channel determines it)
+
+Everything else depends on what the person actually said — which is the message content, which only Evryn should interpret. The trigger can't (and shouldn't) read message content to determine activity.
+
+#### Refined Trigger Model
+
+```
+TRIGGER (code-level):
+    Core.md (always, first for caching)
+  + Situation module (from Supabase: who is this person — gatekeeper, operator, etc.)
+  + Person context (from Supabase: lifecycle state, recent interactions, notes, cross-channel summary)
+  + Activity module (ONLY if deterministic: triage for forwards, operator situation for Slack)
+
+EVRYN (prompt-level):
+    Reads the actual message
+  + Sees where this person is in their lifecycle (from person context in systemPrompt)
+  + Determines what activity is appropriate
+  + Pulls activity-specific guidance via tool IF the conversation needs it
+  + Responds naturally, writes observations back to Supabase
+```
+
+**Activity modules shift from "trigger-loaded" to "Evryn-loaded on demand"** — except triage (always deterministic from email headers). They're essentially internal-reference files that Evryn pulls when she recognizes the situation calls for it.
+
+**Core.md becomes Evryn's activity hub.** It needs an "available activities" section — lightweight pointers telling Evryn what resources exist and when to pull them. Without this, Evryn wouldn't know onboarding.md exists when Mark says "you know what, let's just get started now." Core.md is her hub for discovering what she can do.
+
+**Mark's Friday email produces the right behavior:** Evryn sees Mark's context ("start Monday"), answers his question naturally with his context in the back of her mind, closes with something like "glad I could help — looking forward to Monday!" If mid-conversation he says "let's get started now," she pulls onboarding.md and shifts naturally.
+
+#### Unknown Sender Routing (Open Item)
+
+Justin identified a gap: when someone emails who isn't in Supabase, Evryn needs first-string routing. The "is this a person?" classification (user/ignore/bad_actor) currently lives in triage.md, but triage is specifically for forwarded-email classification against gatekeeper criteria. A direct email from an unknown sender isn't a triage event — it's a first-contact evaluation.
+
+This might need:
+- A separate first-contact routing module (lightweight: is this a real person? spam? scam?)
+- Or: the trigger creates a minimal user record for any unknown sender, and Evryn evaluates from there
+- Or: the person/ignore/bad_actor classification from triage.md gets extracted into a shared utility
+
+**Not resolved.** Needs further discussion. For v0.2, the only inbound channels are Mark's forwards (triage) and Mark/Justin direct messages (known users), so this isn't blocking — but it needs to be solved before v0.3 when unknown senders become common.
+
+#### SDK Sessions: Not Used for User-Facing Interactions
+
+Justin walked through why SDK sessions don't serve Evryn's needs:
+
+1. **Sessions don't span channels** — Evryn needs cross-channel awareness (email + text + web app = same relationship)
+2. **We can't control SDK compaction** — the SDK decides what to compress; we need full control
+3. **Sessions create a second source of truth** alongside Supabase — inconsistency risk
+4. **We need Supabase memory ANYWAY** for cross-channel awareness and persistence
+5. **Sessions expire/degrade** — we'd have to keep our own books regardless for reliability
+
+**Decision: Memory-managed context composition instead of SDK sessions.** The trigger pulls everything from Supabase and assembles the right context view per query. No session persistence dependency. Supabase is the single source of truth.
+
+Justin's model for context composition:
+```
+[User's story — synthesized understanding, including lightweight cross-channel summaries]
++ [Last N messages from this thread/channel — using channel-specific thread IDs]
++ [Semantic search of relevant past interactions — v0.3+]
+```
+
+**Channel/thread identification:** Messages in Supabase need a channel + thread identifier. Gmail provides thread IDs. Slack provides thread IDs. Web app would have its own session concept. The trigger uses these to pull "last N messages from the current thread."
+
+**Channel-aware responses:** Evryn should be aware of channel security. She might say "let me answer this in the app — email isn't very secure for this kind of conversation." This is a natural extension of her care for users.
+
+**Semantic search is v0.3+.** For v0.2, the trigger pulls the N most recent messages from the current thread. The messages table stores all messages permanently.
+
+#### Prompt Caching (v0.3+ Optimization)
+
+Anthropic's prompt caching works on the PREFIX of the system prompt — longest matching prefix gets cached automatically within a ~5-minute TTL.
+
+**We control the cutoff by controlling the order:**
+- Core.md first → cached across ALL Evryn queries (stays warm at scale with many users)
+- Situation module second → cached for consecutive same-situation queries
+- Dynamic context (person profile, recent messages) last → never cached
+
+Justin asked: "can we stipulate where the cutoff is?" Answer: yes, by ordering. Core.md first = always cacheable. At scale with constant activity, core.md (~1,500 tokens) stays cached continuously — every Evryn call benefits.
+
+**Not a v0.2 concern.** The bulk of cost is in message content, not the identity prefix. Drop a note for v0.3+: "if prefix costs become material, investigate cache breakpoint optimization and prefix ordering."
+
+#### Implications for Existing Docs (To Capture in Persistent Docs)
+
+These changes affect:
+1. **ADR-012** — trigger composition diagram needs updating (activity modules shift to on-demand except triage)
+2. **ADR-015** — module matrix needs updating (activities are no longer always trigger-loaded)
+3. **ARCHITECTURE.md** — trigger composition section, Identity Composition section
+4. **identity-writing-brief.md** — activity module specs may need revision (they're now pull-on-demand resources)
+5. **core.md** — needs an "available activities" section (Evryn's activity hub)
+6. **ADR-012 addendum on SDK features** — update "Use: sessions" to clarify we use query() but NOT sessions for user-facing interactions
+
+**Not all of these need to happen before v0.2 ships.** Priority:
+- Core.md activity hub section — needed before identity writing continues
+- ARCHITECTURE.md trigger diagram — needed for DC to build correctly
+- ADR updates — can follow, but should happen soon
+
+#### Items Still Open (from the original S2 list)
+
+1. ~~Trigger mechanism~~ — Resolved
+2. ~~SDK Skills alignment~~ — Resolved
+3. ~~Dynamic loading~~ — Resolved (this section)
+4. **Module shape/format** (S2 Open Question #2) — Partially informed by this session (Skills format principles apply, activity modules are now on-demand). Still needs explicit resolution.
+5. **core.md check** — Now also includes adding the "available activities" hub section.
+
+#### Commits
+
+- ADR-012 addendum (SDK Skills): `_evryn-meta` `3d78277`
+- ARCHITECTURE.md resolved note: `evryn-backend` `8201171`
+- This session doc update: pending commit
