@@ -1,6 +1,6 @@
 # ADR-012: Trigger-Composed Identity (Option A)
 
-**Status:** Accepted (file structure revised 2026-03-04)
+**Status:** Accepted (revised 2026-03-05 — simplified trigger, on-demand modules)
 **Date:** 2026-03-02
 **Participants:** Justin + AC
 
@@ -18,56 +18,46 @@ Three options were evaluated over Sessions 1-4 of Pre-Work #6.
 
 ## Decision
 
-**Option A: The trigger script composes everything.** It reads identity files (core + situation module + activity module), concatenates them with user context from Supabase, and passes the result as a single `systemPrompt` string to `query()`. No `settingSources`, no filesystem-based config loading.
+**Option A: The trigger script composes everything.** It reads core identity and person context from Supabase, concatenates them into a single `systemPrompt` string, and passes it to `query()`. No `settingSources`, no filesystem-based config loading.
 
-### Identity file structure (Situation × Activity matrix):
-```
-identity/
-├── core.md                    ← Always loaded. Who Evryn IS.
-├── situations/
-│   ├── operator.md            ← Justin mode (Slack-only, ADR-014) (v0.2)
-│   ├── gatekeeper.md          ← Mark-type context (v0.2)
-│   ├── gold-contact.md        ← v0.3 stub
-│   ├── cast-off.md            ← v0.3 stub
-│   ├── regular-user.md        ← v0.3 stub
-│   └── new-contact.md         ← v0.3 stub
-├── activities/
-│   ├── onboarding.md          ← Getting to know someone
-│   ├── conversation.md        ← Ongoing relationship
-│   └── triage.md              ← Sorting inbound email
-├── public-knowledge/          ← Content Evryn can share with users
-│   └── company-context.md     ← On-demand
-└── internal-reference/        ← Internal procedures, pulled via tool when needed
-    ├── canary-procedure.md
-    ├── crisis-protocol.md
-    ├── trust-arc-scripts.md
-    ├── smart-curiosity-full.md
-    └── contact-capture.md
-```
+**Identity file structure:** See ARCHITECTURE.md (canonical reference for the file tree). The structure follows the Situation × Activity matrix (ADR-015) with public-knowledge and internal-reference directories.
 
-### Prompt composition per query (two-phase model):
+### The Simplified Trigger
 
-The trigger loads identity and context; Evryn determines her own activity from the conversation. Activity modules are on-demand except in two deterministic cases.
+The trigger's job is minimal — it loads identity and context, then Evryn determines both situation and activity from the conversation:
 
 ```
-PHASE 1: TRIGGER (code-level)
+TRIGGER (code-level):
     │
-    ├─ Always: Core.md (first, for prompt caching)
-    ├─ Identify sender → Supabase lookup → load situation module
-    ├─ Load person context from Supabase (lifecycle, recent interactions, notes)
-    └─ Deterministic activity? (only two cases)
-        ├─ Forwarded email detected → triage.md
-        └─ Operator situation → no default activity loaded
+    ├─ Identify sender → Supabase lookup → load person context
+    ├─ Compose systemPrompt: Core.md + person context
+    ├─ ONE hard-coded exception:
+    │   └─ Slack from Justin's verified user ID → add operator.md to systemPrompt
+    ├─ If forwarded email → store in emailmgr_items (data capture)
+    └─ Call query(systemPrompt, incomingMessage)
 
-PHASE 2: EVRYN (prompt-level)
+EVRYN (prompt-level):
     │
-    ├─ Reads the actual message
-    ├─ Determines appropriate activity from person context + message content
-    ├─ Pulls activity-specific guidance via tool IF needed
-    └─ Responds naturally, writes observations back to Supabase
+    ├─ Reads the incoming message (passed as prompt, NOT in systemPrompt)
+    ├─ Determines situation from message + person context
+    │   (pulls situation module via tool if needed)
+    ├─ Determines activity from message + person context
+    │   (pulls activity module via tool if needed)
+    └─ Responds, writes observations back to Supabase
 ```
 
-Core.md includes an "available activities" section — lightweight pointers so Evryn knows what on-demand resources exist and when to pull them.
+The incoming message is the `prompt` parameter to `query()`, never part of the `systemPrompt`. This is a security boundary — email content is untrusted user input and must not be in system-level instructions where prompt injection could manipulate Evryn's identity or access controls.
+
+Core.md includes an "available modules" section — lightweight pointers so Evryn knows what situations and activities she can pull on demand. Operator is deliberately excluded from this section (see ADR-017 for the three-layer operator security model).
+
+### Evolution of this decision
+
+This ADR has been revised as the trigger model was refined:
+- **Original (2026-03-02):** Trigger deterministically loads situation + activity based on person profile and interaction type
+- **Activity shift (2026-03-05):** Activity modules move to on-demand — Evryn determines activity from the conversation, not the trigger (ADR-015 revised)
+- **Simplified trigger (2026-03-05):** Situations also move to on-demand — trigger only loads core + person context, with operator as the sole hard-coded exception (ADR-017). Forward ≠ triage — all forwards go to emailmgr_items, Evryn classifies intent.
+
+The core decision (Option A: trigger composes systemPrompt via code) remains unchanged. What changed is how *much* the trigger composes — it got radically simpler.
 
 ## Reasoning
 
@@ -77,26 +67,26 @@ Core.md includes an "available activities" section — lightweight pointers so E
 
 **Why Option A works:**
 1. Full control over content, ordering, and token budget
-2. Prompt caching optimization: stable core first (cacheable ~90% cost reduction), then module, then dynamic context
-3. Security by construction: operator module only loads when code decided to load it — prompt injection in email can't reach operator mode
+2. Prompt caching optimization: stable core first (cacheable ~90% cost reduction), then dynamic context
+3. Security by construction: operator module only loads when code decided to load it — prompt injection in email can't reach operator mode (see ADR-017 for three-layer defense)
 4. User isolation by construction: trigger loads only the specific user's data from Supabase
 5. No dependency on SDK layering behavior — immune to SDK changes
 6. "More custom code" = reading files and concatenating strings — trivial
 
-**What we DON'T lose:** Hooks, MCP servers, sessions, subagents — all defined programmatically in `query()` options regardless of systemPrompt approach.
+**What we DON'T lose:** Hooks, MCP servers, subagents — all defined programmatically in `query()` options regardless of systemPrompt approach.
 
 **What we handle differently:** "Output styles" (user vs operator tone/info boundaries) are achieved by composing different prompts per-query via the trigger — actually more powerful because Evryn switches modes email-to-email, not session-to-session.
 
 ## Cross-channel awareness note
 
-Per-query composition doesn't mean siloed. Evryn's memory in Supabase spans all channels. When the trigger composes for a text message, it pulls recent email interactions from the messages table too. "Sessions" in the SDK sense are per-task; relationship continuity lives in the memory layer, not the SDK session.
+Per-query composition doesn't mean siloed. Evryn's memory in Supabase spans all channels. When the trigger composes for a text message, it pulls recent email interactions from the messages table too. Relationship continuity lives in the memory layer (Supabase), not SDK session persistence — each `query()` call is a discrete task.
 
 ## References
 
-- Session doc: `docs/historical/2026-02-24-mvp-build-work-s1-4.md` (Sessions 1-4)
-- Identity writing S2 (operator move, granularity, directory rename): `docs/sessions/2026-03-04-identity-writing-s1.md`
+- Session doc: `2026-02-24-mvp-build-work-s1-4.md` (Sessions 1-4)
+- Identity Writing S2: `2026-03-04-identity-writing-s2.md` (trigger refinement, simplified model)
 - SDK docs: platform.claude.com/docs/en/agent-sdk/modifying-system-prompts
-- Related: ADR-001 (SDK single-agent architecture), ADR-015 (module matrix)
+- Related: ADR-001 (SDK single-agent architecture), ADR-015 (module matrix), ADR-017 (per-context situations, operator security)
 
 ---
 
@@ -117,20 +107,20 @@ Designed for Claude-as-developer: "I see you need to process a PDF — let me lo
 
 ### (a) Should `internal-reference/` files become Skills?
 
-**No.** Our activity modules already serve the role Skills metadata plays — telling Evryn what resources exist and when to use them — but more precisely. Activity modules only expose references relevant to the current activity; Skills metadata would load for *every* query regardless of activity.
+**No.** Core.md's "available modules" section already serves the role Skills metadata plays — telling Evryn what resources exist and when to use them — but more precisely. The available modules section only exposes what Evryn should know about; Skills metadata would load for *every* query regardless of context.
 
-The mechanism already works: Evryn reads internal-reference files via tool when she recognizes she needs them (guided by references in her activity module). This is functionally identical to Skills Level 2-3 loading, but scoped by activity rather than globally visible.
+The mechanism already works: Evryn reads internal-reference files via tool when she recognizes she needs them (guided by references in her situation/activity modules). This is functionally identical to Skills Level 2-3 loading, but scoped by context rather than globally visible.
 
-Additional consideration: Skills metadata is visible to Claude at startup. Internal-reference files should only be accessible when the right activity module is loaded. Making them Skills would expose their existence even in contexts where Evryn shouldn't know about them.
+Additional consideration: Skills metadata is visible to Claude at startup. Internal-reference files should only be accessible when the right module is loaded. Making them Skills would expose their existence even in contexts where Evryn shouldn't know about them.
 
 ### (b) Does the Skills format inform our module shape?
 
 **Yes — and it validates decisions already made.** Key principles that transfer:
 
 - **"Claude is already smart — only add what it doesn't know"** → Reinforces lean modules (~500-800 tokens)
-- **"Progressive disclosure: overview → details on demand"** → This IS our architecture (activity module → internal-reference)
+- **"Progressive disclosure: overview → details on demand"** → This IS our architecture (core.md → situation/activity module → internal-reference)
 - **"Set appropriate degrees of freedom"** → Maps to our guidance vs. rules distinction
-- **"Keep references one level deep"** → Internal-reference files should link directly from activity modules, never from other internal-reference files
+- **"Keep references one level deep"** → Internal-reference files should link directly from modules, never from other internal-reference files
 - **"Under 500 lines for main file"** → Validates our token budgets
 
 What doesn't transfer: Skills use third-person descriptions ("Processes Excel files"). Our modules correctly use second-person ("You're talking to...") because they're identity, not capability declarations.
@@ -138,11 +128,12 @@ What doesn't transfer: Skills use third-person descriptions ("Processes Excel fi
 ### (c) Is there a hybrid?
 
 **We're already doing it.** The current architecture IS a hybrid:
-- **Trigger loads identity:** Core + situation + activity + user context from Supabase
-- **Evryn discovers procedures:** Reads internal-reference files via tool when she recognizes the need, guided by references in her activity module
+- **Trigger loads identity:** Core + person context from Supabase (+ operator.md for Justin on Slack)
+- **Evryn discovers her context:** Pulls situation and activity modules on demand when she determines what the conversation needs
+- **Evryn discovers procedures:** Reads internal-reference files via tool, guided by references in her modules
 - **Evryn discovers public knowledge:** Reads public-knowledge files via tool when users ask about her
 
-The SDK Skills mechanism doesn't add value for the discovery part because the activity modules already serve as the metadata layer — and they're more precise.
+The SDK Skills mechanism doesn't add value for the discovery part because core.md's available modules section already serves as the metadata layer — and it's more precise.
 
 ### Conclusion
 
