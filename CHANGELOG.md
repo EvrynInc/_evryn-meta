@@ -4,6 +4,14 @@
 
 ---
 
+## 2026-03-05 (Structural work to support identity write — context discipline)
+
+- **Required Context pattern added to `evryn-backend/docs/ARCHITECTURE.md`** — doc-level header declaring 4 must-read docs with consequence language ("without it, you'll..."), plus per-section context notes on all 9 `##` sections.
+- **SDK knowledge digested inline** in ARCHITECTURE.md Identity Composition section — what SDK offers natively (settingSources + Skills), why we diverge (trigger knows context, prompt caching, structural security), what we DO use (query, hooks, MCP, sessions, subagents). Provisional note: SDK alignment not yet fully resolved.
+- **Context Discipline section added to AC's CLAUDE.md** — "always read the architecture doc before build-level work, honor its Required Context section."
+- **Required Context stub added to `evryn-team-agents/docs/ARCHITECTURE.md`** — placeholder for when Lucas build resumes.
+- **Root cause diagnosed:** AC keeps losing SDK context because no reading path points to the SDK research with urgency. ARCHITECTURE.md documented the trigger approach but never explained what the SDK offers natively — fresh instances see only the answer, never the question.
+
 ## 2026-03-05 (Identity writing S2 — modules + BUILD workflow + structural rethink)
 
 - **Situation modules written and pushed:** `operator.md` (Justin mode, approval workflow), `gatekeeper.md` (gatekeeper relationship context — needs lifecycle fix: "What You Know" → "What You Should Know").
