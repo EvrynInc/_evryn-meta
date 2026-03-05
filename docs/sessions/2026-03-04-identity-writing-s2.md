@@ -1,7 +1,7 @@
 # Session Doc: Identity Writing S2
 **Date:** 2026-03-04 through 2026-03-05
 **Participants:** Justin + AC
-**Status:** In progress — paused at onboarding module rewrite after structural rethink
+**Status:** In progress — structural context-discipline fix landed (Phase 6), open questions remain (trigger mechanism, SDK alignment, dynamic loading, module shape, core.md)
 
 ---
 
@@ -200,3 +200,55 @@ All from S1 list plus:
 - `_evryn-meta/docs/hub/user-experience.md` — onboarding, anticipation mode, Training Mode, early match calibration
 - `_evryn-meta/docs/hub/trust-and-safety.md` — trust loop, canary principle, crisis protocols, cultural trust fluency
 - Claude Agent SDK skills docs (overview + best practices) — via WebFetch during session
+
+---
+
+## Phase 6: Structural Work — Context Discipline (2026-03-05, separate session "3/5/26a")
+
+Separate session from the identity writing proper. Justin identified a recurring meta-problem: AC keeps losing SDK context between sessions, and more broadly, fresh instances working deep in a build lose awareness of foundational docs and make decisions that feel right zoomed in but are wrong from altitude.
+
+### Root Cause Diagnosed
+
+AC keeps losing SDK context because **no reading path points to it with urgency.** The SDK research lives in `_evryn-meta/docs/research/claude-agent-sdk.md`, but ARCHITECTURE.md only documented the trigger-composed approach without ever explaining what the SDK *offers* natively. Fresh instances see only the answer (we use trigger composition), never the question (what alternatives the SDK provides and why we chose differently). The identity-writing-brief doesn't mention the SDK at all. CLAUDE.md mentions "Claude Agent SDK" in passing with no instruction to understand it.
+
+### Three-Layer Structural Fix (All Committed and Pushed)
+
+**Layer 1: Required Context pattern in `evryn-backend/docs/ARCHITECTURE.md`**
+
+Doc-level header declaring 4 must-read docs with consequence language:
+- The Hub — "without it, you'll misframe what the system is for"
+- Technical Vision — "without it, you'll make design decisions that conflict with where the system is heading"
+- Trust & Safety — "without it, you'll miss constraints that keep Evryn from inadvertently betraying user trust"
+- User Experience — "without it, you'll build technically correct systems that feel wrong to users"
+
+Plus **per-section context notes** on all 9 `##` sections. Most say "doc-level reading is sufficient." Agent Architecture points to the SDK research. Onboarding Patterns points to the identity-writing-brief. Security notes the principles-vs-implementation split. This gives 100% clarity on when to follow down vs when to leave it alone.
+
+Justin's key insight on the canary principle language: "you'll miss the canary principle" means nothing to an LLM who doesn't know what that is. Changed to describe the *consequence*: "you'll miss constraints that keep Evryn from inadvertently betraying user trust." Skip the name, say what it *is*.
+
+**Layer 2: SDK knowledge digested inline in ARCHITECTURE.md Identity Composition section**
+
+Replaced the brief "Why not SDK-native loading" paragraph with a full explanation of what the SDK offers natively (settingSources + Skills framework), why we diverge (trigger knows context before Claude wakes up, prompt caching, structural security), and what we DO use (query, hooks, MCP, sessions, subagents). Marked provisional — the full SDK/Skills alignment question (Open Question #1) is not yet resolved.
+
+Also added a note that Justin needs a deeper, more concrete explanation of how the trigger mechanism actually works — the current description is too abstract and feels like a "black box."
+
+**Layer 3: Context Discipline section in AC's CLAUDE.md**
+
+New section between Architectural Mandate and Security Mindset: "Always read the architecture doc before build-level work. Honor its Required Context section. When it says 'read X or you'll misunderstand Y,' read X. When it says no extra context needed, don't burn tokens."
+
+Also stubbed the Required Context pattern into `evryn-team-agents/docs/ARCHITECTURE.md` for when the Lucas build resumes.
+
+### Commits
+
+- `evryn-backend` `7cdf9ec`: "ARCHITECTURE.md: add Required Context pattern + digested SDK knowledge"
+- `_evryn-meta` `f6ec783`: "CLAUDE.md: add Context Discipline section"
+- `evryn-team-agents` `fc86104`: "ARCHITECTURE.md: stub Required Context section for future development"
+
+### Open Items from This Session (To Tackle Next)
+
+Justin agreed to work through these in order:
+
+1. **Trigger mechanism deep-dive** — Justin flagged this as a "black box" that's "fucking with" him. He needs a concrete explanation of what the trigger code actually does — not abstract descriptions, but "here's what happens step by step when an email arrives." Probably belongs in ARCHITECTURE.md with a note that Justin is building his mental model.
+2. **SDK Skills alignment** (S2 Open Question #1) — Full relationship between identity modules and SDK Skills framework.
+3. **Dynamic loading** — What happens when Evryn discovers things mid-conversation that need new context? The current trigger mechanism composes everything at query start. If Evryn realizes mid-conversation she needs the crisis protocol or a different activity module, how does she get it? (She can pull `internal-reference/` files via tool already, but this may be broader than that.)
+4. **Module shape/format** (S2 Open Question #2) — What should identity modules look like structurally?
+5. **core.md check** — Ensure "gentle guide" quality and Smart Curiosity DNA are explicit enough.
