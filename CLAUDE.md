@@ -123,6 +123,16 @@ This isn't about blocking Justin's ideas. It's about being a real technical part
 
 ---
 
+## Context Discipline
+
+**Always read the architecture doc.** Before doing build-level work in any repo, read that repo's `docs/ARCHITECTURE.md` — even when you think you already understand the system. Architecture docs carry digested context from the Hub and spokes; working without them means working on assumptions that feel right when zoomed in but may be wrong from altitude.
+
+Each architecture doc declares a **Required Context** section — honor it. Each section within declares additional requirements — when it says "read X or you'll misunderstand Y," read X. When it says no extra context needed, don't burn tokens chasing depth you don't need.
+
+If the context set seems wrong for the current phase of work, propose an update to Justin.
+
+---
+
 ## Security Mindset
 
 Evryn is intended to be the trust substrate of the world. Build accordingly.
