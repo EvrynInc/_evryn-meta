@@ -4,6 +4,16 @@
 
 ---
 
+## 2026-03-05 (SDK Skills alignment + dynamic loading/sessions/activity determination)
+
+- **ADR-012 addendum written** — SDK Skills framework evaluated against identity architecture. Skills format principles adopted; loading mechanism not needed. Activity modules already serve as discovery layer more precisely than Skills metadata.
+- **ARCHITECTURE.md provisional note → resolved** — Skills alignment no longer open.
+- **Activity modules shift from trigger-loaded to on-demand** — trigger can only deterministically know triage (forwarded email) and operator (Slack). Everything else: Evryn reads person context and determines activity, pulls activity guidance via tool if needed.
+- **SDK sessions NOT used for user-facing interactions** — memory-managed context from Supabase instead. Single source of truth, cross-channel by default, full control over what's summarized.
+- **Core.md becomes Evryn's activity hub** — needs "available activities" section so Evryn knows what on-demand resources exist.
+- **Prompt caching strategy clarified** — prefix ordering (core first) gives automatic caching; optimization deferred to v0.3+.
+- **Unknown sender routing identified as open item** — person/ignore/bad_actor classification needs to be available outside triage pathway.
+
 ## 2026-03-05 (Structural work to support identity write — context discipline)
 
 - **Required Context pattern added to `evryn-backend/docs/ARCHITECTURE.md`** — doc-level header declaring 4 must-read docs with consequence language ("without it, you'll..."), plus per-section context notes on all 9 `##` sections.
