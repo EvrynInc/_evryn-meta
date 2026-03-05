@@ -1,95 +1,189 @@
 # Session Doc: Identity Writing S2
-**Date:** 2026-03-04
+**Date:** 2026-03-04 through 2026-03-05
 **Participants:** Justin + AC
-**Status:** In progress
+**Status:** In progress — paused at onboarding module rewrite after structural rethink
 
 ---
 
 ## To Resume This Session
 
 **Read these docs in this order:**
-1. `evryn-backend/docs/identity-writing-brief.md` — the working spec
+1. `evryn-backend/docs/identity-writing-brief.md` — the working spec for all identity files
 2. `evryn-backend/identity/core.md` — the voice everything must match
-3. `evryn-backend/docs/BUILD-EVRYN-MVP.md` — the workflow (being updated this session)
-4. `_evryn-meta/docs/hub/detail/gatekeeper-approach.md` — gatekeeper operational playbook (was missing from S1 source list)
+3. `evryn-backend/docs/BUILD-EVRYN-MVP.md` — the workflow (updated this session: steps 4, 7-10, approval gate, v0.2/v0.3 framing)
+4. `_evryn-meta/docs/hub/detail/gatekeeper-approach.md` — gatekeeper operational playbook
 5. `_evryn-meta/docs/research/learning-levels-and-instrumentation.md` — feedback/learning architecture
-6. This session doc
+6. **All three v0.1 historical files** in `evryn-backend/docs/historical/Evryn_0.1_Instructions_Prompts_Scripts/` — treat as an early prototype to study and extract useful patterns from. The language in Prompts & Scripts was chosen very carefully. Beautiful Language has early match calibration ("magic of duds"), refund promise, and tone guidelines. Description & Instructions has conversation flows and abuse handling.
+7. `_evryn-meta/docs/hub/user-experience.md` — onboarding flows, Training Mode, anticipation mode, early match calibration
+8. `_evryn-meta/docs/hub/trust-and-safety.md` — trust loop, canary principle, crisis protocols
+9. `evryn-backend/docs/ARCHITECTURE.md` — read Identity Composition section (line ~411), Onboarding Patterns section (line ~581), and Security section (line ~609)
+10. **Claude Agent SDK skills docs** — `https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview` and `https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices` — these are critical for the shape/format question (see "Open Questions" below)
+11. The completed identity files on disk: `identity/situations/operator.md`, `identity/situations/gatekeeper.md`, `identity/activities/triage.md`
+12. This session doc
+
+**Also read the Agent SDK docs generally** — `https://platform.claude.com/docs/en/agent-sdk/overview` and related pages. Justin has flagged repeatedly that AC keeps losing awareness of the SDK framework. This must be resolved before continuing.
 
 ---
 
-## What Happened in S2 (So Far)
+## What Happened in S2
 
-### Phase 1: Module Architecture Restructure (Complete)
+### Phase 1: Module Architecture Restructure (Complete — done 2026-03-04)
 
 Resolved the granularity question from S1 and updated all docs:
 - **Operator moved from activities/ to situations/.** Answers "who am I talking to?" not "what am I doing?"
 - **Module granularity: Option A.** Lean activity modules (~500-800 tokens) carry judgment. Detailed procedures in `internal-reference/`, pulled via tool.
 - **knowledge/ → public-knowledge/ + internal-reference/.** Bright security line.
-- **Two new v0.3 situation stubs:** new-contact, regular-user (stubs themselves deferred from sprint)
+- **Two new v0.3 situation stubs:** new-contact, regular-user (stubs themselves deferred from sprint — NOW: Justin wants full versions, not stubs. See Phase 5.)
 - **Standardized situation order:** operator, gatekeeper, gold-contact, cast-off, regular-user, new-contact
 - **Six docs updated:** ADR-015, ADR-012, ARCHITECTURE.md, identity-writing-brief.md, session doc S1, CHANGELOG.md
 - **Committed and pushed** both repos.
 
-### Phase 2: Identity Module Writing (In Progress)
+### Phase 2: Identity Module Writing — Situation Modules (Complete)
 
-**Completed files:**
-- `identity/situations/operator.md` — Justin feedback: removed "What Doesn't Change" section (he may need full access early on), added systemtest@evryn.ai for email format checks (approvals still on Slack)
-- `identity/situations/gatekeeper.md` — Justin feedback: removed "Build for One" section
-- `identity/activities/triage.md` — ON DISK but needs rewrite (see below)
+**Completed and pushed:**
+- `identity/situations/operator.md` — Justin mode. Direct/operational tone, full info access, approval workflow (systemtest@evryn.ai + Slack), escalations land here. Justin removed "What Doesn't Change" section (needs full access early on).
+- `identity/situations/gatekeeper.md` — Gatekeeper relationship context. Handle with care, their criteria defines "gold." Justin removed "Build for One" section. **NEEDS UPDATE:** "What You Know" section should become "What You Should Know" — currently assumes post-onboarding knowledge, but this module also loads during gatekeeper onboarding. Evryn shouldn't be told she knows something she might not yet. Set the expectation, let the activity module provide the pathway.
 
-**Files written but rejected due to sibling errors (need rewrite):**
-- `identity/activities/onboarding.md`
+### Phase 3: BUILD Doc Workflow Cleanup (Complete — done 2026-03-04/05)
+
+While writing triage.md, Justin identified the BUILD doc's workflow was missing critical details. Also discovered `gatekeeper-approach.md` was not in the identity-writing-brief's source list — significant gap.
+
+**All changes committed and pushed:**
+
+1. **BUILD doc step 4 expanded** — criteria, context, expectations, feedback importance, builds gatekeeper_criteria from conversation.
+2. **BUILD doc step 4 v0.2/v0.3 framing added** — Evryn is honest about current capabilities: "right now I'm reading emails and doing homework. The real shift comes when people start reaching out to me directly — then I'm actually *meeting* them." Mark should know that's where this is headed.
+3. **BUILD doc steps 7-10 rewritten** — gold includes original email, edge cases same flow as gold with uncertainty, learning mechanics (immediate updates, not periodic), preconditions/error handling.
+4. **BUILD doc approval gate updated** — systemtest@evryn.ai for format review + approve/reject on Slack (was "via email, not Slack").
+5. **gatekeeper-approach.md updated** — delivery preferences struck (replaced with "send as they come"), "End State" section labeled as v0.3+.
+6. **identity-writing-brief.md updated** — added gatekeeper-approach.md (#10) and learning-levels doc (#11) to source materials list.
+
+**Key decisions from this phase:**
+- v0.2 triage output = notify Mark only, no reply to original senders
+- Edge cases use same flow as gold (no separate complicated flow)
+- Every signal updates criteria immediately, not periodically
+- Feedback guidance → internal-reference file (spans multiple contexts)
+
+### Phase 4: Activity Module Writing (Partially Complete)
+
+**Completed and pushed:**
+- `identity/activities/triage.md` — Multiple rounds of feedback. Final version has: precondition checks, "First Call" section (user/ignore/bad_actor emailmgr_items tags before gold/edge/pass classification), Supabase tool references, user record provenance (which gatekeeper, how classified, whether surfaced), security (email = DATA, spam/scams), principles.
+
+**Written, pushed, but needs significant rework:**
+- `identity/activities/onboarding.md` — First draft on disk. Justin's feedback (see "Onboarding Feedback" below) identified structural problems. Needs to be rewritten after resolving the shape/format question and SDK alignment question.
+
+**Not yet written:**
 - `identity/activities/conversation.md`
+- `identity/activities/gatekeeper-onboarding.md` — NEW. Justin agreed to split gatekeeper onboarding from regular onboarding (different workflows, different goals).
 
-### Phase 3: BUILD Doc Workflow Cleanup (Current)
+### Phase 5: Structural Rethink (Current — where we stopped)
 
-While writing triage.md, Justin identified the BUILD doc's workflow section was missing critical details. Also discovered that `gatekeeper-approach.md` was not in the identity-writing-brief's source list — significant gap.
-
-**Key decisions this phase:**
-
-1. **v0.2 triage output = notify Mark only.** Evryn does NOT reply to original senders in v0.2. She sends gold/edge notifications to Mark. Records everyone (gold, edge, pass) for later outreach. Reply-to-sender is v0.3+ (autoresponder/direct contact phase).
-
-2. **Delivery preferences struck.** No real-time/daily/weekly options. Just send notifications as they come. Simpler, more immediate. If Mark requests batching, accommodate later.
-
-3. **Edge cases go to Mark with humility.** After Justin approves an edge case on Slack, Evryn sends it to Mark with explanation and uncertainty — not claiming it's gold.
-
-4. **Feedback guidance = internal-reference file.** The three-tier feedback quality principle (from learning-levels-and-instrumentation.md) spans onboarding, conversation, and operator contexts. Too broad for one module, not needed every volley → `internal-reference/feedback-guidance.md`.
-
-5. **Precondition checks needed in workflow.** Evryn must verify gatekeeper record + criteria + parseable forward before classifying. If anything fails → escalate to Justin on Slack, don't guess.
-
-6. **Approval flow updated.** Email to systemtest@evryn.ai for format check, approve/reject on Slack (not email-based approval as BUILD doc originally said).
+Justin raised fundamental questions about the shape of identity modules and the relationship to the Claude Agent SDK Skills framework. **This must be resolved before continuing to write modules.**
 
 ---
 
-## Specific BUILD Doc Changes (Plan Approved)
+## Onboarding Feedback (Justin's detailed notes on first draft)
 
-### The Workflow section (lines 107-119):
-- Step 4: Expand to bullets — criteria, context, expectations, feedback importance
-- Step 7: Clarify approval flow (systemtest email + Slack approval)
-- After step 8: Add 8a — Justin approves/rejects edge cases, approved ones go to Mark with humility
-- Step 9: Expand with learning mechanics (training data, implicit signals, explicit feedback requests)
-- New step 10: Preconditions and error handling
+These are the specific issues Justin identified. All need to be addressed in the rewrite:
 
-### Approval gate section (lines 123-127):
-- Update to reflect systemtest@evryn.ai + Slack approval (was "via email, not Slack")
-
-### gatekeeper-approach.md:
-- Strike delivery preferences section (lines 193-202), replace with simple "send as they come"
-- Add phase labels clarifying v0.2 vs v0.3 workflows
-
-### identity-writing-brief.md:
-- Add gatekeeper-approach.md to source materials list
+1. **"not just a data collection exercise"** — change to "not a data collection exercise" (remove "just")
+2. **Pacing section** — "Don't dump everything you know or everything you want to say up front" better than original
+3. **"This isn't just tone — it's a design constraint"** — unclear jargon. Make transparent so any human or LLM understands it without needing to be savvy.
+4. **"Let them lead" is wrong.** Evryn should *gently guide*. Justin's analogy: like his best therapist — "I feel like I'm very gently being guided — it's my show, but I have this expert who's very gently guiding me — she knows the landscape, she won't let me stray off too far." The v0.1 prototype did this well: it gently led toward things it needed to capture, then gracefully tailed out. This is not "let them lead" — it's "create a safe, fairly wide lane, then let them navigate it."
+5. **"Don't improvise the sequence"** → "Avoid improvising the sequence"
+6. **Contact capture needs context awareness.** Sometimes you already HAVE their contact info (they emailed a gatekeeper, they signed up, etc.). Evryn needs to check what she already knows before asking. If she has email from a forward, the question might be "is this the best way to reach you?" not "can I get your email?"
+7. **Missing goals/workflow structure.** The draft feels "flaccid" — it could meander. Needs clear steps/progression like the v0.1 prototype had (acknowledge → introduce → get them talking → Smart Curiosity → "More About Me" → contact capture → close gracefully). Not rigid scripts, but clear sense of direction.
+8. **The "gentle guide" quality may need to live in core.md.** Evryn is your guide — she'll gently guide you through, but you're always in charge of your own journey. This applies everywhere, not just onboarding.
+9. **Gatekeeper onboarding should be a separate activity module** (`gatekeeper-onboarding.md`). The workflows are genuinely different: regular onboarding = understand the person for matching; gatekeeper onboarding = understand their judgment for triaging. Different goals, different steps.
+10. **Need REAL new-contact.md and regular-user.md, not stubs.** Justin: "we're going to work harder trying to figure out what should be stubbed vs just trying our best to create the real version." Can't properly scope onboarding without knowing what situation module loads alongside it.
+11. **Acknowledge what you know about them** during onboarding — but this must pass through the "don't share anything user-to-user without explicit permission" gate. If Justin told Evryn stuff about Mark, she needs to vet what Mark would be comfortable knowing she was told.
+12. **gatekeeper.md lifecycle fix needed.** "What You Know" → "What You Should Know" with framing: if you don't have this yet, you need to find it out.
+13. **Precondition checks** needed in all activity modules (like triage has).
+14. **Feedback line update:** "Even a one-liner on *why* helps you learn *so* much faster."
 
 ---
 
-## Remaining Work
+## Open Questions (Must Resolve Before Continuing)
 
-After BUILD doc cleanup:
-1. Rewrite `activities/triage.md` to match corrected workflow
-2. Write `activities/onboarding.md` and `activities/conversation.md`
-3. Write internal-reference files: canary-procedure, crisis-protocol, trust-arc-scripts, smart-curiosity-full, contact-capture, feedback-guidance (NEW)
-4. Write `public-knowledge/company-context.md`
-5. Commit + push
+### 1. SDK Skills Framework Alignment
+
+**The question:** What is our relationship to the Claude Agent SDK's Skills framework? Are our identity modules effectively skills? What are we intentionally doing differently, and what should we adopt?
+
+**Current architecture (ADR-012):** The trigger script composes identity files into a systemPrompt string and passes it to `query()`. Evryn doesn't choose what loads — the trigger decides based on who's talking and what's happening.
+
+**Justin's challenge:** Why does the trigger choose? Is the trigger smart enough? Why not let Evryn choose what she needs? The SDK's skills framework has Claude discover and load skills on-demand. Are we reinventing something worse?
+
+**What we know from the SDK skills docs:**
+- Skills are filesystem-based, discovered via metadata (name + description loaded at startup), and progressively loaded (SKILL.md read when triggered, reference files read as needed)
+- Skills best practices: concise, operational (not background context), clear workflows, conditional logic, progressive disclosure
+- The SDK's `.claude/skills/` directory with SKILL.md files is the native mechanism
+- Skills can be project-based or personal
+
+**What needs to happen:** AC needs to deeply study the SDK skills docs, compare our trigger-composed approach to native skills loading, and either (a) align our architecture with SDK skills, (b) document clearly why we're diverging and what we lose/gain, or (c) find a hybrid. This must be codified into something persistent that loads every time anyone architects or builds — in ARCHITECTURE.md and the relevant CLAUDE.md files.
+
+**Justin's frustration (valid):** AC keeps losing awareness of the SDK framework between sessions. The number of times Justin has had to say "go read the SDK docs" is unacceptable. This must be permanently solved.
+
+### 2. Module Shape / Format
+
+**The question:** What should identity modules look like structurally? Current drafts read like personality guides. They should read more like "a job description meets a workflow" — operational instructions that Evryn can USE.
+
+**What we learned from skills best practices:**
+- Shape should be: what's the goal, what are the steps, what does success look like, what tools/references do you have, what do you escalate
+- "Success criteria" should include the relationship/vibes stuff — that IS Evryn's job
+- Assume the LLM is already smart — only add what it doesn't know
+- Set appropriate degrees of freedom (high for relationship stuff, low for approval workflows)
+- Include conditional workflows where the path forks
+- Reference deeper material (internal-reference files) one level deep
+
+**This needs to be captured in a persistent doc** (identity-writing-brief.md or a new "module format guide") so every module gets built to the same shape.
+
+### 3. What Moves to Core
+
+**Confirmed to live in core.md (not activity modules):**
+- Dual-track processing (warm conversation + rich insights) — used everywhere, not just onboarding
+- Pacing (small pieces, let them pull for more) — applies to all interactions
+- Smart Curiosity orientation (the DNA, not the full checklist) — always active
+- The "gentle guide" quality — Evryn knows the landscape, creates a safe lane, lets you navigate
+
+**Check:** Are these already in core.md? If not, they need to be added. (Dual-track and pacing ARE in core. Smart Curiosity DNA is partially there. "Gentle guide" may need to be made more explicit.)
+
+---
+
+## Remaining Work (Updated)
+
+**Before writing more modules:**
+1. Resolve SDK skills alignment question — study SDK docs deeply, propose architecture decision
+2. Define module shape/format — capture in persistent doc
+3. Check/update core.md — ensure dual-track, pacing, Smart Curiosity, "gentle guide" are all there
+4. Fix gatekeeper.md — lifecycle awareness ("What You Should Know")
+5. Write new-contact.md and regular-user.md (REAL versions, not stubs)
+
+**Then write modules:**
+6. Rewrite `activities/onboarding.md` (regular user flow, workflow-structured)
+7. Write `activities/gatekeeper-onboarding.md` (NEW — gatekeeper flow)
+8. Write `activities/conversation.md`
+9. Write internal-reference files: canary-procedure, crisis-protocol, trust-arc-scripts, smart-curiosity-full, contact-capture, feedback-guidance
+10. Write `public-knowledge/company-context.md`
+11. Commit + push
+
+---
+
+## Emailmgr Tagging Decision (from 2026-03-04 late session)
+
+**Justin's simplification for triage classification:**
+- Tag each forwarded email in `emailmgr_items` with one of three tags: `user`, `ignore`, `bad_actor`
+- Gold/edge/pass is a sub-classification within "user" — it's about how well they match the gatekeeper's criteria, not whether they're a person
+- The bar for `ignore` is HIGH — most emails, even spam, have a person behind them. Only ignore when there's genuinely no human to find.
+- `bad_actor` = a real person acting in bad faith. Gets a user record too, flagged. Recognition matters if they show up elsewhere.
+- In v0.3, pull these up: ignore stays ignored, bad_actor flagged on user record, user gets outreach with context from original email
+- Don't solve v0.3 outreach now — just tag for future processing
+
+**Already implemented in triage.md** — the "First Call: Who Sent This?" section.
+
+## v0.2 vs v0.3 Framing Decision
+
+- **v0.2:** Evryn is a smart reader — judging emails at face value plus web research. Honest about this.
+- **v0.3 (autoresponder/direct contact):** People reach out to Evryn directly. She's actually *meeting* them — conversations, trust building, the full experience. Recommendations go from "this looks promising" to "I know this person."
+- **Already added to BUILD doc step 4.** Needs to also go in onboarding module (expectation-setting with gatekeeper).
 
 ---
 
@@ -98,5 +192,11 @@ After BUILD doc cleanup:
 All from S1 list plus:
 - `_evryn-meta/docs/hub/detail/gatekeeper-approach.md` — gatekeeper operational playbook (was missing from S1)
 - `_evryn-meta/docs/research/learning-levels-and-instrumentation.md` — three-level learning framework, reasoning traces, feedback quality tiers
-- `evryn-backend/docs/BUILD-EVRYN-MVP.md` — full read
-- `evryn-backend/docs/ARCHITECTURE.md` — pipeline design, memory architecture, approval gate sections
+- `evryn-backend/docs/BUILD-EVRYN-MVP.md` — full read (multiple times, as it was being updated)
+- `evryn-backend/docs/ARCHITECTURE.md` — Identity Composition (~line 411), Onboarding Patterns (~line 581), Security (~line 609)
+- `evryn-backend/docs/historical/Evryn_0.1_Instructions_Prompts_Scripts/Evryn_0.1_Description_Instructions_v1.0.md` — personality, conversation flows, abuse handling, devmode
+- `evryn-backend/docs/historical/Evryn_0.1_Instructions_Prompts_Scripts/The_Beautiful_Language_of_Evryn_v0.9.md` — explainer video, direct-to-conversation script, early match calibration, refund promise, tone guidelines
+- `evryn-backend/docs/historical/Evryn_0.1_Instructions_Prompts_Scripts/Evryn_0.1_Prompts_Scripts_v1.0.md` — carefully crafted scripts (intro, Smart Curiosity, "More About Me" trust arc, contact capture)
+- `_evryn-meta/docs/hub/user-experience.md` — onboarding, anticipation mode, Training Mode, early match calibration
+- `_evryn-meta/docs/hub/trust-and-safety.md` — trust loop, canary principle, crisis protocols, cultural trust fluency
+- Claude Agent SDK skills docs (overview + best practices) — via WebFetch during session

@@ -4,6 +4,16 @@
 
 ---
 
+## 2026-03-05 (Identity writing S2 — modules + BUILD workflow + structural rethink)
+
+- **Situation modules written and pushed:** `operator.md` (Justin mode, approval workflow), `gatekeeper.md` (gatekeeper relationship context — needs lifecycle fix: "What You Know" → "What You Should Know").
+- **Triage activity module complete** (`triage.md`) — emailmgr_items tagging (user/ignore/bad_actor), gold/edge/pass classification, user record provenance in `users` table, precondition checks, security section. Multiple rounds of Justin feedback.
+- **BUILD doc workflow rewritten** — steps 4, 7-10 expanded, approval gate updated (systemtest@evryn.ai + Slack), preconditions/error handling added, v0.2 vs v0.3 expectation-setting framing added to step 4.
+- **gatekeeper-approach.md updated** — delivery preferences struck (send as they come), "End State" section labeled as v0.3+ target.
+- **identity-writing-brief.md updated** — added gatekeeper-approach.md and learning-levels doc to source materials.
+- **Onboarding first draft written but rejected** — 14 specific issues from Justin (missing workflow structure, "let them lead" wrong, gatekeeper onboarding should be separate, need real situation modules not stubs). Paused on structural rethink.
+- **Structural rethink triggered** — three open questions: (1) SDK Skills framework alignment (should Evryn choose her own modules?), (2) module shape/format (job description + workflow, not personality guide), (3) what belongs in core.md vs activity modules. Must resolve before continuing.
+
 ## 2026-03-04 (Identity writing session 2 — module architecture restructure)
 
 - **Operator moved from activities/ to situations/.** Operator mode answers "who am I talking to?" (Justin), not "what am I doing?" — the activity varies. ADR-015 revised.

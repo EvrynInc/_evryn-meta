@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-04T14:27-08:00*
+*Last updated: 2026-03-05T10:31-08:00*
 *Last #sweep: 2026-03-02*
 *Last #align: 2026-03-02*
 
@@ -22,16 +22,15 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **5-day sprint: Mark live.** Sprint week March 2–6. Sprint plan at `evryn-backend/docs/SPRINT-MARK-LIVE.md`. Target: ready for Mark by Fri March 6.
-- **Pre-Work #6 (identity writing IN PROGRESS):** core.md v5 complete. Module architecture restructured (S2): operator → situation, knowledge/ → public-knowledge/ + internal-reference/, lean activity modules + reference files. **Remaining:** Write modules (situations: operator, gatekeeper; activities: triage, onboarding, conversation; public-knowledge: company-context; internal-reference: canary, crisis, trust-arc, smart-curiosity, contact-capture; v0.3 stubs) + Pre-Work #9 (DC CLAUDE.md update).
+- **Pre-Work #6 (identity writing IN PROGRESS):** core.md v5 complete. Situation modules written (operator, gatekeeper). Triage activity module complete. Onboarding first draft on disk but needs structural rework. **PAUSED** on a process/architecture question: how do identity modules relate to SDK Skills framework? Must resolve before continuing. Session doc: `_evryn-meta/docs/sessions/2026-03-04-identity-writing-s2.md`.
 - **Build phases finalized:** v0.2 "Gatekeeper's Inbox" (Mark live ~March 10) → v0.3 "The Broker" (web app + matching + payments, first revenue late April) → v0.4 "Scale" (second gatekeeper, publisher, agents, June/July). SIFF (mid-May) is a target for presence.
 - **Legal: Privacy & Terms questionnaire** — Under active consideration with Fenwick.
 
 ## Active Projects
 
-- **_evryn-meta** — Identity writing session doc written (`docs/sessions/2026-03-04-identity-writing-s1.md`). Contains all context for resume: 9 architectural decisions, v4 draft, offloaded content routing, open questions, source materials index.
-- **evryn-backend** — **Sprint week March 2–6.** Identity writing: core.md v4 on disk (uncommitted, pending Justin's final edit). `identity/` directory restructured: operator.md → situations/, knowledge/ → public-knowledge/ + internal-reference/. DC1 scaffolding in progress (package.json, src/ created). DC2 synthetic fixtures delivered (18 emails). Sprint plan: `docs/SPRINT-MARK-LIVE.md`.
-- **evryn-team-agents** — PAUSED. #align flag added to ARCHITECTURE.md (do #align before resuming Lucas build). Reusable code being adapted for evryn-backend.
+- **_evryn-meta** — Identity writing S2 session doc tracks all decisions and open questions. S2 has 5 open questions that must resolve before continuing (SDK alignment, module shape, core.md updates, situation module lifecycle, new-contact/regular-user modules).
+- **evryn-backend** — Identity files on disk: core.md (v5), situations/operator.md, situations/gatekeeper.md (needs lifecycle fix), activities/triage.md (complete), activities/onboarding.md (first draft, needs rework). BUILD doc updated (steps 4, 7-10, approval gate, v0.2/v0.3 framing). Pre-Work #9 (DC CLAUDE.md update) still pending.
+- **evryn-team-agents** — PAUSED.
 - **evryn-dev-workspace** — DC's home repo. OC/QC entities added to CLAUDE.md.
 - **evryn-website** — Live at evryn.ai.
 
