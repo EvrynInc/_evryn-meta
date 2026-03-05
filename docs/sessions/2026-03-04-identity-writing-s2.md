@@ -272,3 +272,15 @@ This is the next item to tackle. It requires real analysis, not just explanation
 **The question to answer:** Our identity modules serve a fundamentally different purpose than SDK Skills (identity context vs. capability discovery). But: (a) should `internal-reference/` files be Skills that Evryn discovers on-demand? (b) Does the Skills format (concise, operational, clear workflows) inform how we should shape our modules even if we don't use the Skills loading mechanism? (c) Is there a hybrid where the trigger loads identity but Evryn discovers procedures?
 
 Also read the Required Context demands (Hub, technical-vision, trust-and-safety, user-experience) fresh — don't work from compacted versions.
+
+### SDK Skills Alignment — Resolved (2026-03-05, post-compaction session)
+
+Full reading list completed (Hub + 3 spokes fresh, SDK Skills docs from web, ARCHITECTURE.md, identity-writing-brief, all 4 completed identity files, SDK research doc). Analysis:
+
+**(a) Should `internal-reference/` files become Skills?** No. Activity modules already serve as the discovery layer (telling Evryn what resources exist and when to use them), more precisely than Skills metadata — which would load on every query regardless of activity. The current mechanism (Evryn reads internal-reference files via tool, guided by activity module references) is functionally identical to Skills Level 2-3 loading but better scoped.
+
+**(b) Does the Skills format inform our module shape?** Yes — validates existing decisions. Key principles adopted: "only add what Claude doesn't know" (reinforces lean modules), progressive disclosure (already our architecture), degrees of freedom (our guidance vs. rules), one-level-deep references (new: internal-reference files should link from activity modules, not from each other).
+
+**(c) Hybrid?** We're already doing it. Trigger loads identity; Evryn discovers procedures via tool reads guided by activity module references.
+
+**Captured in:** ADR-012 addendum (full analysis), ARCHITECTURE.md provisional note replaced with resolved note.

@@ -93,3 +93,58 @@ Per-query composition doesn't mean siloed. Evryn's memory in Supabase spans all 
 - Identity writing S2 (operator move, granularity, directory rename): `docs/sessions/2026-03-04-identity-writing-s1.md`
 - SDK docs: platform.claude.com/docs/en/agent-sdk/modifying-system-prompts
 - Related: ADR-001 (SDK single-agent architecture), ADR-015 (module matrix)
+
+---
+
+## Addendum: SDK Skills Framework Analysis (2026-03-05)
+
+**Question:** The SDK's Skills framework (`.claude/skills/SKILL.md`) provides on-demand capability discovery — metadata loads at startup, full content loads when triggered. Does this change the ADR-012 decision? Specifically: (a) should `internal-reference/` files become Skills? (b) Does the Skills format inform our module shape? (c) Is there a hybrid approach?
+
+**Analysis performed against:** SDK Skills docs (overview + best practices, fetched fresh from platform.claude.com), all completed identity files (core.md, operator.md, gatekeeper.md, triage.md), identity-writing-brief, ARCHITECTURE.md, Hub + spokes, SDK research doc.
+
+### What Skills Are
+
+Skills are a **capability discovery mechanism**. Three loading levels:
+1. **Metadata** (~100 tokens/Skill) — name + description, loaded at startup. Tells Claude "this capability exists."
+2. **Instructions** (SKILL.md body) — loaded when Claude decides it's relevant to the current task.
+3. **Resources** (additional files, scripts) — loaded as-needed from the Skill directory.
+
+Designed for Claude-as-developer: "I see you need to process a PDF — let me load the PDF skill." Claude autonomously decides what to load.
+
+### (a) Should `internal-reference/` files become Skills?
+
+**No.** Our activity modules already serve the role Skills metadata plays — telling Evryn what resources exist and when to use them — but more precisely. Activity modules only expose references relevant to the current activity; Skills metadata would load for *every* query regardless of activity.
+
+The mechanism already works: Evryn reads internal-reference files via tool when she recognizes she needs them (guided by references in her activity module). This is functionally identical to Skills Level 2-3 loading, but scoped by activity rather than globally visible.
+
+Additional consideration: Skills metadata is visible to Claude at startup. Internal-reference files should only be accessible when the right activity module is loaded. Making them Skills would expose their existence even in contexts where Evryn shouldn't know about them.
+
+### (b) Does the Skills format inform our module shape?
+
+**Yes — and it validates decisions already made.** Key principles that transfer:
+
+- **"Claude is already smart — only add what it doesn't know"** → Reinforces lean modules (~500-800 tokens)
+- **"Progressive disclosure: overview → details on demand"** → This IS our architecture (activity module → internal-reference)
+- **"Set appropriate degrees of freedom"** → Maps to our guidance vs. rules distinction
+- **"Keep references one level deep"** → Internal-reference files should link directly from activity modules, never from other internal-reference files
+- **"Under 500 lines for main file"** → Validates our token budgets
+
+What doesn't transfer: Skills use third-person descriptions ("Processes Excel files"). Our modules correctly use second-person ("You're talking to...") because they're identity, not capability declarations.
+
+### (c) Is there a hybrid?
+
+**We're already doing it.** The current architecture IS a hybrid:
+- **Trigger loads identity:** Core + situation + activity + user context from Supabase
+- **Evryn discovers procedures:** Reads internal-reference files via tool when she recognizes the need, guided by references in her activity module
+- **Evryn discovers public knowledge:** Reads public-knowledge files via tool when users ask about her
+
+The SDK Skills mechanism doesn't add value for the discovery part because the activity modules already serve as the metadata layer — and they're more precise.
+
+### Conclusion
+
+**ADR-012 decision confirmed with additional evidence.** The SDK Skills framework is designed for capability discovery in a developer tool. Our identity modules serve a different purpose: identity composition for a conversational agent. We adopt Skills *format principles* for module authoring; we don't adopt the Skills *loading mechanism*.
+
+Full SDK feature usage:
+- **Use:** `query()`, hooks, MCP servers, sessions, subagents
+- **Don't use:** `settingSources`, Skills framework, presets
+- **Adopt as design principles:** Skills best practices for conciseness, progressive disclosure, degrees of freedom, one-level-deep references
