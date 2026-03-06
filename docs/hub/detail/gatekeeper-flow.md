@@ -63,7 +63,7 @@ No contact is made with anyone who emailed Mark during this phase. Evryn logs al
 
 ## Phase II: Evryn Goes Active (v0.3+)
 
-Once Evryn's calibration is solid — typically after a few weeks of seeing the quality of her work in Phase I — Evryn begins engaging with the people in Mark's inbound. This can happen through two pathways, which may both be active simultaneously.
+Once Evryn's calibration is solid — typically after a few weeks of verifying the quality of her work in Phase I — Evryn begins engaging with the people in Mark's inbound. These pathways are typically mutually exclusive — either the gatekeeper keeps forwarding (Pathway 1) or redirects people to Evryn directly (Pathway 2) — though in practice, both may overlap during the transition or when stragglers still email the gatekeeper directly (see Pathway 2 below).
 
 ### Pathway 1: Forwarding Continues
 
@@ -124,11 +124,11 @@ Evryn's first priority is always whether someone is the right mutual fit for Mar
 
 ---
 
-## Phase I Backlog (v0.3 Launch)
+## Phase I Backlog (at v0.3 Launch)
 
-During Phase I, Evryn logged ~200 emails/day but didn't contact anyone. When Phase II launches, these people are sitting in Evryn's records, never contacted. Evryn goes back and reaches them using the same Pathway 1 outreach — gold, edge, and redirect messages — applied to the backlog based on each person's original classification.
+During Phase I, Evryn logged ~200 emails/day but didn't contact anyone, because she was still calibrating. When Phase II launches, these people are sitting in Evryn's records, never contacted. Evryn goes back and reaches them using the same Pathway 1 outreach — gold, edge, and redirect messages — applied to the backlog based on each person's original classification.
 
-**Question for counsel:** The outreach messages are the same as Pathway 1, but with a significant time delay (weeks rather than days). Evryn is responding to the person's original email to Mark, on Mark's behalf and with his authorization. Does the time delay change the legal posture? Is a reply to an email sent weeks ago still a "reply" for CAN-SPAM purposes, or does the delay make it functionally unsolicited? Does Evryn need the gatekeeper's explicit endorsement for backlog outreach specifically?
+**Question for counsel:** The outreach messages are the same as Pathway 1, but with a significant time delay (weeks rather than days). Evryn is responding to the person's original email to Mark, on Mark's behalf and with his authorization. Does the time delay change the legal posture? Is a reply to an email sent weeks ago still a "reply" for CAN-SPAM purposes, or does the delay make it functionally "unsolicited"? Does Evryn need the gatekeeper's explicit authorization for backlog outreach specifically, or is his previous authorization sufficient?
 
 ### Backlog: Who Contacts Whom
 
