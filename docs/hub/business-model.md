@@ -48,6 +48,10 @@ Gatekeeper connections are Evryn's freemium tier — and it's a powerful one. A 
 
 This is the loss leader that feeds Evryn's growth engine. The gold is in the second, third, hundredth connection Evryn brokers for each person who entered through a gatekeeper's inbox.
 
+### Proactive Finder Economics
+
+When no one in the network fits a seeker's need, Evryn can go find them — web research, review analysis, personalized outreach. The full cost of a metro-area search-and-contact campaign is roughly $6 (see `docs/research/proactive-finder-cost-analysis.md`). This is a *network investment*, not a per-connection cost — everyone Evryn recruits stays in the network and serves future seekers at no extra discovery cost. The implication: proactive sourcing makes sense when the *aggregate* connection value justifies the one-time spend.
+
 ### Gaming Risks
 
 **Risk: Someone spams every gatekeeper, so they can get the free connections.** Evryn's behavioral intelligence is the mitigation — the same trust mechanics that govern everything else. Trust-based pricing means trust-based everything. At scale, most gatekeepers redirect inbound to Evryn directly, so new users come through Evryn (standard pricing applies for non-gatekeeper connections). We don't advertise the "gatekeeper connections are free" policy — it's how Evryn operates, not a marketing pitch.
