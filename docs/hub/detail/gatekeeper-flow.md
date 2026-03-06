@@ -10,7 +10,7 @@
 
 ## The Gatekeeper Relationship in One Paragraph
 
-A gatekeeper is someone who receives far more inbound contact than they can personally evaluate. Evryn takes that inbound off their plate — identifying which people are genuinely worth their time and handling the rest. Evryn is never inside the gatekeeper's inbox. The gatekeeper routes emails to Evryn, Evryn evaluates them, and the gatekeeper hears about the ones that matter. Everyone who comes through a gatekeeper's inbound becomes a full Evryn user in their own right — Evryn's obligation is to each person individually, not just to the gatekeeper who surfaced them.
+A gatekeeper is someone who receives far more inbound contact than they can personally evaluate. Evryn takes that inbound off their plate — identifying which people are genuinely worth their time and handling the rest. Evryn is never inside the gatekeeper's inbox. The gatekeeper routes emails to Evryn, Evryn evaluates them, and connects the gatekeeper to the ones who seem like a great fit. Everyone who comes through a gatekeeper's inbound can become a full Evryn user in their own right — Evryn's obligation is to each person individually, not just to the gatekeeper who surfaced them.
 
 ---
 
@@ -39,6 +39,8 @@ For each forwarded email, Evryn receives the sender's name, email address, messa
 - **Edge case** — potentially valuable, requires judgment.
 - **Pass** — not the right fit for Mark right now.
 
+Spam, scams, and bad actors are filtered out during triage and are not part of any outreach pathway.
+
 ### Step 4: Evryn Notifies Mark
 
 For gold and edge-case classifications, Evryn drafts a notification for Mark explaining who the person is and why they're worth his attention. During this pilot phase, a member of Evryn's operations team reviews and approves every outbound message before it's sent. Mark receives the notification and decides how to proceed.
@@ -59,26 +61,44 @@ No contact is made with anyone who emailed Mark during this phase. Evryn logs al
 
 ---
 
-## Phase II: Evryn as Point of Contact (v0.3+)
+## Phase II: Evryn Goes Active (v0.3+)
 
-Once Mark trusts Evryn's judgment — typically after a few weeks of seeing the quality of her work in Phase I — the relationship shifts. Instead of Mark forwarding emails to Evryn, people reach out to Evryn directly.
+Once Evryn's calibration is solid — typically after a few weeks of seeing the quality of her work in Phase I — Evryn begins engaging with the people in Mark's inbound. This can happen through two pathways, which may both be active simultaneously.
 
-### How It Works
+### Pathway 1: Forwarding Continues
 
-Mark makes a simple change (one of the following, or both):
+Mark keeps forwarding his inbound. Evryn now replies to everyone on his behalf, with Mark's authorization. The approach differs by classification:
 
-- **Auto-responder:** Mark sets up an auto-reply on his submissions inbox: *"Evryn helps me find the people who are just the right fit for me. To see if we'd be a good fit, reach out to her at evryn.ai."* This is a standard email auto-reply.
+**Gold** — clearly worth Mark's time. Evryn notifies Mark and reaches out to the person:
 
-- **Contact page redirect:** Mark updates the "contact me" section of his website to point people to Evryn: *"I work with Evryn to find the right people for me. If you think we'd be a great fit, reach out to her at evryn.ai — she'll take it from there."*
+> "Hi [name] — you reached out to Mark about [topic]. I work with Mark to find the right connections for him, and I've put you in touch. He's got a lot on his plate, so it might be a moment — but I wanted you to know you're on his radar. In the meantime, finding the right connections for people is what I do — I'd love to hear more about what you're looking for."
 
-### What Changes
+**Edge** — potentially valuable, but Evryn needs more information to judge the fit. Evryn reaches out to learn more:
 
-- **People are now contacting Evryn because Mark told them to.** They initiated the contact. Evryn is not intercepting anything — the person chose to reach out to Evryn based on the gatekeeper's direction.
-- **Mark's daily effort drops to zero.** He hears from Evryn when someone is worth his time. Everything else is handled.
-- **The legal posture simplifies.** The person reached out to Evryn voluntarily. No unsolicited outreach considerations — they opted in by contacting Evryn.
-- **The gatekeeper is publicly vouching for Evryn.** This endorsement carries weight with the people who reach out.
+> "Hi [name] — you reached out to Mark about [topic]. I work with Mark to find the right connections for him — I'd love to hear more about what you're looking for and see if there's a great fit here."
 
-### The Flow From the Person's Perspective
+**Redirect** — not the right fit for Mark right now. Evryn reaches out honestly:
+
+> "Hi [name] — you reached out to Mark Titus about [topic]. I work with Mark to find the right connections for him. Unfortunately this isn't the right fit for Mark right now — but finding the right connections for people is what I do, so I'd love to hear more about what you're looking for and see if I can help."
+
+**Legal posture for all Pathway 1 outreach:** Every message is a reply to something the person initiated (they emailed Mark), sent on Mark's behalf with his authorization.
+
+#### Pathway 1: Who Contacts Whom
+
+| Action | Direction | Legal posture |
+|--------|-----------|---------------|
+| Gold reply to sender | Evryn → person who emailed Mark | Reply, authorized by Mark, facilitating a connection Mark wants |
+| Edge reply to sender | Evryn → person who emailed Mark | Reply, authorized by Mark, gathering information to evaluate fit |
+| Redirect reply to sender | Evryn → person who emailed Mark | Reply, authorized by Mark, redirecting to Evryn's broader services |
+| Gatekeeper notification (gold/edge) | Evryn → Mark | Internal; Mark authorized |
+
+### Pathway 2: Direct Contact
+
+Mark sets up an auto-responder or updates his contact page (or both) to direct people to Evryn:
+
+*"I work with Evryn to find the right connections for me. If you think we'd be a great fit, reach out to her at evryn.ai — she'll take it from there."*
+
+People now reach out to Evryn directly. From this point:
 
 1. They want to reach Mark.
 2. They see his auto-responder or contact page directing them to Evryn.
@@ -87,43 +107,34 @@ Mark makes a simple change (one of the following, or both):
 5. If they're a strong mutual fit for Mark, Evryn facilitates the connection.
 6. If they're not the right fit for Mark, Evryn helps them find other connections across all life domains.
 
-### Everyone Becomes an Evryn User
+Some people may still email Mark directly during Pathway 2 (they have his email, they're replying to old threads). These are forwarded to Evryn and handled via Pathway 1 — a reply to something the person initiated, authorized by Mark.
 
-Evryn's first priority is always whether someone is the right connection for Mark — when they are, Evryn facilitates it. But Evryn also helps people find connections across all life domains, so someone who came through Mark's inbound might also find other opportunities, collaborators, or people that Evryn discovers for them. Everyone who reaches out to Mark gets taken care of, and Mark's reputation benefits from that.
-
-**For the agreement:** The gatekeeper does not have ownership or exclusive rights over people who come through their inbound. Evryn always evaluates everyone from a gatekeeper's channel for that gatekeeper first, but Evryn's obligation is to each user individually.
-
-### Stragglers
-
-Some people may still email Mark directly during Phase II (they have his email, they're replying to old threads). These are forwarded to Evryn and handled as replies on Mark's behalf — the same legal posture as if they had contacted Evryn directly.
-
-### Phase II: Who Contacts Whom
+#### Pathway 2: Who Contacts Whom
 
 | Action | Direction | Legal posture |
 |--------|-----------|---------------|
 | Person contacts Evryn | Person → Evryn | Person initiated at gatekeeper's direction; voluntary opt-in |
 | Gatekeeper notification (gold/edge) | Evryn → Mark | Internal; Mark authorized |
-| Straggler reply | Evryn → person who emailed Mark directly | Reply to something the person initiated, authorized by Mark |
 
-All primary communication with senders is person-initiated. Evryn evaluates everyone for Mark, helps everyone find what they need, and notifies Mark about the people worth his time.
+### Everyone Becomes an Evryn User
+
+Evryn's first priority is always whether someone is the right mutual fit for Mark — when they are, Evryn facilitates it. But Evryn also helps people find connections across all life domains, so someone who came through Mark's inbound might also find other opportunities, collaborators, or people that Evryn discovers for them. Everyone who reaches out to Mark gets taken care of, and Mark's reputation benefits from that.
+
+**For the agreement:** Evryn always evaluates everyone from a gatekeeper's channel for mutual best fit with that gatekeeper. However, the same person may reach out to more than one gatekeeper at the same time, so the gatekeeper should assume no ownership or exclusive rights over people who come through their inbound.
 
 ---
 
-## Gatekeeper Redirect Outreach (v0.3)
+## Phase I Backlog (v0.3 Launch)
 
-During Phase I, Evryn logged ~200 emails/day but didn't contact anyone. When Phase II launches, these people — real professionals with real needs who reached out to Mark — are sitting in Evryn's records, never contacted. Gatekeeper Redirect Outreach is Evryn going back to reach those people. This is primarily a one-time catch-up of the Phase I backlog.
+During Phase I, Evryn logged ~200 emails/day but didn't contact anyone. When Phase II launches, these people are sitting in Evryn's records, never contacted. Evryn goes back and reaches them using the same Pathway 1 outreach — gold, edge, and redirect messages — applied to the backlog based on each person's original classification.
 
-Evryn responds to their original email:
+**Question for counsel:** The outreach messages are the same as Pathway 1, but with a significant time delay (weeks rather than days). Evryn is responding to the person's original email to Mark, on Mark's behalf and with his authorization. Does the time delay change the legal posture? Is a reply to an email sent weeks ago still a "reply" for CAN-SPAM purposes, or does the delay make it functionally unsolicited? Does Evryn need the gatekeeper's explicit endorsement for backlog outreach specifically?
 
-> "Hi [name] — you reached out to Mark Titus about [topic]. I work with Mark to find the right connections for him. Unfortunately this isn't the right fit for Mark right now — but finding the right connections for people is what I do. I'd love to hear more about what you're looking for and see if I can help."
-
-**Question for counsel:** Evryn is *responding* to the person's original email to Mark — but with a significant time delay and a different purpose (not facilitating a connection with Mark, but offering Evryn's own services). Does the fact that this is a response to the person's original email make it a reply rather than unsolicited outreach? Does Evryn need the gatekeeper's explicit endorsement so that the message functions as a redirection on the gatekeeper's behalf — declining the connection while offering alternative help?
-
-### Redirect Outreach: Who Contacts Whom
+### Backlog: Who Contacts Whom
 
 | Action | Direction | Legal posture |
 |--------|-----------|---------------|
-| Backlog outreach | Evryn → person who emailed Mark during Phase I | Reply to original email, but delayed and with changed purpose; question for counsel |
+| Backlog outreach (gold/edge/redirect) | Evryn → person who emailed Mark during Phase I | Reply to original email, authorized by Mark, but delayed; question for counsel |
 
 ---
 
@@ -133,7 +144,7 @@ Evryn responds to their original email:
 
 **What Evryn does with it:** AI-powered evaluation of fit, conversation with the sender, and — for people who become active users — ongoing profile building to find them the right connections.
 
-**Where it's stored:** Evryn's database (Supabase, hosted PostgreSQL with row-level security and encryption at rest). Email content is also processed through Anthropic's Claude API for AI evaluation.
+**Where it's stored:** Evryn's database (Supabase, hosted PostgreSQL with row-level security and encryption at rest and in transit). Email content is also processed through Anthropic's Claude API for AI evaluation.
 
 **Retention:** Raw forwarded email content has a 6-month retention period, then is purged. Information from those emails that pertains to a person who becomes an active Evryn user is incorporated into their user profile and retained for the life of the account.
 
