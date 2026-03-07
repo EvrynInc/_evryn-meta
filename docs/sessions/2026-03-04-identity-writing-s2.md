@@ -1,7 +1,7 @@
 # Session Doc: Identity Writing S2
 **Date:** 2026-03-04 through 2026-03-05
 **Participants:** Justin + AC
-**Status:** In progress — structural context-discipline fix landed (Phase 6), open questions remain (trigger mechanism, SDK alignment, dynamic loading, module shape, core.md)
+**Status:** In progress — all 5 open questions resolved. Architecture finalized (ADRs 012-017). Persistent docs updated. 2 items remain: module shape/format, core.md updates.
 
 ---
 
@@ -148,22 +148,24 @@ These are the specific issues Justin identified. All need to be addressed in the
 
 ---
 
-## Remaining Work (Updated)
+## Remaining Work (Updated 2026-03-05)
 
 **Before writing more modules:**
-1. Resolve SDK skills alignment question — study SDK docs deeply, propose architecture decision
-2. Define module shape/format — capture in persistent doc
-3. Check/update core.md — ensure dual-track, pacing, Smart Curiosity, "gentle guide" are all there
+1. ~~Resolve SDK skills alignment question~~ — DONE (ADR-012 addendum)
+2. Define module shape/format — capture in persistent doc (S2 Open Question #2, still open)
+3. Check/update core.md — available modules hub (situations AND activities, excluding operator), gentle guide, Smart Curiosity DNA
 4. Fix gatekeeper.md — lifecycle awareness ("What You Should Know")
 5. Write new-contact.md and regular-user.md (REAL versions, not stubs)
+6. Update ARCHITECTURE.md pipeline diagram + system diagram + approval gate for simplified trigger + Slack-only approval
+7. Update BUILD doc for Socket Mode + approval flow email address
 
 **Then write modules:**
-6. Rewrite `activities/onboarding.md` (regular user flow, workflow-structured)
-7. Write `activities/gatekeeper-onboarding.md` (NEW — gatekeeper flow)
-8. Write `activities/conversation.md`
-9. Write internal-reference files: canary-procedure, crisis-protocol, trust-arc-scripts, smart-curiosity-full, contact-capture, feedback-guidance
-10. Write `public-knowledge/company-context.md`
-11. Commit + push
+8. Rewrite `activities/onboarding.md` (regular user flow, workflow-structured)
+9. Write `activities/gatekeeper-onboarding.md` (NEW — gatekeeper flow)
+10. Write `activities/conversation.md`
+11. Write internal-reference files: canary-procedure, crisis-protocol, trust-arc-scripts, smart-curiosity-full, contact-capture, feedback-guidance
+12. Write `public-knowledge/company-context.md`
+13. Commit + push
 
 ---
 
@@ -392,10 +394,132 @@ These changes affect:
 2. ~~SDK Skills alignment~~ — Resolved
 3. ~~Dynamic loading~~ — Resolved (this section)
 4. **Module shape/format** (S2 Open Question #2) — Partially informed by this session (Skills format principles apply, activity modules are now on-demand). Still needs explicit resolution.
-5. **core.md check** — Now also includes adding the "available activities" hub section.
+5. **core.md check** — Now also includes adding the "available modules" hub section (both situations AND activities, excluding operator).
 
 #### Commits
 
 - ADR-012 addendum (SDK Skills): `_evryn-meta` `3d78277`
 - ARCHITECTURE.md resolved note: `evryn-backend` `8201171`
-- This session doc update: pending commit
+
+---
+
+## Phase 7: Per-Context Situations + Simplified Trigger (2026-03-05, continued session "3/5/26a")
+
+Updating persistent docs for the activity module shift led to two deeper architectural insights, then a cascade of decisions.
+
+### Per-Context Situations (ADR-017)
+
+Justin identified that "gatekeeper" shouldn't be a static label on a person's profile. Mark is a gatekeeper when forwarding candidate emails, but a regular user when asking Evryn a personal question. The trigger can't determine situation from metadata alone because:
+- **A person can occupy different situations in different interactions.** Same person, different context = different situation.
+- **"Forward = triage" isn't deterministic either.** Mark might forward info about a friend, or context Evryn asked for — not every forward is a triage event.
+
+These two insights collapsed into a single principle: **the trigger should be as simple as possible, and Evryn should determine both situation and activity from the conversation.**
+
+### Simplified Trigger Model
+
+```
+TRIGGER (code-level):
+    ├─ Identify sender → Supabase lookup → load person context
+    ├─ Compose systemPrompt: Core.md + person context
+    ├─ ONE hard-coded exception:
+    │   └─ Slack from Justin's verified user ID → add operator.md to systemPrompt
+    ├─ If forwarded email → store in emailmgr_items (data capture)
+    └─ Call query(systemPrompt, incomingMessage)
+
+EVRYN (prompt-level):
+    ├─ Reads the incoming message (passed as prompt, NOT in systemPrompt)
+    ├─ Determines situation from message + person context
+    │   (pulls situation module via tool if needed)
+    ├─ Determines activity from message + person context
+    │   (pulls activity module via tool if needed)
+    └─ Responds, writes observations back to Supabase
+```
+
+**Incoming message = `prompt` parameter to `query()`, never `systemPrompt`.** This is a security boundary — email content is untrusted user input. Putting it in systemPrompt would let prompt injection manipulate system-level instructions.
+
+### Operator Security (Three Defense-in-Depth Layers)
+
+1. **Core.md doesn't mention it.** The "available modules" section lists situations and activities Evryn can pull on demand. `operator.md` is not listed. Evryn has no knowledge it exists.
+2. **The tool blocks it.** The file-read tool Evryn uses for on-demand module loading excludes `operator.md` from accessible paths.
+3. **Only the trigger can load it.** The trigger code reads `operator.md` directly from the filesystem and concatenates it into `systemPrompt` — code-level string concatenation, no tool involved.
+
+### JSONB Roles (Not Static Labels)
+
+Person profiles use fluid `profile_jsonb.roles` instead of a static `situation` field:
+```jsonb
+{
+  "roles": {
+    "gatekeeper": { "active": true, "context": "Inbox triage for mark@example.com", "since": "2026-03-07" }
+  }
+}
+```
+The trigger passes this as context; Evryn determines the appropriate situation per interaction.
+
+### Inbox Pipeline
+
+All forwarded emails → `emailmgr_items` for data capture. Evryn classifies intent: triage vs info-sharing vs conversation. Forward detection is for data capture, NOT routing.
+
+### Unknown Sender Routing — Resolved
+
+No special trigger path needed. The trigger creates a minimal person record, loads core + thin context, and Evryn evaluates.
+
+### Slack-Only Approval Flow
+
+Justin identified that Gmail API only authenticates Evryn's own email, not incoming sender identity — incoming email from Justin could be spoofed. Decision: **Slack is the only approval channel** (operator mode = verified Slack user ID).
+
+**Flow:**
+1. Evryn emails the draft to justin@evryn.ai for delivery format review
+2. Justin copies the subject line into Slack and says "approve" or gives notes
+3. On approval: Evryn sends final message to recipient, **Bcc justin@evryn.ai**
+4. On notes: Evryn revises and re-sends draft to justin@evryn.ai
+
+**Rationale:** Email sender identity can be spoofed; Slack user ID cannot. The operator channel must be unimpeachable. Volume is low (~6 gold/month per gatekeeper, always 1 gatekeeper at a time). Justin is vetting for "is Evryn fucking up?" not "is this a good connection?"
+
+### Socket Mode for Two-Way Slack
+
+Monday's build gave Evryn one-way Slack (outbound pings via webhook). The approval flow requires inbound (Justin → Evryn). Evaluated three options:
+- **Socket Mode (WebSocket):** Near-instant, no public endpoint, smallest attack surface. Recommended.
+- **Events API (HTTP webhook):** Near-instant, requires public endpoint (attack surface), more robust retry on drops.
+- **Polling:** 30-second latency, unusable for back-and-forth conversation.
+
+**Decision: Socket Mode.** Security advantage (no public endpoint) with equivalent reliability via catch-up-on-reconnect pattern. On WebSocket reconnect, query `conversations.history` since last processed timestamp to recover any missed messages during connection gaps.
+
+Same infrastructure carries forward to team agents — each agent gets its own Slack app + Socket Mode connection.
+
+### Docs Updated This Session
+
+| Doc | Repo | Changes |
+|-----|------|---------|
+| ADR-017 (NEW) | _evryn-meta | Per-context situations, simplified trigger, operator security, JSONB roles, inbox pipeline, unknown sender resolution |
+| ADR-012 | _evryn-meta | Rewritten: file tree removed (pointer to ARCHITECTURE.md), simplified trigger diagram, SDK addendum updated |
+| ADR-015 | _evryn-meta | Rewritten: file tree removed, trigger composition updated, per-context examples, ADR-017 cross-refs |
+| ARCHITECTURE.md | evryn-backend | Identity Composition section rewritten, operator security inline, module architecture + file tree updated, caching simplified |
+| identity-writing-brief.md | evryn-backend | Composition model rewritten, on-demand everything, per-context, triage intent classification, gatekeeper-onboarding split |
+| BUILD-EVRYN-MVP.md | evryn-backend | Pipeline diagram + code example for simplified trigger, one pathway, ADR-017 references |
+| SPRINT-MARK-LIVE.md | evryn-backend | Slack-only approval flow, Socket Mode (Tuesday), pipeline diagram, Key Design Decisions, Bcc on sends |
+
+**ARCHITECTURE.md still needs updating:** Pipeline Design section (lines ~343-381) and System Diagram (lines ~745-789) still show old two-pathway routing. Approval Gate section (lines ~387-397) needs Slack-only update.
+
+### Commits (this phase)
+
+- `_evryn-meta` `96a1729`: ADR-012, ADR-015 activity module shift
+- `_evryn-meta` `b5bba39`: ADR-017 created
+- `_evryn-meta` `0777b97`: ADR-017 filename refs
+- `_evryn-meta` `4a8b688`: ADR-012, ADR-015 simplified trigger rewrite
+- `evryn-backend` `8736117`: ARCHITECTURE.md "How to think about this" + SDK divergence + simplified trigger diagram
+- `evryn-backend` `12f5947`: ARCHITECTURE.md inline operator security
+- `evryn-backend` `d63749a`: ARCHITECTURE.md module architecture + caching
+- `evryn-backend` `a33db33`: identity-writing-brief updates
+- `evryn-backend` `a879840`: BUILD doc simplified trigger
+- `evryn-backend` `45b60f9`: SPRINT doc simplified trigger (partial)
+- Additional SPRINT doc commits pending (Slack-only approval, Socket Mode)
+
+### Items Still Open (Updated)
+
+1. ~~Trigger mechanism~~ — Resolved
+2. ~~SDK Skills alignment~~ — Resolved
+3. ~~Dynamic loading~~ — Resolved
+4. **Module shape/format** (S2 Open Question #2) — Still needs explicit resolution
+5. **core.md check** — Available modules hub (situations AND activities, excluding operator), gentle guide, Smart Curiosity DNA
+6. **ARCHITECTURE.md pipeline + system diagram + approval gate** — Still show old model, need updating
+7. **BUILD doc** — Needs Socket Mode + minor approval flow clarifications (systemtest@evryn.ai → justin@evryn.ai)
