@@ -63,7 +63,7 @@ No contact is made with anyone who emailed Mark during this phase. Evryn logs al
 
 ## Phase II: Evryn Goes Active (v0.3+)
 
-Once Evryn's calibration is solid — typically after a few weeks of verifying the quality of her work in Phase I — Evryn begins engaging with the people in Mark's inbound. These pathways are typically mutually exclusive — either the gatekeeper keeps forwarding (Pathway 1) or redirects people to Evryn directly (Pathway 2) — though in practice, both may overlap during the transition or when stragglers still email the gatekeeper directly (see Pathway 2 below).
+Once Evryn's calibration is solid — typically after a few weeks of verifying the quality of her work in Phase I — Evryn begins engaging with the people in Mark's inbound. These pathways are typically mutually exclusive — either the gatekeeper keeps forwarding (Pathway 1) or redirects people to Evryn directly (Pathway 2) — though in practice, both may overlap during the transition or when stragglers still email the gatekeeper directly (see Pathway 2 below). Pathway 2 is the preferred end state — cleaner legally, zero-effort for the gatekeeper, and publicly builds trust — but Pathway 1 works indefinitely for gatekeepers who prefer to keep forwarding.
 
 ### Pathway 1: Forwarding Continues
 

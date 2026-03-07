@@ -76,7 +76,7 @@ When pitching a gatekeeper, the commitment ramp is gentle. No big ask up front.
 
 ## The End State: "Evryn Handles This" (v0.3+)
 
-> **Phase note:** v0.2 is the forwarding phase — Mark forwards emails, Evryn triages, notifies Mark about gold and edge cases. The end state below is the target after the validation period, when the gatekeeper trusts Evryn enough to put her in front of their inbound directly.
+> **Phase note:** v0.2 is calibration only — Mark forwards emails, Evryn triages and notifies Mark about gold and edge cases, but doesn't contact anyone who emailed Mark. Starting in v0.3, Evryn begins engaging with senders (see `gatekeeper-flow.md`). The section below describes the preferred end state — when the gatekeeper trusts Evryn enough to put her in front of their inbound directly.
 
 The gold standard isn't forwarding — it's people reaching out to Evryn directly, with the gatekeeper's stamp of approval. This changes everything:
 
@@ -93,11 +93,7 @@ The gold standard isn't forwarding — it's people reaching out to Evryn directl
 
 **The forwarding setup (Steps 2-3) exists to get them to this point.** Once they trust Evryn's judgment, the "quick adjustment" in Step 4 is switching to one of these.
 
-**On the forwarding route:** Even during the forwarding phase, Evryn can respond to the original sender on the gatekeeper's behalf. The framing should position Evryn as who she is — a trusted connector — not as an inbox manager:
-
-> "Hi [name] — you reached out to [gatekeeper fullname] about [topic]. [Firstname] works with me to find the right people for [him/her] — I'd love to hear more about what you're looking for and see if I can help."
-
-This is a reply to something the person sent, not unsolicited outreach. The gatekeeper authorized it. CAN-SPAM doesn't apply to replies. *(Confirm with Fenwick when scoping gatekeeper agreement.)*
+**If a gatekeeper stays on forwarding (v0.3+):** Not every gatekeeper will switch to direct contact — some may prefer to keep forwarding indefinitely. That works too. Starting in v0.3, Evryn responds to every forwarded email on the gatekeeper's behalf — with tailored messages for gold, edge, and redirect contacts. The framing positions Evryn as a trusted connector, not an inbox manager. Every message is a reply to something the person sent, authorized by the gatekeeper — no CAN-SPAM considerations. Full outreach messages and legal posture: `gatekeeper-flow.md` (Phase II, Pathway 1).
 
 ---
 
@@ -210,7 +206,7 @@ Evryn sends gold and edge-case notifications as they come — real-time, one per
 - The gatekeeper model is a channel, not an ownership structure
 - Data retention: forwarded email content has a 6-month TTL; information pertaining to active users is incorporated into their profiles
 
-**CAN-SPAM (forwarding phase):** When Evryn responds to a forwarded email on the gatekeeper's behalf, this is a reply — not unsolicited commercial email. The gatekeeper authorized the response. Confirm this framing with Fenwick.
+**CAN-SPAM (forwarding route, v0.3+):** When Evryn responds to a forwarded email on the gatekeeper's behalf, this is a reply — not unsolicited commercial email. The gatekeeper authorized the response. Confirm this framing with Fenwick.
 
 **CAN-SPAM (end state):** When people reach out to Evryn directly (via the gatekeeper's auto-responder or contact page redirect), they initiated contact. No CAN-SPAM issue.
 
