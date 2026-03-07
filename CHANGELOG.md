@@ -4,6 +4,15 @@
 
 ---
 
+## 2026-03-06 (Cross-repo gatekeeper flow alignment + doc cleanup)
+
+- **gatekeeper-approach.md aligned with gatekeeper-flow.md** — v0.2 = calibration only (no sender contact), forwarding section updated for v0.3+ with flow doc reference, CAN-SPAM label corrected.
+- **gatekeeper-flow.md** — Pathway 2 preference note added (preferred end state, but Pathway 1 works indefinitely).
+- **evryn-backend ARCHITECTURE.md** — pricing model fixed (gold ↔ gatekeeper = free, cast-off = paid), three-tier outreach refs (gold/edge/pass) replace generic messages, system diagram updated for Socket Mode + simplified trigger + approval flow.
+- **evryn-backend BUILD doc** — v0.3 scope clarified (all classifications + Phase I backlog), stale "Gmail IS the capture mechanism" fixed (triage pipeline captures in Supabase), Socket Mode added to Slack line, systemtest@evryn.ai → justin@evryn.ai for approval review, Phase 1d relabeled Slack-based.
+- **gatekeeper.md identity module** — "What You Know" → "What You Should Know" lifecycle fix (don't assert knowledge Evryn might not have yet during onboarding).
+- **Session doc items 4/6/7 marked done** — gatekeeper lifecycle fix, ARCHITECTURE diagrams, BUILD Socket Mode.
+
 ## 2026-03-05 (SDK Skills alignment + dynamic loading/sessions/activity determination)
 
 - **ADR-012 addendum written** — SDK Skills framework evaluated against identity architecture. Skills format principles adopted; loading mechanism not needed. Activity modules already serve as discovery layer more precisely than Skills metadata.

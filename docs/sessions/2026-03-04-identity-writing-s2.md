@@ -154,10 +154,10 @@ These are the specific issues Justin identified. All need to be addressed in the
 1. ~~Resolve SDK skills alignment question~~ — DONE (ADR-012 addendum)
 2. Define module shape/format — capture in persistent doc (S2 Open Question #2, still open)
 3. Check/update core.md — available modules hub (situations AND activities, excluding operator), gentle guide, Smart Curiosity DNA
-4. Fix gatekeeper.md — lifecycle awareness ("What You Should Know")
+4. ~~Fix gatekeeper.md — lifecycle awareness ("What You Should Know")~~ — DONE. "What You Know" → "What You Should Know" with framing: if you don't have gatekeeper_criteria yet, you need to find it out via onboarding. Don't triage without it.
 5. Write new-contact.md and regular-user.md (REAL versions, not stubs)
-6. Update ARCHITECTURE.md pipeline diagram + system diagram + approval gate for simplified trigger + Slack-only approval
-7. Update BUILD doc for Socket Mode + approval flow email address
+6. ~~Update ARCHITECTURE.md pipeline diagram + system diagram + approval gate for simplified trigger + Slack-only approval~~ — DONE. System diagram updated: Socket Mode, simplified trigger model, approval flow.
+7. ~~Update BUILD doc for Socket Mode + approval flow email address~~ — DONE. Slack line describes Socket Mode + catch-up-on-reconnect. systemtest@evryn.ai → justin@evryn.ai for approval review. Phase 1d: "email-based" → "Slack-based".
 
 **Then write modules:**
 8. Rewrite `activities/onboarding.md` (regular user flow, workflow-structured)
