@@ -34,8 +34,8 @@ Not every connection generates direct revenue. The principle: **don't charge for
 
 | Scenario | Charge? | Why |
 |----------|---------|-----|
-| Cast-off connects to the gatekeeper they emailed | Free | They already found the gatekeeper. Evryn surfaced them, not discovered them. |
-| Gatekeeper gets someone from their own inbox | Free | The triage service IS the value to gatekeepers. This is the acquisition channel — don't add friction. |
+| Gold contact connects to the gatekeeper they emailed | Free | They already found the gatekeeper. Evryn surfaced them, not discovered them. |
+| Gatekeeper connects with gold contact from their inbox | Free | The triage service IS the value to gatekeepers. This is the acquisition channel — don't add friction. |
 | Cast-off gets connected to someone ELSE Evryn found | Paid | Evryn's matching intelligence created this. This is the product. |
 | Person Evryn recruits (e.g., a plumber) — first connection | Free | They didn't ask for this. Get them in the door. Evryn communicates value: "connections like this typically run about $20 — this first one is on me." |
 | Recruited person's subsequent connections | Paid | Now they're a user. Evryn's matching is creating value for them. |
