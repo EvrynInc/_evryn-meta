@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-06T17:46-08:00*
+*Last updated: 2026-03-09T14:08-07:00*
 *Last #sweep: 2026-03-02*
 *Last #align: 2026-03-02*
 
@@ -28,7 +28,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## Active Projects
 
-- **_evryn-meta** — ADR-017 written (per-context situations, simplified trigger, operator security layers). ADR-012 and ADR-015 revised to match. All 5 S2 open questions resolved. 2 items remain: module shape/format, core.md updates.
+- **_evryn-meta** — Doc hygiene done (S1/S2 archived, S3 created, February CHANGELOG archived, spam-is-people spoke edit). ARCHITECTURE.md trim brief written (`docs/sessions/architecture-trim-brief.md`) — run in a fresh instance. All 5 S2 open questions resolved. 2 items remain before identity writing continues: module shape/format, core.md updates.
 - **evryn-backend** — Identity files on disk: core.md (v5), situations/operator.md, situations/gatekeeper.md (lifecycle fix done), activities/triage.md (complete), activities/onboarding.md (first draft, needs rework). ARCHITECTURE.md fully updated (Identity Composition, operator security, system diagram, pipeline diagram, approval gate). BUILD doc and SPRINT doc updated for simplified trigger + Slack-only approval + Socket Mode. Pre-Work #9 (DC CLAUDE.md update) still pending.
 - **evryn-team-agents** — PAUSED.
 - **evryn-dev-workspace** — DC's home repo. OC/QC entities added to CLAUDE.md.

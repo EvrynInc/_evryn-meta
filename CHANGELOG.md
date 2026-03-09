@@ -6,6 +6,17 @@
 
 ---
 
+## 2026-03-09 (Doc hygiene + #lock)
+
+- **Session docs reorganized** — S1 and S2 archived to `docs/sessions/historical/`. S3 created with remaining identity writing work only. All ADR and persistent doc references updated to historical/ paths.
+- **S3 bug fixed** — "triage is deterministic from email headers" corrected to match ADR-017 (forward ≠ triage, Evryn determines intent). Cultural trust fluency table added to internal-reference files list.
+- **CHANGELOG February archived** to `docs/historical/changelog-historical/changelog-2026-02.md`. Monthly archive instruction added to CHANGELOG header.
+- **trust-and-safety spoke** — "spam is people" principle added to spam mitigation bullet (redirect before blocking; bad actors get blocked, bad habits get redirected).
+- **LEARNINGS.md** — 4 new entries (#36-39: forward ≠ triage, situation per-context, untrusted input in prompt, catch-up-on-reconnect).
+- **AGENT_PATTERNS.md** — 3 new patterns (per-context situation determination, defense-in-depth for privileged modes, catch-up-on-reconnect).
+- **ARCHITECTURE.md trim brief** written at `docs/sessions/architecture-trim-brief.md` — reading list, strategy, constraints for a fresh instance to trim from 847 to ~500 lines.
+- **#lock checkpoint** — current-state refreshed.
+
 ## 2026-03-06 (Cross-repo gatekeeper flow alignment + doc cleanup)
 
 - **gatekeeper-approach.md aligned with gatekeeper-flow.md** — v0.2 = calibration only (no sender contact), forwarding section updated for v0.3+ with flow doc reference, CAN-SPAM label corrected.
