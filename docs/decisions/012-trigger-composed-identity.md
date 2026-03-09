@@ -84,7 +84,7 @@ Per-query composition doesn't mean siloed. Evryn's memory in Supabase spans all 
 ## References
 
 - Session doc: `2026-02-24-mvp-build-work-s1-4.md` (Sessions 1-4)
-- Identity Writing S2: `2026-03-04-identity-writing-s2.md` (trigger refinement, simplified model)
+- Identity Writing S2: `docs/sessions/historical/2026-03-04-identity-writing-s2.md` (archived — decisions captured in this ADR and ADR-017)
 - SDK docs: platform.claude.com/docs/en/agent-sdk/modifying-system-prompts
 - Related: ADR-001 (SDK single-agent architecture), ADR-015 (module matrix), ADR-017 (per-context situations, operator security)
 

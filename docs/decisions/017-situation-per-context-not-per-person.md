@@ -8,7 +8,7 @@
 
 ADR-015 introduced the Situation × Activity matrix: situations answer "who am I talking to?" and activities answer "what am I doing right now?" The original architecture (ADR-012) had the trigger deterministically loading both — situation from the person's profile, activity from the interaction type.
 
-Identity Writing S2 (`2026-03-04-identity-writing-s2.md`) progressively refined this model. First, activity modules shifted to on-demand (Evryn determines activity from the conversation, not the trigger — see ADR-012 revised, ADR-015 revised). Then Justin identified two deeper problems:
+Identity Writing S2 (archived at `docs/sessions/historical/2026-03-04-identity-writing-s2.md`) progressively refined this model. First, activity modules shifted to on-demand (Evryn determines activity from the conversation, not the trigger — see ADR-012 revised, ADR-015 revised). Then Justin identified two deeper problems:
 
 **Problem 1: A person can occupy different situations in different interactions.** Mark is a gatekeeper *in the context of his inbox* — when he forwards emails for triage. But as Evryn's network grows (v0.3+), Mark might be a gold contact for someone else, or just a regular user asking Evryn a personal question. A static "gatekeeper" label on his profile would cause the trigger to load gatekeeper context when it shouldn't.
 
@@ -128,4 +128,4 @@ Data model impact: `profile_jsonb.roles` (structured, multi-role) instead of a s
 - ADR-015: Situation × Activity Module Matrix (introduces situations and activities)
 - ADR-014: Operator Module — Slack Only (operator channel restriction)
 - ARCHITECTURE.md file tree and Identity Composition section (canonical reference)
-- Session doc: `2026-03-04-identity-writing-s2.md`
+- Session doc: `docs/sessions/historical/2026-03-04-identity-writing-s2.md` (archived — decisions captured in this ADR)

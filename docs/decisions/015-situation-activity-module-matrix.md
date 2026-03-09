@@ -36,6 +36,6 @@ Trigger composition: `Core.md + person context from Supabase`. Both situation an
 ## References
 
 - Session doc: `2026-02-24-mvp-build-work-s1-4.md` (Session 3 Decision 3)
-- Identity Writing S2: `2026-03-04-identity-writing-s2.md` (operator move, granularity, on-demand shift, per-context situations)
+- Identity Writing S2: `docs/sessions/historical/2026-03-04-identity-writing-s2.md` (archived — decisions captured in this ADR and ADR-017)
 - Trigger composition: ADR-012
 - Per-context situations and operator security: ADR-017

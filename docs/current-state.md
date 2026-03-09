@@ -22,7 +22,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Pre-Work #6 (identity writing IN PROGRESS):** core.md v5 complete. All situation + activity modules written except conversation.md and gatekeeper-onboarding.md. Architecture fully resolved (ADRs 012-017). All persistent docs updated (simplified trigger, per-context situations, Slack-only approval, Socket Mode, Bcc, system diagram, approval gate). **2 items remain:** module shape/format (S2 Open Question #2), core.md updates (available modules hub, gentle guide, Smart Curiosity DNA). Session doc: `_evryn-meta/docs/sessions/2026-03-04-identity-writing-s2.md`.
+- **Pre-Work #6 (identity writing IN PROGRESS):** core.md v5 complete. All situation + activity modules written except conversation.md and gatekeeper-onboarding.md. Architecture fully resolved (ADRs 012-017). All persistent docs updated (simplified trigger, per-context situations, Slack-only approval, Socket Mode, Bcc, system diagram, approval gate). **2 items remain:** module shape/format (S2 Open Question #2), core.md updates (available modules hub, gentle guide, Smart Curiosity DNA). Session doc: `_evryn-meta/docs/sessions/2026-03-09-identity-writing-s3.md`.
 - **Build phases finalized:** v0.2 "Gatekeeper's Inbox" (Mark live ~March 10) → v0.3 "The Broker" (web app + matching + payments, first revenue late April) → v0.4 "Scale" (second gatekeeper, publisher, agents, June/July). SIFF (mid-May) is a target for presence.
 - **Legal: Privacy & Terms questionnaire** — Under active consideration with Fenwick.
 
