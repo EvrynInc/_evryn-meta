@@ -4,7 +4,7 @@ Learnings from building AI agents that will help when building Evryn (the produc
 
 **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 
-*Last updated: 2026-02-06T19:21:00-08:00*
+*Last updated: 2026-03-09T13:15-07:00*
 
 ---
 
@@ -27,6 +27,9 @@ Building "proactive infrastructure" is building agency.
 
 ### Script-as-Skill
 When you have carefully crafted language (scripts, disclosure arcs, trust-building sequences), don't make the agent recite them verbatim. Give the agent the script AND the reasoning behind it, then let Claude flow naturally while hitting the same targets. The agent understands the intent and adapts to each person's communication style. Verbatim scripts sound robotic; understood scripts sound genuine.
+
+### Per-Context Situation Determination
+Don't assign static "roles" that determine how the agent treats someone. The same person occupies different situations in different interactions — a gatekeeper forwarding candidates vs. asking a personal question needs different agent behavior. Let the agent determine the situation from the conversation, not from a metadata label. The trigger provides person context (who they are, their history); the agent decides what situation this interaction represents.
 
 ### Two-Layer Pacing
 Pacing guidance splits into two layers with different homes:
@@ -242,6 +245,9 @@ Voice stress analysis (~88% accuracy) can flag inconsistencies. Use it as:
 
 Combine with conversational probing (Evryn calling out BS) for a powerful trust toolkit.
 
+### Catch-Up-on-Reconnect for Persistent Connections
+For any persistent connection (WebSocket, SSE, long-polling), handle reconnection by querying missed events since last processed timestamp. This is distinct from "Push + Sweep" (scheduled backup) — it's an immediate recovery on reconnect that makes drops a latency blip, not lost data. ~10 lines of code for near-perfect reliability.
+
 ### Push + Sweep Pattern for Reliability
 Never rely solely on real-time notifications. Pair instant triggers with scheduled sweeps:
 - Push notification → process immediately (happy path)
@@ -263,6 +269,14 @@ When agents can modify their own persistent state (notes, memory, config), they 
 The prompting fix handles the common case. The structural guard catches the failure mode. Neither alone is sufficient — prompting fails when agents ignore instructions, guards fail when legitimate restructuring looks like destruction.
 
 Keep validation in the execution layer (where the write happens), not as a separate orchestration step. This is a side-effect check, not a state transition.
+
+### Defense-in-Depth for Privileged Modes
+When an agent has a privileged mode (operator/admin), protect it with multiple independent layers:
+1. **Core identity doesn't mention it.** The agent has no awareness the mode exists.
+2. **Tool access blocks it.** The agent's file-reading tools exclude the privileged module from accessible paths.
+3. **Only code-level loading can activate it.** The trigger concatenates the module into systemPrompt via direct filesystem read — no tool involved, no prompt-level discovery path.
+
+Any single layer might fail. All three together make unauthorized activation require compromising the code itself.
 
 ---
 
