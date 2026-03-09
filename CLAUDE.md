@@ -52,8 +52,8 @@ An AI-powered relationship broker. She finds you "your people" — the rare indi
 - `_evryn-meta` — AC's home. Cross-repo docs, dashboard.
 - `evryn-team-agents` — Lucas's home. Agent runtime.
 - `evryn-dev-workspace` — DC's home. Identity and methodology.
-- `evryn-ops` — OC's home. Operations, monitoring, deployment. Being built end of Monday / start of Tuesday (Mark Live sprint).
-- `evryn-quality` — QC's home. Code review, testing, quality gates. Being built end of Tuesday / start of Wednesday (Mark Live sprint).
+- `evryn-ops` — OC's home. Operations, monitoring, deployment. Created when Phase 0 scaffolding is running (see sprint doc).
+- `evryn-quality` — QC's home. Code review, testing, quality gates. Created when triage pipeline is running (see sprint doc).
 - `evryn-website` — Marketing site (evryn.ai). Live.
 - `evryn-backend` — Product backend. Active (MVP build).
 
@@ -186,6 +186,10 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
   - Build methodology (how to approach classes of problems) → `evryn-dev-workspace/docs/research/`
   - Repo-specific build research (implementation-level) → `[repo]/docs/build-research/`
   - When in doubt, default to `_evryn-meta/docs/research/` — it's easier to find there.
+
+**Absorption protocol (flow-up rule):** Information flows down the hierarchy (Hub → spokes → ARCHITECTURE → BUILD → sprint → session) but completed work must flow *back up*. When work is done, update the BUILD doc's phase status. When a session produces decisions, write ADRs. When strategy changes, update spokes and Hub. The #lock protocol enforces this — but the principle applies any time: if something important lives only in a session doc or sprint doc, it hasn't been captured yet.
+
+**Session docs are ephemeral — persistent docs never reference them.** Hub, spokes, ARCHITECTURE, BUILD docs must never say "see session doc for details." If a persistent doc needs information from a session, absorb the information first, then reference the persistent location. Session docs can reference persistent docs freely. One exception: the BUILD doc may have a single "Active session" pointer during an active build, marked for absorption at #lock. Sprint docs follow the same rule — they're disposable after the sprint; everything important should have flowed up into the BUILD doc.
 
 **Rule: Research without breadcrumbs is dead research.** When you create a research file, place breadcrumbs in the build/architecture docs where that research would change the quality of thinking. Even preliminary breadcrumbs — they ensure the research gets discovered at the right moment instead of sitting unread in a folder.
 

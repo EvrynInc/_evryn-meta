@@ -12,7 +12,7 @@ AC/DC is **permanent infrastructure** (ADR-004) — not temporary scaffolding. I
 
 AC (Architect Claude, in `_evryn-meta`) and DC (Developer Claude instances in repos) are separate Claude Code instances. They can't see each other's conversations. Justin relays "read" messages between them.
 
-Neither AC nor DC can detect new messages on their own — they only read when Justin prompts them. Justin is the relay between instances.
+AC and DC check their inbound mailboxes at session startup and #lock (see their CLAUDE.md and #lock protocols). Justin relays urgent handoffs between sessions, so if you write something to DC, make sure you tell Justin.
 
 ---
 

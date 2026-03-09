@@ -6,6 +6,18 @@
 
 ---
 
+## 2026-03-09 (#sweep — doc hygiene + protocol hardening)
+
+- **Absorption protocol added to AC CLAUDE.md** — information must flow back up the doc hierarchy (session → sprint → BUILD → ARCHITECTURE). Persistent docs never reference ephemeral session docs (one exception: BUILD doc active session pointer, cleared at #lock).
+- **Build progress tracking added to both #lock protocols** — BUILD doc status column updated at #lock, sprint doc tasks marked, active session pointer cleared when absorbed.
+- **AC/DC protocol updated** — mailbox checks at session startup and #lock (both AC and DC). DC explicitly told to tell Justin when writing to dc-architecture-notes-for-ac.md.
+- **DC #lock protocol restructured** — old steps 3+6 merged into single "AC handoff" step. Mailbox check added. Multi-instance note: designated instances (DC1, DC2) only absorb their own notes.
+- **DC CLAUDE.md updated** — build progress tracking rule, session start mailbox check with multi-instance safeguard, permanent infrastructure framing for AC/DC.
+- **BUILD doc (evryn-backend)** — status columns added to all phase tables (0a/0b DONE, 0c-0e DEFERRED, Phase 1-2 NOT STARTED). Active session pointer added.
+- **Sprint doc (evryn-backend) rewritten** — Day 1-5 with dates (Tue 3/11 – Mon 3/17), BUILD phase mappings, per-task status (DC1 scaffolding DONE, AC2 fixtures DONE, AC1 system prompt IN PROGRESS). Friday meeting removed. After Sprint dates corrected (stabilization week March 18, Build 2 ~March 25). OC/QC timing updated to Day refs.
+- **AC CLAUDE.md** — OC/QC repo descriptions updated from specific sprint days to trigger-based timing.
+- **current-state.md** — #sweep date updated, Mark live date corrected (~March 18-19).
+
 ## 2026-03-09 (Doc hygiene + #lock)
 
 - **Session docs reorganized** — S1 and S2 archived to `docs/sessions/historical/`. S3 created with remaining identity writing work only. All ADR and persistent doc references updated to historical/ paths.

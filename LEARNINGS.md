@@ -4,7 +4,7 @@
 
 **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 
-*Last updated: 2026-03-09T13:15-07:00*
+*Last updated: 2026-03-09*
 
 ---
 
@@ -50,16 +50,11 @@
 
 ## Unpromoted
 
-34. **"Rich insights" over "structured data" in identity prompts.** Telling the model to collect "structured understanding" makes it cram into predictable fields prematurely. "Rich insights — observations, patterns, signals, emotional cues, things said and unsaid" encourages journaling. Don't structure data before you know what's signal. *(Source: identity writing session 2026-03-04. Promote to: identity-writing-brief or BUILD doc prompt engineering notes.)*
-
-35. **Soul DNA test for always-loaded context.** If it's not part of the soul DNA in *every* moment, it doesn't belong in the always-loaded file. Every token burns every turn. Test: can it be pointed to instead of included? Procedures, operational details, and scenario-specific handling all move to contextual modules. *(Source: identity writing session 2026-03-04. Promote to: AGENT_PATTERNS Modular Context Loading.)*
-
-36. **"Forward ≠ triage."** Forward detection (email headers, "Fwd:" in subject) should capture data, not determine routing. A forward from a gatekeeper might be a candidate to triage, info about a friend, or context the agent asked for — only the agent can tell by reading the message. *(Source: identity writing S2, Phase 7, 2026-03-05. Promote to: already captured in ADR-017 + ARCHITECTURE.md pipeline section.)*
-
-37. **"Situation is per-context, not per-person."** A person's situation depends on what they're saying, not a static label on their profile. Mark is a "gatekeeper" when forwarding candidates but a "regular user" when asking a personal question. The trigger can't determine situation from metadata alone. *(Source: ADR-017, 2026-03-05. Promote to: AGENT_PATTERNS — already partially there in "Modular Context Loading" but needs explicit call-out.)*
-
-38. **"Untrusted input goes in `prompt`, never `systemPrompt`."** Email content is untrusted user input. Putting it in systemPrompt lets prompt injection manipulate system-level instructions. Security boundary: systemPrompt = agent identity + trusted context; prompt = the message to respond to. *(Source: identity writing S2, Phase 7. Promote to: DC CLAUDE.md security section, ARCHITECTURE.md security section.)*
-
-39. **"Catch-up-on-reconnect makes persistent connections reliable."** For WebSocket/Socket Mode, handle reconnection by querying missed messages since last processed timestamp (~10 lines of code). Makes connection drops a latency blip, not lost data. *(Source: Socket Mode decision, 2026-03-05. Promote to: AGENT_PATTERNS "Push + Sweep" pattern (related but distinct).)*
+34. *Promoted → AGENT_PATTERNS "Rich Insights Over Structured Extraction" + evryn-backend identity-writing-brief §Structural Principles.*
+35. *Promoted → AGENT_PATTERNS Modular Context Loading (Soul DNA Test).*
+36. *Promoted → ADR-017 + evryn-backend ARCHITECTURE.md pipeline section ("Forward ≠ Triage").*
+37. *Promoted → AGENT_PATTERNS Per-Context Situation Determination.*
+38. **"Untrusted input goes in `prompt`, never `systemPrompt`."** Email content is untrusted user input. Putting it in systemPrompt lets prompt injection manipulate system-level instructions. Security boundary: systemPrompt = agent identity + trusted context; prompt = the message to respond to. *(Partially promoted: evryn-backend ARCHITECTURE.md security section done. DC CLAUDE.md security section pending Pre-Work #9.)*
+39. *Promoted → AGENT_PATTERNS Catch-Up-on-Reconnect for Persistent Connections.*
 
 *New learnings land here temporarily before being promoted to their permanent homes.*

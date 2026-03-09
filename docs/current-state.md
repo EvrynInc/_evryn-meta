@@ -6,8 +6,8 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-09T14:08-07:00*
-*Last #sweep: 2026-03-02*
+*Last updated: 2026-03-09T16:47-07:00*
+*Last #sweep: 2026-03-09*
 *Last #align: 2026-03-02*
 
 ---
@@ -23,15 +23,15 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 ## What's Next
 
 - **Pre-Work #6 (identity writing IN PROGRESS):** core.md v5 complete. All situation + activity modules written except conversation.md and gatekeeper-onboarding.md. Architecture fully resolved (ADRs 012-017). All persistent docs updated (simplified trigger, per-context situations, Slack-only approval, Socket Mode, Bcc, system diagram, approval gate). **2 items remain:** module shape/format (S2 Open Question #2), core.md updates (available modules hub, gentle guide, Smart Curiosity DNA). Session doc: `_evryn-meta/docs/sessions/2026-03-09-identity-writing-s3.md`.
-- **Build phases finalized:** v0.2 "Gatekeeper's Inbox" (Mark live ~March 10) → v0.3 "The Broker" (web app + matching + payments, first revenue late April) → v0.4 "Scale" (second gatekeeper, publisher, agents, June/July). SIFF (mid-May) is a target for presence.
+- **Build phases finalized:** v0.2 "Gatekeeper's Inbox" (Mark live ~March 18-19) → v0.3 "The Broker" (web app + matching + payments, first revenue late April) → v0.4 "Scale" (second gatekeeper, publisher, agents, June/July). SIFF (mid-May) is a target for presence.
 - **Legal: Privacy & Terms questionnaire** — Under active consideration with Fenwick.
 
 ## Active Projects
 
-- **_evryn-meta** — Doc hygiene done (S1/S2 archived, S3 created, February CHANGELOG archived, spam-is-people spoke edit). ARCHITECTURE.md trim brief written (`docs/sessions/architecture-trim-brief.md`) — run in a fresh instance. All 5 S2 open questions resolved. 2 items remain before identity writing continues: module shape/format, core.md updates.
-- **evryn-backend** — Identity files on disk: core.md (v5), situations/operator.md, situations/gatekeeper.md (lifecycle fix done), activities/triage.md (complete), activities/onboarding.md (first draft, needs rework). ARCHITECTURE.md fully updated (Identity Composition, operator security, system diagram, pipeline diagram, approval gate). BUILD doc and SPRINT doc updated for simplified trigger + Slack-only approval + Socket Mode. Pre-Work #9 (DC CLAUDE.md update) still pending.
+- **_evryn-meta** — #sweep completed (doc hygiene + protocol hardening). Absorption protocol and session doc referencing rules added to AC CLAUDE.md. AC/DC protocol updated (mailbox checks at startup and #lock). AC #lock protocol updated (build progress step, mailbox check step). OC/QC repo descriptions updated to trigger-based timing. 2 items remain before identity writing continues: module shape/format, core.md updates.
+- **evryn-backend** — Identity files on disk: core.md (v5), situations/operator.md, situations/gatekeeper.md (lifecycle fix done), activities/triage.md (complete), activities/onboarding.md (first draft, needs rework). ARCHITECTURE.md fully updated. BUILD doc updated with status columns (Phase 0: 0a/0b DONE, 0c-0e DEFERRED; Phase 1-2: NOT STARTED) + active session pointer. SPRINT doc updated with Day 1-5 dates (Tue 3/11 – Mon 3/17), per-task status, BUILD phase mappings, corrected After Sprint dates. Pre-Work #9 (DC CLAUDE.md update) still pending.
 - **evryn-team-agents** — PAUSED.
-- **evryn-dev-workspace** — DC's home repo. OC/QC entities added to CLAUDE.md.
+- **evryn-dev-workspace** — DC's home repo. DC #lock protocol updated (build progress step, merged AC handoff step, mailbox check with multi-instance note). DC CLAUDE.md updated (build progress tracking rule, session start mailbox check, multi-instance note, permanent infrastructure framing).
 - **evryn-website** — Live at evryn.ai.
 
 ## Infrastructure

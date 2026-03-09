@@ -4,7 +4,7 @@ Learnings from building AI agents that will help when building Evryn (the produc
 
 **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 
-*Last updated: 2026-03-09T13:15-07:00*
+*Last updated: 2026-03-09*
 
 ---
 
@@ -30,6 +30,9 @@ When you have carefully crafted language (scripts, disclosure arcs, trust-buildi
 
 ### Per-Context Situation Determination
 Don't assign static "roles" that determine how the agent treats someone. The same person occupies different situations in different interactions — a gatekeeper forwarding candidates vs. asking a personal question needs different agent behavior. Let the agent determine the situation from the conversation, not from a metadata label. The trigger provides person context (who they are, their history); the agent decides what situation this interaction represents.
+
+### Rich Insights Over Structured Extraction
+When writing agent prompts for information gathering (onboarding, intake, user understanding), tell the agent to collect "rich insights — observations, patterns, signals, emotional cues, things said and unsaid" rather than "structured understanding." The word "structured" makes the model cram information into predictable fields prematurely — it tries to fill a template instead of actually listening. "Rich insights" encourages journaling-style observation that captures what's genuinely signal. Don't impose structure on data before you know what matters. Structure comes from synthesis, not collection.
 
 ### Two-Layer Pacing
 Pacing guidance splits into two layers with different homes:
@@ -59,6 +62,8 @@ Don't load everything every time. Split agent context into:
 - **Modules:** Loaded based on trigger type (briefing procedures, reflection guidance, collaboration patterns)
 
 Agents should have *awareness* of what modules exist (low-resolution summary in core), but only get detailed procedures when relevant. This can save 30-40% on routine calls.
+
+**Soul DNA test:** If it's not part of the soul DNA in *every* moment, it doesn't belong in the always-loaded core. Every token burns every turn. Test: can it be pointed to instead of included? Procedures, operational details, and scenario-specific handling all move to contextual modules. The core should be who the agent IS — everything else is what the agent DOES, loaded when the doing happens.
 
 ### Measure What Matters, Not Proxies
 When constraining agent behavior (e.g., preventing runaway conversations), measure the actual thing you care about:
