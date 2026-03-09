@@ -148,7 +148,7 @@ Beyond behavioral detection, Evryn will employ proactive AI detection — scanni
 ### Preventing Platform Abuse
 
 System-level defenses beyond individual moderation:
-- **Spam mitigation** — rate limits, refusal of spammy prompts, quiet blocking of repeat offenders
+- **Spam mitigation** — rate limits, refusal of spammy prompts, quiet blocking of repeat offenders. But: spam is often just people trying to find connections and not doing it well — they're misguided, not malicious. Where possible, redirect before blocking. Bad actors get blocked; bad habits get redirected.
 - **Scraping defense** — no browsing or search by design; even verified users can't systematically harvest data
 - **Reverse-engineering prevention** — behavioral throttles reduce the impact of adversarial queries
 

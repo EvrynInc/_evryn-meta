@@ -2,7 +2,7 @@
 
 **Status:** Not started. Picking up from S2 (archived to `historical/`).
 
-**Previous sessions:** S1 wrote core.md (v5 on disk). S2 resolved all 5 open architectural questions (ADRs 012-017), wrote situation modules (operator, gatekeeper) and triage activity module, drafted onboarding (needs rewrite). Full history in `historical/2026-03-04-identity-writing-s1.md` and `historical/2026-03-04-identity-writing-s2.md`.
+**Previous sessions:** S1 wrote core.md (v5 on disk). S2 resolved all 5 open architectural questions (ADRs 012-017), wrote situation modules (operator, gatekeeper) and triage activity module, drafted onboarding (needs rewrite). Full history in `docs/sessions/historical/2026-03-04-identity-writing-s1.md` and `docs/sessions/historical/2026-03-04-identity-writing-s2.md`.
 
 ---
 
@@ -90,14 +90,14 @@ These are Justin's specific issues with the first `onboarding.md` draft. Preserv
 | `situations/new-contact.md` | Situation | Not started | Real version, not stub (feedback #10) |
 | `situations/regular-user.md` | Situation | Not started | Real version, not stub (feedback #10) |
 | `public-knowledge/company-context.md` | Knowledge | Not started | Public-safe "what is Evryn" |
-| Internal reference files | Reference | Not started | canary-procedure, crisis-protocol, trust-arc-scripts, smart-curiosity-full, contact-capture, feedback-guidance |
+| Internal reference files | Reference | Not started | canary-procedure, crisis-protocol, trust-arc-scripts, smart-curiosity-full, contact-capture, feedback-guidance, cultural-trust-fluency (v0.3+ — five culture group table from S1 offload list) |
 
 ---
 
 ## Key Context for Module Writing
 
 - **Simplified trigger model (ADR-017).** The trigger does as little as possible: identify sender → Supabase lookup → compose systemPrompt (core.md + person context) → call `query()`. One hard-coded exception: Slack from Justin's verified user ID adds operator.md.
-- **Activity modules are on-demand.** Evryn pulls them via tool when she recognizes the situation calls for it. Exception: triage (deterministic from email headers, stored in emailmgr_items). Activity modules are essentially internal-reference files that Evryn pulls when she recognizes the need.
+- **Activity modules are on-demand.** Evryn pulls them via tool when she recognizes the conversation calls for it. All forwards go to `emailmgr_items` for data capture, but forward ≠ triage — Evryn determines intent (triage vs. info-sharing vs. conversation). No activity is deterministic except operator (trigger-loaded for Justin's Slack).
 - **Situation is per-context, not per-person.** Mark is "gatekeeper" when forwarding candidates, "regular user" when asking a personal question. The trigger passes person context (including JSONB roles); Evryn determines the appropriate situation from the conversation.
 - **core.md is the activity hub.** Evryn discovers what she can do from core.md's "available modules" section. This is how she knows onboarding.md exists when Mark says "let's get started now."
 - **Operator security: three layers.** Core doesn't mention operator.md. Tool blocks access to it. Only trigger code can load it. See ARCHITECTURE.md.
