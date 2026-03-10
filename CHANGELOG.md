@@ -6,6 +6,17 @@
 
 ---
 
+## 2026-03-09 (#align — evryn-meta + evryn-backend)
+
+- **#align results:** 4 principles with no build representation (addressed), 1 build/principle tension (date updated), 0 ADR integrity issues, 6 missing breadcrumbs (placed). All 17 ADRs hold.
+- **identity-writing-brief.md (evryn-backend)** — Cultural trust fluency added as structural principle (design constraint, not future feature). "Spam is people" added to triage.md content spec (redirect before blocking).
+- **ARCHITECTURE.md (evryn-backend)** — "Behavioral Design Principles" section added after Onboarding Patterns: catalyst-not-replacement, emotional peak tagging, "talk to Evryn" as primary landing. These are v0.3+ breadcrumbs that inform identity writing and future build specs.
+- **BUILD-EVRYN-MVP.md (evryn-backend)** — "Phase 1-2 Principle Breadcrumbs" section added before Future Phase Resources: 9 deferred principles with spoke sources, timing, and build impact. v0.3 web app design principle made explicit (conversation-first, not form-first).
+- **Hub (roadmap.md)** — Mark live date updated from "~March 10" to "~March 18-19".
+- **GTM spoke** — v0.2 date updated to match Hub.
+- **ADR-005** — v0.2 implementation note added: the public-knowledge/internal-reference directory split is the v0.2 implementation of the information boundary this ADR called for.
+- **current-state.md** — #align date updated.
+
 ## 2026-03-09 (#sweep — doc hygiene + protocol hardening)
 
 - **Absorption protocol added to AC CLAUDE.md** — information must flow back up the doc hierarchy (session → sprint → BUILD → ARCHITECTURE). Persistent docs never reference ephemeral session docs (one exception: BUILD doc active session pointer, cleared at #lock).

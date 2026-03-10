@@ -41,10 +41,12 @@ The doc was built over many sessions with Justin's direct input. Some things tha
 1. **This brief** (you're reading it)
 2. **`_evryn-meta/CLAUDE.md`** — AC's operating manual. Pay special attention to: "Documentation Approach" (Diataxis + progressive depth), "Write notes that survive context loss" (the overcompression warning), and "Source-of-truth documents require explicit approval from Justin before edits."
 3. **`_evryn-meta/docs/hub/roadmap.md`** — The Hub. What Evryn is. You need this to understand what ARCHITECTURE.md is describing.
-4. **`evryn-backend/docs/ARCHITECTURE.md`** — The full 847 lines. Read every word. This is what you're trimming.
-5. **All 17 ADRs in `_evryn-meta/docs/decisions/`** — Read each one. You need to know what rationale is already captured in ADRs so you can confidently replace inline reasoning with pointers. The relevant ones for this doc are primarily ADRs 001, 012, 013, 014, 015, 016, 017 — but scan all of them.
+4. **docs\hub\trust-and-safety.md, docs\hub\user-experience.md, docs\hub\technical-vision.md** these are essential context, to understand what really matters. 
+5. **`evryn-backend/docs/ARCHITECTURE.md`** — The full 847 lines. Read every word. This is what you're trimming.
+6. **All 17 ADRs in `_evryn-meta/docs/decisions/`** — Read each one. You need to know what rationale is already captured in ADRs so you can confidently replace inline reasoning with pointers. The relevant ones for this doc are primarily ADRs 001, 012, 013, 014, 015, 016, 017 — but scan all of them.
+7. C:\Users\Justin\Evryn\Code\evryn-backend\docs\BUILD-EVRYN-MVP.md, C:\Users\Justin\Evryn\Code\evryn-backend\docs\SPRINT-MARK-LIVE.md
 
-**You do NOT need to read:** Session docs, CHANGELOG, LEARNINGS, AGENT_PATTERNS, identity files, spokes (other than the Hub), BUILD doc, SPRINT doc.
+**You do NOT need to read:** Session docs, CHANGELOG, LEARNINGS, AGENT_PATTERNS, identity files, additional spokes (other than those mentioned).
 
 ## How to Deliver
 
@@ -81,7 +83,7 @@ The doc was built over many sessions with Justin's direct input. Some things tha
 
 ## What Success Looks Like
 
-- A doc that's under ~500 lines (flexible — quality over target)
+- A doc that's *ideally* under ~500 lines (flexible — quality over target)
 - Every cut is traceable: "this rationale is in ADR-012" or "this is stated identically in section X"
 - The doc is still self-contained enough that DC can build from it without chasing references
 - Justin reviews and approves every change before it's made

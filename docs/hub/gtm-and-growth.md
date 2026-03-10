@@ -19,7 +19,7 @@ The Master Plan's GTM was written assuming a traditional startup with a human te
 **Bottom line:** The strategic direction below is correct — film industry first, wave strategy, whisper cascade, quality over quantity. What's evolved is the *urgency and scale assumptions*. Evryn can afford to grow more deliberately, prove the model at small scale, and let traction speak for itself.
 
 **Build phases, target dates, and GTM alignment:**
-- **v0.2 "Gatekeeper's Inbox"** (target: Mark live ~March 10-12, stabilize through March 14) — Mark live, triage running, user records accumulating. GTM is one gatekeeper proving the model.
+- **v0.2 "Gatekeeper's Inbox"** (target: Mark live ~March 18-19) — Mark live, triage running, user records accumulating. GTM is one gatekeeper proving the model.
 - **v0.3 "The Broker"** (target: DC starts ~March 17, first revenue late April / early May) — Web app + matching + payments + cast-off outreach. GTM shifts: cast-offs become the acquisition channel (~200 new users/day from Mark alone), first revenue flows, whisper cascade begins organically. **SIFF (Seattle International Film Festival, mid-May to early June) is a real target for presence.**
 - **v0.4 "Scale"** (target: June/July, after v0.3 stabilizes) — Second gatekeeper, begins to test the publisher module (replacing Justin's manual approval), agents come online. GTM widens: wave strategy activates across multiple gatekeeper channels, proactive outreach, Lucas manages operations. Union contract negotiation window (May-July 2026) overlaps — film professionals are anxious, trusted connections matter most.
 

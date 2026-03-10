@@ -18,6 +18,14 @@ Create a `public.md` output style with two dimensions:
 
 ## Consequences
 
-- Implementation deferred to Phase 2 (when communication tools come online)
+- Full `public.md` style guide deferred to Phase 2 (when communication tools come online)
 - `executive.md` remains the default output style for Justin
 - The information boundary dimension requires careful specification — AC should define what's internal-only before Phase 2 build begins
+
+## v0.2 Implementation Note (added 2026-03-09, #align)
+
+The information boundary dimension of this ADR is being implemented in v0.2 through the identity file directory structure:
+- **`identity/public-knowledge/`** — content Evryn can share with users (company context, etc.)
+- **`identity/internal-reference/`** — procedures that guide her behavior but are never surfaced (canary procedure, crisis protocols, trust arc scripts, etc.)
+
+This structural separation — enforced by directory, not instruction — is the v0.2 implementation of the "what can be shared externally" boundary this ADR called for. The full `public.md` tone guide remains deferred, but the information boundary is architecturally enforced from day one. See [ADR-015](015-situation-activity-module-matrix.md) (bright security line between public-knowledge and internal-reference).
