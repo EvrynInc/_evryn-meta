@@ -6,6 +6,15 @@
 
 ---
 
+## 2026-03-10 (Cross-doc consistency + BUILD memory table restoration)
+
+- **BUILD doc (evryn-backend)** — Stale phase names stripped (8 locations), "Gmail as natural archive" corrected to Supabase, "triage system prompt" → "composable identity files", memory architecture table restored (had been over-trimmed to pointer-only — DC needs the build-resolution detail while writing core.md).
+- **ARCHITECTURE.md (evryn-backend)** — Sprint dates corrected (March 11-17), Current State section updated (Phase 0a/0b DONE, remaining identity files listed), stale "triage system prompt" terminology fixed.
+- **SPRINT doc (evryn-backend)** — AC1 task updated to "composable identity files" with correct directory structure. All "Build 2" references → "v0.3".
+- **Architecture trim brief** — Moved to `docs/sessions/historical/2026-03-09-architecture-trim-brief.md` (work complete).
+- **Claude Code permissions** — `settings.local.json` cleaned up from one-off approvals to structured allow list (reads scoped to Evryn repos, safe git/bash/dev tools auto-approved).
+- **#lock checkpoint** — current-state refreshed.
+
 ## 2026-03-09 (#align — evryn-meta + evryn-backend)
 
 - **#align results:** 4 principles with no build representation (addressed), 1 build/principle tension (date updated), 0 ADR integrity issues, 6 missing breadcrumbs (placed). All 17 ADRs hold.
@@ -37,7 +46,7 @@
 - **trust-and-safety spoke** — "spam is people" principle added to spam mitigation bullet (redirect before blocking; bad actors get blocked, bad habits get redirected).
 - **LEARNINGS.md** — 4 new entries (#36-39: forward ≠ triage, situation per-context, untrusted input in prompt, catch-up-on-reconnect).
 - **AGENT_PATTERNS.md** — 3 new patterns (per-context situation determination, defense-in-depth for privileged modes, catch-up-on-reconnect).
-- **ARCHITECTURE.md trim brief** written at `docs/sessions/architecture-trim-brief.md` — reading list, strategy, constraints for a fresh instance to trim from 847 to ~500 lines.
+- **ARCHITECTURE.md trim brief** written at `docs/sessions/historical/2026-03-09-architecture-trim-brief.md` — reading list, strategy, constraints for a fresh instance to trim from 847 to ~500 lines. *(Executed in subsequent session — trim complete.)*
 - **#lock checkpoint** — current-state refreshed.
 
 ## 2026-03-06 (Cross-repo gatekeeper flow alignment + doc cleanup)

@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-09T17:21-07:00*
+*Last updated: 2026-03-10T17:38-07:00*
 *Last #sweep: 2026-03-09*
 *Last #align: 2026-03-09*
 
@@ -28,8 +28,8 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## Active Projects
 
-- **_evryn-meta** — #sweep completed (doc hygiene + protocol hardening). Absorption protocol and session doc referencing rules added to AC CLAUDE.md. AC/DC protocol updated (mailbox checks at startup and #lock). AC #lock protocol updated (build progress step, mailbox check step). OC/QC repo descriptions updated to trigger-based timing. 2 items remain before identity writing continues: module shape/format, core.md updates.
-- **evryn-backend** — Identity files on disk: core.md (v5), situations/operator.md, situations/gatekeeper.md (lifecycle fix done), activities/triage.md (complete), activities/onboarding.md (first draft, needs rework). ARCHITECTURE.md fully updated. BUILD doc updated with status columns (Phase 0: 0a/0b DONE, 0c-0e DEFERRED; Phase 1-2: NOT STARTED) + active session pointer. SPRINT doc updated with Day 1-5 dates (Tue 3/11 – Mon 3/17), per-task status, BUILD phase mappings, corrected After Sprint dates. Pre-Work #9 (DC CLAUDE.md update) still pending.
+- **_evryn-meta** — Cross-doc consistency pass complete (ARCHITECTURE ↔ BUILD ↔ SPRINT). Architecture trim brief executed and archived. Claude Code permissions configured (settings.local.json). 2 items remain before identity writing continues: module shape/format, core.md updates.
+- **evryn-backend** — Identity files on disk: core.md (v5), situations/operator.md, situations/gatekeeper.md (lifecycle fix done), activities/triage.md (complete), activities/onboarding.md (first draft, needs rework). ARCHITECTURE.md trimmed and current-state updated. BUILD doc trimmed (stale warnings removed, phase names cleaned, memory table restored, terminology fixed). SPRINT doc terminology aligned (composable identity files, v0.3 naming). Pre-Work #9 (DC CLAUDE.md update) still pending.
 - **evryn-team-agents** — PAUSED.
 - **evryn-dev-workspace** — DC's home repo. DC #lock protocol updated (build progress step, merged AC handoff step, mailbox check with multi-instance note). DC CLAUDE.md updated (build progress tracking rule, session start mailbox check, multi-instance note, permanent infrastructure framing).
 - **evryn-website** — Live at evryn.ai.
