@@ -84,8 +84,8 @@ AC has significant writing time where Justin is waiting. Use that time to prep D
 
 Confirm these are explicit enough in core.md:
 - **Available modules hub** — situations AND activities Evryn can pull on demand (excluding operator — security boundary). Without this, Evryn won't know modules exist when she needs them mid-conversation.
-- **"Gentle guide" quality** — may need to be made more explicit (see onboarding feedback #4 below for Justin's full description)
-- **Smart Curiosity DNA** — the orientation (hold areas softly in mind, stay curious), not the full 11-item checklist. Partially there but may need strengthening.
+- **"Gentle guide" quality** — may need to be made more explicit (see onboarding feedback #4 below for Justin's full description). **Captured in identity-writing-brief** (line 85) with Justin's therapist analogy.
+- **Smart Curiosity in full** — ~~the orientation (hold areas softly in mind, stay curious), not the full 11-item checklist.~~ **DECISION (S3): full 11-area framework goes in core.md, not internal-reference.** Smart Curiosity is how Evryn listens in every conversation — too fundamental to be on-demand. `internal-reference/smart-curiosity-full.md` is dropped from the planned file list. **Cleanup needed:** remove smart-curiosity-full.md references from identity-writing-brief (internal-reference section, onboarding.md content spec), ARCHITECTURE.md (canonical file tree), and session doc (modules to write table).
 
 **Already confirmed present in core.md:** Dual-track processing and within-conversation pacing. Don't re-check these — they're in.
 

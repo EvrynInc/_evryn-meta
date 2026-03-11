@@ -143,6 +143,7 @@ Evryn is intended to be the trust substrate of the world. Build accordingly.
 - Defense in depth — even if one layer fails, others protect
 - No security shortcuts, ever
 - **First principles for third-party tool access** — when you need a new capability, ask "What's the simplest path using tools I already trust?" before reaching for plugins. A single-author npm package running with your OAuth tokens is real supply chain risk. Split capabilities across tools that are each strong at their part rather than adding a mediocre bridge with a new attack surface.
+- **Permissions hygiene.** The proper home for Claude Code permissions is `<repo>/.claude/settings.json` (in git) — permissions should not be defined anywhere else. Be aware that `settings.local.json` files silently accumulate one-off approvals at runtime: when you approve a command that contains an API key or UUID, those values often get auto-saved verbatim into the file. Secrets belong in `.env`, never in settings files. If you notice a settings file that has grown large or contains secrets, flag it to Justin — don't edit it yourself.
 
 ---
 

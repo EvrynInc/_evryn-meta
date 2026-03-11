@@ -1,12 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Read(c:/Users/Justin/Evryn/Code/**)",
-      "Read(C:/Users/Justin/Evryn/Code/**)",
-      "Glob(c:/Users/Justin/Evryn/Code/**)",
-      "Glob(C:/Users/Justin/Evryn/Code/**)",
-      "Grep(c:/Users/Justin/Evryn/Code/**)",
-      "Grep(C:/Users/Justin/Evryn/Code/**)",
+      "Read(~/Evryn/Code/**)",
+      "Glob(~/Evryn/Code/**)",
+      "Grep(~/Evryn/Code/**)",
       "WebFetch(domain:anthropic.com)",
       "WebFetch(domain:www.anthropic.com)",
       "WebFetch(domain:claude.com)",
