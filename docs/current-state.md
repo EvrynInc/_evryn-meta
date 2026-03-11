@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-10T18:12-07:00*
+*Last updated: 2026-03-11T13:45-07:00*
 *Last #sweep: 2026-03-09*
 *Last #align: 2026-03-09*
 
@@ -22,16 +22,16 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Pre-Work #6 (identity writing IN PROGRESS):** core.md v5 complete. On disk: operator.md, gatekeeper.md (lifecycle fix done), triage.md (complete), onboarding.md (first draft, needs rewrite). **Still need:** conversation.md (DC Day 3 blocker), gatekeeper-onboarding.md (before Mark go-live), onboarding.md rewrite, core.md updates (available modules hub). v0.3-only: new-contact.md, regular-user.md. Architecture fully resolved (ADRs 012-017). Session doc: `_evryn-meta/docs/sessions/2026-03-09-identity-writing-s3.md`.
+- **Pre-Work #6 (identity writing IN PROGRESS):** core.md v5 complete. On disk: operator.md, gatekeeper.md (lifecycle fix done), triage.md (complete), onboarding.md (first draft, needs rewrite). S3a prep work done (writing brief updated, pointer comments added, sprint dates fixed). **Next up:** review existing files with Justin, then write conversation.md (DC Day 3 blocker), gatekeeper-onboarding.md (before Mark go-live), core.md updates (modules hub, gentle guide, Smart Curiosity in full). Session doc: `_evryn-meta/docs/sessions/2026-03-09-identity-writing-s3.md`.
 - **Build phases finalized:** v0.2 "Gatekeeper's Inbox" (Mark live ~March 18-19) → v0.3 "The Broker" (web app + matching + payments, first revenue late April) → v0.4 "Scale" (second gatekeeper, publisher, agents, June/July). SIFF (mid-May) is a target for presence.
 - **Legal: Privacy & Terms questionnaire** — Under active consideration with Fenwick.
 
 ## Active Projects
 
-- **_evryn-meta** — Cross-doc consistency pass complete. Architecture trim executed and archived. Claude Code permissions configured. S3 session doc has sprint-aligned priority ordering and credential checklist for Justin.
-- **evryn-backend** — DC Day 1 scaffolding complete (`src/` has email poller, Supabase client, Slack notifier, config). `.env` configured (Gmail OAuth, Supabase, Slack webhook, Anthropic API key). Synthetic test fixtures done (18 emails). Identity writing in progress (see Pre-Work #6 above). ARCHITECTURE.md trimmed. BUILD + SPRINT docs current. Pre-Work #9 (DC CLAUDE.md update) still pending.
-- **evryn-team-agents** — PAUSED.
-- **evryn-dev-workspace** — DC's home repo. DC #lock protocol updated (build progress step, merged AC handoff step, mailbox check with multi-instance note). DC CLAUDE.md updated (build progress tracking rule, session start mailbox check, multi-instance note, permanent infrastructure framing).
+- **_evryn-meta** — S3 session doc updated for clean handoff. Claude Code permissions configured across all repos (portable settings.json with ~/ paths, gitignore hygiene, CLAUDE.md notes).
+- **evryn-backend** — DC Day 1 scaffolding complete (`src/` has email poller, Supabase client, Slack notifier, config). Identity writing in progress (see Pre-Work #6 above). Sprint dates corrected. Identity-writing-brief extensively updated. Pointer comments added to all identity files.
+- **evryn-team-agents** — PAUSED. Settings.local.json cleaned (had Linear API key in plaintext).
+- **evryn-dev-workspace** — DC's home repo. CLAUDE.md updated with permissions hygiene note.
 - **evryn-website** — Live at evryn.ai.
 
 ## Infrastructure

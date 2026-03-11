@@ -1,8 +1,27 @@
 # Identity Writing S3 — Remaining Work
 
-**Status:** Not started. Picking up from S2 (archived to `historical/`).
+**Status:** In progress. Pre-review groundwork done (S3a). Next action: review existing identity files with Justin, then write remaining modules.
 
 **Previous sessions:** S1 wrote core.md (v5 on disk). S2 resolved all 5 open architectural questions (ADRs 012-017), wrote situation modules (operator, gatekeeper) and triage activity module, drafted onboarding (needs rewrite). Full history in `docs/sessions/historical/2026-03-04-identity-writing-s1.md` and `docs/sessions/historical/2026-03-04-identity-writing-s2.md`.
+
+---
+
+## What Was Done This Session (S3a — March 11)
+
+- Updated `identity-writing-brief.md` extensively — added "What Identity Means" section (bright line: system-side context = identity, user-side input = prompt), "Rewriting Rules" section (pointer comment format, three key constraints, "more Evryn" test), caching/cost note for core.md (signal-to-noise, not token cost), gentle guide requirement (Justin's therapist analogy: "create a safe, fairly wide lane, then let them navigate it"), Smart Curiosity in full decision
+- Added rewriting guidelines pointer comment to ALL existing identity files: `<!-- Make NO EDITS to this doc without consulting Rewriting guidelines: docs/identity-writing-brief.md -->`
+- Fixed sprint doc dates (days of week off by one throughout, added Day 1 extended framing: Mon March 2 – Wed March 11)
+
+**Key decisions made:**
+- **"Identity" naming is correct** — not "system prompt docs." Only core.md and operator.md go in systemPrompt parameter; everything else loads via tool. "Identity" = full operating context on the system side.
+- **Smart Curiosity full 11-area framework goes in core.md** — too fundamental to every conversation to be on-demand. `internal-reference/smart-curiosity-full.md` dropped from planned files.
+- **"More Evryn" is the rewriting test** — not "sharper" (ambiguous), not "think/act/speak better" (too specific). "More Evryn" is future-proof.
+- **Prescriptive > descriptive in instruction docs** — "must stay lean" not "are lean."
+- **Gentle guide applies everywhere**, not just onboarding — belongs in core.md.
+
+**Cleanup still needed (batched for review pass):**
+- Remove `smart-curiosity-full.md` references from: identity-writing-brief (internal-reference section, ~line 170s), onboarding.md content spec, ARCHITECTURE.md canonical file tree (~line 499)
+- Sprint doc Day 4 text still says "Start drafting the message to Mark for Day 5 (Monday)" — should say "(Tuesday)"
 
 ---
 
@@ -21,7 +40,7 @@ The Mark Live sprint (`evryn-backend/docs/SPRINT-MARK-LIVE.md`) has DC starting 
 
 **Priority order (sprint-critical first):**
 1. **Review existing identity files with Justin.** It's been a week and major structural work happened in between — Justin needs to re-read core.md, operator.md, gatekeeper.md, triage.md, and onboarding.md (first draft) before any new writing. Catch anything that feels off now, not after we've built on top of it.
-2. core.md updates — available modules hub (Evryn can't discover modules without it)
+2. core.md updates — available modules hub (Evryn can't discover modules without it), gentle guide quality, Smart Curiosity in full
 3. conversation.md — DC Day 3 blocker
 4. gatekeeper-onboarding.md — needed before Mark goes live
 5. Split current onboarding.md — extract gatekeeper content into gatekeeper-onboarding.md, leave regular onboarding as a v0.3 polish pass (~90% done)
@@ -40,31 +59,42 @@ AC has significant writing time where Justin is waiting. Use that time to prep D
 
 ---
 
-## To Resume
+## To Resume (Reading List for a Fresh Instance)
 
-**Read these docs in this order:**
-1. `_evryn-meta/docs/hub/roadmap.md` — the Hub. Always load this first.
-2. `evryn-backend/docs/identity-writing-brief.md` — the working spec for all identity files
-3. `evryn-backend/identity/core.md` — the voice everything must match (v5 on disk)
-4. `evryn-backend/docs/BUILD-EVRYN-MVP.md` — the workflow Evryn follows
-5. `evryn-backend/docs/ARCHITECTURE.md` — Identity Composition section (~line 439), honor Required Context demands
-6. `_evryn-meta/docs/hub/detail/gatekeeper-approach.md` — gatekeeper operational playbook (needed for gatekeeper-onboarding module)
-7. `_evryn-meta/docs/hub/detail/gatekeeper-flow.md` — end-to-end gatekeeper lifecycle
-8. `_evryn-meta/docs/research/learning-levels-and-instrumentation.md` — feedback/learning architecture
-9. `_evryn-meta/docs/hub/user-experience.md` — onboarding flows, Training Mode, anticipation mode
-10. `_evryn-meta/docs/hub/trust-and-safety.md` — trust loop, canary principle, crisis protocols
-11. **All three v0.1 historical files** in `evryn-backend/docs/historical/Evryn_0.1_Instructions_Prompts_Scripts/` — treat as an early prototype to study and extract useful patterns from. The language in Prompts & Scripts was chosen very carefully. Beautiful Language has early match calibration ("magic of duds"), refund promise, and tone guidelines. Description & Instructions has conversation flows and abuse handling. **Critical for onboarding workflow structure** — the v0.1 progression (acknowledge → introduce → get them talking → Smart Curiosity → "More About Me" → contact capture → close gracefully) is the reference model for what "clear sense of direction" means.
-12. The completed identity files on disk: `identity/situations/operator.md`, `identity/situations/gatekeeper.md`, `identity/activities/triage.md`, `identity/activities/onboarding.md` (first draft, needs rewrite — read to understand what went wrong)
-13. Claude Agent SDK skills docs (fresh from web):
+Read these in order. The first 6 are full reads (short, critical). The rest are selective.
+
+**Full reads — these set the frame:**
+1. `_evryn-meta/docs/hub/roadmap.md` — the Hub. What Evryn is, the business model, the philosophy. Always first.
+2. `_evryn-meta/docs/hub/trust-and-safety.md` — trust loop, canary principle, crisis protocols. Critical for tone.
+3. `_evryn-meta/docs/hub/user-experience.md` — onboarding flows, Training Mode, anticipation mode. Critical for module writing.
+4. `evryn-backend/docs/identity-writing-brief.md` — the working spec for all identity files. Extensively updated this session.
+5. `evryn-backend/identity/core.md` — the voice everything must match (v5 on disk, ~1,500 tokens).
+6. This session doc (you're reading it).
+
+**Selective reads — system context:**
+7. `evryn-backend/docs/ARCHITECTURE.md` — Read lines 1-50 (overview) and lines 430-625 (Identity Composition section). Honor Required Context demands in that section.
+8. `evryn-backend/docs/BUILD-EVRYN-MVP.md` — Read lines 1-80 (overview and workflow).
+9. `evryn-backend/docs/SPRINT-MARK-LIVE.md` — Skim for Day 2/Day 3 timing and urgency context.
+
+**Existing identity files — read ALL of these (review is the next task):**
+10. `evryn-backend/identity/situations/operator.md`
+11. `evryn-backend/identity/situations/gatekeeper.md`
+12. `evryn-backend/identity/activities/triage.md`
+13. `evryn-backend/identity/activities/onboarding.md` (first draft, needs rewrite — read to understand what went wrong)
+
+**Reference material for module writing:**
+14. `_evryn-meta/docs/hub/detail/gatekeeper-approach.md` — gatekeeper operational playbook (needed for gatekeeper-onboarding module)
+15. `_evryn-meta/docs/hub/detail/gatekeeper-flow.md` — end-to-end gatekeeper lifecycle
+16. **All three v0.1 historical files** in `evryn-backend/docs/historical/Evryn_0.1_Instructions_Prompts_Scripts/` — early prototype to study. Beautiful Language has match calibration, refund promise, tone guidelines. Description & Instructions has conversation flows and abuse handling. **Critical for onboarding workflow structure** — the v0.1 progression (acknowledge → introduce → get them talking → Smart Curiosity → "More About Me" → contact capture → close gracefully) is the reference model.
+17. If *necessary*, read the SDK skills docs to absorb the *format* principles, not to question the *architecture*:
     - `https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview`
     - `https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices`
-14. This doc
 
-**SDK Skills alignment is RESOLVED** — don't re-investigate. The full analysis is in the ADR-012 addendum (`_evryn-meta/docs/decisions/012-trigger-composed-identity.md`). Summary: Skills format principles adopted (concise, operational, progressive disclosure, degrees of freedom); Skills loading mechanism not needed (our trigger composition + on-demand tool reads already does what Skills does, but better scoped). Read the SDK docs to absorb the *format* principles, not to question the *architecture*.
+**SDK Skills alignment is RESOLVED** — don't re-investigate. The full analysis is in the ADR-012 addendum (`_evryn-meta/docs/decisions/012-trigger-composed-identity.md`). Summary: Skills format principles adopted; loading mechanism not needed.
 
 ---
 
-## Open Questions (Must Resolve First)
+## Open Questions (Must Resolve During Review)
 
 ### Module Shape / Format (S2 Open Question #2 — still open)
 
@@ -78,14 +108,14 @@ AC has significant writing time where Justin is waiting. Use that time to prep D
 - Include conditional workflows where the path forks
 - Reference deeper material (internal-reference files) one level deep
 
-**This needs to be captured in a persistent doc** (identity-writing-brief.md or a new "module format guide") so every module gets built to the same shape.
+**This needs to be captured in a persistent doc** (identity-writing-brief.md or a new "module format guide") so every module gets built to the same shape. Justin noted that triage.md likely serves as the template (preconditions, steps, decision points, outputs, security, principles) — confirm during review.
 
-### core.md Check
+### core.md Updates Needed
 
-Confirm these are explicit enough in core.md:
+Confirm these are addressed in core.md:
 - **Available modules hub** — situations AND activities Evryn can pull on demand (excluding operator — security boundary). Without this, Evryn won't know modules exist when she needs them mid-conversation.
-- **"Gentle guide" quality** — may need to be made more explicit (see onboarding feedback #4 below for Justin's full description). **Captured in identity-writing-brief** (line 85) with Justin's therapist analogy.
-- **Smart Curiosity in full** — ~~the orientation (hold areas softly in mind, stay curious), not the full 11-item checklist.~~ **DECISION (S3): full 11-area framework goes in core.md, not internal-reference.** Smart Curiosity is how Evryn listens in every conversation — too fundamental to be on-demand. `internal-reference/smart-curiosity-full.md` is dropped from the planned file list. **Cleanup needed:** remove smart-curiosity-full.md references from identity-writing-brief (internal-reference section, onboarding.md content spec), ARCHITECTURE.md (canonical file tree), and session doc (modules to write table).
+- **"Gentle guide" quality** — captured in identity-writing-brief (line 85) with Justin's therapist analogy. Needs to be in core.md too since it applies everywhere.
+- **Smart Curiosity in full** — DECIDED: full 11-area framework goes in core.md (see decisions above).
 
 **Already confirmed present in core.md:** Dual-track processing and within-conversation pacing. Don't re-check these — they're in.
 
@@ -124,7 +154,7 @@ These are Justin's specific issues with the first `onboarding.md` draft. Preserv
 | `situations/new-contact.md` | Situation | Not started | Real version, not stub (feedback #10) |
 | `situations/regular-user.md` | Situation | Not started | Real version, not stub (feedback #10) |
 | `public-knowledge/company-context.md` | Knowledge | Not started | Public-safe "what is Evryn" |
-| Internal reference files | Reference | Not started | canary-procedure, crisis-protocol, trust-arc-scripts, smart-curiosity-full, contact-capture, feedback-guidance, cultural-trust-fluency (v0.3+ — five culture group table from S1 offload list) |
+| Internal reference files | Reference | Not started | canary-procedure, crisis-protocol, trust-arc-scripts, contact-capture, feedback-guidance, cultural-trust-fluency (v0.3+ — five culture group table from S1 offload list) |
 
 ---
 

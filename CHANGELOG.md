@@ -6,6 +6,15 @@
 
 ---
 
+## 2026-03-11 (Identity writing S3a prep + Claude Code permissions)
+
+- **Identity writing brief (evryn-backend)** — "What Identity Means" section, "Rewriting Rules" section (pointer comments, "more Evryn" test, prescriptive language), caching/cost note, gentle guide requirement, Smart Curiosity in full decision.
+- **Pointer comments added** to all 5 existing identity files — rewriting guidelines gate.
+- **Sprint doc dates fixed (evryn-backend)** — days of week corrected, Day 1 extended framing added.
+- **Claude Code permissions** — portable `settings.json` (in git, `~/` paths) created for all 5 repos. `settings.local.json` files cleared and untracked. `.gitignore` updated across all repos. Permissions hygiene notes added to AC and DC CLAUDE.md files.
+- **Session doc rewritten** for clean handoff — full reading list for fresh instance, decisions captured, cleanup items batched.
+- **#lock checkpoint** — current-state refreshed.
+
 ## 2026-03-10 (Cross-doc consistency + BUILD memory table restoration)
 
 - **BUILD doc (evryn-backend)** — Stale phase names stripped (8 locations), "Gmail as natural archive" corrected to Supabase, "triage system prompt" → "composable identity files", memory architecture table restored (had been over-trimmed to pointer-only — DC needs the build-resolution detail while writing core.md).
