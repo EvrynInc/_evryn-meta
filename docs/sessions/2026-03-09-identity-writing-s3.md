@@ -6,6 +6,40 @@
 
 ---
 
+## Sprint Alignment — March 11
+
+The Mark Live sprint (`evryn-backend/docs/SPRINT-MARK-LIVE.md`) has DC starting Day 2 (triage pipeline) tomorrow. Day 1 scaffolding is already done — `src/` has email poller, Supabase client, Slack notifier, config. Synthetic test fixtures (18 emails) are done too.
+
+**What DC needs from identity writing, and when:**
+
+| Sprint Day | DC Needs | Status |
+|------------|----------|--------|
+| Day 1 (done) | Nothing — scaffolding complete | DONE |
+| Day 2 | core.md (done), triage.md (done), operator.md (done), gatekeeper.md (done) for triage pipeline | READY |
+| Day 3 | conversation.md for conversation pathway | **NOT WRITTEN** |
+| Go-live (~Mar 18) | gatekeeper-onboarding.md for Mark's first interaction | **NOT WRITTEN** |
+
+**Priority order (sprint-critical first):**
+1. **Review existing identity files with Justin.** It's been a week and major structural work happened in between — Justin needs to re-read core.md, operator.md, gatekeeper.md, triage.md, and onboarding.md (first draft) before any new writing. Catch anything that feels off now, not after we've built on top of it.
+2. core.md updates — available modules hub (Evryn can't discover modules without it)
+3. conversation.md — DC Day 3 blocker
+4. gatekeeper-onboarding.md — needed before Mark goes live
+5. Split current onboarding.md — extract gatekeeper content into gatekeeper-onboarding.md, leave regular onboarding as a v0.3 polish pass (~90% done)
+6. new-contact.md, regular-user.md, company-context.md, internal-reference files — v0.3, not sprint-blocking
+
+### ⚡ Justin: While AC Writes, Set Up DC Credentials
+
+AC has significant writing time where Justin is waiting. Use that time to prep DC's environment — when identity files are done, DC can start immediately with no gap.
+
+**Already in `.env` (confirmed):** Gmail OAuth (evryn@evryn.ai), Supabase URL + service key, Slack webhook, Mark protection flags.
+
+**Still needed for DC Day 2:**
+- [x] **`ANTHROPIC_API_KEY`** — in `.env` (copied from `evryn-team-agents/.env`). Not in config.ts yet — DC will add it.
+- [ ] **Slack Socket Mode setup** — Day 2 upgrades from webhook to Socket Mode (two-way). Go to the Slack app settings → Socket Mode → enable. This gives you an **App-Level Token** (`SLACK_APP_TOKEN`, starts with `xapp-`). You'll also need the **Bot User OAuth Token** (`SLACK_BOT_TOKEN`, starts with `xoxb-`). DC will add these to config.ts.
+- [ ] **Railway project** — create a project for evryn-backend if not already done. DC deploys from CLI.
+
+---
+
 ## To Resume
 
 **Read these docs in this order:**
