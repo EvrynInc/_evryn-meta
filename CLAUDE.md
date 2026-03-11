@@ -178,7 +178,7 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
 **Where new context goes** (routing table):
 - Project state changes → `docs/current-state.md`
 - Decisions → `docs/decisions/NNN-title.md` (ADR format). **Write ADRs at decision time.** Under compaction pressure, decisions captured only in session docs get lost — the session compresses and the decision evaporates. Session docs capture the discussion; ADRs capture the decision. If a decision was made, write the ADR before the session ends.
-- What was built/changed → `CHANGELOG.md` (brief, in each repo)
+- What was built/changed → `_evryn-meta/CHANGELOG.md` (single cross-repo changelog for now; when DC starts shipping regularly in repos, add a repo-level changelog there for build-level detail). When diving into a specific repo's recent history, check if that repo has its own CHANGELOG.md — it may have build-level context not captured here.
 - Learnings & patterns → `LEARNINGS.md` or `AGENT_PATTERNS.md`
 - Session working notes → `docs/` (session doc, absorbed later)
 - Build details → the relevant build doc in the relevant repo

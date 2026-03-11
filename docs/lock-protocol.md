@@ -10,7 +10,7 @@ When Justin says `#lock` or it's time for a checkpoint:
 
 1. **`docs/current-state.md`** — Refresh to reflect current reality. Clean snapshot, not a log.
 2. **Build progress** — If build work was completed this session, update the BUILD doc's phase checklist in the relevant repo (status column). If a sprint doc exists, mark completed tasks. If the BUILD doc has an "Active session" pointer and session content has been absorbed into persistent docs, clear the pointer.
-3. **Session decisions** — If decisions were made this session, ensure they're captured in a session decisions doc (`_evryn-meta/docs/sessions/`) or absorbed into persistent docs. Session decisions docs are disposable — absorb and delete.
+3. **Session decisions** — If decisions were made this session, ensure they're captured in a session decisions doc (`_evryn-meta/docs/sessions/`) or absorbed into persistent docs. Session decisions docs are disposable — absorb and delete. **ADR check:** If any decisions this session are architectural (change how the system works, not just craft/process choices), write them as ADRs now — decisions captured only in session docs often get lost in the shuffle over time.
 4. **`ARCHITECTURE.md`** — Update the appropriate repo's ARCHITECTURE.md if anything architectural changed (schema, pipelines, user model, security patterns).
 5. **Hub & spokes** — If anything this session changes company-level truth (Hub) or domain depth (spokes), update them. Also check: if a spoke was modified, does the Hub's corresponding section still set the right expectation?
 6. **`LEARNINGS.md`** — Add appropriate cross-project patterns or insights.
