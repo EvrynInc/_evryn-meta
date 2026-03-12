@@ -6,8 +6,11 @@
 
 ---
 
-## 2026-03-11 (Identity writing S3a prep + Claude Code permissions)
+## 2026-03-11 (DC credential setup + Identity writing S3a prep + Claude Code permissions)
 
+- **Slack Socket Mode credentials configured (evryn-backend)** — Socket Mode enabled, App-Level Token generated, Bot Token scopes set (chat:write, channels:history, channels:read, im:history, im:read, groups:read, groups:history, users:read), event subscriptions (message.channels, message.im, message.groups). Tokens in `evryn-backend/.env`. Legacy webhook URL retained until Socket Mode is live in code.
+- **Railway project created and CLI linked (evryn-backend)** — project `evryn-backend` on Railway, CLI installed and linked to local repo. DC deploys with `railway up`.
+- **Slack breadcrumb (evryn-team-agents)** — ARCHITECTURE.md note: copy Evryn Notifications app config for future agent Slack apps.
 - **Identity writing brief (evryn-backend)** — "What Identity Means" section, "Rewriting Rules" section (pointer comments, "more Evryn" test, prescriptive language), caching/cost note, gentle guide requirement, Smart Curiosity in full decision.
 - **Pointer comments added** to all 5 existing identity files — rewriting guidelines gate.
 - **Sprint doc dates fixed (evryn-backend)** — days of week corrected, Day 1 extended framing added.

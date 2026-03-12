@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-11T13:45-07:00*
+*Last updated: 2026-03-11T17:25-07:00*
 *Last #sweep: 2026-03-09*
 *Last #align: 2026-03-09*
 
@@ -29,7 +29,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 ## Active Projects
 
 - **_evryn-meta** — S3 session doc updated for clean handoff. Claude Code permissions configured across all repos (portable settings.json with ~/ paths, gitignore hygiene, CLAUDE.md notes).
-- **evryn-backend** — DC Day 1 scaffolding complete (`src/` has email poller, Supabase client, Slack notifier, config). Identity writing in progress (see Pre-Work #6 above). Sprint dates corrected. Identity-writing-brief extensively updated. Pointer comments added to all identity files.
+- **evryn-backend** — DC Day 1 scaffolding complete. All DC Day 2 credentials ready (Slack Socket Mode + Railway linked). Identity writing in progress (see Pre-Work #6 above).
 - **evryn-team-agents** — PAUSED. Settings.local.json cleaned (had Linear API key in plaintext).
 - **evryn-dev-workspace** — DC's home repo. CLAUDE.md updated with permissions hygiene note.
 - **evryn-website** — Live at evryn.ai.
@@ -37,6 +37,8 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 ## Infrastructure
 
 - Running locally on Justin's desktop. No cloud deployment yet.
+- Slack: "Evryn Notifications" app configured for Socket Mode (tokens in evryn-backend/.env). Legacy webhook retained until Socket Mode code is live.
+- Railway: `evryn-backend` project created, CLI installed and linked. DC deploys with `railway up`.
 - Supabase: TWO projects (keeping separate). Agent dashboard project + Evryn product project.
 - Dashboard at evryn-dashboard.vercel.app (pulls from agent dashboard Supabase).
 - evryn@evryn.ai — Evryn's own Google account (separate from agents@evryn.ai).

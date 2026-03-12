@@ -54,8 +54,8 @@ AC has significant writing time where Justin is waiting. Use that time to prep D
 
 **Still needed for DC Day 2:**
 - [x] **`ANTHROPIC_API_KEY`** — in `.env` (copied from `evryn-team-agents/.env`). Not in config.ts yet — DC will add it.
-- [ ] **Slack Socket Mode setup** — Day 2 upgrades from webhook to Socket Mode (two-way). Go to the Slack app settings → Socket Mode → enable. This gives you an **App-Level Token** (`SLACK_APP_TOKEN`, starts with `xapp-`). You'll also need the **Bot User OAuth Token** (`SLACK_BOT_TOKEN`, starts with `xoxb-`). DC will add these to config.ts.
-- [ ] **Railway project** — create a project for evryn-backend if not already done. DC deploys from CLI.
+- [x] **Slack Socket Mode setup** — DONE (2026-03-11). Socket Mode enabled, App-Level Token + Bot Token in `.env`, scopes configured (chat:write, channels:history, channels:read, im:history, im:read, groups:read, groups:history, users:read), event subscriptions (message.channels, message.im, message.groups). Legacy webhook retained until Socket Mode code is live.
+- [x] **Railway project** — DONE (2026-03-11). Project `evryn-backend` created, CLI installed and linked. DC deploys with `railway up`.
 
 ---
 
