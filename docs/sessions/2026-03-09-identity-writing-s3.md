@@ -36,7 +36,7 @@ The Mark Live sprint (`evryn-backend/docs/SPRINT-MARK-LIVE.md`) has DC starting 
 | Day 1 (done) | Nothing — scaffolding complete | DONE |
 | Day 2 | core.md (done), triage.md (done), operator.md (done), gatekeeper.md (done) for triage pipeline | READY |
 | Day 3 | conversation.md for conversation pathway | **NOT WRITTEN** |
-| Go-live (~Mar 18) | gatekeeper-onboarding.md for Mark's first interaction | **NOT WRITTEN** |
+| Day 4 + Go-live | gatekeeper-onboarding.md — needed for Day 4 fictional gatekeeper integration test AND Mark's first interaction | **NOT WRITTEN** |
 
 **Priority order (sprint-critical first):**
 1. **Review existing identity files with Justin.** It's been a week and major structural work happened in between — Justin needs to re-read core.md, operator.md, gatekeeper.md, triage.md, and onboarding.md (first draft) before any new writing. Catch anything that feels off now, not after we've built on top of it.
