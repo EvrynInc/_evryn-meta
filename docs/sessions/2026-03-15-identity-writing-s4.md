@@ -22,19 +22,19 @@
 
 AC walked through triage.md line by line with the lens: "Can Evryn follow this doc and know exactly what to do?" Found 8 gaps in two categories.
 
-### Schema Questions (must resolve before doc can be precise)
+### Schema Questions — RESOLVED (S4 session, 2026-03-15)
 
-These need Justin + AC to decide before rewriting triage.md. The answers affect what field names the doc references.
+All five resolved. Decisions below affect field names in triage.md rewrite and DC schema tasks.
 
-1. **Where does first-call classification live?** Triage.md says "Tag: `user` / `ignore` / `bad_actor`" — but there's no `tag` field in `emailmgr_items`. The schema has `categories[]` (an array). Is the first-call classification a new field? Does it go in `categories[]`? Something else?
+1. **Where does first-call classification live?** → New field `emailmgr_items.sender_type` (values: `user` / `ignore` / `bad_actor`). Dedicated field, not `categories[]` — keeps classifications queryable and `categories[]` available for future tagging.
 
-2. **Where does gold/pass/edge classification live?** Same question. No explicit field for the triage classification result. Needs a specific field name.
+2. **Where does gold/pass/edge classification live?** → New field `emailmgr_items.triage_result` (values: `gold` / `pass` / `edge` / null). Null when sender_type isn't `user`. Two-step classification (sender_type first, triage_result second) is cleaner than a single compound field.
 
-3. **Where do Evryn's notes/impressions live in the user record?** Triage.md says "write your impressions" when creating a user record. Where? `profile_jsonb.notes`? `profile_jsonb.story`? A dedicated column? The BUILD doc mentions `profile_jsonb` carries "gatekeeper criteria, story, notes" but no specific key structure.
+3. **Where do Evryn's notes/impressions live in the user record?** → `users.profile_jsonb.story` (narrative understanding — who they are, what stood out, what they seem to want; grows over time) + `users.profile_jsonb.notes` (array of timestamped operational entries, e.g. `[{date, text}]`). Also: rename existing `emailmgr_items.summary` → `triage_reasoning` (AI-generated summary is too generic; triage reasoning is the actual use case). Also: existing `emailmgr_items.content_raw` stores full email text for audit trail; Evryn gets the clean parsed body in her prompt, not this raw field.
 
-4. **Does Evryn create or update `emailmgr_items`?** Triage.md says "use your Supabase tools to create it." But ARCHITECTURE.md says the trigger stores forwards in emailmgr_items before Evryn wakes up. Which is it? (Most likely: trigger creates the entry, Evryn updates it with classification. But the doc needs to match reality.)
+4. **Does Evryn create or update `emailmgr_items`?** → Trigger creates the emailmgr_item (status: `new`). Evryn updates it (sender_type, triage_result, triage_reasoning, status changes). Triage.md's "use your Supabase tools to create it" is wrong — must say "update."
 
-5. **Who creates the original sender's user record?** The trigger creates/finds the gatekeeper (forwarder). But the original sender extracted from the forward body — does the trigger create their record too, or does Evryn? Sprint doc Day 2 (line 134) says "User record creation" is a DC task, but that likely refers to the gatekeeper, not the extracted sender.
+5. **Who creates the original sender's user record?** → Trigger creates/finds the gatekeeper (forwarder) record. Evryn creates the original sender's user record during triage — the original sender info is extracted by the trigger into emailmgr_items fields (original_from, etc.), but the user record creation requires Evryn's judgment (story, notes, classification context). Bad actors get `users.status = 'restricted'` (not 'blocked' — leaves door cracked for redemption; reasoning stored in `profile_jsonb`).
 
 ### Doc Clarity (fixable once schema questions are answered)
 
@@ -43,6 +43,35 @@ These need Justin + AC to decide before rewriting triage.md. The answers affect 
 7. **"Learn immediately" (line 75) is descriptive, not prescriptive.** Says "every signal updates your understanding" but doesn't tell Evryn what to DO. Should be: "After every approval, rejection, or piece of gatekeeper feedback, update your understanding of what 'gold' means for this gatekeeper. Refine `gatekeeper_criteria` if feedback reveals a pattern."
 
 8. **No "check if user already exists" instruction.** The "For all people" section says "Create a record in the users table" — but what if the person already has a record from a previous forward? Evryn needs to check first.
+
+### Flow Decisions — RESOLVED (S4 session, 2026-03-15)
+
+1. **Trigger creates emailmgr_item; Evryn updates it.** Trigger does deterministic extraction (original_from, subject, forwarding note, is_forwarded, clean email body). Evryn does judgment (classification, user record creation, drafting notifications).
+
+2. **Trigger creates/finds gatekeeper record; Evryn creates original sender's user record.** The trigger knows the forwarder (From: header). The original sender is in `emailmgr_items.original_from` (trigger-extracted). Evryn creates the user record because it requires judgment (story, notes, context).
+
+3. **Structured handoff prompt.** The trigger composes Evryn's prompt as structured data + clean email body, not the raw email. Format:
+   ```
+   Forwarded email from [gatekeeper] (gatekeeper):
+   - emailmgr_item_id: [uuid]
+   - Original sender: [email from original_from field]
+   - Subject: [subject]
+   - Gatekeeper's note: [forwarding note, if any]
+
+   Email body:
+   [clean parsed body text — NOT content_raw with headers]
+   ```
+   Principle: everything deterministic is done deterministically. Evryn's intelligence is for judgment, not parsing.
+
+4. **Gatekeeper's forwarding note.** Stored in the messages table (the whole forwarded email including note goes there as a message record). Also extracted by the trigger and included in Evryn's structured handoff prompt.
+
+5. **Post-classification flow.** Gold/edge: Evryn drafts notification email → emails draft to justin@evryn.ai → pings Slack → updates status to `pending_approval` → waits for Justin's approval on Slack. Pass: status → `done` (logged, no notification). Ignore/bad_actor: status → `done` (logged).
+
+6. **No separate `body` field in current schema.** `content_raw` stores the full raw email. The clean parsed body is composed by the trigger at runtime for the prompt — not persisted separately. Open question whether a `body` field should be added (goes to DC via sprint doc).
+
+7. **Database renamed.** Supabase project renamed from "n8n prototype" to "Evryn Product." Serves both backend and frontend.
+
+8. **Backups.** Free Supabase plan has no automated backups. Manual backups sufficient at current scale (Mark + test-gatekeeper). DC to set up `evryn-backend/backups/` directory and a dump script. Backup check added to #sweep protocol.
 
 ---
 
@@ -147,6 +176,7 @@ Read these in order. The first 7 are full reads (short, critical). The rest are 
 | 11 | `evryn-backend/docs/BUILD-EVRYN-MVP.md` | 60-143 | Critical Principles + The Workflow + Justin-Approval Gate |
 | 12 | `evryn-backend/docs/BUILD-EVRYN-MVP.md` | 450-480 | Supabase Schema + emailmgr_items Status Lifecycle |
 | 13 | `evryn-backend/docs/SPRINT-MARK-LIVE.md` | Skim | Day-by-day timing, urgency context |
+| 14 | `evryn-backend/docs/schema-reference.md` | Full | Current database schema snapshot (what IS, not what ought to be — ARCHITECTURE.md is the target) |
 
 **Fresh reads when we reach specific modules (not loaded yet):**
 

@@ -98,6 +98,7 @@ An AI-powered relationship broker. She finds you "your people" — the rare indi
 - **Don't state something is running unless you've verified it.** "Live" means actually running, not "designed" or "planned."
 - **Prefer full file writes over incremental edits** when making multiple changes to a file. Incremental Edit operations display confusingly in VS Code — it looks like recent work is being deleted. For short files or extensive changes, do the full Write. For long source-of-truth files where a full rewrite risks accidental content loss, targeted Edits to non-overlapping sections are acceptable — just commit+push promptly after.
 - **Commit and push before doing follow-up edits.** Same reason — the IDE shows recent edits as if being deleted during subsequent changes.
+- **Number items in lists.** When presenting multiple items for Justin to respond to, always number them. Sub-items get letters (a, b, c), sub-sub-items get roman numerals (i, ii, iii). This lets Justin respond efficiently: "2.a.iii — yes" instead of quoting the item text back.
 
 ---
 
@@ -206,11 +207,9 @@ For *where new content goes*, use the routing table in "Documentation Approach" 
 
 ## Auto-Memory Hygiene
 
-**Do not use the auto-memory file** (`.claude/projects/*/memory/MEMORY.md`). Claude writes memory entries too concisely — they lose context and become meaningless to future instances. Justin can't review or correct what's in auto-memory (unlike CLAUDE.md, which lives in the repo and is visible).
+**DO NOT write to the auto-memory file** (`.claude/projects/*/memory/MEMORY.md`). **No exceptions.** The MEMORY.md file should contain only a "DO NOT WRITE HERE" notice pointing back to this section. Claude writes memory entries too concisely — they lose context, accumulate contradictory junk, and become meaningless to future instances. Justin can't review or correct what's in auto-memory (unlike CLAUDE.md, which lives in the repo and is visible).
 
-All operational learnings go directly to the appropriate repo files (proposed, with Justin's approval) — so Justin can vet the wording.
-
-The only acceptable use is truly ephemeral same-day notes (e.g., "mid-task, resuming after lunch") — and even then, prefer a session doc.
+All operational learnings go directly to the appropriate repo files (proposed, with Justin's approval) — so Justin can vet the wording. Feedback about communication style, numbering conventions, etc. goes here in CLAUDE.md under the relevant section.
 
 ---
 

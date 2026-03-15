@@ -67,6 +67,11 @@ Check for session docs in `docs/` (working notes from individual sessions). Two 
 
 As you work through the steps above, compile a running list of cross-repo references that are high-risk for inconsistency — recently changed areas, references to docs that were moved or retired, or anything where a change in one place likely should have rippled to others. Once you've finished the other checks, go verify those references. Be intentional about where drift is most likely.
 
+### 9. Schema & Backup Health
+
+- Check `evryn-backend/docs/schema-reference.md` date stamp. If schema changes have been made since the last pull, re-pull it from Supabase.
+- Check `evryn-backend/backups/` for a recent dump. If there's no dump in the last week and the database has active data, flag it. At current scale (Free plan, no automated backups), manual dumps are the safety net.
+
 ---
 
 ## Output
@@ -83,6 +88,7 @@ After working through the checklist, give Justin a brief summary:
 - Current state & changelogs: [accurate / N items flagged]
 - Session docs: [clean / N stale / N mismatches]
 - Cross-repo refs: [clean / N issues]
+- Schema & backups: [current / stale schema / no recent backup]
 ```
 
 For each item, state the inconsistency and your proposed fix. Group by confidence:
