@@ -75,7 +75,7 @@ Web/mobile interface — PWA, mobile-responsive from day one. Native apps deferr
 **Five imperatives** — what the system must deliver to make the relationship feel genuine, safe, and worth returning to:
 
 1. **Trusted Intelligence** — understand users quickly, speak with emotional precision, protect privacy by design. Interpret nuance, honor consent, align guidance with user values.
-2. **Attuned Presence** — feel *with* the user. Track their journey, remember what matters, know when to engage or hold space. Not always active, but always aware.
+2. **Attuned Presence** — feel *with* the user. Track their journey, remember what matters, know when to engage or hold space. Not always active, but always aware. The design target is nourishment, not stimulation — every interaction should leave users feeling more connected, more like themselves, not more dependent on the system.
 3. **Resonant Matching** — introduce people who feel uniquely right and worth paying for. Deep understanding, real constraint handling, judgment calls that earn belief.
 4. **Continuous Learning** — improve with every conversation, every match, every outcome. The model of each user should get sharper over time.
 5. **Structural Safety** — protect users from harm, deception, and noise. Filter out what doesn't belong. Maintain a space where trust compounds.

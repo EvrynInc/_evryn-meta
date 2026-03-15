@@ -130,6 +130,8 @@ People who emailed a gatekeeper but weren't the right mutual fit didn't opt in t
 
 The growth model is **rhizomatic** — like the roots of a great tree, spreading strong and unseen until suddenly the canopy is everywhere. Every early user should feel like a co-founder of a mission-driven community.
 
+**Full toolkit, aligned intent.** The psychological systems that drive human behavior — dopamine, social proof, reciprocity, scarcity, curiosity — are *good* systems. They exist so humans find what they genuinely need. They've been hijacked by platforms that exploit them against the user's interest. Evryn uses these same systems, but in alignment with the user's genuine good. The difference between manipulation and influence: manipulation exploits psychology against someone's interest; influence leverages psychology in service of their interest. Every growth lever is available. The constraint isn't *which tools* — it's *whose interest they serve*.
+
 **Quality over quantity.** Personal outreach and warm introductions, not cold ads. Each invite feels special because it is.
 
 **Growth asks are emotionally intelligent.** Evryn uses her emotional intelligence to tag peak-engagement moments — when belief, excitement, or resonance are high — and shapes later invitations to share, pre-purchase (see [business-model spoke](business-model.md) for the credit bonus), or become an owner via StartEngine. Not as transactions, but as story beats. The moment of conversion isn't a CTA — it's a payoff.
