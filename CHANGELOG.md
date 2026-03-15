@@ -6,6 +6,13 @@
 
 ---
 
+## 2026-03-14 (Testing approach: fictional gatekeeper + two-phase validation)
+
+- **Testing strategy updated (evryn-backend)** — Replaced "pre-define Mark's real criteria" with fictional test gatekeeper approach. Two phases: (1) hand-seeded criteria for Day 2 engine validation, (2) wipe-and-reonboard integration test on Day 4 (Justin plays fictional gatekeeper at `systemtest@evryn.ai`, Evryn gathers criteria through Slack-initiated onboarding conversation). Mark's real criteria learned through his own onboarding — not pre-defined.
+- **BUILD doc + sprint doc updated** — Fictional gatekeeper character defined on Day 1 (with answer key). Day 2 uses hand-seeded criteria. Day 4 tests full chain: Slack introduction → Evryn outreach → onboarding conversation → criteria gathering → classification. Validates the pipeline Mark will actually experience.
+- **Manus evaluated and rejected** — Chinese company, incompatible with Evryn's security posture. Claude Code Agent Teams and Cowork researched as alternatives. Conclusion: neither replaces the need for a custom agent build, and the MVP bottleneck is human tasks (identity files, credentials) not coding speed. DC instances complete estimated 2-hour builds in 5-7 minutes.
+- **#lock checkpoint** — current-state refreshed.
+
 ## 2026-03-11 (DC credential setup + Identity writing S3a prep + Claude Code permissions)
 
 - **Slack Socket Mode credentials configured (evryn-backend)** — Socket Mode enabled, App-Level Token generated, Bot Token scopes set (chat:write, channels:history, channels:read, im:history, im:read, groups:read, groups:history, users:read), event subscriptions (message.channels, message.im, message.groups). Tokens in `evryn-backend/.env`. Legacy webhook URL retained until Socket Mode is live in code.

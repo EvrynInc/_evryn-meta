@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-11T17:25-07:00*
+*Last updated: 2026-03-14T19:54-07:00*
 *Last #sweep: 2026-03-09*
 *Last #align: 2026-03-09*
 
@@ -22,8 +22,9 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Pre-Work #6 (identity writing IN PROGRESS):** core.md v5 complete. On disk: operator.md, gatekeeper.md (lifecycle fix done), triage.md (complete), onboarding.md (first draft, needs rewrite). S3a prep work done (writing brief updated, pointer comments added, sprint dates fixed). **Next up:** review existing files with Justin, then write conversation.md (DC Day 3 blocker), gatekeeper-onboarding.md (before Mark go-live), core.md updates (modules hub, gentle guide, Smart Curiosity in full). Session doc: `_evryn-meta/docs/sessions/2026-03-09-identity-writing-s3.md`.
-- **Build phases finalized:** v0.2 "Gatekeeper's Inbox" (Mark live ~March 18-19) → v0.3 "The Broker" (web app + matching + payments, first revenue late April) → v0.4 "Scale" (second gatekeeper, publisher, agents, June/July). SIFF (mid-May) is a target for presence.
+- **Pre-Work #6 (identity writing IN PROGRESS):** core.md v5 complete. On disk: operator.md, gatekeeper.md (lifecycle fix done), triage.md (complete), onboarding.md (first draft, needs rewrite). S3a prep work done. **Next up:** finish remaining identity files (conversation.md, gatekeeper-onboarding.md, core.md updates, internal-reference files, company-context.md). Session doc: `_evryn-meta/docs/sessions/2026-03-09-identity-writing-s3.md`.
+- **Testing approach updated:** Fictional test gatekeeper (not Mark's real criteria). Two-phase: hand-seeded criteria for engine validation (Day 2), then wipe-and-reonboard integration test (Day 4) where Justin plays the fictional gatekeeper via `systemtest@evryn.ai`. Mark's real criteria learned through his own onboarding conversation. See BUILD doc and sprint doc.
+- **Build phases finalized:** v0.2 "Gatekeeper's Inbox" (Mark live target shifting due to snow/power outage delays — behind ~2 days) → v0.3 "The Broker" (web app + matching + payments, first revenue late April) → v0.4 "Scale" (second gatekeeper, publisher, agents, June/July).
 - **Legal: Privacy & Terms questionnaire** — Under active consideration with Fenwick.
 
 ## Active Projects
