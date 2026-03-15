@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-14T19:54-07:00*
+*Last updated: 2026-03-14T20:32-07:00*
 *Last #sweep: 2026-03-09*
 *Last #align: 2026-03-09*
 
@@ -22,17 +22,17 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Pre-Work #6 (identity writing IN PROGRESS):** core.md v5 complete. On disk: operator.md, gatekeeper.md (lifecycle fix done), triage.md (complete), onboarding.md (first draft, needs rewrite). S3a prep work done. **Next up:** finish remaining identity files (conversation.md, gatekeeper-onboarding.md, core.md updates, internal-reference files, company-context.md). Session doc: `_evryn-meta/docs/sessions/2026-03-09-identity-writing-s3.md`.
-- **Testing approach updated:** Fictional test gatekeeper (not Mark's real criteria). Two-phase: hand-seeded criteria for engine validation (Day 2), then wipe-and-reonboard integration test (Day 4) where Justin plays the fictional gatekeeper via `systemtest@evryn.ai`. Mark's real criteria learned through his own onboarding conversation. See BUILD doc and sprint doc.
-- **Build phases finalized:** v0.2 "Gatekeeper's Inbox" (Mark live target shifting due to snow/power outage delays — behind ~2 days) → v0.3 "The Broker" (web app + matching + payments, first revenue late April) → v0.4 "Scale" (second gatekeeper, publisher, agents, June/July).
+- **Pre-Work #6 (identity writing IN PROGRESS):** core.md v7 complete (Justin reviewed). operator.md and gatekeeper.md reviewed and approved. triage.md reviewed — gaps identified (schema questions + doc clarity, see session doc). **Next:** resolve triage schema questions, rewrite triage.md, write conversation.md (DC Day 3 blocker) and gatekeeper-onboarding.md (Day 4 blocker). Session doc: `_evryn-meta/docs/sessions/2026-03-09-identity-writing-s3.md`.
+- **Sprint shifted ~2 days** — snow/power outage March 12-13. Day 1 extended through Sun March 15. Day 2 now Mon March 16. Go-live target ~March 19-20. Sprint doc dates not yet updated.
+- **Status lifecycle documented** — `emailmgr_items` status flow (new→processing→pending_approval→done, escalated, error) with lifecycle table in BUILD doc. Startup recovery + stale item check added to Day 4 hardening.
 - **Legal: Privacy & Terms questionnaire** — Under active consideration with Fenwick.
 
 ## Active Projects
 
-- **_evryn-meta** — S3 session doc updated for clean handoff. Claude Code permissions configured across all repos (portable settings.json with ~/ paths, gitignore hygiene, CLAUDE.md notes).
-- **evryn-backend** — DC Day 1 scaffolding complete. All DC Day 2 credentials ready (Slack Socket Mode + Railway linked). Identity writing in progress (see Pre-Work #6 above).
-- **evryn-team-agents** — PAUSED. Settings.local.json cleaned (had Linear API key in plaintext).
-- **evryn-dev-workspace** — DC's home repo. CLAUDE.md updated with permissions hygiene note.
+- **_evryn-meta** — S3b session doc updated for machine transition (Justin switching machines tomorrow).
+- **evryn-backend** — DC Day 1 scaffolding complete. All DC Day 2 credentials ready. Identity writing in progress. Email address roles clarified (justin@ for drafts, systemtest@ for test recipient). Go-live checklist updated with env flip items.
+- **evryn-team-agents** — PAUSED.
+- **evryn-dev-workspace** — DC's home repo.
 - **evryn-website** — Live at evryn.ai.
 
 ## Infrastructure

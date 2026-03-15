@@ -6,6 +6,21 @@
 
 ---
 
+## 2026-03-14 (Identity review S3b + operational documentation)
+
+- **core.md v7 (evryn-backend)** — Justin's full review pass (v6: ~16 line edits — voice, trust structure, precision) + three additions (v7: gentle guide paragraph, Smart Curiosity full 11-area framework, available modules hub "What You Can Draw On" section).
+- **operator.md reviewed and approved** — "Be reasonably concise", instruction channel expanded (team integration feedback).
+- **gatekeeper.md reviewed and approved** — No changes needed.
+- **triage.md reviewed — gaps identified** — 5 schema questions (where do classifications live? who creates records?) + 3 doc clarity issues (no status update instructions, descriptive not prescriptive "Learn immediately", no existing-user check). Must resolve before rewrite.
+- **Email address roles clarified (evryn-backend)** — `justin@evryn.ai` for draft review, `systemtest@evryn.ai` as test recipient (fictional gatekeeper). Fixed operator.md, triage.md, sprint doc. Sprint doc #align flag resolved.
+- **emailmgr_items status lifecycle documented (evryn-backend)** — Consolidated status values in ARCHITECTURE.md (`new→processing→pending_approval→done`, `escalated`, `error`). Full lifecycle table in BUILD doc (who sets, what triggers next step, what catches stuck items). Startup recovery + stale item check added to sprint Day 4 hardening.
+- **Escalation tracking (evryn-backend)** — Mechanics clarified: `notifySlack()` tool call during `query()`, item marked `escalated` in emailmgr_items. ARCHITECTURE.md Proactive Behavior section updated. EVR-54 created for full infrastructure (v0.3).
+- **Go-live checklist updated** — `.env` flip (`SEND_ENABLED=true`, `TEST_RECIPIENT` to Mark's real address) added.
+- **Sprint shifted ~2 days** — Snow/power outage March 12-13. Day 2 now Mon March 16, go-live ~March 19-20.
+- **Session doc rewritten** for machine transition — full reading list, triage gaps analysis, updated todos, shifted timeline.
+- **setup-credentials.md created (evryn-backend)** — Slack Socket Mode + Railway step-by-step for Justin.
+- **#lock checkpoint** — current-state refreshed.
+
 ## 2026-03-14 (Testing approach: fictional gatekeeper + two-phase validation)
 
 - **Testing strategy updated (evryn-backend)** — Replaced "pre-define Mark's real criteria" with fictional test gatekeeper approach. Two phases: (1) hand-seeded criteria for Day 2 engine validation, (2) wipe-and-reonboard integration test on Day 4 (Justin plays fictional gatekeeper at `systemtest@evryn.ai`, Evryn gathers criteria through Slack-initiated onboarding conversation). Mark's real criteria learned through his own onboarding — not pre-defined.
