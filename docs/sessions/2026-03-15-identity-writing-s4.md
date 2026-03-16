@@ -65,7 +65,7 @@ All five resolved. Decisions below affect field names in triage.md rewrite and D
 
 4. **Gatekeeper's forwarding note.** Stored in the messages table (the whole forwarded email including note goes there as a message record). Also extracted by the trigger and included in Evryn's structured handoff prompt.
 
-5. **Post-classification flow.** Gold/edge: Evryn drafts notification email → emails draft to justin@evryn.ai → pings Slack → updates status to `pending_approval` → waits for Justin's approval on Slack. Pass: status → `done` (logged, no notification). Ignore/bad_actor: status → `done` (logged).
+5. **Post-classification flow.** Gold/edge: Evryn drafts notification email → emails draft to review@evryn.ai → pings Slack → updates status to `pending_approval` → waits for Justin's approval on Slack. Pass: status → `done` (logged, no notification). Ignore/bad_actor: status → `done` (logged).
 
 6. **No separate `body` field in current schema.** `content_raw` stores the full raw email. The clean parsed body is composed by the trigger at runtime for the prompt — not persisted separately. Open question whether a `body` field should be added (goes to DC via sprint doc).
 
@@ -128,8 +128,8 @@ Preserving Justin's language because the phrasing carries the intent:
 - **Operator security: three layers.** Core doesn't mention operator.md. Tool blocks access to it. Only trigger code can load it. See ARCHITECTURE.md.
 - **Security boundary: incoming message goes in `prompt`, never `systemPrompt`.** Email content is untrusted user input — putting it in systemPrompt would let prompt injection manipulate system-level instructions.
 - **v0.2 vs v0.3 framing.** v0.2: Evryn is a smart reader (emails at face value + web research). v0.3: Evryn actually meets people (conversations, trust building). Onboarding should set this expectation with the gatekeeper.
-- **Approval flow.** All outbound → justin@evryn.ai (email review for formatting) → Slack (approve/notes) → send with Bcc justin@evryn.ai. Slack-only approval because email sender identity can be spoofed; Slack user ID cannot.
-- **Email address roles.** `evryn@evryn.ai` (Evryn's sender), `justin@evryn.ai` (Justin's draft review inbox), `systemtest@evryn.ai` (test recipient standing in for the fictional gatekeeper during testing).
+- **Approval flow.** All outbound → review@evryn.ai (email review for formatting) → Slack (approve/notes) → send with Bcc review@evryn.ai. Slack-only approval because email sender identity can be spoofed; Slack user ID cannot.
+- **Email address roles.** `evryn@evryn.ai` (Evryn's sender), `review@evryn.ai` (Justin's draft review inbox), `systemtest@evryn.ai` (test recipient standing in for the fictional gatekeeper during testing).
 - **emailmgr tagging (user/ignore/bad_actor)** is already implemented in triage.md's "First Call: Who Sent This?" section. Gold/edge/pass is a sub-classification within "user."
 - **Escalation mechanics.** Evryn calls `notifySlack()` tool during `query()`, posts to Justin's Slack, does NOT respond to user. Justin handles in operator mode. Item marked `escalated` in emailmgr_items. Full proactive follow-up infrastructure is v0.3 (EVR-54).
 - **Status lifecycle.** `emailmgr_items` status flow documented in BUILD doc: `new→processing→pending_approval→done`, with `escalated` and `error` branches. Startup recovery + stale item check in sprint Day 4 hardening.
