@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-14T20:32-07:00*
+*Last updated: 2026-03-15T17:25:11-07:00*
 *Last #sweep: 2026-03-09*
 *Last #align: 2026-03-09*
 
@@ -22,15 +22,16 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Pre-Work #6 (identity writing IN PROGRESS):** core.md v7 complete (Justin reviewed). operator.md and gatekeeper.md reviewed and approved. triage.md reviewed — gaps identified (schema questions + doc clarity, see session doc). **Next:** resolve triage schema questions, rewrite triage.md, write conversation.md (DC Day 3 blocker) and gatekeeper-onboarding.md (Day 4 blocker). Session doc: `_evryn-meta/docs/sessions/2026-03-09-identity-writing-s3.md`.
-- **Sprint shifted ~2 days** — snow/power outage March 12-13. Day 1 extended through Sun March 15. Day 2 now Mon March 16. Go-live target ~March 19-20. Sprint doc dates not yet updated.
-- **Status lifecycle documented** — `emailmgr_items` status flow (new→processing→pending_approval→done, escalated, error) with lifecycle table in BUILD doc. Startup recovery + stale item check added to Day 4 hardening.
+- **Day 2 (Mon March 16) UNBLOCKED.** DC has everything: schema migration specs (DC0), identity files (core.md v7, operator.md, gatekeeper.md, triage.md v3), synthetic test fixtures, all credentials ready.
+- **Remaining identity files:** conversation.md (DC Day 3 blocker, Tue March 17), gatekeeper-onboarding.md (Day 4, Wed March 18), onboarding.md rewrite (14 feedback items), new-contact.md and regular-user.md. Session doc: `_evryn-meta/docs/sessions/2026-03-15-identity-writing-s4.md`.
+- **Schema decisions resolved (S4):** sender_type (lead/ignore/bad_actor), triage_result (gold/pass/edge), triage_reasoning, profile_jsonb.story (append-only), _meta hygiene key. Schema reference doc created at `evryn-backend/docs/schema-reference.md`.
+- **Identity writing brief evolved** — now a lasting guide with Activity Module Patterns section (9 principles from triage.md).
 - **Legal: Privacy & Terms questionnaire** — Under active consideration with Fenwick.
 
 ## Active Projects
 
-- **_evryn-meta** — S3b session doc updated for machine transition (Justin switching machines tomorrow).
-- **evryn-backend** — DC Day 1 scaffolding complete. All DC Day 2 credentials ready. Identity writing in progress. Email address roles clarified (justin@ for drafts, systemtest@ for test recipient). Go-live checklist updated with env flip items.
+- **_evryn-meta** — S4 session doc current. Sweep protocol updated (schema & backup check).
+- **evryn-backend** — DC Day 1 scaffolding complete. Day 2 unblocked. Schema reference doc created. ARCHITECTURE.md updated (message recording, identity resolution, evryn_knowledge breadcrumbs). Sprint doc has DC0 schema migration task.
 - **evryn-team-agents** — PAUSED.
 - **evryn-dev-workspace** — DC's home repo.
 - **evryn-website** — Live at evryn.ai.
@@ -40,8 +41,8 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 - Running locally on Justin's desktop. No cloud deployment yet.
 - Slack: "Evryn Notifications" app configured for Socket Mode (tokens in evryn-backend/.env). Legacy webhook retained until Socket Mode code is live.
 - Railway: `evryn-backend` project created, CLI installed and linked. DC deploys with `railway up`.
-- Supabase: TWO projects (keeping separate). Agent dashboard project + Evryn product project.
-- Dashboard at evryn-dashboard.vercel.app (pulls from agent dashboard Supabase).
+- Supabase: "Evryn Product" project (maruxkjwlfltlmureqkt, renamed from "n8n Prototype"). Free plan — no automated backups. Manual dumps planned.
+- Dashboard at evryn-dashboard.vercel.app (pulls from separate agent dashboard Supabase project).
 - evryn@evryn.ai — Evryn's own Google account (separate from agents@evryn.ai).
 
 ## Backlog

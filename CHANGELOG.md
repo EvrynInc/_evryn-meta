@@ -6,6 +6,22 @@
 
 ---
 
+## 2026-03-15 (Identity writing S4 — triage rewrite + schema decisions + brief evolution)
+
+- **Triage schema questions resolved** — all 5 gaps answered: `sender_type` (lead/ignore/bad_actor), `triage_result` (gold/pass/edge), `triage_reasoning` (renamed from summary), `profile_jsonb.story` (single append-only narrative, merged from story+notes), `_meta` hygiene key. Bad actors get status `bad_actor` (not restricted). Leads get status `lead` (not user — avoids table name ambiguity).
+- **triage.md rewritten (v3, evryn-backend)** — phase-based structure (classify → record → act), table anchoring per phase, structured handoff from trigger, profile_jsonb creation with over-compression warning, cultural trust fluency nuance, identity resolution with same-person check. Dry-run tested with fresh instance — 8 findings, all addressed.
+- **Schema reference doc created (evryn-backend)** — `docs/schema-reference.md`, pulled from Supabase OpenAPI endpoint. Snapshot of what IS (ARCHITECTURE.md is what ought to be).
+- **ARCHITECTURE.md updated (evryn-backend)** — schema reference pointer, message recording architecture (outbound auto-recorded by tools, inbound recorded by Evryn), identity resolution breadcrumbs (v0.2 email + same-person check, v0.3+ multi-channel design needed), evryn_knowledge consolidation note (Reflection module, v0.3+).
+- **Identity writing brief evolved (evryn-backend)** — clean header with lasting-guide purpose, Activity Module Patterns section (9 principles from triage.md), stale session-level content removed, S4 resolved questions added.
+- **core.md updated (evryn-backend)** — Supabase tools mention in "What You Can Draw On."
+- **gatekeeper.md updated (evryn-backend)** — Supabase table anchoring, triage history in profile (not raw emailmgr_items), prescriptive feedback learning.
+- **Sprint doc DC0 added (evryn-backend)** — schema migration task with detailed COMMENT ON instructions, backup directory setup.
+- **Sprint doc DC1 updated (evryn-backend)** — outbound tools must auto-record to messages table.
+- **Sweep protocol updated** — schema & backup health check added (item 9).
+- **Supabase project renamed** — "n8n Prototype" → "Evryn Product."
+- **CLAUDE.md** — auto-memory hygiene tightened (MEMORY.md should only contain DO NOT WRITE notice). Numbering rule already present from earlier session.
+- **#lock checkpoint** — current-state refreshed.
+
 ## 2026-03-14 (Identity review S3b + operational documentation)
 
 - **core.md v7 (evryn-backend)** — Justin's full review pass (v6: ~16 line edits — voice, trust structure, precision) + three additions (v7: gentle guide paragraph, Smart Curiosity full 11-area framework, available modules hub "What You Can Draw On" section).
