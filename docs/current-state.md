@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-15T17:25:11-07:00*
+*Last updated: 2026-03-15T17:48:51-07:00*
 *Last #sweep: 2026-03-09*
 *Last #align: 2026-03-09*
 
@@ -44,6 +44,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 - Supabase: "Evryn Product" project (maruxkjwlfltlmureqkt, renamed from "n8n Prototype"). Free plan — no automated backups. Manual dumps planned.
 - Dashboard at evryn-dashboard.vercel.app (pulls from separate agent dashboard Supabase project).
 - evryn@evryn.ai — Evryn's own Google account (separate from agents@evryn.ai).
+- review@evryn.ai — alias for draft review / approval workflow (created 2026-03-15). Keeps operator review separate from justin@evryn.ai (Justin-the-user).
 
 ## Backlog
 

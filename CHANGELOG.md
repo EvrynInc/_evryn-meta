@@ -20,6 +20,8 @@
 - **Sweep protocol updated** — schema & backup health check added (item 9).
 - **Supabase project renamed** — "n8n Prototype" → "Evryn Product."
 - **CLAUDE.md** — auto-memory hygiene tightened (MEMORY.md should only contain DO NOT WRITE notice). Numbering rule already present from earlier session.
+- **review@evryn.ai created** — alias for draft review/approval workflow. Replaced all `justin@evryn.ai` references in review contexts across 7 files (triage.md, operator.md, sprint doc, BUILD doc, ARCHITECTURE.md, identity-writing-brief, session doc). Keeps Justin-the-user separate from the operator review function.
+- **Test gatekeeper profile created (evryn-backend)** — `tests/fixtures/test-gatekeeper-profile.md` with character definition, `gatekeeper_criteria` JSON for Supabase seeding, and answer key for all 18 fixtures. Sprint doc updated with pointer.
 - **#lock checkpoint** — current-state refreshed.
 
 ## 2026-03-14 (Identity review S3b + operational documentation)
