@@ -8,9 +8,9 @@
 
 ## What Needs to Happen (Priority Order)
 
-1. **Resolve triage schema questions** (5 questions below) — answers determine triage.md rewrite
-2. **Rewrite triage.md** with precise instructions — after schema questions resolved
-3. **Resolve module shape/format question** — triage.md is the template, capture in identity-writing-brief
+1. ~~**Resolve triage schema questions**~~ — DONE. All 5 resolved, see below.
+2. ~~**Rewrite triage.md**~~ — DONE. v3 on disk, dry-run tested with fresh instance.
+3. ~~**Resolve module shape/format question**~~ — DONE. triage.md is the template. Patterns captured in identity-writing-brief.md.
 4. **Write conversation.md** — DC Day 3 blocker (Tue March 17)
 5. **Write gatekeeper-onboarding.md** — needed by Day 4 (Wed March 18) for integration test
 6. **Review + rewrite onboarding.md** — 14 feedback items (see below)
@@ -75,19 +75,9 @@ All five resolved. Decisions below affect field names in triage.md rewrite and D
 
 ---
 
-## Module Shape / Format (Open Question)
+## Module Shape / Format — RESOLVED (S4 session, 2026-03-15)
 
-**The question:** What should identity modules look like structurally? Current drafts read like personality guides. They should read more like "a job description meets a workflow" — operational instructions that Evryn can USE.
-
-**What we learned from SDK skills best practices:**
-- Shape should be: what's the goal, what are the steps, what does success look like, what tools/references do you have, what do you escalate
-- "Success criteria" should include the relationship/vibes stuff — that IS Evryn's job
-- Assume the LLM is already smart — only add what it doesn't know, and/or focus/prime its thinking
-- Set appropriate degrees of freedom (high for relationship stuff, low for approval workflows)
-- Include conditional workflows where the path forks
-- Reference deeper material (internal-reference files) one level deep
-
-**This needs to be captured in a persistent doc** (identity-writing-brief.md or a new "module format guide") so every module gets built to the same shape. Justin noted that triage.md likely serves as the template (preconditions, steps, decision points, outputs, security, principles) — confirm during review.
+**Resolved:** triage.md IS the template. Nine principles extracted from writing and dry-run testing it, captured in the "Activity Module Patterns" section of `evryn-backend/docs/identity-writing-brief.md`. The brief has been updated with the structural pattern (header → context → preconditions → what you have → your data → phases → security) and all writing principles. Future modules should follow this pattern.
 
 ---
 
