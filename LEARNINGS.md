@@ -57,4 +57,6 @@
 38. **"Untrusted input goes in `prompt`, never `systemPrompt`."** Email content is untrusted user input. Putting it in systemPrompt lets prompt injection manipulate system-level instructions. Security boundary: systemPrompt = agent identity + trusted context; prompt = the message to respond to. *(Partially promoted: evryn-backend ARCHITECTURE.md security section done. DC CLAUDE.md security section pending Pre-Work #9.)*
 39. *Promoted → AGENT_PATTERNS Catch-Up-on-Reconnect for Persistent Connections.*
 
+40. *Promoted → evryn-backend ARCHITECTURE.md Data Model §Design Principles ("Constrain Every Field an LLM Writes").*
+
 *New learnings land here temporarily before being promoted to their permanent homes.*

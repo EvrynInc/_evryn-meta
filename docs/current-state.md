@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-15T17:48:51-07:00*
+*Last updated: 2026-03-16T16:50:53-07:00*
 *Last #sweep: 2026-03-09*
 *Last #align: 2026-03-09*
 
@@ -22,16 +22,15 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Day 2 (Mon March 16) UNBLOCKED.** DC has everything: schema migration specs (DC0), identity files (core.md v7, operator.md, gatekeeper.md, triage.md v3), synthetic test fixtures, all credentials ready.
-- **Remaining identity files:** conversation.md (DC Day 3 blocker, Tue March 17), gatekeeper-onboarding.md (Day 4, Wed March 18), onboarding.md rewrite (14 feedback items), new-contact.md and regular-user.md. Session doc: `_evryn-meta/docs/sessions/2026-03-15-identity-writing-s4.md`.
-- **Schema decisions resolved (S4):** sender_type (lead/ignore/bad_actor), triage_result (gold/pass/edge), triage_reasoning, profile_jsonb.story (append-only), _meta hygiene key. Schema reference doc created at `evryn-backend/docs/schema-reference.md`.
-- **Identity writing brief evolved** — now a lasting guide with Activity Module Patterns section (9 principles from triage.md).
+- **Day 2 (Mon March 16) COMPLETE.** Schema migration done (sender_type, triage_result, triage_reasoning, CHECK constraints on all classification fields). Full triage pipeline running — SDK query() wired with trigger-composed identity, MCP tools for Supabase/email/Slack/identity modules, Slack Socket Mode two-way, forward detection, user record creation. 16/18 synthetic fixtures correct (2 non-deterministic but defensible). Evryn's voice and judgment are strong.
+- **Day 3 (Tue March 17) blockers:** conversation.md identity file needed for conversation pathway. AC writing it in parallel session.
+- **Remaining identity files:** conversation.md (Day 3), gatekeeper-onboarding.md (Day 4), onboarding.md rewrite (14 feedback items), new-contact.md and regular-user.md. Session doc: `_evryn-meta/docs/sessions/2026-03-15-identity-writing-s4.md`.
 - **Legal: Privacy & Terms questionnaire** — Under active consideration with Fenwick.
 
 ## Active Projects
 
-- **_evryn-meta** — S4 session doc current. Sweep protocol updated (schema & backup check).
-- **evryn-backend** — DC Day 1 scaffolding complete. Day 2 unblocked. Schema reference doc created. ARCHITECTURE.md updated (message recording, identity resolution, evryn_knowledge breadcrumbs). Sprint doc has DC0 schema migration task.
+- **_evryn-meta** — S4 session doc current. ARCHITECTURE.md updated (CHECK constraint principle).
+- **evryn-backend** — Day 2 complete. Triage pipeline end-to-end. triage.md updated ("no note means triage" fix). DC pushing Day 2 code.
 - **evryn-team-agents** — PAUSED.
 - **evryn-dev-workspace** — DC's home repo.
 - **evryn-website** — Live at evryn.ai.
@@ -39,12 +38,12 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 ## Infrastructure
 
 - Running locally on Justin's desktop. No cloud deployment yet.
-- Slack: "Evryn Notifications" app configured for Socket Mode (tokens in evryn-backend/.env). Legacy webhook retained until Socket Mode code is live.
+- Slack: "Evryn Notifications" app — Socket Mode live in code (two-way). Catch-up-on-reconnect implemented.
 - Railway: `evryn-backend` project created, CLI installed and linked. DC deploys with `railway up`.
-- Supabase: "Evryn Product" project (maruxkjwlfltlmureqkt, renamed from "n8n Prototype"). Free plan — no automated backups. Manual dumps planned.
+- Supabase: "Evryn Product" project (maruxkjwlfltlmureqkt). Schema migrated Day 2 (new classification fields, CHECK constraints). Manual backup taken pre-migration. Free plan — no automated backups.
 - Dashboard at evryn-dashboard.vercel.app (pulls from separate agent dashboard Supabase project).
 - evryn@evryn.ai — Evryn's own Google account (separate from agents@evryn.ai).
-- review@evryn.ai — alias for draft review / approval workflow (created 2026-03-15). Keeps operator review separate from justin@evryn.ai (Justin-the-user).
+- review@evryn.ai — alias for draft review / approval workflow.
 
 ## Backlog
 

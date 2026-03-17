@@ -6,6 +6,15 @@
 
 ---
 
+## 2026-03-16 (Day 2 — schema migration + triage pipeline + AC review)
+
+- **Day 2 complete (evryn-backend)** — DC built full triage pipeline in one session: schema migration (sender_type, triage_result, triage_reasoning, CHECK constraints, archived priority), SDK query() with trigger-composed identity (core.md + person context), MCP tools (Supabase read/write, identity module reader, email send, Slack notify), Slack Socket Mode two-way with catch-up-on-reconnect, forward detection, user record creation. 16/18 synthetic fixtures correct; 2 non-deterministic but defensible.
+- **CHECK constraint principle added (evryn-backend ARCHITECTURE.md)** — Every text field Evryn writes must have a CHECK constraint. LLMs invent plausible values (e.g., `triaged` instead of `done`). Belt-and-suspenders: CHECK in database + valid values in tool descriptions. Confirmed by Day 2 testing.
+- **triage.md updated (evryn-backend)** — "No note means triage" rule added. Fixes category error where Evryn sometimes classified forwarded emails as "direct correspondence" because the sender was writing to the gatekeeper. People emailing the gatekeeper IS the input; no gatekeeper note means evaluate.
+- **Answer key assessment** — Evryn outperformed the answer key in every divergent case. Fixtures 09 (newsletter→ignore) and 16 (scam→bad_actor) were answer key errors from pre-S4 schema. Fixtures 11, 14, 17 Evryn correctly classified as gold where answer key said edge — she evaluated substance over surface.
+- **DC mailbox protocol established** — ac-to-dc.md pattern: Slack ping first (verify comms), reading list, schema decisions summary, deliverables checklist, completion protocol (Slack ping + dc-to-ac.md debrief + commit/push).
+- **#lock checkpoint** — current-state refreshed.
+
 ## 2026-03-15 (Identity writing S4 — triage rewrite + schema decisions + brief evolution)
 
 - **Triage schema questions resolved** — all 5 gaps answered: `sender_type` (lead/ignore/bad_actor), `triage_result` (gold/pass/edge), `triage_reasoning` (renamed from summary), `profile_jsonb.story` (single append-only narrative, merged from story+notes), `_meta` hygiene key. Bad actors get status `bad_actor` (not restricted). Leads get status `lead` (not user — avoids table name ambiguity).
