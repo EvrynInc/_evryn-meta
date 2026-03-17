@@ -264,6 +264,8 @@ After a strategic conversation produces build tasks:
 
 DC doesn't need to know why we decided something. It needs to know what to build and any constraints.
 
+4. **Update the operator guide** (`<repo>/docs/operator-guide.md`) if the build changes how Justin operates the system. This is Justin's cheat sheet — light, scannable, kept current. DC flags operator-relevant details in dc-to-ac.md; AC updates the guide.
+
 **Build docs are DC's self-contained source of truth.** By the time DC opens a build doc, every decision is already made, every relevant detail absorbed in-doc. No "go read this other thing." This affects how AC architects — every conversation that produces build work should be moving toward a self-contained spec.
 
 **DC instances are fast — the bottleneck is human tasks.** DC builds that AC estimated to be 2 hrs actually only took 5-7 minutes. Sprint timeline bottlenecks are human tasks (OAuth setup, credentials, service configuration), not coding. Calibrate estimates accordingly.
