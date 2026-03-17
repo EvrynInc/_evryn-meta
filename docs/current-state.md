@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-16T16:50:53-07:00*
+*Last updated: 2026-03-17T14:10:32-07:00*
 *Last #sweep: 2026-03-09*
 *Last #align: 2026-03-09*
 
@@ -22,28 +22,28 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Day 2 (Mon March 16) COMPLETE.** Schema migration done (sender_type, triage_result, triage_reasoning, CHECK constraints on all classification fields). Full triage pipeline running — SDK query() wired with trigger-composed identity, MCP tools for Supabase/email/Slack/identity modules, Slack Socket Mode two-way, forward detection, user record creation. 16/18 synthetic fixtures correct (2 non-deterministic but defensible). Evryn's voice and judgment are strong.
-- **Day 3 (Tue March 17) blockers:** conversation.md identity file needed for conversation pathway. AC writing it in parallel session.
-- **Remaining identity files:** conversation.md (Day 3), gatekeeper-onboarding.md (Day 4), onboarding.md rewrite (14 feedback items), new-contact.md and regular-user.md. Session doc: `_evryn-meta/docs/sessions/2026-03-15-identity-writing-s4.md`.
+- **Day 3 (Tue March 17) — DC work complete, AC work in progress.** DC: approval flow end-to-end, conversation pathway wired, Slack restructured (three channels). AC: conversation.md done; gatekeeper-onboarding.md not started (blocks Day 4 integration test). AC1 doing triage/identity dedup, then gatekeeper-onboarding.
+- **Day 4 (Wed March 18) blockers:** gatekeeper-onboarding.md (AC1 writing). DC tasks: error handling + hardening, bug fixes, emergency channel alerting. Full-chain integration test. Identity/runtime dedup review.
+- **Deferred non-blocking:** OC repo creation, QC repo creation, v0.3 design — all NOT STARTED, none on critical path.
+- **Remaining identity files:** gatekeeper-onboarding.md (Day 4 blocker), onboarding.md rewrite, new-contact.md, regular-user.md.
 - **Legal: Privacy & Terms questionnaire** — Under active consideration with Fenwick.
 
 ## Active Projects
 
-- **_evryn-meta** — S4 session doc current. ARCHITECTURE.md updated (CHECK constraint principle).
-- **evryn-backend** — Day 2 complete. Triage pipeline end-to-end. triage.md updated ("no note means triage" fix). DC pushing Day 2 code.
-- **evryn-team-agents** — PAUSED.
+- **_evryn-meta** — OC repo planned (evryn-ops), plan approved. Operator guide created in evryn-backend.
+- **evryn-backend** — Day 3 DC work complete. Approval flow + conversation pathway + Slack restructure. AC1 doing identity dedup then gatekeeper-onboarding.md.
+- **evryn-team-agents** — PAUSED. Slack channel architecture decided (three channels + emergency DND override).
 - **evryn-dev-workspace** — DC's home repo.
 - **evryn-website** — Live at evryn.ai.
 
 ## Infrastructure
 
 - Running locally on Justin's desktop. No cloud deployment yet.
-- Slack: "Evryn Notifications" app — Socket Mode live in code (two-way). Catch-up-on-reconnect implemented.
-- Railway: `evryn-backend` project created, CLI installed and linked. DC deploys with `railway up`.
-- Supabase: "Evryn Product" project (maruxkjwlfltlmureqkt). Schema migrated Day 2 (new classification fields, CHECK constraints). Manual backup taken pre-migration. Free plan — no automated backups.
-- Dashboard at evryn-dashboard.vercel.app (pulls from separate agent dashboard Supabase project).
-- evryn@evryn.ai — Evryn's own Google account (separate from agents@evryn.ai).
-- review@evryn.ai — alias for draft review / approval workflow.
+- Slack: "Evryn" app (renamed from "Evryn Notifications") — Socket Mode, bot token via `@slack/bolt`. Separate "Dev Alerts" app with webhook.
+- Slack channels: `#evryn-approvals` (Evryn), `#dev-alerts` (agents), `#emergency-alerts` (DND override — not yet wired in code).
+- Railway: `evryn-backend` project created, CLI installed and linked.
+- Supabase: "Evryn Product" project (maruxkjwlfltlmureqkt). Schema migrated Day 2. Free plan — no automated backups.
+- evryn@evryn.ai, review@evryn.ai, systemtest@evryn.ai — see operator guide for roles.
 
 ## Backlog
 

@@ -6,6 +6,23 @@
 
 ---
 
+## 2026-03-17 (Day 3 — approval flow + conversation pathway + Slack restructure)
+
+- **Day 3 complete (evryn-backend)** — DC built full approval flow and conversation pathway. `submit_draft` MCP tool replaces `send_email` — Evryn cannot send directly, everything through Justin's approval. Approval flow: Evryn drafts → review@evryn.ai (delivery format) → Slack ping → Justin approves/notes → send (Bcc review@evryn.ai) or revise. Three Slack parsing patterns: `approve [subject]`, `notes [subject]: feedback`, `[subject]: feedback`.
+- **conversation.md written and wired (evryn-backend)** — AC1 completed conversation activity module. Evryn pulls it on demand for direct messages. DC wired into identity reader tool.
+- **Slack restructured (evryn-backend)** — Justin-initiated separation: `#evryn-approvals` (Evryn's channel, bot token), `#dev-alerts` (DC/AC/OC/QC, webhook). `#emergency-alerts` created for DND-override emergencies. Evryn app renamed "Evryn Notifications" → "Evryn". All incoming webhooks deleted from Evryn app — bot token via `@slack/bolt` is primary path. Webhook optional fallback in config.
+- **Direct messages now create emailmgr_items** — deviation from spec (originally forwards-only), needed for approval flow draft metadata attachment. Tagged with `metadata.type: "direct_message"`.
+- **`send_email` tool removed from Evryn** — replaced entirely by `submit_draft`. Stricter than spec but simpler and safer.
+- **Email threading supported** — `inReplyTo` and `threadId` passed through approval flow to `sendEmail()`.
+- **Slack Unicode sanitization** — em dashes, en dashes, smart quotes → ASCII before sending. Applies to ALL agents posting to Slack (code-side `notifySlack()` and curl-side webhooks).
+- **Double subject prefix bug found and fixed** — Evryn included `[Evryn] Gold` AND approval code wrapped it again. Fixed with prefix stripping.
+- **Operator guide created (evryn-backend)** — Justin's cheat sheet for approval flow, triage notifications, operator mode, escalations, go-live checklist. Maintained by AC during #lock; DC flags operator-relevant changes.
+- **Sprint tracker enhanced** — "Blocks day" column added for critical path visibility. Identity/runtime dedup review added as Day 4 task.
+- **OC/SRE strategy decided** — OC (manual Claude Code persona) now for sprint. SRE subagent under Soren (CTO agent) later for autonomous monitoring. Severity-based workflow: quick fix (OC→DC), architectural (OC→AC→DC), emergency (OC patches→notify all).
+- **Three-channel Slack architecture** — `#evryn-approvals` (Evryn drafts/approvals), `#dev-alerts` (build status, non-urgent ops), `#emergency-alerts` (DND override, runaway behavior, anything touching Mark unsafely).
+- **Lock protocol updated** — operator guide check added (step 12), auto-memory hygiene updated to match current policy.
+- **AC/DC CLAUDE.md updates** — operator guide maintenance wired into AC handoff steps and DC report protocol.
+
 ## 2026-03-16 (Day 2 — schema migration + triage pipeline + AC review)
 
 - **Day 2 complete (evryn-backend)** — DC built full triage pipeline in one session: schema migration (sender_type, triage_result, triage_reasoning, CHECK constraints, archived priority), SDK query() with trigger-composed identity (core.md + person context), MCP tools (Supabase read/write, identity module reader, email send, Slack notify), Slack Socket Mode two-way with catch-up-on-reconnect, forward detection, user record creation. 16/18 synthetic fixtures correct; 2 non-deterministic but defensible.
