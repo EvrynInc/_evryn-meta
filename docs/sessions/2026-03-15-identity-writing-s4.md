@@ -109,7 +109,7 @@ Preserving Justin's language because the phrasing carries the intent:
 | Module | Type | Status | Notes |
 |--------|------|--------|-------|
 | `activities/triage.md` | Activity | Rewrite needed | Gaps identified S3b — schema questions + doc clarity |
-| `activities/conversation.md` | Activity | Not started | **DC Day 3 blocker (Tue March 17)** |
+| `activities/conversation.md` | Activity | DONE | Written by AC1, wired by DC Day 3 |
 | `activities/gatekeeper-onboarding.md` | Activity | Not started | **Needed by Day 4 (Wed March 18)** for integration test |
 | `activities/onboarding.md` | Activity | Rewrite needed | First draft on disk has 14 feedback items (see above) |
 | `situations/new-contact.md` | Situation | Not started | Real version, not stub (feedback #10) |
