@@ -13,6 +13,10 @@
 - **triage.md updated (evryn-backend)** — "No note means triage" rule added. Fixes category error where Evryn sometimes classified forwarded emails as "direct correspondence" because the sender was writing to the gatekeeper. People emailing the gatekeeper IS the input; no gatekeeper note means evaluate.
 - **Answer key assessment** — Evryn outperformed the answer key in every divergent case. Fixtures 09 (newsletter→ignore) and 16 (scam→bad_actor) were answer key errors from pre-S4 schema. Fixtures 11, 14, 17 Evryn correctly classified as gold where answer key said edge — she evaluated substance over surface.
 - **DC mailbox protocol established** — ac-to-dc.md pattern: Slack ping first (verify comms), reading list, schema decisions summary, deliverables checklist, completion protocol (Slack ping + dc-to-ac.md debrief + commit/push).
+- **Identity architecture validated by Day 2 testing** — Evryn's voice is strong even in procedural triage (not just a classifier, feels like a person who classifies). Cultural trust fluency from core.md works in practice (Japanese email translated and correctly classified). Tool call reliability high when handoff prompt explicitly names the module to pull.
+- **Windows subagent limit noted (evryn-backend ARCHITECTURE.md)** — subagent prompts >8,191 chars fail on Windows. Main query unaffected. Breadcrumb placed for publisher subagent design.
+- **Answer key corrections needed** — fixtures 04 (warm intro: gold→edge, Evryn too conservative), 09 (newsletter: pass→ignore), 12 (spammy-but-relevant: edge→pass, Evryn evaluated substance correctly), 16 (scam: pass→bad_actor). Stale `emailmgr_items` table comment also needs updating.
+- **Sprint tracker table added (evryn-backend)** — all tasks across all days with owner and status. Makes missed parallel work visible.
 - **#lock checkpoint** — current-state refreshed.
 
 ## 2026-03-15 (Identity writing S4 — triage rewrite + schema decisions + brief evolution)
