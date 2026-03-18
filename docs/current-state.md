@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-17T18:02:46-07:00*
+*Last updated: 2026-03-17T18:15:34-07:00*
 *Last #sweep: 2026-03-09*
 *Last #align: 2026-03-09*
 
@@ -23,7 +23,8 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 ## What's Next
 
 - **Day 4 DC work complete (Tue March 17).** All hardening done: retry with backoff, crash recovery, stale item re-pings, graceful shutdown, edge cases, dedup verified, conversation fixture test passed. DC ahead of schedule (finished Day 3+4 in one calendar day).
-- **Remaining blocker: gatekeeper-onboarding.md** (AC1 writing). Blocks full-chain integration test. AC1 doing triage/identity dedup first, then gatekeeper-onboarding.
+- **conversation.md v2 written** (AC1, Justin reviewing). Identity/runtime dedup principle established: identity docs carry judgment, runtime carries mechanics. Pending decision: trim triage.md now or stabilization week.
+- **Remaining blocker: gatekeeper-onboarding.md** (AC1 next). Blocks full-chain integration test.
 - **Day 5 (Thu March 19):** Integration test (once gatekeeper-onboarding.md lands), final stabilization, go/no-go.
 - **Remaining identity files:** gatekeeper-onboarding.md (integration test blocker), onboarding.md rewrite, new-contact.md, regular-user.md.
 - **Legal: Privacy & Terms questionnaire** — Under active consideration with Fenwick.

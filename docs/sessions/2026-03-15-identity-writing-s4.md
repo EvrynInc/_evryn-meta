@@ -1,6 +1,8 @@
 # Identity Writing S4 — Remaining Work
 
-**Status:** In progress. core.md done (v7), operator.md and gatekeeper.md reviewed and approved. Triage.md has gaps (schema questions + doc clarity). Onboarding.md first draft needs rewrite (14 feedback items). conversation.md and gatekeeper-onboarding.md not started.
+**Status:** In progress. core.md done (v7), operator.md and gatekeeper.md reviewed and approved. Triage.md rewritten (v3, dry-run tested). conversation.md v2 written (Justin reviewing). Onboarding.md first draft needs rewrite (14 feedback items). gatekeeper-onboarding.md not started.
+
+**Identity/runtime dedup insight (AC1, 2026-03-17):** Justin observed that triage.md duplicates work the runtime already handles (field constraints in tool descriptions, structured handoff in prompt composition, auto-recording in tool responses). Principle: identity docs carry *judgment and disposition*; the runtime carries *mechanics and data*. When they overlap, tokens are wasted and maintenance diverges. Decision pending: trim triage.md now or during stabilization week. Apply principle to all new modules immediately.
 
 **Previous sessions:** S1 wrote core.md (v5). S2 resolved architectural questions (ADRs 012-017), wrote situation modules (operator, gatekeeper) and triage activity module, drafted onboarding. S3 did core.md v6+v7 (Justin's full review), reviewed all existing identity files, identified triage.md gaps, updated sprint dates for snow day shift. Full history in `docs/sessions/historical/`.
 
@@ -11,7 +13,7 @@
 1. ~~**Resolve triage schema questions**~~ — DONE. All 5 resolved, see below.
 2. ~~**Rewrite triage.md**~~ — DONE. v3 on disk, dry-run tested with fresh instance.
 3. ~~**Resolve module shape/format question**~~ — DONE. triage.md is the template. Patterns captured in identity-writing-brief.md.
-4. **Write conversation.md** — DC Day 3 blocker (Tue March 17)
+4. ~~**Write conversation.md**~~ — DONE. v2 on disk, Justin reviewing. Lean module (~400 tokens): trust arc skill, feedback handling, proactive awareness, approval gate. No mechanical duplication of runtime.
 5. **Write gatekeeper-onboarding.md** — needed by Day 4 (Wed March 18) for integration test
 6. **Review + rewrite onboarding.md** — 14 feedback items (see below)
 7. **Write new-contact.md and regular-user.md** — real versions, not stubs

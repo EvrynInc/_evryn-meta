@@ -6,6 +6,11 @@
 
 ---
 
+## 2026-03-17 (AC1 — conversation.md + identity/runtime dedup analysis)
+
+- **conversation.md v2 written (evryn-backend)** — Lean activity module (~400 tokens): trust arc skill reference with breadcrumb triggers, feedback handling, proactive awareness, approval gate. v1 rejected (sloppy — repeated core.md, disembodied field references, no synthesis). v2 carries only what core.md and situation modules don't already provide.
+- **Identity/runtime dedup principle established** — Justin observed triage.md duplicates runtime mechanics (field constraints in tool descriptions, structured handoff in prompt composition, auto-recording in tool responses). Principle: identity docs carry *judgment and disposition*; runtime carries *mechanics and data*. Applies to all future modules. triage.md trim deferred (decision pending: now vs stabilization week).
+
 ## 2026-03-17 (Seattle launch research + strategic reframe)
 
 - **Seattle launch strategy research** — Full demand landscape analysis (`docs/research/seattle-launch-strategy-v1.md`): 7 demand channels (Freeze, transplant flood, tech displacement, cross-ecosystem void, dating, practical needs, cultural resonance), community ecosystem map (10+ sectors with specific orgs/events), spore dynamic (migration-driven organic expansion), I-5 corridor (Portland as inevitability).
