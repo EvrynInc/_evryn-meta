@@ -6,6 +6,16 @@
 
 ---
 
+## 2026-03-17 (Seattle launch research + strategic reframe)
+
+- **Seattle launch strategy research** — Full demand landscape analysis (`docs/research/seattle-launch-strategy-v1.md`): 7 demand channels (Freeze, transplant flood, tech displacement, cross-ecosystem void, dating, practical needs, cultural resonance), community ecosystem map (10+ sectors with specific orgs/events), spore dynamic (migration-driven organic expansion), I-5 corridor (Portland as inevitability).
+- **"Concentrate effort, open aperture" strategic reframe** — Film is the hose, everything else is rain. Cross-domain IS the product; constraining to one domain cripples it. Proactive finding enables serving any user in any domain from day one.
+- **GTM spoke updated** — Seattle data (7 waters), open aperture section, spore dynamic (mover + evangelist types), I-5 corridor expansion, proactive finding as engine.
+- **Business model spoke updated** — Trust-based pricing Seattle cultural resonance, cross-domain density reframe, spore multiplier on Seattle investment.
+- **Hub updated** — GTM section reframed from "film first, LA expansion" to "concentrate effort, open aperture" with Seattle as launchpad.
+- **Gatekeeper approach updated** — Breadcrumb for non-film gatekeeper archetypes (tech, food, nonprofit).
+- **Trusted Partner Briefing v1.7 drafted** — Market entry rewritten (Seattle ignition, gatekeeper strategy origin, open aperture, spore dynamic), Where We Are Now updated (3/17/26, v0.2 going live, AI-first team), Capital Strategy updated. Justin reviewing.
+
 ## 2026-03-17 (Day 4 — hardening + OC/QC repos)
 
 - **Day 4 hardening complete (evryn-backend)** — All 10 hardening items: Gmail retry with exponential backoff (30s→5min), Supabase unreachable handling, SDK query() failure→error status, dedup verified (in-memory Set + external_id), edge cases (empty body skip, 50k char truncation, multilingual native), sequential rate limiting, startup crash recovery (reset `processing`→`new`), stale item re-ping (every 15min, 4hr threshold), uncaught error handlers, graceful shutdown (SIGTERM/SIGINT).

@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-17T14:10:32-07:00*
+*Last updated: 2026-03-17T18:00:22-07:00*
 *Last #sweep: 2026-03-09*
 *Last #align: 2026-03-09*
 
@@ -30,7 +30,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## Active Projects
 
-- **_evryn-meta** — OC repo created (evryn-ops), QC repo created (evryn-quality). Operator guide created in evryn-backend.
+- **_evryn-meta** — OC repo created (evryn-ops), QC repo created (evryn-quality). Operator guide created in evryn-backend. **Seattle launch research complete** (`docs/research/seattle-launch-strategy-v1.md`). Strategic reframe: "concentrate effort, open aperture" — film is the hose, everything else is rain. Spore dynamic identified. GTM spoke, business model spoke, Hub, gatekeeper approach all updated. Trusted Partner Briefing v1.7 drafted (Justin reviewing).
 - **evryn-backend** — Day 3 DC work complete. Approval flow + conversation pathway + Slack restructure. AC1 doing identity dedup then gatekeeper-onboarding.md.
 - **evryn-team-agents** — PAUSED. Slack channel architecture decided (three channels + emergency DND override).
 - **evryn-dev-workspace** — DC's home repo.
