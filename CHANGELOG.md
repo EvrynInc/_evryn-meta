@@ -6,6 +6,14 @@
 
 ---
 
+## 2026-03-18 (#align)
+
+- **#align protocol updated** — Added identity layer (Evryn's identity files) and agent identity layer (team agents when running) to checklist. Previous #align missed that identity files are where principles become practice.
+- **"Nourishment, not stimulation" added to core.md** — Evryn's What You Believe section. Enticing and inspiring yearning is encouraged; manufactured craving is the line.
+- **Internal-reference module tracking added to BUILD** — crisis-protocol.md and feedback-guidance.md before go-live; canary-procedure, trust-arc-scripts, contact-capture, company-context for v0.3.
+- **Manual check-ins operator task** — Added to BUILD and operator guide. Evryn can't initiate in v0.2; Justin triggers check-ins manually until v0.3 proactive behavior is built.
+- **Five principle breadcrumbs added to BUILD** — proactive check-ins (v0.2 manual → v0.3 automated), budget tracking (v0.3, existing dashboard), bias/fairness testing (v0.4, pairs with self-reflection), PII anonymization (hardening sprint v0.3→v0.4), ZDR (bundle with PII).
+
 ## 2026-03-17 (AC1 — conversation.md + identity/runtime dedup analysis)
 
 - **conversation.md v2 written (evryn-backend)** — Lean activity module (~400 tokens): trust arc skill reference with breadcrumb triggers, feedback handling, proactive awareness, approval gate. v1 rejected (sloppy — repeated core.md, disembodied field references, no synthesis). v2 carries only what core.md and situation modules don't already provide.
