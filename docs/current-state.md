@@ -30,7 +30,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## Active Projects
 
-- **_evryn-meta** — OC repo planned (evryn-ops), plan approved. Operator guide created in evryn-backend.
+- **_evryn-meta** — OC repo created (evryn-ops). Operator guide created in evryn-backend.
 - **evryn-backend** — Day 3 DC work complete. Approval flow + conversation pathway + Slack restructure. AC1 doing identity dedup then gatekeeper-onboarding.md.
 - **evryn-team-agents** — PAUSED. Slack channel architecture decided (three channels + emergency DND override).
 - **evryn-dev-workspace** — DC's home repo.
