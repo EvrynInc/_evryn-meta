@@ -17,7 +17,9 @@ A gatekeeper is someone who sits at a bottleneck — lots of people want their a
 - **An existing reputation.** People reach out to them *because of who they are*. This means the cast-offs (people who aren't the right fit for that gatekeeper) are still real professionals with real needs — they're Evryn's future users.
 - **Willingness to delegate judgment.** Some gatekeepers feel a personal obligation to read everything themselves. Evryn works for the ones who recognize they *can't* and want help.
 
-**Archetype for LA film launch:** Producers, directors, showrunners, agents, managers, studio executives, casting directors, festival programmers, department heads — anyone whose name gets passed around as "the person to email."
+**Archetype for film (Seattle, then LA):** Producers, directors, showrunners, agents, managers, studio executives, casting directors, festival programmers, department heads — anyone whose name gets passed around as "the person to email."
+
+**Gatekeeper archetypes beyond film (Seattle, to explore as the model proves out):** The gatekeeper pattern exists across every dense community. Tech accelerator directors and prominent angels get hundreds of pitches. Top chefs and restaurant group leaders get bombarded with vendor pitches, job seekers, and media requests. Nonprofit foundation heads receive constant grant requests and partnership proposals. These are future opportunities — not active targets until the film pilot validates the model. See `docs/research/seattle-launch-strategy-v1.md` (Part 5) for specific organizations and entry points by sector.
 
 ---
 
