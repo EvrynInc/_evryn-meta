@@ -92,7 +92,9 @@ Conventional wisdom says "don't boil the ocean" — pick one domain, nail it, th
 
 **Evryn doesn't need domain-specific infrastructure per domain.** Her architecture is designed for this: "World/Domain Knowledge — initially via web search tools; grows into a curated knowledge base over time" (see [technical-vision spoke](technical-vision.md)). Evryn has Claude's entire world knowledge. If she encounters a salmon fisherman, she doesn't need a "fishing module" — she can have an intelligent conversation about his world, understand his needs, and match him. If she encounters enough fishermen, she builds a knowledge base. The architecture grows with the demand.
 
-**Cross-domain density works differently.** In a single-domain platform, you need 300 actors AND 300 directors. In Evryn's model, 300 people across 10 domains might be MORE matchable — because each person has multiple intents (professional, romantic, practical, creative), and any two people might match on an intent neither expected. The matching surface area isn't a single domain — it's the full product of people × intents. And the supply-side recruiting model (Evryn finds the plumber when someone needs one) means Evryn can create density on demand, for any domain.
+**Cross-domain density works differently.** In a single-domain platform, you need 300 actors AND 300 directors. In Evryn's model, 300 people across 10 domains might be MORE matchable — because each person has multiple intents (professional, romantic, practical, creative), and any two people might match on an intent neither expected. The matching surface area isn't a single domain — it's the full product of people × intents.
+
+**Proactive finding is the engine that makes all of this work.** Evryn doesn't wait for density to materialize — she creates it. When a user needs a plumber and there isn't one in the network, Evryn goes and finds one (~$6 for a metro-area search; see [business-model spoke](business-model.md), Supply-Side Economics). The found plumber becomes a full user with their own needs. This means Evryn can serve ANY user in ANY domain from day one — she doesn't need pre-existing density, she needs judgment and the ability to research and recruit. This is what makes the open aperture viable: you don't refuse a salmon fisherman because there are no other fishermen in the network. You help him, and in doing so, you start building that corner of the network.
 
 **The strategic framing: film is where you point the hose; everything else is where you let the rain fall.**
 
@@ -182,15 +184,17 @@ Pre-launch: if you refer someone who becomes a paying customer, Evryn rewards yo
 
 ### The Spore Dynamic: Migration as Growth Engine
 
-Seattle is a throughput city — high inbound AND high outbound migration. 64,000 international migrants arrive annually; domestic out-migration flows to specific, predictable places (LA, Portland, Phoenix, Sacramento, Idaho, Texas, Carolinas). This isn't a market problem — it's a growth engine.
+Seattle is a throughput city — high inbound AND high outbound migration. 64,000 international migrants arrive annually; domestic out-migration flows to specific, predictable places (LA, Portland, Phoenix, Sacramento, Idaho, Texas, Carolinas). This isn't a market problem — it's a growth engine. And crucially, proactive finding means Evryn can serve users anywhere from day one — she doesn't need a pre-existing local network to deliver value.
 
-**Outbound spores:** Someone leaves Seattle for Phoenix. They take their Evryn relationship with them. They arrive needing connections — a doctor, a plumber, a job, a friend. Evryn helps them *there.* They tell someone in Phoenix about Evryn. Evryn doesn't need to "launch" in Phoenix. She arrives with her users.
+**Outbound spores — the mover:** Someone leaves Seattle for Phoenix. They take their Evryn relationship with them. They arrive needing connections — a doctor, a plumber, a job, a friend. Evryn doesn't need a Phoenix network to help them — she finds what they need proactively, and each person she finds becomes a new user with their own needs. The local network bootstraps from a single seed.
 
-**Inbound spores:** An Indian tech worker arrives in Seattle with zero local network but deep connections in Bangalore. A Californian moves up with SF contacts. Evryn helps them in Seattle, but their trust graph extends back to where they came from. When someone in their origin network needs a connection in Seattle — or vice versa — the network is already there.
+**Outbound spores — the evangelist:** Someone has an amazing Evryn experience in Seattle and tells friends back home about it. People ask: "Is that just a Seattle thing?" They ask Evryn, and she says: "No — I help people everywhere." Someone in Phoenix contacts her. Again, no local network needed — Evryn starts finding people for them immediately. She tells them: "If you spread the word to your friends, I can build something here even faster." The whisper cascade ignites in a new city without Evryn ever "launching" there.
 
-**The math:** If Evryn acquires 1,000 active users in Seattle and the city's domestic out-migration rate holds, roughly 50-100 of those users leave for other cities each year — each arriving in a new place needing exactly what Evryn provides. Over 3 years, that's 150-300 seeds planted in a dozen cities, each with an existing relationship and a reason to evangelize.
+**Inbound spores:** A tech worker relocates from San Francisco to Seattle with zero local network but deep connections back in the Bay Area. Evryn helps them in Seattle — and they tell people back home. Someone in San Francisco asks Evryn for help. Evryn finds what they need proactively, and each person she finds becomes a new node. The trust graph extends along migration corridors organically, and proactive finding means every new node can be served immediately.
 
-**Strategic implication:** Every dollar invested in Seattle user acquisition has a multiplier effect on geographic expansion. Seattle isn't just a launch city — it's a launchpad. The spore dynamic is organic, costs nothing, and follows real migration corridors. Full migration data: `docs/research/seattle-launch-strategy-v1.md` (Part 3).
+**The math:** If Evryn has 10,000 active users in Seattle and the city's domestic out-migration rate holds, roughly 500-1,000 of those users leave for other cities each year — each arriving in a new place needing exactly what Evryn provides, and each one a seed who's already experienced the product and can evangelize it. Over 3 years, that's 1,500-3,000 seeds planted in a dozen cities, concentrated along predictable migration corridors (LA, Portland, Phoenix, Sacramento). Each seed who brings in even one friend doubles Evryn's presence. And every proactive find Evryn makes adds another user to the local network. Meanwhile, the evangelist spores are spreading in parallel — people who never moved, just talked.
+
+**Strategic implication:** Every dollar invested in Seattle user acquisition has a multiplier effect on geographic expansion. Seattle isn't just a launch city — it's a launchpad. The spore dynamic combines three forces: organic migration, word-of-mouth evangelism, and proactive finding that can serve anyone anywhere from day one. Full migration data: `docs/research/seattle-launch-strategy-v1.md` (Part 3).
 
 ### Evangelist Story Loops
 
@@ -260,7 +264,15 @@ Specific thresholds will be defined as each phase approaches launch readiness. T
 
 ### City Expansion
 
-Geographic expansion follows density, not ambition. Each new city goes live when network density thresholds are met within specific connection tags — not a global headcount. For example: when there are enough casting directors and enough actors in Portland, Evryn can go live for actors in Portland. Different connection types activate at different times in different cities. Evryn can honestly say "we haven't officially launched in your area yet" while still surprising early users with matches when they materialize.
+Geographic expansion follows density, not ambition — but proactive finding means Evryn can serve users anywhere before formal density exists. The distinction: Evryn can honestly say "I'm still building my network in your area" while actively finding what users need and growing the local network one connection at a time.
+
+**The I-5 corridor is the first organic expansion.** Portland isn't a launch to plan — it's an inevitability if Seattle works. The creative scenes are already one ecosystem: IATSE Local 488 covers both states (same union, same crew pool), the music scenes have always been connected (Sub Pop in Seattle, Kill Rock Stars in Portland/Olympia), Amtrak Cascades hit record ridership in 2025 (951,397 passengers, 6 daily round trips), and Portland's cooperative/indie values amplify Evryn's model (more co-ops per capita, stronger indie publishing, worker-owned restaurants). The whisper cascade follows existing network lines south on I-5. Evryn doesn't launch in Portland — she *arrives.*
+
+**Corridor nodes:** Tacoma (30 minutes south, becoming a serious arts city — $6.4M Tacoma Creates program) and Bellingham (90 minutes north, growing tech hub, 24% below national average cost of living, attracting creatives priced out of Seattle) are bonus nodes that the network reaches naturally.
+
+**Beyond the corridor:** The spore dynamic (see Growth Mechanics above) handles geographic expansion beyond the PNW through migration patterns and word-of-mouth evangelism. Each new city doesn't require a separate launch — it requires a seed user and Evryn's ability to find people proactively.
+
+Full corridor research: `docs/research/seattle-launch-strategy-v1.md` (Part 7).
 
 ---
 
