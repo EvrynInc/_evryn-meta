@@ -6,6 +6,17 @@
 
 ---
 
+## 2026-03-17 (Day 4 — hardening + OC/QC repos)
+
+- **Day 4 hardening complete (evryn-backend)** — All 10 hardening items: Gmail retry with exponential backoff (30s→5min), Supabase unreachable handling, SDK query() failure→error status, dedup verified (in-memory Set + external_id), edge cases (empty body skip, 50k char truncation, multilingual native), sequential rate limiting, startup crash recovery (reset `processing`→`new`), stale item re-ping (every 15min, 4hr threshold), uncaught error handlers, graceful shutdown (SIGTERM/SIGINT).
+- **notifyDev() separation (evryn-backend)** — New `src/notify/dev.ts` for `#dev-alerts` via Dev Alerts webhook. Clean split: `notifySlack()`→`#evryn-approvals` (Evryn), `notifyDev()`→`#dev-alerts` (system). Same Unicode sanitization.
+- **Status lifecycle hardened** — `new`→`processing`→`pending_approval`→`done` (happy path), `processing`→`error` (failure), `processing`→`new` (crash recovery on startup).
+- **Conversation fixture test passed** — Fixture 15 through full pipeline: conversation.md pulled, submit_draft with "reply" classification, email threading correct, in-character response. All 4 checks passed.
+- **evryn-ops repo created** — OC (Operations Claude) CLAUDE.md: SRE mindset, hard block authority, ops review checklist, monitoring table, severity-based workflow, standalone mailbox protocol, Slack webhook instructions.
+- **evryn-quality repo created** — QC (Quality Claude) CLAUDE.md: adversarial reviewer, security-first mandate, code review checklist, ADR-aware review process, standalone mailbox protocol, Slack webhook instructions, v0.2 review targets.
+- **Hub repos table updated** — evryn-ops and evryn-quality added.
+- **Operator guide updated** — actual approval flow commands from DC Day 3 report, three-channel Slack structure, DND setup instructions.
+
 ## 2026-03-17 (Day 3 — approval flow + conversation pathway + Slack restructure)
 
 - **Day 3 complete (evryn-backend)** — DC built full approval flow and conversation pathway. `submit_draft` MCP tool replaces `send_email` — Evryn cannot send directly, everything through Justin's approval. Approval flow: Evryn drafts → review@evryn.ai (delivery format) → Slack ping → Justin approves/notes → send (Bcc review@evryn.ai) or revise. Three Slack parsing patterns: `approve [subject]`, `notes [subject]: feedback`, `[subject]: feedback`.
