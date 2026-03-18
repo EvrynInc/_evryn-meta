@@ -219,7 +219,11 @@ Full protocol: `docs/ac-dc-protocol.md`. Don't load it unless you need it — on
 
 **Quick reference:** Mailboxes live in each repo (`<repo>/docs/ac-to-dc.md` / `dc-to-ac.md`). Messages are disposable snapshots — reader clears the file after absorbing. AC writes `ARCHITECTURE.md` in each repo; DC reads but never modifies it.
 
-**Session start:** When you're about to work in a specific repo, peek at that repo's `docs/dc-to-ac.md` and `docs/dc-architecture-notes-for-ac.md`. If there's actionable content, read the full protocol. If they're empty or don't exist, move on.
+**Read-receipt convention:** When you read a mailbox message, absorb what you need into persistent docs, then **clear the file** (replace contents with `READ — absorbed`). Before writing a new outbound message, check that the file is clear — if it still has content, your previous message hasn't been received. **Do not overwrite unread messages.**
+
+**Multi-instance awareness:** Justin may run multiple AC instances in parallel (AC1, AC2, etc.). If Justin designates you as a numbered instance, sign your mailbox messages with that designation (e.g., "From AC2:") and only absorb inbound messages addressed to you. There is no AC-to-AC protocol — Justin hand-relays between AC instances.
+
+**Session start:** When you're about to work in a specific repo, peek at that repo's `docs/dc-to-ac.md` and `docs/dc-architecture-notes-for-ac.md`. If there's actionable content, read the full protocol. If they're empty or don't exist, move on. If you've been designated as a specific instance, only absorb messages meant for you.
 
 ---
 

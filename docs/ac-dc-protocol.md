@@ -68,16 +68,19 @@ DC's persistent state lives in: its repo's CLAUDE.md, build docs, ARCHITECTURE.m
 
 ## Multi-Instance Structure
 
-AC is the single architect. There can be multiple DC instances building in parallel across repos. Each DC is scoped to one repo and one build.
+Both AC and DC can run as multiple instances. Each DC is scoped to one repo and one build. Multiple ACs may run in parallel when Justin is working on several architectural threads at once — Justin hand-relays between AC instances as needed.
 
 ```
-AC (one instance, _evryn-meta)
- ├── DC1 (evryn-team-agents) — agent runtime builds
- ├── DC2 (evryn-backend) — product backend builds (future)
- └── DC3 (evryn-website) — website builds (future)
+AC1 (_evryn-meta) ─── DC1 (evryn-team-agents)
+AC2 (_evryn-meta) ─── DC2 (evryn-backend)
+AC3 (_evryn-meta) ─── DC3 (evryn-website)
 ```
 
 Each DC has its own mailbox pair in its repo. The pattern is the same everywhere: disposable messages, persistent state in repo docs.
+
+### Instance Identification
+
+When Justin designates you as a numbered instance (AC1, DC2, etc.), **sign your mailbox messages** with that designation so the recipient and Justin know who wrote what. Example: "From AC2:" at the top of a message. When reading a mailbox, only absorb messages addressed to you — if a message is addressed to a different instance, leave it for them.
 
 ---
 
