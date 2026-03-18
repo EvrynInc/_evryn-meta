@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-17T18:00:22-07:00*
+*Last updated: 2026-03-17T18:02:46-07:00*
 *Last #sweep: 2026-03-09*
 *Last #align: 2026-03-09*
 
@@ -22,27 +22,28 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Day 3 (Tue March 17) — DC work complete, AC work in progress.** DC: approval flow end-to-end, conversation pathway wired, Slack restructured (three channels). AC: conversation.md done; gatekeeper-onboarding.md not started (blocks Day 4 integration test). AC1 doing triage/identity dedup, then gatekeeper-onboarding.
-- **Day 4 (Wed March 18) blockers:** gatekeeper-onboarding.md (AC1 writing). DC tasks: error handling + hardening, bug fixes, emergency channel alerting. Full-chain integration test. Identity/runtime dedup review.
-- **Deferred non-blocking:** OC repo creation, QC repo creation, v0.3 design — all NOT STARTED, none on critical path.
-- **Remaining identity files:** gatekeeper-onboarding.md (Day 4 blocker), onboarding.md rewrite, new-contact.md, regular-user.md.
+- **Day 4 DC work complete (Tue March 17).** All hardening done: retry with backoff, crash recovery, stale item re-pings, graceful shutdown, edge cases, dedup verified, conversation fixture test passed. DC ahead of schedule (finished Day 3+4 in one calendar day).
+- **Remaining blocker: gatekeeper-onboarding.md** (AC1 writing). Blocks full-chain integration test. AC1 doing triage/identity dedup first, then gatekeeper-onboarding.
+- **Day 5 (Thu March 19):** Integration test (once gatekeeper-onboarding.md lands), final stabilization, go/no-go.
+- **Remaining identity files:** gatekeeper-onboarding.md (integration test blocker), onboarding.md rewrite, new-contact.md, regular-user.md.
 - **Legal: Privacy & Terms questionnaire** — Under active consideration with Fenwick.
 
 ## Active Projects
 
-- **_evryn-meta** — OC repo created (evryn-ops), QC repo created (evryn-quality). Operator guide created in evryn-backend. **Seattle launch research complete** (`docs/research/seattle-launch-strategy-v1.md`). Strategic reframe: "concentrate effort, open aperture" — film is the hose, everything else is rain. Spore dynamic identified. GTM spoke, business model spoke, Hub, gatekeeper approach all updated. Trusted Partner Briefing v1.7 drafted (Justin reviewing).
-- **evryn-backend** — Day 3 DC work complete. Approval flow + conversation pathway + Slack restructure. AC1 doing identity dedup then gatekeeper-onboarding.md.
-- **evryn-team-agents** — PAUSED. Slack channel architecture decided (three channels + emergency DND override).
+- **_evryn-meta** — OC + QC repos created. Seattle launch research complete. Strategic reframe: "concentrate effort, open aperture." Trusted Partner Briefing v1.7 drafted (Justin reviewing).
+- **evryn-backend** — Day 4 DC complete. Hardened pipeline. Operator guide current. Waiting on gatekeeper-onboarding.md for integration test.
+- **evryn-ops** — Created. OC CLAUDE.md ready.
+- **evryn-quality** — Created. QC CLAUDE.md ready.
+- **evryn-team-agents** — PAUSED. Slack channel architecture documented.
 - **evryn-dev-workspace** — DC's home repo.
 - **evryn-website** — Live at evryn.ai.
 
 ## Infrastructure
 
 - Running locally on Justin's desktop. No cloud deployment yet.
-- Slack: "Evryn" app (renamed from "Evryn Notifications") — Socket Mode, bot token via `@slack/bolt`. Separate "Dev Alerts" app with webhook.
-- Slack channels: `#evryn-approvals` (Evryn), `#dev-alerts` (agents), `#emergency-alerts` (DND override — not yet wired in code).
+- Slack: "Evryn" app — Socket Mode, bot token via `@slack/bolt`. "Dev Alerts" app with webhook. Channels: `#evryn-approvals`, `#dev-alerts`, `#emergency-alerts` (not wired).
 - Railway: `evryn-backend` project created, CLI installed and linked.
-- Supabase: "Evryn Product" project (maruxkjwlfltlmureqkt). Schema migrated Day 2. Free plan — no automated backups.
+- Supabase: "Evryn Product" project. Schema migrated Day 2. Free plan — no automated backups.
 - evryn@evryn.ai, review@evryn.ai, systemtest@evryn.ai — see operator guide for roles.
 
 ## Backlog
