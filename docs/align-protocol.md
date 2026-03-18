@@ -18,6 +18,10 @@ Read all of the following in full. This is a deep read, not a skim.
 
 **Build layer:** Every active ARCHITECTURE.md, BUILD doc, sprint plan, and session doc across active repos. Session docs carry pending architectural decisions that haven't landed in permanent docs yet.
 
+**Identity layer:** Evryn's identity files (`evryn-backend/identity/`) — core.md, situation modules, activity modules, internal-reference docs, public-knowledge docs. These are where principles become practice in Evryn's actual behavior. A principle that's in the Hub but not reflected in Evryn's identity files is a principle she doesn't know about.
+
+**Agent identity layer (when running):** Team agent identity files (`evryn-team-agents/`) — Lucas's CLAUDE.md, subagent definitions, agent runtime context. Skip when team agents are paused; include whenever they're active. Same logic: principles must be reflected in agent behavior, not just docs.
+
 ### 1. Principles → Build
 
 For each substantive principle, design constraint, or commitment in the Hub, spokes, and detail docs, ask:
