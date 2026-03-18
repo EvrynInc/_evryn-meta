@@ -54,7 +54,7 @@
 35. *Promoted → AGENT_PATTERNS Modular Context Loading (Soul DNA Test).*
 36. *Promoted → ADR-017 + evryn-backend ARCHITECTURE.md pipeline section ("Forward ≠ Triage").*
 37. *Promoted → AGENT_PATTERNS Per-Context Situation Determination.*
-38. **"Untrusted input goes in `prompt`, never `systemPrompt`."** Email content is untrusted user input. Putting it in systemPrompt lets prompt injection manipulate system-level instructions. Security boundary: systemPrompt = agent identity + trusted context; prompt = the message to respond to. *(Partially promoted: evryn-backend ARCHITECTURE.md security section done. DC CLAUDE.md security section pending Pre-Work #9.)*
+38. *Promoted → evryn-backend ARCHITECTURE.md security section + DC CLAUDE.md Build Mandate "Security first" bullet ("Untrusted Input Boundary").*
 39. *Promoted → AGENT_PATTERNS Catch-Up-on-Reconnect for Persistent Connections.*
 
 40. *Promoted → evryn-backend ARCHITECTURE.md Data Model §Design Principles ("Constrain Every Field an LLM Writes").*
