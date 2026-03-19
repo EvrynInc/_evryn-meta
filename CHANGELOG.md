@@ -12,6 +12,13 @@
 - **Bilateral match insight ([ADR-018](docs/decisions/018-gold-to-match-bilateral-reframe.md)).** The "gold" framing created a blind spot: we were treating triage as a one-directional filter (find Mark's gold). But the original sender already expressed interest in Mark by emailing them — that's a signal. When Evryn confirms the fit, that's a bilateral match: both sides have signaled interest, Evryn is confirming and brokering. This means: (1) the sender's profile_jsonb.story should capture *their* side (what they wanted, why they reached out), (2) the connection is Evryn's first brokered match — tracked as such from day one, (3) in v0.3 these people's history with Evryn starts here, not at signup. This reframe brings v0.2 triage into alignment with v0.3+ matching as the same operation at different scales.
 - **Fenwick Terms and Privacy Policy draft reviewed** — extensive changes sent back. Separate doc at `docs/legal/2026.03.18-fenwick-review-response.md`.
 
+## 2026-03-18 (AC1 — triage.md trim + identity doc review)
+
+- **triage.md trimmed (evryn-backend)** — Removed runtime-redundant mechanics (field lists duplicated by tool descriptions, approval steps handled by submit_draft tool, "What You Have" section duplicated by structured handoff prompt). Kept all judgment content (classification framework, "spam is people," cultural trust fluency, merge caution, story writing quality, security). ~140 lines → ~95 lines.
+- **Gatekeeper privacy safeguard added to triage.md** — Story writing instruction now explicitly says: don't assume gatekeeper acted on recommendation, write so nothing compromises gatekeeper's privacy if referenced in future conversation with this person.
+- **Load-bearing language restored** — "future version of you" framing for story richness, "in the system" for bad actor recognition, explicit "create a new record" instruction, bad actor "this lets a future instance revisit" motivation.
+- **Open design threads identified** — full profile_jsonb structure (story_history, pending_notes, notes with provenance) deferred to v0.3; cross-user feedback routing (gatekeeper feedback → contact profile) needs spec in feedback-guidance.md; testing character framework for v0.3 match testing.
+
 ## 2026-03-18 (#align)
 
 - **#align protocol updated** — Added identity layer (Evryn's identity files) and agent identity layer (team agents when running) to checklist. Previous #align missed that identity files are where principles become practice.
