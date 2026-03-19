@@ -6,6 +6,12 @@
 
 ---
 
+## 2026-03-18 (gold-to-match rename + bilateral match insight)
+
+- **Terminology decision: gold → match.** "Gold" was ad hoc jargon from early triage framing. What it actually describes is a match — the person matches the gatekeeper's criteria. Renaming to `match` aligns with Evryn's core vocabulary and removes jargon from public-facing docs (Terms, Privacy Policy). triage_result values become: `match / pass / edge`. Sprint tracker task added (before integration test).
+- **Bilateral match insight.** The "gold" framing created a blind spot: we were treating triage as a one-directional filter (find Mark's gold). But the original sender already expressed interest in Mark by emailing them — that's a signal. When Evryn confirms the fit, that's a bilateral match: both sides have signaled interest, Evryn is confirming and brokering. This means: (1) the sender's profile_jsonb.story should capture *their* side (what they wanted, why they reached out), (2) the connection is Evryn's first brokered match — tracked as such from day one, (3) in v0.3 these people's history with Evryn starts here, not at signup. This reframe brings v0.2 triage into alignment with v0.3+ matching as the same operation at different scales.
+- **Fenwick Terms and Privacy Policy draft reviewed** — extensive changes sent back. Separate doc at `docs/legal/2026.03.18-fenwick-review-response.md`.
+
 ## 2026-03-18 (#align)
 
 - **#align protocol updated** — Added identity layer (Evryn's identity files) and agent identity layer (team agents when running) to checklist. Previous #align missed that identity files are where principles become practice.
