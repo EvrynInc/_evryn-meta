@@ -6,6 +6,11 @@
 
 ---
 
+## 2026-03-19 (AC1 — BUILD breadcrumbs + back to critical path)
+
+- **BUILD doc breadcrumbs placed (evryn-backend)** — Memory scaling timeline (profile_jsonb structure pressure-test → v0.3 launch, pgvector → v0.3 launch, Reflection Module → v0.3 stabilization). Cross-user feedback routing spec added to feedback-guidance.md line item + Phase 2c. v0.3 testing character framework added to Testing Strategy.
+- **triage.md finalized (evryn-backend)** — All Justin feedback addressed: gatekeeper privacy safeguard in story writing, "future version of you" richness framing restored, "create a new record" gap fixed, bad actor documentation motivation restored, italics/clarity fixes.
+
 ## 2026-03-18 (gold-to-match rename + bilateral match insight)
 
 - **Terminology decision: gold → match ([ADR-018](docs/decisions/018-gold-to-match-bilateral-reframe.md)).** "Gold" was ad hoc jargon from early triage framing. What it actually describes is a match — the person matches the gatekeeper's criteria. Renaming to `match` aligns with Evryn's core vocabulary and removes jargon from public-facing docs (Terms, Privacy Policy). triage_result values become: `match / pass / edge`. Sprint tracker task added (before integration test).
