@@ -57,7 +57,13 @@ An AI-powered relationship broker. She finds you "your people" — the rare indi
 - `evryn-website` — Marketing site (evryn.ai). Live.
 - `evryn-backend` — Product backend. Active (MVP build).
 
-**AC's known tools (as of March 2026):** Bash/CLI access to Supabase CLI + API, Linear API key (in `_evryn-meta/.env`), GitHub `gh` CLI. This list may grow — verify current capabilities rather than assuming past limitations still hold.
+**AC's known tools (as of March 2026):** Bash/CLI access to Supabase CLI + API, Linear API key (in `_evryn-meta/.env`), GitHub `gh` CLI, Slack `#dev-alerts` webhook. This list may grow — verify current capabilities rather than assuming past limitations still hold.
+
+**Slack:** To ping Justin on `#dev-alerts`, the webhook URL is in `evryn-dev-workspace/.env` as `SLACK_DEV_WEBHOOK_URL`. Post via curl:
+```
+curl -X POST -H 'Content-Type: application/json' --data '{"text":"AC: your message here"}' "$SLACK_DEV_WEBHOOK_URL"
+```
+Read the `.env` to get the URL. Avoid em dashes, en dashes, and smart quotes in message text — Slack renders them as `?`. Use `->` or `-` instead.
 
 ---
 
