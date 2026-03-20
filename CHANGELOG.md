@@ -6,15 +6,22 @@
 
 ---
 
+## 2026-03-19 (AC0 — ADR-018 status lifecycle + Day 5 prep)
+
+- **ADR-018 revised with full status lifecycle design** — `triage_result` stays immutable (Evryn's prediction). `status` tracks lifecycle: new→processing→pending_approval→delivered→matched/passed/no_gk_response. Terminal states replace generic "done." Lifecycle metadata (timestamptz + annotated notes) replaces `processed_at`. Follow-up tracking via lifecycle entries. Approval gate as architectural invariant. Gatekeeper response mechanics.
+- **ARCHITECTURE.md updated** — emailmgr_items Status Lifecycle section, Outbound Approval Gate in Security section.
+- **DC Day 5 mailbox written** — status migration, sendEmail retry, follow-up cron, approval parser improvement, final stabilization.
+- **AC0→AC1 note written** — core.md approval backstop, triage.md dedup/repeat-contact, gatekeeper-onboarding feedback loop, feedback-guidance.md two flows.
+- **Operator guide updated** — delivered items follow-up, failed send retry, new alert types (WebSocket disconnect, follow-up drafts, send failures).
+
 ## 2026-03-19 (AC1 — BUILD breadcrumbs + back to critical path)
 
 - **BUILD doc breadcrumbs placed (evryn-backend)** — Memory scaling timeline (profile_jsonb structure pressure-test → v0.3 launch, pgvector → v0.3 launch, Reflection Module → v0.3 stabilization). Cross-user feedback routing spec added to feedback-guidance.md line item + Phase 2c. v0.3 testing character framework added to Testing Strategy.
 - **triage.md finalized (evryn-backend)** — All Justin feedback addressed: gatekeeper privacy safeguard in story writing, "future version of you" richness framing restored, "create a new record" gap fixed, bad actor documentation motivation restored, italics/clarity fixes.
 
-## 2026-03-18 (gold-to-match rename + bilateral match insight)
+## 2026-03-18 (ADR-018: triage as bilateral matching)
 
-- **Terminology decision: gold → match ([ADR-018](docs/decisions/018-gold-to-match-bilateral-reframe.md)).** "Gold" was ad hoc jargon from early triage framing. What it actually describes is a match — the person matches the gatekeeper's criteria. Renaming to `match` aligns with Evryn's core vocabulary and removes jargon from public-facing docs (Terms, Privacy Policy). triage_result values become: `match / pass / edge`. Sprint tracker task added (before integration test).
-- **Bilateral match insight ([ADR-018](docs/decisions/018-gold-to-match-bilateral-reframe.md)).** The "gold" framing created a blind spot: we were treating triage as a one-directional filter (find Mark's gold). But the original sender already expressed interest in Mark by emailing them — that's a signal. When Evryn confirms the fit, that's a bilateral match: both sides have signaled interest, Evryn is confirming and brokering. This means: (1) the sender's profile_jsonb.story should capture *their* side (what they wanted, why they reached out), (2) the connection is Evryn's first brokered match — tracked as such from day one, (3) in v0.3 these people's history with Evryn starts here, not at signup. This reframe brings v0.2 triage into alignment with v0.3+ matching as the same operation at different scales.
+- **ADR-018: Triage as bilateral matching — gold ≠ match ([ADR-018](docs/decisions/018-gold-to-match-bilateral-reframe.md)).** Initially proposed renaming gold→match; revised after realizing they're different stages. Gold = Evryn's prediction (triage classification). Match = confirmed reality (gatekeeper validated). Gold stays in the schema. Legal docs correctly use "match" for confirmed connections. Bilateral insight stands: triage is Evryn's first matching engine, sender's story should be tracked from day one. Gatekeeper feedback completes the gold→match transaction — onboarding must set this expectation, feedback-guidance.md must spec the flow.
 - **Fenwick Terms and Privacy Policy draft reviewed** — extensive changes sent back. Separate doc at `docs/legal/2026.03.18-fenwick-review-response.md`.
 
 ## 2026-03-18 (AC1 — triage.md trim + identity doc review)

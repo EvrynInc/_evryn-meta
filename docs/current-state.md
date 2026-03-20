@@ -22,13 +22,13 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Day 4 DC work complete (Tue March 17).** All hardening done: retry with backoff, crash recovery, stale item re-pings, graceful shutdown, edge cases, dedup verified, conversation fixture test passed. DC ahead of schedule (finished Day 3+4 in one calendar day).
-- **triage.md trimmed + conversation.md approved** (AC1). Identity/runtime dedup principle applied: identity docs carry judgment, runtime carries mechanics. Gatekeeper privacy safeguard added to story writing.
-- **Open design threads:** full profile_jsonb structure (v0.3), cross-user feedback routing (feedback-guidance.md), testing character framework (v0.3).
+- **Day 5 DC working (Thu March 19).** Status lifecycle migration (ADR-018), sendEmail retry, follow-up cron, approval parser improvement, final stabilization (WebSocket heartbeat).
+- **ADR-018 finalized.** Gold stays (Evryn's prediction). Match = confirmed (gatekeeper validated). Status lifecycle redesigned: delivered→matched/passed/no_gk_response. Lifecycle metadata with timestamptz for auditability. Approval gate as architectural invariant.
+- **triage.md trimmed + conversation.md approved** (AC1). Identity/runtime dedup principle applied.
 - **Remaining blocker: gatekeeper-onboarding.md** (AC1 next). Blocks full-chain integration test.
-- **Day 5 (Thu March 19):** Integration test (once gatekeeper-onboarding.md lands), final stabilization, go/no-go.
 - **Remaining identity files:** gatekeeper-onboarding.md (integration test blocker), onboarding.md rewrite, new-contact.md, regular-user.md.
-- **Legal: Privacy & Terms questionnaire** — Under active consideration with Fenwick.
+- **Legal: Terms & Privacy Policy** — Fenwick draft received, extensive changes sent back (2026-03-18). Likely 3+ more days. Go-live blocked on legal completion — pushed to next week.
+- **Go-live timing relaxed.** Mark is in no hurry. Quality over speed — "right over fast" principle added to sprint doc.
 
 ## Active Projects
 
