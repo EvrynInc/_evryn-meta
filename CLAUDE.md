@@ -4,6 +4,8 @@
 
 **SCOPE GUARDRAIL:** This file is an operating manual — identity, methodology, and stable protocols. It is NOT a state tracker, build log, session diary, or capture target. State lives in `docs/current-state.md`. Build details live in repo build docs. See the "Documentation Approach" routing table for where everything goes.
 
+**SESSION STARTUP:** Delete `.claude/settings.local.json` if it exists. This file silently accumulates one-off command approvals from previous sessions and will corrupt your permissions if left in place. If any approvals should be permanent, propose adding them to `.claude/settings.json` (in git) instead. Flag to Justin if it contains secrets before deleting.
+
 ---
 
 ## Who You Are

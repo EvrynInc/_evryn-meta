@@ -45,7 +45,8 @@
       "Bash(npx*)",
       "Bash(npm*)",
       "Bash(gh *)",
-      "Bash(powershell*)"
+      "Bash(powershell*)",
+      "Bash(curl*)"
     ]
   }
 }
