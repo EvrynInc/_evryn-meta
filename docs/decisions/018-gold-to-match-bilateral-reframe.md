@@ -60,30 +60,23 @@ The legal docs (Terms, Privacy Policy) correctly use "match" because they descri
 
    The `delivered` state means: notification sent to gatekeeper, awaiting feedback. Items cycle `delivered → pending_approval → delivered` during follow-ups (each follow-up goes through the approval gate). Terminal states are the only "done."
 
-8. **Follow-up tracking in metadata.** Instead of adding follow-up statuses, track follow-up state in `emailmgr_items.metadata`:
-
-   ```json
-   {
-     "draft": { "..." },
-     "follow_ups": 2,
-     "last_follow_up_at": "2026-03-17T10:00:00-07:00"
-   }
-   ```
-
-   The stale item checker uses `last_follow_up_at` (or `updated_at` if no follow-ups yet) to determine if it's time to trigger Evryn again. Evryn sees the follow-up count and decides: 0 → send first follow-up; 2+ → recommend closing as `no_gk_response`.
-
-9. **Lifecycle metadata for auditability.** Every status change is recorded in `metadata.lifecycle` with timestamptz:
+8. **Lifecycle metadata for auditability and follow-up tracking.** Every status change is recorded in `metadata.lifecycle` with timestamptz and an annotated note:
 
    ```json
    {
      "lifecycle": [
        { "status": "new", "at": "2026-03-17T09:00:00-07:00" },
        { "status": "processing", "at": "2026-03-17T09:00:05-07:00" },
-       { "status": "pending_approval", "at": "2026-03-17T09:01:00-07:00" },
-       { "status": "delivered", "at": "2026-03-17T09:05:00-07:00" }
+       { "status": "pending_approval", "at": "2026-03-17T09:01:00-07:00", "note": "triage notification draft" },
+       { "status": "delivered", "at": "2026-03-17T09:05:00-07:00", "note": "initial notification sent" },
+       { "status": "pending_approval", "at": "2026-03-24T10:00:00-07:00", "note": "follow-up 1 draft" },
+       { "status": "delivered", "at": "2026-03-24T10:05:00-07:00", "note": "follow-up 1 sent" },
+       { "status": "no_gk_response", "at": "2026-04-07T10:00:00-07:00", "note": "closed after 2 follow-ups, no response" }
      ]
    }
    ```
+
+   The lifecycle IS the follow-up record — count the delivery entries to know how many follow-ups have been sent. If something goes wrong, the exact point of failure is visible. The stale item checker uses the timestamp of the last `delivered` entry to determine if it's time to trigger Evryn again. Evryn sees the full history and decides what to do: 0 follow-ups → send first; 2+ follow-ups with no response → close as `no_gk_response`.
 
    Full audit trail without extra columns. `updated_at` (auto-managed) is the only timestamp column needed for queries — `processed_at` is dropped.
 
