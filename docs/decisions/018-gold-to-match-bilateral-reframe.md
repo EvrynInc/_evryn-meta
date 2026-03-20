@@ -80,7 +80,17 @@ The legal docs (Terms, Privacy Policy) correctly use "match" because they descri
 
    Full audit trail without extra columns. `updated_at` (auto-managed) is the only timestamp column needed for queries — `processed_at` is dropped.
 
-10. **Identity-level approval backstop.** The approval gate is enforced at the code level (only `submit_draft` tool, no `send_email`). But as belt-and-suspenders, `core.md` must include: "You never send anything to anyone without operator approval. Every outbound message goes through the approval flow. No exceptions." This protects against future code changes that might accidentally add a direct send path.
+9. **Gatekeeper response completes the lifecycle.** When the gatekeeper responds with feedback (in conversation, via operator relay, however it comes), Evryn reads the response, determines confirmation or rejection, and updates the status:
+   - Confirmation → `matched`: `{ "status": "matched", "at": "...", "note": "gatekeeper confirmed: 'great fit, exactly who I was looking for'" }`
+   - Rejection → `passed`: `{ "status": "passed", "at": "...", "note": "gatekeeper rejected: 'not the right time for this'" }`
+
+   Evryn captures the gatekeeper's actual words in the lifecycle note so there's a record of what they said. This is Evryn's judgment — same intelligence she uses for everything else.
+
+10. **Approval gate as an architectural invariant.** The current implementation enforces the approval gate at the code level (only `submit_draft` tool, no `send_email`). As belt-and-suspenders:
+    - **`core.md`** must include: "You never send anything to anyone without operator approval. Every outbound message goes through the approval flow. No exceptions."
+    - **ARCHITECTURE.md** must declare: "All outbound communication requires an approval mechanism. Whatever tool implements this gate, it must exist. If the tooling changes, the approval gate must be preserved or explicitly retired by Justin."
+
+    If the tools change (e.g., `submit_draft` is replaced with `send_email` that has built-in approval), the identity-level constraint ensures Evryn still routes through approval. If no approval tool exists, Evryn would be stuck and ping Justin: "I need to send this but I don't have an approval tool." That's the right failure mode — fail closed, not open.
 
 ## Consequences
 
@@ -90,9 +100,9 @@ The legal docs (Terms, Privacy Policy) correctly use "match" because they descri
   - For `sender_type = ignore` and `bad_actor`: status goes straight to terminal (`ignored`, `bad_actor`) instead of through the full lifecycle
 - **`triage_result` stays immutable.** Gold stays in the CHECK constraint, code, identity docs, operator guide, and test fixtures. No rename.
 - **Legal docs use "match"** for confirmed connections — this is correct and intentional. No collision with the internal `gold` classification.
-- **v0.3 needs a connection/relationship schema** with edges that carry both `original_assessment` and `outcome`, plus `gatekeeper_user_id` for multi-gatekeeper scoping. Design this when speccing v0.3 connection lifecycle.
+- **v0.3 needs a connection/relationship graph** — general user-to-user edges, any kind of connection. Triage-specific details (classification, outcome) stay on emailmgr_items where they belong. Once someone is a confirmed match, they're just two connected users on the graph. The `user_id` field on emailmgr_items already serves as the gatekeeper ID — multiple gatekeepers just means multiple items with different user_ids. See `_evryn-meta/docs/hub/technical-vision.md` for the relationship graph design.
 - **Identity docs and story writing** should reflect the bilateral framing: the sender is a person with their own needs, not just an item in the gatekeeper's inbox.
 - **Gatekeeper onboarding identity doc** must include the feedback-closes-the-loop expectation. See Decision #5.
-- **`feedback-guidance.md`** (internal-reference module, pre-Mark-onboarding) should spec the follow-up cadence and Evryn's judgment framework for checking on delivered items.
+- **`feedback-guidance.md`** (internal-reference module, pre-Mark-onboarding) should spec the gold→match confirmation flow alongside the training feedback flow — two separate concerns in the same module. Also: follow-up cadence and Evryn's judgment framework for checking on delivered items.
 - **Code changes for v0.2:** `executeApproval()` needs try/catch + retry around `sendEmail()`, status update from `"done"` to `"delivered"`, lifecycle metadata appended on every status change. Stale item checker extended for `delivered` items >7 days → triggers Evryn via `runEvrynQuery()`.
 - **Dedup instruction needed in triage.md:** Before classifying, Evryn checks if she's already sent a notification about this person to this gatekeeper. If so, evaluate whether the new email changes the picture — don't re-classify from scratch.
