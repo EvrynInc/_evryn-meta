@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-19T12:32:39-07:00*
+*Last updated: 2026-03-19T19:20:44-07:00*
 *Last #sweep: 2026-03-18*
 *Last #align: 2026-03-18*
 
@@ -24,7 +24,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 - **Day 5 DC working (Thu March 19).** Status lifecycle migration (ADR-018), sendEmail retry, follow-up cron, approval parser improvement, final stabilization (WebSocket heartbeat).
 - **ADR-018 finalized.** Gold stays (Evryn's prediction). Match = confirmed (gatekeeper validated). Status lifecycle redesigned: delivered→matched/passed/no_gk_response. Lifecycle metadata with timestamptz for auditability. Approval gate as architectural invariant.
-- **triage.md trimmed + conversation.md approved** (AC1). Identity/runtime dedup principle applied.
+- **Identity docs cleaned up (AC1).** triage.md trimmed + ADR-018 implemented (`done`→terminal states, dedup, bilateral framing). core.md approval gate backstop added. operator.md, gatekeeper.md confirmed clean. conversation.md written lean. Ready for gatekeeper-onboarding.md.
 - **Remaining blocker: gatekeeper-onboarding.md** (AC1 next). Blocks full-chain integration test.
 - **Remaining identity files:** gatekeeper-onboarding.md (integration test blocker), onboarding.md rewrite, new-contact.md, regular-user.md.
 - **Legal: Terms & Privacy Policy** — Fenwick draft received, extensive changes sent back (2026-03-18). Likely 3+ more days. Go-live blocked on legal completion — pushed to next week.

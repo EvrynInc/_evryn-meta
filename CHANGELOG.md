@@ -6,6 +6,15 @@
 
 ---
 
+## 2026-03-19 (DC Day 5 — status lifecycle migration + stabilization)
+
+- **Status lifecycle migration complete (evryn-backend)** — CHECK constraint updated (done→terminal states), processed_at dropped, lifecycle metadata on every status change with timestamptz + descriptive notes. Existing rows migrated: done→passed/ignored/delivered based on triage_result.
+- **sendEmail retry (evryn-backend)** — executeApproval() now retries 3x with exponential backoff (2s, 4s). On final failure: error status + #dev-alerts.
+- **Follow-up cron (evryn-backend)** — checkFollowUps() runs hourly. Delivered items >7 days → triggers Evryn via runEvrynQuery(). Follow-ups go through approval gate.
+- **Approval parser improvement (evryn-backend)** — "approval_hint" parse type: if message contains "approve" but doesn't match regex, lists pending subjects for copy/paste.
+- **WebSocket heartbeat (evryn-backend)** — Checks every 30min, alerts #dev-alerts if no Slack events in 2 hours.
+- **Vertical sweep findings** — Two critical: core.md missing approval backstop (AC1 fixing), triage.md references `done` status (AC1 fixing). One moderate: Bcc not passed to sendEmail in executeApproval() (flagged for DC).
+
 ## 2026-03-19 (AC0 — ADR-018 status lifecycle + Day 5 prep)
 
 - **ADR-018 revised with full status lifecycle design** — `triage_result` stays immutable (Evryn's prediction). `status` tracks lifecycle: new→processing→pending_approval→delivered→matched/passed/no_gk_response. Terminal states replace generic "done." Lifecycle metadata (timestamptz + annotated notes) replaces `processed_at`. Follow-up tracking via lifecycle entries. Approval gate as architectural invariant. Gatekeeper response mechanics.
@@ -13,6 +22,13 @@
 - **DC Day 5 mailbox written** — status migration, sendEmail retry, follow-up cron, approval parser improvement, final stabilization.
 - **AC0→AC1 note written** — core.md approval backstop, triage.md dedup/repeat-contact, gatekeeper-onboarding feedback loop, feedback-guidance.md two flows.
 - **Operator guide updated** — delivered items follow-up, failed send retry, new alert types (WebSocket disconnect, follow-up drafts, send failures).
+
+## 2026-03-19 (AC1 — ADR-018 implementation + identity doc cleanup)
+
+- **triage.md: ADR-018 status fixes (evryn-backend)** — `done` replaced with proper terminal states (`ignored`, `passed`). Dedup + repeat-contact handling added (re-triage vs follow-up data point vs repeat bad_actor). Bilateral framing: sender's story captures what *they* wanted, not just how they scored.
+- **core.md: approval gate backstop (evryn-backend)** — "You never send anything without approval" added to Hard Constraints. Belt-and-suspenders with code-level enforcement (submit_draft tool). If tooling changes, Evryn still routes through approval or stops and asks Justin.
+- **operator.md + gatekeeper.md confirmed clean** — Passed through runtime-dedup lens. Both are situation modules (disposition/judgment only), no redundancy with runtime mechanics.
+- **Bcc bug flagged for DC** — executeApproval() stores draft_bcc but never passes it to sendEmail(). Written to ac-to-dc.md, absorbed by AC0.
 
 ## 2026-03-19 (AC1 — BUILD breadcrumbs + back to critical path)
 
