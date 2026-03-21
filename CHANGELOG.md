@@ -6,6 +6,14 @@
 
 ---
 
+## 2026-03-20 (AC0 — AC1 decisions, AC2 review, session hygiene)
+
+- **AC1 decisions absorbed** — Standalone modules (gatekeeper-onboarding not nested with onboarding), pre-go-live internal-reference files (feedback-guidance, trust-arc-scripts, company-context). Sprint tracker, BUILD doc, core.md module hub updated.
+- **AC2 v0.3 design proposals reviewed** — 6 proposals (connection graph, proactive behavior, multi-gatekeeper, feedback loops, memory scaling, trust at scale). All architecturally sound. Breadcrumbs placed in ARCHITECTURE.md + BUILD doc v0.3 Staging section with key questions. Prompt saved for re-run.
+- **Session hygiene protocol** — settings.local.json cleanup added to all CLAUDE.md files (session startup) and lock protocols (session end) across AC, DC, OC, QC. AC settings.json: curl permission added for Slack webhooks. AC CLAUDE.md: Slack webhook instructions added.
+- **Vertical sweep** — Full alignment check Hub→ARCHITECTURE→BUILD→sprint→identity→code. Two critical findings fixed by AC1 (core.md approval backstop, triage.md `done`→terminal states). Bcc bug fixed by DC.
+- **Database backup** — Post-Day 5 migration backup (schema + data, 2026-03-20).
+
 ## 2026-03-19 (DC Day 5 — status lifecycle migration + stabilization)
 
 - **Status lifecycle migration complete (evryn-backend)** — CHECK constraint updated (done→terminal states), processed_at dropped, lifecycle metadata on every status change with timestamptz + descriptive notes. Existing rows migrated: done→passed/ignored/delivered based on triage_result.

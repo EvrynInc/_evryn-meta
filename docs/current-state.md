@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-20T17:37:54-07:00*
+*Last updated: 2026-03-20T18:45:11-07:00*
 *Last #sweep: 2026-03-18*
 *Last #align: 2026-03-18*
 
@@ -32,7 +32,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## Active Projects
 
-- **_evryn-meta** — OC + QC repos created. Seattle launch research complete. Strategic reframe: "concentrate effort, open aperture." Trusted Partner Briefing v1.7 drafted (Justin reviewing).
+- **_evryn-meta** — OC + QC repos created. AC2 v0.3 design proposals complete (6 files, Justin review pending). Seattle launch research complete. Trusted Partner Briefing v1.7 drafted (Justin reviewing).
 - **evryn-backend** — Day 5 DC complete. Hardened pipeline. Status lifecycle migrated (ADR-018). All v0.2 identity activity modules done. Waiting on three internal-reference files for full go-live readiness.
 - **evryn-ops** — Created. OC CLAUDE.md ready.
 - **evryn-quality** — Created. QC CLAUDE.md ready.
