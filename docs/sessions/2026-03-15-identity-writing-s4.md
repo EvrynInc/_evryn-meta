@@ -1,8 +1,16 @@
 # Identity Writing S4 — Remaining Work
 
-**Status:** In progress. core.md done (v7), operator.md and gatekeeper.md reviewed and approved. Triage.md rewritten (v3, dry-run tested). conversation.md v2 written (Justin reviewing). Onboarding.md first draft needs rewrite (14 feedback items). gatekeeper-onboarding.md not started.
+**Status as of 2026-03-20:** All activity modules for v0.2 are written. triage.md trimmed + ADR-018 implemented. conversation.md approved. gatekeeper-onboarding.md written (v3, Justin approved structure). onboarding.md gatekeeper section extracted, `onboarding_pending` pattern added, deferred to v0.3. operator.md and gatekeeper.md confirmed clean (runtime-dedup pass). core.md has approval gate backstop. identity-writing-brief.md framing fixed (gatekeepers are users, standalone modules not nested).
 
-**Identity/runtime dedup insight (AC1, 2026-03-17):** Justin observed that triage.md duplicates work the runtime already handles (field constraints in tool descriptions, structured handoff in prompt composition, auto-recording in tool responses). Principle: identity docs carry *judgment and disposition*; the runtime carries *mechanics and data*. When they overlap, tokens are wasted and maintenance diverges. Decision pending: trim triage.md now or during stabilization week. Apply principle to all new modules immediately.
+**Remaining before go-live:** Three internal-reference files: feedback-guidance.md (highest priority — two-flow spec per ADR-018), trust-arc-scripts.md (near copy-paste from v0.1 "More About Me"), company-context.md (sanitized Hub). Plus new-contact.md and regular-user.md situation modules (lower priority — Evryn can function without them for Mark pilot).
+
+**Identity/runtime dedup principle (resolved):** Identity docs carry *judgment and disposition*; the runtime carries *mechanics and data*. Applied to triage.md trim and all new modules. Confirmed: operator.md and gatekeeper.md were already clean.
+
+**Key decisions this session (AC1, 2026-03-18 through 2026-03-20):**
+- Gatekeepers are just users. Gatekeeper is a role in the current interaction, not a different category of person. Framing fixed in identity-writing-brief.md.
+- Onboarding and gatekeeper-onboarding are standalone activity modules, not nested. Shared techniques live in internal-reference/ files.
+- `onboarding_pending` pattern: Evryn tracks uncovered onboarding topics in `profile_jsonb.onboarding_pending` and finds organic moments to cover them in future conversations.
+- Cross-user feedback routing: gatekeeper feedback about a contact goes to the contact's `profile_jsonb.notes` array with `seen_by_subject: false` (ARCHITECTURE.md spec, v0.3 structure). For v0.2, simpler inline approach in story with privacy marker.
 
 **Previous sessions:** S1 wrote core.md (v5). S2 resolved architectural questions (ADRs 012-017), wrote situation modules (operator, gatekeeper) and triage activity module, drafted onboarding. S3 did core.md v6+v7 (Justin's full review), reviewed all existing identity files, identified triage.md gaps, updated sprint dates for snow day shift. Full history in `docs/sessions/historical/`.
 
@@ -110,14 +118,16 @@ Preserving Justin's language because the phrasing carries the intent:
 
 | Module | Type | Status | Notes |
 |--------|------|--------|-------|
-| `activities/triage.md` | Activity | Rewrite needed | Gaps identified S3b — schema questions + doc clarity |
-| `activities/conversation.md` | Activity | DONE | Written by AC1, wired by DC Day 3 |
-| `activities/gatekeeper-onboarding.md` | Activity | Not started | **Needed by Day 4 (Wed March 18)** for integration test |
-| `activities/onboarding.md` | Activity | Rewrite needed | First draft on disk has 14 feedback items (see above) |
-| `situations/new-contact.md` | Situation | Not started | Real version, not stub (feedback #10) |
-| `situations/regular-user.md` | Situation | Not started | Real version, not stub (feedback #10) |
-| `public-knowledge/company-context.md` | Knowledge | Not started | Public-safe "what is Evryn" |
-| Internal reference files | Reference | Not started | canary-procedure, crisis-protocol, trust-arc-scripts, contact-capture, feedback-guidance, cultural-trust-fluency (v0.3+ — five culture group table from S1 offload list) |
+| `activities/triage.md` | Activity | DONE | Trimmed, ADR-018 implemented, runtime-dedup applied |
+| `activities/conversation.md` | Activity | DONE | Written lean, approved |
+| `activities/gatekeeper-onboarding.md` | Activity | DONE | Standalone, v3 approved |
+| `activities/onboarding.md` | Activity | Deferred (v0.3) | Gatekeeper section extracted, `onboarding_pending` pattern added, 14 feedback items still pending |
+| `situations/new-contact.md` | Situation | Not started | Real version, not stub. Not blocking Mark pilot. |
+| `situations/regular-user.md` | Situation | Not started | Real version, not stub. Not blocking Mark pilot. |
+| `public-knowledge/company-context.md` | Knowledge | Not started | **Pre-go-live.** Public-safe "what is Evryn" — sanitized Hub. |
+| `internal-reference/feedback-guidance.md` | Reference | Not started | **Pre-go-live, highest priority.** Two-flow spec: transactional lifecycle (gold→match) + training calibration. Cross-user feedback routing. See ADR-018 Decision #5, AC0→AC1 note. |
+| `internal-reference/trust-arc-scripts.md` | Reference | Not started | **Pre-go-live.** Near copy-paste from v0.1 "More About Me" sequence. Referenced by gatekeeper-onboarding.md and conversation.md. |
+| Other internal-reference files | Reference | Not started | canary-procedure, crisis-protocol, contact-capture — v0.3. cultural-trust-fluency — v0.3+. |
 
 ---
 

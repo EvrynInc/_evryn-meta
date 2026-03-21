@@ -23,6 +23,14 @@
 - **AC0→AC1 note written** — core.md approval backstop, triage.md dedup/repeat-contact, gatekeeper-onboarding feedback loop, feedback-guidance.md two flows.
 - **Operator guide updated** — delivered items follow-up, failed send retry, new alert types (WebSocket disconnect, follow-up drafts, send failures).
 
+## 2026-03-20 (AC1 — gatekeeper-onboarding.md + identity framing fixes)
+
+- **gatekeeper-onboarding.md written (evryn-backend)** — Standalone activity module. Structured around conversation flow: introduce → get to know them → learn criteria → what happens next (setup, validation, feedback, handoff with auto-responder end state). Four-step ramp from gatekeeper-approach.md woven in as script-as-skill. `onboarding_pending` pattern for tracking uncovered topics across conversations.
+- **"Gatekeepers are just users" framing fix** — Fixed false dichotomy in identity-writing-brief.md (lines 180, 274). Gatekeepers are users whose current interaction involves their gatekeeper role. Same onboarding goal (understand who they are and what they need), with criteria-learning layer on top.
+- **Onboarding/gatekeeper-onboarding standalone decision** — Originally planned as nested (gatekeeper layers on general onboarding). Changed: different situation modules load (gatekeeper.md vs new-contact.md), shared techniques live in internal-reference/ files. Composition model is one situation + one activity.
+- **onboarding.md updated (evryn-backend)** — Gatekeeper section extracted (now in gatekeeper-onboarding.md). `onboarding_pending` pattern added. Deferred to v0.3.
+- **S4 session doc updated** — Status, modules table, and key decisions brought current for fresh AC1 handoff.
+
 ## 2026-03-19 (AC1 — ADR-018 implementation + identity doc cleanup)
 
 - **triage.md: ADR-018 status fixes (evryn-backend)** — `done` replaced with proper terminal states (`ignored`, `passed`). Dedup + repeat-contact handling added (re-triage vs follow-up data point vs repeat bad_actor). Bilateral framing: sender's story captures what *they* wanted, not just how they scored.
