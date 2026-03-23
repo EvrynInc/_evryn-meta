@@ -6,6 +6,12 @@
 
 ---
 
+## 2026-03-23 (AC0 — test suites, cost model note)
+
+- **Integration test protocol written (evryn-backend)** — `tests/integration-test-v02.md`: full-chain test on Railway (deploy → onboard Rachel Blackwood → triage fixtures → data wipe).
+- **Adversarial test suite written (evryn-backend)** — `tests/adversarial-test-v02.md`: 14 scenarios across 6 categories (privacy leakage, prompt injection, classification integrity, approval gate, crisis, resilience). Adversarial testing established as architectural practice in ARCHITECTURE.md.
+- **BUILD doc cost model note** — v0.3 staging section updated: cost model spreadsheet only covers v0.2, must be extended before scoping v0.3 (reflection, matching, proactive outreach costs not yet modeled). Weekend thinking evaluation referenced.
+
 ## 2026-03-20 (AC0 — AC1 decisions, AC2 review, session hygiene)
 
 - **AC1 decisions absorbed** — Standalone modules (gatekeeper-onboarding not nested with onboarding), pre-go-live internal-reference files (feedback-guidance, trust-arc-scripts, company-context). Sprint tracker, BUILD doc, core.md module hub updated.

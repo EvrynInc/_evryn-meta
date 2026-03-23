@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-20T18:45:11-07:00*
+*Last updated: 2026-03-23T16:30:00-07:00*
 *Last #sweep: 2026-03-18*
 *Last #align: 2026-03-18*
 
@@ -33,7 +33,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 ## Active Projects
 
 - **_evryn-meta** — OC + QC repos created. AC2 v0.3 design proposals complete (6 files, Justin review pending). Seattle launch research complete. Trusted Partner Briefing v1.7 drafted (Justin reviewing).
-- **evryn-backend** — Day 5 DC complete. Hardened pipeline. Status lifecycle migrated (ADR-018). All v0.2 identity activity modules done. Waiting on three internal-reference files for full go-live readiness.
+- **evryn-backend** — All DC build work complete (Days 2-5). Hardened pipeline. Status lifecycle migrated (ADR-018). All v0.2 identity activity modules done. Integration + adversarial test suites written. Remaining: three internal-reference files → deploy to Railway → integration test → adversarial test → go/no-go. Legal (Fenwick) blocks actual go-live.
 - **evryn-ops** — Created. OC CLAUDE.md ready.
 - **evryn-quality** — Created. QC CLAUDE.md ready.
 - **evryn-team-agents** — PAUSED. Slack channel architecture documented.
