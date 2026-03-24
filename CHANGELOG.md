@@ -6,6 +6,15 @@
 
 ---
 
+## 2026-03-23 (AC1 — core.md privacy + story lenses, S5 session doc)
+
+- **core.md "User privacy is sacred" rewrite (evryn-backend)** — Hard constraint expanded: explicit consent model (this information, this person), default-private rule, existential consequence framing. Headline changed from "User isolation is absolute."
+- **core.md story lenses framework (evryn-backend)** — Six categories Evryn maintains for every user profile: who they are, what they're looking for, how they came to Evryn, what you've observed, where you and this user are, what you wonder.
+- **core.md `shareable_with_user` protocol (evryn-backend)** — Notes from others protocol: authorization model for cross-user information sharing. Renamed from `seen_by_subject` (awareness) to `shareable_with_user` (authorization). Felt appeal tying back to privacy constraint.
+- **S5 session doc created** — Full revision specs for gatekeeper-onboarding.md (8 changes), onboarding.md pass (14 feedback items + MI priming), conversation.md update, three internal-reference files, ARCHITECTURE.md proposals. Reading list for fresh instances.
+- **AC0 note written** — Runtime scaffold spec (profile_jsonb template, story_history separate table, model tier shift, adversarial test note). For DC via sprint doc.
+- **S4 retirement ready** — All content captured in persistent docs or S5. Move to `sessions/historical/` next session.
+
 ## 2026-03-23 (AC0 — test suites, cost model note)
 
 - **Integration test protocol written (evryn-backend)** — `tests/integration-test-v02.md`: full-chain test on Railway (deploy → onboard Rachel Blackwood → triage fixtures → data wipe).

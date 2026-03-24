@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-23T16:30:00-07:00*
+*Last updated: 2026-03-23T18:05:12-07:00*
 *Last #sweep: 2026-03-18*
 *Last #align: 2026-03-18*
 
@@ -22,11 +22,11 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Day 5 DC working (Thu March 19).** Status lifecycle migration (ADR-018), sendEmail retry, follow-up cron, approval parser improvement, final stabilization (WebSocket heartbeat).
-- **ADR-018 finalized.** Gold stays (Evryn's prediction). Match = confirmed (gatekeeper validated). Status lifecycle redesigned: delivered→matched/passed/no_gk_response. Lifecycle metadata with timestamptz for auditability. Approval gate as architectural invariant.
-- **All v0.2 activity modules done (AC1).** triage.md trimmed + ADR-018. conversation.md approved. gatekeeper-onboarding.md written (standalone, v3). onboarding.md deferred to v0.3 (gatekeeper section extracted, `onboarding_pending` pattern added). core.md, operator.md, gatekeeper.md all clean.
-- **Remaining pre-go-live: three internal-reference files.** feedback-guidance.md (highest priority — two-flow spec, ADR-018), trust-arc-scripts.md (v0.1 copy-paste), company-context.md (sanitized Hub). AC1 spinning up fresh instance to write these.
-- **Remaining v0.3 identity files:** onboarding.md rewrite, new-contact.md, regular-user.md.
+- **All DC build work complete.** Days 2-5 done. ADR-018 status lifecycle migrated. Pipeline hardened. Follow-up cron, retry, approval parser, WebSocket heartbeat all operational.
+- **core.md updated (AC1).** Story lenses framework, `shareable_with_user` protocol, "User privacy is sacred" rewrite. All activity modules done. gatekeeper-onboarding.md revision + onboarding.md pass planned (S5 session doc).
+- **Remaining pre-go-live: three internal-reference files + gatekeeper-onboarding revision.** feedback-guidance.md (highest priority), trust-arc-scripts.md, company-context.md. Plus gatekeeper-onboarding.md tightening (preconditions, data orientation, intro substance, validation check-ins). Full plan in S5 session doc.
+- **Remaining v0.3 identity files:** onboarding.md rewrite, new-contact.md, regular-user.md, conversation.md update (cross-user note writing).
+- **Runtime scaffold needed (AC0 note for DC).** profile_jsonb template (not empty `{}`), `shareable_with_user` naming, model tier shift (Opus default). See `docs/sessions/2026-03-23-ac0-note-runtime-scaffold.md`.
 - **Legal: Terms & Privacy Policy** — Fenwick draft received, extensive changes sent back (2026-03-18). Likely 3+ more days. Go-live blocked on legal completion — pushed to next week.
 - **Go-live timing relaxed.** Mark is in no hurry. Quality over speed — "right over fast" principle added to sprint doc.
 
