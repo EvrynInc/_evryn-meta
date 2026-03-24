@@ -20,11 +20,11 @@ The question: how do we catch matches that new information unlocks, without re-e
 
 The full chain from "new information arrives" to "new matches discovered" has three stages: reflection, profile evaluation, and re-matching. Each stage gates the next — downstream work only fires when the upstream stage produced meaningful change. The only operation that runs outside the weekly batch is first-match for new users (see below).
 
-**Stage 1: Reflection (rolling schedule, batched at 50% cost via Anthropic batch API)**
+**Stage 1: Reflection (weekly batch, 50% cost via Anthropic batch API)**
 
 During the week, Evryn converses with users and captures insights in `pending_notes`. Conversations, incoming third-party info, and other interactions are tracked in normal DB tables (messages, etc.). No reflection runs during the week — insights accumulate.
 
-On a rolling schedule, a batch job queries the DB for all users with any activity since their last reflection. For each user, one Opus call with the full picture: old story + pending_notes + ALL raw interactions from the messages table + any other info appended to the user's record (Evryn's notes over time, third-party observations, etc.) — all read in **chronological order** so Evryn can see patterns and trends across the full history. This single pass folds in new information and re-examines old conclusions in light of new context simultaneously; when Evryn reads the full chronological record alongside the current story, she naturally does both.
+Weekly, a batch job queries the DB for all users with any activity since their last reflection. For each user, one Opus call with the full picture: old story + pending_notes + ALL raw interactions from the messages table + any other info appended to the user's record (Evryn's notes over time, third-party observations, etc.) — all read in **chronological order** so Evryn can see patterns and trends across the full history. This single pass folds in new information and re-examines old conclusions in light of new context simultaneously; when Evryn reads the full chronological record alongside the current story, she naturally does both.
 
 **Why the full history, not just recent interactions:** Evryn's value is in seeing patterns across time. A user's third mention of loneliness over six months is qualitatively different from any single mention. Reading the full record in order makes these patterns visible. Per-user volume is manageable — most users have onboarding plus a few interactions per month. Even after a year, the full input for a typical user is well within a single Opus call.
 
@@ -34,13 +34,13 @@ On a rolling schedule, a batch job queries the DB for all users with any activit
 
 **Why "any activity" as the trigger:** Even seemingly minor activity can be meaningful in aggregate or in context. A DB query for "any activity since last reflection" is cheap. Writing filtering logic to distinguish "meaningful" from "not meaningful" activity is complex, fragile, and risks missing things. Let Opus make that judgment during reflection — that's what it's good at. If the new activity was trivial, reflection produces a story that barely changed, and downstream gates catch it.
 
-**Care Module noise is self-filtering:** The Care Module reaches out to users proactively, which creates activity entries. This means reflection runs for users who only had "nothing yet" / "okay, thanks Evryn" exchanges. That's fine — reflection is mostly an input process. Evryn reads the full picture, sees nothing meaningful changed, and her output is minimal (near-zero output tokens). The downstream profile-evaluation gate catches it: Evryn looks at the barely-changed story and says "no profile rewrites needed." Cost is one cheap reflection call with minimal output. The alternative — building rules to pre-filter Care Module noise — is more complexity than it saves.
+**Noise is largely self-filtering:** For instance, the Care Module reaches out to users proactively, which creates activity entries. This means reflection runs for users who only had "nothing yet" / "okay, thanks Evryn" exchanges. That's fine — reflection is mostly an input process. Evryn reads the full picture, sees nothing meaningful changed, and her output is minimal (near-zero output tokens). The downstream profile-evaluation gate catches it: Evryn looks at the barely-changed story and says "no profile rewrites needed." Cost is one cheap reflection call with minimal output. This pattern generalizes — any low-signal activity triggers reflection, but the pipeline's gates prevent it from cascading into expensive downstream work. The alternative — building rules to pre-filter noise sources — is more complexity than it saves.
 
 **What pending_notes are:** Insights Evryn noticed during conversations — things she thinks are worth remembering. NOT an activity log. The trigger for reflection is "any activity" (DB query), not `pending_notes.length > 0`. A user could have activity (received a proactive outreach, had a brief exchange) with no pending_notes. Reflection still runs — Evryn might see patterns in the raw interactions that in-conversation Evryn missed. That's the whole point of stepping back.
 
 **What pending_notes are NOT:** An entry for every interaction. "Conversation ID XYZ, no new insights" should never be a pending_note. That's just noise that costs output tokens to write and input tokens to read. The database already tracks activity.
 
-**Cadence and load distribution at scale:** Reflection doesn't need to run for all users on the same day. At scale, reflection runs on a rolling schedule — UUIDs A through D on Monday, E through H on Tuesday, etc. This spreads the batch load evenly across the week. No user goes more than a week without a check. If scale outstrips this, the solution is more parallelism (same architecture, more compute), and at that volume, Anthropic would likely be open to custom arrangements.
+**Cadence:** Weekly until cost-prohibitive. More often if optimizations make it cheaper. **At scale,** if batch volume delays processing, stagger reflections across the week on a rolling schedule (UUIDs A-D on Monday, E-H on Tuesday, etc.) so no user goes more than a week without a check. This is a scale optimization, not the default — at lower volume, a single weekly batch is simpler operationally. If scale outstrips even a rolling schedule, the solution is more parallelism (same architecture, more compute), and at that volume, Anthropic would likely be open to custom arrangements.
 
 **Stage 2: Profile evaluation (chained batch after reflection completes)**
 
@@ -52,11 +52,11 @@ After reflection rewrites stories, Evryn evaluates each existing match profile a
 
 **Important: compare against baseline, not previous version.** If we tracked cumulative drift (2% + 1% + 3% + 1% = 7%), we'd need to compare each profile against the last version that actually triggered a rewrite. Since the gate is Evryn's judgment rather than a numeric threshold, this is handled naturally — she's comparing against the extant profile, which IS the baseline.
 
-**Stage 3: Re-matching (fixed day, after all rolling reflections and profile evaluations complete for the cycle)**
+**Stage 3: Re-matching (Fridays, after the week's reflection and profile evaluation batch completes)**
 
-Re-matching runs on a fixed day — after the rolling reflection schedule has covered all active users for the week. This ensures every user in the system has been freshly reflected before anyone's re-matching runs. Without this, A's Monday reflection might run against B's stale profile from last week, missing a match that B's Wednesday reflection would have surfaced.
+Re-matching runs after all reflection and profile evaluation has completed for the cycle, ensuring every user in the system is freshly reflected before any cross-user searching happens. Re-matching is a cross-user operation — it searches one user against all others — so it needs the complete, fresh picture.
 
-Reflections and profile evaluations are per-user operations — they only read and write one user's data, so order doesn't matter and they can roll throughout the week. Re-matching is a cross-user operation — it searches one user against all others. It needs the complete, fresh picture.
+**Why Fridays:** New matches surface over the weekend (great for personal connections — soulmates, therapists, tutors) or greet you Monday morning (great for professional connections — collaborators, hires, mentors). At scale with a rolling reflection schedule, the fixed re-matching day ensures everyone has been freshly reflected before the cross-user search runs.
 
 For all users whose profile embeddings changed during the cycle, the re-matching pipeline runs as described below.
 
@@ -74,7 +74,7 @@ This handles the dealbreaker-flip case. If the previous analytical score was 20/
 
 Embedding changes affect a person's *ranking within pools they were already in*. For returning candidates (still in the top-K after re-search), the question is: did the pairwise vector similarity improve enough to justify re-evaluation?
 
-A dot product comparison between the old and new pairwise similarity scores is trivially cheap and deterministic. This replaces any token-expensive approach like reading old analytical reasoning — the dot product tells you whether the relationship improved without spending tokens to re-read why it previously didn't work.
+A dot product comparison between the old and new pairwise similarity scores is trivially cheap and deterministic — the dot product tells you whether the relationship improved enough to re-evaluate, without spending tokens to re-read why it previously didn't work.
 
 **The sensitivity dial: previous analytical score modulates the threshold.**
 
