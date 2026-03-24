@@ -6,6 +6,15 @@
 
 ---
 
+## 2026-03-23 (AC2 — weekend thinking intake, structured fields decision)
+
+- **Weekend thinking evaluated** — Five docs from non-repo Claude session assessed against full architecture (Hub, spokes, ARCHITECTURE.md, BUILD doc). Genuine improvements identified (onboarding frameworks, confidence-aware reflection, matching trigger model, embedding guidance). Redundancy caught (pattern observation system duplicates existing Insight Routing Pipeline). Conflicts flagged (investigative matching needs trust-architecture alignment).
+- **Structured fields decision approved** — `profile_jsonb.structured` subobject for matching pre-filters (location, profession, company, industry). Extracted during triage when inferable, nulls when not. Story remains source of truth. No schema migration — JSONB subobject within existing column. AC1 implementing in triage.md.
+- **Installment plans positioned for v0.4** — Trust-based pricing extension: non-binding payment plans for users who can't pay full connection value upfront. Opens market segments. Justin's strategic rationale captured in session doc.
+- **Cost model gap flagged** — Spreadsheet only reflects v0.2 ops. Breadcrumb placed in BUILD doc v0.3 staging section. Justin to update before v0.3 BUILD doc.
+- **BUILD doc updated (evryn-backend)** — v0.3 staging section: cost model verification breadcrumb + weekend thinking analysis references.
+- **CLAUDE.md updated** — Sub-agent doc reading guidance: be wary, read directly when precision/nuance matters, sub-agents fine for low-lift tasks.
+
 ## 2026-03-23 (AC1 — core.md privacy + story lenses, S5 session doc)
 
 - **core.md "User privacy is sacred" rewrite (evryn-backend)** — Hard constraint expanded: explicit consent model (this information, this person), default-private rule, existential consequence framing. Headline changed from "User isolation is absolute."

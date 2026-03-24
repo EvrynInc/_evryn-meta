@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-23T18:05:12-07:00*
+*Last updated: 2026-03-23T18:31-07:00*
 *Last #sweep: 2026-03-18*
 *Last #align: 2026-03-18*
 
@@ -27,12 +27,14 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 - **Remaining pre-go-live: three internal-reference files + gatekeeper-onboarding revision.** feedback-guidance.md (highest priority), trust-arc-scripts.md, company-context.md. Plus gatekeeper-onboarding.md tightening (preconditions, data orientation, intro substance, validation check-ins). Full plan in S5 session doc.
 - **Remaining v0.3 identity files:** onboarding.md rewrite, new-contact.md, regular-user.md, conversation.md update (cross-user note writing).
 - **Runtime scaffold needed (AC0 note for DC).** profile_jsonb template (not empty `{}`), `shareable_with_user` naming, model tier shift (Opus default). See `docs/sessions/2026-03-23-ac0-note-runtime-scaffold.md`.
+- **Weekend thinking evaluated (AC2).** Five docs from non-repo Claude session assessed against full architecture. Structured fields decision approved (`profile_jsonb.structured` for matching pre-filters, extracted during triage). ARCHITECTURE.md updates pending: matching trigger model, embedding guidance, model tiers, reflection module confidence-aware, investigative matching. Business-model spoke: installment plans (v0.4 target). Session doc: `docs/sessions/2026-03-23-weekend-thinking-intake.md`.
+- **Cost model needs v0.3+ features.** Current spreadsheet only reflects v0.2 costs — doesn't include reflection, matching, proactive outreach. Must be updated before v0.3 BUILD doc. Breadcrumb in BUILD doc v0.3 staging section.
 - **Legal: Terms & Privacy Policy** — Fenwick draft received, extensive changes sent back (2026-03-18). Likely 3+ more days. Go-live blocked on legal completion — pushed to next week.
 - **Go-live timing relaxed.** Mark is in no hurry. Quality over speed — "right over fast" principle added to sprint doc.
 
 ## Active Projects
 
-- **_evryn-meta** — OC + QC repos created. AC2 v0.3 design proposals complete (6 files, Justin review pending). Seattle launch research complete. Trusted Partner Briefing v1.7 drafted (Justin reviewing).
+- **_evryn-meta** — OC + QC repos created. AC2 v0.3 design proposals complete (6 files, Justin review pending). Weekend thinking evaluated (5 docs, session doc captures decisions + remaining work). Seattle launch research complete. Trusted Partner Briefing v1.7 drafted (Justin reviewing).
 - **evryn-backend** — All DC build work complete (Days 2-5). Hardened pipeline. Status lifecycle migrated (ADR-018). All v0.2 identity activity modules done. Integration + adversarial test suites written. Remaining: three internal-reference files → deploy to Railway → integration test → adversarial test → go/no-go. Legal (Fenwick) blocks actual go-live.
 - **evryn-ops** — Created. OC CLAUDE.md ready.
 - **evryn-quality** — Created. QC CLAUDE.md ready.
