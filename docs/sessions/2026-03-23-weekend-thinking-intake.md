@@ -196,20 +196,31 @@ Justin dropped doc 06 (claude.ai user memory structure) to AC1 for the identity 
 
 ---
 
+## Instance Assignments
+
+**This session is AC2.** AC2 owns doc evaluation, ARCHITECTURE.md updates, and business-model spoke updates from the weekend thinking.
+
+**AC1** owns identity file writing (gatekeeper-onboarding.md expansion, triage.md structured extraction step, other identity work). AC1 already picked up the structured fields task independently while reading Doc 06 — no separate note needed.
+
+**AC0** owns build orchestration (DC coordination, integration test, sprint execution).
+
+**Cost model spreadsheet** is NOT in the repo (constantly changing). When docs need cost figures, reference the spreadsheet by description and last-verified date. Ask Justin for specific numbers.
+
+---
+
 ## Action Items
 
-### This session (AC, with Justin's approval)
+### AC2 (this session, with Justin's approval)
 
 | # | Action | Priority | Status |
 |---|--------|----------|--------|
-| 1 | Structured fields decision — get Justin's approval on approach above | **NOW** | PENDING |
+| 1 | Structured fields decision — Justin approved the approach | **NOW** | APPROVED |
 | 2 | ARCHITECTURE.md — Judgment & Matching: trigger model, embedding guidance, model tiers | High | NOT STARTED |
 | 3 | ARCHITECTURE.md — Embedding Strategy: what embeddings are good/bad at, structured pre-filters | High | NOT STARTED |
 | 4 | ARCHITECTURE.md — Reflection Module: confidence-aware self-evaluation (Doc 02) | Medium | NOT STARTED |
 | 5 | ARCHITECTURE.md — Insight Routing Pipeline: clarify reflection vs pattern observation (Doc 04) | Low | NOT STARTED |
 | 6 | business-model spoke — installment plans (v0.4 target), competitive context breadcrumb, breakeven reference | Medium | NOT STARTED |
-| 7 | triage.md — add structured extraction step (after #1 is approved) | High | NOT STARTED |
-| 8 | Investigative matching — design note connecting to trust architecture (Doc 03 item 5) | Medium | NOT STARTED |
+| 7 | Investigative matching — design note connecting to trust architecture (Doc 03 item 5) | Medium | NOT STARTED |
 
 ### Justin
 
@@ -217,16 +228,16 @@ Justin dropped doc 06 (claude.ai user memory structure) to AC1 for the identity 
 |---|--------|----------|
 | J1 | Update cost model: break "Concierge distills" into separate line items | Before v0.3 BUILD |
 | J2 | Update cost model: add v0.3+ feature costs (reflection, matching, proactive) | Before v0.3 BUILD |
-| J3 | Review structured fields decision (#1 above) | Now |
 
 ### AC1 (identity writing thread)
 
 | # | Action | Notes |
 |---|--------|-------|
 | A1 | Doc 01 — expand gatekeeper-onboarding.md "Get to Know Them" | Justin delivered the brief directly |
-| A2 | Doc 06 — profile_jsonb structure discussion | Cross-ref: structured fields decision here affects the spec |
+| A2 | triage.md — add `profile_jsonb.structured` extraction step | AC1 picked this up from Doc 06 work, already in progress |
+| A3 | Doc 06 — profile_jsonb structure discussion | Cross-ref: structured fields decision here affects the spec |
 
-### AC0 (integration test)
+### AC0 (integration test + build orchestration)
 
 | # | Action | Notes |
 |---|--------|-------|
@@ -234,7 +245,7 @@ Justin dropped doc 06 (claude.ai user memory structure) to AC1 for the identity 
 
 ### Sprint-awareness note
 
-Justin is mid-sprint. The ARCHITECTURE.md updates (items 2-5) are important but not sprint-blocking — they're design documentation, not code changes. The triage.md update (item 7) IS sprint-relevant if we want v0.2 contacts to have structured data from day one. Prioritize #1 → #7 → #2-3, then the rest as bandwidth allows.
+Justin is mid-sprint. The ARCHITECTURE.md updates (items 2-5) are important but not sprint-blocking — they're design documentation, not code changes. The triage.md update is sprint-relevant (v0.2 contacts should have structured data from day one) — AC1 is handling it. AC2 prioritizes #2-3, then the rest as bandwidth allows.
 
 ---
 
