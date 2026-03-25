@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-25T11:19-07:00*
+*Last updated: 2026-03-25T16:48-07:00*
 *Last #sweep: 2026-03-18*
 *Last #align: 2026-03-18*
 
@@ -22,15 +22,14 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **All DC build work complete.** Days 2-5 done. ADR-018 status lifecycle migrated. Pipeline hardened. Follow-up cron, retry, approval parser, WebSocket heartbeat all operational.
-- **core.md updated (AC1).** Story lenses framework, `shareable_with_user` protocol, "User privacy is sacred" rewrite. All activity modules done. gatekeeper-onboarding.md revision + onboarding.md pass planned (S5 session doc).
-- **Remaining pre-go-live: three internal-reference files + gatekeeper-onboarding revision.** feedback-guidance.md (highest priority), trust-arc-scripts.md, company-context.md. Plus gatekeeper-onboarding.md tightening (preconditions, data orientation, intro substance, validation check-ins). Full plan in S5 session doc.
+- **AC0 (orchestrator): doc alignment done, DC knock list ready.** `seen_by_subject` → `shareable_with_user` renamed across all docs. `story_versions` table decided for v0.3 (rationale doc updated). Runtime init reminder in ARCHITECTURE.md. Story → match profile → embedding pipeline made explicit. Adversarial test protocol fixed. Permissions simplified. DC tasks queued (see below).
+- **AC1 (identity): in progress.** core.md done (story lenses, shareable_with_user, privacy rewrite). All activity modules done. Remaining pre-go-live: feedback-guidance.md (highest priority), trust-arc-scripts.md, company-context.md, gatekeeper-onboarding.md tightening. Full plan in S5 session doc.
+- **AC2 (v0.3 design): mostly landed.** Structured fields, embedding strategy, matching trigger model, confidence-aware reflection all in ARCHITECTURE.md. ADR-019 + ADR-020 written and breadcrumbed. **Remaining:** insight routing clarification (#5), business-model spoke installment plans + breadcrumbs (#6), investigative matching design note (#7). Session doc: `docs/sessions/2026-03-23-weekend-thinking-intake.md`.
+- **DC: all build work complete, new tasks queued.** Days 2-5 done. Pipeline hardened. New knock list from AC0: model tier switch (Sonnet→Opus), profile_jsonb runtime scaffold, `seen_by_subject` runtime cleanup, `confidence_audit` in template, Railway deploy. Waiting on AC1 identity files before spinning up.
 - **Remaining v0.3 identity files:** onboarding.md rewrite, new-contact.md, regular-user.md, conversation.md update (cross-user note writing).
-- **Runtime scaffold needed (AC0 note for DC).** profile_jsonb template (not empty `{}`), `shareable_with_user` naming, model tier shift (Opus default). See `docs/sessions/2026-03-23-ac0-note-runtime-scaffold.md`.
-- **Weekend thinking (AC2): major progress.** Structured fields, embedding strategy, matching trigger model written into ARCHITECTURE.md. ADR-019 (matching cascade pipeline — reflection, re-matching, cost optimization) and ADR-020 (model tiers — Opus for everything v0.2) written and breadcrumbed. BUILD doc model tiers fixed (was Sonnet default, now Opus per ADR-020). **Remaining AC2 items:** ARCHITECTURE.md confidence-aware reflection (#4), insight routing clarification (#5), business-model spoke installment plans + breadcrumbs (#6), investigative matching design note (#7). Session doc: `docs/sessions/2026-03-23-weekend-thinking-intake.md`.
-- **Cost model needs v0.3+ features.** Current spreadsheet only reflects v0.2 costs — doesn't include reflection, matching, proactive outreach. Must be updated before v0.3 BUILD doc. Breadcrumb in BUILD doc v0.3 staging section.
-- **Legal: Terms & Privacy Policy** — Fenwick draft received, extensive changes sent back (2026-03-18). Likely 3+ more days. Go-live blocked on legal completion — pushed to next week.
-- **Go-live timing relaxed.** Mark is in no hurry. Quality over speed — "right over fast" principle added to sprint doc.
+- **Cost model needs v0.3+ features.** Current spreadsheet only reflects v0.2 costs. Must be updated before v0.3 BUILD doc. Breadcrumb in BUILD doc v0.3 staging section.
+- **Legal: Terms & Privacy Policy** — Fenwick draft received, extensive changes sent back (2026-03-18). Go-live blocked on legal completion.
+- **Go-live timing relaxed.** Mark is in no hurry. Quality over speed.
 
 ## Active Projects
 

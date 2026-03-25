@@ -6,6 +6,17 @@
 
 ---
 
+## 2026-03-25 (AC0 — orchestrator session, doc alignment, test prep)
+
+- **`seen_by_subject` → `shareable_with_user` renamed everywhere** — ARCHITECTURE.md schema spec, BUILD doc memory timeline, adversarial test protocol. Aligns with core.md protocol (AC1). Runtime cleanup deferred to DC.
+- **`story_versions` table decided for v0.3** — `story_history` breaks out of `profile_jsonb` into dedicated `story_versions` table at v0.3 launch, not deferred to v0.4. Rationale doc (05-memory-scaling.md) updated with decision, naming rationale, retention approach (ties to ADR-019 light/deep reflection split).
+- **ARCHITECTURE.md: runtime initialization reminder** — New user records must use structured template, not empty `{}`. Reminder lives next to the schema spec so DC sees it when modifying fields.
+- **ARCHITECTURE.md: story → match profile → embedding pipeline made explicit** — Stories are never embedded directly. Match profiles are separate written artifacts written by Opus editorial judgment. Closes gap where a reader could assume direct story embedding. BUILD doc memory timeline corrected accordingly.
+- **ARCHITECTURE.md: confidence self-audit added (AC2)** — Reflection Module produces `profile_jsonb.confidence_audit` during weekly batch. Natural language confidence self-assessment. Also added to profile_jsonb schema block.
+- **Adversarial test protocol fixed** — `seen_by_user` → `shareable_with_user` in setup and test 1.1.
+- **Permissions simplified (_evryn-meta)** — `Bash(*)` replaces ~40 specific command prefixes. `linear.app` added to WebFetch.
+- **DC knock list built** — Model tier switch, profile_jsonb scaffold, seen_by_subject cleanup, confidence_audit in template, Railway deploy. Waiting on AC1 identity files before spinning up.
+
 ## 2026-03-24/25 (AC2 — matching cascade, model tiers, ARCHITECTURE.md updates)
 
 - **ADR-019: Matching Cascade Pipeline** — Full reflection → profile evaluation → re-matching design. Weekly batch at 50% cost, Evryn's judgment as profile-rewrite gate, two-phase re-matching (structured filter diffs + cosine sensitivity dial), Friday re-matching day, first matches real-time. Location architecture (PostGIS user_locations table) designed for v0.3.
