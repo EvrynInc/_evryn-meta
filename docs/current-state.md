@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-23T18:31-07:00*
+*Last updated: 2026-03-25T11:19-07:00*
 *Last #sweep: 2026-03-18*
 *Last #align: 2026-03-18*
 
@@ -27,7 +27,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 - **Remaining pre-go-live: three internal-reference files + gatekeeper-onboarding revision.** feedback-guidance.md (highest priority), trust-arc-scripts.md, company-context.md. Plus gatekeeper-onboarding.md tightening (preconditions, data orientation, intro substance, validation check-ins). Full plan in S5 session doc.
 - **Remaining v0.3 identity files:** onboarding.md rewrite, new-contact.md, regular-user.md, conversation.md update (cross-user note writing).
 - **Runtime scaffold needed (AC0 note for DC).** profile_jsonb template (not empty `{}`), `shareable_with_user` naming, model tier shift (Opus default). See `docs/sessions/2026-03-23-ac0-note-runtime-scaffold.md`.
-- **Weekend thinking evaluated (AC2).** Five docs from non-repo Claude session assessed against full architecture. Structured fields decision approved (`profile_jsonb.structured` for matching pre-filters, extracted during triage). ARCHITECTURE.md updates pending: matching trigger model, embedding guidance, model tiers, reflection module confidence-aware, investigative matching. Business-model spoke: installment plans (v0.4 target). Session doc: `docs/sessions/2026-03-23-weekend-thinking-intake.md`.
+- **Weekend thinking (AC2): major progress.** Structured fields, embedding strategy, matching trigger model written into ARCHITECTURE.md. ADR-019 (matching cascade pipeline — reflection, re-matching, cost optimization) and ADR-020 (model tiers — Opus for everything v0.2) written and breadcrumbed. BUILD doc model tiers fixed (was Sonnet default, now Opus per ADR-020). **Remaining AC2 items:** ARCHITECTURE.md confidence-aware reflection (#4), insight routing clarification (#5), business-model spoke installment plans + breadcrumbs (#6), investigative matching design note (#7). Session doc: `docs/sessions/2026-03-23-weekend-thinking-intake.md`.
 - **Cost model needs v0.3+ features.** Current spreadsheet only reflects v0.2 costs — doesn't include reflection, matching, proactive outreach. Must be updated before v0.3 BUILD doc. Breadcrumb in BUILD doc v0.3 staging section.
 - **Legal: Terms & Privacy Policy** — Fenwick draft received, extensive changes sent back (2026-03-18). Likely 3+ more days. Go-live blocked on legal completion — pushed to next week.
 - **Go-live timing relaxed.** Mark is in no hurry. Quality over speed — "right over fast" principle added to sprint doc.

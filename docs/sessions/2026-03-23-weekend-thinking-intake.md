@@ -12,6 +12,27 @@ Justin did blue-sky thinking over the weekend with a Claude instance that did NO
 
 **Key framing from Justin:** This is weekend thinking, not vetted architecture. The authoring Claude lacked repo context. Justin was working at 2am. Evaluate critically — don't rubber-stamp.
 
+### Pickup Reading List (for a fresh AC2)
+
+Read in this order — the foundational docs give you the context you need to understand the session doc's evaluations and decisions.
+
+**Step 1: Foundational context (read before this session doc)**
+1. `docs/hub/roadmap.md` (the Hub) — company truth, business model, philosophy
+2. `docs/hub/trust-and-safety.md` — trust architecture, especially "Evryn Is a Witness, Not a Mirror"
+3. `docs/hub/user-experience.md` — UX philosophy
+4. `docs/hub/technical-vision.md` — technical north star
+5. `docs/hub/business-model.md` — pricing, revenue model
+6. `evryn-backend/docs/ARCHITECTURE.md` — product architecture (recently updated by this session)
+
+**Step 2: This session doc** — read fully, including the per-doc evaluations
+
+**Step 3: Per-item context for remaining work (#4-7)**
+- **#4 (Reflection Module confidence-aware):** `docs/sessions/2026-03-23-weekend-thinking/02-confidence-aware-reflection.md`
+- **#5 (Insight Routing Pipeline clarification):** `docs/sessions/2026-03-23-weekend-thinking/04-pattern-observation-system.md`
+- **#6 (business-model spoke):** Weekend doc 05 (sections 5.2, 5.3, 5.5 in this session doc). Note: installment plans section partially blocked on Justin updating cost model (J1/J2).
+- **#7 (investigative matching):** `docs/sessions/2026-03-23-weekend-thinking/03-matching-architecture.md` (investigative matching section specifically)
+- **ADR-019 and ADR-020** — written during this session, inform the remaining work
+
 A sixth doc (06 — claude.ai user memory structure) was dropped to AC1 for the identity writing thread. Not worked in this session — noted for cross-reference only.
 
 ---
@@ -214,13 +235,21 @@ Justin dropped doc 06 (claude.ai user memory structure) to AC1 for the identity 
 
 | # | Action | Priority | Status |
 |---|--------|----------|--------|
-| 1 | Structured fields decision — Justin approved the approach | **NOW** | APPROVED |
-| 2 | ARCHITECTURE.md — Judgment & Matching: trigger model, embedding guidance, model tiers | High | NOT STARTED |
-| 3 | ARCHITECTURE.md — Embedding Strategy: what embeddings are good/bad at, structured pre-filters | High | NOT STARTED |
+| 1 | Structured fields decision — Justin approved the approach | **NOW** | DONE |
+| 2 | ARCHITECTURE.md — Judgment & Matching: trigger model, embedding guidance, model tiers | High | DONE |
+| 3 | ARCHITECTURE.md — Embedding Strategy: what embeddings are good/bad at, structured pre-filters | High | DONE |
 | 4 | ARCHITECTURE.md — Reflection Module: confidence-aware self-evaluation (Doc 02) | Medium | NOT STARTED |
 | 5 | ARCHITECTURE.md — Insight Routing Pipeline: clarify reflection vs pattern observation (Doc 04) | Low | NOT STARTED |
 | 6 | business-model spoke — installment plans (v0.4 target), competitive context breadcrumb, breakeven reference | Medium | NOT STARTED |
 | 7 | Investigative matching — design note connecting to trust architecture (Doc 03 item 5) | Medium | NOT STARTED |
+
+**Additional work completed (not originally scoped):**
+- **ADR-019: Matching Cascade Pipeline** — Full design for reflection → profile evaluation → re-matching. Weekly batch at 50% cost, Evryn's judgment as profile-rewrite gate, two-phase re-matching (structured filter diffs + cosine sensitivity dial), Friday re-matching day, first matches real-time. Includes location architecture discussion (PostGIS user_locations table for v0.3).
+- **ADR-020: Model Tier Selection** — Opus for everything in v0.2. Dedicated analysis required before v0.3 downgrading.
+- **Breadcrumbs placed** for both ADRs into ARCHITECTURE.md (Reflection Module, model tiers paragraph) and BUILD doc (model tiers section fixed from Sonnet to Opus, code example fixed, v0.3 staging ref).
+- **BUILD doc model tiers were actively wrong** (said Sonnet default, Opus for edge cases) — fixed to match ADR-020.
+
+**Future breadcrumb needed (from AC0):** The `match_candidates` cache table is mentioned in ADR-019 Consequences but not yet in ARCHITECTURE.md. Add when v0.3 design gets closer.
 
 ### Justin
 

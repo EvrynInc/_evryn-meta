@@ -6,6 +6,14 @@
 
 ---
 
+## 2026-03-24/25 (AC2 — matching cascade, model tiers, ARCHITECTURE.md updates)
+
+- **ADR-019: Matching Cascade Pipeline** — Full reflection → profile evaluation → re-matching design. Weekly batch at 50% cost, Evryn's judgment as profile-rewrite gate, two-phase re-matching (structured filter diffs + cosine sensitivity dial), Friday re-matching day, first matches real-time. Location architecture (PostGIS user_locations table) designed for v0.3.
+- **ADR-020: Model Tier Selection** — Opus for everything in v0.2. Conversation is the product, triage is matching. v0.3+ needs dedicated analysis before downgrading any operation.
+- **ARCHITECTURE.md updated (evryn-backend)** — Structured fields in profile_jsonb, location earmarked for PostGIS promotion, embedding strategy (what embeddings are good/bad at, two-phase pipeline), matching trigger model (event-driven, not scheduled), model tiers (Opus for everything), Reflection Module ADR-019 ref.
+- **BUILD doc fixed (evryn-backend)** — Model tiers corrected from "Sonnet default, Opus for edge cases" to "Opus for everything" per ADR-020. Code example updated. ADR-019 ref in v0.3 staging.
+- **Session doc updated** — Pickup reading list for fresh AC2. Items #2/#3 done, #4-7 remaining with per-item context.
+
 ## 2026-03-23 (AC2 — weekend thinking intake, structured fields decision)
 
 - **Weekend thinking evaluated** — Five docs from non-repo Claude session assessed against full architecture (Hub, spokes, ARCHITECTURE.md, BUILD doc). Genuine improvements identified (onboarding frameworks, confidence-aware reflection, matching trigger model, embedding guidance). Redundancy caught (pattern observation system duplicates existing Insight Routing Pipeline). Conflicts flagged (investigative matching needs trust-architecture alignment).
