@@ -254,12 +254,15 @@ Everything in `profile_jsonb` is loaded as a single JSONB column. At scale:
 
 ### Proposed Migration Path
 
-**v0.3:** Keep everything in `profile_jsonb` but adopt the structured story decomposition above. The "hot" fields (current_synthesis, stable_traits, transient_state) are what the trigger loads for person context. The rest stays in the same column but isn't extracted per-query.
+**v0.3 (decided — AC0 + Justin, 2026-03-25):** Break `story_history` out of `profile_jsonb` into a dedicated `story_versions` table at v0.3 launch, not later. Supabase returns `profile_jsonb` as a whole blob — "selective loading" within JSONB is an application-level optimization that still transfers all the data. With story rewrites happening after every conversation, history grows fast and would bloat every `query()` call within weeks of v0.3 launch. The migration cost is trivial now (barely any data); the cost of waiting is burning tokens on history that only the Reflection Module ever reads.
 
-**v0.4 (if needed):** Break `profile_jsonb` into separate columns or even a separate `user_profiles` table:
+Table: `story_versions` (user_id, as_of, story, superseded_by). Named `story_versions` rather than `story_history` to distinguish the table from the v0.2 JSONB field during migration, and because "versions" accurately describes the structure — discrete snapshots with an ordering relationship, not a log or changelog.
+
+The rest of `profile_jsonb` stays intact for v0.3 — adopt the structured story decomposition above for the "hot" fields (current_synthesis, stable_traits, transient_state) that the trigger loads for person context.
+
+**v0.4 (if needed):** Break remaining `profile_jsonb` into separate columns or a separate `user_profiles` table:
 - `story_synthesis` (TEXT — the hot context)
 - `story_entries` (JSONB — the archive)
-- `story_history` (JSONB — previous syntheses)
 - `gatekeeper_criteria` (JSONB — separate concern)
 - `communication_preferences` (JSONB — separate concern)
 
@@ -277,4 +280,4 @@ This is a straightforward migration — the data is already structured in JSONB 
 
 3. **Reflection module priority:** The BUILD doc says "v0.3 or earlier if feasible." Is this in scope for the v0.3 build, or is it a stretch goal? The structured story decomposition can be built without the reflection module — manual synthesis (Evryn updates the story during conversations) works for a while.
 
-4. **story_history retention:** How many historical syntheses to keep? Proposed: last 10 syntheses. Older ones are valuable for understanding how Evryn's view of someone evolved, but the marginal value drops fast.
+4. **story_versions retention:** Now that history lives in its own table, retention is less urgent — old versions don't inflate per-query context. ADR-019 already designs the cadence split: weekly "light reflection" (recent interactions, fast synthesis) and monthly "deep reflection" (full history, pattern-finding) when per-user volume grows. The `story_versions` table supports both — light reflection reads the last few versions, deep reflection reads everything. No pruning needed until row counts actually matter at scale.
