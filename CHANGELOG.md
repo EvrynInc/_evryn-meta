@@ -6,6 +6,11 @@
 
 ---
 
+## 2026-03-26 (AC — Fenwick legal response)
+
+- **Fenwick review response doc updated** — Appended Justin's March 22 addendum (refund language, email addresses, bold-vs-caps question) and Fenwick's March 24 inline responses to all 16 items.
+- **Draft response to Fenwick** — `docs/legal/2026.03.26-fenwick-response-draft.md`. Addresses: process/communication structure (background vs. ask vs. wording), scope/timeline misalignment (Phase 2 is 2-4 weeks after Phase 1, not "a future phase"), over-disclosure calibration. Substantive follow-ups on items 2 (payments timing), 5 (no-match guarantee applies in Phase 1), 8 ("no ownership" consolidated from three source docs), 11 (safety identifier punted to Phase 2), 14 (user record disclosure accuracy + future contact). Accepts items 1, 3, 4, 6, 7, 9, 10, 12, 13, 15, 16.
+
 ## 2026-03-25 (AC0 — orchestrator session, doc alignment, test prep)
 
 - **`seen_by_subject` → `shareable_with_user` renamed everywhere** — ARCHITECTURE.md schema spec, BUILD doc memory timeline, adversarial test protocol. Aligns with core.md protocol (AC1). Runtime cleanup deferred to DC.

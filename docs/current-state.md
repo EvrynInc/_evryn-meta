@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-25T16:48-07:00*
+*Last updated: 2026-03-26T16:31-07:00*
 *Last #sweep: 2026-03-18*
 *Last #align: 2026-03-18*
 
@@ -28,7 +28,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 - **DC: all build work complete, new tasks queued.** Days 2-5 done. Pipeline hardened. New knock list from AC0: model tier switch (Sonnet→Opus), profile_jsonb runtime scaffold, `seen_by_subject` runtime cleanup, `confidence_audit` in template, Railway deploy. Waiting on AC1 identity files before spinning up.
 - **Remaining v0.3 identity files:** onboarding.md rewrite, new-contact.md, regular-user.md, conversation.md update (cross-user note writing).
 - **Cost model needs v0.3+ features.** Current spreadsheet only reflects v0.2 costs. Must be updated before v0.3 BUILD doc. Breadcrumb in BUILD doc v0.3 staging section.
-- **Legal: Terms & Privacy Policy** — Fenwick draft received, extensive changes sent back (2026-03-18). Go-live blocked on legal completion.
+- **Legal: Terms & Privacy Policy** — Fenwick responded to our review (2026-03-24). Response drafted (2026-03-26) addressing scope/timeline misalignment, process workflow, and 6 substantive items. Key issue: Fenwick scoped to Phase 1 only; we need Phase 2 drafting to begin in parallel given 2-4 week gap. Awaiting ETAs. Go-live blocked on legal completion.
 - **Go-live timing relaxed.** Mark is in no hurry. Quality over speed.
 
 ## Active Projects
