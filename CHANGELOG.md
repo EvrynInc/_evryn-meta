@@ -6,6 +6,17 @@
 
 ---
 
+## 2026-03-27 (AC — Cowork team workspace)
+
+- **Created `evryn-team-workspace` repo** — Cowork agent workspace replaces SDK agent build for now. `evryn-team-agents` frozen as insurance. Decision: Cowork handles ~85% of team agent functionality with zero build/maintenance cost.
+- **All 8 agent definitions written** — Lucas, Soren, Mira, Marlowe, Emma, Dominic, Nathan, Thea. Verbatim profile transfer from founding-team-profiles.md (third to second person). Each includes: load-bearing reading note, identity, context loading, standup protocol, memory guidance.
+- **Lucas education added** — Yale History (deep time perspective, institutional lifecycles) + HBS OB (culture as a system, general management). Not in original profiles; designed to produce exactly the mental frameworks Evryn's CoS needs.
+- **CLAUDE.md** — Team coordination index. Context cascade, speaking convention, meeting room / subagent model, writing discipline, memory discipline, subagent context requirement.
+- **ARCHITECTURE.md** — Structural doc for maintainers. Context flow, cross-repo reads, memory architecture + compaction lifecycle, coordination mechanisms, agent definition pattern.
+- **Memory stubs** — MEMORY.md for all 8 agents with instructions and ~100 line guidance.
+- **First current-state snapshot** — `shared/current-state/2026-03-27T19-08.md` compiled from Cowork onboarding session + work priorities briefing.
+- **Structure decisions** — Dropped logs (redundant with memory + current-state). current-state moved into shared/. Priorities as dated snapshots. Decisions as ADRs. Projects with RACI headers.
+
 ## 2026-03-26 (AC — Fenwick legal response)
 
 - **Fenwick review response doc updated** — Appended Justin's March 22 addendum (refund language, email addresses, bold-vs-caps question) and Fenwick's March 24 inline responses to all 16 items.

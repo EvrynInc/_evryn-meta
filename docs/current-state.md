@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-26T16:31-07:00*
+*Last updated: 2026-03-27T19:15-07:00*
 *Last #sweep: 2026-03-18*
 *Last #align: 2026-03-18*
 
@@ -37,7 +37,8 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 - **evryn-backend** — All DC build work complete (Days 2-5). Hardened pipeline. Status lifecycle migrated (ADR-018). All v0.2 identity activity modules done. Integration + adversarial test suites written. Remaining: three internal-reference files → deploy to Railway → integration test → adversarial test → go/no-go. Legal (Fenwick) blocks actual go-live.
 - **evryn-ops** — Created. OC CLAUDE.md ready.
 - **evryn-quality** — Created. QC CLAUDE.md ready.
-- **evryn-team-agents** — PAUSED. Slack channel architecture documented.
+- **evryn-team-workspace** — NEW. Cowork agent workspace — team identity definitions, coordination artifacts, shared workspace. Replaces SDK agent build for now. All 8 agents defined, CLAUDE.md + ARCHITECTURE.md complete, first current-state snapshot written. See ADR-021.
+- **evryn-team-agents** — FROZEN. SDK-era agent build preserved as insurance. `evryn-team-workspace` is the active team home.
 - **evryn-dev-workspace** — DC's home repo.
 - **evryn-website** — Live at evryn.ai.
 

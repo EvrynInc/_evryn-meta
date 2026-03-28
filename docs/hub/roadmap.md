@@ -133,7 +133,8 @@ The vision: a world where the *default* would be that people can be trusted and 
 |------|---------|--------|
 | `_evryn-meta` | AC's home. Hub, cross-repo docs | Active |
 | `evryn-backend` | Evryn product agent (Gatekeeper's Inbox) | Active — building |
-| `evryn-team-agents` | Lucas (Chief of Staff) runtime | Paused |
+| `evryn-team-workspace` | Cowork team workspace — agent identities, coordination | Active |
+| `evryn-team-agents` | Lucas (Chief of Staff) SDK build | Frozen |
 | `evryn-website` | Marketing site (evryn.ai) | Live |
 | `evryn-dev-workspace` | DC's home. Identity & methodology | Active |
 | `evryn-ops` | OC's home. Operations, monitoring, runbooks | Active |
