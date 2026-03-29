@@ -18,7 +18,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 **Key framing:** Evryn is a broker, not a SaaS. v0.2 surfaces connections from a gatekeeper's inbox — not sorting email, brokering connections. Everyone is a "user," both sides pay per-connection.
 
-**Runway:** ~$6,125 cash + $15K available ($5K founder + $10K angel contingent on traction). Burn ~$800/mo current (agents paused); Fenwick ~$45K due August is the critical constraint. Revenue target: late April / early May.
+**Runway:** See the latest team current-state snapshot (`evryn-team-workspace/shared/current-state/`) for current bank balance and runway status.
 
 ## What's Next
 
