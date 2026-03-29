@@ -209,6 +209,10 @@ These emerged from the discovery conversation and haven't been built or formally
 
 **What we're mapping:** The relationship between editorial approach and retrieval behavior. We may find that different schemas work best for different intents, different populations, different industries. We may find that some schemas produce 90% garbage but the 10% is unreachable any other way — and then the question becomes whether cheap noise filtering makes that schema viable.
 
+**How grading works:** The evaluation has nothing to do with Evryn assessing the quality of her own writing. It's purely about evaluating what the vector search returned. For each schema, Evryn looks at the candidate set and grades it on multiple dimensions: Does this schema produce good signal with low noise? Good signal with high noise? Mostly garbage but a tiny amount of 24-carat gold that's otherwise unreachable? Can we tune toward the gold while filtering the noise cheaply? The grade is about *retrieval behavior*, not editorial quality. A beautifully written profile that produces poor retrieval results is a failed schema. An ugly profile that surfaces extraordinary candidates is a successful one.
+
+**The coupling with the triage layer:** This is a key design insight — the optimal editorial strategy depends on the cost of downstream filtering. A schema that produces incredible but rare signal is only viable if you can cheaply discard the noise around it. This means the schema experiments and the triage layer are *coupled systems*, not independent features. The triage layer's cost structure determines which schemas are economically viable. A schema that produces 90% noise is prohibitively expensive if every candidate hits Opus, but perfectly viable if a local model can discard the noise for fractions of a penny.
+
 **Architecture requirement:** The embedding table must support multiple vectors per user per intent, tagged by schema strategy. This is a natural extension of the existing "multiple vectors per user, typed by purpose" design.
 
 **When to run:** Experiments can start as soon as we have even a small pool of test profiles — potentially during v0.3 development using synthetic data.
@@ -224,7 +228,11 @@ These emerged from the discovery conversation and haven't been built or formally
 4. Evryn scans the full set of assessments (200 one-line reads, trivially cheap) and pulls out candidates for full evaluation
 5. Evryn also reviews rejection rationales — can override the local model when it missed nuance
 
-**Why reasoning, not just pass/fail:** The local model *will* miss nuance — that's guaranteed. But by writing its reasoning, it gives Evryn a window into what it noticed and what it might have missed. "Rejected because different cities" is a rationale Evryn can override ("that person told me last week they're thinking about relocating"). "Rejected because no obvious connection" is a rationale that might stand.
+**Why reasoning, not just pass/fail:** The local model *will* miss nuance — that's guaranteed. A 7B model doesn't have Opus's ability to see that two people's relationship with failure would make them extraordinary business partners. But by writing its reasoning, it gives Evryn a window into what it noticed and what it might have missed. The triage model shouldn't just say "no" — it needs to reason over *why* the match was surfaced in the first place and *why* it thinks it's probably not worth pursuing. For example: "Surfaced because A grew up in San Francisco and B is looking for a job in San Francisco — not useful unless maybe the job seeker wants local background, but there are almost certainly better candidates even for that. Also both played Pokémon Go for about a year, which may have contributed to the similarity score." That's enough for Evryn to make a fast call — and occasionally she'll see something the triage model missed: "Wait, B would love to get a sense of the city from a fellow Pokémon enthusiast who knows the neighborhoods — pull that one back."
+
+The key insight: having Opus read both users' *full profiles* to arrive at that conclusion would be a disaster at scale. But having Evryn read 200 one-to-two-line triage assessments is trivial — and it cuts her deep-evaluation workload by potentially 90% while preserving her ability to catch what the lesser model missed.
+
+**The triage model can't just say "no" — Evryn needs to check its work.** The *nature* of weaker models is that they miss nuance. So the output format must always include: (1) whether to push forward or not, (2) why it thinks the match was surfaced, and (3) why it's recommending or rejecting. Evryn reviews all of it — the recommendations to confirm they're real, and the rejections to catch overrides.
 
 **Threshold bias:** When in doubt, push it forward. The cost of a few extra candidates reaching Opus is cheap. The cost of a missed extraordinary match is expensive.
 
@@ -249,6 +257,24 @@ These emerged from the discovery conversation and haven't been built or formally
 
 ---
 
+## v0.2 Implications
+
+Most of this research targets v0.3+ matching. But the question was raised: should we introduce a cheaper model for email triage in v0.2 to reduce costs?
+
+**The numbers:** ~200 emails/day, ~6,000/month. Opus classification runs a few cents per email — roughly $150-300/month total depending on email length and reasoning verbosity. A cheaper model doing first-pass triage on obvious passes (bulk PR blasts, automated newsletters, irrelevant cold pitches) could cut this by half or more.
+
+**The recommendation: don't introduce triage complexity in v0.2.** Three reasons:
+
+1. **Absolute cost is manageable.** Even at the high end, $300/month for email classification doesn't materially change the runway math. The Fenwick bill is the existential threat, not model costs. Saving $150/month doesn't move the needle.
+
+2. **Quality risk at the worst possible time.** v0.2 is the product's first impression with a real gatekeeper. Every misclassified gold contact — even one — damages Mark's trust and, by extension, the credibility Evryn needs for the next gatekeeper. During calibration, we're learning what Mark's criteria actually are. A lesser model making the first call adds noise to that learning loop.
+
+3. **Engineering cost is better spent elsewhere.** Building routing logic, model handoff, the show-your-work format, and a review interface for Evryn to check the lesser model's work — that's real engineering time that should go toward getting v0.2 live and then building v0.3.
+
+**What to do instead:** Make sure the v0.2 classification pipeline logs enough data to *retroactively test* triage models later. Save the emails and Opus's classifications. When building the v0.3 matching pipeline — which needs multi-stage architecture because candidate volumes are fundamentally different from email triage — run Haiku or a local model against the historical v0.2 dataset and measure exactly what it gets wrong. That gives us real calibration data for free, without slowing down v0.2 or introducing premature complexity. And once the triage infrastructure exists for matching, applying it retroactively to email classification is a configuration change.
+
+---
+
 ## Open Questions (Permanently Tracked)
 
 These are not questions waiting for answers. They're questions we need to *keep asking* as we build, measure, and learn. When we make a decision that partially answers one, the decision goes in the architecture doc or an ADR; the question stays here.
@@ -261,10 +287,15 @@ Which model tiers are appropriate for each pipeline stage — and when should th
 
 Population-level patterns probably exist in what makes connections work — complementary communication styles, compatible attachment patterns, shared value hierarchies. A trained model could learn these. But the *magic* matches — the ones where Evryn sees something nobody else would — might be fundamentally individual, not population-level patterns. They might be *judgments*, not learnable statistical regularities.
 
+Or they might not be. Judgment might just be pattern-matching at a resolution we can't yet replicate computationally. We don't know — and that uncertainty should drive the design rather than being resolved prematurely.
+
+**Architectural hypothesis (not settled — test this):** The embedding system should be tunable at three layers: population-level patterns as the base (what generally makes connections work), cluster-level adjustments on top (what works specifically for, say, creative professionals seeking collaborators, or introverts seeking romantic partners), and individual-level tweaks at the finest grain (what works for *this specific person* given their particular history and patterns). This mirrors how ad-tech systems work — collaborative filtering gives population patterns, segment models give cluster adjustments, personalization gives individual tuning. The open question is whether the individual layer can be *learned* from data or whether it requires *narrative inference* — but this is a spectrum, not a binary. Some individual-level patterns are probably learnable ("this person consistently responds well to matches who lead with intellectual curiosity"). Others probably require judgment ("this person's complicated feelings about their hometown mean a specific candidate would be either perfect or terrible, and you'd need to understand the emotional landscape to know which").
+
 The practical framing: at each layer (population, cluster, individual), what can a trained model learn, and what still requires conscious evaluation? We should instrument from day one to track this:
 - For each match that succeeds, was it one the learned model would have surfaced on its own, or did it require Opus's editorial judgment?
 - If the ratio shifts over time, the patterns are more learnable than expected
 - If it stays stable, narrative judgment is irreducible at some level
+- Track *where* in the pipeline each piece of valuable intelligence originated — which stage, which model, which mechanism
 
 ### How do we measure whether the embedding captured the judgment?
 
