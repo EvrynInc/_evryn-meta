@@ -60,8 +60,8 @@ After checking the box and clicking "Talk to Evryn," the user enters a chat inte
 - **No conversation data persists** beyond the active session. If the user leaves without creating an account, the conversation content is discarded. IP and behavioral data may be retained separately for security purposes (abuse detection, repeat attack prevention) — this is security infrastructure, not user data. (Whether any retention window is needed for the conversation content itself is a question for Fenwick.)
 
 **Account creation nudge cadence:**
-- At ~20 exchanges: Evryn gently suggests creating an account ("Hey, I'm really enjoying talking to you. I want to let you know that if you want me to remember you after this conversation, you need to create a login - it's free and it's super easy.").
-- At ~30 exchanges: Evryn gives a little warning ("just want to let you know that the system is going to require an account creation soon.").
+- At ~20 exchanges: Evryn gently suggests creating an account.
+- At ~30 exchanges: Evryn gives a warning that the system will require an account to continue soon."
 - At ~40 exchanges: The system requires account creation to proceed.
 
 The nudge is conversational, not a modal or popup. Evryn weaves it naturally into the conversation at an appropriate moment.
@@ -99,7 +99,7 @@ Account creation doesn't change the conversation's character — Evryn was alrea
 
 Evryn continues learning about the user: who they are, what kinds of connections they're looking for, how they want those connections to feel. This isn't a form or an intake — it's a genuine conversation using Evryn's curiosity.
 
-**How Evryn explains herself:** Early in the relationship, Evryn tells users how she's different — her values, aligned incentives, privacy model, trust-based pricing, how connections happen (including ID Verification). This isn't a separate disclosure screen — it's woven into the conversation at natural moments when the user's curiosity or the flow of conversation calls for it. If important details are missed during onboarding, Evryn notes them to include organically in later conversations.
+**How Evryn explains herself:** Early in the relationship, Evryn tells users how she's different — her values, aligned incentives, privacy model, trust-based pricing, how connections happen (including ID verification). This isn't a separate disclosure screen — it's woven into the conversation at natural moments when the user's curiosity or the flow of conversation calls for it. If important details are missed during onboarding, Evryn logs them and finds organic moments to weave them into future conversations — checking them off as she covers them.
 
 **What Evryn is building during onboarding:**
 - A narrative "story" of who this person is — synthesized understanding, not extracted data points
@@ -165,21 +165,20 @@ Both users must independently approve information sharing for the connection to 
 | Description approved for sharing | Timestamp, user ID, description version, what information was included |
 | Each progressive reveal step | Timestamp, user ID, what new information was shared |
 | Match declined | Timestamp, user ID, connection ID, stage at which declined |
-| Feedback shared on decline (if any) | Timestamp, user ID, whether feedback was Evryn's independent judgment or user-approved |
+| User feedback shared with other party (if any) | Timestamp, user ID, what was shared, user's consent to share |
 
----
+Note: Evryn may also share her own independent perspective with the declining or declined user. This isn't a consent event — it's Evryn exercising her judgment. The consent event above only captures cases where one user's feedback is shared with the other.
 
-## Stage 6b: Identity Verification
+### Step 4: Identity verification
 
 Before a connection proceeds to payment, both users must be identity-verified. "I only connect people I trust, and part of that is knowing they're real."
 
-**How it works:** Evryn uses a third-party identity verification service (iDenfy) — the user completes a brief verification flow (photo ID + selfie match). Evryn never stores ID documents or biometrics. She stores only: verified (yes/no), verification date, and a non-reversible trust fingerprint (a cryptographic hash that anchors trust signals to a verified identity without storing who they are).
+Evryn uses a third-party identity verification service (iDenfy) — the user completes a brief verification flow (photo ID + selfie match). Evryn never stores ID documents or biometrics. She stores only: verified (yes/no), verification date, and a non-reversible trust fingerprint (a cryptographic hash that anchors trust signals to a verified identity without storing who they are).
 
-**When it happens:** At the Connection Dance stage, not at account creation. This is deliberate — verification adds friction, and we only want to impose it when there's a reason (someone is about to be connected to another real person). Users who are still in onboarding or anticipation mode don't need to verify yet.
+Verification is required before connection, not at account creation — it adds friction, and we only impose it when there's a reason (someone is about to be connected to another real person). However, Evryn may give users the opportunity to verify earlier if they want — during onboarding, she mentions that verification will be needed before connections, and users can choose to get it done proactively.
 
 **Once verified, always verified.** The user only goes through this once. The trust fingerprint persists even if the account is deleted — so bad actors can't delete and re-create accounts to reset their trust history.
 
-### Consent events logged
 | Event | Data captured |
 |-------|--------------|
 | Identity verification completed | Timestamp, user ID, verified (yes/no), trust fingerprint hash, verification provider |
