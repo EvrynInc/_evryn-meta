@@ -57,7 +57,7 @@ After checking the box and clicking "Talk to Evryn," the user enters a chat inte
 **What's happening architecturally:**
 - This pre-account conversation runs in an **ephemeral, tab-scoped session.** There is no cookie-based persistence. If the user closes the tab and returns later, they start a fresh conversation — Evryn doesn't remember them. This is a deliberate safety choice: it prevents one person's conversation from being served to another person on a shared device.
 - Evryn runs her **full dual-track processing** from exchange one — warm conversation on the surface, structured understanding being built underneath. She's learning who this person is, what they're looking for, and how to help them.
-- **No data persists** beyond the active session. If the user leaves without creating an account, the conversation data is discarded (after a short security-retention window — exact duration TBD with Fenwick).
+- **No conversation data persists** beyond the active session. If the user leaves without creating an account, the conversation content is discarded. IP and behavioral data may be retained separately for security purposes (abuse detection, repeat attack prevention) — this is security infrastructure, not user data. (Whether any retention window is needed for the conversation content itself is a question for Fenwick.)
 
 **Account creation nudge cadence:**
 - At ~20 exchanges: Evryn gently suggests creating an account ("Hey, I'm really enjoying talking to you. I want to let you know that if you want me to remember you after this conversation, you need to create a login - it's free and it's super easy.").
@@ -98,6 +98,8 @@ When the user chooses to create an account (on their own initiative, prompted by
 Account creation doesn't change the conversation's character — Evryn was already being fully herself. What changes is that the conversation now *persists*. Evryn can remember, follow up, and work in the background.
 
 Evryn continues learning about the user: who they are, what kinds of connections they're looking for, how they want those connections to feel. This isn't a form or an intake — it's a genuine conversation using Evryn's curiosity.
+
+**How Evryn explains herself:** Early in the relationship, Evryn tells users how she's different — her values, aligned incentives, privacy model, trust-based pricing, how connections happen (including ID Verification). This isn't a separate disclosure screen — it's woven into the conversation at natural moments when the user's curiosity or the flow of conversation calls for it. If important details are missed during onboarding, Evryn notes them to include organically in later conversations.
 
 **What Evryn is building during onboarding:**
 - A narrative "story" of who this person is — synthesized understanding, not extracted data points
@@ -162,12 +164,31 @@ Both users must independently approve information sharing for the connection to 
 |-------|--------------|
 | Description approved for sharing | Timestamp, user ID, description version, what information was included |
 | Each progressive reveal step | Timestamp, user ID, what new information was shared |
+| Match declined | Timestamp, user ID, connection ID, stage at which declined |
+| Feedback shared on decline (if any) | Timestamp, user ID, whether feedback was Evryn's independent judgment or user-approved |
+
+---
+
+## Stage 6b: Identity Verification
+
+Before a connection proceeds to payment, both users must be identity-verified. "I only connect people I trust, and part of that is knowing they're real."
+
+**How it works:** Evryn uses a third-party identity verification service (iDenfy) — the user completes a brief verification flow (photo ID + selfie match). Evryn never stores ID documents or biometrics. She stores only: verified (yes/no), verification date, and a non-reversible trust fingerprint (a cryptographic hash that anchors trust signals to a verified identity without storing who they are).
+
+**When it happens:** At the Connection Dance stage, not at account creation. This is deliberate — verification adds friction, and we only want to impose it when there's a reason (someone is about to be connected to another real person). Users who are still in onboarding or anticipation mode don't need to verify yet.
+
+**Once verified, always verified.** The user only goes through this once. The trust fingerprint persists even if the account is deleted — so bad actors can't delete and re-create accounts to reset their trust history.
+
+### Consent events logged
+| Event | Data captured |
+|-------|--------------|
+| Identity verification completed | Timestamp, user ID, verified (yes/no), trust fingerprint hash, verification provider |
 
 ---
 
 ## Stage 7: Payment
 
-Once both users have opted in and approved their information sharing, Evryn asks each user what they'd like to pay for the introduction.
+Once both users have opted in, approved their information sharing, and are identity-verified, Evryn asks each user what they'd like to pay for the introduction.
 
 **Trust-based pricing:** The user sets the amount — Evryn has already communicated the value of trust in continuing to work with Evryn, and so she now extends trust to the user to value the connection honestly. (Consumer protection and pricing compliance questions for Fenwick — see meeting prep doc, Q4.) Evryn is willing to suggest a price if the user prefers.
 
@@ -180,10 +201,14 @@ Once both users have opted in and approved their information sharing, Evryn asks
 
 **The satisfaction guarantee:** If the connection doesn't feel right, the user can request a full refund within 30 days. No explanation required (though feedback *much* appreciated). (Specific ToS language for this guarantee is a question for Fenwick — see meeting prep doc, Q4.)
 
+**Refunds:** Users can request a refund by telling Evryn directly in conversation, or by emailing support@evryn.ai. Evryn will ask what didn't feel right — not to gatekeep the refund, but because the feedback genuinely helps her improve. The refund itself is processed regardless of whether feedback is given. Refunds are processed back through Stripe.
+
 ### Consent events logged
 | Event | Data captured |
 |-------|--------------|
 | Payment completed | Timestamp, user ID, amount, Stripe transaction ID, connection ID |
+| Refund requested | Timestamp, user ID, connection ID, channel (in-app / email), reason (if given) |
+| Refund processed | Timestamp, user ID, amount, Stripe refund ID |
 
 ---
 
@@ -192,7 +217,7 @@ Once both users have opted in and approved their information sharing, Evryn asks
 After both users have paid, Evryn connects them in a direct conversation. This is a separate chat screen — distinct from the Evryn conversation, accessed through the **Connections** tab in the bottom nav.
 
 **Key characteristics:**
-- **Fully private.** Evryn is NOT present in the conversation. She doesn't observe, she doesn't listen, she doesn't moderate in real-time. The conversation is between the two users only. (This is a deliberate v0.3 decision — see [ADR-022](../../../_evryn-meta/docs/decisions/022-observation-deferred-past-v03.md).)
+- **Fully private.** Evryn is NOT present in the conversation. She doesn't observe, she doesn't listen, she doesn't moderate in real-time. The conversation is between the two users only.
 - **Full-screen interface.** The connection conversation takes over the screen. The user switches between Evryn and their connections via the bottom nav.
 - **Clear identification.** The input field shows the other person's name ("Message Sarah"). In v0.3, all connections share one visual treatment — no color-coding or custom themes yet.
 - **Users control contact sharing.** After connecting, users can choose when or if to share direct contact information. They can remain safely within Evryn's platform, with Evryn having vouched for each.
@@ -226,7 +251,8 @@ Depending on the situation, Evryn may follow up a day or two later for a second 
 | Pre-account conversation | Conversation content, behavioral signals | **Yes and No** — ephemeral, migrated on account creation, discarded if no account created. (security retention window TBD) | No |
 | Account creation | Auth credentials, second ToS/PP acceptance | Yes | Yes (from this point forward) |
 | Onboarding + Anticipation | Conversation, profile data, structured signals | Yes — in user profile | Yes |
-| Connection Dance | Consent events, approved descriptions, opt-in/out decisions | Yes — in consent audit trail + connection records | Yes |
+| Connection Dance | Consent events, approved descriptions, proceed/decline decisions at each reveal step | Yes — in consent audit trail + connection records | Yes |
+| Identity verification | Verified flag, trust fingerprint hash | Yes — in user profile + trust graph | Yes |
 | Payment | Transaction details | Yes — via Stripe + internal records | Yes |
 | Connection conversation | Messages between users | Yes — in connection records | Yes |
 | Aftercare | Feedback, calibration data | Yes — in user's profile | Yes |
@@ -250,11 +276,10 @@ Depending on the situation, Evryn may follow up a day or two later for a second 
 For clarity — these features exist in Evryn's long-term design but are not part of v0.3:
 
 - **Evryn Wallet** (pre-purchased credits, locked credits) — v0.4+
-- **Evryn observation of connection conversations** — at least deferred past v0.3, candidate for deprecation
+- **Evryn observation of connection conversations** — at least deferred past v0.3, candidate for deprecation ([ADR-022](../../../_evryn-meta/docs/decisions/022-observation-deferred-past-v03.md))
 - **Color-coded or themed connection conversations** — all connections share one visual treatment in v0.3
 - **3-second send delay** on connection messages — deferred
 - **Progressive interface reveal** — bottom nav present from day one in v0.3
 - **Installment plans** — v0.4+
-- **Voice capability** — v0.4+
-- **Identity verification** (iDenfy) — future
-- **SMS and other communication channels** — future
+- **Voice capability** — future
+- **SMS or other communication channels** — future

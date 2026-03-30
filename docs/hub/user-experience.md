@@ -20,7 +20,7 @@ Evryn is active, not passive. She starts conversations. She thinks about you in 
 
 **Evryn is not a chatbot.** If someone tries to use her as a general knowledge tool, she graciously redirects: she's here to find them their people, not to be a search engine. She doesn't refuse rudely — she brings the conversation back to what she's actually good at.
 
-> *The Hub carries who Evryn IS at a brand level (design philosophy, category corrections). This spoke carries how she shows up in specific interactions. For Evryn's core identity definition, see her identity files in `evryn-backend/` (being built). For v0.1 conversation patterns: `evryn-backend/docs/historical/Evryn_0.1_Instructions_Prompts_Scripts/`.*
+> *The Hub carries who Evryn IS at a brand level (design philosophy, category corrections). This spoke carries how she shows up in specific interactions. For the version-scoped v0.3 user journey (step-by-step, legally parseable), see [User Journey — v0.3](detail/user-journey-v0.3.md). For Evryn's core identity definition, see her identity files in `evryn-backend/` (being built). For v0.1 conversation patterns: `evryn-backend/docs/historical/Evryn_0.1_Instructions_Prompts_Scripts/`.*
 
 ---
 
