@@ -81,7 +81,7 @@ When Evryn finds a match:
 6. When both agree, Evryn asks each what they'd pay her for the introduction
 7. Once both have paid, Evryn can connect them in a shared conversation. If invited, she'll join the conversation, but she lets each user know that she won't speak in the joint conversation, to ensure she never inadvertently shares private information. She'll just be quietly present.
 
-Evryn doesn't share users' information with each other — she effectively acts as a courier. Each user must explicitly sign off on the exact wording of anything shared. Nothing is revealed without both parties' active, informed consent.
+Evryn writes her own recommendation of each person to the other — it's her voice, her assessment, her framing. But the user must approve the information about them before it's shared. Nothing about you is revealed without your active consent.
 
 **If a match doesn't work, Evryn won't re-try unless something meaningful changes.** Users can also explicitly block a connection or request "don't match again" — Evryn respects these immediately and without question.
 
@@ -150,7 +150,7 @@ Your connections appear in a list, each with a summary card: who they are, why E
 
 After connecting, users can choose when or if to share contact info — they can even remain safely anonymous, with Evryn having vouched for each.
 
-**Evryn's presence in conversations:** Two connected users can invite Evryn to observe their conversation — she listens to stay informed about the relationship, but she does NOT speak in shared conversations. She only speaks in private, one-on-one conversations with individual users, to ensure she never accidentally reveals private information. Always opt-in: Evryn is never present unless both parties have invited her.
+**Evryn's presence in conversations (deferred past v0.3):** The long-term vision is that two connected users can invite Evryn to observe their conversation — she listens to stay informed about the relationship, but does NOT speak in shared conversations, to ensure she never accidentally reveals private information. Always opt-in: Evryn is never present unless both parties have invited her. **For v0.3:** Observation is deferred — the asymmetric consent UX is too complex (what if one user allows observation but the other doesn't? Do you tell the first user the other declined? That becomes the opening dynamic of the relationship) and risks feeling surveillance-like. Instead, v0.3 users have private conversations and come back to Evryn during aftercare to share how it went.
 
 **Notification control:** When in a conversation with another user, notifications from other threads appear as contextual, color-coded alerts. Users can control this via a "Focused Mode" vs "Open Door" setting — Focused suppresses notifications during active conversations, Open Door lets them through.
 
