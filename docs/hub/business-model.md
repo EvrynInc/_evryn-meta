@@ -212,7 +212,7 @@ Evryn uses a trust-filtered market model:
 
 ## Capital Strategy
 
-**Financial reality (as of Feb 2026):** ~$6,125 cash on hand. The original $40K ($15K founder + $25K angel) was substantially depleted by a failed build due to a fraudulent CTO in late 2025.
+**Financial reality:** See the latest team current-state snapshot (`evryn-team-workspace/shared/current-state/`) for current bank balance and runway status. The projection table below will be replaced by a proper financial model once one is built; until then, the current-state snapshot is the live source of truth for cash position. Background: the original $40K ($15K founder + $25K angel) was substantially depleted by a failed build due to a fraudulent CTO in late 2025.
 
 **Burn rate components** (being refined in updated Financial Model):
 - **Base operating costs** (infrastructure, services, subscriptions, advisor): ~$725/mo today; ~$750/mo once agents come online (one additional Google Workspace seat for `agents@evryn.ai` aliases + still only one Slack seat — agents use bot tokens, not user seats). Itemized breakdown in [BizOps spoke](bizops-and-tooling.md).
@@ -249,16 +249,16 @@ What it costs depending on what's running:
 
 ### Cash Runway Projection
 
-*Projection as of Feb 2026. Will go stale — update monthly or when plans change.*
+*Projection as of March 2026. Will go stale — update monthly or when plans change.*
 
 | Month | Phase | Burn | One-Time | Capital In | Revenue | Cash (end) |
 |-------|-------|------|----------|-----------|---------|-----------|
-| **Mar** | v0.2 build → Mark live | $800 | — | — | $0 | $5,325 |
-| **Apr** | v0.3 build, v0.2 running | $950 | — | — | ~$0 | $4,375 |
-| **May** | v0.3 launch, cast-offs active | $1,600 | — | +$5K (founder) | ~$2,200 | $9,975 |
-| **Jun** | v0.4 build, agents starting | $2,800 | — | +$10K (angel) | ~$8,000 | $25,175 |
-| **Jul** | v0.4 build, agents full sprint | $4,225 | — | — | ~$19,200 | $40,150 |
-| **Aug** | v0.4 scale, agents full sprint | $4,225 | Fenwick ~$45K | — | ~$44,600 | $25,525 |
+| **Mar** | v0.2 build → Mark live | $800 | DE Franchise $600 | — | $0 | $4,688 |
+| **Apr** | v0.3 build, v0.2 running | $950 | — | — | ~$0 | $3,738 |
+| **May** | v0.3 launch, cast-offs active | $1,600 | — | +$5K (founder) | ~$2,200 | $9,338 |
+| **Jun** | v0.4 build, agents starting | $2,800 | — | +$10K (angel) | ~$8,000 | $24,538 |
+| **Jul** | v0.4 build, agents full sprint | $4,225 | — | — | ~$19,200 | $39,513 |
+| **Aug** | v0.4 scale, agents full sprint | $4,225 | Fenwick ~$45K | — | ~$44,600 | $34,888 |
 
 **Reading this table:** July and August run at full sprint burn ($4,225) because v0.4 requires agents running full bore. At conservative revenue estimates, the Fenwick bill in August is manageable — cash stays positive throughout. However, this depends on v0.3 launching on time (late April) and achieving ~5% cast-off conversion. If revenue underperforms by 50%, August cash drops to ~$3K — survivable but very tight. If v0.3 launches a month late, the entire revenue curve shifts right and August becomes a crisis.
 
