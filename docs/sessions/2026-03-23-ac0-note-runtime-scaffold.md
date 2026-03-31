@@ -20,7 +20,7 @@ When the trigger creates a new user record (or when Evryn creates one during tri
   "story": "",
   "notes": [],
   "roles": [],
-  "onboarding_pending": []
+  "follow_ups": []
 }
 ```
 
