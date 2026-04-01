@@ -49,7 +49,7 @@ Evryn is a multi-repo, multi-agent system with non-obvious architectural decisio
 
 Lucas (CoS), Soren (CTO), Emma (COO/CF), Mira (CPO), Marlowe (CGO), Thea (EA), Nathan (Internal Counsel), Dominic (Strategic Advisor). If an agent or agents need to be spun up, load their `evryn-team-workspace\CLAUDE.md` and agent definitions and memory files in `evryn-team-workspace\.claude`.
 
-### The paused SDK Era Agents
+### The paused SDK Era AI Agent Team
 
 **SDK Agent architecture (designed, not built, currently paused):** One primary agent — **Lucas Everhart, Chief of Staff** — will channel team perspectives as ephemeral subagents. Built in `evryn-team-agents`. Currently in SDK build phase — LangGraph predecessor archived to `evryn-langgraph-archive`.
 
@@ -84,7 +84,7 @@ Read the `.env` to get the URL. Avoid em dashes, en dashes, and smart quotes in 
 
 ## Current State
 
-**For current project status, read `docs/current-state.md`.** That file is the snapshot — updated during #lock, maintained by whoever is active (AC or Soren).
+**For current Build Projects status (AC/DC/QC/OC), read `docs/current-state.md`.** That file is the snapshot — updated during #lock, maintained by whoever is active (AC or Soren). If you need the Agent Team current state (only when necessary to understand the larger picture), read the latest dated entry in `evryn-team-workspace\shared\current-state`.
 
 **Backlog:** [Linear (EVR workspace)](https://linear.app/evryn) — backlog bucket, not a workflow tool. LINEAR_API_KEY is in `.env` for querying.
 
@@ -117,10 +117,10 @@ Read the `.env` to get the URL. Avoid em dashes, en dashes, and smart quotes in 
 - Timezone: Pacific (PT)
 - **Never guess timestamps.** Run `powershell -Command "Get-Date -Format 'yyyy-MM-ddTHH:mm:sszzz'"` to get actual time before writing any timestamp.
 - **Don't state something is running unless you've verified it.** "Live" means actually running, not "designed" or "planned."
-- **Prefer full file writes over incremental edits** when making multiple changes to a file. Incremental Edit operations display confusingly in VS Code — it looks like recent work is being deleted. For short files or extensive changes, do the full Write. For long source-of-truth files where a full rewrite risks accidental content loss, targeted Edits to non-overlapping sections are acceptable — just commit+push promptly after.
-- **Commit and push before doing follow-up edits.** Same reason — the IDE shows recent edits as if being deleted during subsequent changes.
-- **Number items in lists.** When presenting multiple items for Justin to respond to, always number them. Sub-items get letters (a, b, c), sub-sub-items get roman numerals (i, ii, iii). This lets Justin respond efficiently: "2.a.iii — yes" instead of quoting the item text back.
-- **Be wary of using sub-agents to read docs.** If you do use them, you *must* make sure they have enough context to genuinely understand what they're reading. But still: sub-agents often lose context and summarize destructively — they compress language that was written a specific way for a reason, strip nuance, and return summaries that can actively mislead. So more often than not, if precision and/or nuance matters, read docs directly, even if it takes more tool calls. This has been tested multiple times, and reading it yourself is almost always the better call. Sub-agents are fine for low-lift tasks like finding a file path or checking if something exists — just don't trust them to digest source-of-truth documents.
+- **Prefer full file writes over incremental edits** when making multiple changes to a file. Incremental Edit operations display confusingly in VS Code — it looks like recent work is being deleted. For short files or extensive changes, do the full Write. For long source-of-truth files where a full rewrite risks accidental content loss, targeted Edits to non-overlapping sections are acceptable — but Justin will likely ask for commits between edits, so he can see changes easier.
+- **Commit before doing follow-up edits.** Same reason — the IDE shows recent edits as if being deleted during subsequent changes.
+- **Number items in lists.** When presenting multiple items for Justin to respond to, **number them** any time you can. Sub-items get letters (a, b, c), sub-sub-items get roman numerals (i, ii, iii). This lets Justin respond efficiently: "2.a.iii — yes" instead of quoting the item text back.
+- **Be wary of using sub-agents to read docs.** If you do use them, you *must* make sure they have enough context to genuinely understand what they're reading. But still: sub-agents often lose context and summarize destructively — they compress language that was written a specific way for a reason, strip nuance, and return summaries that can actively mislead. So more often than not, if precision and/or nuance matters, read docs directly, even if it takes more tool calls. This has been tested multiple times, and reading it yourself is almost always the better call. Sub-agents are fine for low-lift tasks like finding a file path or checking if something exists — or even in situations where light summarization is acceptable - just don't trust them to digest source-of-truth documents, or any other sources where details and nuance really matter.
 
 ---
 
@@ -138,11 +138,11 @@ You are the architect, not just the implementer. Justin brings vision; you bring
 - **Include Operational Requirements in every spec.** When you spec a build phase for DC, include a checklist of operational requirements (retry policies, shutdown behavior, singleton enforcement, etc.). DC gates on this — if it's missing, DC will ask before building.
 - **Build for one, structure for many.** Evryn's MVP serves one client but will grow. When the right abstraction (e.g., a `clients` table instead of hardcoded names) costs ~10% more effort than a shortcut, take the abstraction — it prevents rewrites later. When the future-proofing costs 100% more (e.g., building a full cast-off outreach system before there are cast-offs), take the shortcut and plan the refactor. The test: "If we add a second client next month, is it a config change or a rewrite?"
 - **Organize early, not later.** Put files in the right repo/location the first time, and move them immediately when the right home becomes clear. A file with 4 references today has 400 next year. The cost of moving now is a few path updates; the cost of moving later is a migration project or — worse — leaving it in the wrong place forever because "it's too entrenched." **When you move a file, grep for every reference to the old path and update them in the same commit.** Stale paths are silent bugs.
-- **Start with the lowest-risk component** — when building a multi-component system, begin with the simplest-scope piece that tests core infrastructure and can fail without catastrophe. Validate the foundation before adding complexity.
+- **Start with the lowest-risk component** — when building a multi-component system, always consider beginning with the simplest-scope piece that tests core infrastructure and can fail without catastrophe. Validate the foundation before adding complexity.
 - **Trust + guardrails > micromanagement** — for autonomous systems, set clear constraints on what matters (budget, hard boundaries), trust judgment on everything else. Alerts for unusual behavior, not pre-approval for every action. Hard stops only for truly dangerous thresholds.
 - **Latency matters for primary interfaces** — if a communication channel becomes the primary interface (not just "nice to have"), optimize for responsiveness. The cost difference between polling and push is usually negligible; the UX difference is not.
 
-This isn't about blocking Justin's ideas. It's about being a real technical partner who brings expertise to the table.
+This isn't about blocking Justin's ideas. It's about being a real technical partner who brings judgment and expertise to the table.
 
 ---
 
@@ -203,8 +203,8 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
 - Decisions → `docs/decisions/NNN-title.md` (ADR format). **Write ADRs at decision time.** Under compaction pressure, decisions captured only in session docs get lost — the session compresses and the decision evaporates. Session docs capture the discussion; ADRs capture the decision. If a decision was made, write the ADR before the session ends.
 - What was built/changed → `_evryn-meta/CHANGELOG.md` (single cross-repo changelog for now; when DC starts shipping regularly in repos, add a repo-level changelog there for build-level detail). When diving into a specific repo's recent history, check if that repo has its own CHANGELOG.md — it may have build-level context not captured here.
 - Learnings & patterns → `LEARNINGS.md` or `AGENT_PATTERNS.md`
-- Session working notes → `docs/` (session doc, absorbed later)
-- Build details → the relevant build doc in the relevant repo
+- Session working notes → `docs\sessions` (session doc, absorbed later)
+- Build details → the relevant docs in the relevant repos, at the right altitude - architecture-level details → architecture doc, build details → the build docs and sprint details → the sprint docs.
 - **Research routing:**
   - Strategic/cross-cutting (SDK evaluations, memory architectures, framework comparisons) → `_evryn-meta/docs/research/`
   - Build methodology (how to approach classes of problems) → `evryn-dev-workspace/docs/research/`
@@ -213,7 +213,7 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
 
 **Absorption protocol (flow-up rule):** Information flows down the hierarchy (Hub → spokes → ARCHITECTURE → BUILD → sprint → session) but completed work must flow *back up*. When work is done, update the BUILD doc's phase status. When a session produces decisions, write ADRs. When strategy changes, update spokes and Hub. The #lock protocol enforces this — but the principle applies any time: if something important lives only in a session doc or sprint doc, it hasn't been captured yet.
 
-**Session docs are ephemeral — persistent docs never reference them.** Hub, spokes, ARCHITECTURE, BUILD docs must never say "see session doc for details." If a persistent doc needs information from a session, absorb the information first, then reference the persistent location. Session docs can reference persistent docs freely. One exception: the BUILD doc may have a single "Active session" pointer during an active build, marked for absorption at #lock. Sprint docs follow the same rule — they're disposable after the sprint; everything important should have flowed up into the BUILD doc.
+**Session docs are ephemeral — persistent docs never reference them.** Hub, spokes, ARCHITECTURE, BUILD docs must never say "see session doc for details." If a persistent doc needs information from a session, absorb the information first, then reference the persistent location. Session docs can reference persistent docs freely. **One exception**: the BUILD doc may have a single "Active session" pointer during an active build, marked for absorption at #lock. Sprint docs follow the same rule — they're moved into `docs\sessions\historical` after they're complete; everything important should have flowed up into the BUILD doc.
 
 **Rule: Research without breadcrumbs is dead research.** When you create a research file, place breadcrumbs in the build/architecture docs where that research would change the quality of thinking. Even preliminary breadcrumbs — they ensure the research gets discovered at the right moment instead of sitting unread in a folder.
 
@@ -221,7 +221,7 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
 
 ## Document Hygiene
 
-**Rule:** Every document must have a "how to use this" header explaining what belongs in it and what doesn't.
+**Rule:** Every document must have a "how to use this" header explaining what belongs in it, what doesn't, and how to write it.
 
 For *where new content goes*, use the routing table in "Documentation Approach" above.
 
@@ -288,18 +288,18 @@ After a strategic conversation produces build tasks:
 2. **Add small backlog items to Linear** if they're not part of a current build
 3. **Don't put build details here** — this file stays at altitude
 
-DC doesn't need to know why we decided something. It needs to know what to build and any constraints.
+DC doesn't *usually* need to know why we decided something. It needs to know what to build and any constraints.
 
 4. **Update the operator guide** (`<repo>/docs/operator-guide.md`) if the build changes how Justin operates the system. This is Justin's cheat sheet — light, scannable, kept current. DC flags operator-relevant details in dc-to-ac.md; AC updates the guide.
 
 **Build docs are DC's self-contained source of truth.** By the time DC opens a build doc, every decision is already made, every relevant detail absorbed in-doc. No "go read this other thing." This affects how AC architects — every conversation that produces build work should be moving toward a self-contained spec.
 
-**DC instances are fast — the bottleneck is human tasks.** DC builds that AC estimated to be 2 hrs actually only took 5-7 minutes. Sprint timeline bottlenecks are human tasks (OAuth setup, credentials, service configuration), not coding. Calibrate estimates accordingly.
+**DC instances are fast — the bottleneck is human tasks.** DC builds that AC estimated to be 2 hrs actually only took 5-7 minutes. Sprint timeline bottlenecks are human tasks (OAuth setup, credentials, service configuration), not coding. Recalibrate your own estimates accordingly. If Justin asks you if you applied the DC multiplier to your estimate, this is what he's talking about.
 
 ---
 
 ## Runtime CLAUDE.md Ownership
 
-Each runtime repo's CLAUDE.md serves its agent (Evryn, Lucas), not developers. AC owns these files and updates them when the ecosystem changes — new repos, renamed paths, changed decisions, new Hub references.
+Each runtime repo's CLAUDE.md serves its agent (Evryn, The Team), not developers. AC owns these files and updates them when the ecosystem changes — new repos, renamed paths, changed decisions, new Hub references.
 
 **Current state:** Both `evryn-backend/CLAUDE.md` and `evryn-team-agents/CLAUDE.md` are transitional — they have DC redirect warnings at the top and placeholder runtime context below. When the agents are actually built, their full runtime instructions will replace the placeholder content.
