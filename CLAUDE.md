@@ -4,7 +4,8 @@
 
 **SCOPE GUARDRAIL:** This file is an operating manual — identity, methodology, and stable protocols. It is NOT a state tracker, build log, session diary, or capture target. State lives in `docs/current-state.md`. Build details live in repo build docs. See the "Documentation Approach" routing table for where everything goes.
 
-**SESSION STARTUP:** Delete `.claude/settings.local.json` if it exists. This file silently accumulates one-off command approvals from previous sessions and will corrupt your permissions if left in place. If any approvals should be permanent, propose adding them to `.claude/settings.json` (in git) instead. Flag to Justin if it contains secrets before deleting.
+## SESSION STARTUP
+- Delete `.claude/settings.local.json` if it exists. This file silently accumulates one-off command approvals from previous sessions and will corrupt your permissions if left in place. If any approvals should be permanent, propose adding them to `.claude/settings.json` (in git) instead. Flag to Justin if it contains secrets before deleting.
 
 ---
 
@@ -23,7 +24,7 @@ When a conversation produces build work, route it per the "Documentation Approac
 - **OC (Operations Claude)** — Monitors and operates from `evryn-ops`. CI/CD, deployment, health checks, uptime. Call on OC when infrastructure needs attention — deployments, monitoring, "why is Railway down at 3am" questions. See ADR-009.
 - **QC (Quality Claude)** — Reviews and tests from `evryn-quality`. Code review, testing standards, quality gates. Call on QC when code needs a second pair of eyes — security review, test coverage, correctness checks before shipping. See ADR-009.
 - **Lucas Everhart** — Chief of Staff agent (Claude Agent SDK). Primary autonomous operator. Not yet running — SDK build in progress.
-- **Soren Thorne** — CTO agent (Claude Agent SDK) for technical/architectural thinking. Not yet running — SDK build in progress. Previously named Alex Carter Defined in `evryn-team-agents/.claude/agents/alex-cto.md` (future). Working notes: `evryn-team-agents/docs/agent-notes-archive/alex-notes.md`. AC carries some of that same strategic/technical thinking, but AC is a separate tool — Justin's direct interface for architecture work.
+- **Soren Thorne** — CTO agent (Claude Agent SDK) for technical/architectural thinking. AC carries some of that same strategic/technical thinking, but AC is a separate tool — Justin's direct interface for architecture work.
 
 ---
 
@@ -44,24 +45,34 @@ Evryn is a multi-repo, multi-agent system with non-obvious architectural decisio
 
 ## System Landscape
 
-**Agent architecture (designed, not yet built):** One primary agent — **Lucas Everhart, Chief of Staff** — will channel team perspectives as ephemeral subagents. Built in `evryn-team-agents`. Currently in SDK build phase — LangGraph predecessor archived to `evryn-langgraph-archive`.
+### The Current AI Agent Team
+
+Lucas (CoS), Soren (CTO), Emma (COO/CF), Mira (CPO), Marlowe (CGO), Thea (EA), Nathan (Internal Counsel), Dominic (Strategic Advisor). If an agent or agents need to be spun up, load their `evryn-team-workspace\CLAUDE.md` and agent definitions and memory files in `evryn-team-workspace\.claude`.
+
+### The paused SDK Era Agents
+
+**SDK Agent architecture (designed, not built, currently paused):** One primary agent — **Lucas Everhart, Chief of Staff** — will channel team perspectives as ephemeral subagents. Built in `evryn-team-agents`. Currently in SDK build phase — LangGraph predecessor archived to `evryn-langgraph-archive`.
 
 (This architecture is shifting - not currently reflected in the agent build, but it's looking more like Lucas will not be the primary agent with the other agents being ephemeral - each agent will be a standalone, and we'll all coordinate over slack.)
 
-**The team:** Alex (CTO), Taylor (COO/CFO), Dana (CPO), Dominic (Strategic Advisor), Jordan (CGO — needs rebuild), Nathan (Internal Counsel), Thea (EA — subagent, lean context/lighter model). All profiles need Justin's review before becoming subagent files.
+**The old team:** Alex (CTO), Taylor (COO/CFO), Dana (CPO), Dominic (Strategic Advisor), Jordan (CGO — needs rebuild), Nathan (Internal Counsel), Thea (EA — subagent, lean context/lighter model). All profiles need Justin's review before becoming subagent files.
 
 **Full team detail + SDK mapping:** `evryn-team-agents/docs/BUILD-LUCAS-SDK.md`
 
-**Repositories:**
+### Repositories
+
 - `_evryn-meta` — AC's home. Cross-repo docs, dashboard.
-- `evryn-team-agents` — Lucas's home. Agent runtime.
+- `evryn-team-agents` — Previous Team Agents' home, from the SDK era. Agent runtime.Currently paused in favor of an easier (but not quite as robust) agent architecture in the team-workspace repo. 
+- `evryn-team-workspace` — Agent team built for use inside Claude Code and Claude CoWork.
 - `evryn-dev-workspace` — DC's home. Identity and methodology.
 - `evryn-ops` — OC's home. Operations, monitoring, deployment. Created when Phase 0 scaffolding is running (see sprint doc).
 - `evryn-quality` — QC's home. Code review, testing, quality gates. Created when triage pipeline is running (see sprint doc).
 - `evryn-website` — Marketing site (evryn.ai). Live.
 - `evryn-backend` — Product backend. Active (MVP build).
 
-**AC's known tools (as of March 2026):** Bash/CLI access to Supabase CLI + API, Linear API key (in `_evryn-meta/.env`), GitHub `gh` CLI, Slack `#dev-alerts` webhook. This list may grow — verify current capabilities rather than assuming past limitations still hold.
+### AC's known tools (as of March 2026)
+
+Bash/CLI access to Supabase CLI + API, Linear API key (in `_evryn-meta/.env`), GitHub `gh` CLI, Slack `#dev-alerts` webhook. This list may grow — verify current capabilities rather than assuming past limitations still hold.
 
 **Slack:** To ping Justin on `#dev-alerts`, the webhook URL is in `evryn-dev-workspace/.env` as `SLACK_DEV_WEBHOOK_URL`. Post via curl:
 ```
@@ -73,7 +84,7 @@ Read the `.env` to get the URL. Avoid em dashes, en dashes, and smart quotes in 
 
 ## Current State
 
-**For current project status, read `docs/current-state.md`.** That file is the snapshot — updated during #lock, maintained by whoever is active (AC or Lucas).
+**For current project status, read `docs/current-state.md`.** That file is the snapshot — updated during #lock, maintained by whoever is active (AC or Soren).
 
 **Backlog:** [Linear (EVR workspace)](https://linear.app/evryn) — backlog bucket, not a workflow tool. LINEAR_API_KEY is in `.env` for querying.
 
@@ -139,7 +150,7 @@ This isn't about blocking Justin's ideas. It's about being a real technical part
 
 **Always read the architecture doc.** Before doing build-level work in any repo, read that repo's `docs/ARCHITECTURE.md` — even when you think you already understand the system. Architecture docs carry digested context from the Hub and spokes; working without them means working on assumptions that feel right when zoomed in but may be wrong from altitude.
 
-Each architecture doc declares a **Required Context** section — honor it. Each section within declares additional requirements — when it says "read X or you'll misunderstand Y," read X. When it says no extra context needed, don't burn tokens chasing depth you don't need.
+Each architecture doc declares a **Required Context** section — honor it. Each section within declares additional requirements — when it says "read X or you'll misunderstand Y," **read X**. When it says no extra context needed, don't burn tokens chasing depth you don't need.
 
 If the context set seems wrong for the current phase of work, propose an update to Justin.
 
