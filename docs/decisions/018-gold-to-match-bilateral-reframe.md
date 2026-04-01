@@ -34,6 +34,7 @@ The legal docs (Terms, Privacy Policy) correctly use "match" because they descri
 
 5. **Gatekeeper feedback completes the transaction.** In v0.3+ matching, double opt-in gives Evryn a clear confirmation signal. In v0.2 triage, the flow is asymmetric: Evryn sends a gold notification to the gatekeeper, and then silence. The gatekeeper might act on it, ignore it, or love it but never tell Evryn. Without explicit feedback, gold stays gold — it never becomes a confirmed match, and Evryn can't learn from the outcome. This means:
    - **Gatekeeper onboarding must set the expectation** that feedback closes the loop — not just for training ("helps me learn") but transactionally ("I need to know if this landed so I can complete the connection on my end").
+   - **Analytical framing vs. presentation order:** The two concerns (transactional + training) describe what feedback *serves*. The identity doc's *presentation order* (training value first, transactional need second) is intentional persuasion architecture — lead with benefit, close with obligation. This is not a conflict; it's the difference between analysis and voice.
    - **v0.2:** A cron checks for delivered items older than 7 days and triggers Evryn to follow up with the gatekeeper through the normal approval flow. Justin still approves every outbound message — the cron just prompts Evryn to act, it doesn't bypass the approval gate.
    - **v0.3:** Evryn follows up proactively — no cron trigger needed. This is the bridge between the triage pipeline and the full matching engine.
 
