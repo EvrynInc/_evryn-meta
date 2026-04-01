@@ -64,7 +64,7 @@ After checking the box and clicking "Talk to Evryn," the user enters a chat inte
 - At ~30 exchanges: Evryn gives a warning that the system will require an account to continue soon."
 - At ~40 exchanges: The system requires account creation to proceed.
 
-The nudge is conversational, not a modal or popup. Evryn weaves it naturally into the conversation at an appropriate moment.
+The nudges are conversational, with an inline modal. Evryn weaves it naturally into the conversation at an appropriate moment.
 
 ---
 
@@ -143,7 +143,7 @@ Evryn composes a description of each user for the other. This is **Evryn's voice
 
 The user sees Evryn's description of them (what she plans to share with the other person). Two buttons:
 
-- **"Yes, send this now"** — unambiguous confirmation that this IS the submission, not a preview
+- **"Yes, you can share this"** — unambiguous confirmation that this IS the submission, not a preview
 - **"Let's keep working on this"** — continues the conversation to refine the description
 
 This may take one round or several, depending on the connection type and the user's comfort level. Some connections need one round (for something like a buy-nothing). Others need multiple rounds of reveal — a brief anonymous description first, then progressively more detail if both users want to continue.
@@ -153,7 +153,7 @@ This may take one round or several, depending on the connection type and the use
 - Contact information
 - Photos (except in dating contexts — see below)
 
-**Dating contexts and photos:** For dating connections, photos may need to be shared before payment because physical appearance is relevant to the decision. This involves a separate, explicit consent step and may require a different consent standard. (Question for Fenwick — see meeting prep doc, Q7.)
+**Dating contexts and photos:** For dating connections, photos may need to be shared before payment because physical appearance is relevant to the decision. This involves a separate, explicit consent step and may require a different consent standard. 
 
 ### Step 3: Mutual opt-in
 
@@ -187,9 +187,9 @@ Verification is required before connection, not at account creation — it adds 
 
 ## Stage 7: Payment
 
-Once both users have opted in, approved their information sharing, and are identity-verified, Evryn asks each user what they'd like to pay for the introduction.
+Once both users have opted in, approved their information sharing, and are identity-verified, Evryn asks each user what they think would be fair payment for the introduction.
 
-**Trust-based pricing:** The user sets the amount — Evryn has already communicated the value of trust in continuing to work with Evryn, and so she now extends trust to the user to value the connection honestly. (Consumer protection and pricing compliance questions for Fenwick — see meeting prep doc, Q4.) Evryn is willing to suggest a price if the user prefers.
+**Trust-based pricing:** The user sets the amount — Evryn has already communicated the value of trust in continuing to work with Evryn, and so she now extends trust to the user to value the connection honestly. Evryn is willing to suggest a price if the user prefers.
 
 **The payment interface:**
 - A minimal modal that slides up from the bottom of the screen, with the chat still visible above
@@ -217,9 +217,9 @@ After both users have paid, Evryn connects them in a direct conversation. This i
 
 **Key characteristics:**
 - **Fully private.** Evryn is NOT present in the conversation. She doesn't observe, she doesn't listen, she doesn't moderate in real-time. The conversation is between the two users only.
-- **Full-screen interface.** The connection conversation takes over the screen. The user switches between Evryn and their connections via the bottom nav.
-- **Clear identification.** The input field shows the other person's name ("Message Sarah"). In v0.3, all connections share one visual treatment — no color-coding or custom themes yet.
-- **Users control contact sharing.** After connecting, users can choose when or if to share direct contact information. They can remain safely within Evryn's platform, with Evryn having vouched for each.
+- **Full-screen interface.** The connection conversation takes over the screen. The user switches between Evryn and their Connections via the bottom nav.
+- **Clear identification.** The input field shows the other person's name ("Message Sarah"). In v0.3, all connections share one visual treatment — distinct from talking to Evryn, but no custom color-coding or custom themes yet.
+- **Users control contact sharing.** After connecting, users can choose when or if to share direct contact information. Or they can remain safely anonymous within Evryn's platform, with Evryn having vouched for each.
 
 **Before connecting, Evryn sets up aftercare:**
 Evryn explicitly tells each user: "After you two talk, come back and tell me how it goes, okay?" — and gets their agreement. This sets the expectation for the feedback loop that follows.
@@ -238,7 +238,7 @@ This serves two purposes:
 
 Depending on the situation, Evryn may follow up a day or two later for a second check-in — how does the connection feel now that some time has passed?
 
-**Feedback data use:** Aftercare feedback updates both users' profiles (privacy-safe — no cross-user data leakage). It's used to calibrate matching algorithms (anonymized for cluster and global calibrations) and deepen Evryn's understanding of what each user truly needs. (Whether this constitutes "profiling" under GDPR is a question for Fenwick — see meeting prep doc, Q8.)
+**Feedback data use:** Aftercare feedback updates both users' profiles (privacy-safe — no cross-user data leakage). It's used to calibrate matching algorithms (anonymized for cluster and global calibrations) and deepen Evryn's understanding of what each user truly needs. 
 
 ---
 
@@ -256,17 +256,15 @@ Depending on the situation, Evryn may follow up a day or two later for a second 
 | Connection conversation | Messages between users | Yes — in connection records | Yes |
 | Aftercare | Feedback, calibration data | Yes — in user's profile | Yes |
 
-**All conversation data processed through Anthropic's API** for AI reasoning. This applies at every stage, including the pre-account phase. (Whether this requires specific disclosure is a question for Fenwick — see meeting prep doc, Q3.) No sensitive transaction info passed to Anthropic - held solely in Stripe. 
+**All conversation data processed through Anthropic's API** for AI reasoning. This applies at every stage, including the pre-account phase. No sensitive transaction info passed to Anthropic - held solely in Stripe. 
 
 ---
 
 ## Communication Channels in v0.3
 
-- **Email:** Outreach to gatekeeper and leads (gatekeeper replies), transactional notifications
+- **Email:** Outreach to gatekeeper and leads (gatekeeper replies), transactional notifications, follow-ups
 - **In-app chat:** All conversations with Evryn and with connections
 - **No SMS, no push notifications, no other channels** in v0.3
-
-(Whether the transition from email outreach to in-app chat requires re-consent is a question for Fenwick — see meeting prep doc, Q9.)
 
 ---
 
