@@ -32,7 +32,7 @@ The interface is like texting with Evryn: thoughts come in small bubbles, she pa
 
 Until voice capability is built, the main interface is a chat pane with a subtle persistent footer carrying growth actions ('Share Evryn', 'Pre-Buy', 'Become an Owner'). All other functionality — customer service, referrals, pausing matchmaking — surfaces conversationally within the chat.
 
-An **Account** page provides direct access to Terms of Service, Privacy Policy, billing history, saved payment methods, Evryn Wallet, account status (confirming anything set conversationally — e.g., matchmaking paused), and data management tools (export, delete) — the small set of things that need a page, not a conversation.
+An **Account** page provides direct access to Terms of Service, Privacy Policy, billing history, Evryn Wallet, account status (confirming anything set conversationally — e.g., matchmaking paused), and data management tools (export, delete) — the small set of things that need a page, not a conversation. **v0.3 simplification:** No saved payment methods (Stripe handles all card storage), no Evryn Wallet (simple pay-in-the-moment), no communication preferences page. Opt-out of proactive outreach is conversational (tell Evryn) + CAN-SPAM unsubscribe link in every email.
 
 **Design principle: "Present But Not Pressing."** Features should never feel surprising when you discover them or frustrating when you need them. Before a feature is relevant, it can appear in a muted or inactive state with enough context that users understand the system's shape. Once relevant, it's always one tap away — easy to find the moment you need it, but never tripping over it. The primary experience is always the conversation with Evryn; everything else is infrastructure she makes available when the moment is right.
 
@@ -79,7 +79,7 @@ When Evryn finds a match:
 4. This may take one volley or several, depending on the connection type
 5. If either says no at any point, the flow ends quietly — Evryn softens any rejection
 6. When both agree, Evryn asks each what they'd pay her for the introduction
-7. Once both have paid, Evryn can connect them in a shared conversation. If invited, she'll join the conversation, but she lets each user know that she won't speak in the joint conversation, to ensure she never inadvertently shares private information. She'll just be quietly present.
+7. Once both have paid, Evryn connects them in a private conversation. **v0.3: connection conversations are fully private — Evryn is not present.** Target (post-v0.3): if invited, she'll join the conversation but won't speak, to ensure she never inadvertently shares private information. See "Connection Conversations" section below for full deferral reasoning.
 
 Evryn writes her own recommendation of each person to the other — it's her voice, her assessment, her framing. But the user must approve the information about them before it's shared. Nothing about you is revealed without your active consent.
 
@@ -105,7 +105,7 @@ Full reasoning and security analysis: [ADR-010](../decisions/010-canary-principl
 
 ## After Care
 
-After a connection conversation, users return to Evryn's main interface. She greets them: "Welcome back. How did that feel?" If she was invited into their conversation, she knows what was said but doesn't assume she understands the internal experience. She then follows up a day or two later. This produces high-quality feedback for calibration.
+After a connection conversation, users return to Evryn's main interface. She asks how it went. **v0.3: Evryn wasn't present in the connection conversation, so aftercare is her primary feedback channel** — she relies entirely on what users share. Post-v0.3, if she was invited into their conversation, she knows what was said but doesn't assume she understands the internal experience. Either way, she follows up a day or two later. This produces high-quality feedback for calibration.
 
 All the while, Evryn is continuing to think about what connections to offer next — and she keeps the user in the loop. This serves two purposes: so they never think she's forgotten them, and so that when she arrives with a new connection, they're genuinely excited. This proactive anticipation-building between matches deepens trust and keeps engagement organic.
 
