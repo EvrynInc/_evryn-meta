@@ -10,9 +10,9 @@
 
 AC/DC is **permanent infrastructure** (ADR-004) — not temporary scaffolding. It's Justin's manual-mode escape hatch for when Lucas/Alex is malfunctioning or when Justin wants direct architectural control.
 
-AC (Architect Claude, in `_evryn-meta`) and DC (Developer Claude instances in repos) are separate Claude Code instances. They can't see each other's conversations. Justin relays "read" messages between them.
+AC (Architect Claude, in `_evryn-meta`) and DC (Developer Claude in `evryn-dev-workspace`, but building in all repos) are separate Claude Code instances. They can't see each other's conversations. Justin or Soren relay "read" messages between them.
 
-AC and DC check their inbound mailboxes at session startup and #lock (see their CLAUDE.md and #lock protocols). Justin relays urgent handoffs between sessions, so if you write something to DC, make sure you tell Justin.
+AC and DC check their inbound mailboxes at session startup and #lock (see their CLAUDE.md and #lock protocols). Justin/Soren relay urgent handoffs between sessions, so if you write something to DC, make sure you tell Justin (and Soren when appropriate).
 
 ---
 
