@@ -6,6 +6,15 @@
 
 ---
 
+## 2026-04-02/03 (AC — Fenwick legal finalization + website legal pages)
+
+- **Fenwick v0.2 finals reviewed** — ToS and Privacy Notice. All 16 items from our review addressed. Profiling section partially fixed (removed "no decisions about individuals," kept "don't tell Initiating Users who to reach out to" — defensible, flagged for Phase 2 revision). "Customer Email Data" renamed to "User Data" throughout. Safety identifier language simplified (implementation detail struck, pseudonymized identifier retained).
+- **10(a) carveout question sent to Fenwick** — Proposed broadening PII exception from enumerated fields to functional test ("information to the extent necessary to utilize the Services") + adding "knowingly" scienter requirement. Awaiting response.
+- **evryn-website: ToS and Privacy Notice pages built** — `/terms` and `/privacy` routes. Old `/privacy-policy` redirects via 301. Formatting matched to Fenwick PDF (bold defined terms, underlined sub-headings). Homepage footer updated: Terms | Privacy | Contact with bot-resistant email link. Old privacy policy archived to `archive/legal/`.
+- **Legal folder reorganized** — All Terms/Privacy materials moved to `docs/legal/Terms-and-Privacy/`. Broken links fixed in 4 persistent docs (gtm-and-growth, gatekeeper-approach, technical-vision, openclaw research).
+- **BizOps spoke updated** — Legal section reflects finalized v0.2 docs with archive pointers.
+- **Fenwick Phase 2 meeting prep finalized** — Consolidated to 7 questions + 3 corrections. Cut redundant items, tightened scope. Wireframes + user journey doc sent as companion materials.
+
 ## 2026-03-27 (AC — Cowork team workspace)
 
 - **Created `evryn-team-workspace` repo** — Cowork agent workspace replaces SDK agent build for now. `evryn-team-agents` frozen as insurance. Decision: Cowork handles ~85% of team agent functionality with zero build/maintenance cost.

@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-03-27T19:15-07:00*
+*Last updated: 2026-04-02T16:30-07:00*
 *Last #sweep: 2026-03-18*
 *Last #align: 2026-03-18*
 
@@ -28,7 +28,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 - **DC: all build work complete, new tasks queued.** Days 2-5 done. Pipeline hardened. New knock list from AC0: model tier switch (Sonnet→Opus), profile_jsonb runtime scaffold, `seen_by_subject` runtime cleanup, `confidence_audit` in template, Railway deploy. Waiting on AC1 identity files before spinning up.
 - **Remaining v0.3 identity files:** onboarding.md rewrite, new-contact.md, regular-user.md, conversation.md update (cross-user note writing).
 - **Cost model needs v0.3+ features.** Current spreadsheet only reflects v0.2 costs. Must be updated before v0.3 BUILD doc. Breadcrumb in BUILD doc v0.3 staging section.
-- **Legal: Terms & Privacy Policy** — Fenwick responded to our review (2026-03-24). Response drafted (2026-03-26) addressing scope/timeline misalignment, process workflow, and 6 substantive items. Key issue: Fenwick scoped to Phase 1 only; we need Phase 2 drafting to begin in parallel given 2-4 week gap. Awaiting ETAs. Go-live blocked on legal completion.
+- **Legal: v0.2 ToS and Privacy Notice finalized.** Fenwick finals received 2026-04-02. Both pages built for evryn.ai at `/terms` and `/privacy`. Website committed, not yet pushed — waiting on Fenwick response to one remaining 10(a) carveout question (broadening PII exception for auto-forwarded email content). Phase 2 (v0.3) scoping call completed; meeting prep doc and wireframes sent. Phase 2 legal work in progress.
 - **Go-live timing relaxed.** Mark is in no hurry. Quality over speed.
 
 ## Active Projects
@@ -40,7 +40,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 - **evryn-team-workspace** — NEW. Cowork agent workspace — team identity definitions, coordination artifacts, shared workspace. Replaces SDK agent build for now. All 8 agents defined, CLAUDE.md + ARCHITECTURE.md complete, first current-state snapshot written. See ADR-021.
 - **evryn-team-agents** — FROZEN. SDK-era agent build preserved as insurance. `evryn-team-workspace` is the active team home.
 - **evryn-dev-workspace** — DC's home repo.
-- **evryn-website** — Live at evryn.ai.
+- **evryn-website** — Live at evryn.ai. ToS + Privacy Notice pages built, committed locally, push pending Fenwick 10(a) response. Homepage updated: Terms | Privacy | Contact footer, bot-resistant contact email. Old privacy policy archived.
 
 ## Infrastructure
 
