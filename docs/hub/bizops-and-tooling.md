@@ -19,7 +19,7 @@
 - **Incorporation:** via Clerky ($800 one-time). Still used for some corporate filings; Fenwick handles most legal work now.
 - **Trademark:** filed via LegalZoom
 - **Age requirement:** 18+ for launch. May consider serving younger users in the future with parent-administered accounts, once there's team and revenue to handle the compliance requirements.
-- **Terms of Service & Privacy Policy:** In progress with Fenwick. Full legal context, data practices, compliance questions, and regulatory considerations are centralized in the [Fenwick questionnaire](../legal/privacy-and-terms-questionnaire.md). Once the ToS and Privacy Policy are drafted, they will supersede the questionnaire as the authoritative legal documents and be linked here.
+- **Terms of Service & Privacy Notice:** v0.2 finalized with Fenwick (April 2026). Live at [evryn.ai/terms](https://evryn.ai/terms) and [evryn.ai/privacy](https://evryn.ai/privacy). Full exchange history and Fenwick drafts in `docs/legal/Terms-and-Privacy/`. Posted versions archived in `evryn-website/archive/legal/`. Phase 2 (v0.3) legal work in progress.
 
 ---
 
