@@ -154,7 +154,7 @@ Each wave is primed in advance: actors know casting directors are next; when cas
 
 ## Cast-Off Outreach as Acquisition Channel
 
-People who emailed a gatekeeper but weren't the right mutual fit didn't opt in to hearing from Evryn. However, they initiated contact with someone in Evryn's ecosystem. CAN-SPAM is navigable (requires opt-out, not prior opt-in for email). Consent framework for channels beyond email (SMS, etc.) needs legal guidance — flagged in `_evryn-meta/docs/legal/privacy-and-terms-questionnaire.md` (under active consideration with Fenwick).
+People who emailed a gatekeeper but weren't the right mutual fit didn't opt in to hearing from Evryn. However, they initiated contact with someone in Evryn's ecosystem. CAN-SPAM is navigable (requires opt-out, not prior opt-in for email). v0.2 outreach is structured as replies on the gatekeeper's behalf with their authorization. Consent framework for channels beyond email (SMS, etc.) will be worked out with legal team for v0.3.
 
 **Framing:** "You reached out to [gatekeeper], who works with Evryn. They're not the right fit for this, but if you'd like, I'd be happy to help you find what you're looking for."
 

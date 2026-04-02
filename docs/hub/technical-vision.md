@@ -250,7 +250,7 @@ The commitments we can make structurally:
 - Clear terms and consent mechanisms
 - Appointed DPO function
 
-*Full legal treatment will live in `docs/legal/` (Terms of Service and Privacy Policy, in progress with Fenwick). Questionnaire sent to Fenwick: `docs/legal/privacy-and-terms-questionnaire.md`. First drafts received 2026-03-17: `docs/legal/2026-03-17-fenwick-drafts/`. Review response sent 2026-03-18: `docs/legal/2026.03.18-fenwick-review-response.md`.*
+*v0.2 Terms of Service and Privacy Notice finalized with Fenwick (April 2026). Full legal exchange history in `docs/legal/Terms-and-Privacy/`. Phase 2 (v0.3) legal work in progress.*
 
 ---
 

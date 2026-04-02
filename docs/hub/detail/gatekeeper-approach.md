@@ -200,9 +200,9 @@ Evryn sends gold and edge-case notifications as they come — real-time, one per
 
 ## Legal Considerations
 
-**Gatekeeper agreement:** Pre-launch checkpoint in `evryn-backend/docs/ARCHITECTURE.md` — verify that Fenwick's Terms adequately cover the gatekeeper relationship, or draft a separate gatekeeper agreement. Must be resolved before Mark starts forwarding email.
+**Gatekeeper agreement:** v0.2 ToS covers the gatekeeper relationship (Section 13(e) "No Referral Relationship"). A separate gatekeeper agreement may be needed at scale — flagged for v0.4+.
 
-**Key points for the agreement (see `docs/legal/privacy-and-terms-questionnaire.md`):**
+**Key points covered in the ToS:**
 - Gatekeepers have no ownership or priority rights over the people in their inbound
 - Everyone discovered through a gatekeeper's inbox becomes a full Evryn user
 - The gatekeeper model is a channel, not an ownership structure
