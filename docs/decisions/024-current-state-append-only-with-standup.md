@@ -40,8 +40,8 @@ Between standups, any team member can append to current-state during #lock — s
 
 - New `shared/protocols/standup-protocol.md` created
 - `daily-brief-template.md` removed (replaced by standup protocol)
-- CLAUDE.md needs #standup reference and append-only rule
-- #lock protocol needs appendage format instructions
-- Lucas's agent definition needs #standup pointer
+- CLAUDE.md updated with #standup reference and append-only rule
+- #lock protocol updated with appendage format instructions
+- Lucas's agent definition updated with #standup pointer
 - Current-state snapshot naming updated to dots + timezone (`2026.04.01T19.03-07.00.md`)
 - Deep dive reports stored in `.claude/agent-memory/<name>/deep-dives/`
