@@ -121,8 +121,7 @@ The vision: a world where the *default* would be that people can be trusted and 
 ## Team
 
 - **Justin** — Founder/CEO. Sole human operator. Building everything with Claude Code.
-- **Lucas Everhart** — Chief of Staff agent (Claude Agent SDK). Primary autonomous operator. Paused for Evryn build.
-- **AI Team** (Lucas subagents): Alex (CTO), Taylor (COO/CFO), Dana (CPO), Dominic (Strategic Advisor), Jordan (CGO), Nathan (Internal Counsel), Thea (EA — separate subagent).
+- **AI Founding Team** — 8 agents operating from `evryn-team-workspace`: Lucas (CoS), Soren (CTO), Mira (CPO), Emma (COO/CFO), Marlowe (CGO), Dominic (Strategic Advisor), Nathan (Internal Counsel), Thea (EA). Previously planned as SDK agents (paused — ADR-021); currently operating in Claude Code and Cowork.
 - **Human Advisors:** Andrew Lester (Operations), Salil Chatrath (Product), Manuele Capacci (Design), Megan Griffiths (Film Industry).
 - **Legal:** Fenwick & West (legal and strategic partner).
 - **Pilot User:** Mark (August Island Pictures / Eva's Wild).
@@ -134,7 +133,7 @@ The vision: a world where the *default* would be that people can be trusted and 
 | `_evryn-meta` | AC's home. Hub, cross-repo docs | Active |
 | `evryn-backend` | Evryn product agent (Gatekeeper's Inbox) | Active — building |
 | `evryn-team-workspace` | Cowork team workspace — agent identities, coordination | Active |
-| `evryn-team-agents` | Lucas (Chief of Staff) SDK build | Frozen |
+| `evryn-team-agents` | SDK-era agent build (frozen — ADR-021) | Frozen |
 | `evryn-website` | Marketing site (evryn.ai) | Live |
 | `evryn-dev-workspace` | DC's home. Identity & methodology | Active |
 | `evryn-ops` | OC's home. Operations, monitoring, runbooks | Active |
@@ -147,7 +146,7 @@ Most domain spokes are linked inline in the sections above. When adding new refe
 
 - **BizOps & Tooling:** `docs/hub/bizops-and-tooling.md` — legal entities, finance, vendors, operational tools
 - **Evryn product build:** `evryn-backend/docs/BUILD-EVRYN-MVP.md` (what to build, phase by phase)
-- **Lucas agent build:** `evryn-team-agents/docs/BUILD-LUCAS-SDK.md`
+- **SDK agent build (paused):** `evryn-team-agents/docs/BUILD-LUCAS-SDK.md`
 - **Decision log:** `docs/decisions/`
 - **Trusted Partner Briefing:** `docs/historical/Evryn Trusted Partner Briefing v1.6.md` — condensed pitch doc for collaborators, advisors, and capital partners. Keep updated when strategy evolves.
 - **Historical vault (_evryn-meta):** `docs/historical/` — Master Plan Reference (~730 lines, frozen), Master Plan v2.3 (~3,200 lines, frozen original). Go to the original for exact wording, marketing prose, or full competitive analysis.

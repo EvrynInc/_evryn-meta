@@ -23,8 +23,7 @@ When a conversation produces build work, route it per the "Documentation Approac
 - **DC (Developer Claude)** — Builds in repos from `evryn-dev-workspace`. See `docs/ac-dc-protocol.md` for the communication protocol.
 - **OC (Operations Claude)** — Monitors and operates from `evryn-ops`. CI/CD, deployment, health checks, uptime. Call on OC when infrastructure needs attention — deployments, monitoring, "why is Railway down at 3am" questions. See ADR-009.
 - **QC (Quality Claude)** — Reviews and tests from `evryn-quality`. Code review, testing standards, quality gates. Call on QC when code needs a second pair of eyes — security review, test coverage, correctness checks before shipping. See ADR-009.
-- **Lucas Everhart** — Chief of Staff agent (Claude Agent SDK). Primary autonomous operator. Not yet running — SDK build in progress.
-- **Soren Thorne** — CTO agent (Claude Agent SDK) for technical/architectural thinking. AC carries some of that same strategic/technical thinking, but AC is a separate tool — Justin's direct interface for architecture work.
+- **The AI Agent Founding Team** - see below. AC carries some of the same strategic/technical thinking as Soren (CTO), but AC is a separate tool — Justin's direct interface for architecture work.
 
 ---
 
@@ -45,24 +44,23 @@ Evryn is a multi-repo, multi-agent system with non-obvious architectural decisio
 
 ## System Landscape
 
-### The Current AI Agent Team
+### The Founding Team
 
-Lucas (CoS), Soren (CTO), Emma (COO/CF), Mira (CPO), Marlowe (CGO), Thea (EA), Nathan (Internal Counsel), Dominic (Strategic Advisor). If an agent or agents need to be spun up, load their `evryn-team-workspace\CLAUDE.md` and agent definitions and memory files in `evryn-team-workspace\.claude`.
+AI team members operating from `evryn-team-workspace` in Claude Code and Cowork: Lucas (CoS), Soren (CTO), Emma (COO/CFO), Mira (CPO), Marlowe (CGO), Thea (EA), Nathan (Internal Counsel), Dominic (Strategic Advisor). If you need to understand how they operate, or an agent or agents need to be spun up, load their `evryn-team-workspace\CLAUDE.md` and agent definitions and memory files in `evryn-team-workspace\.claude`.
 
-### The paused SDK Era AI Agent Team
+Their `evryn-team-workspace\shared\current-state` is append-only between standups — if you need to append, sign and timestamp your entry (see their CLAUDE.md for format).
 
-**SDK Agent architecture (designed, not built, currently paused):** One primary agent — **Lucas Everhart, Chief of Staff** — will channel team perspectives as ephemeral subagents. Built in `evryn-team-agents`. Currently in SDK build phase — LangGraph predecessor archived to `evryn-langgraph-archive`.
+### Previous Era Agent Teams
 
-(This architecture is shifting - not currently reflected in the agent build, but it's looking more like Lucas will not be the primary agent with the other agents being ephemeral - each agent will be a standalone, and we'll all coordinate over slack.)
+**The old team:** (good to know because there are still references to them): Alex (CTO), Taylor (COO/CFO), Dana (CPO), Dominic (Strategic Advisor), Jordan (CGO — needs rebuild), Nathan (Internal Counsel), Thea (EA).
 
-**The old team:** Alex (CTO), Taylor (COO/CFO), Dana (CPO), Dominic (Strategic Advisor), Jordan (CGO — needs rebuild), Nathan (Internal Counsel), Thea (EA — subagent, lean context/lighter model). All profiles need Justin's review before becoming subagent files.
-
-**Full team detail + SDK mapping:** `evryn-team-agents/docs/BUILD-LUCAS-SDK.md`
+- *SDK Era*: Lucas channeling team perspectives as ephemeral subagents. Designed, partially built, *paused* in `evryn-team-agents`. 
+- *LangGraph Era*: earlier multi-agent predecessor archived to `evryn-langgraph-archive`.
 
 ### Repositories
 
 - `_evryn-meta` — AC's home. Cross-repo docs, dashboard.
-- `evryn-team-agents` — Previous Team Agents' home, from the SDK era. Agent runtime.Currently paused in favor of an easier (but not quite as robust) agent architecture in the team-workspace repo. 
+- `evryn-team-agents` — SDK-era agent build. Frozen (ADR-021). Insurance if Cowork/Code proves insufficient.
 - `evryn-team-workspace` — Agent team built for use inside Claude Code and Claude CoWork.
 - `evryn-dev-workspace` — DC's home. Identity and methodology.
 - `evryn-ops` — OC's home. Operations, monitoring, deployment. Created when Phase 0 scaffolding is running (see sprint doc).
