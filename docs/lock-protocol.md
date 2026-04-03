@@ -17,13 +17,14 @@ When Justin says `#lock` or it's time for a checkpoint:
 7. **`AGENT_PATTERNS.md`** — Add appropriate agent-building learnings.
 8. **`CHANGELOG.md`** — Add brief one-liners for anything built or changed this session.
 9. **Linear** — Create tickets for small backlog items that aren't part of a current build. Don't duplicate what's in build docs or ARCHITECTURE.md.
-10. **Bitwarden reminder** — If `.env` was modified, remind Justin: "Hey, we updated .env — remember to re-upload to Bitwarden." (Files in `.gitignore` exist only on the local machine — git won't save them. Most credentials can be regenerated from service dashboards, but it's time-consuming. Prevention beats cure.)
-11. **Mailbox check** — Peek at `dc-to-ac.md` and `dc-architecture-notes-for-ac.md` in any repo you touched this session. If there's content you haven't absorbed, absorb it now.
-12. **Operator guide** — If anything built or changed this session affects how Justin operates Evryn, update the relevant repo's `docs/operator-guide.md`. DC flags operator-relevant changes in dc-to-ac.md; AC updates the guide.
-13. **Database backup check** — Check the dates on the most recent files in `evryn-backend/backups/`. If it's been more than a week since the last backup, take one now (both schema + data dumps — see `evryn-backend/backups/README.md`). Before running the dump, query for current tables — they may have changed since the backup script was last updated.
-14. **Auto-memory hygiene** — Check `.claude/projects/*/memory/MEMORY.md`. AC does not use auto-memory (see CLAUDE.md Auto-Memory Hygiene). If anything landed there accidentally, promote it to persistent docs or clear it. The file should contain only the "DO NOT WRITE HERE" notice.
-15. **Settings.local.json cleanup** — Check for `.claude/settings.local.json` in the current repo. This file silently accumulates one-off command approvals at runtime. Delete it if it exists — permissions belong in `.claude/settings.json` (in git), not in local overrides. If it contains secrets (API keys, UUIDs that were auto-saved), flag to Justin before deleting.
-16. **Commit and push** — Get everything to remote immediately.
+10. **Team current-state** — Did anything this session change the *team's* operating picture (not just the build picture)? If so, append to `evryn-team-workspace/shared/current-state/` — signed, timestamped, one or two sentences. If only Soren would care, skip it — he reads the `_evryn-meta` current-state directly.
+11. **Bitwarden reminder** — If `.env` was modified, remind Justin: "Hey, we updated .env — remember to re-upload to Bitwarden." (Files in `.gitignore` exist only on the local machine — git won't save them. Most credentials can be regenerated from service dashboards, but it's time-consuming. Prevention beats cure.)
+12. **Mailbox check** — Peek at `dc-to-ac.md` and `dc-architecture-notes-for-ac.md` in any repo you touched this session. If there's content you haven't absorbed, absorb it now.
+13. **Operator guide** — If anything built or changed this session affects how Justin operates Evryn, update the relevant repo's `docs/operator-guide.md`. DC flags operator-relevant changes in dc-to-ac.md; AC updates the guide.
+14. **Database backup check** — Check the dates on the most recent files in `evryn-backend/backups/`. If it's been more than a week since the last backup, take one now (both schema + data dumps — see `evryn-backend/backups/README.md`). Before running the dump, query for current tables — they may have changed since the backup script was last updated.
+15. **Auto-memory hygiene** — Check `.claude/projects/*/memory/MEMORY.md`. AC does not use auto-memory (see CLAUDE.md Auto-Memory Hygiene). If anything landed there accidentally, promote it to persistent docs or clear it. The file should contain only the "DO NOT WRITE HERE" notice.
+16. **Settings.local.json cleanup** — Check for `.claude/settings.local.json` in the current repo. This file silently accumulates one-off command approvals at runtime. Delete it if it exists — permissions belong in `.claude/settings.json` (in git), not in local overrides. If it contains secrets (API keys, UUIDs that were auto-saved), flag to Justin before deleting.
+17. **Commit and push** — Get everything to remote immediately.
 
 ---
 
