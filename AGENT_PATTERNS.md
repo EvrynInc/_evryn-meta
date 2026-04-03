@@ -115,6 +115,9 @@ This applies to briefings, memory summarization, and any context compression.
 
 ## Memory & Context
 
+### Memory as Narrative GPS, Not Compressed Log
+Agent memory works best as a first-person story that orients a fresh instance — not a chronological log of events that gets periodically shortened. The key insight: without memory, an agent loads its docs and knows what Evryn is building, but not where *it* is in it. Structure: consolidated Story (rewritten during consolidation) + Recent Notes (appended during work). Promotion pathway: observations that become durable move to agent definition; observations that generalize move to team CLAUDE.md. See ADR-023.
+
 ### Two Types of Memory
 Agents need both:
 1. **Working memory** (narrative understanding) - Their current model of the world, written in their voice

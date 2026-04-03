@@ -44,19 +44,18 @@
 32. *Promoted → AC CLAUDE.md research breadcrumb rules ("Study Material ≠ Implementation Spec").*
 33. *Promoted → AC CLAUDE.md research breadcrumb rules ("Place Breadcrumbs at Decision Points").*
 
----
-
----
-
-## Unpromoted
-
 34. *Promoted → AGENT_PATTERNS "Rich Insights Over Structured Extraction" + evryn-backend identity-writing-brief §Structural Principles.*
 35. *Promoted → AGENT_PATTERNS Modular Context Loading (Soul DNA Test).*
 36. *Promoted → ADR-017 + evryn-backend ARCHITECTURE.md pipeline section ("Forward ≠ Triage").*
 37. *Promoted → AGENT_PATTERNS Per-Context Situation Determination.*
 38. *Promoted → evryn-backend ARCHITECTURE.md security section + DC CLAUDE.md Build Mandate "Security first" bullet ("Untrusted Input Boundary").*
 39. *Promoted → AGENT_PATTERNS Catch-Up-on-Reconnect for Persistent Connections.*
-
 40. *Promoted → evryn-backend ARCHITECTURE.md Data Model §Design Principles ("Constrain Every Field an LLM Writes").*
+
+---
+
+## Unpromoted
+
+41. **Strip Instructions from Data Files.** If a file is read every session but only written to occasionally, don't put writing instructions in the file — put them in the protocol that gates writing. The file stays clean (lower token cost on every load), and the instructions are in context exactly when they're needed. The file itself should have a guardrail warning not to write or edit without reading the protocol first — otherwise it will almost certainly get overwritten by an eager agent. Applied to agent MEMORY.md files: writing guidance moved to #lock protocol, consolidation guidance to #consolidate protocol. *Promote to:* Already applied in team workspace. Consider for other repos where instruction-heavy files are loaded on every session.
 
 *New learnings land here temporarily before being promoted to their permanent homes.*

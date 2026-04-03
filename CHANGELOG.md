@@ -6,6 +6,19 @@
 
 ---
 
+## 2026-04-01/02 (AC — Team workspace memory/protocol overhaul)
+
+- **Agent memory redesigned as narrative GPS** — Memory files stripped to Story + Recent Notes. First person, no instructions in the file. Writing guidance moved to #lock protocol; consolidation guidance to new #consolidate protocol. ADR-023.
+- **"Compaction" renamed to "consolidation"** everywhere — the process synthesizes understanding, not just compresses.
+- **#standup protocol created** — Team consolidation ritual. Standard (daily course alignment) and deep (weekly with subagent reflection). Current-state is append-only between standups; only Lucas rebuilds during synthesis. ADR-024.
+- **Task authority protocol** — Only Justin's tasks are commands; everything else is a request. Added to CLAUDE.md. ADR-025.
+- **Linear labels remapped** — alex→soren, taylor→emma, dana→mira, jordan→marlowe. EVR-55 created for backlog cleanup.
+- **#lock reinforcement** added to all 8 agent definitions ("lock frequently, or the next you starts with a gap").
+- **settings.json created** for evryn-team-workspace — broad Bash allow, deny list for destructive ops.
+- **Claude Code Operations section** added to team CLAUDE.md — session startup, write preferences, timestamp discipline.
+- **Research files date-prefixed** — All 26 files in `_evryn-meta/docs/research/` renamed with `YYYY.MM.DD` prefix.
+- **Snapshot naming convention updated** — Dots + timezone offset (`2026.04.01T19.03-07.00.md`) across all repos.
+
 ## 2026-04-02/03 (AC — Fenwick legal finalization + website legal pages)
 
 - **Fenwick v0.2 finals reviewed** — ToS and Privacy Notice. All 16 items from our review addressed. Profiling section partially fixed (removed "no decisions about individuals," kept "don't tell Initiating Users who to reach out to" — defensible, flagged for Phase 2 revision). "Customer Email Data" renamed to "User Data" throughout. Safety identifier language simplified (implementation detail struck, pseudonymized identifier retained).

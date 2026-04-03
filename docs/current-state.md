@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-04-02T16:30-07:00*
+*Last updated: 2026-04-03T12:23-07:00*
 *Last #sweep: 2026-03-18*
 *Last #align: 2026-03-18*
 
@@ -37,7 +37,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 - **evryn-backend** — All DC build work complete (Days 2-5). Hardened pipeline. Status lifecycle migrated (ADR-018). All v0.2 identity activity modules done. Integration + adversarial test suites written. Remaining: three internal-reference files → deploy to Railway → integration test → adversarial test → go/no-go. Legal (Fenwick) blocks actual go-live.
 - **evryn-ops** — Created. OC CLAUDE.md ready.
 - **evryn-quality** — Created. QC CLAUDE.md ready.
-- **evryn-team-workspace** — NEW. Cowork agent workspace — team identity definitions, coordination artifacts, shared workspace. Replaces SDK agent build for now. All 8 agents defined, CLAUDE.md + ARCHITECTURE.md complete, first current-state snapshot written. See ADR-021.
+- **evryn-team-workspace** — Cowork agent workspace. Major overhaul (2026-04-01/02): memory redesigned as narrative GPS (ADR-023), #standup protocol for team consolidation (ADR-024), task authority protocol (ADR-025), #lock and #consolidate protocols, Linear labels remapped, settings.json created. Remaining: CLAUDE.md/#lock appendage rules, agent definition standup pointers, ARCHITECTURE.md updates, deep-dives directories, identity review.
 - **evryn-team-agents** — FROZEN. SDK-era agent build preserved as insurance. `evryn-team-workspace` is the active team home.
 - **evryn-dev-workspace** — DC's home repo.
 - **evryn-website** — Live at evryn.ai. ToS + Privacy Notice pages built, committed locally, push pending Fenwick 10(a) response. Homepage updated: Terms | Privacy | Contact footer, bot-resistant contact email. Old privacy policy archived.
