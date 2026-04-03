@@ -43,7 +43,6 @@
 31. *Promoted → AC CLAUDE.md Security Mindset ("First Principles for Third-Party Tool Access").*
 32. *Promoted → AC CLAUDE.md research breadcrumb rules ("Study Material ≠ Implementation Spec").*
 33. *Promoted → AC CLAUDE.md research breadcrumb rules ("Place Breadcrumbs at Decision Points").*
-
 34. *Promoted → AGENT_PATTERNS "Rich Insights Over Structured Extraction" + evryn-backend identity-writing-brief §Structural Principles.*
 35. *Promoted → AGENT_PATTERNS Modular Context Loading (Soul DNA Test).*
 36. *Promoted → ADR-017 + evryn-backend ARCHITECTURE.md pipeline section ("Forward ≠ Triage").*
