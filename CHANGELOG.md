@@ -6,6 +6,11 @@
 
 ---
 
+## 2026-04-03 (AC — Team workspace wrap-up)
+
+- **Skills vs protocols resolved** — no `.claude/skills/` wrappers needed for now. `shared/protocols/` is the approach — protocols work everywhere, skills may not be respected by Cowork. Can revisit later.
+- **Team workspace to-do list cleared** — all items from the March 27 build session either completed or handed off.
+
 ## 2026-04-03 (AC + DC — Research migration, project structure, DC agent definition)
 
 - **Research moved from _evryn-meta to evryn-team-workspace** — 26 files reorganized into `shared/projects/product/research/`, `growth/research/`, `ops/research/`. DC executed the migration; AC verified. All active references updated across 4 repos.
