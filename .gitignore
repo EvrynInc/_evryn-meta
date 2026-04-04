@@ -141,6 +141,5 @@ vite.config.ts.timestamp-*
 # Windows reserved device names (phantom files)
 nul
 
-# Claude Code — track shared settings, ignore everything else
-.claude/*
-!.claude/settings.json
+# Claude Code — only ignore the local settings file (accumulates runtime junk)
+.claude/settings.local.json
