@@ -130,7 +130,7 @@ When volume and complexity demand it, Evryn's intelligence separates into indepe
 - **Modules separate when they need different things:** different context windows, different model tiers, different schedules, or structural isolation from each other.
 - **The boundary between subagent and deterministic process is a build decision, not an architectural one.** Some intelligence needs LLM judgment; some is better served by rules. This vision doc doesn't prescribe which.
 
-Current module design for v0.2: `evryn-backend/docs/ARCHITECTURE.md` (Agent Architecture). Earlier module architecture thinking from the n8n prototype era: `docs/research/2025-12-01-n8n-module-architecture.md`.
+Current module design for v0.2: `evryn-backend/docs/ARCHITECTURE.md` (Agent Architecture). Earlier module architecture thinking from the n8n prototype era: `evryn-team-workspace/shared/projects/product/research/2025.12.01 n8n-module-architecture.md`.
 
 ---
 
@@ -266,7 +266,7 @@ Evryn's intelligence isn't a monolithic LLM call. It's a layered stack: core ide
 
 **Periodic reflection:** At intervals, Evryn steps back and looks at patterns across conversations and match outcomes — what worked, what didn't, where her judgment drifted. These reflections inform updates to matching logic, conversation strategies, and timing calibration. This is what makes her feel both deeply present and quietly evolving.
 
-*For the full learning architecture — three-level framework (context enrichment → structured feedback → ML), instrumentation at every decision point, metacognition and self-reflection, constitutional principles for learning, and the ML transition plan — see `_evryn-meta/docs/research/learning-levels-and-instrumentation.md`, `metacognition-and-self-reflection.md`, and `ml-transition-and-personalization.md`.*
+*For the full learning architecture — three-level framework (context enrichment → structured feedback → ML), instrumentation at every decision point, metacognition and self-reflection, constitutional principles for learning, and the ML transition plan — see `evryn-team-workspace/shared/projects/product/research/2026.03.02 learning-levels-and-instrumentation.md`, `evryn-team-workspace/shared/projects/product/research/2026.03.02 metacognition-and-self-reflection.md`, and `evryn-team-workspace/shared/projects/product/research/2026.03.02 ml-transition-and-personalization.md`.*
 
 ### Simulated Data Strategy
 

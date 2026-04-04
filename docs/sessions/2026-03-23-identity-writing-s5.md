@@ -235,7 +235,7 @@ Read in order. First 5 are full reads (short, critical). Rest are selective.
 | 10 | `evryn-backend/docs/BUILD-EVRYN-MVP.md` | 60-143 | Critical Principles + The Workflow |
 | 11 | `evryn-backend/docs/BUILD-EVRYN-MVP.md` | 450-480 | Schema + Memory Scaling |
 | 12 | `_evryn-meta/docs/hub/detail/gatekeeper-approach.md` | Full | Gatekeeper operational playbook |
-| 13 | `_evryn-meta/docs/research/learning-levels-and-instrumentation.md` | Full | Feedback quality, approval gate as training interface |
+| 13 | `evryn-team-workspace/shared/projects/product/research/2026.03.02 learning-levels-and-instrumentation.md` | Full | Feedback quality, approval gate as training interface |
 | 14 | `evryn-backend/docs/historical/Evryn_0.1_Instructions_Prompts_Scripts/Evryn_0.1_Prompts_Scripts_v1.0.md` | Full | v0.1 scripts (source for trust-arc-scripts.md) |
 
 **Weekend thinking docs** (evaluate against full context, don't rubber-stamp):

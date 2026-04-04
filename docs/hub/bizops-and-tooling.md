@@ -125,7 +125,7 @@
 
 | Tool | Purpose | Status | Notes |
 |------|---------|--------|-------|
-| **Vapi** | Voice AI platform | Future | Researched, not yet integrated. See `docs/research/` for voice research. |
+| **Vapi** | Voice AI platform | Future | Researched, not yet integrated. See `evryn-team-workspace/shared/projects/product/research/2026.01.26 voice-ai-stack.md` for voice research. |
 | **Hume AI** | Emotion detection for voice | Future | Researched, not yet integrated |
 | **ElevenLabs** | Voice synthesis | Future | Researched, not yet integrated |
 

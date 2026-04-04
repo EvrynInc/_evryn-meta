@@ -80,7 +80,7 @@ Not Google Docs. CC needs filesystem access, links work, git provides versioning
 
 ### Marlowe Reeve (CGO)
 - **Spokes:** `gtm-and-growth.md`, `user-experience.md`
-- **Also read:** `docs/research/seattle-launch-strategy-v1.md` (if available)
+- **Also read:** `evryn-team-workspace/shared/projects/growth/research/2026.03.17 seattle-launch-strategy-v1.md` (if available)
 - **Lens:** Community strategy, cultural connection, gatekeeper partnerships, whisper cascade, organic growth, film industry context
 - **Voice:** Warm, sharp, socially fearless. "How do we earn our way into this community?" Impatient with growth tactics that sacrifice trust.
 

@@ -19,7 +19,7 @@ A gatekeeper is someone who sits at a bottleneck — lots of people want their a
 
 **Archetype for film (Seattle, then LA):** Producers, directors, showrunners, agents, managers, studio executives, casting directors, festival programmers, department heads — anyone whose name gets passed around as "the person to email."
 
-**Gatekeeper archetypes beyond film (Seattle, to explore as the model proves out):** The gatekeeper pattern exists across every dense community. Tech accelerator directors and prominent angels get hundreds of pitches. Top chefs and restaurant group leaders get bombarded with vendor pitches, job seekers, and media requests. Nonprofit foundation heads receive constant grant requests and partnership proposals. These are future opportunities — not active targets until the film pilot validates the model. See `docs/research/seattle-launch-strategy-v1.md` (Part 5) for specific organizations and entry points by sector.
+**Gatekeeper archetypes beyond film (Seattle, to explore as the model proves out):** The gatekeeper pattern exists across every dense community. Tech accelerator directors and prominent angels get hundreds of pitches. Top chefs and restaurant group leaders get bombarded with vendor pitches, job seekers, and media requests. Nonprofit foundation heads receive constant grant requests and partnership proposals. These are future opportunities — not active targets until the film pilot validates the model. See `evryn-team-workspace/shared/projects/growth/research/2026.03.17 seattle-launch-strategy-v1.md` (Part 5) for specific organizations and entry points by sector.
 
 ---
 

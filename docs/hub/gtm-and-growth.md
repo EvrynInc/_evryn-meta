@@ -16,7 +16,7 @@ The Master Plan's GTM was written assuming a traditional startup with a human te
 - **But gatekeepers are hard to reach.** Justin has real inroads (Mark is the pilot, and there are warm paths to others), but most gatekeepers will treat Evryn's pitch as part of their own slush pile. The bottom-up whisper cascade strategy is still essential — it builds the social proof and user base that makes gatekeepers take notice.
 - **User-owned positioning is a structural advantage.** Evryn is a Delaware PBC with a plan to move trust data to an independent Swiss Foundation. In an environment where consumer trust in AI platforms is actively declining — deepfakes on dating apps, copyright battles in film, data breaches everywhere — "no overlords" isn't just messaging. It's a competitive moat that VC-funded competitors structurally cannot replicate. Full depth in the [business-model spoke](business-model.md) (Capital Strategy section).
 
-**Bottom line:** The strategic direction below is correct — film as ignition point, wave strategy, whisper cascade, quality over quantity. What's evolved is the *urgency and scale assumptions* and the *aperture*. Evryn can afford to grow more deliberately, prove the model at small scale, and let traction speak for itself. And critically: **film is where you point the hose; everything else is where you let the rain fall.** Evryn's cross-domain model means she should actively welcome and serve anyone who shows up, from any domain, from day one. The effort is concentrated (film, Seattle, gatekeepers); the aperture is wide open (anyone who arrives gets served). See "Concentrate Effort, Open Aperture" below and `docs/research/seattle-launch-strategy-v1.md` for the full demand landscape.
+**Bottom line:** The strategic direction below is correct — film as ignition point, wave strategy, whisper cascade, quality over quantity. What's evolved is the *urgency and scale assumptions* and the *aperture*. Evryn can afford to grow more deliberately, prove the model at small scale, and let traction speak for itself. And critically: **film is where you point the hose; everything else is where you let the rain fall.** Evryn's cross-domain model means she should actively welcome and serve anyone who shows up, from any domain, from day one. The effort is concentrated (film, Seattle, gatekeepers); the aperture is wide open (anyone who arrives gets served). See "Concentrate Effort, Open Aperture" below and `evryn-team-workspace/shared/projects/growth/research/2026.03.17 seattle-launch-strategy-v1.md` for the full demand landscape.
 
 **Build phases, target dates, and GTM alignment:**
 - **v0.2 "Gatekeeper's Inbox"** (target: Mark live ~March 18-19) — Mark live, triage running, user records accumulating. GTM is one gatekeeper proving the model.
@@ -47,7 +47,7 @@ The long-term target is LA — densest film community in the world, and capturin
 
 **We don't have to choose.** There's no subscription churn — if someone in Portland or New York tries Evryn and there aren't matches in their area yet, Evryn says "we haven't officially launched in your area, but I'll keep an eye out" and surprises them later when a match materializes. Focus density efforts where the warm paths are (Seattle), let growth spread wherever it spreads, and expand to LA when connections are in hand. If LA film has contracted further by then, we won't have put all our eggs in one basket.
 
-**Seattle isn't just where the warm paths are — it may be the ideal launch market for what Evryn is.** Research (March 2026, `docs/research/seattle-launch-strategy-v1.md`) revealed seven distinct reservoirs of demand for trusted connection in Seattle:
+**Seattle isn't just where the warm paths are — it may be the ideal launch market for what Evryn is.** Research (March 2026, `evryn-team-workspace/shared/projects/growth/research/2026.03.17 seattle-launch-strategy-v1.md`) revealed seven distinct reservoirs of demand for trusted connection in Seattle:
 
 1. **The Freeze itself.** Seattle ranks #1 among the 15 largest US metros for depression (~45% of adults). 50% of young adults (18-25) report loneliness. 40% of residents say making new friends "isn't important" — but a peer-reviewed study (January 2026) proved this is a self-fulfilling prophecy, not a genuine preference. Single-person households went from 17% to 40% between 2016 and 2021. Lowest religious participation among major US counties. Evryn breaks the cycle because she initiates — in the city where nobody reaches out, Evryn reaches out.
 
@@ -82,7 +82,7 @@ The film industry is contracting faster than most people realize, and AI is acce
 4. **Trust in AI is actively being eroded.** The Seedance 2.0 copyright battle has made "AI" a loaded word in the film industry. Evryn is not an AI video tool — she's a trusted connector who happens to be AI-powered. Evryn's approach should lead with trust, relationship, and human outcomes — not with "AI" as a feature.
 5. **The contract negotiation window (May-July 2026) overlaps with v0.3's target timeline.** This is both sensitive and opportune — a moment when trusted connections matter most. We should be ready to seize the opportunity to help people find the connections that allow them to flourish in this changing landscape.
 
-Full research: `docs/research/film-industry-ai-disruption-v1.md` (refreshed Feb 2026, next refresh recommended May 2026).
+Full research: `evryn-team-workspace/shared/projects/growth/research/2026.02.27 film-industry-ai-disruption-v1.md` (refreshed Feb 2026, next refresh recommended May 2026).
 
 ### Concentrate Effort, Open Aperture
 
@@ -106,9 +106,9 @@ Conventional wisdom says "don't boil the ocean" — pick one domain, nail it, th
 
 **The story problem solves itself.** "How do you pitch 'everything'?" You don't. The gatekeeper pitch is domain-specific (to Mark, it's about film). Each user's experience is personal (to each user, it's about *their* needs). The word-of-mouth story isn't "she does everything" — it's "she found me exactly what I needed." The aggregate is cross-domain; the individual experience is deeply personal. And the landing page is "talk to Evryn."
 
-**What this means for adjacent creative ecosystems:** Music, game dev, visual arts, literary, and the broader creative economies in Seattle share the same structural advantages as film: tight-knit, collaborative, high need for trusted introductions. Many film professionals already straddle multiple creative industries. These ecosystems don't need separate launches — they need Evryn to be open when their members arrive. The community ecosystem map (`docs/research/seattle-launch-strategy-v1.md`, Part 4) identifies specific organizations, events, and gathering points across every major Seattle community.
+**What this means for adjacent creative ecosystems:** Music, game dev, visual arts, literary, and the broader creative economies in Seattle share the same structural advantages as film: tight-knit, collaborative, high need for trusted introductions. Many film professionals already straddle multiple creative industries. These ecosystems don't need separate launches — they need Evryn to be open when their members arrive. The community ecosystem map (`evryn-team-workspace/shared/projects/growth/research/2026.03.17 seattle-launch-strategy-v1.md`, Part 4) identifies specific organizations, events, and gathering points across every major Seattle community.
 
-Full research: `docs/research/seattle-launch-strategy-v1.md` (March 2026).
+Full research: `evryn-team-workspace/shared/projects/growth/research/2026.03.17 seattle-launch-strategy-v1.md` (March 2026).
 
 ---
 
@@ -194,7 +194,7 @@ Seattle is a throughput city — high inbound AND high outbound migration. 64,00
 
 **The math:** If Evryn has 10,000 active users in Seattle and the city's domestic out-migration rate holds, roughly 500-1,000 of those users leave for other cities each year — each arriving in a new place needing exactly what Evryn provides, and each one a seed who's already experienced the product and can evangelize it. Over 3 years, that's 1,500-3,000 seeds planted in a dozen cities, concentrated along predictable migration corridors (LA, Portland, Phoenix, Sacramento). Each seed who brings in even one friend doubles Evryn's presence. And every proactive find Evryn makes adds another user to the local network. Meanwhile, the evangelist spores are spreading in parallel — people who never moved, just talked.
 
-**Strategic implication:** Every dollar invested in Seattle user acquisition has a multiplier effect on geographic expansion. Seattle isn't just a launch city — it's a launchpad. The spore dynamic combines three forces: organic migration, word-of-mouth evangelism, and proactive finding that can serve anyone anywhere from day one. Full migration data: `docs/research/seattle-launch-strategy-v1.md` (Part 3).
+**Strategic implication:** Every dollar invested in Seattle user acquisition has a multiplier effect on geographic expansion. Seattle isn't just a launch city — it's a launchpad. The spore dynamic combines three forces: organic migration, word-of-mouth evangelism, and proactive finding that can serve anyone anywhere from day one. Full migration data: `evryn-team-workspace/shared/projects/growth/research/2026.03.17 seattle-launch-strategy-v1.md` (Part 3).
 
 ### Evangelist Story Loops
 
@@ -272,7 +272,7 @@ Geographic expansion follows density, not ambition — but proactive finding mea
 
 **Beyond the corridor:** The spore dynamic (see Growth Mechanics above) handles geographic expansion beyond the PNW through migration patterns and word-of-mouth evangelism. Each new city doesn't require a separate launch — it requires a seed user and Evryn's ability to find people proactively.
 
-Full corridor research: `docs/research/seattle-launch-strategy-v1.md` (Part 7).
+Full corridor research: `evryn-team-workspace/shared/projects/growth/research/2026.03.17 seattle-launch-strategy-v1.md` (Part 7).
 
 ---
 
@@ -318,7 +318,7 @@ No single competitor covers Evryn's ground, but many cover pieces of it. Evryn's
 4. **The creative industry has no AI matchmaker.** Evryn enters greenfield territory with founder advantage. The competitive moat in this specific vertical is wide.
 5. **Consumer trust in AI-powered platforms is declining.** Over half of dating app users refuse to share personal data due to deepfake and breach fears. This is both a headwind (Evryn must earn trust actively) and a tailwind (Evryn's trust-first, user-owned model is more differentiated than ever).
 
-Full competitive research: `docs/research/competitive-landscape-v1.md` (refreshed Feb 2026, next refresh recommended May 2026).
+Full competitive research: `evryn-team-workspace/shared/projects/growth/research/2026.02.27 competitive-landscape-v1.md` (refreshed Feb 2026, next refresh recommended May 2026).
 
 > *Pitch note: The original Master Plan has extensive competitive analysis prose (lines 770-848) — the "casino model" framing, the structural moat argument, the LTV analysis. Excellent for investor pitches and capital partner conversations.*
 

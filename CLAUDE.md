@@ -204,10 +204,12 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
 - Session working notes → `docs\sessions` (session doc, absorbed later)
 - Build details → the relevant docs in the relevant repos, at the right altitude - architecture-level details → architecture doc, build details → the build docs and sprint details → the sprint docs.
 - **Research routing:**
-  - Strategic/cross-cutting (SDK evaluations, memory architectures, framework comparisons) → `_evryn-meta/docs/research/`
+  - Strategic/cross-cutting (SDK evaluations, memory architectures, framework comparisons) → `evryn-team-workspace/shared/projects/product/research/`
+  - Growth research (competitive landscape, launch strategy, market analysis) → `evryn-team-workspace/shared/projects/growth/research/`
+  - Ops research (tooling, project management, workflows) → `evryn-team-workspace/shared/projects/ops/research/`
   - Build methodology (how to approach classes of problems) → `evryn-dev-workspace/docs/research/`
   - Repo-specific build research (implementation-level) → `[repo]/docs/build-research/`
-  - When in doubt, default to `_evryn-meta/docs/research/` — it's easier to find there.
+  - When in doubt, default to `evryn-team-workspace/shared/projects/` — it's easier to find there.
 
 **Absorption protocol (flow-up rule):** Information flows down the hierarchy (Hub → spokes → ARCHITECTURE → BUILD → sprint → session) but completed work must flow *back up*. When work is done, update the BUILD doc's phase status. When a session produces decisions, write ADRs. When strategy changes, update spokes and Hub. The #lock protocol enforces this — but the principle applies any time: if something important lives only in a session doc or sprint doc, it hasn't been captured yet.
 
