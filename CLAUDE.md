@@ -59,7 +59,7 @@ Their `evryn-team-workspace\shared\current-state` is append-only between standup
 
 ### Repositories
 
-- `_evryn-meta` — AC's home. Source-of-truth documents (Hub, spokes, ADRs, research, final legal documents) and AC operations (current-state, mailboxes, sessions, protocols). Active work and drafts go in `evryn-team-workspace`.
+- `_evryn-meta` — AC's home. Source-of-truth documents (Hub, spokes, ADRs, final legal documents) and AC operations (current-state, mailboxes, sessions, protocols). Active work, drafts, and research go in `evryn-team-workspace`.
 - `evryn-team-agents` — SDK-era agent build. Frozen (ADR-021). Insurance if Cowork/Code proves insufficient.
 - `evryn-team-workspace` — Agent team built for use inside Claude Code and Claude CoWork.
 - `evryn-dev-workspace` — DC's home. Identity and methodology.
