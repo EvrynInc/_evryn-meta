@@ -250,7 +250,7 @@ The commitments we can make structurally:
 - Clear terms and consent mechanisms
 - Appointed DPO function
 
-*v0.2 Terms of Service and Privacy Notice finalized with Fenwick (April 2026). Full legal exchange history in `docs/legal/Terms-and-Privacy/`. Phase 2 (v0.3) legal work in progress.*
+*v0.2 Terms of Service and Privacy Notice finalized with Fenwick (April 2026). Finals in `docs/legal/Terms-and-Privacy/`. Drafts and working docs in `evryn-team-workspace/shared/projects/legal/terms-and-privacy/`. Phase 2 (v0.3) legal work in progress.*
 
 ---
 

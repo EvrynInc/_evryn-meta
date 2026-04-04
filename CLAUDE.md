@@ -20,7 +20,7 @@ Your job: strategic conversations with Justin, architectural oversight, cross-re
 When a conversation produces build work, route it per the "Documentation Approach" routing table below. DC picks up build work from repo build docs and standardized `docs/` structure.
 
 **Other entities (these are NOT you):**
-- **DC (Developer Claude)** — Builds in repos from `evryn-dev-workspace`. See `docs/ac-dc-protocol.md` for the communication protocol.
+- **DC (Developer Claude)** — Builds in repos from `evryn-dev-workspace`. See `docs/protocols/ac-dc-protocol.md` for the communication protocol.
 - **OC (Operations Claude)** — Monitors and operates from `evryn-ops`. CI/CD, deployment, health checks, uptime. Call on OC when infrastructure needs attention — deployments, monitoring, "why is Railway down at 3am" questions. See ADR-009.
 - **QC (Quality Claude)** — Reviews and tests from `evryn-quality`. Code review, testing standards, quality gates. Call on QC when code needs a second pair of eyes — security review, test coverage, correctness checks before shipping. See ADR-009.
 - **The AI Agent Founding Team** - see below. AC carries some of the same strategic/technical thinking as Soren (CTO), but AC is a separate tool — Justin's direct interface for architecture work.
@@ -59,7 +59,7 @@ Their `evryn-team-workspace\shared\current-state` is append-only between standup
 
 ### Repositories
 
-- `_evryn-meta` — AC's home. Cross-repo docs, dashboard.
+- `_evryn-meta` — AC's home. Source-of-truth documents (Hub, spokes, ADRs, research, final legal documents) and AC operations (current-state, mailboxes, sessions, protocols). Active work and drafts go in `evryn-team-workspace`.
 - `evryn-team-agents` — SDK-era agent build. Frozen (ADR-021). Insurance if Cowork/Code proves insufficient.
 - `evryn-team-workspace` — Agent team built for use inside Claude Code and Claude CoWork.
 - `evryn-dev-workspace` — DC's home. Identity and methodology.
@@ -235,7 +235,7 @@ All operational learnings go directly to the appropriate repo files (proposed, w
 
 ## AC/DC Communication Protocol
 
-Full protocol: `docs/ac-dc-protocol.md`. Don't load it unless you need it — only read it when you actually need to write to or read from DC.
+Full protocol: `docs/protocols/ac-dc-protocol.md`. Don't load it unless you need it — only read it when you actually need to write to or read from DC.
 
 **Quick reference:** Mailboxes live in each repo (`<repo>/docs/ac-to-dc.md` / `dc-to-ac.md`). Messages are disposable snapshots — reader clears the file after absorbing. AC writes `ARCHITECTURE.md` in each repo; DC reads but never modifies it.
 
@@ -262,19 +262,19 @@ When Justin steps away and you're working autonomously at the strategic level:
 
 ## #lock Protocol
 
-Session-level checkpoint — capture what changed this session into persistent docs. Checklist: `docs/lock-protocol.md`. **Read it every time** Justin says `#lock`.
+Session-level checkpoint — capture what changed this session into persistent docs. Checklist: `docs/protocols/lock-protocol.md`. **Read it every time** Justin says `#lock`.
 
 ---
 
 ## #sweep Protocol
 
-Weekly consistency check — do our docs agree with each other across repos? Checklist: `docs/sweep-protocol.md`. **Read it when** Justin says `#sweep`. **Cadence: at least once a week.** If it's been more than 7 days since the last #sweep, proactively suggest one.
+Weekly consistency check — do our docs agree with each other across repos? Checklist: `docs/protocols/sweep-protocol.md`. **Read it when** Justin says `#sweep`. **Cadence: at least once a week.** If it's been more than 7 days since the last #sweep, proactively suggest one.
 
 ---
 
 ## #align Protocol
 
-Principles-to-practice integration — does what we're building actually embody what we believe? Checklist: `docs/align-protocol.md`. **Read it when** Justin says `#align`. **Cadence: at least once a week.** If it's been more than 7 days since the last #align, proactively suggest one.
+Principles-to-practice integration — does what we're building actually embody what we believe? Checklist: `docs/protocols/align-protocol.md`. **Read it when** Justin says `#align`. **Cadence: at least once a week.** If it's been more than 7 days since the last #align, proactively suggest one.
 
 ---
 
