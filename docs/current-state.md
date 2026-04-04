@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-04-03T22:21-07:00*
+*Last updated: 2026-04-03T22:35-07:00*
 *Last #sweep: 2026-03-18*
 *Last #align: 2026-03-18*
 
@@ -28,7 +28,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 - **DC: all build work complete, new tasks queued.** Days 2-5 done. Pipeline hardened. New knock list from AC0: model tier switch (Sonnet→Opus), profile_jsonb runtime scaffold, `seen_by_subject` runtime cleanup, `confidence_audit` in template, Railway deploy. Waiting on AC1 identity files before spinning up.
 - **Remaining v0.3 identity files:** onboarding.md rewrite, new-contact.md, regular-user.md, conversation.md update (cross-user note writing).
 - **Cost model needs v0.3+ features.** Current spreadsheet only reflects v0.2 costs. Must be updated before v0.3 BUILD doc. Breadcrumb in BUILD doc v0.3 staging section.
-- **Legal: v0.2 ToS and Privacy Notice finalized.** Fenwick finals received 2026-04-02. Both pages built for evryn.ai at `/terms` and `/privacy`. Website committed, not yet pushed — waiting on Fenwick response to one remaining 10(a) carveout question (broadening PII exception for auto-forwarded email content). Phase 2 (v0.3) scoping call completed; meeting prep doc and wireframes sent. Phase 2 legal work in progress.
+- **Legal: v0.2 ToS and Privacy Notice — one revision remaining.** Fenwick finals received 2026-04-02. 10(a) PII carveout resolved: removing prohibition entirely, shifting responsibility to Initiating User. Updated docs expected Tuesday April 7. Both pages built for evryn.ai at `/terms` and `/privacy` — committed locally, push blocked on final revision. Phase 2 (v0.3) scoping call completed; meeting prep and wireframes sent. Phase 2 legal work in progress.
 - **Go-live timing relaxed.** Mark is in no hurry. Quality over speed.
 
 ## Active Projects

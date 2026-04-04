@@ -6,6 +6,13 @@
 
 ---
 
+## 2026-04-03 (AC + Nathan — Fenwick finalization, website legal pages, Nathan onboarding)
+
+- **Fenwick 10(a) resolved** — removing PII prohibition entirely, shifting responsibility to Initiating User. Updated docs expected Tuesday April 7.
+- **Nathan loaded for legal capture** — finalization session notes written (`evryn-team-workspace/shared/projects/legal/terms-and-privacy/2026.04.03-v02-finalization-notes.md`). Fenwick correspondence log created. File moves: meeting prep to legal/terms-and-privacy/, wireframes to product/. References fixed across 5 files.
+- **Broken links fixed** — 4 persistent docs updated after legal folder reorganization (gtm-and-growth, gatekeeper-approach, technical-vision, openclaw research).
+- **BizOps spoke updated** — Legal section reflects finalized v0.2 docs with archive pointers.
+
 ## 2026-04-03 (AC — Team workspace wrap-up)
 
 - **Skills vs protocols resolved** — no `.claude/skills/` wrappers needed for now. `shared/protocols/` is the approach — protocols work everywhere, skills may not be respected by Cowork. Can revisit later.
