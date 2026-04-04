@@ -5,13 +5,14 @@
       "Glob(~/Evryn/Code/**)",
       "Grep(~/Evryn/Code/**)",
       "Bash(*)",
-      "WebFetch(domain:anthropic.com)",
-      "WebFetch(domain:www.anthropic.com)",
-      "WebFetch(domain:claude.com)",
-      "WebFetch(domain:github.com)",
-      "WebFetch(domain:raw.githubusercontent.com)",
-      "WebFetch(domain:docs.anthropic.com)",
-      "WebFetch(domain:linear.app)"
+      "WebFetch(*)",
+      "mcp__claude_ai_Linear__*",
+      "mcp__claude_ai_Gmail__*"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(git reset --hard*)",
+      "Bash(rm -rf *)"
     ]
   }
 }
