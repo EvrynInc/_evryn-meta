@@ -77,7 +77,7 @@ Safety is structural, not bolted on. Full depth: `docs/hub/trust-and-safety.md`.
 
 ## Current Strategy
 
-**Build stages:** v0.1 (Custom GPT PoC) done → **v0.2 "Gatekeeper's Inbox"** ← current build, Mark live target ~March 19-20 → **v0.3 "The Broker"** (web app + matching + payments + cast-off outreach, target first revenue late April / early May) → **v0.4 "Scale"** (second gatekeeper, publisher module, agents, target June/July).
+**Build stages:** v0.1 (Custom GPT PoC) done → **v0.2 "Gatekeeper's Inbox"** (code built, identity files and testing to complete, go-live blocked on Fenwick finals expected April 7) → **v0.3 "The Broker"** (web app + matching + payments + cast-off outreach, target first revenue early May) → **v0.4 "Scale"** (second gatekeeper, publisher module, target June/July).
 
 - **v0.2 "Gatekeeper's Inbox":** Evryn surfaces connections from a gatekeeper's inbox. Gatekeeper forwards emails → Evryn identifies who's worth their time (gold/pass/edge case) → drafts notification → Justin approves via email → Evryn delivers. Pilot gatekeeper: Mark (Seattle). These are connections being brokered, not emails being sorted — tracked as such from day one.
 - **AI founding team active** via Claude Code and Cowork from `evryn-team-workspace` (ADR-021). SDK agent build (`evryn-team-agents`) frozen as insurance.
