@@ -350,7 +350,7 @@ Three gatekeeper types by inbox situation: dedicated inbox (auto-forward, zero d
 
 Two distinct modes of active acquisition, both essential:
 
-**Growth marketing (Jordan, CGO agent — v0.4+):** Organic outreach on forums, communities, any pathway that doesn't require ad spend. Before revenue AND after, beating the bushes is primary. Jordan finds people who might need Evryn and points them her way. This is awareness, not brokering.
+**Growth marketing (Marlowe, CGO agent — v0.4+):** Organic outreach on forums, communities, any pathway that doesn't require ad spend. Before revenue AND after, beating the bushes is primary. Jordan finds people who might need Evryn and points them her way. This is awareness, not brokering.
 
 **Supply-side recruiting (Evryn herself — v0.3):** When a user says "I need a plumber" and Evryn doesn't have one, she goes and finds one. "Hey, your reviews look amazing — I have someone who'd love to work with you." This IS brokering — warm, personal, on-brand. The recruited person's first connection is free (they didn't ask for this), but they know what Evryn charges ("connections like this typically run about $20 — this first one is on me"). Subsequent connections are paid. Full pricing framework: [business-model spoke](business-model.md) (Free vs. Paid Connection Framework + Supply-Side Economics).
 
