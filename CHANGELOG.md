@@ -6,6 +6,20 @@
 
 ---
 
+## 2026-04-03 (AC + DC — Research migration, project structure, DC agent definition)
+
+- **Research moved from _evryn-meta to evryn-team-workspace** — 26 files reorganized into `shared/projects/product/research/`, `growth/research/`, `ops/research/`. DC executed the migration; AC verified. All active references updated across 4 repos.
+- **Project folder structure** — Five department folders created: `helm/`, `product/`, `ops/`, `legal/`, `growth/`. Documented in team CLAUDE.md.
+- **Demarcation rule established** — _evryn-meta = source of truth + AC ops. Team workspace = active work, research, drafts. Written into both CLAUDE.md files.
+- **Legal working docs moved** to `evryn-team-workspace/shared/projects/legal/terms-and-privacy/`. Finals stay in `_evryn-meta/docs/legal/`.
+- **AC protocols folder** — Moved lock, ac-dc, sweep, align protocols to `docs/protocols/`. References updated.
+- **developer.md agent definition** — Verbatim copy of DC CLAUDE.md in `_evryn-meta/.claude/agents/`. Adaptation for subagent/teammate use pending.
+- **DC CLAUDE.md updated** — Added evryn-team-workspace, fixed stale SDK references.
+- **Hub + spokes updated** — Stale team references fixed (Hub, bizops, technical-vision, gtm-and-growth).
+- **.gitignore fixed** — Was blocking all of `.claude/`; now only blocks `settings.local.json`.
+- **Agent integration tests** — All 4 passed (Lucas, Nathan, Mira, Soren). One gap found and fixed: project subfolder structure wasn't documented.
+- **AC #lock protocol** — Added team current-state appendage step (#10).
+
 ## 2026-04-01/02 (AC — Team workspace memory/protocol overhaul)
 
 - **Agent memory redesigned as narrative GPS** — Memory files stripped to Story + Recent Notes. First person, no instructions in the file. Writing guidance moved to #lock protocol; consolidation guidance to new #consolidate protocol. ADR-023.

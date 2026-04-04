@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-04-03T12:23-07:00*
+*Last updated: 2026-04-03T22:21-07:00*
 *Last #sweep: 2026-03-18*
 *Last #align: 2026-03-18*
 
@@ -37,9 +37,9 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 - **evryn-backend** — All DC build work complete (Days 2-5). Hardened pipeline. Status lifecycle migrated (ADR-018). All v0.2 identity activity modules done. Integration + adversarial test suites written. Remaining: three internal-reference files → deploy to Railway → integration test → adversarial test → go/no-go. Legal (Fenwick) blocks actual go-live.
 - **evryn-ops** — Created. OC CLAUDE.md ready.
 - **evryn-quality** — Created. QC CLAUDE.md ready.
-- **evryn-team-workspace** — Cowork agent workspace. Major overhaul (2026-04-01/02): memory redesigned as narrative GPS (ADR-023), #standup protocol for team consolidation (ADR-024), task authority protocol (ADR-025), #lock and #consolidate protocols, Linear labels remapped, settings.json created. Remaining: CLAUDE.md/#lock appendage rules, agent definition standup pointers, ARCHITECTURE.md updates, deep-dives directories, identity review.
+- **evryn-team-workspace** — Cowork agent workspace. Major overhaul complete (2026-04-01/03): memory as narrative GPS (ADR-023), #standup/#consolidate/#lock protocols, task authority (ADR-025), Linear integration, project folder structure (helm/product/ops/legal/growth), research moved here from _evryn-meta, demarcation rule established. Agent integration tests passed. Remaining: developer.md adaptation, agent teams test, real standup test, full #lock for this session's work.
 - **evryn-team-agents** — FROZEN. SDK-era agent build preserved as insurance. `evryn-team-workspace` is the active team home.
-- **evryn-dev-workspace** — DC's home repo.
+- **evryn-dev-workspace** — DC's home repo. developer.md agent definition created in _evryn-meta (verbatim copy, adaptation pending). CLAUDE.md updated with team-workspace reference and current team names. Stale SDK references cleaned.
 - **evryn-website** — Live at evryn.ai. ToS + Privacy Notice pages built, committed locally, push pending Fenwick 10(a) response. Homepage updated: Terms | Privacy | Contact footer, bot-resistant contact email. Old privacy policy archived.
 
 ## Infrastructure
