@@ -6,6 +6,16 @@
 
 ---
 
+## 2026-04-05 (AC2 — Weekend thinking close-out, trust rewrite)
+
+- **Weekend thinking fully ingested** — All 6 docs from 2026-03-23 absorbed into persistent files, moved to `docs/sessions/historical/`.
+- **ARCHITECTURE.md updates** — confidence_audit in profile_jsonb + Reflection Module, Insight Routing Pipeline clarification (reflection vs self-reflection), investigative matching breadcrumb, installment plans breadcrumb.
+- **ADR-026: Investigative matching** — Trust-bounded constraint flexibility. Evryn can widen searches when she suspects stated constraints are softer than they appear, but brings it with respect and humility.
+- **Hub trust rewrite** — "You're always in control" replaced with "No dark patterns" (full toolkit, aligned intent framing). Behavioral filtering rewritten with matching vs platform access distinction. "Evryn is a witness, not a mirror" added. Design philosophy reformatted to bullets.
+- **Trust-and-safety spoke** — "You're always in control" header replaced with "Evryn is here *for you*".
+- **Business-model spoke** — Installment plans subsection (v0.4 target), competitive pricing context, unit economics at rest.
+- **EVR-77** — FYI to Soren re: doc 06 (claude.ai user memory structure) for agent memory design reference.
+
 ## 2026-04-03 (AC + Nathan — Fenwick finalization, website legal pages, Nathan onboarding)
 
 - **Fenwick 10(a) resolved** — removing PII prohibition entirely, shifting responsibility to Initiating User. Updated docs expected Tuesday April 7.
