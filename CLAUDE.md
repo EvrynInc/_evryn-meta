@@ -84,9 +84,9 @@ Read the `.env` to get the URL. Avoid em dashes, en dashes, and smart quotes in 
 
 **For current Build Projects status (AC/DC/QC/OC), read `docs/current-state.md`.** That file is the snapshot — updated during #lock, maintained by whoever is active (AC or Soren). If you need the Agent Team current state (only when necessary to understand the larger picture), read the latest dated entry in `evryn-team-workspace\shared\current-state`.
 
-**Backlog:** [Linear (EVR workspace)](https://linear.app/evryn) — backlog bucket, not a workflow tool. LINEAR_API_KEY is in `.env` for querying.
+**Task management:** [Linear (EVR workspace)](https://linear.app/evryn) — the team's task tracking system with RACI labels. For protocol and API key, see `evryn-team-workspace/shared/protocols/linear-protocol.md`.
 
-**How work flows:** The gap between ARCHITECTURE.md (target) and current state (reality) = the work. Build docs scope the work. Linear holds small items outside current builds.
+**How work flows:** The gap between ARCHITECTURE.md (target) and current state (reality) = the work. Build docs scope the work. Linear tracks discrete tasks across sessions.
 
 ---
 

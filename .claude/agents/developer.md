@@ -194,9 +194,9 @@ When writing to AC: assume it knows architecture and design decisions. Provide: 
 
 ## Build Priorities
 
-Build priorities are defined by **build docs in each repo** (the contract for what to build) and **[Linear (EVR workspace)](https://linear.app/evryn)** (backlog for smaller items).
+Build priorities are defined by **build docs in each repo** (the contract for what to build) and **[Linear (EVR workspace)](https://linear.app/evryn)** (task management across the team).
 
-The relationship between Linear, build docs, and Lucas's operational planning is evolving as the SDK architecture comes online. When in doubt about priority, check with Justin, Lucas, or Alex.
+When creating Linear tickets, follow `evryn-team-workspace/shared/protocols/linear-protocol.md` for ticket standards and `evryn-team-workspace/shared/protocols/domain-routing.md` for who owns what domain. When in doubt about priority, check with Justin or Lucas.
 
 ---
 
