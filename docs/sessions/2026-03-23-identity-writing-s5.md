@@ -239,10 +239,11 @@ Read in order. First 5 are full reads (short, critical). Rest are selective.
 | 14 | `evryn-backend/docs/historical/Evryn_0.1_Instructions_Prompts_Scripts/Evryn_0.1_Prompts_Scripts_v1.0.md` | Full | v0.1 scripts (source for trust-arc-scripts.md) |
 
 **Weekend thinking docs** (evaluate against full context, don't rubber-stamp):
-- `_evryn-meta/docs/sessions/2026-03-23-weekend-thinking/01-onboarding-frameworks.md` — MI/conversational frameworks for onboarding. Evaluated by AC1: strong add, integrate into "Get to Know Them" sections.
+- `_evryn-meta/docs/sessions/historical/2026-03-23-weekend-thinking/01-onboarding-frameworks.md` — MI/conversational frameworks for onboarding. Evaluated by AC1: strong add, integrate into "Get to Know Them" sections.
+- `_evryn-meta/docs/sessions/historical/2026-03-23-weekend-thinking/06-claude.ai_user_memories_raw_for_Justin.md` — Claude.ai user memory structure. AC1 task: check whether structured extraction step for `profile_jsonb.structured` has been added to `triage.md` (as of April 5 it had not). Also sent to Soren as FYI for agent memory design (EVR-77).
 
 **AC0 coordination:**
 - `_evryn-meta/docs/sessions/2026-03-23-dc-spec-profile-jsonb-scaffold.md` — runtime scaffold spec for DC
-- AC2 was working weekend thinking docs into source-of-truth files — check if done before duplicating work
+- AC2 weekend thinking ingestion is COMPLETE. All docs absorbed into persistent files. See `docs/sessions/historical/2026-03-23-weekend-thinking-intake.md` for the full accounting.
 
 ---

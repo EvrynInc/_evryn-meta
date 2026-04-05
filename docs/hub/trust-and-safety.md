@@ -24,7 +24,7 @@ Trust → Value → Payment → Memory → More Trust. Each cycle deepens the re
 
 4. **Character becomes currency.** Your reputation with Evryn is behavioral, not performative. Not your resume, not your branding, not your ad spend. Just: what you've done and how it impacted those you've touched. Over time, Evryn's trust graph replaces the resume, the referral, the background check, the rating system, and the profile. "I don't care what your bio says. I care how you impact others."
 
-5. **You're always in control.** Evryn takes the wheel so you can relax, but you're ultimately the one in control. You can change direction, slow down, even go dormant. And Evryn commits to no manipulation: no auto-inviting your friends, no "accidental" opt-ins, no fake urgency, no gamification. No ads, no selling data. **You** are the customer, not an advertiser. If Evryn believes something must be shared for a connection to be ethical and you don't want to share it, the match simply won't proceed.
+5. **Evryn is here *for you*.** Evryn takes the wheel so you can relax — she drives, but you can always change direction, slow down, even go dormant. And Evryn commits to no dark patterns: no manipulation, gamification, or fake urgency against your interests. No auto-inviting your friends, no "accidental" opt-ins. No ads, no selling data. **You** are the customer, not an advertiser. If Evryn believes something must be shared for a connection to be ethical and you don't want to share it, the match simply won't proceed.
 
 ### Trust Signals
 

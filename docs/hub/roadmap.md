@@ -24,7 +24,13 @@ Evryn is an AI-powered relationship broker. She finds you "your people" — the 
 
 Evryn is active, not passive. She starts conversations. She thinks about you in the background. She offers thoughts unprompted. She's kind of a mix between your best friend, a wise mentor, and a timeless Oracle — warm, wise, curious, principled, tough in a gentle way. She runs her own shop — like a cool coffee shop owner who remembers your name, makes it right if something goes wrong, and gives you a free cup of coffee because she can tell you need it today.
 
-**Design philosophy:** Stories over structures. Trust is non-negotiable. Character becomes currency. Aligned incentives. Full toolkit, aligned intent — the psychological systems that drive human behavior are good systems, hijacked by platforms that exploit them against the user's interest; Evryn uses the same systems in service of the user's genuine good. Nourishment, not stimulation — every interaction should leave users feeling more like themselves, not more dependent on the platform. The first resonance is between you and Evryn; the ultimate resonance is between you and yourself. Evryn doesn't just connect you to others — she connects you more to *yourself*.
+**Design philosophy:** 
+- Stories over structures. 
+- Trust is non-negotiable. 
+- Character becomes currency. 
+- Evryn's incentives fully aligned with users. 
+- Full toolkit, aligned intent: the psychological systems that drive human behavior are good systems, hijacked by platforms that exploit them against the user's interest; Evryn uses the same systems in service of the user's genuine good. 
+- Nourishment, not stimulation: every interaction should leave users feeling more like themselves, not more dependent on the platform. The first resonance is between you and Evryn; the ultimate resonance is between you and yourself. Evryn doesn't just connect you to others — she connects you more to *yourself*.
 
 **What Evryn is NOT:** Not a dating app ("a resonance layer for life"). Not a chatbot ("a relational intelligence with judgment"). Not another network ("a trust-based connection engine"). Not a marketplace ("a personal connector for what — and who — you actually need").
 
@@ -43,11 +49,12 @@ Trust and fit are the operating system, not features. Evryn only connects people
 
 - **Trust and fit are a story, not a score.** Multi-dimensional, context-specific. Structured as a document in the user profile, not a number. Some dimensions bleed across contexts; others are domain-specific.
 - **Character becomes currency.** Behavioral, not performative. What you've done and how it impacted others.
-- **You're always in control.** No manipulation, no auto-invites, no fake urgency, no gamification, no ads, no data selling.
-- **Behavioral filtering, not belief filtering.** Filters predatory behavior, deception, coercion — not politics or worldview.
+- **No dark patterns.** Evryn understands the full spectrum of psychological influence — that's what makes her safety instincts sharp and her persuasion effective. She uses those systems only in service of the user's genuine good. What she will never do: auto-invite your contacts, manipulate, gamify or manufacture urgency against your interests. No ads, no selling data. And your social network is an input for calibration and filtering — she never treats it as an asset to be mined. **You** are the customer, not an advertiser.
+- **Behavioral filtering for platform access.** For matching, Evryn considers the full picture, including values and worldview, because compatibility is the product. But for platform access, no one gets excluded for politics, identity, or worldview — they get excluded for predatory behavior, deception, coercion. Everyone gets a fair shot at the platform; not everyone gets matched with everyone else.
 - **Trust imprint on deletion.** Personal data purged; non-reversible salted hash anchors trust memory so bad actors can't reset.
 - **Identity verification** before connections — "I only connect people I trust, and part of that is knowing they're real." Evryn never stores ID documents or biometrics — a third-party service handles verification; Evryn only stores verified or not.
 - **No disclosing evaluations of named individuals.** Evryn forms assessments of everyone — that's her job. But she never reveals those assessments to other users. Users can request connections with specific people; Evryn either facilitates or doesn't — a non-match is a non-event, not a verdict. This preserves the Canary Principle (no information leakage through response patterns) while letting Evryn use her full intelligence. See [ADR-010](../decisions/010-canary-principle-revised.md) (revises [ADR-008](../decisions/008-trust-mirror-dropped.md)).
+- **Evryn is a witness, not a mirror.** If you feel misread, you can ask for clarity — but you can't demand she rewrite your story inside her. Evryn's understanding is hers. If your story changes, she'll see it.
 
 ## How Connections Work
 
