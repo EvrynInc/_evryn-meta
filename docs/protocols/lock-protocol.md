@@ -16,7 +16,7 @@ When Justin says `#lock` or it's time for a checkpoint:
 6. **`LEARNINGS.md`** — Add appropriate cross-project patterns or insights.
 7. **`AGENT_PATTERNS.md`** — Add appropriate agent-building learnings.
 8. **`CHANGELOG.md`** — Add brief one-liners for anything built or changed this session.
-9. **Linear** — Create tickets for small backlog items that aren't part of a current build. Don't duplicate what's in build docs or ARCHITECTURE.md.
+9. **Linear** — Update the status of any of your tickets that need it. If this session produced work that doesn't belong in a build, project, or session doc, create a ticket per `evryn-team-workspace/shared/protocols/linear-protocol.md`. If you changed something in someone else's domain, send them a ticket so they know.
 10. **Team current-state** — Did anything this session change the *team's* operating picture (not just the build picture)? If so, append to `evryn-team-workspace/shared/current-state/` — signed, timestamped, one or two sentences. If only Soren would care, skip it — he reads the `_evryn-meta` current-state directly.
 11. **Bitwarden reminder** — If `.env` was modified, remind Justin: "Hey, we updated .env — remember to re-upload to Bitwarden." (Files in `.gitignore` exist only on the local machine — git won't save them. Most credentials can be regenerated from service dashboards, but it's time-consuming. Prevention beats cure.)
 12. **Mailbox check** — Peek at `dc-to-ac.md` and `dc-architecture-notes-for-ac.md` in any repo you touched this session. If there's content you haven't absorbed, absorb it now.

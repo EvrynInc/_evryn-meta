@@ -77,10 +77,10 @@ Safety is structural, not bolted on. Full depth: `docs/hub/trust-and-safety.md`.
 
 ## Current Strategy
 
-**Build stages:** v0.1 (Custom GPT PoC) done → **v0.2 "Gatekeeper's Inbox"** ← current build, Mark live target ~March 19-20 → **v0.3 "The Broker"** (web app + matching + payments + cast-off outreach, target first revenue late April / early May) → **v0.4 "Scale"** (second gatekeeper, publisher module, agents, target June/July).
+**Build stages:** v0.1 (Custom GPT PoC) done → **v0.2 "Gatekeeper's Inbox"** (code built, identity files and testing to complete, go-live blocked on Fenwick finals expected April 7) → **v0.3 "The Broker"** (web app + matching + payments + cast-off outreach, target first revenue early May) → **v0.4 "Scale"** (second gatekeeper, publisher module, target June/July).
 
 - **v0.2 "Gatekeeper's Inbox":** Evryn surfaces connections from a gatekeeper's inbox. Gatekeeper forwards emails → Evryn identifies who's worth their time (gold/pass/edge case) → drafts notification → Justin approves via email → Evryn delivers. Pilot gatekeeper: Mark (Seattle). These are connections being brokered, not emails being sorted — tracked as such from day one.
-- **Lucas (Chief of Staff agent) PAUSED** — building Evryn product first. Everything transfers back.
+- **AI founding team active** via Claude Code and Cowork from `evryn-team-workspace` (ADR-021). SDK agent build (`evryn-team-agents`) frozen as insurance.
 - **Website** live at evryn.ai.
 - **Runway:** See the latest team current-state snapshot (`evryn-team-workspace/shared/current-state/`) for current bank balance and runway status. Full burn profile and month-by-month projection in [business-model spoke](docs/hub/business-model.md).
 - **GTM: Concentrate effort, open aperture.** Film is the ignition point (Mark, Megan, SIFF, Justin's 78K+ second-gen contacts), but Evryn welcomes and serves anyone who arrives, from any domain, from day one. Cross-domain connection is the product — constraining to one domain would cripple it. Film is where you point the hose; everything else is where you let the rain fall. Two parallel channels: **top-down** via gatekeepers like Mark — high-volume connectors whose ~200 daily cast-offs become Evryn users; **bottom-up** via whisper cascade — trust mechanics as growth engine, not artificial scarcity. Proactive finding (Evryn recruits supply-side to meet user needs) means she can serve users in any domain or geography without pre-existing density.
@@ -121,7 +121,7 @@ The vision: a world where the *default* would be that people can be trusted and 
 ## Team
 
 - **Justin** — Founder/CEO. Sole human operator. Building everything with Claude Code.
-- **AI Founding Team** — 8 agents operating from `evryn-team-workspace`: Lucas (CoS), Soren (CTO), Mira (CPO), Emma (COO/CFO), Marlowe (CGO), Dominic (Strategic Advisor), Nathan (Internal Counsel), Thea (EA). Previously planned as SDK agents (paused — ADR-021); currently operating in Claude Code and Cowork.
+- **AI Founding Team** — 8 agents operating from `evryn-team-workspace`: Lucas (CoS), Soren (CTO), Mira (CPO — Product Experience), Emma (COO/CFO), Marlowe (CGO), Dominic (Strategic Advisor), Nathan (Internal Counsel), Thea (EA). Previously planned as SDK agents (paused — ADR-021); currently operating in Claude Code and Cowork. Domain ownership and routing: `evryn-team-workspace/shared/protocols/domain-routing.md`.
 - **Human Advisors:** Andrew Lester (Operations), Salil Chatrath (Product), Manuele Capacci (Design), Megan Griffiths (Film Industry).
 - **Legal:** Fenwick & West (legal and strategic partner).
 - **Pilot User:** Mark (August Island Pictures / Eva's Wild).

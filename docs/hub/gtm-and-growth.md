@@ -19,9 +19,9 @@ The Master Plan's GTM was written assuming a traditional startup with a human te
 **Bottom line:** The strategic direction below is correct — film as ignition point, wave strategy, whisper cascade, quality over quantity. What's evolved is the *urgency and scale assumptions* and the *aperture*. Evryn can afford to grow more deliberately, prove the model at small scale, and let traction speak for itself. And critically: **film is where you point the hose; everything else is where you let the rain fall.** Evryn's cross-domain model means she should actively welcome and serve anyone who shows up, from any domain, from day one. The effort is concentrated (film, Seattle, gatekeepers); the aperture is wide open (anyone who arrives gets served). See "Concentrate Effort, Open Aperture" below and `evryn-team-workspace/shared/projects/growth/research/2026.03.17 seattle-launch-strategy-v1.md` for the full demand landscape.
 
 **Build phases, target dates, and GTM alignment:**
-- **v0.2 "Gatekeeper's Inbox"** (target: Mark live ~March 18-19) — Mark live, triage running, user records accumulating. GTM is one gatekeeper proving the model.
-- **v0.3 "The Broker"** (target: DC starts ~March 17, first revenue late April / early May) — Web app + matching + payments + cast-off outreach. GTM shifts: cast-offs become the acquisition channel (~200 new users/day from Mark alone), first revenue flows, whisper cascade begins organically. **SIFF (Seattle International Film Festival, mid-May to early June) is a real target for presence.**
-- **v0.4 "Scale"** (target: June/July, after v0.3 stabilizes) — Second gatekeeper, begins to test the publisher module (replacing Justin's manual approval), agents come online. GTM widens: wave strategy activates across multiple gatekeeper channels, proactive outreach, Lucas manages operations. Union contract negotiation window (May-July 2026) overlaps — film professionals are anxious, trusted connections matter most.
+- **v0.2 "Gatekeeper's Inbox"** (code built, go-live blocked on identity files, testing, Fenwick terms and privacy finals — all expected by April 7) — Mark live, triage running, user records accumulating. GTM is one gatekeeper proving the model.
+- **v0.3 "The Broker"** (target: first revenue early May) — Web app + matching + payments + cast-off outreach. GTM shifts: cast-offs become the acquisition channel (~200 new users/day from Mark alone), first revenue flows, whisper cascade begins organically. **SIFF (Seattle International Film Festival, mid-May to early June) is a real target for presence.**
+- **v0.4 "Scale"** (target: June/July, after v0.3 stabilizes) — Second gatekeeper, begins to test the publisher module (replacing Justin's manual approval). GTM widens: wave strategy activates across multiple gatekeeper channels, proactive outreach. Union contract negotiation window (May-July 2026) overlaps — film professionals are anxious, trusted connections matter most.
 
 ---
 
@@ -350,7 +350,7 @@ Three gatekeeper types by inbox situation: dedicated inbox (auto-forward, zero d
 
 Two distinct modes of active acquisition, both essential:
 
-**Growth marketing (Jordan, CGO agent — v0.4+):** Organic outreach on forums, communities, any pathway that doesn't require ad spend. Before revenue AND after, beating the bushes is primary. Jordan finds people who might need Evryn and points them her way. This is awareness, not brokering.
+**Growth marketing (Marlowe, CGO agent — v0.4+):** Organic outreach on forums, communities, any pathway that doesn't require ad spend. Before revenue AND after, beating the bushes is primary. Marlowe finds people who might need Evryn and points them her way. This is awareness, not brokering.
 
 **Supply-side recruiting (Evryn herself — v0.3):** When a user says "I need a plumber" and Evryn doesn't have one, she goes and finds one. "Hey, your reviews look amazing — I have someone who'd love to work with you." This IS brokering — warm, personal, on-brand. The recruited person's first connection is free (they didn't ask for this), but they know what Evryn charges ("connections like this typically run about $20 — this first one is on me"). Subsequent connections are paid. Full pricing framework: [business-model spoke](business-model.md) (Free vs. Paid Connection Framework + Supply-Side Economics).
 
@@ -379,7 +379,7 @@ PR is timed to validate momentum, not create it — "pour fuel on a fire that's 
 
 **SIFF (mid-May to early June) is the inaugural event target.** Both Mark and Megan are connected to SIFF; v0.3 should be in early operation by then. Other major film festivals (Sundance, SXSW) are either seasonally past or conflict with build sprints — SIFF is the right first public-facing moment. Future festival strategy expands from there.
 
-**Industry communities:** NoFilmSchool, gear forums, film school networks, and targeted forum engagement (Reddit, Facebook groups, Discord, X). This is Jordan's domain once the CGO agent comes online (v0.4), but channels should be identified and warmed before then.
+**Industry communities:** NoFilmSchool, gear forums, film school networks, and targeted forum engagement (Reddit, Facebook groups, Discord, X). This is Marlowe's domain — channels should be identified and warmed before formal outreach begins.
 
 **Long-form content:** Once agents are operational and Justin has bandwidth, Evryn's content strategy centers on long-form writing about ethos, trust, connection philosophy, and the building journey. Evryn herself may be the primary author — consistent with her voice, her perspective, and her relationship with users. Justin and the agents contribute too. Transparent updates ("Here's what we learned from our first 100 connections") build the tribe.
 

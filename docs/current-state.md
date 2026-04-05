@@ -50,6 +50,6 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 - Supabase: "Evryn Product" project. Schema migrated Day 2. Free plan — no automated backups.
 - evryn@evryn.ai, review@evryn.ai, systemtest@evryn.ai — see operator guide for roles.
 
-## Backlog
+## Task Management
 
-[Linear (EVR workspace)](https://linear.app/evryn) — backlog bucket, not a workflow tool. LINEAR_API_KEY is in `_evryn-meta/.env` for querying.
+[Linear (EVR workspace)](https://linear.app/evryn) — the team's task tracking system with RACI labels. For protocol and API key, see `evryn-team-workspace/shared/protocols/linear-protocol.md`.
