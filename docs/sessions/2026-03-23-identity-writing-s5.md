@@ -30,7 +30,7 @@
 
 ### AC0 note written
 
-`docs/sessions/2026-03-23-ac0-note-runtime-scaffold.md` — covers:
+`docs/sessions/2026-03-23-dc-spec-profile-jsonb-scaffold.md` — covers:
 1. profile_jsonb runtime scaffold (template for new user records)
 2. story_history → separate table (v0.3, flag in ARCHITECTURE.md)
 3. `seen_by_subject` → `shareable_with_user` rename (docs only, no migration)
@@ -242,7 +242,7 @@ Read in order. First 5 are full reads (short, critical). Rest are selective.
 - `_evryn-meta/docs/sessions/2026-03-23-weekend-thinking/01-onboarding-frameworks.md` — MI/conversational frameworks for onboarding. Evaluated by AC1: strong add, integrate into "Get to Know Them" sections.
 
 **AC0 coordination:**
-- `_evryn-meta/docs/sessions/2026-03-23-ac0-note-runtime-scaffold.md` — runtime scaffold spec for DC
+- `_evryn-meta/docs/sessions/2026-03-23-dc-spec-profile-jsonb-scaffold.md` — runtime scaffold spec for DC
 - AC2 was working weekend thinking docs into source-of-truth files — check if done before duplicating work
 
 ---
