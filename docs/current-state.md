@@ -7,8 +7,8 @@
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
 *Last updated: 2026-04-05T17:13-07:00*
-*Last #sweep: 2026-03-18*
-*Last #align: 2026-03-18*
+*Last #sweep: 2026-04-04 (Lucas)*
+*Last #align: 2026-04-04 (Lucas)*
 
 ---
 
