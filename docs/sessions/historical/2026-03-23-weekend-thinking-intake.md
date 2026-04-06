@@ -249,7 +249,7 @@ Justin dropped doc 06 (claude.ai user memory structure) to AC1 for the identity 
 - **Breadcrumbs placed** for both ADRs into ARCHITECTURE.md (Reflection Module, model tiers paragraph) and BUILD doc (model tiers section fixed from Sonnet to Opus, code example fixed, v0.3 staging ref).
 - **BUILD doc model tiers were actively wrong** (said Sonnet default, Opus for edge cases) — fixed to match ADR-020.
 
-**Future breadcrumb needed (from AC0):** The `match_candidates` cache table is mentioned in ADR-019 Consequences but not yet in ARCHITECTURE.md. Add when v0.3 design gets closer.
+**~~Future breadcrumb needed (from AC0):~~** ~~The `match_candidates` cache table is mentioned in ADR-019 Consequences but not yet in ARCHITECTURE.md. Add when v0.3 design gets closer.~~ **DONE (AC0, 2026-04-05)** — breadcrumb added to ARCHITECTURE.md Judgment & Matching section.
 
 ### Justin
 
