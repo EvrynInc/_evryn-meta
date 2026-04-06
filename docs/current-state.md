@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-04-03T22:35-07:00*
+*Last updated: 2026-04-05T17:13-07:00*
 *Last #sweep: 2026-03-18*
 *Last #align: 2026-03-18*
 
@@ -22,10 +22,11 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **AC0 (orchestrator): doc alignment done, DC knock list ready.** `seen_by_subject` → `shareable_with_user` renamed across all docs. `story_versions` table decided for v0.3 (rationale doc updated). Runtime init reminder in ARCHITECTURE.md. Story → match profile → embedding pipeline made explicit. Adversarial test protocol fixed. Permissions simplified. DC tasks queued (see below). `follow_ups` rename note pending (`docs/sessions/2026-03-25-ac0-note-follow-ups-rename.md`).
-- **AC1 (identity): in progress.** core.md done (story lenses, shareable_with_user, privacy rewrite). All activity modules done. Remaining pre-go-live: feedback-guidance.md (highest priority), trust-arc-scripts.md, company-context.md, gatekeeper-onboarding.md tightening. Full plan in S5 session doc.
-- **AC2 (v0.3 design): mostly landed.** Structured fields, embedding strategy, matching trigger model, confidence-aware reflection all in ARCHITECTURE.md. ADR-019 + ADR-020 written and breadcrumbed. **Remaining:** insight routing clarification (#5), business-model spoke installment plans + breadcrumbs (#6), investigative matching design note (#7). Session doc: `docs/sessions/2026-03-23-weekend-thinking-intake.md`.
-- **DC: all build work complete, new tasks queued.** Days 2-5 done. Pipeline hardened. New knock list from AC0: model tier switch (Sonnet→Opus), profile_jsonb runtime scaffold, `seen_by_subject` runtime cleanup, `confidence_audit` in template, Railway deploy. Waiting on AC1 identity files before spinning up.
+- **AC0 (orchestrator): doc alignment done, DC knock list finalized in sprint tracker.** All renames propagated (`shareable_with_user`, `follow_ups`). AC2 proposals evaluated and accepted (confidence_audit, story→match-profile pipeline, investigative matching). `authorized_by` audit trail added to ARCHITECTURE.md. Sprint tracker has full orchestration state + sequencing. Scaffold spec renamed and updated (`docs/sessions/2026-03-23-dc-spec-profile-jsonb-scaffold.md`).
+- **AC1 (identity): in progress, locked 2026-04-05.** core.md done. All activity modules done. Remaining pre-go-live: feedback-guidance.md (highest priority), trust-arc-scripts.md, company-context.md. gatekeeper-onboarding.md "Get to Know Them" expansion pending (from AC2 doc 01). triage.md structured extraction step pending (from AC2 doc 06). Full plan in S5 session doc.
+- **AC2 (v0.3 design): complete.** Weekend thinking fully ingested. confidence_audit, insight routing, investigative matching (ADR-026), business-model spoke updates all landed. See CHANGELOG 2026-04-05 entry.
+- **AC3 (team workspace overhaul): mostly complete.** Memory as narrative GPS (ADR-023), protocols (#standup/#consolidate/#lock), task authority (ADR-025), Linear integration, project folder structure, research migration. **4 items remaining** — see `docs/sessions/2026-04-05-ac3-team-workspace-overhaul-remaining.md`.
+- **DC: all build work complete, new tasks queued.** Days 2-5 done. Pipeline hardened. 5 deferred tasks in sprint tracker (model tier, runtime scaffold, seen_by_subject grep, Railway deploy, confidence_audit). Full sequencing in sprint tracker AC0 Orchestration State section.
 - **Remaining v0.3 identity files:** onboarding.md rewrite, new-contact.md, regular-user.md, conversation.md update (cross-user note writing).
 - **Cost model needs v0.3+ features.** Current spreadsheet only reflects v0.2 costs. Must be updated before v0.3 BUILD doc. Breadcrumb in BUILD doc v0.3 staging section.
 - **Legal: v0.2 ToS and Privacy Notice — one revision remaining.** Fenwick finals received 2026-04-02. 10(a) PII carveout resolved: removing prohibition entirely, shifting responsibility to Initiating User. Updated docs expected Tuesday April 7. Both pages built for evryn.ai at `/terms` and `/privacy` — committed locally, push blocked on final revision. Phase 2 (v0.3) scoping call completed; meeting prep and wireframes sent. Phase 2 legal work in progress.

@@ -6,6 +6,14 @@
 
 ---
 
+## 2026-04-05 (AC0 — Orchestration packout, sprint tracker finalization)
+
+- **Sprint tracker finalized** — Added 3 deferred DC tasks (seen_by_subject grep, Railway deploy, confidence_audit in scaffold). Added AC0 Orchestration State section with sequencing and blocking dependencies.
+- **ARCHITECTURE.md** — Added `authorized_by` audit trail to notes schema for `shareable_with_user` flip tracking.
+- **Scaffold spec renamed** — `ac0-note-runtime-scaffold` → `dc-spec-profile-jsonb-scaffold`. Added status table, `confidence_audit: null` to template. Now a live DC spec, not an inter-AC note.
+- **`follow_ups` rename completed** — All 3 files updated (ARCHITECTURE.md, sprint tracker, scaffold spec). Rename note moved to `historical/`.
+- **current-state.md** — Added AC3 section. Updated AC0, AC1, AC2, DC sections to reflect close-out state.
+
 ## 2026-04-05 (AC2 — Weekend thinking close-out, trust rewrite)
 
 - **Weekend thinking fully ingested** — All 6 docs from 2026-03-23 absorbed into persistent files, moved to `docs/sessions/historical/`.
