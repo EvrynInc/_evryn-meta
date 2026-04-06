@@ -48,7 +48,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 - Running locally on Justin's desktop. No cloud deployment yet.
 - Slack: "Evryn" app — Socket Mode, bot token via `@slack/bolt`. "Dev Alerts" app with webhook. Channels: `#evryn-approvals`, `#dev-alerts`, `#emergency-alerts` (not wired).
 - Railway: `evryn-backend` project created, CLI installed and linked.
-- Supabase: "Evryn Product" project. Schema migrated Day 2. Free plan — no automated backups.
+- Supabase: "Evryn Product" project. Schema migrated Day 2. Free plan — no automated backups. **Last backup: 2026-04-05** (data only via REST API; schema unchanged since 2026-03-18). Supabase CLI not linked on this machine — `supabase link` needed for schema dumps.
 - evryn@evryn.ai, review@evryn.ai, systemtest@evryn.ai — see operator guide for roles.
 
 ## Task Management
