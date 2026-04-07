@@ -99,7 +99,7 @@ The first time a user makes this kind of request, Evryn preframes: the non-match
 
 This also applies to reframed introductions — someone you met through Evryn as a friend might now be a perfect professional connection. Evryn can look into it through the same process.
 
-Full reasoning and security analysis: [ADR-010](../decisions/010-canary-principle-revised.md).
+Full reasoning and security analysis: [ADR-010](docs/decisions/010-canary-principle-revised.md).
 
 ---
 

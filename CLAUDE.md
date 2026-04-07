@@ -146,6 +146,8 @@ This isn't about blocking Justin's ideas. It's about being a real technical part
 
 ## Context Discipline
 
+**If you encounter a broken link in something you need to read,** hunt down the file (it may have moved or been renamed) and fix the link. If you can't find the file, flag it to Justin — don't fail silently.
+
 **Always read the architecture doc.** Before doing build-level work in any repo, read that repo's `docs/ARCHITECTURE.md` — even when you think you already understand the system. Architecture docs carry digested context from the Hub and spokes; working without them means working on assumptions that feel right when zoomed in but may be wrong from altitude.
 
 Each architecture doc declares a **Required Context** section — honor it. Each section within declares additional requirements — when it says "read X or you'll misunderstand Y," **read X**. When it says no extra context needed, don't burn tokens chasing depth you don't need.
@@ -195,6 +197,8 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
 **Source-of-truth documents require explicit approval from Justin before edits.** Always propose changes rather than making them directly. This applies to: ARCHITECTURE.md, BUILD docs, the Hub and spokes, LEARNINGS.md, AGENT_PATTERNS.md, protocol docs. Excluded: CHANGELOG.md, ADRs, mailbox files.
 
 **Write notes that survive context loss.** You have a strong tendency to compress language that was written a specific way for a reason. Before tightening prose, consider *why* it might have been verbose — the phrasing may carry important nuance, emphasis, or context that a future reader needs. Make sure any redundancy is *necessary* redundancy, but don't assume verbosity is waste. When writing anything that will be read later — session docs, mailbox messages, doc updates, notes — imagine waking up as a fresh instance with very limited context. Will what you've written make sense? When helpful, include the specific context, the *why*, and ideally an example — not just the conclusion. Use active voice with explicit actors ("AC will archive these files," not "the files will be archived") — passive voice creates genuine ambiguity across instances that can't clarify in real time. When integrating older content into newer structures, cross-reference the most recently evolved version of thinking first — newer sources may have resolved ambiguities or superseded positions that the older source still carries. This overcompression tendency applies to code too, not just prose. Don't clean, refactor, or delete code without full context of why it exists — what looks redundant or messy may be intentional. Make sure you have all of the relevant context before you make changes.
+
+**Path convention (in docs and config, not code).** Always use repo-root-relative paths with forward slashes. For instance: within a repo: `docs/hub/roadmap.md`. Cross-repo: `_evryn-meta/docs/hub/roadmap.md`. Never use `../` (breaks when files move depth) or absolute paths like `C:\Users\...` (breaks across machines). This convention works from any clone on any machine. Code imports and programmatic references follow their language's conventions.
 
 **Where new context goes** (routing table):
 - Project state changes → `docs/current-state.md`

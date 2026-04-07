@@ -6,7 +6,7 @@
 
 ## Session Summary
 
-Justin onboarded Claude Cowork as a strategic planning and operations layer — the role Lucas/Thea were designed to fill, but without requiring a custom build. Cowork now has access to: all repos (via `C:\Users\jbmcg\Evryn\Code\`), Gmail (justin@evryn.ai), Google Drive (evryn.ai workspace), and Linear (EVR workspace).
+Justin onboarded Claude Cowork as a strategic planning and operations layer — the role Lucas/Thea were designed to fill, but without requiring a custom build. Cowork now has access to: all repos (via the shared `Code/` directory), Gmail (justin@evryn.ai), Google Drive (evryn.ai workspace), and Linear (EVR workspace).
 
 Session covered: work priorities briefing, Fenwick legal strategy (scope alignment with Andrea, deferral approach with Andy), process/workflow design, and the decision to use Cowork as the agent team layer.
 

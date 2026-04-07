@@ -94,7 +94,7 @@ Evryn forms assessments of everyone she interacts with — that's her job. But s
 
 **Preframing:** Evryn tells users upfront that non-matches could be for any number of reasons and she can't say which — "same way I'd protect you if someone asked about you." This makes opacity feel like mutual protection, not a limitation.
 
-**Trust Mirror was dropped** as part of this analysis — asking "Would you have connected me to this person?" is a request for Evryn's *opinion*, not a *connection*, and would still create baseline-deviation risk. See [ADR-010](../decisions/010-canary-principle-revised.md) (revises [ADR-008](../decisions/008-trust-mirror-dropped.md)) for full reasoning and red-team analysis.
+**Trust Mirror was dropped** as part of this analysis — asking "Would you have connected me to this person?" is a request for Evryn's *opinion*, not a *connection*, and would still create baseline-deviation risk. See [ADR-010](docs/decisions/010-canary-principle-revised.md) (revises [ADR-008](docs/decisions/008-trust-mirror-dropped.md)) for full reasoning and red-team analysis.
 
 ---
 

@@ -1,6 +1,6 @@
 # Evryn Foundation Architecture
 
-> **How to use this file:** Deep dive on the two-entity structure (Evryn Inc. + Evryn Foundation), cryptographic architecture, trustee governance, and Trust Severance Protocol. Sub-spoke of the [long-term-vision spoke](../long-term-vision.md). Read this when evaluating anything related to data sovereignty, legal resilience, Foundation governance, or cryptographic trust infrastructure.
+> **How to use this file:** Deep dive on the two-entity structure (Evryn Inc. + Evryn Foundation), cryptographic architecture, trustee governance, and Trust Severance Protocol. Sub-spoke of the [long-term-vision spoke](docs/hub/long-term-vision.md). Read this when evaluating anything related to data sovereignty, legal resilience, Foundation governance, or cryptographic trust infrastructure.
 >
 > **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 
@@ -96,7 +96,7 @@ No system has zero trust surface. Evryn's architecture minimizes what must be tr
 - **Hardware trust:** The HSM manufacturer. Mitigated by using industry-standard, independently audited devices.
 - **Code trust:** The software running inside secure environments. Mitigated by reproducible builds and independent code audits.
 - **Governance trust:** The Foundation board and trustees. Mitigated by multi-party thresholds, jurisdictional distribution, and charter constraints.
-- **Inference trust (current):** The external AI provider sees data during LLM processing. Mitigated by PII anonymization and Zero Data Retention agreements. Eliminated long-term by self-hosted models inside the Foundation's secure infrastructure (see [technical-vision spoke](../technical-vision.md), LLM Constraint).
+- **Inference trust (current):** The external AI provider sees data during LLM processing. Mitigated by PII anonymization and Zero Data Retention agreements. Eliminated long-term by self-hosted models inside the Foundation's secure infrastructure (see [technical-vision spoke](docs/hub/technical-vision.md), LLM Constraint).
 
 Evryn commits to being transparent about exactly what is trusted and what isn't. Users deserve to know the real trust surface, not a marketing version of it.
 

@@ -44,7 +44,7 @@ The doc was built over many sessions with Justin's direct input. Some things tha
 4. **docs\hub\trust-and-safety.md, docs\hub\user-experience.md, docs\hub\technical-vision.md** these are essential context, to understand what really matters. 
 5. **`evryn-backend/docs/ARCHITECTURE.md`** — The full 847 lines. Read every word. This is what you're trimming.
 6. **All 17 ADRs in `_evryn-meta/docs/decisions/`** — Read each one. You need to know what rationale is already captured in ADRs so you can confidently replace inline reasoning with pointers. The relevant ones for this doc are primarily ADRs 001, 012, 013, 014, 015, 016, 017 — but scan all of them.
-7. C:\Users\Justin\Evryn\Code\evryn-backend\docs\BUILD-EVRYN-MVP.md, C:\Users\Justin\Evryn\Code\evryn-backend\docs\SPRINT-MARK-LIVE.md
+7. `evryn-backend/docs/BUILD-EVRYN-MVP.md`, `evryn-backend/docs/SPRINT-MARK-LIVE.md`
 
 **You do NOT need to read:** Session docs, CHANGELOG, LEARNINGS, AGENT_PATTERNS, identity files, additional spokes (other than those mentioned).
 

@@ -6,8 +6,8 @@
 >
 > **Relationship to other docs:**
 > - **How users arrive at evryn.ai** is covered in the [Gatekeeper Flow](gatekeeper-flow.md). This doc picks up *from arrival at evryn.ai* and covers the user experience forward.
-> - **The UX philosophy and long-term vision** lives in the [UX spoke](../user-experience.md). This doc is the v0.3-specific instantiation of those principles.
-> - **What gets built and in what order** lives in [BUILD-EVRYN-MVP.md](../../../../evryn-backend/docs/BUILD-EVRYN-MVP.md). This doc describes the experience; the build doc describes the implementation.
+> - **The UX philosophy and long-term vision** lives in the [UX spoke](docs/hub/user-experience.md). This doc is the v0.3-specific instantiation of those principles.
+> - **What gets built and in what order** lives in [BUILD-EVRYN-MVP.md](evryn-backend/docs/BUILD-EVRYN-MVP.md). This doc describes the experience; the build doc describes the implementation.
 >
 > **Owns keeping this synced:** Mira (CPO). This doc should reflect the current v0.3 build scope. Header notes which build doc version it reflects.
 >
@@ -273,7 +273,7 @@ Depending on the situation, Evryn may follow up a day or two later for a second 
 For clarity — these features exist in Evryn's long-term design but are not part of v0.3:
 
 - **Evryn Wallet** (pre-purchased credits, locked credits) — v0.4+
-- **Evryn observation of connection conversations** — at least deferred past v0.3, candidate for deprecation ([ADR-022](../../../_evryn-meta/docs/decisions/022-observation-deferred-past-v03.md))
+- **Evryn observation of connection conversations** — at least deferred past v0.3, candidate for deprecation ([ADR-022](docs/decisions/022-observation-deferred-past-v03.md))
 - **Color-coded or themed connection conversations** — all connections share one visual treatment in v0.3
 - **3-second send delay** on connection messages — deferred
 - **Progressive interface reveal** — bottom nav present from day one in v0.3
