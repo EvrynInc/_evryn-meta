@@ -132,6 +132,8 @@ When volume and complexity demand it, Evryn's intelligence separates into indepe
 - **Modules separate when they need different things:** different context windows, different model tiers, different schedules, or structural isolation from each other.
 - **The boundary between subagent and deterministic process is a build decision, not an architectural one.** Some intelligence needs LLM judgment; some is better served by rules. This vision doc doesn't prescribe which.
 
+**Infrastructure licensing optionality:** Evryn's architecture should maintain awareness that we'd like to keep the option open to license the matchmaking and trust intelligence to aligned platforms in the long term. This means API-ready trust layers, modular matchmaking logic, and privacy-safe integration paths should be considered in architectural decisions — so that a future "yes" doesn't require a re-architecture. Full depth: [long-term-vision spoke](long-term-vision.md) (Infrastructure Licensing).
+
 Current module design for v0.2: `evryn-backend/docs/ARCHITECTURE.md` (Agent Architecture). Earlier module architecture thinking from the n8n prototype era: `evryn-team-workspace/shared/projects/product/research/2025.12.01 n8n-module-architecture.md`.
 
 ---

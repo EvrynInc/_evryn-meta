@@ -49,6 +49,12 @@ The two-entity structure — Evryn Inc. (Delaware PBC, revenue and product) and 
 - **The Protocol** — selectively open framework for trust scoring, identity anchoring, match logic
 - **The Platform** — flagship interface, AI, brand, revenue
 
+### Infrastructure Licensing
+
+If Evryn's trust layer proves itself, the architecture is designed to optionally become infrastructure — aligned platforms could embed Evryn's intelligence rather than compete with it. *"LinkedIn — now with Evryn intros."* This is strategic judo: if a competitor comes knocking, Evryn wants the ability to say yes — but only on our terms. The trust graph, the AI, the living memory of trust — those stay with Evryn. What gets licensed is the matchmaking layer, under strict standards. People can copy code. They cannot fake trust. And they cannot access the real graph without meeting Evryn's governance and behavior standards.
+
+This isn't a near-term plan — it's an architectural option being kept open. The technical groundwork (API-ready trust layers, modular matchmaking, privacy-safe integration paths) is being laid with this optionality in mind, so that a future "yes" doesn't require a re-architecture.
+
 ### Graceful Degradation
 
 Designed to degrade in layers: cloud AI → offline trust logic → peer-to-peer mesh → local-only stores → analog fallback. "Trust doesn't stop mattering when the servers go down."

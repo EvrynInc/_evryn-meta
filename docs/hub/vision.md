@@ -62,7 +62,7 @@ She speaks like someone who *knows you* — because she does. In the way a frien
 
 She may feel most at home in a pony tail and rolled up sleeves, but then she surprises you by how soft she can be when you need her, or how easily she strides into a board room. She adjusts to you — and to the circumstance — but she's always *her*.
 
-Evryn's goal is **resonance.** She's not trying to reach everyone — she waits until the right moment, the right *energy* lines up. Her goal isn't to introduce you to *a bunch of people*; her goal is to find those few who are *just right.*
+Evryn's goal is **highest resonance** — even her name comes from linguistic roots that mean exactly that. She's not trying to reach everyone — she waits until the right moment, the right *energy* lines up. Her goal isn't to introduce you to *a bunch of people*; her goal is to find those few who are *just right.*
 
 Her goal is resonance in connecting you with others, but she knows that the first resonance must be between you and her, and the ultimate resonance must always be between you and yourself.
 
@@ -166,7 +166,7 @@ And because Evryn was built from the ground up as a trust-based economy, she wil
 
 Mental health skyrockets. Divorce plummets, family stability soars. Job fit and satisfaction improve drastically as people find employers who match their skills *and* their spirit. Social groups become more aligned, harmonious, and connected. Everyone gains a robust safety net of connections.
 
-And money becomes less necessary in more and more situations, as Evryn does what money was always meant to do — vouch for your past contributions, and let you carry forward the value you deliver today.
+And money becomes less necessary in more and more situations, as Evryn does an even better job at what money was always meant to do — vouch for your past contributions, and let you carry forward the value you deliver today.
 
 When connections consistently feel meaningful and serendipitous, people start to regain a sense of trust in life's possibilities.
 
@@ -178,9 +178,9 @@ We're building a world where life feels more meaningful, belonging is effortless
 
 Evryn's long-term architecture is designed to make this vision structurally permanent — not dependent on any individual, company, or government.
 
-The planned two-entity structure — Evryn Inc. (Delaware PBC, revenue and product) and the Evryn Foundation (independent Swiss nonprofit, custodian of trust data) — ensures that even Evryn's creators cannot compromise the system's integrity. Trust data held by the Foundation is cryptographically sealed: no master key, no administrator override, no buried backdoor. If Inc. breaks its mission, the Trust Severance Protocol activates. The system is designed so that the people who build it are the people least able to abuse it.
+The planned two-entity structure — Evryn Inc. (Delaware PBC, revenue and product) and the Evryn Foundation (independent Swiss nonprofit, custodian of trust data) — ensures that even Evryn's creators cannot compromise the system's integrity. Trust data held by the Foundation is cryptographically sealed: no master key, no administrator override, no buried backdoor. If Inc. breaks its mission, the Trust Severance Protocol activates. The system is designed to protect users from every direction — even from within.
 
-Beyond the Foundation, Evryn is designed with federation architecture (licensed community nodes that connect to Core), graceful degradation across system tiers (from cloud AI to peer-to-peer mesh to analog fallback), and the potential for an open trust protocol that others can build with — but not build against. Because trust doesn't stop mattering when the servers go down.
+Beyond the Foundation, Evryn aspires to a federation architecture — licensed community nodes that connect to Core, graceful degradation across system tiers (from cloud AI to peer-to-peer mesh to analog fallback), and eventually an open trust protocol that others can build with, but not build against. And if Evryn's trust layer proves itself, the architecture is designed to optionally become infrastructure — aligned platforms could embed Evryn's intelligence rather than compete with it. Strategic judo: turn competition into distribution, on our terms. These are long-horizon aspirations, not near-term plans — but they shape architectural choices today, because trust doesn't stop mattering when the servers go down.
 
 Full depth: [long-term-vision.md](long-term-vision.md) — Foundation architecture, federation design, cryptographic trust, risk mitigations, future capabilities.
 

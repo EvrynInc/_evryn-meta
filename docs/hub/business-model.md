@@ -135,6 +135,8 @@ Legacy apps extract until users leave. Evryn earns because users stay. Trust is 
 
 **Structural moat:** The planned Evryn Foundation (Swiss nonprofit, revenue-dependent — see [long-term-vision spoke](long-term-vision.md)) will hold trust data independently of Inc. In a market where consumer AI trust is actively declining — 53% of dating app users worried about AI, deepfakes eroding platform trust, extraction-model fatigue rising — a user-owned PBC with an independent trust foundation is a competitive differentiator no VC-funded competitor can structurally replicate.
 
+**Infrastructure licensing (long-horizon):** If Evryn's trust layer proves itself at scale, the architecture is designed to optionally license the matchmaking and trust intelligence to aligned platforms — turning competition into distribution, on Evryn's terms. This isn't a revenue stream to model yet, but it's an architectural option being kept open. Full depth: [long-term-vision spoke](long-term-vision.md) (Infrastructure Licensing).
+
 **"We're not building a product. We're building a network of human outcomes, continually expanding through trust."**
 
 ---
