@@ -20,9 +20,13 @@
 
 ## What Evryn Is
 
+Somewhere out there are the people you were *meant* to meet. They exist. They're real. And they've been looking for you, too. They'd change your life — and you'd change theirs...if you could just *find* them.
+
+Evryn's name comes from roots meaning "highest resonance" — and she's here to connect you — to *your* people, to yourself — and to the journey you're *meant* to be on. Full depth: [vision spoke](vision.md).
+
 Today's connection tools optimize for engagement metrics (swipes, scrolls, clicks), not real outcomes. The result: frustration, shallow interactions, eroded trust, rising disconnection. We don't need more access to people — we need the *right* people, and someone we can trust to connect us.
 
-Evryn is an AI-powered relationship broker. She finds you "your people" — the rare individuals who are the right fit — and only connects you to people she trusts. Not a dating app, not a networking tool, not a marketplace. A trust-based connection engine across all life domains: soulmate, cofounder, plumber, creative collaborator, hookup, someone who'd pay $100 for the thing you were about to throw away.
+Evryn is an AI-powered relationship broker. She finds you "your people" — the rare individuals who are *just the right fit* — and only connects you to people she trusts. Not a "dating app", not a "networking tool", not a marketplace. Your "friend who knows everyone you'd want to meet" - a trust-based connection engine across all life domains: soulmate, cofounder, plumber, creative collaborator, hookup, someone who'd pay $100 for the thing you were about to throw away.
 
 Evryn is active, not passive. She starts conversations. She thinks about you in the background. She offers thoughts unprompted. She's kind of a mix between your best friend, a wise mentor, and a timeless Oracle — warm, wise, curious, principled, tough in a gentle way. She runs her own shop — like a cool coffee shop owner who remembers your name, makes it right if something goes wrong, and gives you a free cup of coffee because she can tell you need it today.
 
@@ -69,7 +73,7 @@ Everyone who interacts with Evryn is a "user" — whether they came through a ga
 
 ## Business Model
 
-Evryn is a **broker**, not a subscription platform — she gets paid when she delivers, not for access. Everyone is a "user" — both sides pay per-connection. Full depth: `docs/hub/business-model.md`.
+Evryn is a **broker**, not a subscription platform — she doesn't get paid for access, she gets paid when she delivers. Everyone is a "user" — both sides pay per-connection. Full depth: `docs/hub/business-model.md`.
 
 - **Trust-based pricing:** Connections span from a free favor to a $10,000 executive match — any fixed pricing leaves money on the table or prices people out. And how the user shows up in the exchange tells Evryn something about how they show up in relationships. Evryn notices.
 - **Three revenue streams:** (1) Match payments, (2) Post-match transactions (Stripe Connect), (3) Participant-based business access ("ads without ads").
