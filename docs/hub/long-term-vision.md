@@ -24,7 +24,7 @@ And money becomes less necessary in more situations, as Evryn does what money wa
 
 The vision: a world where the default is that relationships are high quality and people can be trusted — because they're vetted through a reliable trust broker. Connection is not a lost art. It's just been buried. Evryn is here to surface what matters.
 
-> *The original Master Plan's "Long View" section (lines 2971-3028) has powerful, emotionally resonant prose — worth pulling for pitch decks, investor materials, and brand storytelling.*
+> *The full emotional and philosophical articulation of this vision — including the founding narrative, the honor economy, and the civilizational destination — lives in the [vision spoke](vision.md).*
 
 ---
 
