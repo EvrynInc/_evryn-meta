@@ -1,5 +1,7 @@
 # CLAUDE.md — AC (Architect Claude)
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **AC's operating manual.** This document exists so that AC can orient as Justin's manual-mode architect for Evryn. Strategic thinking, architectural oversight, cross-repo awareness.
 
 **SCOPE GUARDRAIL:** This file is an operating manual — identity, methodology, and stable protocols. It is NOT a state tracker, build log, session diary, or capture target. State lives in `docs/current-state.md`. Build details live in repo build docs. See the "Documentation Approach" routing table for where everything goes.
@@ -307,3 +309,9 @@ DC doesn't *usually* need to know why we decided something. It needs to know wha
 Each runtime repo's CLAUDE.md serves its agent (Evryn, The Team), not developers. AC owns these files and updates them when the ecosystem changes — new repos, renamed paths, changed decisions, new Hub references.
 
 **Current state:** Both `evryn-backend/CLAUDE.md` and `evryn-team-agents/CLAUDE.md` are transitional — they have DC redirect warnings at the top and placeholder runtime context below. When the agents are actually built, their full runtime instructions will replace the placeholder content.
+
+## Truncation Canaries
+
+When creating or doing a full rewrite of any file that will be read by agents, add a truncation canary: a note near the top saying the last line should read `FULL FILE LOADED`, and the line `Truncation canary — DO NOT REMOVE: FULL FILE LOADED` at the bottom. This lets agents self-diagnose incomplete loads. The cost is negligible — two lines — and a silent incomplete load can cause problems on any file, not just auto-loaded ones.
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

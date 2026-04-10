@@ -1,5 +1,7 @@
 # Long-Term Vision
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+>
 > **How to use this file:** Evryn's long-term architectural and civilizational vision — federation, the Swiss Foundation, risk mitigations, and the world Evryn creates. This is future thinking that shapes present decisions. Read this when evaluating architectural choices that have long-term implications, or when communicating Evryn's larger purpose.
 >
 > **Do not edit without Justin's approval.** Propose changes; don't make them directly.
@@ -117,3 +119,5 @@ To keep in mind as architecture evolves:
 - **Resiliency stubs** — federation, Foundation, graceful degradation (see above)
 
 ---
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

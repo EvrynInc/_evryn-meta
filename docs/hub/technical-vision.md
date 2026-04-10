@@ -1,5 +1,7 @@
 # Technical Vision
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+>
 > **How to use this file:** The widest lens on Evryn's technical architecture — the north star that shapes every build decision. Covers three domains of intelligence, matching design, data pipelines, privacy architecture, and learning systems. Also includes the system landscape diagram for visual orientation. Zooms out to where Evryn is heading long-term; anchors down into `evryn-backend/docs/ARCHITECTURE.md` (product architecture, v0.2–v1.0) where the build gets specific. Read this when thinking about future capabilities, scalability, or architectural direction.
 >
 > **Do not edit without Justin's approval.** Propose changes; don't make them directly.
@@ -381,3 +383,5 @@ This structure also protects users from Evryn itself. If Inc. is acquired, the F
 *Full cryptographic architecture, trustee governance, and Trust Severance Protocol: [Foundation Architecture](detail/evryn-foundation-architecture.md).*
 
 ---
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

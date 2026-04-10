@@ -1,5 +1,7 @@
 # Business Model
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+>
 > **How to use this file:** Full depth on how Evryn makes money and the financial model behind it. The Hub carries the business model shape (broker, per-connection, three streams); this spoke carries pricing mechanics, the free vs. paid framework, wallet structure, market sizing, and financial assumptions. Read this when working on anything related to payments, pricing, growth financials, or competitive positioning.
 >
 > **Do not edit without Justin's approval.** Propose changes; don't make them directly.
@@ -285,3 +287,5 @@ The founding philosophy is user-led, with institutional capital as a last resort
 The Financial Model includes detailed sensitivity analysis, testing viability across a range of traction and monetization scenarios — from deliberately conservative stress tests to expected-case projections. Conservative scenarios don't prove upside; they test whether the model survives under real constraint (stalled traction, lagged belief, underdelivered early monetization). The core launch plan reflects actual expectations around user psychology, early avatar mix, and referral velocity, with fallback triggers if key metrics underperform.
 
 ---
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

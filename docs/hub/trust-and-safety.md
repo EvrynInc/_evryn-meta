@@ -1,5 +1,7 @@
 # Trust & Safety
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+>
 > **How to use this file:** Full depth on Evryn's trust architecture, moderation, and safety systems. The Hub carries principle-level trust content; this spoke carries the mechanics. Read this when you need to understand how trust works in detail, or when building features that touch trust, safety, or moderation.
 >
 > **Do not edit without Justin's approval.** Propose changes; don't make them directly.
@@ -183,3 +185,5 @@ Dashboards will flag problematic chats in real-time. A dedicated Trust & Safety 
 Built with forward compatibility for frameworks like the EU's Digital Services Act: a clear appeal path for bans or moderation decisions, aggregate transparency reporting on moderation activity as the platform matures, and alignment with emerging norms on digital due process and platform accountability.
 
 ---
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

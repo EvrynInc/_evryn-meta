@@ -1,5 +1,7 @@
 # Go-to-Market & Growth
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+>
 > **How to use this file:** Full depth on Evryn's GTM strategy, growth mechanics, and competitive landscape. The Hub carries current strategy and brief GTM summary; this spoke carries the full reasoning, growth channels, messaging, and competitive analysis. Read this when working on growth features, outreach, or competitive positioning.
 >
 > **Do not edit without Justin's approval.** Propose changes; don't make them directly.
@@ -399,3 +401,5 @@ Paid acquisition is secondary to organic growth — the hope is that warm outrea
 Phase alignment: Paid channels activate primarily in v0.3+ when there's a web app to land on and revenue to measure against. Before that, every dollar goes to building.
 
 ---
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

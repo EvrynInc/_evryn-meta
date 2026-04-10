@@ -1,5 +1,7 @@
 # BizOps & Tooling
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+>
 > **How to use this file:** Reference doc for Evryn's business operations tools, infrastructure services, legal entities, and vendor choices. One place to look up what tool we use for what. Read this when evaluating a new tool, checking what we already use, or onboarding someone who needs the operational picture.
 >
 > **Product architecture** lives in `evryn-backend/docs/ARCHITECTURE.md`. **Aspirational technical vision** lives in `docs/hub/technical-vision.md`. This spoke covers business operations and infrastructure services.
@@ -145,3 +147,5 @@
 > *The BizOps appendix in the original Master Plan (lines 3104-3210) has longer rationale for each tool choice. The Notion Vault has deeper evaluations.*
 
 ---
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

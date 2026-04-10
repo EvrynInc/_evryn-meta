@@ -1,5 +1,7 @@
 # Evryn — The Hub
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+>
 > **Living source of truth.** Loaded every session by every agent. If your notes contradict this document, flag the discrepancy — don't silently override.
 >
 > **Do not edit this document without explicit approval from Justin.** If you think something here is wrong or incomplete, tell Justin — do not rewrite it yourself.
@@ -160,3 +162,5 @@ Most domain spokes are linked inline in the sections above. When adding new refe
 - **Historical vault (evryn-backend):** `evryn-backend/docs/historical/` — v0.1 system prompt, requirements drafts, prototype schema, n8n prototype
 
 ---
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

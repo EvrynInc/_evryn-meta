@@ -1,5 +1,7 @@
 # User Experience
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+>
 > **How to use this file:** Full depth on how users interact with Evryn — from first contact through after-care. Covers onboarding, connection flows, conversation patterns, and interface philosophy. The Hub carries principle-level UX content; this spoke carries the full flows. Read this when building or modifying any user-facing feature.
 >
 > **Do not edit without Justin's approval.** Propose changes; don't make them directly.
@@ -191,3 +193,5 @@ When system capacity is strained, Evryn doesn't crash or go silent — she commu
 And she does — right where the conversation left off. This preserves the relationship even under strain.
 
 ---
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
