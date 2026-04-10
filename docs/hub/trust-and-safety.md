@@ -2,7 +2,7 @@
 
 > **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
 >
-> **How to use this file:** Full depth on Evryn's trust architecture, moderation, and safety systems. The Hub carries principle-level trust content; this spoke carries the mechanics. Read this when you need to understand how trust works in detail, or when building features that touch trust, safety, or moderation.
+> **How to use this file:** Full depth on Evryn's trust architecture, moderation, and safety systems. The Hub carries principle-level trust content; this spoke carries the mechanics. For the *narrative* of trust — why it matters, how it creates a self-selecting economy, the honor economy framing — see the [vision spoke](vision.md). Read this spoke when you need to understand how trust works in detail, or when building features that touch trust, safety, or moderation.
 >
 > **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 

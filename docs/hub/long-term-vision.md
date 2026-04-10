@@ -2,7 +2,7 @@
 
 > **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
 >
-> **How to use this file:** Evryn's long-term architectural and civilizational vision — federation, the Swiss Foundation, risk mitigations, and the world Evryn creates. This is future thinking that shapes present decisions. Read this when evaluating architectural choices that have long-term implications, or when communicating Evryn's larger purpose.
+> **How to use this file:** Evryn's long-term structural architecture — federation, the Swiss Foundation, risk mitigations, and future capabilities. This is future thinking that shapes present decisions. Read this when evaluating architectural choices that have long-term implications. For the philosophical and emotional core — why Evryn exists, who she is, the world she creates — see the [vision spoke](vision.md).
 >
 > **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 

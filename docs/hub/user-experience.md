@@ -2,7 +2,7 @@
 
 > **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
 >
-> **How to use this file:** Full depth on how users interact with Evryn — from first contact through after-care. Covers onboarding, connection flows, conversation patterns, and interface philosophy. The Hub carries principle-level UX content; this spoke carries the full flows. Read this when building or modifying any user-facing feature.
+> **How to use this file:** Full depth on how users interact with Evryn — from first contact through after-care. Covers onboarding, connection flows, conversation patterns, and interface philosophy. The Hub carries principle-level UX content; this spoke carries the full flows. For who Evryn IS at the deepest level — her character, her philosophy, the world she's building — see the [vision spoke](vision.md). Read this spoke when building or modifying any user-facing feature.
 >
 > **Do not edit without Justin's approval.** Propose changes; don't make them directly.
 

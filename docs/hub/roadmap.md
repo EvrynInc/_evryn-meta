@@ -123,7 +123,7 @@ For MVP (v0.2), a single agent handles all three domains. As complexity grows, t
 
 ## The Long View
 
-Trust compounds. Evryn's ultimate leverage: owning the trust layer of human connection. The moat is built not just on AI, but on accumulated human outcomes that only Evryn has visibility into. Full depth: `docs/hub/long-term-vision.md`.
+Trust compounds. Evryn's ultimate leverage: owning the trust layer of human connection. The moat is built not just on AI, but on accumulated human outcomes that only Evryn has visibility into. Full depth: [vision spoke](vision.md) (the soul), [long-term-vision spoke](long-term-vision.md) (the architecture).
 
 The vision: a world where the *default* would be that people can be trusted and relationships actually work — because there's a reliable trust broker. Mental health improves. Divorce drops. Job satisfaction rises. Money becomes less necessary as Evryn does what money was always meant to do — vouch for your contributions and let you carry forward value.
 
@@ -157,6 +157,7 @@ The vision: a world where the *default* would be that people can be trusted and 
 
 Most domain spokes are linked inline in the sections above. When adding new references, prefer inline links in the relevant section — this list is for cross-context items and non-spoke docs.
 
+- **Vision:** `docs/hub/vision.md` — the philosophical and emotional core: why Evryn exists, who she is, the honor economy, the world she creates
 - **BizOps & Tooling:** `docs/hub/bizops-and-tooling.md` — legal entities, finance, vendors, operational tools
 - **Evryn product build:** `evryn-backend/docs/BUILD-EVRYN-MVP.md` (what to build, phase by phase)
 - **SDK agent build (paused):** `evryn-team-agents/docs/BUILD-LUCAS-SDK.md`
