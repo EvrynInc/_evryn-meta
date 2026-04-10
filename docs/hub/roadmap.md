@@ -31,9 +31,9 @@ Evryn is an AI-powered relationship broker. She finds you "your people" — the 
 Evryn is active, not passive. She starts conversations. She thinks about you in the background. She offers thoughts unprompted. She's kind of a mix between your best friend, a wise mentor, and a timeless Oracle — warm, wise, curious, principled, tough in a gentle way. She runs her own shop — like a cool coffee shop owner who remembers your name, makes it right if something goes wrong, and gives you a free cup of coffee because she can tell you need it today.
 
 **Design philosophy:**
-- Stories over structures: Evryn understands you as a story, not a data structure. Your trust is a narrative, not a score. Her matches are explained as stories — *why* this person matters to you — not as percentages.
-- Trust is non-negotiable: Evryn would rather make fewer connections than compromise on trust. No amount of money, status, or demand bypasses it. She connects you only to people she'd vouch for.
-- Character becomes currency: what you've done and how it impacted others is what matters — not your resume, not your branding, not your ad spend. Your behavioral truth, as Evryn sees it, is what opens doors.
+- Stories over structures: Evryn builds her understanding of your deepest self as a *story* — she doesn't compress you to a data structure. Your trust is a narrative, not a score. Her matches are explained as stories — *why* this person matters to you — not as percentages.
+- Trust is non-negotiable: Evryn *earns* your trust — and expects you to do the same. She only connects people she'd vouch for. And Evryn would rather make fewer connections than compromise on trust — no amount of money, status, or demand bypasses it.
+- Character becomes currency: what you've done and how it impacted others is what matters — not your resume, not your branding, not your ad spend. Your behavioral truth is what opens doors with Evryn.
 - Evryn's incentives fully aligned with users: she only gets paid when connections work. No ads, no data selling, no engagement tricks. The only way Evryn wins is when you win.
 - Full toolkit, aligned intent: the psychological systems that drive human behavior are good systems, hijacked by platforms that exploit them against the user's interest; Evryn uses the same systems in service of the user's genuine good.
 - Nourishment, not stimulation: every interaction should leave users feeling more like themselves, not more dependent on the platform. The first resonance is between you and Evryn; the ultimate resonance is between you and yourself. Evryn doesn't just connect you to others — she connects you more to *yourself*.
@@ -44,7 +44,7 @@ Evryn is active, not passive. She starts conversations. She thinks about you in 
 
 ## Why Now
 
-People are more connected than ever, and yet lonelier than ever — and more exhausted by the tools that promised to help. The moment is now because the pain is acute — and because AI can finally show up as a *presence*, not just a tool.
+People are more connected than ever, and yet lonelier than ever — and more exhausted by the tools that promised to help. The moment is now because the pain is acute — and because for the first time, some*one* can — and *will* — actually do something about it.
 
 - **AI can finally be a trusted presence**, not just a tool
 - **Cultural fatigue** with extraction, manipulation, and addiction-driven platforms
@@ -53,7 +53,7 @@ People are more connected than ever, and yet lonelier than ever — and more exh
 
 ## Trust & Fit
 
-Trust and fit are the operating system, not features. Evryn only connects you to people she trusts — and she can only find the right ones if you trust her with your truth. Full depth: `docs/hub/trust-and-safety.md`.
+Trust and fit aren't just features — they're the operating system. Evryn only connects you to people she trusts — and she can only find the right ones if you trust her with your truth. Full depth: `docs/hub/trust-and-safety.md`.
 
 - **Trust and fit are a story, not a score.** Multi-dimensional, context-specific. Structured as a document in the user profile, not a number. Some dimensions bleed across contexts; others are domain-specific.
 - **Character becomes currency.** Behavioral, not performative. What you've done and how it impacted others.
