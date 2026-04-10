@@ -326,7 +326,7 @@ Full competitive research: `evryn-team-workspace/shared/projects/growth/research
 
 ### Infrastructure Licensing (Long Game)
 
-If Evryn works, competitors may try to neutralize her. The architecture is designed to optionally license Evryn's matchmaking layer — letting aligned platforms embed her logic. "LinkedIn — now with Evryn intros." Strategic judo: turn competition into distribution.
+If Evryn works, competitors may try to neutralize her. The architecture is designed to optionally license Evryn's matchmaking layer — letting aligned platforms embed her logic. "LinkedIn — now with Evryn intros." Strategic judo: turn competition into distribution. Full depth: [long-term-vision spoke](long-term-vision.md) (Infrastructure Licensing).
 
 ---
 

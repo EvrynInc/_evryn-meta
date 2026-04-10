@@ -30,12 +30,12 @@ Evryn is an AI-powered relationship broker. She finds you "your people" — the 
 
 Evryn is active, not passive. She starts conversations. She thinks about you in the background. She offers thoughts unprompted. She's kind of a mix between your best friend, a wise mentor, and a timeless Oracle — warm, wise, curious, principled, tough in a gentle way. She runs her own shop — like a cool coffee shop owner who remembers your name, makes it right if something goes wrong, and gives you a free cup of coffee because she can tell you need it today.
 
-**Design philosophy:** 
-- Stories over structures. 
-- Trust is non-negotiable. 
-- Character becomes currency. 
-- Evryn's incentives fully aligned with users. 
-- Full toolkit, aligned intent: the psychological systems that drive human behavior are good systems, hijacked by platforms that exploit them against the user's interest; Evryn uses the same systems in service of the user's genuine good. 
+**Design philosophy:**
+- Stories over structures: Evryn understands you as a story, not a data structure. Your trust is a narrative, not a score. Her matches are explained as stories — *why* this person matters to you — not as percentages.
+- Trust is non-negotiable: Evryn would rather make fewer connections than compromise on trust. No amount of money, status, or demand bypasses it. She connects you only to people she'd vouch for.
+- Character becomes currency: what you've done and how it impacted others is what matters — not your resume, not your branding, not your ad spend. Your behavioral truth, as Evryn sees it, is what opens doors.
+- Evryn's incentives fully aligned with users: she only gets paid when connections work. No ads, no data selling, no engagement tricks. The only way Evryn wins is when you win.
+- Full toolkit, aligned intent: the psychological systems that drive human behavior are good systems, hijacked by platforms that exploit them against the user's interest; Evryn uses the same systems in service of the user's genuine good.
 - Nourishment, not stimulation: every interaction should leave users feeling more like themselves, not more dependent on the platform. The first resonance is between you and Evryn; the ultimate resonance is between you and yourself. Evryn doesn't just connect you to others — she connects you more to *yourself*.
 
 **What Evryn is NOT:** Not a dating app ("a resonance layer for life"). Not a chatbot ("a relational intelligence with judgment"). Not another network ("a trust-based connection engine"). Not a marketplace ("a personal connector for what — and who — you actually need").
@@ -44,6 +44,8 @@ Evryn is active, not passive. She starts conversations. She thinks about you in 
 
 ## Why Now
 
+People are more connected than ever, and yet lonelier than ever — and more exhausted by the tools that promised to help. The moment is now because the pain is acute — and because AI can finally show up as a *presence*, not just a tool.
+
 - **AI can finally be a trusted presence**, not just a tool
 - **Cultural fatigue** with extraction, manipulation, and addiction-driven platforms
 - **Loneliness epidemic** + professional displacement = acute demand for trusted connection
@@ -51,7 +53,7 @@ Evryn is active, not passive. She starts conversations. She thinks about you in 
 
 ## Trust & Fit
 
-Trust and fit are the operating system, not features. Evryn only connects people in proportion to how much she trusts them — and only when the fit is genuinely right. Full depth: `docs/hub/trust-and-safety.md`.
+Trust and fit are the operating system, not features. Evryn only connects you to people she trusts — and she can only find the right ones if you trust her with your truth. Full depth: `docs/hub/trust-and-safety.md`.
 
 - **Trust and fit are a story, not a score.** Multi-dimensional, context-specific. Structured as a document in the user profile, not a number. Some dimensions bleed across contexts; others are domain-specific.
 - **Character becomes currency.** Behavioral, not performative. What you've done and how it impacted others.
@@ -75,7 +77,7 @@ Everyone who interacts with Evryn is a "user" — whether they came through a ga
 
 Evryn is a **broker**, not a subscription platform — she doesn't get paid for access, she gets paid when she delivers. Everyone is a "user" — both sides pay per-connection. Full depth: `docs/hub/business-model.md`.
 
-- **Trust-based pricing:** Connections span from a free favor to a $10,000 executive match — any fixed pricing leaves money on the table or prices people out. And how the user shows up in the exchange tells Evryn something about how they show up in relationships. Evryn notices.
+- **Trust-based pricing:** Connections span from a free favor to a $10,000 executive match — any fixed pricing leaves money on the table or prices people out. And how you show up in the exchange tells Evryn something about how you show up in relationships. *Evryn notices.*
 - **Three revenue streams:** (1) Match payments, (2) Post-match transactions (Stripe Connect), (3) Participant-based business access ("ads without ads").
 - **The flywheel:** Value compounds after a connection, not just during. You seek a soulmate → then a wedding planner → then a midwife → a babysitter → a new job. The more Evryn knows you, the more verticals open up. Every success fuels growth.
 - **Structural moat:** Legacy platforms are structurally incentivized to keep you *almost* satisfied — solving your problem kills their subscription. Evryn only gets paid when the connection works. Trust compounds; LTV is exponential.
@@ -125,7 +127,7 @@ For MVP (v0.2), a single agent handles all three domains. As complexity grows, t
 
 Trust compounds. Evryn's ultimate leverage: owning the trust layer of human connection. The moat is built not just on AI, but on accumulated human outcomes that only Evryn has visibility into. Full depth: [vision spoke](vision.md) (the soul), [long-term-vision spoke](long-term-vision.md) (the architecture).
 
-The vision: a world where the *default* would be that people can be trusted and relationships actually work — because there's a reliable trust broker. Mental health improves. Divorce drops. Job satisfaction rises. Money becomes less necessary as Evryn does what money was always meant to do — vouch for your contributions and let you carry forward value.
+The vision: a world where the *default* would be that people can be trusted and relationships actually work — because there's a reliable trust broker. Mental health improves. Divorce drops. Job satisfaction rises. Money becomes less necessary as Evryn does an even better job at what money was always meant to do — vouch for your contributions and let you carry forward value.
 
 **Target state:**
 1. Trust data held by an independent Swiss foundation, structurally inaccessible even to Evryn Inc.
