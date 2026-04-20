@@ -1,6 +1,6 @@
 # ADR-019: Matching Cascade Pipeline
 
-**Status:** Accepted
+**Status:** Accepted (partially superseded by [ADR-027](027-profile-architecture-simplification.md) on cadence — weekly batch → event-based trigger. Pipeline mechanics below survive intact.)
 **Date:** 2026-03-24
 **Deciders:** Justin, AC2
 
