@@ -70,7 +70,7 @@ The story is a narrative. If Evryn wants to organize it with headings, sections,
 - Token budgeting approach (~500-800 tokens for a typical story)
 - The *concept* of different decay rates and loading characteristics — these just live inside the narrative structure rather than as separate fields
 
-**v0.2 operations:** Story gets written during Mark's onboarding conversation. Pending_notes accumulate from subsequent interactions. No consolidation/reflection during v0.2 (~3 weeks). Notes just pile up. When v0.3 launches, the reflection pipeline processes the backlog.
+**v0.2 operations:** Schema has both `story` and `pending_notes` fields from the start (no migration when Reflection arrives), but `story` stays empty — conversational Evryn is not in the business of writing stories. Everything goes to pending_notes: Justin's introduction, onboarding observations, triage observations, all of it. Evryn appends; that's all she does in conversation. Story only gets written when Reflection exists (v0.3). Until then, every query loads the (empty) story + all pending_notes, and Evryn works from the notes directly.
 
 ### Decision 3: Cross-user notes — structural firewalling via separate column
 
