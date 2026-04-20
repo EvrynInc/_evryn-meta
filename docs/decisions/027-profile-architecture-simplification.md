@@ -20,11 +20,9 @@ The `profile_jsonb` structure in ARCHITECTURE.md contains several parallel syste
 
 2. **Tiered story decomposition** (`current_synthesis`, `stable_traits`, `transient_state`) — proposed by the memory-scaling research for different decay rates. In practice, the distinction between "transient state" and "current synthesis" is ~80% overlap, and what counts as "stable" is itself a judgment call. The schema shouldn't impose structure on a fundamentally narrative judgment.
 
-3. **`profile_jsonb.notes` as a separate array** — notes from operators, other users, and other sources are maintained as a parallel data structure alongside the story. But everything should flow through the same path: pending_notes → story via reflection. Separate notes arrays create parallel systems that drift.
+3. **`profile_jsonb.notes` array (current design)** — the existing architecture has a `notes` array inside `profile_jsonb` for operator introductions and cross-user feedback. Because `profile_jsonb` loads in total via `buildPersonContext()`, everything in this array is in Evryn's conversational context — including cross-user feedback tagged `shareable_with_user: false`. If Evryn is one confused volley away from leaking "uuid-12345 said he was bad in bed," that's not firewalling — it's hoping the model follows instructions. Additionally, maintaining a separate notes array alongside the story creates a parallel system that drifts — everything should flow through the same path (pending_notes → story).
 
-4. **Cross-user notes in `profile_jsonb`** — currently tagged with `shareable_with_user: false` as an instruction-level gate. But the raw text loads in every query via `buildPersonContext()`. If Evryn is one confused volley away from leaking "uuid-12345 said he had a small dick," that's not firewalling — it's hoping the model follows instructions.
-
-5. **Weekly batch reflection cadence** (ADR-019) — reflection runs weekly, then profile evaluation, then re-matching Fridays. This was designed for cost efficiency at scale. But it misses the crucial insight: the Evryn instance that just had the conversation is uniquely positioned to evaluate whether something is matching-relevant. A batch process later would have to reconstruct that context.
+4. **Weekly batch reflection cadence** (ADR-019) — reflection runs weekly, then profile evaluation, then re-matching Fridays. This was designed for cost efficiency at scale. But it misses the crucial insight: the Evryn instance that just had the conversation is uniquely positioned to evaluate whether something is matching-relevant. A batch process later would have to reconstruct that context.
 
 ---
 
