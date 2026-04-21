@@ -119,7 +119,7 @@ Evryn is a **relationship engine with compounding value**:
 
 **Why Seattle**: while we'd originally planned to launch in Los Angeles, our research revealed that Seattle may be the ideal launch market for what Evryn is:
 
-* **Seattle ranks #1 among major US metros for depression.** Nearly half of residents report feeling lonely. The "Seattle Freeze" \- the city's notorious difficulty in making friends \- was recently proven by a peer-reviewed study to be a self-fulfilling prophecy: people believe it's hard to make friends, so they stop trying, so it becomes hard to make friends. Evryn breaks this cycle because *she* initiates.
+* **Seattle ranks #1 among major US metros for loneliness.** Nearly half of residents report feeling lonely. The "Seattle Freeze" \- the city's notorious difficulty in making friends \- was recently proven by a peer-reviewed study to be a self-fulfilling prophecy: people believe it's hard to make friends, so they stop trying, so it becomes hard to make friends. Evryn breaks this cycle because *she* initiates.
 * **A city of transplants who need everything.** 78% of Seattle's population growth is migration. 64,000 international migrants arrive annually. Only 35% of residents were born in Washington. These people arrive needing a doctor, a plumber, a friend, a date \- and can't find any of them in the hardest city in America to make friends.
 * **30,000+ tech layoffs in 2025.** Seattle leads the world in AI-driven job displacement. Highly skilled, well-networked people who need new connections \- and can pay for them.
 * **Every community is dense but siloed.** Film, tech, food, music, outdoor, nonprofit, art \- each community is rich on the inside and invisible from the outside. No infrastructure for the intersections. Evryn is the only tool that sees across all of them.
@@ -127,7 +127,7 @@ Evryn is a **relationship engine with compounding value**:
 
 **Seattle is a launchpad, not just a launch city.** People constantly arrive in Seattle and constantly leave \- for LA, Portland, Phoenix, Sacramento, and beyond. Every user who has a great Evryn experience tells people elsewhere; every user who moves takes Evryn with them. And because Evryn can proactively find connections anywhere, she can serve those users in their new city from day one. We don't have to "launch" in new cities \- Evryn arrives with her users, and each one becomes a seed for organic growth. Portland and the broader Pacific Northwest corridor are the first natural expansion, connected by shared creative communities, shared labor pools, and record-breaking train ridership.
 
-* **Our film industry advisor**, Megan Griffiths \- award-winning director and executive producer whose credits span Amazon (*The Summer I Turned Pretty*), HBO, Netflix, and premier festivals \- said she knows *a lot* of people who would love the gatekeeper version of Evryn. The warmest, shortest paths to our next gatekeepers run through Seattle.
+* **Our film industry advisor**, Megan Griffiths \- award-winning director and executive producer whose credits span Amazon (*The Summer I Turned Pretty*), HBO, Netflix, and premier festivals \- said she knows *a lot* of people who will love the gatekeeper version of Evryn. The warmest, shortest paths to our next gatekeepers run through Seattle.
 
 ---
 
@@ -136,7 +136,7 @@ Evryn is a **relationship engine with compounding value**:
 * The Team:
   * **CEO**: Justin McGowan
     * 30 years in the film industry, working as an actor, director, producer, and screenwriter \- creating original projects, supporting other independents, and delivering projects for Fox, Warner, Paramount, Lions Gate, Nintendo, Amazon, Flogging Molly, and Alicia Keys, among others.
-  * **AI Agent Team:** We've moved from a traditional human engineering team to an AI-first approach, building with Claude Code as the primary development tool and planning a full AI agent team as operating staff. This has cut our burn rate dramatically and actually *accelerated* our development speed \- what used to take weeks now takes days.
+  * **AI Agent Team:** We've moved from a traditional human engineering team to an AI-first approach, building with Claude Code as the primary development tool and a full AI agent team as operating staff. This has cut our burn rate dramatically and actually *accelerated* our development speed \- what used to take weeks now takes days.
   * **Operations Advisor**: Andrew Lester
     * 20+ Years of Startup Growth, Operations and Project Management and Startup/Innovation Advisory.
   * **Technical Product Advisor**: Salil Chatrath
@@ -150,7 +150,7 @@ Evryn is a **relationship engine with compounding value**:
   * **General Counsel:**
     * Andy Albertson and the extended team at Fenwick & West
 * **Evryn 0.1 (Complete):** A working conversational prototype that gets to know you, guides onboarding, captures structured profiles and contact info, and runs willingness-to-pay experiments. She asks open-ended questions, follows up to uncover real needs, and holds the trust frame throughout.
-* **Evryn 0.2 "Gatekeeper's Inbox" (Going Live This Week):** Our first pilot gatekeeper, Mark Titus, is ready to start forwarding his inbound to Evryn. Evryn triages his inbox \- identifying who's worth his time (gold), who isn't the right fit (pass), and who's an edge case \- then drafts notifications for Justin's approval before delivering. These are connections being brokered, not emails being sorted.
+* **Evryn 0.2 "Gatekeeper's Inbox" (Going Live This Week):** Our first pilot gatekeeper, is ready to start forwarding his inbound to Evryn. Evryn triages his inbox \- identifying who's worth his time (gold), who isn't the right fit (pass), and who's an edge case \- then drafts notifications for Justin's approval before delivering. These are connections being brokered, not emails being sorted.
 * **Evryn 0.3 "The Broker" (Target: Late April):** Web app \+ matching \+ payments \+ cast-off outreach. Mark's ~200 daily cast-offs become Evryn's first organic users, entering through the web app. First revenue target: late April / early May.
 
 ---
@@ -161,12 +161,12 @@ Our capital plan is sequenced to stay lean, mission-aligned, and user-empowered.
 
 * **Raised to Date**: **$40K**: $15k founder capital; $25k from early angel investor.
 * **Near-Term Angels**: Approaching friends/family/smaller angels to secure funds for our first public-facing build.
-* **Larger Investors**: Once we've **fully validated the build architecture**, we'll approach our short list of mission-aligned larger investors for more substantial investment.
+* **Larger Investors**: Once we've **stabilized the gatekeeper strategy**, we'll approach our short list of mission-aligned larger investors for more substantial investment.
 * **Crowdfunding / User Ownership**: Every new user has the opportunity to **pre-purchase discounted connection credits** prior to launch, and to become a **co-owner of Evryn** through a regulated crowdfunding platform.
   * Both of these approaches extend the runway.
   * Users with skin in the game are more likely to become die-hard ambassadors.
 
-**The AI-first transformation** has dramatically changed the capital calculus. Building with Claude Code as the primary development tool, with plans to bring a full AI agent team online as operating staff, has done two things: it's cut our burn rate to ~$800/month (down from what would have been $15-20K/month with a human engineering team), and it's actually *accelerated* our development speed. We can now build more, faster, with far less expense than originally planned \- and this allows us to be much more deliberate in our capital approach, partnering only on terms that protect the mission.
+**The AI-first transformation** has dramatically changed the capital calculus. Building with Claude Code as the primary development tool and utilizing a full AI agent team online as operating staff, has done two things: it's cut our burn rate to ~$800/month (down from what would have been tens of thousands per month with a full human team), and it's actually *accelerated* our development speed. We can now build more, faster, with far less expense than originally planned \- and this allows us to be much more deliberate in our capital approach, partnering only on terms that protect the mission.
 
 As mentioned above, we're also signed with Fenwick & West \- more than just a very prestigious law firm, they're a strategic partner, whose willingness to take us on as a client not only raises our profile but decreases our short-term burn rate (due to legal cost deferment), and increases our access to strategic and capital partners.
 
