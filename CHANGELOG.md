@@ -6,6 +6,11 @@
 
 ---
 
+## 2026-04-22 (AC — DC Day 6 spec review + deploy prep)
+
+- **DC Day 6 spec reviewed and approved** — Soren wrote, AC reviewed for build-level precision. 10 corrections (2 critical: missing pending_notes loading in buildPersonContext, NULL safety in append_cross_user_note SQL). All corrections applied. Two post-review additions approved (1E message_body column, 2F stripReplyChain, 3C proactive outreach cron).
+- **current-state.md** — Full rewrite to reflect weeks of team progress.
+
 ## 2026-04-05 (AC0 — Orchestration packout, sprint tracker finalization)
 
 - **Sprint tracker finalized** — Added 3 deferred DC tasks (seen_by_subject grep, Railway deploy, confidence_audit in scaffold). Added AC0 Orchestration State section with sequencing and blocking dependencies.
