@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-04-22T18:35-07:00*
+*Last updated: 2026-04-23T16:45-07:00*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
 
@@ -22,17 +22,18 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **DC Day 6 build COMPLETE.** All runtime code changes built, schema migrations applied, data backfilled. Ready for commit + Railway deploy. Two minor JSON.parse try/catch fixes pending (supabase_read, supabase_upsert), then deploy.
-- **Identity files COMPLETE.** All pre-go-live files written, reviewed (Soren runtime, Nathan legal, Marlowe cold read), signed off. Full stack: core.md, gatekeeper.md, onboarding.md, gatekeeper-onboarding.md, triage.md, operator.md, trust-arc-scripts, feedback-guidance, company-context. Module composition model shipped. conversation.md retired, regular-user.md dropped.
-- **Remaining before Mark go-live:** Commit + deploy to Railway -> integration test (Justin + AC) -> adversarial test (Justin + AC) -> identity/runtime dedup review (AC + Justin) -> go/no-go -> Mark email.
+- **DC Day 6 build COMPLETE + Operator redesign COMPLETE.** All runtime code changes built, schema migrations applied, data backfilled. Operator architecture restructured (system actor, not product user). Committed and pushed.
+- **Identity files COMPLETE.** All pre-go-live files written, reviewed (Soren runtime, Nathan legal, Marlowe cold read), signed off. Mira doing final pass now.
+- **Integration test protocol UPDATED.** ADR-027 alignment (pending_notes, not gatekeeper_criteria), Operator UUID fix, Day 6 checkpoints (conversation history, message_body stripping, pending_notes RPC, proactive outreach cron), scripted onboarding conversation built. Billing error loud alert added to runtime. Polling interval now env-configurable.
+- **Remaining before Mark go-live:** Mira's final identity pass -> deploy to Railway -> integration test (Justin + AC, ~3 hrs) -> adversarial test (Justin + AC) -> go/no-go -> Mark email.
 - **Legal: Fenwick Phase 1 complete.** ToS and Privacy Notice finalized. Mark acceptance via email reply. Phase 2 (v0.3 terms) in progress.
 - **Go-live timing relaxed.** Mark is in no hurry. Quality over speed.
 
 ## Active Projects
 
-- **_evryn-meta** — AC reviewed DC Day 6 spec (written by Soren per EVR-93 pattern). ADR-027 (profile architecture simplification) and ADR-028 (volley reasoning persistence) shipped.
-- **evryn-backend** — DC Day 6 complete: ADR-027 schema migrations, RPC functions, profile template, model tier (Opus 4.7), conversation history loading, message body stripping, proactive outreach cron, pending_notes/cross_user_notes tools. Identity file stack complete. Awaiting commit + deploy + testing.
-- **evryn-team-workspace** — Full team operating. Current-state maintained here. Identity file sessions (Mira + Soren + Nathan) ran through this workspace. DC Day 6 spec authored and reviewed here.
+- **_evryn-meta** — AC reviewed DC Day 6 spec (written by Soren per EVR-93 pattern). ADR-027 and ADR-028 shipped. Integration test protocol updated.
+- **evryn-backend** — DC Day 6 + Operator redesign complete. Integration test prep: scripted conversation, billing alert, polling config, ADR-027 test fixture alignment. Awaiting Mira's final pass + deploy + testing.
+- **evryn-team-workspace** — Full team operating. Current-state maintained here. Identity file sessions (Mira + Soren + Nathan) complete. DC Day 6 spec authored and reviewed here.
 - **evryn-ops** — Created. OC CLAUDE.md ready.
 - **evryn-quality** — Created. QC CLAUDE.md ready.
 - **evryn-website** — Live at evryn.ai. ToS + Privacy Notice pages built. Committed locally.

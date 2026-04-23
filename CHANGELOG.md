@@ -6,6 +6,14 @@
 
 ---
 
+## 2026-04-23 (AC — Integration test prep + billing guardrails)
+
+- **Integration test protocol updated** for ADR-027, Operator redesign, Day 6 new-system checkpoints. Rachel character replaced with existing Mark test profile for reproducibility.
+- **Scripted onboarding conversation built** (`evryn-backend/tests/fixtures/integration-test-script.md`) — Slack intro + 7 response blocks covering all identity module topics (core.md, onboarding.md, gatekeeper-onboarding.md). Known inputs for known expected outputs.
+- **Test gatekeeper profile updated** — ADR-027 template (empty story, pending_notes array) + known-good pending_notes for triage isolation test. Old gatekeeper_criteria JSON removed.
+- **Billing error loud alert** added to `runEvrynQuery` — detects credit/billing errors and sends distinct `#dev-alerts` message ("BILLING: Evryn is OFFLINE"). v0.3 spend tracking stub in BUILD doc.
+- **Polling interval env-configurable** — `POLL_INTERVAL_MS` env var (default 30s, testing 10s, production 5min). Documented in operator guide + test pre-flight.
+
 ## 2026-04-22 (AC — DC Day 6 spec review + deploy prep)
 
 - **DC Day 6 spec reviewed and approved** — Soren wrote, AC reviewed for build-level precision. 10 corrections (2 critical: missing pending_notes loading in buildPersonContext, NULL safety in append_cross_user_note SQL). All corrections applied. Two post-review additions approved (1E message_body column, 2F stripReplyChain, 3C proactive outreach cron).
