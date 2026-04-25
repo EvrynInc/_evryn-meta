@@ -6,6 +6,15 @@
 
 ---
 
+## 2026-04-24 (AC — Deploy session support + integration test prep)
+
+- **Evryn deployed to Railway** — DC deployed Day 6 build. AC supported with deploy config (SEND_ENABLED bug catch, Railway plan research, env var guidance). Service paused for weekend; integration test Monday.
+- **Railway Hobby plan decision** — Researched Hobby vs Pro. Hobby sufficient through v0.3. Scaling breadcrumb added to BUILD doc with upgrade triggers.
+- **Mark's real email verified absent** — `mark@evaswild.com` and `mark@augustisland.com` confirmed absent from all repos and Supabase. Two historical references (completed task spec, changelog entry noting the fix) are record-only.
+- **DC mailbox absorbed** — SDK version coupling constraint (critical: SDK + Claude Code binary must match exactly), Docker deployment constraints, Railway CLI vs API gap, Slack scope fix, operator record email change.
+- **Operator guide updated by DC** — Deploy section, setup-credentials linked, Mark protection layers documented.
+- **Orphaned task file dated** — `dc2-synthetic-fixtures.md` renamed with `2026-03-02-` prefix.
+
 ## 2026-04-23 (AC — Integration test prep + billing guardrails)
 
 - **Integration test protocol updated** for ADR-027, Operator redesign, Day 6 new-system checkpoints. Rachel character replaced with existing Mark test profile for reproducibility.

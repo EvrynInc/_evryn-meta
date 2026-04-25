@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-04-23T16:45-07:00*
+*Last updated: 2026-04-24T16:51-07:00*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
 
@@ -22,30 +22,30 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **DC Day 6 build COMPLETE + Operator redesign COMPLETE.** All runtime code changes built, schema migrations applied, data backfilled. Operator architecture restructured (system actor, not product user). Committed and pushed.
-- **Identity files COMPLETE.** All pre-go-live files written, reviewed (Soren runtime, Nathan legal, Marlowe cold read), signed off. Mira doing final pass now.
-- **Integration test protocol UPDATED.** ADR-027 alignment (pending_notes, not gatekeeper_criteria), Operator UUID fix, Day 6 checkpoints (conversation history, message_body stripping, pending_notes RPC, proactive outreach cron), scripted onboarding conversation built. Billing error loud alert added to runtime. Polling interval now env-configurable.
-- **Remaining before Mark go-live:** Mira's final identity pass -> deploy to Railway -> integration test (Justin + AC, ~3 hrs) -> adversarial test (Justin + AC) -> go/no-go -> Mark email.
+- **Evryn deployed to Railway and verified.** DC Day 6 build complete. All runtime code, schema migrations, identity files live. Railway service paused for weekend — restart Monday for integration test.
+- **Integration test is next.** Protocol at `evryn-backend/tests/integration-test-v02.md`. Justin + AC, Monday. Pre-flight items: restart Railway service, verify Slack/Gmail/Supabase connections, wipe test Mark record, run through 6-phase protocol.
+- **SEND_ENABLED bug caught.** Test protocol originally said `SEND_ENABLED=false` — that would block all email sends. Correct config: `SEND_ENABLED=true` + `NODE_ENV=development` (redirects all emails to `systemtest@evryn.ai`). DC has the fix.
+- **After integration test:** adversarial test -> go/no-go -> Mark email.
 - **Legal: Fenwick Phase 1 complete.** ToS and Privacy Notice finalized. Mark acceptance via email reply. Phase 2 (v0.3 terms) in progress.
 - **Go-live timing relaxed.** Mark is in no hurry. Quality over speed.
 
 ## Active Projects
 
-- **_evryn-meta** — AC reviewed DC Day 6 spec (written by Soren per EVR-93 pattern). ADR-027 and ADR-028 shipped. Integration test protocol updated.
-- **evryn-backend** — DC Day 6 + Operator redesign complete. Integration test prep: scripted conversation, billing alert, polling config, ADR-027 test fixture alignment. Awaiting Mira's final pass + deploy + testing.
-- **evryn-team-workspace** — Full team operating. Current-state maintained here. Identity file sessions (Mira + Soren + Nathan) complete. DC Day 6 spec authored and reviewed here.
+- **_evryn-meta** — Railway Hobby plan scaling breadcrumb added to BUILD doc. Mark's real email verified absent from codebase + DB. DC mailbox absorbed.
+- **evryn-backend** — Deployed to Railway (Hobby plan). Operator guide updated with deploy procedure, setup-credentials linked, Mark protection layers documented. SDK version coupling constraint discovered (SDK + Claude Code binary must match exactly).
+- **evryn-team-workspace** — Full team operating. Identity file sessions complete.
 - **evryn-ops** — Created. OC CLAUDE.md ready.
 - **evryn-quality** — Created. QC CLAUDE.md ready.
-- **evryn-website** — Live at evryn.ai. ToS + Privacy Notice pages built. Committed locally.
+- **evryn-website** — Live at evryn.ai. ToS + Privacy Notice pages built.
 - **evryn-dev-workspace** — DC's home repo.
 - **evryn-team-agents** — FROZEN (ADR-021).
 
 ## Infrastructure
 
-- Running locally on Justin's desktop. No cloud deployment yet — Railway deploy is next.
-- Slack: "Evryn" app — Socket Mode, bot token via `@slack/bolt`. "Dev Alerts" app with webhook. Channels: `#evryn-approvals`, `#dev-alerts`.
-- Railway: `evryn-backend` project created, CLI installed and linked. RAILWAY_TOKEN in .env.
-- Supabase: "Evryn Product" project. Schema updated Day 6 (cross_user_notes column, message_body column, two RPC functions, ADR-027 profile templates applied to all 17 users). **Last backup: 2026-04-22** (pre and post migration).
+- Railway: evryn-backend deployed on Hobby plan ($5/month). Service paused for weekend. Integration test config: `SEND_ENABLED=true`, `NODE_ENV=development`, `POLL_INTERVAL_MS=10000`.
+- Slack: "Evryn" app — Socket Mode, bot token via `@slack/bolt`. `channels:read` scope added during deploy. "Dev Alerts" app with webhook.
+- Railway: workspace-scoped API token (not project token). CLI for deploys, GraphQL API for env vars.
+- Supabase: "Evryn Product" project. Schema current (Day 6 migration applied). **Last backup: 2026-04-22** (pre and post migration).
 - evryn@evryn.ai, review@evryn.ai, systemtest@evryn.ai — see operator guide for roles.
 
 ## Task Management
