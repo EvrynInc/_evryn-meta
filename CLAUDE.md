@@ -276,13 +276,13 @@ Session-level checkpoint — capture what changed this session into persistent d
 
 ## #sweep Protocol
 
-Weekly consistency check — do our docs agree with each other across repos? Checklist: `docs/protocols/sweep-protocol.md`. **Read it when** Justin says `#sweep`. **Cadence: at least once a week.** If it's been more than 7 days since the last #sweep, proactively suggest one.
+Weekly consistency check — do our docs agree with each other across repos? **Lucas owns sweep cadence and execution.** If Justin triggers a `#sweep` in an AC session, read and execute `evryn-team-workspace/shared/protocols/sweep-protocol.md`. **Cadence: at least once a week.** If it's been more than 7 days since the last #sweep, flag it to Justin.
 
 ---
 
 ## #align Protocol
 
-Principles-to-practice integration — does what we're building actually embody what we believe? Checklist: `docs/protocols/align-protocol.md`. **Read it when** Justin says `#align`. **Cadence: at least once a week.** If it's been more than 7 days since the last #align, proactively suggest one.
+Principles-to-practice integration — does what we're building actually embody what we believe? **Lucas owns align cadence and execution.** If Justin triggers an `#align` in an AC session, read and execute `evryn-team-workspace/shared/protocols/align-protocol.md`. **Cadence: at least once a week.** If it's been more than 7 days since the last #align, flag it to Justin.
 
 ---
 
