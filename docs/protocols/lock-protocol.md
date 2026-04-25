@@ -24,7 +24,9 @@ When Justin says `#lock` or it's time for a checkpoint:
 14. **Database backup check** — Check the dates on the most recent files in `evryn-backend/backups/`. If it's been more than a week since the last backup, take one now (both schema + data dumps — see `evryn-backend/backups/README.md`). Before running the dump, query for current tables — they may have changed since the backup script was last updated.
 15. **Auto-memory hygiene** — Check `.claude/projects/*/memory/MEMORY.md`. AC does not use auto-memory (see CLAUDE.md Auto-Memory Hygiene). If anything landed there accidentally, promote it to persistent docs or clear it. The file should contain only the "DO NOT WRITE HERE" notice.
 16. **Settings.local.json cleanup** — Check for `.claude/settings.local.json` in the current repo. This file silently accumulates one-off command approvals at runtime. Delete it if it exists — permissions belong in `.claude/settings.json` (in git), not in local overrides. If it contains secrets (API keys, UUIDs that were auto-saved), flag to Justin before deleting.
-17. **Commit and push** — Get everything to remote immediately.
+17. **Fragment sweep** — Scroll back through the full conversation. The category-based steps above catch what you remember happened; this pass catches what you forgot you forgot. Look for: intentions that got derailed, decisions that only live in chat, action items acknowledged but never recorded, things Justin asked for that got handled conversationally but not persisted. Resolve or route anything you find.
+18. **Pause for Justin** — Before committing, let Justin review. Give him a moment to check what's about to land.
+19. **Commit and push** — Get everything to remote immediately.
 
 ---
 
