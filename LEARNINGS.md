@@ -50,21 +50,16 @@
 38. *Promoted → evryn-backend ARCHITECTURE.md security section + DC CLAUDE.md Build Mandate "Security first" bullet ("Untrusted Input Boundary").*
 39. *Promoted → AGENT_PATTERNS Catch-Up-on-Reconnect for Persistent Connections.*
 40. *Promoted → evryn-backend ARCHITECTURE.md Data Model §Design Principles ("Constrain Every Field an LLM Writes").*
+41. *Promoted → evryn-backend BUILD doc (tech stack table) + ARCHITECTURE.md (SDK usage section) + operator guide (Troubleshooting) ("Agent SDK version must match Claude Code binary").*
+42. *Promoted → evryn-backend BUILD doc (Deployment & Infrastructure) + operator guide (Docker/Railway Constraints) ("Claude Code refuses bypassPermissions as root").*
+43. *Promoted → evryn-backend BUILD doc (Deployment & Infrastructure) + operator guide (Docker/Railway Constraints) ("Bundled binary detection fails on node:20-slim").*
+44. *Promoted → evryn-backend operator guide (Docker/Railway Constraints) ("Railway CLI vs API token incompatibility").*
+45. *Promoted → evryn-backend operator guide (Troubleshooting) ("Slack scope gotcha: channels:read vs channels:history").*
 
 ---
 
 ## Unpromoted
 
-41. **Strip Instructions from Data Files.** If a file is read every session but only written to occasionally, don't put writing instructions in the file — put them in the protocol that gates writing. The file stays clean (lower token cost on every load), and the instructions are in context exactly when they're needed. The file itself should have a guardrail warning not to write or edit without reading the protocol first — otherwise it will almost certainly get overwritten by an eager agent. Applied to agent MEMORY.md files: writing guidance moved to #lock protocol, consolidation guidance to #consolidate protocol. *Promote to:* Already applied in team workspace. Consider for other repos where instruction-heavy files are loaded on every session.
-
-42. **Agent SDK version must match Claude Code binary.** SDK 0.2.76 + Claude Code 2.1.119 = silent exit code 1. No error message, no stderr output, just instant death. The SDK spawns Claude Code as a subprocess using an internal protocol — if versions are mismatched, the protocol handshake fails silently. Fix: keep SDK and Claude Code versions in sync (0.2.119 ↔ 2.1.119).
-
-43. **Claude Code refuses bypassPermissions as root.** The `--dangerously-skip-permissions` flag (sent by the SDK for `permissionMode: "bypassPermissions"`) is blocked when running as root/sudo. Docker containers default to root. Fix: `useradd` + `USER` directive in Dockerfile.
-
-44. **Bundled binary detection fails on node:20-slim.** The SDK bundles platform-specific native binaries as optional dependencies. On `node:20-slim` (Debian), the detection incorrectly looks for the musl variant instead of glibc. Fix: install Claude Code globally (`npm install -g @anthropic-ai/claude-code`) and pass `pathToClaudeCodeExecutable` pointing to `/usr/local/bin/claude`.
-
-45. **Railway CLI vs API token incompatibility.** Railway workspace-scoped API tokens (Hobby plan) work with the GraphQL API but are rejected by the Railway CLI (`railway variables`, `railway link`). The CLI requires interactive `railway login` (browser OAuth). Env vars can be managed via GraphQL mutations to `backboard.railway.app/graphql/v2`.
-
-46. **Slack scope gotcha: channels:read vs channels:history.** `channels:history` lets you read messages in a channel. `channels:read` lets you list channels (needed for `conversations.list` to resolve a channel name to an ID). Both are needed — easy to miss that they're separate scopes.
+46. **Strip Instructions from Data Files.** If a file is read every session but only written to occasionally, don't put writing instructions in the file — put them in the protocol that gates writing. The file stays clean (lower token cost on every load), and the instructions are in context exactly when they're needed. The file itself should have a guardrail warning not to write or edit without reading the protocol first — otherwise it will almost certainly get overwritten by an eager agent. Applied to agent MEMORY.md files: writing guidance moved to #lock protocol, consolidation guidance to #consolidate protocol. *Promote to:* Already applied in team workspace. Consider for other repos where instruction-heavy files are loaded on every session.
 
 *New learnings land here temporarily before being promoted to their permanent homes.*
