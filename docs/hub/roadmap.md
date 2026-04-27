@@ -18,6 +18,22 @@
 
 ---
 
+## How We Hold the Hub and Spokes
+
+The Hub and Spokes mix two kinds of claims, and reading them well requires distinguishing them.
+
+**Principles** — the commitments. Trust is non-negotiable. Stories over scores. No dark patterns. Double opt-in. Character becomes currency. We win only when users win. These are the design and ethical posture of the company. They do not change because the data says they should.
+
+**Predictions** — the numbers. ~$8 average per match, 5% cast-off conversion, 60% retention, density thresholds, ARPU by avatar, conversion timelines. These are model outputs from careful, structured thinking — but they are predictions, not certainties. The financial model carries error bands explicitly. We hold predictions with conviction sufficient to plan against, and we stress-test them against reality from day one.
+
+When a prediction proves wrong, we'll almost always update the prediction rather than the principle. When a principle is in tension with a prediction (e.g., trust-based pricing yields lower averages than modeled), we adjust the model, the experience, or the operations to honor the principle.
+
+Having said that, we may discover that a principle wasn't fully thought through, and may refine a principle if we *need to* to become our best self.
+
+All of this is just a plan. And the plan won't survive contact with reality intact. The discipline is to update it honestly when it doesn't.
+
+---
+
 ## What Evryn Is
 
 Somewhere out there are the people you were *meant* to meet. They exist. They're real. And they've been looking for you, too. They'd change your life — and you'd change theirs...if you could just *find* them.

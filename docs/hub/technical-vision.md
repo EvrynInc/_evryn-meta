@@ -215,6 +215,8 @@ User profile snapshots, behavior metadata, and match outcomes are periodically a
 
 ## Privacy & Security Architecture
 
+**Bulkhead architecture.** Every part of the system is built like a ship — locked compartments, watertight doors, no single failure that floods the whole vessel. The question isn't whether some bulkhead will be breached — eventually SOMETHING WILL; it's whether the breach is bounded. A successful prompt injection against the conversational agent does not reveal raw user data because she doesn't hold it. A credential theft against one service does not authorize access to another. A bad actor who passes identity verification cannot reach high-stakes connections without first earning behavioral trust over time. Each compartment assumes its neighbors could be compromised and protects itself accordingly. Zero trust and information firewalling (below) are specific applications of this principle.
+
 **Zero trust, least privilege.** Every service assumes others could be compromised. The matching engine works with synthesized understanding — stories, embeddings, intent projections — not raw PII. Evryn doesn't need to know your email address to know you'd be a great match for someone.
 
 **Third-party AI risk:** Outbound prompts to external LLMs are scrubbed of PII before transmission. External AIs are stateless text generators, never system-of-record.
