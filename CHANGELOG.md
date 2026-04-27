@@ -6,6 +6,11 @@
 
 ---
 
+## 2026-04-27 (AC — Hub vulnerability test + framing additions)
+
+- **"How We Hold the Hub and Spokes" added to roadmap.md** — Distinguishes Principles (commitments that don't bend to data) from Predictions (numbers held with conviction but tested from day one). Sets the right reading lens; most quantitative claims are experiments being tracked.
+- **Bulkhead architecture added to technical-vision.md** — Meta-principle above zero-trust and information firewalling. Every system assumes breach and bounds it. Even walls on land are bulkheads — register signal for the crew.
+
 ## 2026-04-24 (AC — Deploy session support + integration test prep)
 
 - **Evryn deployed to Railway** — DC deployed Day 6 build. AC supported with deploy config (SEND_ENABLED bug catch, Railway plan research, env var guidance). Service paused for weekend; integration test Monday.
