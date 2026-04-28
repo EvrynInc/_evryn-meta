@@ -2,13 +2,89 @@
 
 **Status when this doc was written:** All session work shipped, committed, and ready for hand-off to Mira and DC. This is the #lock for the vetting-AC instance. Fresh AC instance can pick up from this doc + current-state.md.
 
-**Reading order for the fresh AC arriving cold:**
-1. CLAUDE.md (auto-loaded)
-2. `docs/current-state.md`
-3. This session doc
-4. ADR-030 (`docs/decisions/030-slack-threads-as-operator-scope.md`) — the architectural move at the heart of today's work
-5. `evryn-backend/docs/ac-to-dc.md` — the queued DC bundle (six tasks)
-6. `_evryn-meta/docs/sessions/2026-04-28-mira-brief-operator-md-adr030.md` — the queued Mira brief
+## Load list for the fresh AC arriving cold
+
+You're stepping in to absorb DC's reply on the 6-task bundle, judge the compulsion candidates DC surfaced, possibly signal deploy on Task 6 (which depends on Mira's `operator.md` ship status), and possibly support the integration-test re-run. Below is what to load. **Err on the side of overshooting on ARCHITECTURE.md** — instances who've skimped on it tend to make mistakes; the structural understanding it provides is load-bearing for almost every judgment call you'll face.
+
+### Tier 1 — Auto-loaded (no action needed)
+
+- `_evryn-meta/CLAUDE.md` — your operating manual
+
+### Tier 2 — Orientation (read first, in order)
+
+- `_evryn-meta/docs/hub/roadmap.md` — the Hub. Company truth. Read every session, every time.
+- `_evryn-meta/docs/hub/technical-vision.md` — the tech north star. The next-layer-down from the Hub on architecture, lensed for "what is the system?"
+- `_evryn-meta/docs/current-state.md` — current snapshot of what's happening across all repos.
+- This session doc (you're reading it) — what landed today and where things stand.
+- `_evryn-meta/docs/sessions/2026-04-27-integration-test-pivot-and-loop-bug.md` — yesterday's session. Provides the prior-day context for the loop bug, the real-Mark pivot, and the original muddiness that triggered today's vetting.
+
+### Tier 3 — Architecture (read the full file — Justin's instruction)
+
+- `evryn-backend/docs/ARCHITECTURE.md` — **read it end-to-end.** The structure matters; instances who skim mistake what's a deliberate decision vs. what's open. If you're truly time-pressed, the sections most load-bearing for today's task are: User Model (Operator Track + System Actors), Data Model (profile_jsonb + emailmgr_items lifecycle), Pipeline Design (One code path + Permission-not-compulsion — the new principle that landed today), Agent Architecture (Identity Composition + Module Architecture). But default: read it all. The Onboarding Patterns and System Diagram sections are the lowest-cost-to-skim if you must.
+
+### Tier 4 — Today's architectural decisions
+
+- `_evryn-meta/docs/decisions/030-slack-threads-as-operator-scope.md` — the architectural move at the heart of today's work. DC's Task 6 implements this. **Critical** for verifying Task 6's reply.
+- `_evryn-meta/docs/decisions/029-remove-getrecipient-redirect.md` — the prior-day decision DC's Task 4 implements. Critical for verifying Task 4's reply.
+- `_evryn-meta/docs/decisions/027-profile-architecture-simplification.md` — the profile schema decision Task 6 builds on (`_meta`, `pending_notes`, `story`). Important context for the Operator profile initialization in Task 6.
+
+### Tier 5 — Build + sprint context
+
+- `evryn-backend/docs/BUILD-EVRYN-MVP.md` — what we're building, phase by phase. Critical Principles section now includes Permission-Not-Compulsion (today's addition).
+- `evryn-backend/docs/SPRINT-MARK-LIVE.md` — sprint state. Day 6 row covers today's queued work; Backlog covers what's deferred.
+
+### Tier 6 — The DC handoff (the immediate task)
+
+- `evryn-backend/docs/ac-to-dc.md` — the original 6-task spec. Read top-to-bottom.
+- `evryn-backend/docs/dc-to-ac.md` — DC's reply. **Your immediate task is absorbing this**: verify each task confirmation against the spec, judge the compulsion candidates DC surfaced (item f), evaluate the audit candidates from Task 5 (item g), confirm Task 6 implementation (item h).
+- `evryn-backend/docs/dc-architecture-notes-for-ac.md` — DC's longer-form architectural notes if any (often empty).
+
+### Tier 7 — Identity layer
+
+- `evryn-backend/identity/core.md` — Evryn's core identity. Mira's recent addition (commit `a4d7d2e`) is in "What You Can Draw On" — drafting-is-default, escalation-substance, runtime-isn't-infallible. Verify alignment with DC's Task 3 (permissive `processDirect` prompt).
+- `evryn-backend/identity/situations/operator.md` — operator mode. Mira's pending update (per the Mira brief at `_evryn-meta/docs/sessions/2026-04-28-mira-brief-operator-md-adr030.md`) lands here. **Check whether Mira has shipped this** before signaling DC to deploy Task 6.
+- `evryn-backend/identity/activities/onboarding.md` — has the "Look Them Up" research pattern + "Listen to what they want held" discretion beat. Light read for context on the research-aware Evryn shape.
+- `evryn-backend/identity/activities/triage.md` — referenced by `processForward`. Light read.
+- Other identity files (`gatekeeper.md`, `gatekeeper-onboarding.md`, `internal-reference/*`, `public-knowledge/*`) — pull as needed, not required for today's task.
+- `_evryn-meta/docs/sessions/2026-04-28-mira-brief-operator-md-adr030.md` — the brief Mira is working from. Useful context for understanding what's coming and what to verify when Mira ships.
+
+### Tier 8 — Runtime files (for verifying DC's reply)
+
+Read all of `evryn-backend/src/`. The bundle touched many files; better to load the whole runtime than to chase what changed. Particularly:
+
+- `src/index.ts` — entry point
+- `src/config.ts` — env config
+- `src/email/client.ts` — Gmail send/receive (Task 4 + Task 5)
+- `src/email/poll.ts` — polling loop, cron jobs (Task 2)
+- `src/email/process.ts` — email processing (Task 2 + Task 3)
+- `src/email/detect.ts` — forward detection
+- `src/triage/classify.ts` — `runEvrynQuery` + `composeSystemPrompt` + MCP tool definitions (Task 1 + Task 6)
+- `src/notify/slack.ts` — Slack Socket Mode + `handleGeneralMessage` (Task 5 + Task 6)
+- `src/notify/dev.ts` — dev alerts
+- `src/db/users.ts` — user CRUD (Task 6 — Operator profile init)
+- `src/db/messages.ts` — message CRUD (Task 6 — `scope_user_id` queries)
+- `src/db/items.ts` — emailmgr_items CRUD
+- `src/db/client.ts` — Supabase client
+- `src/approval/flow.ts` — approval lookup (Task 5 — single-source-of-truth subject)
+- Any new migration files DC added under `evryn-backend/migrations/` or similar (for Task 6 schema change)
+
+### Tier 9 — Recent LEARNINGS
+
+- `_evryn-meta/LEARNINGS.md` items 47-54 — the recent batch from 2026-04-27 + today's clarification on item 53 (deliberate vs. implicit subject-ification).
+
+### Tier 10 — Pull only if needed
+
+- `_evryn-meta/docs/hub/trust-and-safety.md` — if a question touches user isolation or trust architecture
+- `_evryn-meta/docs/hub/user-experience.md` — if a question touches Evryn's voice or interaction design
+- `_evryn-meta/AGENT_PATTERNS.md` — if you're trying to recall a pattern; the Research & Grounding section is recent
+- `_evryn-meta/CHANGELOG.md` — if you need a chronological snapshot of what's shipped recently
+- Other ADRs in `_evryn-meta/docs/decisions/` — pull individually if a question references one
+- `evryn-backend/docs/operator-guide.md` — Justin's operational cheat sheet; relevant if you need to update operator-facing behavior. Currently slightly stale (still describes the `getRecipient()` redirect that ADR-029/Task 4 removes — operator-guide updates after DC ships, not before, per ADR-029 doc-sequencing).
+- `evryn-team-workspace/shared/current-state/current-state.md` — team-level snapshot, append-only. Useful if you need context on what other team members are doing.
+
+### Original 6-item starter list (kept for the truly time-pressed)
+
+If you genuinely have to triage and read fewer files first, the absolute minimum is: this session doc, `current-state.md`, ADR-030, `ac-to-dc.md`, `dc-to-ac.md`, and the Mira brief. But you'll be making judgment calls without architectural depth — Justin's strong preference is the full ARCHITECTURE.md read.
 
 ---
 
