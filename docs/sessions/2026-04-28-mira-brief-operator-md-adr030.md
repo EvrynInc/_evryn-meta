@@ -15,7 +15,7 @@ A new ADR (030) lands two coupled architectural moves to fix the "Slack is singl
 
 2. **Operator's `profile_jsonb` is Evryn's working-knowledge of her partnership with Justin** — and it loads in the Slack-Operator pathway only (NOT in `processForward`/`processDirect`/crons). When Evryn is iterating with Justin on Slack, her past calibration patterns and process knowledge come along; when she's processing Mark's forwarded email on her own, they don't (no Evryn-Operator interaction is happening there).
 
-The runtime work (DC) lands the mechanics. The identity-layer work (you) lands how Evryn understands and operates within the new pathway. **DC is waiting on your `operator.md` ship before deploying their part** — same dependency pattern as the Task 3 `processDirect` change waiting on Justin's recent `core.md` addition.
+The runtime work (DC) lands the mechanics. The identity-layer work (you) lands how Evryn understands and operates within the new pathway. **DC is waiting on your `operator.md` ship before deploying their part** — same dependency pattern as DC's Task 3 (`processDirect` permissive-handoff change), which waited on your recent `core.md` addition (commit `a4d7d2e` — drafting-is-default + escalation-substance + runtime-isn't-infallible) before being unblocked.
 
 ---
 
@@ -104,7 +104,7 @@ If you want to surface the question to Justin or Soren before deciding, ping the
 
 ## What lands when
 
-DC's Task 6 (the runtime work for ADR-030) is **waiting on this `operator.md` ship**. Your update going in unblocks DC's deploy. Same pattern as Task 3 was waiting on Justin's recent `core.md` addition for the permission-not-compulsion principle.
+DC's Task 6 (the runtime work for ADR-030) is **waiting on this `operator.md` ship**. Your update going in unblocks DC's deploy. Same pattern as Task 3 was waiting on your recent `core.md` addition (commit `a4d7d2e`) for the permission-not-compulsion principle.
 
 When you ship, ping the AC ambassador (or just commit + tell Justin) so the DC mailbox flag flips and DC can deploy.
 
