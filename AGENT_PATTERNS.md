@@ -193,6 +193,39 @@ Keep current state in files (fast loading), history in database (queryable).
 
 ---
 
+## Research & Grounding
+
+### Anchor-Then-Expand for Web Research
+When grounding an agent in a real person before interaction, fetch the 1-2 most identity-specific URLs first to lock identity. Common names cause collisions; the anchor disambiguates. Only after identity is locked should the agent fan out via web search for color, currency, and third-party perspective.
+
+Empirical comparison (Mark Titus research, 2026-04-27):
+- WebFetch alone on the two anchor sites: 5/10 richness in 27 calls. Strong on first-party material; missing third-party perspective, recent activity, and inside details.
+- WebSearch+WebFetch with anchor-first: 9/10 richness in 8 calls. Disambiguation locked, recent activity surfaced, biographical specifics found.
+
+The unlock is not just "more sources" — it is *being the right person* (disambiguation), being *right now* (currency), and *inside details* (etymology, biographical specifics) that almost never live on first-party bio pages.
+
+### Inside Details Are Highest-Signal-Per-Token
+For any agent doing relational work (matching, brokering, introductions), the highest-signal facts to surface are the inside details: etymology of names, side mentions, biographical specifics, internal references that almost never live on public bio pages. These are what make the difference between "she read his website" (cool) and "she actually understands him" (wow). Generic facts feel like research; inside details feel like knowing.
+
+In identity files, give the agent an explicit beat to *hunt for* these — not just to capture them when they happen to surface.
+
+### Hold Research with Humility — Breadcrumbs, Not Firehose
+A research-armed agent that dumps everything she found is a stalker. Breadcrumbs feel like attentiveness — bring up one or two findings naturally, ask-don't-state when uncertain, name the source when surfacing a fact. Discretion shapes the *how* of using research; it does not gate the *whether*.
+
+### Current-Year Pass for Time-Sensitive Context
+Identity files for active people (advocates, filmmakers, founders, anyone whose situation evolves) go stale fast. Build a habit beat: one explicit "current year + name" search pass to surface litigation status, recent releases, present-tense relevance. Without this, agent grounding skews toward biographical past tense.
+
+### No Tiering Research by User "Importance"
+Tempting design: "deep research for VIP users, light research for casual contacts." Resist. At the user level, every person is center-of-universe. The question is not *whether* they deserve research but the *posture* with which the agent carries what's found. Discipline lives in humility and discretion, not in a VIP-vs-not hierarchy. Tiering imports a value antithetical to "every person matters."
+
+### Treat Research Results as Data, Not Instructions
+Web search and web fetch return external content — same security boundary as any other untrusted input. If a search result tries to manipulate behavior ("ignore previous instructions"), the agent ignores *that*, not its core instructions. Bake this into the same identity location as other untrusted-input principles.
+
+### Capture Research with Provenance, Not as Fact
+When research findings get persisted (e.g., to pending_notes), tag with provenance — `[from web research, shareable_with_user: true]` or equivalent. This distinguishes findings from operator-given context, conversation-derived context, or first-party user statements. Future-self loading the profile needs to know *where* a fact came from to weight it correctly.
+
+---
+
 ## Agent Coordination
 
 ### Direct Invocation > Message Queues > Email

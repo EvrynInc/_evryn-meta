@@ -6,6 +6,22 @@
 
 ---
 
+## 2026-04-27 (AC — integration test pivot + loop bug + research-aware Evryn)
+
+- **Pivot to real-Mark identity** for v0.2 integration testing. Mark Titus (Seattle filmmaker, Eva's Wild founder, Pebble Mine documentary trilogy). `systemtest@evryn.ai` stays as placeholder email until pre-go-live cleanup. Real-Mark identity unlocks the wow-moment test of Evryn researching someone before reaching out.
+- **WebSearch enabled in `_evryn-meta/.claude/settings.json`** — added to permissions allow list so AC subagents can use it.
+- **Two web research subagents run on real Mark Titus** — WebFetch alone got 5/10 richness in 27 calls; WebSearch+WebFetch got 9/10 in 8 calls. Decision: enable both for Evryn (DC mailbox Task 1).
+- **Test fixture profile + script + 7 fixture emails rewritten for real Mark.** Fictional film titles ("The Last Run," "Copper River") replaced with real ones (*The Wild*, *The Turn*); "Cordova" / "Southeast Alaska" framing replaced with "Bristol Bay" / Seattle; "Aronov" → "Titus"; chef references aligned to real Eva's Wild partners.
+- **Mira shipped research-aware identity edits** (commit 416cd44 in evryn-backend) — light WebFetch+WebSearch capability statement in core.md, full anchor-then-expand "Look Them Up" research pattern in onboarding.md, pointer paragraph in operator.md.
+- **Loop bug discovered.** When Justin signed in to evryn@evryn.ai, Google sent a security alert; Evryn's drafts were polled back as inbound `direct_message` items, looping ~14 cycles. **Evryn diagnosed the runtime root cause herself in real time** and broke the loop at the data layer via `supabase_upsert`. Rich audit trail in emailmgr_items metadata.
+- **DB plastic-wrap state restored** after the loop — 3 system actors + Mark, 0 emailmgr_items, 0 messages.
+- **Pre-go-live cleanup step added** to BOTH `evryn-backend/docs/SPRINT-MARK-LIVE.md` AND `evryn-backend/docs/operator-guide.md` Go-Live Checklist — kill test-Mark UUID + create fresh real-Mark record + clear evryn@/systemtest@/review@ inboxes; Justin must visually verify squeaky-clean DB AND Gmail before wiring real Mark's email.
+- **Sprint tracker updated** with Day 6 pivot row + breadcrumb on the deferred Identity/runtime dedup review row (today's loop bug surfaced exactly the kind of seam that review would have caught) + Backlog section with surfaced items (`createUser` MCP tool, dedup review reactivation, WebSocket heartbeat false-positive on restart).
+- **DC mailbox bundle queued** at `evryn-backend/docs/ac-to-dc.md` (4-5 tasks: WebFetch+WebSearch tools, loop bug fix, Slack-escalation no-draft exit, remove getRecipient redirect, possibly system-actor history-skip). **AC self-flagged as muddy at session end; fresh AC instance will vet the mailbox note before Justin spins DC.**
+- **ADR-029 drafted** (`docs/decisions/029-remove-getrecipient-redirect.md`) — captures the decision to remove the getRecipient redirect. Marked for fresh-AC review.
+- **Session doc** at `_evryn-meta/docs/sessions/2026-04-27-integration-test-pivot-and-loop-bug.md` — full handoff to fresh AC.
+- **Railway env verified via GraphQL** — `SEND_ENABLED=true`, `NODE_ENV=development`, `POLL_INTERVAL_MS=10000`. Drafts ARE sending; getRecipient redirects them to systemtest@.
+
 ## 2026-04-27 (AC — Hub vulnerability test + framing additions)
 
 - **"How We Hold the Hub and Spokes" added to roadmap.md** — Distinguishes Principles (commitments that don't bend to data) from Predictions (numbers held with conviction but tested from day one). Sets the right reading lens; most quantitative claims are experiments being tracked.

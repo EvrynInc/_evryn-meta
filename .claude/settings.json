@@ -6,6 +6,7 @@
       "Grep(~/Evryn/Code/**)",
       "Bash(*)",
       "WebFetch(*)",
+      "WebSearch",
       "mcp__claude_ai_Linear__*",
       "mcp__claude_ai_Gmail__*"
     ],

@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-04-24T16:51-07:00*
+*Last updated: 2026-04-27T17:45-07:00*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
 
@@ -14,7 +14,7 @@
 
 ## Strategic Pivot: Evryn Product First
 
-Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v0.2 "Gatekeeper's Inbox") for Mark (pilot user, Seattle) first. See `evryn-backend/docs/BUILD-EVRYN-MVP.md`.
+Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v0.2 "Gatekeeper's Inbox") for Mark (real-Mark = Mark Titus, Seattle filmmaker / Eva's Wild founder) first. See `evryn-backend/docs/BUILD-EVRYN-MVP.md`.
 
 **Key framing:** Evryn is a broker, not a SaaS. v0.2 surfaces connections from a gatekeeper's inbox — not sorting email, brokering connections. Everyone is a "user," both sides pay per-connection.
 
@@ -22,31 +22,32 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Evryn deployed to Railway and verified.** DC Day 6 build complete. All runtime code, schema migrations, identity files live. Railway service paused for weekend — restart Monday for integration test.
-- **Integration test is next.** Protocol at `evryn-backend/tests/integration-test-v02.md`. Justin + AC, Monday. Pre-flight items: restart Railway service, verify Slack/Gmail/Supabase connections, wipe test Mark record, run through 6-phase protocol.
-- **SEND_ENABLED bug caught.** Test protocol originally said `SEND_ENABLED=false` — that would block all email sends. Correct config: `SEND_ENABLED=true` + `NODE_ENV=development` (redirects all emails to `systemtest@evryn.ai`). DC has the fix.
-- **After integration test:** adversarial test -> go/no-go -> Mark email.
-- **Legal: Fenwick Phase 1 complete.** ToS and Privacy Notice finalized. Mark acceptance via email reply. Phase 2 (v0.3 terms) in progress.
+- **Integration test paused mid-prep (2026-04-27).** Loop bug surfaced when Justin signed into evryn@evryn.ai and Google sent a security alert — Evryn's drafts were being polled back as inbound `direct_message` items, looping ~14 times before manual break. Evryn diagnosed her own runtime bug. DB restored to plastic-wrap state.
+- **Pivot to real-Mark identity** (with `systemtest@evryn.ai` as placeholder email — defense-in-depth keeps real email out of DB during testing). Fixture profile, integration test script, and 7 fixture emails rewritten for real Mark Titus. Mira's identity-file edits (commit 416cd44) added research-aware Evryn pattern (WebFetch + WebSearch).
+- **DC bundle queued at `evryn-backend/docs/ac-to-dc.md`** — 4-5 tasks: add WebFetch+WebSearch to allowedTools, fix loop bug, give Evryn a Slack-escalation exit (no-draft path), remove getRecipient() redirect, possibly system-actor history-skip. **Note: AC self-flagged as muddy at session end; new AC will vet the mailbox note (especially Task 5 cross-user bleed analysis) before Justin spins DC.**
+- **Pre-go-live cleanup step captured** in both sprint tracker AND operator-guide Go-Live Checklist: kill test-Mark UUID + create fresh real-Mark record + clear evryn@/systemtest@/review@ inboxes; Justin must visually verify squeaky-clean DB AND Gmail before real-Mark email is wired in.
+- **After integration test (once DC bundle ships and test re-runs):** adversarial test → go/no-go → Mark email.
+- **Legal: Fenwick Phase 1 complete.** ToS and Privacy Notice finalized. Phase 2 (v0.3 terms) in progress.
 - **Go-live timing relaxed.** Mark is in no hurry. Quality over speed.
 
 ## Active Projects
 
-- **_evryn-meta** — Railway Hobby plan scaling breadcrumb added to BUILD doc. Mark's real email verified absent from codebase + DB. DC mailbox absorbed.
-- **evryn-backend** — Deployed to Railway (Hobby plan). Operator guide updated with deploy procedure, setup-credentials linked, Mark protection layers documented. SDK version coupling constraint discovered (SDK + Claude Code binary must match exactly).
-- **evryn-team-workspace** — Full team operating. Identity file sessions complete.
-- **evryn-ops** — Created. OC CLAUDE.md ready.
-- **evryn-quality** — Created. QC CLAUDE.md ready.
+- **_evryn-meta** — Today: real-Mark pivot orchestration. Settings.json updated to allow WebSearch. Sprint tracker updated with pivot row + critical findings. Session doc + ADR 029 (getRecipient removal) drafted.
+- **evryn-backend** — Mark pre-created in DB (UUID `72c22bc4-...`, full ADR-027 template, empty story/notes). DB plastic-wrap state (3 system actors + Mark, 0 emailmgr_items, 0 messages). Identity files updated by Mira (research-aware Evryn). Fixture profile + script + 7 fixture emails rewritten for real Mark. DC mailbox queued with 4-5 tasks pending review.
+- **evryn-team-workspace** — Mira shipped research-aware identity edits (commit 416cd44). Lucas memory ~21K chars, consolidation needed soon.
+- **evryn-ops** — Created. OC CLAUDE.md ready. Not yet active.
+- **evryn-quality** — Created. QC CLAUDE.md ready. Not yet active.
 - **evryn-website** — Live at evryn.ai. ToS + Privacy Notice pages built.
 - **evryn-dev-workspace** — DC's home repo.
 - **evryn-team-agents** — FROZEN (ADR-021).
 
 ## Infrastructure
 
-- Railway: evryn-backend deployed on Hobby plan ($5/month). Service paused for weekend. Integration test config: `SEND_ENABLED=true`, `NODE_ENV=development`, `POLL_INTERVAL_MS=10000`.
-- Slack: "Evryn" app — Socket Mode, bot token via `@slack/bolt`. `channels:read` scope added during deploy. "Dev Alerts" app with webhook.
-- Railway: workspace-scoped API token (not project token). CLI for deploys, GraphQL API for env vars.
-- Supabase: "Evryn Product" project. Schema current (Day 6 migration applied). **Last backup: 2026-04-22** (pre and post migration).
-- evryn@evryn.ai, review@evryn.ai, systemtest@evryn.ai — see operator guide for roles.
+- Railway: evryn-backend deployed on Hobby plan ($5/month). Currently RUNNING. Env: `SEND_ENABLED=true`, `NODE_ENV=development`, `POLL_INTERVAL_MS=10000`. **Important: do not trigger any new Gmail activity on evryn@evryn.ai (sign-ins, etc.) until DC fixes the loop bug — quiet inbox is what's keeping us safe.**
+- Railway: workspace-scoped API token. CLI requires interactive `railway login`; GraphQL API at `backboard.railway.app/graphql/v2` accepts the token directly via Bearer auth.
+- Slack: "Evryn" app — Socket Mode, bot token via `@slack/bolt`. WebSocket heartbeat false-positive after restart is a known cry-wolf (filed as DC backlog).
+- Supabase: "Evryn Product" project. Schema current (Day 6 migration applied). **Last backup: 2026-04-22** (5 days; OK but approaching 1-week threshold — consider taking one this week).
+- evryn@evryn.ai (Evryn's polled inbox), systemtest@evryn.ai (test recipient + currently holds Mark's placeholder address), review@evryn.ai = alias on justin@evryn.ai (Justin's review inbox — NOT polled by Evryn).
 
 ## Task Management
 
