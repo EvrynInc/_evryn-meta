@@ -1,4 +1,4 @@
-# ADR-030: Slack Threads as Operator Conversation Scope; Operator's Profile as Foundational Context
+# ADR-030: Slack Threads as Operator Conversation Scope; Operator's Profile as Working-Knowledge in Operator Pathways
 
 > **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
 
@@ -26,7 +26,7 @@ The unspoken assumption was: *Slack handles approvals + quick one-shots; multi-t
 
 Justin's framing: *"if I need to solve something with her I'm what, copypasting our whole convo in - basically re-creating a session in each message - that's really not going to be sustainable. I can't imagine this clunky process when there's 200 inbound per day - who knows how many ways things can go wrong - and not being able to say 'yeah, don't loop on this, just do X', to get it fixed in the moment would be a nightmare."*
 
-We need the iterative channel without violating user isolation. We also want Evryn to operate at full resolution — including her working knowledge of how to partner with the Operator — even in Evryn-Operator conversations about specific users.
+We need the iterative channel without violating user isolation. We also want Evryn to work with the Operator at full resolution — bringing her working-knowledge of the partnership into every Slack-Operator interaction — including in threads scoped to specific users.
 
 ## Decision
 
@@ -34,20 +34,22 @@ Two coupled architectural moves:
 
 **Part 1 — Slack threads as user scope.** Each Slack thread carries one scope: a specific user (`scope_user_id` = that user's UUID), or NULL (= meta-operator: cross-cutting, no specific user). Scope is set at the first message of a thread and inherited by all replies. New top-level Slack messages start new threads, requiring fresh scope determination.
 
-**Part 2 — Operator's profile as foundational context.** Operator's `profile_jsonb` carries Evryn's working-knowledge of her partnership with the Operator (preferences, patterns, calibration). Evryn's `composeSystemPrompt` loads Operator's profile into her processing context every time — across every pathway. This profile is foundational context that sits between core identity and per-user data; it informs how Evryn works without ever appearing in messages she sends to users.
+**Part 2 — Operator's profile as working-knowledge in Operator pathways.** Operator's `profile_jsonb` carries Evryn's working-knowledge of her partnership with the Operator (preferences, patterns, calibration). When the runtime fires the Slack-Operator pathway (`handleGeneralMessage`), Operator's profile loads alongside the scoped user's profile (if the thread is user-scoped) or alone (if meta-scoped). This gives Evryn cohesive working-knowledge of how she works with the Operator across iterations — instead of cold-starting every Slack message.
 
-These two together make cross-user bleed structurally impossible (a thread carries one scope) AND give Evryn full-resolution awareness of her partnership with the Operator throughout her work (working-knowledge always loaded into her context).
+**Operator's profile does NOT load in user-facing pathways** (`processForward`, `processDirect`, cron-driven outreach). Those flows have no Evryn-Operator interaction happening; Evryn doesn't need partnership-calibration to triage Mark's inbound, and loading Operator's profile there would bloat context and expand the surface for accidental bleed without a behavioral benefit. Minimal context for the task; partnership-knowledge loads when Evryn is partnering, nowhere else.
 
-### A critical clarification — context vs. surfaced
+These two together make cross-user bleed structurally impossible (a thread carries one scope) AND give Evryn full-resolution awareness of her Operator partnership in the pathway where it matters.
 
-Two distinct things often get conflated when we talk about "loading X into Evryn":
+### A note on "loading" — context vs. surfaced
 
-- **Loading into Evryn's processing context** (her systemPrompt) — informs how she thinks and behaves. Not visible to anyone she's talking to.
-- **Surfacing in a message she sends** — appears in actual user-facing text. Visible to the recipient.
+In a user-scoped Slack-Operator thread, two profiles load: the scoped user's (e.g., Mark's) and Operator's. Worth being precise about what "loads" means here:
 
-Operator's profile loads into Evryn's processing context across every pathway. **It does not appear in messages she sends to users.** A user (e.g., Mark) never sees the contents of Operator's profile. Evryn's behavior is calibrated by Operator's working-knowledge the way a barista who knows their boss prefers no foam doesn't say *"Justin prefers no foam"* to the customer — they just don't put foam on the latte.
+- **Loading into Evryn's processing context** (her systemPrompt) — informs how she thinks and responds. Not visible to anyone outside the conversation.
+- **Surfacing in a message she sends** — appears in actual recipient-facing text. Visible.
 
-The 100% public-safe discipline below is the safety net for the unlikely case that Evryn ever literally surfaced Operator-profile content in a user-facing message — it would be harmless because everything in the profile is public-safe by design.
+The user (e.g., Mark) isn't in a Slack-Operator thread anyway — these are Justin-Evryn conversations *about* the user. But for the avoidance of doubt: even though Mark's profile loads in a Mark-scoped Slack-Operator thread (so Evryn can think about him substantively), nothing from Mark's profile gets surfaced *to Mark* — he's not the recipient of those Slack messages; Justin is. The same goes for Operator's profile: it shapes Evryn's behavior in the thread; it doesn't get echoed back at Justin as text.
+
+The 100% public-safe discipline below is the safety net for the unlikely case that Operator-profile content ever did surface in a recipient-facing message — it would be harmless because everything in the profile is public-safe by design.
 
 ### Mechanism — Part 1: Thread scope on the messages table
 
@@ -75,22 +77,20 @@ The existing `messages` table already has `thread_id` (Slack `thread_ts`), `send
 
 **Meta-operator continuity:** NULL-scoped Slack threads (meta-operator) can load both this thread's history AND prior NULL-scoped operator-thread history (last N days, configurable). This gives Evryn cross-meta continuity safely — all those messages are by definition meta (no user data was loaded into any of them).
 
-### Mechanism — Part 2: Operator's profile as foundational context
+### Mechanism — Part 2: Operator's profile in Operator pathways
 
-Operator's `profile_jsonb` follows the standard ADR-027 schema (story + pending_notes + supporting fields), with one addition described below. It's written and reflected on like any other user's profile. The runtime difference is *when* it's loaded:
+Operator's `profile_jsonb` follows the standard ADR-027 schema (story + pending_notes + supporting fields), with one addition described below. It's written and reflected on like any other user's profile. The runtime difference is *when* it's loaded.
 
-**Loading rule:** `composeSystemPrompt` loads core.md + scoped user's person context (if any) + Operator's `profile_jsonb` story + Operator's `_meta.discipline_notice`. Operator's profile loads into the systemPrompt across every pathway:
+**Loading rule:** When the runtime fires `handleGeneralMessage` (the Slack-Operator pathway), `composeSystemPrompt` loads core.md + operator.md + Operator's `profile_jsonb` story + Operator's `_meta.discipline_notice`. Then:
 
-- Slack-Operator threads (`handleGeneralMessage`): scope determined per Part 1; Operator's profile loads alongside the scoped user's profile (if scope is a user) or alone (if meta).
-- Forwarded-email triage (`processForward`): the gatekeeper's profile loads as the scoped user; Operator's profile loads as foundational context.
-- Direct-message responses (`processDirect`): the sender's profile loads as the scoped user; Operator's profile loads as foundational context.
-- Cron-driven outreach (`checkFollowUps`, `checkProactiveOutreach`): the user being followed-up-on loads as the scoped user; Operator's profile loads as foundational context.
+- If the thread is user-scoped (per Part 1): the scoped user's person context also loads, alongside Operator's.
+- If the thread is meta-scoped (NULL): no specific user context loads. Just core + operator + Operator's profile + this thread's history (and prior NULL-scoped meta-thread history per the meta continuity rule).
 
-**Reminder, per the clarification above:** loading into Evryn's processing context is not the same as surfacing in a user-facing message. Mark never sees Operator's profile content; Evryn's behavior is just calibrated by it.
+**Other pathways do not load Operator's profile.** `processForward`, `processDirect`, and cron-driven flows compose context from core.md + the scoped user's person context, as they do today. There is no Evryn-Operator interaction in those flows; Operator's working-knowledge is not relevant to them, and loading it would bloat context and expand the surface for accidental bleed without a behavioral benefit.
 
 ### The 100% public-safe discipline
 
-Operator's profile loads into Evryn's context everywhere (Part 2). For this to be safe, the discipline that governs what gets *written* to it has to be ironclad.
+Operator's profile loads in Operator pathways. The discipline that governs what gets *written* to it has to be ironclad — both because the profile shapes Evryn's behavior in those pathways (so its contents matter) and as defense-in-depth against any future load-surface expansion.
 
 The discipline is **100% public-safe**: assume any of this could leak. If Evryn would be uncomfortable with a stranger reading it from a billboard, it doesn't belong in Operator's profile.
 
@@ -157,11 +157,11 @@ Either way, Evryn does not silently let wrongly-scoped messages persist. The rec
 ### UX flow
 
 - Justin (top-level): *"Mark forwarded that vague filmmaker email — what do you think?"* → Mark-scoped thread opens.
-- Evryn (in-thread, with Mark's profile + Operator's working-knowledge in her context): drafts a thoughtful response. Operator's working-knowledge informs *how* she frames it (tone, length, escalation calibration); Mark's profile informs *what* she's classifying. Mark, when he eventually receives the response, sees only Evryn's response — not her processing context.
+- Evryn (in-thread, with Mark's profile + Operator's working-knowledge in her context): drafts a thoughtful response. Operator's working-knowledge informs *how* she frames it (tone, length, escalation calibration); Mark's profile informs *what* she's classifying.
 - Justin (replying in thread): *"yeah let me know what you decide."* → she has the full thread context + Mark's profile + Operator's working-knowledge.
 - Justin (top-level, new): *"thoughts on Bob's conversation history?"* → new Bob-scoped thread.
-- Justin (top-level, new): *"how are classifications going overall this week?"* → new NULL-scoped thread, no specific user data, Operator's working-knowledge still loaded.
-- Even in user-pathway processing (Mark's forwarded email triggering `processForward`): Operator's working-knowledge loads into Evryn's processing context, so her behavior is calibrated against Operator preferences. Mark's experience is unchanged — he just gets a response that reflects the Operator-tuned Evryn.
+- Justin (top-level, new): *"how are classifications going overall this week?"* → new NULL-scoped thread, no specific user data, Operator's working-knowledge loaded.
+- A separate flow: Mark forwards an email to `evryn@evryn.ai`. The runtime fires `processForward`. Evryn loads core.md + Mark's profile + triage.md and does her work. Operator's profile does NOT load in this pathway — there's no Evryn-Operator interaction happening; Evryn is doing her own job with her own judgment, and the partnership-calibration patterns don't apply. The work is hers.
 
 ### Identity-Layer Additions (Mira pass)
 
@@ -179,12 +179,13 @@ Possibly a new identity module `situations/meta-operator.md` for cross-cutting s
 **Positive:**
 - Cross-user bleed structurally impossible (thread = scope; can't carry two)
 - Justin gets natural multi-turn iteration with Evryn on Slack
-- Evryn operates at full resolution everywhere — Operator's working-knowledge is foundational context, not a special-case load
+- Evryn operates at full resolution in Operator pathways — partnership working-knowledge loads whenever she's iterating with the Operator (instead of cold-starting every Slack message)
+- Minimal-context principle preserved in user-facing pathways — they load only what the task needs
 - Uses Slack's native thread feature — no special syntax for the Operator
 - Maps directly onto ARCHITECTURE.md's planned v0.3 per-user operator interface — this *is* that interface, arriving early
 - Resolves the "Slack is single-shot by design" friction without violating user isolation
 - Reflection works natively on Operator's profile (consolidates `pending_notes` into `story` over time → cohesive working memory; the public-safe audit is part of Reflection, not separate infrastructure)
-- Calibration patterns from past sessions inform present work without manual context-passing
+- Calibration patterns from past sessions inform present Operator iterations without manual context-passing
 - Worst-case-leak is harmless: Operator's profile is 100% public-safe by design
 
 **Negative / risks:**
@@ -197,26 +198,26 @@ Possibly a new identity module `situations/meta-operator.md` for cross-cutting s
 **Operational:**
 - Supabase migration: ALTER TABLE messages ADD COLUMN scope_user_id, plus index
 - Supabase data: initialize Operator's `profile_jsonb._meta.discipline_notice` field
-- ARCHITECTURE.md Operator Track section updated (replaces "single-shot by design" framing with "thread = scope" framing)
+- ARCHITECTURE.md Operator Track section updated (replaces "single-shot by design" framing with "thread = scope" framing; clarifies Operator's profile loads in Operator pathways only)
 - ARCHITECTURE.md v0.3 Operator Interface section updated to point at this ADR
-- ARCHITECTURE.md System Actors section updated to clarify Operator's profile is the deliberate exception (see LEARNINGS 53 clarification)
+- ARCHITECTURE.md System Actors section updated to clarify Operator's profile is the deliberate exception to "system actors are never subjects" — and that the exception is scoped to Operator pathways (see LEARNINGS 53 clarification)
 - `evryn-team-workspace/shared/protocols/sweep-protocol.md` gains an Operator-profile spot-check step
 - `operator.md` needs a Mira pass
 
 ## One-of carve-out — does not generalize
 
-Loading Operator's profile alongside the scoped user's profile works *because* Operator is the team — one entity, predictable identity, public-safe working-knowledge applies universally. **It does NOT generalize to "load multiple users together."** If we ever feel the impulse to load User A's profile alongside User B's because "they came up together," we should resist — that's the cross-user-bleed surface this whole architecture exists to prevent. Operator-as-foundational-context is a one-of carve-out for the team-partnership relationship, not a precedent for multi-user loading.
+In a user-scoped Slack-Operator thread, two profiles load: the scoped user's and Operator's. This works *because* Operator is the team — one entity, predictable identity, public-safe working-knowledge applies universally to the partnership. **It does NOT generalize to "load multiple user profiles together in any pathway."** If we ever feel the impulse to load User A's profile alongside User B's because "they came up together," we should resist — that's the cross-user-bleed surface this whole architecture exists to prevent. Operator-as-partnership-context is a one-of carve-out, not a precedent for multi-user loading.
 
-A future reader who sees Operator-loaded-alongside-Mark and thinks *"oh, we can also load Sally alongside Mark when they came up together"* — no. This pattern stops with Operator.
+A future reader who sees Operator-loaded-alongside-Mark in a Slack thread and thinks *"oh, we can also load Sally alongside Mark in a `processDirect` flow when they came up together"* — no. This pattern stops with Operator, and only in Operator pathways.
 
 ## Related
 
-- ARCHITECTURE.md Operator Track ("Slack Operator is single-shot by design" — to be revised to "Slack thread = scope")
+- ARCHITECTURE.md Operator Track ("Slack Operator is single-shot by design" — to be revised to "Slack thread = scope; Operator's profile loads in Operator pathways only")
 - ARCHITECTURE.md v0.3 Operator Interface (per-user persistence — this becomes that interface, on Slack)
 - ARCHITECTURE.md Meta-Operator (persistent, cross-cutting, PII-free — NULL-scoped threads handle this naturally)
-- ARCHITECTURE.md System Actors / Memory Architecture / Reflection Module (Operator's profile is a deliberate exception; Reflection handles the public-safe audit via the `_meta.discipline_notice` instruction)
-- ARCHITECTURE.md Identity Composition (Permission, not compulsion — the architectural principle this ADR honors by giving Evryn working-knowledge instead of compelling her behavior)
-- LEARNINGS item 53 (System actors are FK anchors and senders, never *implicit* subjects of user-scoped operations — clarification needed: Operator-as-foundational-context is a deliberate exception with explicit scope-gating; the principle still bars implicit subject-ification)
+- ARCHITECTURE.md System Actors / Memory Architecture / Reflection Module (Operator's profile is a deliberate exception in Operator pathways; Reflection handles the public-safe audit via the `_meta.discipline_notice` instruction)
+- ARCHITECTURE.md Identity Composition (Permission, not compulsion — the architectural principle this ADR honors by giving Evryn working-knowledge in the pathway where she's partnering, instead of compelling her behavior)
+- LEARNINGS item 53 (System actors are FK anchors and senders, never *implicit* subjects of user-scoped operations — clarification needed: Operator-as-foundational-context-in-Operator-pathways is a deliberate exception with explicit pathway-gating; the principle still bars implicit subject-ification)
 - ADR-014 (Operator Module Slack-Only — establishes the structural Operator detection that this ADR builds on)
 
 ## Open considerations
