@@ -1,10 +1,8 @@
 # ADR-029: Remove the `getRecipient()` Redirect
 
 > **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
->
-> **DRAFT — written by AC at session-end while self-flagged as muddy.** Fresh AC: please review the reasoning and either accept, refine, or reject. The decision was made with Justin in real-time and is being implemented by DC; this ADR captures the rationale.
 
-**Status:** Accepted (pending fresh-AC review of this ADR's framing)
+**Status:** Accepted in principle — implementation pending DC Task 4. Framing reviewed by fresh AC instance.
 **Date:** 2026-04-27
 **Deciders:** Justin, AC
 
@@ -21,6 +19,7 @@ This was sound when real-Mark's email might have been embedded in test data or f
 
 - **Real Mark's email is verified absent from codebase + DB** (per current-state, 2026-04-24).
 - **Mark's record in DB uses `systemtest@evryn.ai` as the email address** during testing (set 2026-04-27 during integration test prep). Any draft Evryn writes to "Mark" naturally goes to `systemtest@evryn.ai` — no redirect needed.
+- **DC Tasks 2 and 3 (in flight) close adjacent risks** the redirect was implicitly hedging — the loop bug (sent drafts polled back as inbound) and Evryn drafting on no-reply / system-noise senders. With those closed, the redirect is no longer load-bearing as a defense against bugs in user-record creation that might surface a real address by accident.
 - **The redirect causes a real workflow break:** drafts intended for `review@evryn.ai` (= Justin's alias for reviewing approval drafts) get redirected to `systemtest@evryn.ai` along with everything else. Justin can't see the drafts in his normal review inbox; the entire approval-review workflow is broken-by-design while NODE_ENV=development.
 
 This was discovered today (2026-04-27) when investigating why Justin saw no draft emails during the loop bug — the drafts existed and were being sent, but landed at `systemtest@` instead of his review inbox.
@@ -56,14 +55,13 @@ The remaining safety layers (which are sufficient):
 - `SPRINT-MARK-LIVE.md` — Pre-Go-Live Cleanup section (the visual-verification step that this decision relies on as the remaining safety mechanism).
 - `evryn-backend/docs/operator-guide.md` — Mark Protection (Safety Layers) section needs updating after DC's deploy.
 
-## Notes for fresh-AC review
+## Open considerations
 
-I (the muddy AC writing this) am not 100% confident this decision is captured at the right altitude. Specifically:
-1. Should this be paired with an explicit principle update somewhere about *what* constitutes adequate safety for outbound during testing — i.e., is "approval gate + DB-controlled recipient + kill switch" the durable pattern, or is this a v0.2-specific call?
-2. Should `operator-guide.md` be updated *now* (with a note that the change ships when DC's redeploy lands) or *after* DC's deploy (so docs match reality at all times)?
-3. Is there a subtlety I'm missing about why the redirect was originally specified, beyond "real Mark's email might be in the system"? (I haven't read the original ADR or design doc that established the two-layer pattern.)
+- **When to revisit this pattern.** The remaining safety stack (approval gate + DB-controlled recipient + kill switch) holds while three constraints hold: a single gatekeeper, all outbound human-reviewed via the approval gate, and the test recipient being controlled at the database level (Mark's record uses `systemtest@evryn.ai` until pre-go-live cleanup). When any of those relax — multiple gatekeepers, autonomous outbound (e.g., expanded autonomy after trust is established with an operator), or matching against external user data the DB can't constrain — revisit whether a recipient-routing guardrail needs to come back. The v0.3+ equivalent might be an "intended-recipient-must-match-an-allow-listed-record" check rather than a blanket NODE_ENV redirect.
 
-If fresh-AC concludes the decision is right but the framing in this ADR is off, please refine. If fresh-AC concludes the decision itself is wrong, flag it to Justin before DC ships Task 4.
+- **Doc-update sequencing.** `operator-guide.md` describes the system as it actually runs (operator-facing reference). It updates *after* the redirect removal ships, not before — docs lag implementation when describing reality. ADRs precede implementation (decision captured at decision time); operator and user-facing docs trail implementation (so they describe what is, not what's planned).
+
+- **What the redirect was originally hedging, beyond "real Mark's email might be in the system."** Two further implicit risks: (1) a bug in user-record creation that surfaces an unexpected real-recipient address (e.g., resolving an inbound sender to a real production address that then gets included in some outbound). The loop-bug fix and the no-reply / system-noise escalation exit (DC tasks shipping alongside this ADR) close the practical pathways for this. (2) misconfiguration during testing that bypasses the kill switch. This remains a real but acceptable risk — `SEND_ENABLED` is a single boolean visible in the Railway env panel, easy to verify before any test session.
 
 ---
 
