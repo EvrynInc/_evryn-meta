@@ -23,7 +23,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 ## What's Next
 
 - **Integration test paused mid-prep (2026-04-27).** Loop bug surfaced when Justin signed into evryn@evryn.ai and Google sent a security alert — Evryn's drafts were being polled back as inbound `direct_message` items, looping ~14 times before manual break. Evryn diagnosed her own runtime bug. DB restored to plastic-wrap state.
-- **Pivot to real-Mark identity** (with `systemtest@evryn.ai` as placeholder email — defense-in-depth keeps real email out of DB during testing). Fixture profile, integration test script, and 7 fixture emails rewritten for real Mark Titus. Mira's identity-file edits (commit 416cd44) added research-aware Evryn pattern (WebFetch + WebSearch).
+- **Pivot to real-Mark identity** (with `systemtest@evryn.ai` as placeholder email — defense-in-depth keeps real email out of DB during testing). Fixture profile, integration test script, and 7 fixture emails rewritten for real Mark Titus. Mira's identity-file edits (commits 3771ca8 + 416cd44) added research-aware Evryn pattern (WebFetch + WebSearch).
 - **DC bundle queued at `evryn-backend/docs/ac-to-dc.md`** — 4 tasks: add WebFetch+WebSearch to allowedTools, fix loop bug, give Evryn a Slack-escalation exit (no-draft path on system-noise senders), remove getRecipient() redirect. (Originally-floated fifth task — system-actor history-skip — was reconsidered and dropped during fresh-AC review; principle captured in `LEARNINGS.md` item 53 instead.)
 - **Pre-go-live cleanup step captured** in both sprint tracker AND operator-guide Go-Live Checklist: kill test-Mark UUID + create fresh real-Mark record + clear evryn@/systemtest@/review@ inboxes; Justin must visually verify squeaky-clean DB AND Gmail before real-Mark email is wired in.
 - **After integration test (once DC bundle ships and test re-runs):** adversarial test → go/no-go → Mark email.
@@ -34,7 +34,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 - **_evryn-meta** — On 2026-04-27: real-Mark pivot orchestration. Settings.json updated to allow WebSearch. Sprint tracker updated with pivot row + critical findings. Session doc + ADR-029 (getRecipient removal) written and reviewed.
 - **evryn-backend** — Mark pre-created in DB (UUID `72c22bc4-...`, full ADR-027 template, empty story/notes). DB plastic-wrap state (3 system actors + Mark, 0 emailmgr_items, 0 messages). Identity files updated by Mira (research-aware Evryn). Fixture profile + script + 7 fixture emails rewritten for real Mark. DC mailbox queued with 4 tasks awaiting DC.
-- **evryn-team-workspace** — Mira shipped research-aware identity edits (commit 416cd44). Lucas memory ~21K chars, consolidation needed soon.
+- **evryn-team-workspace** — Mira shipped research-aware identity edits (commits 3771ca8 + 416cd44). Lucas memory ~21K chars, consolidation needed soon.
 - **evryn-ops** — Created. OC CLAUDE.md ready. Not yet active.
 - **evryn-quality** — Created. QC CLAUDE.md ready. Not yet active.
 - **evryn-website** — Live at evryn.ai. ToS + Privacy Notice pages built.
