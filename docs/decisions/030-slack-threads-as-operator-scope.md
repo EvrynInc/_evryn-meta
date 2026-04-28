@@ -26,7 +26,7 @@ The unspoken assumption was: *Slack handles approvals + quick one-shots; multi-t
 
 Justin's framing: *"if I need to solve something with her I'm what, copypasting our whole convo in - basically re-creating a session in each message - that's really not going to be sustainable. I can't imagine this clunky process when there's 200 inbound per day - who knows how many ways things can go wrong - and not being able to say 'yeah, don't loop on this, just do X', to get it fixed in the moment would be a nightmare."*
 
-We need the iterative channel without violating user isolation. We also want Evryn to operate at full resolution — including her working knowledge of how to partner with the Operator — even in user conversations.
+We need the iterative channel without violating user isolation. We also want Evryn to operate at full resolution — including her working knowledge of how to partner with the Operator — even in Evryn-Operator conversations about specific users.
 
 ## Decision
 
@@ -34,13 +34,24 @@ Two coupled architectural moves:
 
 **Part 1 — Slack threads as user scope.** Each Slack thread carries one scope: a specific user (`scope_user_id` = that user's UUID), or NULL (= meta-operator: cross-cutting, no specific user). Scope is set at the first message of a thread and inherited by all replies. New top-level Slack messages start new threads, requiring fresh scope determination.
 
-**Part 2 — Operator's profile as foundational context.** Operator's `profile_jsonb` carries Evryn's working-knowledge of her partnership with the Operator (preferences, patterns, calibration). This profile is loaded into *every* Evryn `query()` — user conversations, meta-operator conversations, cron-driven proactive outreach — alongside the scoped user's profile. It's not a "user profile" in the same sense as Mark's; it's foundational context that sits between core identity and per-user data.
+**Part 2 — Operator's profile as foundational context.** Operator's `profile_jsonb` carries Evryn's working-knowledge of her partnership with the Operator (preferences, patterns, calibration). Evryn's `composeSystemPrompt` loads Operator's profile into her processing context every time — across every pathway. This profile is foundational context that sits between core identity and per-user data; it informs how Evryn works without ever appearing in messages she sends to users.
 
-These two together make cross-user bleed structurally impossible (a thread carries one scope) AND give Evryn full-resolution awareness of the Operator throughout her work (working-knowledge always loaded).
+These two together make cross-user bleed structurally impossible (a thread carries one scope) AND give Evryn full-resolution awareness of her partnership with the Operator throughout her work (working-knowledge always loaded into her context).
+
+### A critical clarification — context vs. surfaced
+
+Two distinct things often get conflated when we talk about "loading X into Evryn":
+
+- **Loading into Evryn's processing context** (her systemPrompt) — informs how she thinks and behaves. Not visible to anyone she's talking to.
+- **Surfacing in a message she sends** — appears in actual user-facing text. Visible to the recipient.
+
+Operator's profile loads into Evryn's processing context across every pathway. **It does not appear in messages she sends to users.** A user (e.g., Mark) never sees the contents of Operator's profile. Evryn's behavior is calibrated by Operator's working-knowledge the way a barista who knows their boss prefers no foam doesn't say *"Justin prefers no foam"* to the customer — they just don't put foam on the latte.
+
+The 100% public-safe discipline below is the safety net for the unlikely case that Evryn ever literally surfaced Operator-profile content in a user-facing message — it would be harmless because everything in the profile is public-safe by design.
 
 ### Mechanism — Part 1: Thread scope on the messages table
 
-No new table. Add a column to the existing `messages` table:
+**Use the existing `messages` table — no new table needed.** Add a column:
 
 ```sql
 ALTER TABLE messages ADD COLUMN scope_user_id UUID REFERENCES users(id);
@@ -49,14 +60,16 @@ COMMENT ON COLUMN messages.scope_user_id IS
 CREATE INDEX idx_messages_scope ON messages (thread_id, source) WHERE source = 'slack';
 ```
 
+The existing `messages` table already has `thread_id` (Slack `thread_ts`), `sender_id`, `recipient_id`, `source`. The new `scope_user_id` column is the only addition needed — it lets any message carry its thread's scope, and the thread's scope is recoverable from any scoped message in the thread.
+
 **Scope determination on a new thread:**
 - Inbound Slack message arrives. Runtime checks: does any prior message in this `thread_id` have `scope_user_id IS NOT NULL`? If yes, inherit that scope. If no, this is a new-thread first-message.
-- For new-thread first-message: write the inbound message to `messages` with `scope_user_id = NULL` (we don't know yet). Compose Evryn's context: core.md + operator.md + Operator's profile + this single inbound message. Evryn determines scope from content. If scope is a specific user, she calls `set_thread_scope({user_id})` (which writes the scope to the runtime's pending-write state). She composes her response. Runtime writes her outbound message with the determined `scope_user_id`. **Then runtime backfills**: `UPDATE messages SET scope_user_id = $scope WHERE thread_id = $thread_ts AND scope_user_id IS NULL`. Idempotent, cheap, runs once per thread.
+- For new-thread first-message: write the inbound message to `messages` with `scope_user_id = NULL` (we don't know yet). Compose Evryn's context: core.md + operator.md + Operator's profile + this single inbound message. Evryn determines scope from content. If scope is a specific user, she calls `set_thread_scope({user_id})` (which writes the scope to the runtime's pending-write state). She composes her response. Runtime writes her outbound message with the determined `scope_user_id`. **Then runtime backfills:** `UPDATE messages SET scope_user_id = $scope WHERE thread_id = $thread_ts AND scope_user_id IS NULL`. Idempotent, cheap, runs once per thread.
 - For inherited-scope replies: write the inbound message with the inherited `scope_user_id`. Compose Evryn's context: core.md + operator.md + Operator's profile + scoped user's profile (if scope is a user) + this thread's message history.
 
-**Why backfill matters:** without it, the first inbound message stays NULL. Cross-thread retrospective queries (*"pull recent threads about Mark"* → `WHERE scope_user_id = $mark_id`) would miss those early messages. Since the first message in a thread typically carries 80% of the framing, missing it is unacceptable. Backfill is structurally required, not optional.
+**Why backfill is structurally required, not optional:** without it, the first inbound message stays NULL. Cross-thread retrospective queries (*"pull recent threads about Mark"* → `WHERE scope_user_id = $mark_id`) would miss those early messages. Since the first message in a thread typically carries 80% of the framing, missing it is unacceptable.
 
-**Scope locking:** A thread carries one scope for life. If Justin starts a Mark thread and later wants to discuss Bob, Evryn responds: *"let me know if you want to start a fresh thread for Bob — keeping Mark's thread clean."* Cleaner than allowing in-thread scope changes (which would re-introduce the cross-user-bleed surface this ADR closes).
+**Scope locking:** A thread carries one scope for life. Scope changes mid-thread are not allowed — they re-introduce the cross-user-bleed surface this ADR closes.
 
 **Per-thread persistence:** every Slack message gets written to `messages` with `thread_id = thread_ts` and `source = "slack"`. Loading "this thread's history" is a clean filtered query: `WHERE source = 'slack' AND thread_id = $thread_ts`. Never crosses to other threads.
 
@@ -66,19 +79,18 @@ CREATE INDEX idx_messages_scope ON messages (thread_id, source) WHERE source = '
 
 Operator's `profile_jsonb` follows the standard ADR-027 schema (story + pending_notes + supporting fields), with one addition described below. It's written and reflected on like any other user's profile. The runtime difference is *when* it's loaded:
 
-**Loading rule:** `composeSystemPrompt` always loads core.md + scoped user's person context (if any) + Operator's `profile_jsonb` story + Operator's `_meta.discipline_notice` (described next).
+**Loading rule:** `composeSystemPrompt` loads core.md + scoped user's person context (if any) + Operator's `profile_jsonb` story + Operator's `_meta.discipline_notice`. Operator's profile loads into the systemPrompt across every pathway:
 
-This applies in every pathway:
-- Slack-to-Operator (`handleGeneralMessage`): scope determined per Part 1, plus Operator's profile loaded
-- `processForward` (gatekeeper forwards): scoped user is the gatekeeper, plus Operator's profile loaded
-- `processDirect` (direct messages): scoped user is the sender, plus Operator's profile loaded
-- Cron-driven (`checkFollowUps`, `checkProactiveOutreach`): scoped user is the user being followed-up-on, plus Operator's profile loaded
+- Slack-Operator threads (`handleGeneralMessage`): scope determined per Part 1; Operator's profile loads alongside the scoped user's profile (if scope is a user) or alone (if meta).
+- Forwarded-email triage (`processForward`): the gatekeeper's profile loads as the scoped user; Operator's profile loads as foundational context.
+- Direct-message responses (`processDirect`): the sender's profile loads as the scoped user; Operator's profile loads as foundational context.
+- Cron-driven outreach (`checkFollowUps`, `checkProactiveOutreach`): the user being followed-up-on loads as the scoped user; Operator's profile loads as foundational context.
 
-Operator's profile is foundational context — like core.md, like person-context for the user being served. It always loads.
+**Reminder, per the clarification above:** loading into Evryn's processing context is not the same as surfacing in a user-facing message. Mark never sees Operator's profile content; Evryn's behavior is just calibrated by it.
 
-### The "100% public-safe" discipline
+### The 100% public-safe discipline
 
-Operator's profile is structurally guaranteed to load in user conversations (Part 2). For this to be safe, the discipline that governs what gets *written* to it has to be ironclad.
+Operator's profile loads into Evryn's context everywhere (Part 2). For this to be safe, the discipline that governs what gets *written* to it has to be ironclad.
 
 The discipline is **100% public-safe**: assume any of this could leak. If Evryn would be uncomfortable with a stranger reading it from a billboard, it doesn't belong in Operator's profile.
 
@@ -102,7 +114,7 @@ To make the discipline visible at every load (not just dependent on identity-fil
 
 Proposed text:
 
-> *"This profile holds Evryn's working-knowledge of her partnership with the Operator. **100% public-safe content only — assume any of this could leak.** If a note isn't something you'd be comfortable with a stranger reading from a billboard, it doesn't belong here. Routing for the rest: notes about specific users → that user's profile via `append_pending_note(target_user_id)`. Strategic / business-sensitive content → not captured here (escalate to the Operator if it should be persisted somewhere appropriate). Personal observations about the Operator-as-person → don't capture; communicate directly or let it go."*
+> *"This profile holds Evryn's working-knowledge of her partnership with the Operator. **100% public-safe content only — assume any of this could leak.** If a note isn't something you'd be comfortable with a stranger reading from a billboard, it doesn't belong here. Routing for the rest: notes about specific users → that user's profile via `append_pending_note(target_user_id)`. Strategic / business-sensitive content → not captured here (escalate to the Operator if it should be persisted somewhere appropriate). Personal observations about the Operator-as-person → don't capture; communicate directly to the Operator or let it go. **For Reflection (v0.3+):** when reflecting on this profile, do one extra pass — audit existing content for 100% public-safe compliance, flag anything that fails the test."*
 
 Initialized once at Operator user creation. Lives in `_meta`, not `story`, so Reflection writes the story freely without compacting away the discipline header. The trigger loads `_meta.discipline_notice` independently of `story`.
 
@@ -110,25 +122,54 @@ Initialized once at Operator user creation. Lives in `_meta`, not `story`, so Re
 
 For the discipline to actually hold over time, audits have to actually happen.
 
-**v0.2 (manual):** Add a step to the #lock checklist: *"Spot-check Operator's profile_jsonb for the public-safe discipline. If anything in `pending_notes` or `story` fails the 'would I publish this?' test, address it (route to right location, delete, or escalate to Justin)."* Lock happens regularly; this catches drift early. (See `_evryn-meta/docs/protocols/lock-protocol.md`.)
+**v0.2 (manual, in #sweep):** Add a step to the #sweep checklist: *"Spot-check Operator's profile_jsonb for 100% public-safe compliance. If anything in `pending_notes` or `story` fails the 'would I publish this?' test, address it (route to right location, delete, or escalate to Justin)."* Sweep happens regularly; this catches drift early. (See `evryn-team-workspace/shared/protocols/sweep-protocol.md`.)
 
-**v0.3+ (Evryn-self-audit via Reflection):** When Reflection processes Operator's profile, it includes a public-safe audit pass. If anything fails the test, Reflection: (a) flags it in a note for the Operator, (b) suggests where it should go (specific user / strategic doc / "let it go"), (c) doesn't auto-delete (Operator confirms). Justin's framing: *"who better?"* — Evryn writes the notes, has full context for what should and shouldn't be there, has the calibration to know what's public-safe. (Breadcrumbed in ARCHITECTURE.md Memory Architecture / Reflection Module section; sprint backlog item to scope when Reflection lands.)
+**v0.3+ (Evryn-self-audit, as part of Reflection):** Reflection is the audit. When Reflection processes Operator's profile, it follows the instruction in `_meta.discipline_notice` to do one extra pass — auditing existing content for 100% public-safe compliance, flagging anything that fails. No separate audit infrastructure needed; the instruction lives in the profile header where Reflection sees it. Justin's framing: *"who better?"* — Evryn writes the notes, has full context, has the calibration to know what's public-safe.
+
+### Cross-user-bleed recovery
+
+A scoped thread is supposed to carry one scope. When that boundary breaks — someone mentions another user mid-thread, or the thread turns out to be wrongly scoped — Evryn flags it as a user-isolation break and acts to restore isolation.
+
+**Mid-thread bleed (another user mentioned in a scoped thread):**
+
+In a Mark-scoped thread, Justin says: *"oh, also, Bob mentioned something interesting about Mark last week."*
+
+Evryn's response, roughly:
+
+> *"I think we just broke user isolation — this thread is scoped to Mark, and you've referenced Bob. I recommend we redact Bob's identifying info from this conversation now, before it persists into a Mark-context that could surface later. I can edit the messages above to replace 'Bob' with '[redacted user]' if you confirm. Then let's start a fresh thread for Bob if there's more to discuss about him."*
+
+She has the agency to act: with Justin's confirmation, she can call `supabase_upsert` (or a dedicated redaction tool — see Open considerations) to update the message content fields, replacing user-identifying terms. The redaction is recorded in the message's metadata so the audit trail is preserved (we know there was a redaction; we can't see what was redacted).
+
+**Wrong-scope recovery (whole thread is wrongly scoped):**
+
+If Justin or Evryn realizes mid-thread that the entire thread is wrongly scoped — e.g., a thread that opened with Justin saying "let's talk about Mark" turns out to be about Bob — abandoning the thread isn't enough. The wrongly-scoped messages stay in the database with `scope_user_id = $wrong_user`. They'd load in future $wrong_user conversations, polluting that user's context.
+
+Evryn's recovery, with Justin's confirmation:
+
+1. Flag the realization: *"I think this thread is actually about Bob, not Mark — that means everything we've said here is wrongly scoped to Mark and would load in Mark's context later if we don't fix it."*
+2. Recommend the right move: re-scope all messages in this thread to Bob (`UPDATE messages SET scope_user_id = $bob_id WHERE thread_id = $thread_ts`) AND redact any erroneous Mark references that shouldn't carry forward into Bob's context.
+3. Or, if the content is too tangled to cleanly re-scope: nuke the messages, start fresh as a Bob thread.
+
+Either way, Evryn does not silently let wrongly-scoped messages persist. The recovery is explicit, performed (with confirmation), and recorded.
+
+**Identity-layer dependency:** This recovery behavior needs to be in `operator.md` so Evryn knows to flag and act when she detects a scope break. Mira's pass on `operator.md` will codify the language and the action discipline.
 
 ### UX flow
 
 - Justin (top-level): *"Mark forwarded that vague filmmaker email — what do you think?"* → Mark-scoped thread opens.
-- Evryn (in-thread, with Mark's full profile + Operator's working-knowledge loaded): drafts a thoughtful response. The Operator-knowledge informs *how* she frames it (tone, length, escalation calibration); Mark's profile informs *what* she's classifying.
+- Evryn (in-thread, with Mark's profile + Operator's working-knowledge in her context): drafts a thoughtful response. Operator's working-knowledge informs *how* she frames it (tone, length, escalation calibration); Mark's profile informs *what* she's classifying. Mark, when he eventually receives the response, sees only Evryn's response — not her processing context.
 - Justin (replying in thread): *"yeah let me know what you decide."* → she has the full thread context + Mark's profile + Operator's working-knowledge.
 - Justin (top-level, new): *"thoughts on Bob's conversation history?"* → new Bob-scoped thread.
 - Justin (top-level, new): *"how are classifications going overall this week?"* → new NULL-scoped thread, no specific user data, Operator's working-knowledge still loaded.
-- Even in user-pathway processing (e.g., Mark's forwarded email triggering `processForward`): Operator's working-knowledge loads, so Evryn's response is calibrated against the Operator's preferences.
+- Even in user-pathway processing (Mark's forwarded email triggering `processForward`): Operator's working-knowledge loads into Evryn's processing context, so her behavior is calibrated against Operator preferences. Mark's experience is unchanged — he just gets a response that reflects the Operator-tuned Evryn.
 
 ### Identity-Layer Additions (Mira pass)
 
 `operator.md` needs:
 - The routing discipline (which notes go where, with the public-safe test)
 - Awareness of thread scope as the Operator-Slack pathway's structure
-- The "let's start a fresh thread for Bob" pattern when a thread's existing scope doesn't match
+- The mid-thread bleed recovery pattern (flag, recommend redaction, perform with confirmation)
+- The wrong-scope recovery pattern (flag, re-scope or nuke, with confirmation)
 - A note that NULL-scoped threads are meta-operator territory
 
 Possibly a new identity module `situations/meta-operator.md` for cross-cutting strategic conversations, or `operator.md` handles both with a flag. AC + Mira to decide during the Mira pass.
@@ -142,15 +183,16 @@ Possibly a new identity module `situations/meta-operator.md` for cross-cutting s
 - Uses Slack's native thread feature — no special syntax for the Operator
 - Maps directly onto ARCHITECTURE.md's planned v0.3 per-user operator interface — this *is* that interface, arriving early
 - Resolves the "Slack is single-shot by design" friction without violating user isolation
-- Reflection works natively on Operator's profile (consolidates `pending_notes` into `story` over time → cohesive working memory)
+- Reflection works natively on Operator's profile (consolidates `pending_notes` into `story` over time → cohesive working memory; the public-safe audit is part of Reflection, not separate infrastructure)
 - Calibration patterns from past sessions inform present work without manual context-passing
 - Worst-case-leak is harmless: Operator's profile is 100% public-safe by design
 
 **Negative / risks:**
 - New column + ~50-line `handleGeneralMessage` rewrite + small backfill query
 - Behavioral dependency: Justin has to use threads for multi-user discussions (one user = one thread). Mistake mode: he replies top-level when he meant to reply in-thread. Mitigation: when Evryn detects ambiguity, she asks before assuming.
-- Discipline dependency: Evryn must route notes correctly (public-safe → Operator's profile; user-specific → that user's profile; strategic → escalate). The discipline-notice + identity-file principle + audit pathway form belt-and-suspenders. Pattern failure becomes a re-architecture trigger.
+- Discipline dependency: Evryn must route notes correctly (public-safe → Operator's profile; user-specific → that user's profile; strategic → escalate) and must flag/redact when scope breaks. The discipline-notice + identity-file principle + audit pathway form belt-and-suspenders. Pattern failure becomes a re-architecture trigger.
 - Scope-determination on first message may need an extra round-trip if user identification is ambiguous (verification protocol kicks in). Acceptable — verification is a one-time cost per thread.
+- Redaction is destructive (we lose the original content). Acceptable trade-off for user isolation; metadata preserves the audit trail of "this was redacted."
 
 **Operational:**
 - Supabase migration: ALTER TABLE messages ADD COLUMN scope_user_id, plus index
@@ -158,8 +200,7 @@ Possibly a new identity module `situations/meta-operator.md` for cross-cutting s
 - ARCHITECTURE.md Operator Track section updated (replaces "single-shot by design" framing with "thread = scope" framing)
 - ARCHITECTURE.md v0.3 Operator Interface section updated to point at this ADR
 - ARCHITECTURE.md System Actors section updated to clarify Operator's profile is the deliberate exception (see LEARNINGS 53 clarification)
-- ARCHITECTURE.md Reflection Module section gets a breadcrumb for the Evryn-self-audit on Operator's profile (v0.3+)
-- `_evryn-meta/docs/protocols/lock-protocol.md` gains an Operator-profile spot-check step
+- `evryn-team-workspace/shared/protocols/sweep-protocol.md` gains an Operator-profile spot-check step
 - `operator.md` needs a Mira pass
 
 ## One-of carve-out — does not generalize
@@ -173,7 +214,7 @@ A future reader who sees Operator-loaded-alongside-Mark and thinks *"oh, we can 
 - ARCHITECTURE.md Operator Track ("Slack Operator is single-shot by design" — to be revised to "Slack thread = scope")
 - ARCHITECTURE.md v0.3 Operator Interface (per-user persistence — this becomes that interface, on Slack)
 - ARCHITECTURE.md Meta-Operator (persistent, cross-cutting, PII-free — NULL-scoped threads handle this naturally)
-- ARCHITECTURE.md System Actors / Memory Architecture / Reflection Module (Operator's profile is a deliberate exception; Reflection-self-audit is the v0.3+ enforcement)
+- ARCHITECTURE.md System Actors / Memory Architecture / Reflection Module (Operator's profile is a deliberate exception; Reflection handles the public-safe audit via the `_meta.discipline_notice` instruction)
 - ARCHITECTURE.md Identity Composition (Permission, not compulsion — the architectural principle this ADR honors by giving Evryn working-knowledge instead of compelling her behavior)
 - LEARNINGS item 53 (System actors are FK anchors and senders, never *implicit* subjects of user-scoped operations — clarification needed: Operator-as-foundational-context is a deliberate exception with explicit scope-gating; the principle still bars implicit subject-ification)
 - ADR-014 (Operator Module Slack-Only — establishes the structural Operator detection that this ADR builds on)
@@ -183,9 +224,8 @@ A future reader who sees Operator-loaded-alongside-Mark and thinks *"oh, we can 
 - **Visibility of scope.** When Evryn determines a new thread's scope, she should announce it ("starting a Mark thread") so Justin sees the state. Visible state beats hidden state, especially for an ops channel. The announcement also doubles as the user-verification step (Justin can correct if she got the wrong user).
 - **Meta-operator identity module.** New file `situations/meta-operator.md`, or does `operator.md` handle both with a flag passed by the trigger? AC + Mira call.
 - **Thread expiration / cleanup.** Threads accumulate over time. Operational policy: archive after N days? Hard-cap on active threads? TBD before scale.
-- **Wrong-scope recovery.** If Justin starts a Mark thread but realizes he meant Bob, cleanest recovery is: he abandons the Mark thread (or marks closed via Slack reaction), starts a fresh Bob thread. No code-level "scope change" needed — keeps the structural guarantee clean.
+- **Dedicated redaction tool.** v0.2 can use raw `supabase_upsert` for redaction (Evryn manually crafts the update). A dedicated `redact_user_from_message(message_id, user_name_to_redact)` MCP tool would be safer and audit-trail-friendlier — substitutes the user's name with `[redacted user]` server-side, records the redaction in message metadata. Worth speccing as a follow-up DC task; not blocking for v0.2 if Evryn can do raw upserts cleanly.
 - **Evryn-initiated thread scope.** When `notify_slack` posts a new message (escalation), the message is being created in code — Evryn knows the user. `notify_slack` accepts an optional `user_id` parameter that pre-populates the thread's scope when the resulting Slack message gets `thread_ts` assigned. Worth specifying in the implementation.
-- **Reflection-self-audit scope (v0.3+).** When Reflection processes Operator's profile, the audit pass needs explicit constitutional principles ("public-safe test," "categories of routing-out") so it can flag confidently. Probably a small ADR or design doc when Reflection lands.
 
 ---
 
