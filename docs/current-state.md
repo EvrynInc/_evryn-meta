@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-04-27T17:45-07:00*
+*Last updated: 2026-04-28T17:30-07:00*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
 
@@ -22,19 +22,20 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Integration test paused mid-prep (2026-04-27).** Loop bug surfaced when Justin signed into evryn@evryn.ai and Google sent a security alert — Evryn's drafts were being polled back as inbound `direct_message` items, looping ~14 times before manual break. Evryn diagnosed her own runtime bug. DB restored to plastic-wrap state.
-- **Pivot to real-Mark identity** (with `systemtest@evryn.ai` as placeholder email — defense-in-depth keeps real email out of DB during testing). Fixture profile, integration test script, and 7 fixture emails rewritten for real Mark Titus. Mira's identity-file edits (commits 3771ca8 + 416cd44) added research-aware Evryn pattern (WebFetch + WebSearch).
-- **DC bundle queued at `evryn-backend/docs/ac-to-dc.md`** — 4 tasks: add WebFetch+WebSearch to allowedTools, fix loop bug, give Evryn a Slack-escalation exit (no-draft path on system-noise senders), remove getRecipient() redirect. (Originally-floated fifth task — system-actor history-skip — was reconsidered and dropped during fresh-AC review; principle captured in `LEARNINGS.md` item 53 instead.)
+- **Integration test paused mid-prep (2026-04-27).** Loop bug surfaced when Justin signed into evryn@evryn.ai and Google sent a security alert — Evryn's drafts were polled back as inbound `direct_message` items, looping ~14 cycles before manual break. Evryn diagnosed her own runtime bug. DB restored to plastic-wrap state.
+- **Vetting pass + architectural deepening (2026-04-28).** Fresh-AC reviewed prior day's lock work; found and fixed accuracy issues. **ADR-030 written + iterated** — Slack threads as Operator user-isolation scope + Operator's profile as working-knowledge in Operator pathways (resolves "Slack is single-shot" friction without violating user isolation). **Permission-over-compulsion principle landed** in ARCHITECTURE.md + BUILD doc. **Mira shipped `core.md` addition** (commit `a4d7d2e`) — drafting-is-default + escalation-substance + runtime-isn't-infallible.
+- **DC bundle queued at `evryn-backend/docs/ac-to-dc.md`** — 6 tasks: (1) WebFetch+WebSearch tools, (2) loop-bug fix, (3) permissive `processDirect` prompt, (4) remove `getRecipient()` redirect, (5) UTF-8 cleanliness across all outbound paths, (6) ADR-030 implementation. Task 6 deploy waits on Mira's `operator.md` ship; Tasks 1-5 deployable as soon as built. Justin's deploy pattern (b): build all six, deploy together when Mira ships, re-run integration test against the iterative-Slack architecture.
+- **Mira brief queued** at `_evryn-meta/docs/sessions/2026-04-28-mira-brief-operator-md-adr030.md` — five additions to `operator.md` (thread-scope awareness, public-safe routing discipline, mid-thread bleed recovery, wrong-scope recovery, NULL-scoped meta territory) + one open structural call (one-file-two-modes vs. separate `meta-operator.md`).
 - **Pre-go-live cleanup step captured** in both sprint tracker AND operator-guide Go-Live Checklist: kill test-Mark UUID + create fresh real-Mark record + clear evryn@/systemtest@/review@ inboxes; Justin must visually verify squeaky-clean DB AND Gmail before real-Mark email is wired in.
-- **After integration test (once DC bundle ships and test re-runs):** adversarial test → go/no-go → Mark email.
+- **After Mira + DC ship + integration test re-runs:** adversarial test → go/no-go → Mark email.
 - **Legal: Fenwick Phase 1 complete.** ToS and Privacy Notice finalized. Phase 2 (v0.3 terms) in progress.
 - **Go-live timing relaxed.** Mark is in no hurry. Quality over speed.
 
 ## Active Projects
 
-- **_evryn-meta** — On 2026-04-27: real-Mark pivot orchestration. Settings.json updated to allow WebSearch. Sprint tracker updated with pivot row + critical findings. Session doc + ADR-029 (getRecipient removal) written and reviewed.
-- **evryn-backend** — Mark pre-created in DB (UUID `72c22bc4-...`, full ADR-027 template, empty story/notes). DB plastic-wrap state (3 system actors + Mark, 0 emailmgr_items, 0 messages). Identity files updated by Mira (research-aware Evryn). Fixture profile + script + 7 fixture emails rewritten for real Mark. DC mailbox queued with 4 tasks awaiting DC.
-- **evryn-team-workspace** — Mira shipped research-aware identity edits (commits 3771ca8 + 416cd44). Lucas memory ~21K chars, consolidation needed soon.
+- **_evryn-meta** — On 2026-04-28: vetting pass + ADR-030 (Slack thread scope + Operator-profile-as-working-knowledge) + Mira brief for operator.md + LEARNINGS 53 deliberate-vs-implicit clarification. Permission-over-compulsion principle documented in ARCHITECTURE.md + BUILD doc.
+- **evryn-backend** — Mark pre-created in DB (UUID `72c22bc4-...`, full ADR-027 template, empty story/notes). DB plastic-wrap state (3 system actors + Mark, 0 emailmgr_items, 0 messages). Identity files updated by Mira (research-aware Evryn at commits 3771ca8 + 416cd44, then drafting-is-default at a4d7d2e). Fixture profile + script + 7 fixture emails for real Mark (Mat Cerf attributions cleaned 2026-04-28). DC mailbox queued with 6 tasks awaiting DC.
+- **evryn-team-workspace** — Mira shipped two batches of identity work (commits 3771ca8 + 416cd44 + a4d7d2e). Sweep protocol gained Operator-profile public-safe spot-check step (ADR-030 v0.2 audit pathway). Lucas memory ~21K chars, consolidation needed soon.
 - **evryn-ops** — Created. OC CLAUDE.md ready. Not yet active.
 - **evryn-quality** — Created. QC CLAUDE.md ready. Not yet active.
 - **evryn-website** — Live at evryn.ai. ToS + Privacy Notice pages built.
@@ -43,10 +44,10 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## Infrastructure
 
-- Railway: evryn-backend deployed on Hobby plan ($5/month). Currently RUNNING. Env: `SEND_ENABLED=true`, `NODE_ENV=development`, `POLL_INTERVAL_MS=10000`. **Important: do not trigger any new Gmail activity on evryn@evryn.ai (sign-ins, etc.) until DC fixes the loop bug — quiet inbox is what's keeping us safe.**
+- Railway: evryn-backend deployed on Hobby plan ($5/month). Currently RUNNING. Env: `SEND_ENABLED=true`, `NODE_ENV=development`, `POLL_INTERVAL_MS=10000`. **Important: do not trigger any new Gmail activity on evryn@evryn.ai (sign-ins, etc.) until DC ships the loop-bug fix (Task 2).** evryn@evryn.ai inbox confirmed clear (2026-04-28).
 - Railway: workspace-scoped API token. CLI requires interactive `railway login`; GraphQL API at `backboard.railway.app/graphql/v2` accepts the token directly via Bearer auth.
 - Slack: "Evryn" app — Socket Mode, bot token via `@slack/bolt`. WebSocket heartbeat false-positive after restart is a known cry-wolf (filed as DC backlog).
-- Supabase: "Evryn Product" project. Schema current (Day 6 migration applied). **Last backup: 2026-04-22.** Cadence target: weekly. If this date is more than ~7 days behind today, take a fresh backup before any schema-touching work.
+- Supabase: "Evryn Product" project. Schema current (Day 6 migration applied). **Last backup: 2026-04-22.** 6 days as of today (2026-04-28) — within the 7-day cadence target but close. ADR-030 lands a schema migration (ALTER TABLE messages ADD COLUMN scope_user_id) — DC takes a fresh backup before/after per project policy.
 - evryn@evryn.ai (Evryn's polled inbox), systemtest@evryn.ai (test recipient + currently holds Mark's placeholder address), review@evryn.ai = alias on justin@evryn.ai (Justin's review inbox — NOT polled by Evryn).
 
 ## Task Management

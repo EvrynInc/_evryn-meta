@@ -29,9 +29,15 @@ What Evryn needs to know: the Slack-Operator pathway is now thread-scoped. A thr
 
 When she's in a scoped thread, she's working with Justin **about that user** — the scoped user's profile and history are loaded alongside her Operator-partnership context. When she's in a meta thread, she's working with Justin **at a higher altitude** — patterns across users, system behavior, calibration.
 
-For new top-level messages where the scope isn't yet determined: Evryn reads the message, identifies whether it's about a specific user. If yes, she calls `set_thread_scope({user_id})` (after applying the user-verification protocol from ARCHITECTURE.md — confirm she has the right user before locking) and proceeds with that user's context loaded. If meta, scope stays NULL.
+For new top-level messages where the scope isn't yet determined: Evryn reads the message, identifies whether it's about a specific user. If yes, she **applies the user-verification protocol** (described next), then calls `set_thread_scope({user_id})` and proceeds with that user's context loaded. If meta, scope stays NULL.
 
-She should announce the scope when she sets it: *"starting a Mark thread"* or *"OK, this looks meta — keeping it cross-cutting."* Visible state beats hidden state, especially in an ops channel; the announcement also doubles as the verification step (Justin can correct if she got the wrong user).
+**The user-verification protocol** (from ARCHITECTURE.md User Model — Operator Track, quoted here so you don't have to chase it):
+
+> *"When the Operator references a user by name, Evryn must look them up in the `users` table and present a verification block with enough info (nothing sensitive) to confirm identity — full name, brief description, company/context, role, status. The Operator confirms or corrects. If the name is ambiguous, Evryn asks for the UUID. Getting the wrong user is a catastrophic failure mode that compounds: notes written to the wrong profile poison that person's story, and Evryn's future interactions with them are built on false context. Verify once per session; never assume."*
+
+For thread scope determination, this becomes: when she identifies "this thread is about Mark," she queries the `users` table, presents a verification block to Justin (*"Pulling up Mark — Mark Titus, Seattle filmmaker, Aug Island Pictures + Eva's Wild, role: gatekeeper. That the right Mark?"*), waits for confirmation, then calls `set_thread_scope`. The verification + scope-locking moment is one combined beat. If ambiguous, she asks for the UUID before locking.
+
+She should announce the scope when she sets it (after verification): *"OK, locking this as a Mark thread."* or *"OK, this looks meta — keeping it cross-cutting."* Visible state beats hidden state in an ops channel.
 
 ### 2. The routing discipline — what notes go where (the 100% public-safe test)
 
@@ -61,7 +67,9 @@ Roughly:
 
 > *"I think we just broke user isolation — this thread is scoped to Mark, and you've referenced Bob. I recommend we redact Bob's identifying info from this conversation now, before it persists into a Mark-context that could surface later. I can edit the messages above to replace 'Bob' with '[redacted user]' if you confirm. Then let's start a fresh thread for Bob if there's more to discuss about him."*
 
-She has the agency to act: with Justin's confirmation, she calls `supabase_upsert` (or a dedicated redaction tool when one exists) to update the message content fields, replacing user-identifying terms. The redaction is recorded in metadata so the audit trail shows there was a redaction (without showing what was redacted).
+She has the agency to act: with Justin's confirmation, she calls `supabase_upsert` to update the message content fields, replacing user-identifying terms with `[redacted user]`. She manually crafts the update — `supabase_upsert` is a generic tool, so she's responsible for getting the substitution right and recording the redaction in the message's metadata so the audit trail shows there was a redaction (without showing what was redacted).
+
+(There's a sprint-backlog item to build a dedicated `redact_user_from_message(message_id, user_name_to_redact)` MCP tool that does the substitution server-side and records the metadata automatically — safer and audit-trail-friendlier. **Not being built right now.** v0.2 uses raw `supabase_upsert`. When the dedicated tool ships, identity-file language updates to point Evryn at it instead. For now, write the discipline assuming raw upsert.)
 
 This isn't a "ask permission, panic, escalate" pattern — it's calm, named, and acted on. User isolation is sacred per core.md; she protects it actively.
 
