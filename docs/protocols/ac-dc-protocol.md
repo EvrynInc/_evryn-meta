@@ -30,12 +30,27 @@ The general pattern: `<repo>/docs/ac-to-dc.md` and `<repo>/docs/dc-to-ac.md`.
 
 To prevent one side from overwriting an unread message:
 
-1. **Writer** writes the message to the mailbox file.
+1. **Writer** writes the message to the mailbox file **and commits it** before handing off (see "Author commits before handoff" below). The commit preserves the message in git history so it remains recoverable after the reader clears the file.
 2. **Justin** tells the other side to "read."
-3. **Reader** reads the message, absorbs what they need into their own persistent docs, then **clears the file** (replace contents with `READ — absorbed`).
+3. **Reader** reads the message, absorbs what they need into their own persistent docs, then **clears the file** (replace contents with `READ — absorbed`) and commits the cleared state.
 4. **Writer** can see the mailbox is clear before writing a new message. If the file still has content, the previous message hasn't been received — **do not overwrite**.
 
-This keeps mailboxes at one message max (no growing log) while ensuring no messages get lost.
+This keeps mailboxes at one message max (no growing log) while ensuring no messages get lost — and the git history retains a recoverable record of every exchange.
+
+### Author commits before handoff
+
+**The mailbox file must be committed by its author before the reader is told to read.** Without this, the message lives only on disk in the working tree; if the reader clears it before the author committed, the original content is lost from git history and only recoverable by reconstruction from the reader's context (which is lossy and time-bounded by context window).
+
+Concrete pattern:
+
+1. **Author writes the message** to the mailbox file.
+2. **Author commits it** (one focused commit, e.g., `dc-to-ac: 2026-04-29 deploy report`). Push.
+3. **Author tells Justin** the mailbox is ready for the reader.
+4. **Reader reads, absorbs, clears, commits the cleared state**, pushes.
+
+If you (as reader) discover that the previous author didn't commit their reply before clearing — for example, you arrive at session start and find the mailbox already on disk but uncommitted — restore the content from your context (or theirs, if reachable), commit it as the author's reply with a co-author / on-behalf-of note in the commit message, and only then proceed with your absorption-and-clearing commit. This catches up the missing history step.
+
+**Why it matters:** the mailbox is the only durable record of what one instance asked the other in writing. Even with both sides absorbing into persistent docs, the literal phrasing of the request, the receipts in the reply, and the empirical examples cited often need to be referenced later. Lossy reconstruction from another instance's compressed memory isn't a reliable substitute. (Surfaced 2026-04-29: DC's deploy report sat uncommitted on disk while AC absorbed and cleared; AC retroactively reconstructed and committed before the cleared state.)
 
 ### When to Use Mailboxes
 
