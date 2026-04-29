@@ -72,7 +72,9 @@ Their `evryn-team-workspace\shared\current-state` is append-only between standup
 
 ### AC's known tools (as of March 2026)
 
-Bash/CLI access to Supabase CLI + API, Linear API key (in `_evryn-meta/.env`), GitHub `gh` CLI, Slack `#dev-alerts` webhook. This list may grow — verify current capabilities rather than assuming past limitations still hold.
+Bash/CLI access to Supabase CLI + API, Linear API key (in `_evryn-meta/.env`), GitHub `gh` CLI, Slack `#dev-alerts` webhook, Railway CLI (`railway` command — see below). This list may grow — verify current capabilities rather than assuming past limitations still hold.
+
+**Railway CLI:** The `railway` command is globally installed (`@railway/cli`) and reads credentials from Justin's home directory (`~/.railway/`), so authentication persists across sessions and across agents. Run `railway whoami` to confirm; if it returns "not logged in", ask Justin to run `railway login` once and the credentials will be available to AC and DC going forward. From inside `evryn-backend/`: `railway status` (current project/service), `railway logs --deployment` (runtime logs), `railway logs --build` (latest build), `railway deployment list --json` (history with status, timestamps, build metadata), `railway up` (deploy current working tree). For Railway platform incidents that explain failed/queued deploys, check status.railway.com. Reach for this directly instead of asking Justin to copy-paste from the Railway dashboard — it saves real time.
 
 **Slack:** To ping Justin on `#dev-alerts`, the webhook URL is in `evryn-dev-workspace/.env` as `SLACK_DEV_WEBHOOK_URL`. Post via curl:
 ```
