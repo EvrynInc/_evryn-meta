@@ -19,6 +19,7 @@
 - **LEARNINGS item 53 clarified** — distinguished "implicit" subject-ification (barred — the loop-bug pattern) from "deliberate" subject-ification with explicit pathway-gating (designed exception, e.g., ADR-030's Operator pathway). Title now reads "...Never *Implicit* Subjects."
 - **Session doc** at `_evryn-meta/docs/sessions/2026-04-28-vetting-pass-and-adr-030.md` — full handoff for fresh AC arriving cold.
 - **Pre-handoff state confirmed:** evryn@evryn.ai inbox cleared (Justin); Railway env still as expected; Mira and DC ready to spin in parallel. No blockers on the AC side.
+- **Fresh-AC handoff (evening).** Walked the full load list, verified DC's six-task build against the runtime (root cause + two fix layers for the loop bug clean; ADR-030 implementation isolation correct — only `handleGeneralMessage` loads Operator's profile; UTF-8 fixes single-source-of-truth; `getRecipient` redirect deleted entirely). Verified Mira's `operator.md` ADR-030 ship (commits `7721972` + `0fd4181`, one-file-two-modes structure). Wrote DC deploy go-signal mailbox at `evryn-backend/docs/ac-to-dc.md` with one pre-deploy fix (`notify_slack` tool description: compulsion → permission, from DC's audit candidates). Em-dash sanitizer cleanup at `notify/slack.ts:79-83` + `notify/dev.ts:16-20` folded into the same DC trip via the smoke-test (sprint backlog updated to reflect). Mailbox tightly scoped to one job; Justin spins DC in the morning.
 
 ## 2026-04-27 (AC — integration test pivot + loop bug + research-aware Evryn)
 

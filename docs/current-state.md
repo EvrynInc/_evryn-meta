@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-04-28T17:30-07:00*
+*Last updated: 2026-04-28T17:08-07:00*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
 
@@ -24,18 +24,19 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 - **Integration test paused mid-prep (2026-04-27).** Loop bug surfaced when Justin signed into evryn@evryn.ai and Google sent a security alert — Evryn's drafts were polled back as inbound `direct_message` items, looping ~14 cycles before manual break. Evryn diagnosed her own runtime bug. DB restored to plastic-wrap state.
 - **Vetting pass + architectural deepening (2026-04-28).** Fresh-AC reviewed prior day's lock work; found and fixed accuracy issues. **ADR-030 written + iterated** — Slack threads as Operator user-isolation scope + Operator's profile as working-knowledge in Operator pathways (resolves "Slack is single-shot" friction without violating user isolation). **Permission-over-compulsion principle landed** in ARCHITECTURE.md + BUILD doc. **Mira shipped `core.md` addition** (commit `a4d7d2e`) — drafting-is-default + escalation-substance + runtime-isn't-infallible.
-- **DC bundle queued at `evryn-backend/docs/ac-to-dc.md`** — 6 tasks: (1) WebFetch+WebSearch tools, (2) loop-bug fix, (3) permissive `processDirect` prompt, (4) remove `getRecipient()` redirect, (5) UTF-8 cleanliness across all outbound paths, (6) ADR-030 implementation. Task 6 deploy waits on Mira's `operator.md` ship; Tasks 1-5 deployable as soon as built. Justin's deploy pattern (b): build all six, deploy together when Mira ships, re-run integration test against the iterative-Slack architecture.
-- **Mira brief queued** at `_evryn-meta/docs/sessions/2026-04-28-mira-brief-operator-md-adr030.md` — five additions to `operator.md` (thread-scope awareness, public-safe routing discipline, mid-thread bleed recovery, wrong-scope recovery, NULL-scoped meta territory) + one open structural call (one-file-two-modes vs. separate `meta-operator.md`).
+- **DC built all six tasks locally; deploy held pending one small fix.** Code committed-not-pushed in working tree (Tasks 1-6 across `src/` + migration SQL at `evryn-backend/backups/adr-030-thread-scope-migration.sql`). DC's reply absorbed; receipts verified by fresh-AC against the runtime. **One pre-deploy fix added:** `notify_slack` tool description rewrite (compulsion → permission, from DC's audit candidates). Deploy go-signal queued at `evryn-backend/docs/ac-to-dc.md`; DC will: apply the fix, run migration with backups before/after, push, smoke-test (WebFetch + loop fix + em-dash subject + approval reference + ADR-030 thread tests + em-dash sanitizer rendering across both Slack paths). Em-dash sanitizer cleanup folded into the same trip — sanitizers at `notify/slack.ts:79-83` and `notify/dev.ts:16-20` come out if `chat.postMessage` and webhook render UTF-8 cleanly.
+- **Mira shipped `operator.md` ADR-030 update** (commits `7721972` + `0fd4181`). Chose **one-file-two-modes** structure (no separate `meta-operator.md`). All five additions in: thread scope as channel structure with verification-and-lock, recovery patterns (mid-thread bleed + wrong-scope), routing discipline + 100% public-safe test, NULL-scoped meta territory, working-with-users mechanics. Tone: kept her full self in operator mode — peer register is about *relationship*, not damping.
 - **Pre-go-live cleanup step captured** in both sprint tracker AND operator-guide Go-Live Checklist: kill test-Mark UUID + create fresh real-Mark record + clear evryn@/systemtest@/review@ inboxes; Justin must visually verify squeaky-clean DB AND Gmail before real-Mark email is wired in.
-- **After Mira + DC ship + integration test re-runs:** adversarial test → go/no-go → Mark email.
+- **Tomorrow morning:** Justin spins DC; DC redeploys; smoke-test passes → Justin posts the real-Mark Slack intro from `evryn-backend/tests/fixtures/integration-test-script.md` Phase 2 → integration test resumes against the iterative-Slack architecture (not the single-shot one we're replacing).
+- **After integration test passes:** adversarial test → go/no-go → Mark email.
 - **Legal: Fenwick Phase 1 complete.** ToS and Privacy Notice finalized. Phase 2 (v0.3 terms) in progress.
 - **Go-live timing relaxed.** Mark is in no hurry. Quality over speed.
 
 ## Active Projects
 
 - **_evryn-meta** — On 2026-04-28: vetting pass + ADR-030 (Slack thread scope + Operator-profile-as-working-knowledge) + Mira brief for operator.md + LEARNINGS 53 deliberate-vs-implicit clarification. Permission-over-compulsion principle documented in ARCHITECTURE.md + BUILD doc.
-- **evryn-backend** — Mark pre-created in DB (UUID `72c22bc4-...`, full ADR-027 template, empty story/notes). DB plastic-wrap state (3 system actors + Mark, 0 emailmgr_items, 0 messages). Identity files updated by Mira (research-aware Evryn at commits 3771ca8 + 416cd44, then drafting-is-default at a4d7d2e). Fixture profile + script + 7 fixture emails for real Mark (Mat Cerf attributions cleaned 2026-04-28). DC mailbox queued with 6 tasks awaiting DC.
-- **evryn-team-workspace** — Mira shipped two batches of identity work (commits 3771ca8 + 416cd44 + a4d7d2e). Sweep protocol gained Operator-profile public-safe spot-check step (ADR-030 v0.2 audit pathway). Lucas memory ~21K chars, consolidation needed soon.
+- **evryn-backend** — Mark pre-created in DB (UUID `72c22bc4-...`, full ADR-027 template, empty story/notes). DB plastic-wrap state (3 system actors + Mark, 0 emailmgr_items, 0 messages). Identity files updated by Mira (research-aware Evryn at commits 3771ca8 + 416cd44, drafting-is-default at a4d7d2e, ADR-030 operator.md mechanics at 7721972 + 0fd4181). Fixture profile + script + 7 fixture emails for real Mark (Mat Cerf attributions cleaned 2026-04-28). DC's six-task bundle built (working tree, not yet committed/pushed); migration staged at `backups/adr-030-thread-scope-migration.sql`. Deploy go-signal queued in `docs/ac-to-dc.md`; DC pushes in the morning.
+- **evryn-team-workspace** — Mira shipped four batches of identity work today + yesterday (commits 3771ca8 + 416cd44 + a4d7d2e + 7721972 + 0fd4181). Sweep protocol gained Operator-profile public-safe spot-check step (ADR-030 v0.2 audit pathway). Lucas memory ~21K chars, Mira memory ~32K+ chars — both flagged for consolidation soon.
 - **evryn-ops** — Created. OC CLAUDE.md ready. Not yet active.
 - **evryn-quality** — Created. QC CLAUDE.md ready. Not yet active.
 - **evryn-website** — Live at evryn.ai. ToS + Privacy Notice pages built.
