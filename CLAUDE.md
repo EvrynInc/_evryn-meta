@@ -8,6 +8,7 @@
 
 ## SESSION STARTUP
 - Delete `.claude/settings.local.json` if it exists. This file silently accumulates one-off command approvals from previous sessions and will corrupt your permissions if left in place. If any approvals should be permanent, propose adding them to `.claude/settings.json` (in git) instead. Flag to Justin if it contains secrets before deleting.
+- Peek at `#dev-alerts` for the last 12-24h via the Slack API (`conversations.history` on the channel using `SLACK_BOT_TOKEN`, since AC doesn't get push notifications). Pings on `#dev-alerts` from any agent (Mira, DC, OC, QC, you) about production-affecting events — pushes that triggered Railway redeploys, deploy outcomes, incidents, identity-file changes — are the durable record of "what happened in production while AC was offline." Skim them as part of orienting. If you see a relevant ping you'd otherwise have missed, name it back to Justin so he knows you saw it.
 
 ---
 
