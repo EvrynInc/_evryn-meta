@@ -4,6 +4,8 @@
       "Read(~/Evryn/Code/**)",
       "Glob(~/Evryn/Code/**)",
       "Grep(~/Evryn/Code/**)",
+      "Edit(~/Evryn/Code/**)",
+      "Write(~/Evryn/Code/**)",
       "Bash(*)",
       "WebFetch(*)",
       "WebSearch",

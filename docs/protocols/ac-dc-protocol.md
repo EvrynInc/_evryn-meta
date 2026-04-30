@@ -60,6 +60,10 @@ Before major builds, architectural changes, or anything where AC should review D
 
 Assume the other party has taken appropriate notes from prior exchanges into their own persistent docs, but doesn't have the raw message history any more than you do. Reference shared artifacts (ARCHITECTURE.md, build docs, Linear issues) rather than restating their contents. Don't repeat context that lives in a doc both sides can read — just point to it.
 
+### Brief Justin when you write or absorb
+
+When you write to DC or absorb from DC, send Justin a short summary of what's being exchanged — what you're asking DC to do, what DC reported back, what's about to land. He doesn't read mailbox content (the technical altitude is below what he tracks), but he needs to know the shape so he can ask follow-up questions and stay oriented on what's shipping. The summary is what closes the loop in lieu of him reading the diff.
+
 ---
 
 ## Writing Standards for Cross-Instance Communication
