@@ -36,8 +36,6 @@ Mira pass on `evryn-backend/identity/situations/operator.md` to:
 2. Reframe scope determination as **ongoing**, not a one-shot at thread start. The current operator.md frames it as "when the Operator opens a new top-level thread, read the message and identify whether it's about a specific user." The empirical failure mode is mid-thread drift — Evryn correctly judges a thread as meta on turn 1, then fails to re-evaluate as the conversation drifts toward user-substantive territory. The identity-layer fix is a re-evaluation beat: *"Scope isn't a one-shot decision at thread start. If a meta thread drifts toward user-substantive content (research about a specific user, direct assessment of a user's fit, captures that should land on a profile), pause and re-evaluate — that's the moment to lock scope, not the next time you happen to think about it."*
 3. Pair the late-scope recovery pattern with the re-evaluation beat — when she catches the drift late, she has both the conceptual frame ("I should re-evaluate scope") and the recovery procedure (flag + recommend specific message IDs / thread IDs to rescope, operator confirms, perform with audit trail).
 
-The Mira brief is at `_evryn-meta/docs/sessions/2026-04-29-mira-brief-operator-md-late-scope.md`.
-
 ### Runtime tooling
 
 DC adds a primitive that supports cross-thread rescoping with audit-trail discipline. Two options sketched:
@@ -86,7 +84,7 @@ Not unilateral. Same shape as the existing recovery patterns.
 - The tool's blast radius is per-message-ID, but if Evryn passes the wrong IDs the audit trail captures it — recoverable, not catastrophic.
 
 **Operational:**
-- Mira pass on `evryn-backend/identity/situations/operator.md` (brief queued at `_evryn-meta/docs/sessions/2026-04-29-mira-brief-operator-md-late-scope.md`).
+- Mira pass on `evryn-backend/identity/situations/operator.md` (shipped 2026-04-29 evening, commit `98f31fa`, merged via `eebd399`).
 - DC implementation of `rescope_messages` MCP tool with audit metadata. Sprint backlog has the entry.
 - After tooling lands: ADR-030 doesn't get amended (frozen at decision time); this ADR carries the extension.
 
