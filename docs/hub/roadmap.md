@@ -38,13 +38,15 @@ All of this is just a plan. And the plan won't survive contact with reality inta
 
 Somewhere out there are the people you were *meant* to meet. They exist. They're real. And they've been looking for you, too. They'd change your life — and you'd change theirs...if you could just *find* them.
 
-Evryn's name comes from roots meaning "highest resonance" — and she's here to connect you — to *your* people, to yourself — and to the journey you're *meant* to be on. Full depth: [vision spoke](vision.md).
+Evryn's name comes from roots meaning "highest resonance" — and she's here to connect you — to *your* people, to yourself — and to the journey you're *meant* to be on. Full depth: [vision-and-ethos spoke](vision-and-ethos.md).
 
 Today's connection tools optimize for engagement metrics (swipes, scrolls, clicks), not real outcomes. The result: frustration, shallow interactions, eroded trust, rising disconnection. We don't need more access to people — we need the *right* people, and someone we can trust to connect us.
 
 Evryn is an AI-powered relationship broker. She finds you "your people" — the rare individuals who are *just the right fit* — and only connects you to people she trusts. Not a "dating app", not a "networking tool", not a marketplace. Your "friend who knows everyone you'd want to meet" - a trust-based connection engine across all life domains: soulmate, cofounder, plumber, creative collaborator, hookup, someone who'd pay $100 for the thing you were about to throw away.
 
 Evryn is active, not passive. She starts conversations. She thinks about you in the background. She offers thoughts unprompted. She's kind of a mix between your best friend, a wise mentor, and a timeless Oracle — warm, wise, curious, principled, tough in a gentle way. She runs her own shop — like a cool coffee shop owner who remembers your name, makes it right if something goes wrong, and gives you a free cup of coffee because she can tell you need it today.
+
+**Evryn's Ethos:** Evryn has her own values — held with both conviction and humility. They're *orientations*, not rigid rules: directions she leans, not lines she enforces. This lets her hold tension between principles that sometimes pull against each other, which is what real ethical life requires. These values drive her judgment — and ours. She tries to see the person clearly, serve what's genuinely good for them, lead with kindness, and stay present. She avoids causing harm, deception, coercion, and reducing people to their utility or their categories. Full depth: [vision-and-ethos spoke](vision-and-ethos.md).
 
 **Design philosophy:**
 - Stories over structures: Evryn builds her understanding of your deepest self as a *story* — she doesn't compress you to a data structure. Your trust is a narrative, not a score. Her matches are explained as stories — *why* this person matters to you — not as percentages.
@@ -74,7 +76,7 @@ Trust and fit aren't just features — they're the operating system. Evryn only 
 - **Trust and fit are a story, not a score.** Multi-dimensional, context-specific. Structured as a document in the user profile, not a number. Some dimensions bleed across contexts; others are domain-specific.
 - **Character becomes currency.** Behavioral, not performative. What you've done and how it impacted others.
 - **No dark patterns.** Evryn understands the full spectrum of psychological influence — that's what makes her safety instincts sharp and her persuasion effective. She uses those systems only in service of the user's genuine good. What she will never do: auto-invite your contacts, manipulate, gamify or manufacture urgency against your interests. No ads, no selling data. And your social network is an input for calibration and filtering — she never treats it as an asset to be mined. **You** are the customer, not an advertiser.
-- **Behavioral filtering for platform access.** For matching, Evryn considers the full picture, including values and worldview, because compatibility is the product. But for platform access, no one gets excluded for politics, identity, or worldview — they get excluded for predatory behavior, deception, coercion. Everyone gets a fair shot at the platform; not everyone gets matched with everyone else.
+- **Access flows from ethos and compatibility.** Matching considers the full picture — values, worldview, identity, context — because compatibility is the product. Platform access flows from Evryn's ethos: no one gets excluded for politics, identity, or worldview — they get excluded for showing up in ways that conflict with Evryn's core orientations (causing harm, deception, coercion, taking what isn't freely given). Everyone gets a fair shot at the platform; not everyone gets matched with everyone else.
 - **Trust imprint on deletion.** Personal data purged; non-reversible salted hash anchors trust memory so bad actors can't reset.
 - **Identity verification** before connections — "I only connect people I trust, and part of that is knowing they're real." Evryn never stores ID documents or biometrics — a third-party service handles verification; Evryn only stores verified or not.
 - **No disclosing evaluations of named individuals.** Evryn forms assessments of everyone — that's her job. But she never reveals those assessments to other users. Users can request connections with specific people; Evryn either facilitates or doesn't — a non-match is a non-event, not a verdict. This preserves the Canary Principle (no information leakage through response patterns) while letting Evryn use her full intelligence. See [ADR-010](docs/decisions/010-canary-principle-revised.md) (revises [ADR-008](docs/decisions/008-trust-mirror-dropped.md)).
@@ -141,7 +143,7 @@ For MVP (v0.2), a single agent handles all three domains. As complexity grows, t
 
 ## The Long View
 
-Trust compounds. Evryn's ultimate leverage: owning the trust layer of human connection. The moat is built not just on AI, but on accumulated human outcomes that only Evryn has visibility into. Full depth: [vision spoke](vision.md) (the soul), [long-term-vision spoke](long-term-vision.md) (the architecture).
+Trust compounds. Evryn's ultimate leverage: owning the trust layer of human connection. The moat is built not just on AI, but on accumulated human outcomes that only Evryn has visibility into. Full depth: [vision-and-ethos spoke](vision-and-ethos.md) (the soul and operating principles), [long-term-vision spoke](long-term-vision.md) (the architecture).
 
 The vision: a world where the *default* would be that people can be trusted and relationships actually work — because there's a reliable trust broker. Mental health improves. Divorce drops. Job satisfaction rises. Money becomes less necessary as Evryn does an even better job at what money was always meant to do — vouch for your contributions and let you carry forward value.
 
@@ -175,7 +177,7 @@ The vision: a world where the *default* would be that people can be trusted and 
 
 Most domain spokes are linked inline in the sections above. When adding new references, prefer inline links in the relevant section — this list is for cross-context items and non-spoke docs.
 
-- **Vision:** `docs/hub/vision.md` — the philosophical and emotional core: why Evryn exists, who she is, the honor economy, the world she creates
+- **Vision and Ethos:** `docs/hub/vision-and-ethos.md` — the soul and operating principles: why Evryn exists, who she is, the values she acts from, the honor economy, the world she creates
 - **BizOps & Tooling:** `docs/hub/bizops-and-tooling.md` — legal entities, finance, vendors, operational tools
 - **Evryn product build:** `evryn-backend/docs/BUILD-EVRYN-MVP.md` (what to build, phase by phase)
 - **SDK agent build (paused):** `evryn-team-agents/docs/BUILD-LUCAS-SDK.md`
