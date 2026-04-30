@@ -430,6 +430,24 @@ When a non-ASCII payload arrives mangled (em-dash → `?`, smart quotes corrupte
 
 **Pattern:** for any encoding mismatch, isolate which layer is mangling. Smoke-test through a known-clean transport (Node `fetch`, PowerShell `Invoke-RestMethod` with explicit UTF-8 encoding) before patching the destination. If the clean transport renders correctly, the workaround at the destination is wasted code that you'll have to peel back later.
 
+### Use File-Based Payloads for Non-Trivial JSON via Bash Heredoc
+
+Sibling failure mode to the transport-validation pattern above: when posting non-trivial JSON from a Node-via-bash one-liner, **bash heredoc silently corrupts backtick-wrapped strings inside JS template literals** before Node ever sees them. The shell evaluates `` `...` `` as command substitution and replaces the contents with the (typically empty) command output. The webhook returns 200 (success) so there's no error to catch — the message just ships with the code references stripped out.
+
+**Empirical example (Evryn, 2026-04-29 evening):** A `#dev-alerts` merge ping intended to include `mira/operator-md-late-scope-2026-04-29`, build ID `ba37ee54`, file references `operator.md` / `rescope_messages` / `slack.ts`, and others — all backtick-wrapped in the JS template literal — arrived in Slack with every backtick-content replaced by an empty string. The reader saw "merged to master" with no branch name, "DC's MCP tool" with no tool name. Webhook status was 200; nothing flagged.
+
+**Pattern:** for any non-trivial Slack/HTTP payload posted from a Node-via-bash one-liner, write the JSON to a temp file and `fs.readFileSync(file)` from Node. This bypasses bash escaping entirely — backticks, dollar signs, exclamation marks, and other shell-special characters survive intact. Same family as the transport-validation pattern: don't trust the bash layer with non-trivial payloads on Windows.
+
+```javascript
+// Bad — bash heredoc eats backticks
+node -e "const text = `merged \`branch-name\` to master`; fetch(...).then(...);"
+
+// Good — file-based payload
+// 1. Write JSON to .tmp-slack-payload.json
+// 2. node -e "const body = require('fs').readFileSync('.tmp-slack-payload.json', 'utf8'); fetch(url, {method:'POST', body, headers:{'Content-Type':'application/json; charset=utf-8'}})"
+// 3. rm .tmp-slack-payload.json
+```
+
 ---
 
 *Add patterns as they emerge from building evryn-team-agents and other agent work.*
