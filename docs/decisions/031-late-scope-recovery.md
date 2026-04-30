@@ -2,7 +2,7 @@
 
 > **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
 
-**Status:** Proposed — pending Justin approval and DC implementation.
+**Status:** Accepted (2026-04-29). DC implementation of `rescope_messages` is on the sprint backlog; Mira's `operator.md` pass is in flight.
 **Date:** 2026-04-29
 **Deciders:** Justin, AC, DC (surfaced)
 **Extends:** [ADR-030](030-slack-threads-as-operator-scope.md) — adds a third named recovery pattern alongside mid-thread bleed and wrong-scope recovery.

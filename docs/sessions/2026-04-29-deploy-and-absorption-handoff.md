@@ -15,7 +15,7 @@
 ### Tier 2 — Orientation (read first, in order)
 
 - `_evryn-meta/docs/hub/roadmap.md` — the Hub. Company truth. Read every session.
-- `_evryn-meta/docs/current-state.md` — current snapshot across all repos. (Note: the `last_updated` timestamp may lag by a few hours; the AC who wrote this doc didn't refresh `current-state.md` because Justin is mid-integration-test and DC's CHANGELOG already captured today's deploy details.)
+- `_evryn-meta/docs/current-state.md` — current snapshot across all repos. Refreshed in this session's commit; treat as authoritative.
 - This session doc (you're reading it) — the AC-side state of today's work.
 - `evryn-backend/docs/dc-to-ac.md` — DC's deploy reply. Currently `READ — absorbed` (this AC absorbed it before clearing). Detail still recoverable via git log if you want it; the absorption routed three architecture findings to ADR-031 + the Mira brief + the v0.3 multi-party doc, plus four LEARNINGS to AGENT_PATTERNS.
 
