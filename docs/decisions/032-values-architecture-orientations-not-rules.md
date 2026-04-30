@@ -81,6 +81,8 @@ Rules break under pressure. Orientations bend. Holding tension between principle
 
 ## Ethical traditions drawn from
 
+For the full landscape exploration — each tradition tested against Evryn's specific situation, what survives, what doesn't, and why — see `evryn-team-workspace/shared/projects/product/research/2026.04.30-evryn-ethical-framework-exploration.md`. This ADR captures the conclusions; the research report captures the how-we-got-there. When revisiting the framework, start there.
+
 For traceability and future revision:
 
 - **Deontological ethics (Kant)** — the floor of structural commitments. Where genuine absolutes belong.
