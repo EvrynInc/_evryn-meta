@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-04-29T16:07-07:00*
+*Last updated: 2026-04-29T18:52-07:00*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
 
@@ -22,33 +22,33 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **v0.2 deployed and verified end-to-end (2026-04-29).** DC's six-task bundle live (loop fix + permissive prompts + UTF-8 cleanliness + getRecipient removal + WebFetch/WebSearch + ADR-030 thread scope), plus three additional in-trip fixes (`tools[]`/`allowedTools[]` dual-list, Slack `say()` `thread_ts` orphan fix, em-dash sanitizer removal). Migration applied with backups before/after; `messages.scope_user_id` + `idx_messages_scope` + Operator's `_meta.discipline_notice` all verified. EVR-60 closed (schema-reference re-pulled).
-- **Integration test in flight.** Justin + DC running through Phase 2+ (top-level Slack intro → verify-and-lock → Naia gold email forward → onboarding multi-turn). Smoke-test residue + integration test residue is in DB; no clean re-wipe boundary in this run — Justin's call.
-- **ADR-031 written (late-scope recovery as third ADR-030 recovery pattern).** Mira brief queued at `_evryn-meta/docs/sessions/2026-04-29-mira-brief-operator-md-late-scope.md` (operator.md reframe of scope as ongoing not one-shot + late-scope recovery beat); Justin passing brief to Mira. DC's `rescope_messages` MCP tool is on the sprint backlog as the runtime half.
-- **Identity-file-review protocol shipped** (DC commits `0cf20fc` in evryn-team-workspace + `4416091` in _evryn-meta + companion ships in evryn-dev-workspace + evryn-backend CHANGELOG). Branch + PR + AC-as-default-reviewer + 7-item checklist + `#dev-alerts` merge ping. Motivated by 2026-04-29 real-Mark-info-in-operator.md leak that multiple reviewers missed. AC startup gains a `#dev-alerts` peek (last 12-24h via `conversations.history`) so push-less agents can see production events.
-- **ARCHITECTURE.md substantially revised today** for ADR-030 + ADR-031 (Operator Track, System Actors, v0.3 Operator Interface, Meta-Operator, Identity Composition). Five sections updated with explicit "(Updated 2026-04-29)" callouts. Fresh-AC review pass requested in handoff doc.
-- **Fresh-AC handoff doc:** `_evryn-meta/docs/sessions/2026-04-29-deploy-and-absorption-handoff.md` — full load list (Tier 1-8) + ARCHITECTURE.md review pass instructions + today's chronological log + state-at-session-end + recommended first action. Read this first when picking up a fresh AC instance.
-- **Pre-Mark-live blockers:** (a) emergency-alerts wiring — `#emergency-alerts` channel exists but no code triggers DND-override path (BUILD doc Phase 0e flag, sprint backlog has the two-stage design + wiring entry); (b) pre-go-live STEP 0 cleanup (kill test-Mark UUID + create fresh real-Mark record + clear inboxes + visual verify); (c) adversarial test full real-Mark refresh (doc still references pre-pivot fictional gatekeeper "Rachel Blackwood").
+- **v0.2 evening bundle LIVE** (Railway deploy `ba37ee54` SUCCESS, 18:43 PT). Bundle: DC's `slack.ts` disconnect-event monitor (replaces overnight silence-heartbeat cry-wolf — was alerting on 2-hour quiet websockets that were actually fine), DC's `rescope_messages` MCP tool (ADR-031 runtime, gated on `threadScopeContext`), Mira's `operator.md` ADR-031 pass (scope-as-ongoing reframe + late-scope as third recovery pattern), AC's ARCHITECTURE.md peer-register expansion. First end-to-end exercise of `identity-file-review.md` protocol — clean pass on all 7 checklist items. (Earlier today: v0.2 afternoon bundle — loop fix + permissive prompts + UTF-8 + getRecipient removal + WebFetch/WebSearch + ADR-030 thread scope; migration applied with backups; EVR-60 closed.)
+- **Smoke test green; integration test paused for the night.** Phase 2+ continuation (Slack intro → verify-and-lock → Naia gold → onboarding) deferred to next session with fresh AC.
+- **ADR-031 written + flipped to Accepted today.** Late-scope recovery as third ADR-030 recovery pattern. Identity layer (Mira) + runtime tool (DC) shipped together this evening per the new companion-ship discipline.
+- **Identity-file-review protocol hardened (AC review pass tonight).** Four additions to DC's draft: new "Preconditions" section (Railway deploy-config dependency named explicitly so the branch-only safety property doesn't silently break); author responsibility #7 (don't merge mid-test); #8 (companion-ship coordination across repos when identity-file references runtime tools / sibling docs); #3 refined (AC-routing — prefer the coordinating AC or a fresh AC, never grab one mid-other-work).
+- **`#dev-alerts` security cleanup.** Evryn removed from the channel; agent-team-side "Dev Team" Slack app now owns both posting (existing webhook) + reading (new `SLACK_DEV_BOT_TOKEN`). AC + DC `CLAUDE.md` SESSION STARTUP rewritten to use the agent-team token. Closes the Evryn-bot-reading-agent-channel conflation Justin flagged.
+- **ARCHITECTURE.md substantially revised today** for ADR-030 + ADR-031 (Operator Track, System Actors, v0.3 Operator Interface, Meta-Operator, Identity Composition). Five sections with "(Updated 2026-04-29)" callouts. Fresh-AC review pass landed (peer-register grounded inline; handoff-doc self-contradiction fixed).
+- **Pre-Mark-live blockers (unchanged):** (a) emergency-alerts wiring — `#emergency-alerts` channel exists but no code triggers DND-override path (BUILD doc Phase 0e flag); (b) pre-go-live STEP 0 cleanup (kill test-Mark UUID + create fresh real-Mark record + clear inboxes + visual verify); (c) adversarial test full real-Mark refresh.
 - **After integration test passes:** adversarial test → go/no-go → Mark email.
 - **Legal: Fenwick Phase 1 complete.** ToS and Privacy Notice finalized. Phase 2 (v0.3 terms) in progress.
 - **Go-live timing relaxed.** Mark is in no hurry. Quality over speed.
 
 ## Active Projects
 
-- **_evryn-meta** — On 2026-04-29: ADR-031 written (late-scope recovery); Mira brief queued; AGENT_PATTERNS gained "SDK Integration & Tool Wiring" section + Stub-Shaped Records pattern; LEARNINGS 46-50 + 55-58 promoted to stubs; CLAUDE.md gained Railway CLI section + corrected em-dash advice + `#dev-alerts` peek for session startup. Earlier (04-28): vetting pass + ADR-030 + permission-over-compulsion principle.
-- **evryn-backend** — v0.2 deployed; Mark pre-created in DB at `systemtest@evryn.ai` (UUID `72c22bc4-...`); `messages.scope_user_id` migration applied; ADR-030 + ADR-031 absorbed into ARCHITECTURE.md; integration test in flight against accumulated DB state. Identity files current (Mira passes for ADR-030 shipped at `7721972` + `0fd4181`; ADR-031 pass queued via brief).
-- **evryn-team-workspace** — `identity-file-review.md` protocol shipped; lock-protocol.md gained step 6 sub-bullet referencing it; `#dev-alerts` coordination wired in across DC + AC CLAUDE.mds. Mira shipped two batches of identity work today (commits `7721972` + `0fd4181`); memory ~32K+ chars, consolidation flagged.
+- **_evryn-meta** — Tonight: ADR-031 flipped to Accepted; AGENT_PATTERNS gained MCP-vs-built-in tool clarification (LEARNING 55 misreading caught by DC during evening trip); CLAUDE.md SESSION STARTUP switched to `SLACK_DEV_BOT_TOKEN`; bash-on-Windows backtick gotcha proposed as Unpromoted LEARNING #59 (pending Justin OK). Earlier today: ADR-031 written + handoff doc + AGENT_PATTERNS SDK Integration section + LEARNINGS stubs (46-50, 55-58) + Railway CLI in CLAUDE.md.
+- **evryn-backend** — v0.2 evening bundle deployed; Mira's ADR-031 `operator.md` pass live (commit `98f31fa` merged via `eebd399`); `rescope_messages` MCP tool live (`1e5e1d9`); `slack.ts` disconnect-monitor live (`55a6177`); ARCHITECTURE.md peer-register expansion (`62cbea3`). `mira/operator-md-late-scope-2026-04-29` branch merged + deleted. Identity files current (Mira passes for ADR-030 shipped at `7721972` + `0fd4181`; ADR-031 pass at `98f31fa`).
+- **evryn-team-workspace** — `identity-file-review.md` protocol shipped + AC review pass tonight (4 additions: preconditions, active-test coordination, companion-ship, AC-routing refinement). Mira shipped three identity batches today (`7721972` + `0fd4181` for ADR-030; `98f31fa` for ADR-031). Memory ~32K+ chars, consolidation still flagged.
 - **evryn-ops** — Created. OC CLAUDE.md ready. Not yet active.
 - **evryn-quality** — Created. QC CLAUDE.md ready. Not yet active.
 - **evryn-website** — Live at evryn.ai. ToS + Privacy Notice pages built.
-- **evryn-dev-workspace** — DC's home repo. CLAUDE.md gained `#dev-alerts` peek for session startup (companion to AC's, 2026-04-29).
+- **evryn-dev-workspace** — DC's home repo. CLAUDE.md updated tonight for `SLACK_DEV_BOT_TOKEN` (companion to AC's edit).
 - **evryn-team-agents** — FROZEN (ADR-021).
 
 ## Infrastructure
 
-- Railway: evryn-backend deployed on Hobby plan ($5/month). v0.2 bundle live as of 2026-04-29 (commits `6316126`, `e4d0cec`, `ccb3048`, `4d8b214`). Env: `SEND_ENABLED=true`, `NODE_ENV=development` (purely descriptive post-ADR-029), `POLL_INTERVAL_MS=10000`. Railway CLI available to AC + DC (`railway whoami`, `status`, `logs --deployment`, `logs --build`, `deployment list --json`); status.railway.com is the right first stop for queued/failed deploys.
-- Slack: "Evryn" app — Socket Mode, bot token via `@slack/bolt`. UTF-8 verified clean on both bot-token (`chat.postMessage`) and webhook paths post-2026-04-29 sanitizer removal. WebSocket heartbeat false-positive on restart is a known cry-wolf.
-- Supabase: "Evryn Product" project. Schema current (ADR-030 migration applied 2026-04-29 with backups). **Last backups:** schema + data dumps at 2026-04-29 (pre + post migration) in `evryn-backend/backups/`.
+- Railway: evryn-backend on Hobby plan ($5/month). Latest deploy `ba37ee54` SUCCESS at 2026-04-29T18:43 PT (replaces `33689051`); afternoon bundle commits `6316126`, `e4d0cec`, `ccb3048`, `4d8b214` plus evening bundle `55a6177`, `1e5e1d9`, `62cbea3`, `98f31fa`. GitHub auto-deploy still off post-Image-Registry-incident; manual `railway up` required.
+- Slack: **two apps now scoped cleanly.** "Evryn" app (Socket Mode, product-narrow channel scope) for the product runtime. "Dev Team" app handles agent-side: webhook posting (`SLACK_DEV_WEBHOOK_URL`) + bot-token reading (`SLACK_DEV_BOT_TOKEN`). Old cry-wolf 2-hour-silence heartbeat replaced tonight with disconnect-event monitor.
+- Supabase: "Evryn Product" project. Schema current (ADR-030 migration applied 2026-04-29 with backups in `evryn-backend/backups/`).
 - evryn@evryn.ai (Evryn's polled inbox), systemtest@evryn.ai (test recipient + currently Mark's placeholder address), review@evryn.ai = alias on justin@evryn.ai (Justin's review inbox — NOT polled by Evryn).
 
 ## Task Management
