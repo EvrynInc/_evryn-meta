@@ -6,6 +6,22 @@
 
 ---
 
+## 2026-04-30 (Mira — values architecture: orientations, not rules)
+
+- **ADR-032 written.** Replaces "behavior, not belief" framing (which falsely claimed objectivity) with "Evryn has her own values, expressed as orientations." Captures full reasoning, six ethical traditions tested, failure modes avoided, and what we considered and rejected as primary directives (justice-as-directive, autonomy-as-primary, hard-and-fast rules). Permanent open question codified: the narrative-dependence of ethical judgment is something we *manage*, not *solve*.
+- **`docs/hub/vision.md` renamed to `vision-and-ethos.md`** (git mv, history preserved). New "Evryn's Ethos" section carries the values architecture: ownership-of-values frame, seven cultivations + seven avoidances, "what we left off, and why" subsection. Commit `52edf5e`.
+- **Hub updated.** New "Evryn's Ethos" sub-section under "What Evryn Is" — ownership frame + tight cultivation/avoidance hits + spoke pointer. Trust & Fit "behavioral filtering" bullet rewritten as "Access flows from ethos and compatibility." Reference paths updated to renamed spoke. Commit `56732d4`.
+- **Trust & Safety spoke rewritten.** "Behavioral Filtering" section renamed and rewritten as "Filtering from Evryn's Ethos." Mechanics preserved; framing changed from objective behavior-filter to applied character. Frontmatter updated to point at vision-and-ethos. Commit `56732d4`.
+- **Long-term-vision and user-experience spokes** — vision references updated to vision-and-ethos. Commit `56732d4`.
+- **Agent definitions** (Lucas, Mira, Marlowe, Dominic, Soren) — auto-load references updated. Commit `c927d78` (evryn-team-workspace).
+- **Identity-stack treatment deferred to v0.3.** Justin and Mira agreed Evryn for v0.2 (gatekeeper email triage and connection brokering through Mark's inbox) doesn't exercise the dimensions the values architecture most directly affects. EVR-102 created (Backlog, R: mira, A: justin, C: soren+nathan) carrying the deferred work. v0.3 working doc (`evryn-team-workspace/shared/projects/product/v0.3/identity-files.md`) gained a "Values architecture → core.md (and identity stack)" stub at the top.
+- **Research report.** `evryn-team-workspace/shared/projects/product/research/2026.04.30-evryn-ethical-framework-exploration.md` — full landscape exploration that produced ADR-032. Six traditions tested side-by-side, consent analysis, justice-as-directive failure modes, Buddhist precept structure decision, layered synthesis. ADR captures conclusions; report captures how-we-got-there. Breadcrumb in ADR-032. Commit `0ba9023` (breadcrumb), `e0ae566` (report).
+- **Auto-memory rule landed in CLAUDE.md.** "Do not use the Claude Code auto-memory system" — Justin caught Mira writing to it earlier in session. The auto-memory system doesn't understand agent identities and creates unattributed noise on every agent's load.
+- **Identity writing bible** (`evryn-backend/docs/identity-writing-bible.md`) — Writer and Reviewer load lists updated to point at vision-and-ethos. Commit `a4dd62c` (evryn-backend).
+- **Pre-go-live cleanup doc** (`evryn-team-workspace/shared/projects/product/v0.2/2026.04.21-pre-go-live-identity-cleanup.md`) — load list reference updated. Commit `901fd29`.
+
+---
+
 ## 2026-04-29 evening (Cross-team — v0.2 evening bundle deploy + ADR-031 round-trip + #dev-alerts security cleanup)
 
 - **v0.2 evening bundle live on Railway** (deploy `ba37ee54` SUCCESS at 18:43 PT). Bundle: DC's `slack.ts` disconnect-event monitor (`55a6177`, replaces 2-hour silence-heartbeat that was producing overnight cry-wolf alerts), DC's `rescope_messages` MCP tool (`1e5e1d9`, ADR-031 runtime, gated on `threadScopeContext`, audit-trail recording in `src/db/messages.ts`), AC's ARCHITECTURE.md peer-register expansion (`62cbea3`), Mira's `operator.md` ADR-031 pass (`98f31fa` merged via `eebd399`). Post-deploy log clean: Supabase + Slack Socket Mode connected, disconnect-monitor attached, polling resumed.
