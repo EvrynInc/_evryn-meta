@@ -27,7 +27,7 @@ When Justin says `#lock` or it's time for a checkpoint:
 15. **Auto-memory hygiene** — Check `.claude/projects/*/memory/MEMORY.md`. AC does not use auto-memory (see CLAUDE.md Auto-Memory Hygiene). If anything landed there accidentally, promote it to persistent docs or clear it. The file should contain only the "DO NOT WRITE HERE" notice.
 16. **Settings.local.json cleanup** — Check for `.claude/settings.local.json` in the current repo. This file silently accumulates one-off command approvals at runtime. Delete it if it exists — permissions belong in `.claude/settings.json` (in git), not in local overrides. If it contains secrets (API keys, UUIDs that were auto-saved), flag to Justin before deleting.
 17. **Fragment sweep** — Scroll back through the full conversation. The category-based steps above catch what you remember happened; this pass catches what you forgot you forgot. Look for: intentions that got derailed, decisions that only live in chat, action items acknowledged but never recorded, things Justin asked for that got handled conversationally but not persisted. Resolve or route anything you find.
-18. **Pause for Justin** — Before committing, let Justin review. Give him a moment to check what's about to land.
+18. **Pause for Justin — hard stop. Do not commit yet.** Wait for Justin's *explicit* go-ahead before this *specific* commit or push — even if Justin gave you permission on a previous commit, you must get explicit permission for this one. Failure to do this has been shown in the past to **break** important things.
 19. **Commit and push** — Get everything to remote immediately.
 
 ---
