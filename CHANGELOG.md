@@ -6,6 +6,18 @@
 
 ---
 
+## 2026-05-01 (AC — #team-alerts + lean Slack/HTTP rules across CLAUDE.md)
+
+- **`#team-alerts` channel + "Team Alerts" Slack app shipped.** Team agents now have a dedicated narrow-scope channel for "ping when work is ready for review" requests from Justin. Webhook URL stored as `SLACK_TEAM_WEBHOOK_URL` in `evryn-team-workspace/.env` (gitignored, uploaded to Bitwarden). End-to-end test from AC landed clean with non-ASCII (em-dash, ellipsis, smart quotes) intact. Three Slack apps now scoped cleanly: "Evryn" (product), "Dev Team" (DC/AC/OC/QC ops), "Team Alerts" (founding team coordination).
+- **`evryn-team-workspace/.gitignore` created.** Covers `.env` and `.env.*` so the new webhook stays local. Commit `97a22da`.
+- **All three CLAUDE.md files trimmed to a single "use Node `fetch`, avoid bash + curl and PowerShell" line.** Earlier verbose per-tool failure-mode lists collapsed; the *path* (Node fetch) is the durable fix, not a configuration. Rationale: when one tool's behavior depends on the path you take, the right docs say "use this tool" rather than enumerate everything that can go wrong with the alternatives. AC commit `bbfa590`, DC commit `fd7f8be`, team commit `97a22da`.
+- **Multi-instance Slack prefix rules made explicit.** AC and DC: `AC:`/`DC:` by default, `AC0/AC1/...` and `DC0/DC1/...` when Justin has designated a numbered instance. Team: `Lucas:` by default, `Lucas (standup):` when the instance is aware more than one of itself is running (team's coordination model is self-aware, not designated). Same commits as above.
+- **DC's `.claude/settings.local.json` deleted.** File contained one stale PowerShell approval string with the Dev Alerts webhook URL embedded — exactly the failure mode CLAUDE.md's permissions-hygiene rule warns about. Approval is also functionally stale now that DC is on Node fetch. File is gitignored — no commit, local-only cleanup.
+
+**Operator-relevant:** `evryn-backend/docs/operator-guide.md` Slack Channels table gained a `#team-alerts` row.
+
+---
+
 ## 2026-04-30 (Mira — values architecture: orientations, not rules)
 
 - **ADR-032 written.** Replaces "behavior, not belief" framing (which falsely claimed objectivity) with "Evryn has her own values, expressed as orientations." Captures full reasoning, six ethical traditions tested, failure modes avoided, and what we considered and rejected as primary directives (justice-as-directive, autonomy-as-primary, hard-and-fast rules). Permanent open question codified: the narrative-dependence of ethical judgment is something we *manage*, not *solve*.

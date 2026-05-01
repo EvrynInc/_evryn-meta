@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-04-29T18:52-07:00*
+*Last updated: 2026-05-01T15:43-07:00*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
 
@@ -47,7 +47,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 ## Infrastructure
 
 - Railway: evryn-backend on Hobby plan ($5/month). Latest deploy `ba37ee54` SUCCESS at 2026-04-29T18:43 PT (replaces `33689051`); afternoon bundle commits `6316126`, `e4d0cec`, `ccb3048`, `4d8b214` plus evening bundle `55a6177`, `1e5e1d9`, `62cbea3`, `98f31fa`. GitHub auto-deploy still off post-Image-Registry-incident; manual `railway up` required.
-- Slack: **two apps now scoped cleanly.** "Evryn" app (Socket Mode, product-narrow channel scope) for the product runtime. "Dev Team" app handles agent-side: webhook posting (`SLACK_DEV_WEBHOOK_URL`) + bot-token reading (`SLACK_DEV_BOT_TOKEN`). Old cry-wolf 2-hour-silence heartbeat replaced tonight with disconnect-event monitor.
+- Slack: **three apps now scoped cleanly.** "Evryn" app (Socket Mode, product-narrow channel scope) for the product runtime. "Dev Team" app handles agent-side: webhook posting (`SLACK_DEV_WEBHOOK_URL`) + bot-token reading (`SLACK_DEV_BOT_TOKEN`). "Team Alerts" app (added 2026-05-01) handles founding-team → Justin pings via webhook (`SLACK_TEAM_WEBHOOK_URL`, in `evryn-team-workspace/.env`) — narrow scope, "ping when ready for review." Old cry-wolf 2-hour-silence heartbeat replaced 2026-04-29 with disconnect-event monitor.
 - Supabase: "Evryn Product" project. Schema current (ADR-030 migration applied 2026-04-29 with backups in `evryn-backend/backups/`).
 - evryn@evryn.ai (Evryn's polled inbox), systemtest@evryn.ai (test recipient + currently Mark's placeholder address), review@evryn.ai = alias on justin@evryn.ai (Justin's review inbox — NOT polled by Evryn).
 
