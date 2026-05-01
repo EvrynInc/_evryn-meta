@@ -77,10 +77,7 @@ Bash/CLI access to Supabase CLI + API, Linear API key (in `_evryn-meta/.env`), G
 
 **Railway CLI:** The `railway` command is globally installed (`@railway/cli`) and reads credentials from Justin's home directory (`~/.railway/`), so authentication persists across sessions and across agents. Run `railway whoami` to confirm; if it returns "not logged in", ask Justin to run `railway login` once and the credentials will be available to AC and DC going forward. From inside `evryn-backend/`: `railway status` (current project/service), `railway logs --deployment` (runtime logs), `railway logs --build` (latest build), `railway deployment list --json` (history with status, timestamps, build metadata), `railway up` (deploy current working tree). For Railway platform incidents that explain failed/queued deploys, check status.railway.com. Reach for this directly instead of asking Justin to copy-paste from the Railway dashboard — it saves real time.
 
-**Slack:** To ping Justin on `#dev-alerts`, the webhook URL is in `evryn-dev-workspace/.env` as `SLACK_DEV_WEBHOOK_URL`. Read the `.env` to get the URL. Slack renders UTF-8 cleanly on both the bot-token and webhook paths — em dashes, en dashes, smart quotes, ellipsis all show correctly **as long as the bytes leave your process intact**. The earlier "Slack renders them as `?`" advice was wrong-rooted: it was bash + curl on Windows mangling non-ASCII to `?` before transit, not Slack's renderer. Use Node `fetch` (or PowerShell `Invoke-RestMethod` with explicit UTF-8 encoding). Bash + curl on Windows is unreliable for any non-ASCII payload — avoid it. Example via Node one-liner:
-```
-node -e "fetch(process.env.SLACK_DEV_WEBHOOK_URL, {method:'POST', headers:{'Content-Type':'application/json; charset=utf-8'}, body: JSON.stringify({text:'AC: message — with em-dash'})}).then(r => console.log(r.status))"
-```
+**Slack:** To ping Justin on `#dev-alerts`, the webhook URL is in `evryn-dev-workspace/.env` as `SLACK_DEV_WEBHOOK_URL`. Use Node `fetch` and prefix your message with your name — `AC:` if you're the only AC, or `AC0:`/`AC1:`/etc. if Justin has designated you a numbered instance. Avoid bash + curl and PowerShell — both have failure modes on Windows (non-ASCII mangling, command-approval prompts) that will burn you.
 
 ---
 
