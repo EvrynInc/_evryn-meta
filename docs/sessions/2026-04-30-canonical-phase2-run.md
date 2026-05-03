@@ -336,3 +336,87 @@ Until then, this is the working state.
 ---
 
 — AC (canonical Phase 2 instance, end of session, 2026-04-30 ~21:00 PT)
+
+---
+
+## Status update — 2026-05-02 (end-of-Saturday close-out)
+
+The body of this doc above is the Friday-night state. Since then, substantive shifts. This section is the layered update; original framing intact above for chronological fidelity.
+
+### What shipped since Friday
+
+**`evryn-backend` — DC bundle Items 1 + 3 shipped, deploy `dd45dd06` SUCCESS (2026-05-02 ~09:22 PT):**
+
+- **Item 1** (`07b03bf`): `submit_draft.emailmgr_item_id` now optional with server-side placeholder auto-create. `metadata.type = 'evryn_initiated'` is the audit-trail key. Tool description softened from compulsion to permission. Unknown-recipient path throws operator-readable error. `tests/test-evryn-initiated-placeholder.ts` (14 field-level checks + failure path) passing. Live full-path smoke is Justin's when he exercises Mark's cold-open in the Phase 2 thread.
+- **Item 3** (`d533b2c`): per-user fixed-time-of-day cron with `users.last_proactive_check_at TIMESTAMPTZ` migration (`backups/add-last-proactive-check-at-migration.sql`, applied 2026-05-02T16:11 UTC) + `PROACTIVE_CHECK_HOUR_PT=7` env var on Railway + new exported `shouldRunProactiveCheck` predicate (target-hour gate + 23h interval gate). `lastProactiveCheck` global removed. Backfill set Mark's `last_proactive_check_at = NOW()` — no surprise pings before Monday 7am PT cron tick. `tests/test-proactive-gating.ts` (10 pure-logic cases) passing.
+
+**`_evryn-meta` — AC0 work:**
+
+- `2464830`: SPRINT row 530 status update (late-scope SHIPPED but UNTESTED).
+- `7d5b79d`: SPRINT backlog gained 2 identity-evolution candidates (curiosity-led research, relationship-ownership posture).
+- `5f48292`: this session doc itself.
+- `b82122b`: Mira + AC1 briefs at `_evryn-meta/docs/sessions/2026-05-01-{mira,ac1}-brief-phase2-*.md`.
+- `9b7fe2a`: #lock — CHANGELOG entries (2026-05-02 + 2026-05-01) + current-state.md refresh.
+- `f1ccafd` (`evryn-team-workspace`): AC0 appendage to team current-state covering Phase 2 in-flight + DC bundle ship + Item 2 on hold + AC1 dispatch.
+
+### Item 2 — reframed and on hold pending Justin's go-ahead
+
+**Friday's framing called for a new ADR-033** for the cron-loads-operator.md change. **Saturday's reframe (per Justin):** in-place amendment to ADR-030 is cleaner because the change is a *carve-out* of an existing decision, not a substantively new decision. Keeps the carve-out where readers will find it.
+
+**The framing principle:** **audience > trigger.** ADR-030 distinguishes pathways by what triggered them (cron vs. Slack-Operator vs. inbound). The better cut is by audience: when an Evryn-instance is talking *to the Operator* (whether triggered by Slack message or by cron's `notify_slack`), Operator-discipline loads. For cron pathways whose audience is a user (cron drafting an email to Mark), ADR-030's exclusion still holds.
+
+**DC architectural note worth absorbing:** `checkFollowUps` already loads `operator.md` (without Operator profile) — partial Operator-discipline. Whatever amendment lands for `checkProactiveOutreach` should **normalize `checkFollowUps` at the same time** so the two cron paths don't diverge in a third direction. Not just one-line change; a coherence pass.
+
+**ARCHITECTURE.md updates needed** (lines 697-700 cron-pathways block + lines 760-762 cache-prefix block).
+
+**Pending Justin's go-ahead on the carve-out framing.** Once approved: AC0 drafts amendment + two ARCHITECTURE.md updates as proposals, Justin gives final approval, AC0 commits + pushes, pings DC via `#dev-alerts`, DC ships Item 2 + redeploys.
+
+### Parallel work in flight
+
+- **Mira** (per her 2026-05-02T16:35 appendage in team current-state): three identity-craft items absorbed and worked through with Justin. Items 1 and 2 (curiosity-led research, Evryn-owns-relationships) ready to draft Monday. **Item 3 (process-commitments-as-pending-notes)** landed as `[binding: until-X]`-tagged pending_notes — gating-condition embedded in the tag, three clearing paths, lives in user record (not Operator profile, preserves user separation), Reflection rule excludes `[binding: ...]` from story compression. **Companion-ships with AC0 Item 2** — Mira's identity-side fix + AC0's runtime-side fix should land together, atomic under one Railway redeploy. Awaiting Justin's pre-go-live land vs. defer call Monday.
+- **AC1**: working docs on cron architecture ADR thinking + capability-vs-constraint architecture ADR thinking. Output informs the *next* round of cron + constraint decisions, not this one. (NB: AC1 may have a stale local clone — saw two "untracked" files that are actually `b82122b` already pushed.)
+
+### Architectural threads — status as of 2026-05-02
+
+Original doc listed four open threads. Updated:
+
+1. **Cron architecture (3 fixes).** Items 1 and 3 **SHIPPED**. Item 2 on hold pending ADR-030 amendment (per above). Plus the `checkFollowUps` normalization noted by DC.
+2. **Cross-instance memory binding.** Mira's `[binding: ...]`-tagged pending_notes is the structural fix. Identity-side discipline + cron-loads-operator.md companion = "promises bind across invocation contexts." Pending Justin's pre-go-live land call.
+3. **`submit_draft` outbound-initiated path.** **SHIPPED** in Item 1 (commit `07b03bf`). Placeholder auto-create lets Evryn-initiated outbound flow through approval gate cleanly.
+4. **Capability-vs-constraint architecture.** AC1 working doc in progress. ADR write deferred until adversarial test ships.
+
+### Updated Monday pickup for fresh AC0 (replaces the original "Recommended first action" sequence)
+
+1. **Reload context.** This session doc (now updated), `_evryn-meta/CLAUDE.md` (auto), Hub, current-state. Skim the original sections above for the *why* behind each thread; this Status Update for the *now*.
+2. **Get Justin's go-ahead on Operator-Audience carve-out framing.** That's the unblock.
+3. **Draft ADR-030 amendment + two ARCHITECTURE.md updates as proposals.** In-place amendment, not new ADR. Address `checkFollowUps` normalization in the amendment so the two cron paths don't diverge.
+4. **Justin approves; commit + push the amendment + ARCHITECTURE.md edits.** Ping DC via `#dev-alerts`.
+5. **DC ships Item 2 + redeploys.** AC0 reads + absorbs DC's reply, clears mailbox.
+6. **Coordinate Mira's pre-go-live land call** for `[binding: ...]`-tagged pending_notes (companion to Item 2). If pre-go-live, ensure atomic-redeploy companion-ship.
+7. **Return to Phase 2 conversation thread** (Slack thread `1777689701.332839` in `#evryn-approvals`) with the queued reply about cross-thread cron divergence. The queued reply substance is in the original Status section above ("Suggested reply to her in the Phase 2 thread").
+8. **Continue Phase 2 → 3 → 4** with the cleaner runtime.
+
+### Carry-forward checklist updates
+
+The original 7-item carry-forward list was as-of-Friday. Current state of each:
+
+1. ✓ Phase 2 conversation alive in thread `1777689701.332839` — still alive, paused over weekend, queued reply ready
+2. ✓ Mark properly populated, DB clean except for Phase 2 messages — unchanged
+3. ✓ Cron's ghost message exists in Slack only — unchanged (visible to Justin, invisible to Evryn-future-self)
+4. ✓ "I'll wait" promise lives only as text in thread history — **Mira's `[binding: ...]`-tagged pending_notes is the proposed fix**, awaiting Justin's pre-go-live land call
+5. ~~Three architectural seams have homes only in this session doc~~ → **Items 1 + 3 shipped; Item 2 on hold for ADR-030 amendment; cross-instance memory has Mira's design; capability-vs-constraint has AC1 working doc**
+6. ✓ Two backlog rows from Friday (`7d5b79d`) NOT lost — sprint-tracked
+7. ✓ Capability-vs-constraint framing is real — AC1 working on it; ADR write deferred until adversarial test
+
+### Retirement criteria — status
+
+Original criteria revisited:
+
+- Phase 2/3/4 complete: **NO** (Phase 2 still in flight, paused over weekend)
+- Three architectural items have homes: **PARTIAL** (Items 1 + 3 shipped; Item 2 on hold; Mira+AC1 working in parallel on the bigger questions)
+- Cron's ghost message addressed or explicitly ignored: **NO** (still ghost; awaiting Item 2 + Mira's `[binding: ...]` companion to make the pattern stick)
+- Decisions flowed up into persistent docs: **PARTIAL** (Items 1+3 in CHANGELOG + current-state + team current-state; ADR-030 amendment pending)
+
+**Doc stays active.** Not ready for `docs/sessions/historical/` move. Will retire once Phase 2 → 4 are complete + ADR-030 amendment lands + Mira's `[binding: ...]` either lands or defers explicitly.
+
+— AC0 (continuation, end-of-Saturday, 2026-05-02 ~17:00 PT)
