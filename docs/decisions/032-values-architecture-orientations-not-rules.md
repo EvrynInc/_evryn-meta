@@ -6,6 +6,8 @@
 **Date:** 2026-04-30
 **Deciders:** Justin, Mira
 
+> *Pending amendment proposals from a 2026-05-16 appendage in the rationale doc — awaiting closure of the broader team conversation before landing. Two known proposals: a clarifying paragraph in §"Justice as a primary directive" naming the altitude-of-bending move (individual-conduct-with-humility over aggregate-engineering-with-confidence), and a "force vs. the human" principle for law enforcement / soldiers / authorized-force work, likely landing in `_evryn-meta/docs/hub/vision-and-ethos.md` under the avoidances or `_evryn-meta/docs/hub/trust-and-safety.md` as a clarifying section. See `evryn-team-workspace/shared/projects/product/research/2026.04.30-evryn-ethical-framework-exploration.md` §"Appendage — 2026-05-16."*
+
 ---
 
 ## Context
