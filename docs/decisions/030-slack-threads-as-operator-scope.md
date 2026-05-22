@@ -221,4 +221,52 @@ A future reader who sees Operator-loaded-alongside-Mark in a Slack thread and th
 
 ---
 
+## Amendment 2026-05-22 — Operator-Audience Carve-Out
+
+**Driver:** v0.2 canonical Phase 2 test (2026-05-01) surfaced a cross-instance discipline gap. Cron-fired Evryn drafted a cold-open to Mark forty minutes after Slack-thread Evryn had committed *"I'll wait on the outbound path"* — different invocation context, no `operator.md` loaded, no structural awareness of the in-flight Operator partnership. Eighteen days of subsequent cron-fired pending_notes on Mark (2026-05-04 through 2026-05-22) showed the same gap from another angle: cron-Evryn pinged the Operator on Slack four times (5/6, 5/9, 5/14, 5/16) and wrote daily process-coordination state into Mark's pending_notes, all without the Operator-partnership discipline that would have shaped tone, cadence, and writing target. The original ADR-030 closed cross-user bleed. This amendment closes the cross-instance Operator-discipline gap that the original ADR left open.
+
+### The shift — audience over trigger
+
+The original ADR distinguished pathways by *trigger* (`handleGeneralMessage` loads Operator's profile; `processForward`, `processDirect`, and cron pathways do not). That cut held when triggers and audiences aligned cleanly. They don't always: **cron-driven outreach is two pathways masquerading as one** — sometimes its audience is the Operator (a `notify_slack` ping for approval / clarification / escalation), sometimes its audience is the user (a `submit_draft` outbound after approval). The audience determines what discipline applies, not the trigger.
+
+**The amended rule:** Operator-context loads when Evryn's audience is the Operator. In practice, this means:
+
+- **Slack-Operator pathway (`handleGeneralMessage`):** loads `operator.md` + Operator's profile + Operator's `_meta.discipline_notice`. *(Unchanged from original.)*
+- **Cron pathways (`checkProactiveOutreach`, `checkFollowUps`):** **load `operator.md` + Operator's profile + Operator's `_meta.discipline_notice`** — because cron-Evryn may, in any given invocation, ping the Operator via `notify_slack` (audience = Operator) before deciding whether to draft. Loading Operator-discipline structurally means her judgment about *when to draft, when to escalate, when to wait* is informed by partnership context every time.
+- **Inbound user pathways (`processForward`, `processDirect`):** **do NOT load Operator-context.** *(Unchanged from original.)* The audience in these flows is the inbound user; Evryn is responding to them; the Operator isn't in the conversation. ADR-030's original cross-user-bleed reasoning applies cleanly.
+
+### The leak-vector guardrail — what gets *written* under this load
+
+Loading Operator-context in cron is the easy half of the amendment. The harder half is what cron-Evryn writes once she has both Operator-context and the scoped user's profile in scope.
+
+**The risk:** with `operator.md` + Operator's profile loaded alongside Mark's profile, cron-Evryn writing pending_notes to Mark could pollute Mark's record with Operator-coordination state (*"Justin's tied up with legal work,"* *"Justin took 3 days to respond,"* *"deferred per Justin's bandwidth"*). The eighteen pre-amendment cron notes on Mark exhibit exactly this pattern — half their substance is *about Justin*, not about Mark. That's a leak vector — Mark's record carries Operator-state that doesn't belong there.
+
+**The discipline:** pending_notes written about a user must be *user-substantive*. Evryn's actions toward the user (drafted, deferred, surfaced) are user-substantive. Evryn's observations of the user's situation, work, or trajectory are user-substantive. Operator-state and Evryn-Operator coordination state are **not** user-substantive — they belong in Operator's profile (if 100% public-safe) or nowhere (if not).
+
+The test, when cron-Evryn is about to write to a user's pending_notes: *"is this a fact about, action toward, or observation of the user — or is this state about Justin, my coordination with him, or my own process?"* The first goes to user pending_notes. The second does not.
+
+**Why this works architecturally:** Operator-context informs cron-Evryn's *judgment* (she knows whom she's working with, what cadence is appropriate, when to escalate) without polluting *writes* (user pending_notes stay user-substantive). Same posture as a thoughtful executive assistant: she remembers your preferences when scheduling but doesn't write *"Justin is stressed"* in someone else's contact card.
+
+### Identity-layer dependency
+
+This amendment is mechanically realized by:
+
+1. **Runtime change (DC):** [`src/email/poll.ts:378` `checkProactiveOutreach`](../../../evryn-backend/src/email/poll.ts#L378) — change `composeSystemPrompt(personContext, false)` to `composeSystemPrompt(personContext, true, operatorProfile)`. Same change for `checkFollowUps` (per DC's 2026-05-02 architectural note — already loads `operator.md` without Operator profile; normalize to load both). DC's 2026-05-02 Item-2 brief covers this.
+2. **Identity-layer language (Mira):** `operator.md` needs an addition naming the write-discipline above — *"when writing to a user's pending_notes, restrict yourself to user-substantive content; Operator-coordination state goes to Operator's profile (if public-safe) or nowhere."* Mira's parallel work on `[binding: ...]`-tagged process-commitments (per her 2026-05-01 brief Item 3) gives the *structural* home for binding state — this amendment gives the *discipline* for what stays out of user-records during the v0.2 window before the binding-tag mechanism is fully in place.
+
+### What the amendment does NOT do
+
+- **Does not load Operator-context in inbound user pathways.** ADR-030's original cross-user-bleed reasoning still applies there.
+- **Does not generalize the carve-out beyond Operator.** This stays a single-entity exception, scoped to one audience type. The "one-of carve-out" guardrail at the bottom of the original ADR continues to hold for all other "load multi-profile" impulses.
+- **Does not enable cron-Evryn to write directly to Operator's profile from cron context.** Cron-Evryn reads Operator's profile for context; writing to Operator's profile happens via the standard `append_pending_note(target_user_id=$operator_id)` path, governed by the 100% public-safe discipline. Same path as today; no new write surface.
+
+### Cross-references
+
+- **ARCHITECTURE.md** Identity Composition + Cache Prefix sections updated 2026-05-22 to reflect the audience-not-trigger framing.
+- **DC Item 2 brief** (2026-05-02 `evryn-backend/docs/ac-to-dc.md`): runtime mechanics that realize this amendment.
+- **Mira identity-craft items** (2026-05-01 `_evryn-meta/docs/sessions/2026-05-01-mira-brief-phase2-discoveries.md`): identity-layer language realizing the write-discipline above + the structural `[binding: ...]` mechanism for cross-instance commitments.
+- **2026-05-22 session work** (this session's lock notes): empirical evidence — 18-note arc on Mark's profile — that motivates the amendment.
+
+---
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED

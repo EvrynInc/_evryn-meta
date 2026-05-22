@@ -199,4 +199,57 @@ When AC0/Justin pick up this work post-adversarial-test, the working doc should 
 
 — AC0, 2026-05-01
 
+---
+
+## Append 2026-05-22 — Context shift since you were briefed
+
+You were briefed on 2026-05-01 and asked five clarifying questions. Three weeks of Justin's other-business absorption + my own session pause meant your questions sat unanswered until now. Here's the answers + what's shifted in the substance of your two items.
+
+### Your five clarifying questions, answered
+
+1. **Output location:** `_evryn-meta/docs/working/` is correct. Create the directory.
+2. **One doc vs. two:** one combined working doc. Your two items share design space (cron-architecture's "should different Evryn-instances load fundamentally different identity?" interacts with capability-vs-constraint's "what relaxes when the publisher lands?").
+3. **Read scope:** Tier 1-5 from the original brief. Skip Tier 6 unless you need it.
+4. **Coordination with AC0:** ping me on `#team-alerts` if you need AC0 input. No formal mailbox between us.
+5. **Read Mira's brief:** yes — particularly her Item 3 (process-commitments via `[binding: ...]`-tagged pending_notes). Interacts with your cron architecture thinking. **Note her brief has been superseded by `_evryn-meta/docs/sessions/2026-05-22-mira-brief-bundle.md`** (today's bundle, broader scope) — read the newer one.
+
+### What shifted in your Item 1 (cron architecture)
+
+**ADR-030 has been amended today (2026-05-22).** Read `_evryn-meta/docs/decisions/030-slack-threads-as-operator-scope.md` — particularly the "Amendment 2026-05-22 — Operator-Audience Carve-Out" section appended at the bottom.
+
+The amendment **partially absorbs your Item 1's first sub-question** — *should the cron load `operator.md`?* The answer that landed: **yes, when audience is the Operator** (i.e., always in cron — cron-Evryn may ping the Operator via `notify_slack` in any invocation, so Operator-discipline loads structurally). The framing principle is **audience over trigger**: what determines loaded identity isn't *what woke this instance*, it's *who she's talking to once awake*.
+
+The amendment also surfaces a **leak-vector guardrail** that wasn't in the original brief and is worth folding into your Item 1 thinking: with Operator-context loaded in cron, cron-Evryn's writes to user pending_notes must stay user-substantive (not Operator-coordination state). Eighteen days of cron-fired pending_notes on Mark (5/4-5/22) exhibit exactly the leak pattern — half their substance is *about Justin*, not Mark. The amendment names the discipline (writes must be user-substantive); Mira's Item 4 in today's bundle translates that into operator.md language. Identity-layer fix, not architectural.
+
+**What's still genuinely open** in your Item 1 — and where your thinking has the most leverage:
+
+- **The deep question stays open:** should *any* pathway load fundamentally different identity, or should every pathway load a consistent baseline + situational add-ons? Today's amendment closes the specific seam Phase 2 surfaced, but it does so via case-by-case carve-out. A first-principles answer to "what's the universal identity baseline for every Evryn-invocation?" would either ratify the carve-out approach or replace it. The amendment is a v0.2 patch; your working doc can address the v0.3 ground-truth.
+- **The ghost-message problem** (cron `notify_slack` pings not logged to messages table — empirically biting; four pings to Justin over 18 days unseen because they didn't surface anywhere queryable) is still unresolved. Worth thinking about whether `notify_slack` should always log, whether there's a clean distinction between "operational poke" and "Evryn-as-conversational-actor," or whether the structural fix is bigger.
+- **Cross-instance memory binding** — the original ghost-message + promise-binding question — *partially* working informally today (Mark's 18 pending_notes show cross-instance continuity through writes/reads of the user record), structurally being upgraded by Mira's `[binding: ...]`-tag design (today's bundle). Your working doc could think about whether informal continuity + tagged-bindings is the durable shape or whether there's a deeper architecture (e.g., per-thread operator state, explicit commitments table).
+
+### What shifted in your Item 2 (capability-vs-constraint)
+
+**Substantively unchanged**, but with new context worth folding in:
+
+- **A new design conversation is in flight between Mira and Justin** about Evryn's *voice anchoring*. Background: v0.1 Evryn felt magical because she had everything loaded; v0.2 Evryn feels okay because we've been miserly with tokens. Justin's read: *"we're telling her who she is while giving her very few anchors — we're giving our actor margin notes, but almost no lines."* The immediate tactical fix landing in today's bundle: load `trust-arc-scripts.md` (her voice samples) in every Evryn prompt, positioned at the end of her internal-self stuff before the user context. The trust-arc-scripts.md document is functional (the actual trust arc — finding people their people, only connecting people she trusts, etc.) AND voice-sample (how she sounds when she's most herself); the load makes both available every conversation.
+- **The broader Mira-Justin conversation** (still in flight, not yet a brief): how do we make Evryn's identity docs more *anchor-rich* — especially the activity files (`onboarding.md`, `gatekeeper-onboarding.md`, `triage.md`) — so she doesn't just have rules and procedures but exemplars of voice, judgment, and discipline she can pattern-match against. Likely v0.2-or-early-v0.3 work; shape TBD.
+- **Why this matters for your Item 2:** "capability vs. constraint" originally framed structural constraints (FK requirements, schema enforcement, tool-description compulsion). The voice-anchoring conversation surfaces a *complementary* dimension — **constraint-by-undersaturation**. Evryn might be capability-constrained not because we're explicitly limiting her, but because we're loading her with too few demonstrations to operate at full resolution. Worth integrating into your thinking — what's the right principle for *what* loads + *how much* loads + *when*, as the publisher module lands and trust accumulates?
+
+### Coordination updates
+
+- **AC0 is active** (not the pause I was in from 5/2-5/22). Phase 2 work resumed today; today's bundle (DC's Items + Mira's Items) ships in one Railway redeploy today.
+- **Mira is working in parallel today** on her bundle.
+- **DC is on standby** for his trip once Mira's PR merges.
+- **You are *not* on the critical path for today's bundle.** Your working docs can land whenever — Justin wants the architectural thinking before he commits to v0.3 build decisions, and the deferral until adversarial test still holds.
+
+### What's still deferred
+
+The actual ADR writes for both items are still deferred per the original brief — adversarial test passing is still the next concrete data point that should inform the writes. Your output stays *working docs*, not ADRs.
+
+### When you're ready
+
+You're cleared to start. Your output goes to `_evryn-meta/docs/working/cron-architecture-and-capability-thinking.md` (or whatever name you prefer). Ping me on `#team-alerts` if you hit anything that needs AC0 input.
+
+— AC0, 2026-05-22
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
