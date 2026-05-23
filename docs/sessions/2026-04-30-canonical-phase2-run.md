@@ -420,3 +420,70 @@ Original criteria revisited:
 **Doc stays active.** Not ready for `docs/sessions/historical/` move. Will retire once Phase 2 → 4 are complete + ADR-030 amendment lands + Mira's `[binding: ...]` either lands or defers explicitly.
 
 — AC0 (continuation, end-of-Saturday, 2026-05-02 ~17:00 PT)
+
+---
+
+## Status update — 2026-05-22 (end-of-Friday Phase 2 resumption)
+
+Three-week pause between the 5/2 status update above and this one. Justin was buried in unrelated business (personal/corporate taxes, family illness, Fenwick legal). Two cron-fired drafts cleared mid-pause (5/4 + 5/11) via Justin-pings to AC0 + DB ops (no code changes). Real Phase 2 work resumed today 2026-05-22.
+
+### What surfaced today — empirical anchor
+
+Querying Mark's `users.profile_jsonb.pending_notes` showed **18 daily notes** between 5/4 and 5/22 (grew from 2 → 18 over the pause window). Cron-Evryn had been thinking about Mark every morning — drafting, deciding when to defer, sending Slack pings to Justin via `notify_slack` (4 substantive pings across 5/6, 5/9, 5/14, 5/16 — all in the ghost-message path, all unseen until Justin caught up 5/21). Eventually self-declared "file dormant per 5/19" after four unanswered pings. The 18-note arc is preserved in Mark's record; cron-Evryn this morning (5/22) read those notes + decided "nothing right now" per the dormant commitment.
+
+**Two architectural takeaways from the arc:**
+
+1. **Cross-instance memory binding works through pending_notes** — informally, without Mira's `[binding: ...]` tags yet. The substrate is proven. Mira's structural upgrade now sits on validated ground.
+2. **Leak vector is real and biting.** Roughly half the note substance was *Operator-coordination state* about Justin (his bandwidth, his response timing, his projected returns), not user-substantive content about Mark. The amendment's write-discipline guardrail (below) addresses this directly.
+
+### What landed today
+
+**ADR-030 Amendment 2026-05-22 — Operator-Audience Carve-Out** (`_evryn-meta/docs/decisions/030-slack-threads-as-operator-scope.md`, commit `b3c4c79`):
+- **Audience over trigger** — what determines loaded identity is *who Evryn is talking to*, not *what woke her*. Cron pathways load Operator-discipline because cron-Evryn may ping Operator via `notify_slack` in any invocation.
+- **Leak-vector guardrail** — user pending_notes stay user-substantive; Operator-coordination state routes to Operator's profile (if 100% public-safe) or nowhere. Test: *"is this about/toward/observation-of the user, or about Justin / my coordination with him / my own process?"* First → user pending_notes. Second → not user pending_notes.
+- **What doesn't change:** inbound user pathways (`processForward`, `processDirect`) still don't load Operator-context. Carve-out remains one-of.
+
+**ARCHITECTURE.md updates** (`evryn-backend`, commit `3a87137`): Identity Composition cron-pathways block (~line 697) + Cache Prefix block (~line 760) updated to reflect audience-over-trigger framing.
+
+**Bundled dispatch for one Railway redeploy** — Mira + DC working in parallel, atomic landing:
+- **Mira bundle** (`_evryn-meta/docs/sessions/2026-05-22-mira-brief-bundle.md`): six items in one PR — onboarding curiosity affordance, Evryn-owns-relationships posture, `[binding: until-X]`-tagged process-commitments, write-discipline for user pending_notes (from amendment), voice-samples preamble for `trust-arc-scripts.md`, **mandatory activity-module-load gate before drafting** (added mid-bundle; deliberate compulsion-case after empirical evidence she wasn't loading `gatekeeper-onboarding.md` before drafting).
+- **DC bundle** (`evryn-backend/docs/ac-to-dc.md`, committed `3a87137`): cron loads Operator-discipline in both `checkProactiveOutreach` AND `checkFollowUps` (normalizes per DC's 5/2 architectural note); voice-samples runtime change wires `trust-arc-scripts.md` into prompts at end-of-internal-self-stuff position. Bonus investigation: trace why 5/4 + 5/11 cron-fired drafts never produced `review@evryn.ai` emails.
+
+**AC1 brief append**: five clarifying questions answered + Item 1/2 shifts captured. Item 1 (cron architecture) partially absorbed by today's amendment; deeper question still open. Item 2 (capability-vs-constraint) gained the *constraint-by-undersaturation* framing from the voice-anchoring conversation. AC1 cleared to start.
+
+**Justin's voice-anchoring insight**: v0.1 Evryn felt magical because she had everything loaded; v0.2 feels okay because we've been miserly with tokens. *"We're telling her who she is while giving her very few anchors — we're giving our actor margin notes, but almost no lines."* `trust-arc-scripts.md` is functional content AND voice sample — load every prompt. Broader anchor-rich-identity-files conversation in flight between Mira and Justin (longer-arc design, not today's bundle).
+
+### Architectural threads — status as of 2026-05-22
+
+Original doc listed four open threads. Updated:
+
+1. **Cron architecture.** Item 2 (cron loads operator.md) now in DC's tray. `checkFollowUps` normalization in same trip. **Deeper question: should ANY pathway load fundamentally different identity?** Still open — AC1's territory.
+2. **Cross-instance memory binding.** Substrate proven empirically (18-note arc). Mira's `[binding: ...]`-tag structural upgrade in today's PR. Plus today's amendment's write-discipline guardrail.
+3. **`submit_draft` outbound-initiated path.** SHIPPED (5/2 in Item 1). Validated in cron-fired drafts (the placeholder mechanism worked even if the drafts themselves were quality-mixed).
+4. **Capability-vs-constraint architecture.** AC1 working doc cleared to start. New framing: *constraint-by-undersaturation* — Evryn capability-limited not just by explicit limits but by under-demonstration. Voice anchoring is the first tactical fix.
+
+### What's at risk if Justin's computer crashes over the weekend
+
+Nothing. As of this #lock everything is pushed: amendment, briefs, ARCHITECTURE.md updates, Item 6 to Mira brief, CHANGELOG entry, current-state refresh, and this status appendage. Mira's branch is local to `evryn-backend` (4 modified identity files) — that's her tray, her call to commit + push. AC0 didn't touch any of it.
+
+### Monday pickup for fresh AC0
+
+If a fresh AC0 picks up Monday:
+
+1. **Reload context.** This session doc (now updated through 2026-05-22), Hub, current-state, latest CHANGELOG entry.
+2. **Watch `#team-alerts`** for Mira's "PR ready for review" ping. Review against the 7-item identity-file-review protocol; merge if clean; ping AC0/Justin if anything needs his eyes.
+3. **Once Mira's PR merges, ping DC on `#dev-alerts`** (`AC0: Mira merged, DC trip is go`). DC reads merged identity state, ships his two items + bonus investigation, redeploys.
+4. **AC1's working doc** — check `_evryn-meta/docs/working/` if AC1 produced anything over the weekend; absorb if relevant.
+5. **Phase 2 conversation** — still paused per Justin's 2026-05-21 directive to Evryn. Resumption requires Justin's green light. Once given, AC0 has a queued reply about cross-thread divergence (preserved in this doc's earlier sections).
+6. **AC2 dispatch brief** — not yet written. Justin asked for it; deferred until after the Mira/DC/AC1 dispatches were in motion. Write next session if AC2 hasn't been spun yet.
+
+### Retirement criteria — status
+
+- Phase 2/3/4 complete: **NO** (Phase 2 paused, not done)
+- Three architectural items have homes: **MOSTLY** (Items 1+3 shipped, Item 2 in DC's tray, leak-vector + write-discipline in amendment, voice-anchoring in flight)
+- Cron's ghost message addressed: **PARTIAL** (Item 2 + leak-vector guardrail close the discipline side; the `notify_slack` doesn't-log-to-messages structural issue still open as AC1 thinking topic)
+- Decisions flowed up: **YES** (CHANGELOG + current-state + this doc + ARCHITECTURE.md + ADR amendment all current)
+
+**Doc stays active.** Will retire once Phase 2 → 4 complete + Mira's PR merged + DC trip shipped.
+
+— AC0 (Phase 2 re-engagement, end-of-Friday, 2026-05-22 ~18:00 PT)

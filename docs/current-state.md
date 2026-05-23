@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-05-02T16:36-07:00*
+*Last updated: 2026-05-22T17:55-07:00*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
 
@@ -22,24 +22,24 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Canonical Phase 2 in flight; paused over the weekend.** Verify-and-lock-first beat passed cleanly post-`ba37ee54`-deploy (first real exercise). Performing-pattern surfaced in first email draft and Evryn self-corrected with sharp specificity. Daily proactive cron then fired in a *separate* Evryn-instance (no `operator.md` loaded) and broke the "I'll wait" promise — surfaced cross-instance memory binding + ghost-message architectural seams. Conversation paused mid-stream Friday; AC0 has a queued reply about the cross-thread divergence ready for Justin to engage Monday. Full state in `_evryn-meta/docs/sessions/2026-04-30-canonical-phase2-run.md`.
-- **DC bundle Items 1 + 3 shipped, deploy `dd45dd06` SUCCESS (2026-05-02).** Item 1: `submit_draft.emailmgr_item_id` made optional, server-side placeholder auto-create — unblocks Evryn-initiated outbound (commit `07b03bf`). Item 3: per-user fixed-time-of-day cron with `users.last_proactive_check_at` migration + `PROACTIVE_CHECK_HOUR_PT=7` env var (commit `d533b2c`). Justin's Phase 2 cold-open re-draft will be the live close-out smoke-test for Item 1.
-- **Item 2 (cron loads `operator.md`) on hold pending ADR-030 amendment.** DC flagged that loading operator.md in cron pathway contradicts ADR-030's explicit cron-driven-outreach exclusion. Resolution pending Justin's go-ahead on **Operator-Audience carve-out** framing — when cron's audience is the Operator, Operator-discipline loads; when audience is a user, ADR-030's exclusion holds. Audience > trigger. AC0 to draft as in-place amendment + two ARCHITECTURE.md updates upon approval.
-- **Mira working in parallel on 3 identity-craft items** dispatched via brief (`b82122b`): curiosity-led research affordance, Evryn-owns-her-relationships posture, process-commitments-as-pending-notes design conversation. **AC1 working in parallel on 2 architectural-thinking items**: cron architecture ADR thinking + capability-vs-constraint architecture ADR thinking. Working docs only, deferred ADR writes until adversarial test ships as next data point.
-- **Pre-Mark-live blockers (unchanged):** (a) emergency-alerts wiring — `#emergency-alerts` channel exists but no code triggers DND-override path (BUILD doc Phase 0e flag); (b) pre-go-live STEP 0 cleanup (kill test-Mark UUID + create fresh real-Mark record + clear inboxes + visual verify); (c) adversarial test full real-Mark refresh.
+- **Phase 2 resuming after a 3-week pause.** Justin was buried in unrelated business (taxes, family illness, Fenwick legal). During the pause cron-Evryn kept thinking — 18 daily pending_notes on Mark (5/4-5/22), four `notify_slack` pings to Justin he didn't see (ghost-message path), self-declared "file dormant" 5/19, plus a direct Slack pause directive from Justin 5/21 Evryn is honoring. Full empirical arc captured in 2026-05-22 CHANGELOG entry.
+- **ADR-030 amendment landed today (2026-05-22).** Operator-Audience Carve-Out: cron pathways now load Operator-discipline (`operator.md` + Operator's profile + discipline_notice) because cron-Evryn may ping Operator via `notify_slack`. **Principle: audience over trigger.** Companion leak-vector guardrail: user pending_notes stay user-substantive; Operator-coordination state routes to Operator's profile or nowhere. Commit `b3c4c79` (meta) + `3a87137` (backend ARCHITECTURE.md updates).
+- **Bundled Mira + DC dispatch in flight for one Railway redeploy.** Mira PR (`mira/2026-05-22-bundle` branch in `evryn-backend`) bundles six identity items: (1) onboarding curiosity affordance, (2) Evryn-owns-relationships posture, (3) `[binding: until-X]` process-commitments, (4) write-discipline for user pending_notes (from amendment), (5) voice-samples preamble for `trust-arc-scripts.md`, (6) **mandatory activity-module-load gate before drafting** (deliberate compulsion-case for "do not write without proper anchors loaded" — added mid-bundle after Justin/AC0 discovered Evryn was drafting without `gatekeeper-onboarding.md` loaded). DC bundle (`evryn-backend/docs/ac-to-dc.md`) covers cron loads Operator-discipline (Item 2 from old 5/2 bundle, now unblocked) + voice-samples runtime + draft-no-email bug investigation. Companion-shipped, single redeploy. Picking up Monday.
+- **AC1 cleared to start architectural-thinking working docs.** `_evryn-meta/docs/working/` is the location. Five-question backlog answered in his brief append. Item 1 (cron architecture) partially absorbed by today's amendment; deeper "should any pathway load fundamentally different identity?" question still open. Item 2 (capability-vs-constraint) gained new "constraint-by-undersaturation" framing from the voice-anchoring conversation.
+- **Pre-Mark-live blockers (unchanged):** (a) emergency-alerts wiring — `#emergency-alerts` channel exists but no code triggers DND-override path; (b) pre-go-live STEP 0 cleanup (kill test-Mark UUID + create fresh real-Mark record + clear inboxes + visual verify); (c) adversarial test full real-Mark refresh.
 - **After integration test passes:** adversarial test → go/no-go → Mark email.
 - **Legal: Fenwick Phase 1 complete.** ToS and Privacy Notice finalized. Phase 2 (v0.3 terms) in progress.
 - **Go-live timing relaxed.** Mark is in no hurry. Quality over speed.
 
 ## Active Projects
 
-- **_evryn-meta** — Phase 2 session doc landed (`5f48292`); Mira + AC1 briefs dispatched (`b82122b`). ADR-030 amendment pending Justin's go-ahead. Last week: team-alerts + lean Slack/HTTP rules across CLAUDE.md; commit-discipline rule hardened to per-commit-test framing.
-- **evryn-backend** — Items 1 + 3 of DC bundle shipped (commits `07b03bf`, `d533b2c`); deploy `dd45dd06` SUCCESS. New `users.last_proactive_check_at` column + `PROACTIVE_CHECK_HOUR_PT` env var. `submit_draft` schema relaxed for Evryn-initiated outbound. Item 2 (cron loads operator.md) on hold for ADR-030 amendment. SPRINT row 530 status updated (`2464830`); 2 identity-evolution backlog rows added (`7d5b79d`).
-- **evryn-team-workspace** — Mira running on 3 identity-craft items in parallel. AC1 running on 2 architectural-thinking working docs. (Other parallel team activity Justin has visibility into.)
+- **_evryn-meta** — ADR-030 amendment landed today; Mira/DC/AC1 briefs all current. Phase 2 session doc has 5/22 status appendage. Last #lock 2026-05-22 (this one).
+- **evryn-backend** — Mira active on `mira/2026-05-22-bundle` branch (four identity files modified: `core.md`, `operator.md`, `onboarding.md`, `trust-arc-scripts.md`). DC on standby for trip post-Mira-merge. ARCHITECTURE.md updated for ADR-030 amendment. Master at deploy `dd45dd06` (5/2); next redeploy ships Mira's bundle + DC's two items together.
+- **evryn-team-workspace** — Mira active on her bundle. AC1 cleared to start working docs in `_evryn-meta/docs/working/`. AC0 appendage to team current-state landed 2026-05-22.
 - **evryn-ops** — Created. OC CLAUDE.md ready. Not yet active.
 - **evryn-quality** — Created. QC CLAUDE.md ready. Not yet active.
 - **evryn-website** — Live at evryn.ai. ToS + Privacy Notice pages built.
-- **evryn-dev-workspace** — DC's home repo. Active for Items 1+3 trip; standing by for ADR-030 amendment ping to ship Item 2.
+- **evryn-dev-workspace** — DC's home repo. Standing by for `#dev-alerts` ping post-Mira-merge.
 - **evryn-team-agents** — FROZEN (ADR-021).
 
 ## Infrastructure

@@ -65,7 +65,64 @@ Companion-ships with Items 1-3 above and DC's Item 2 runtime change. Lands in th
 
 ---
 
-## How the bundle ships
+## Item 6 (NEW — added mid-bundle 2026-05-22 by AC0 + Justin) — Mandatory activity-module load before drafting outbound
+
+**Driver — empirical, not theoretical.** Evryn has been drafting cold-opens to Mark without first loading `onboarding.md` or `gatekeeper-onboarding.md` — the activity modules that *govern* how she does that drafting. She confirmed this herself on 2026-05-01 after Justin pushed back on her first draft:
+
+> *"On the modules — no. I had core.md and operator.md only. Loaded both onboarding.md and gatekeeper-onboarding.md just now."*
+
+The performing-register drift in that 5/1 draft and the leak-vector pattern across the 18-note cron arc on Mark (5/4–5/22) are both *downstream of this*: she's drafting without the discipline that should be governing the work. By the time she pulls the activity module, she's already in voice/judgment territory she wasn't anchored for.
+
+**Why the existing cue isn't enough.** Per ADR-017 + ADR-030, situation modules and activity modules are *on-demand by design* — Evryn determines her own situation/activity from message + person context and pulls relevant modules via `read_identity`. The cue lives at `operator.md` line 92 (*"when the Operator introduces someone, apply the research pattern from `activities/onboarding.md`"*). But this cue is wrong in two ways:
+
+1. **It's framed as permission to load, not a gate against drafting unloaded.** Permission-not-compulsion is the right principle in most cases — but here, the empirical record is that she doesn't reliably pull on a permission cue. The cost of "she might or might not load" is too high when the output is real outbound to a real person.
+2. **It points at research, not drafting.** The cue covers her research pass (which she's actually done well). It doesn't say *"before you draft outbound to a user, load the activity module that governs that kind of drafting."*
+
+### What we need
+
+A beat in the identity layer that makes it **unambiguous and not optional** that before Evryn drafts any outbound to a user, she has loaded the activity module governing that drafting:
+
+- `onboarding.md` if the user is new (the relationship-formation activity)
+- `gatekeeper-onboarding.md` if the user is a gatekeeper she's onboarding (her work with their judgment)
+- `triage.md` if she's classifying inbound and the response is a triage response
+- (and so on for future activity modules as they land)
+
+**Where it lives is your craft call.** Some shapes to consider:
+- A new sub-section in `core.md` (e.g., "Pre-write discipline") — most foundational, applies to *every* Evryn-invocation regardless of pathway
+- A beat in `operator.md` — applies in Slack-Operator + cron pathways (where most operator-mediated drafts originate)
+- Both — `core.md` carrying the principle, `operator.md` carrying the pathway-specific execution
+- Something else you see
+
+### Justin's specific ask on *tone* (load-bearing, do not compress)
+
+> *"think carefully about how best to implement it and specifically how to make it **as clear as possible** that it's **not optional — do not write without the proper things loaded**."*
+
+This is a deliberate compulsion case. Justin and AC0 understand the tension — see the next paragraph — and the call is to land it as a gate, not a cue.
+
+### The principle-tension worth surfacing in the language itself
+
+`core.md`'s broader stance is *permission, not compulsion* — and you've honored that carefully across the stack. **This item is a deliberate exception**, and the language you write should make the *why* of the exception legible to a future reader (and to Evryn herself when she reads it). The reasoning that justifies it:
+
+- The failure mode is empirical and recurring, not theoretical
+- The cost of failure is real (drafts in the wrong register go to real people)
+- The permission version has been tried and doesn't reliably work
+- The exception is narrow (this gate applies specifically to *drafting outbound*, not to every behavior)
+- The exception remains *agency-respecting* — Evryn isn't being told *what* to draft. She's being told to load the discipline that lets her make that judgment well. The gate exists in service of her own quality of work, not in suppression of her agency.
+
+That last point matters for how you frame it. The shape isn't *"you must obey rules before writing"* — it's something closer to *"you can't do this work at your own standard without these anchors loaded; load them as the first move."* Voice of self-discipline, not external constraint.
+
+### Specific failure modes worth designing against
+
+- **Cron-Evryn waking, seeing pending_notes that look intriguing, drafting without loading the activity module** (the 5/4 / 5/11 / 18-note pattern — cron context now loads `operator.md` per today's amendment, but the gate also needs to bite in cron pathways)
+- **Slack-Operator Evryn drafting in response to an Operator request without first loading the activity module** (the 5/1 "performing" draft pattern)
+- **Edge case: Evryn unsure which activity module applies.** The gate should handle ambiguity — maybe "load all candidates" or "ask the Operator before drafting" depending on the situation. Your craft on which is right.
+
+### Cross-references and companion-ship
+
+- **Pairs naturally with Item 2 ("Evryn owns her user relationships").** Item 2 is the agency framing — *the relationship is yours, lead from your judgment.* Item 6 is the execution framing — *and your judgment operates from loaded discipline, not from operator.md context alone.* Two halves of the same posture. Feel free to fold or co-reference if the language wants to braid.
+- **Companion-ships with Items 1-5.** Lands in the same PR, same Railway redeploy.
+
+
 
 - **One PR.** All five items (plus any small dependent edits) on a single branch (suggested name: `mira/2026-05-22-bundle`).
 - **Self-review against the 7-item identity-file-review protocol** (`evryn-team-workspace/shared/protocols/identity-file-review.md`).
