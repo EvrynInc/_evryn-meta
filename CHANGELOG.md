@@ -23,6 +23,16 @@
 
 ---
 
+## 2026-05-20 (AC — team-runtime SDK port feasibility study)
+
+- **Feasibility doc landed.** `_evryn-meta/docs/sessions/2026-05-20-team-runtime-feasibility.md` (commit `dd3ab83`) answered Justin's "weeks or end-of-day?" question about porting the founding-team agents (Lucas first) from Claude Code sessions to a Claude Agent SDK runtime on Railway. Verdict: days-not-weeks, via extracted `@evryn/agent-runner` package + four-tier permission-hook commit policy + push-driven wakes + Haiku heartbeats with five layers of loop-prevention + per-agent tools menu for all 8 + budget $200-1500/mo with named levers.
+- **7 open questions back to Justin** gate the next step (ADR-033 + Phase A DC spec).
+- **Justin's blocking tasks ~3-4 hrs total** (GitHub App, new Supabase project, per-agent Slack apps, Linear seats, Railway service).
+
+**Operator-relevant:** none today.
+
+---
+
 ## 2026-05-02 (AC0 — DC bundle Items 1+3 shipped; Item 2 on hold for ADR-030 amendment)
 
 - **DC bundle Items 1 + 3 shipped, deploy `dd45dd06` SUCCESS.** Item 1: `submit_draft.emailmgr_item_id` made optional with server-side placeholder auto-create (commit `07b03bf` in evryn-backend). Tool description softened from compulsion to permission; placeholder uses `metadata.type = 'evryn_initiated'` as audit-trail key; unknown-recipient path throws operator-readable error. Unblocks Evryn-initiated outbound — first-contact emails, proactive follow-ups. Justin's Phase 2 cold-open re-draft will be the live close-out smoke-test. Item 3: per-user fixed-time-of-day cron cadence (commit `d533b2c`). New `users.last_proactive_check_at TIMESTAMPTZ` column (migration `add-last-proactive-check-at-migration.sql`, applied 2026-05-02T16:11 UTC, dual backups in `evryn-backend/backups/`); `PROACTIVE_CHECK_HOUR_PT=7` env var on Railway; new exported `shouldRunProactiveCheck` predicate (target hour gate + 23h interval gate). Removes the `lastProactiveCheck` global. Backfill set Mark's `last_proactive_check_at` to NOW() — no surprise pings before tomorrow's 7am PT cron tick.
