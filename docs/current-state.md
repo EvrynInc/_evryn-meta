@@ -6,7 +6,8 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-05-22T17:55-07:00*
+*Last updated: 2026-05-25T13:55-07:00*
+*Last #lock (full): 2026-05-25 (machine-switch prep)*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
 
@@ -22,6 +23,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
+- **Machine switch in progress (2026-05-25).** Justin switching from old machine to new; full #lock today before switch. Handoff doc at `_evryn-meta/docs/sessions/2026-05-25-machine-switch-handoff.md` carries reload sections for all four active instances (AC0, Mira, AC1, DC) + each one's pack-out appendage. AC2 visual-architecture-viewer dispatch notes stub at `_evryn-meta/docs/working/ac2-visual-architecture-notes.md` (Option C — custom static web app reading YAML). DB backup taken 5/25 (`backups/schema-2026-05-25.json` + `backups/data-2026-05-25.json`).
 - **Phase 2 resuming after a 3-week pause.** Justin was buried in unrelated business (taxes, family illness, Fenwick legal). During the pause cron-Evryn kept thinking — 18 daily pending_notes on Mark (5/4-5/22), four `notify_slack` pings to Justin he didn't see (ghost-message path), self-declared "file dormant" 5/19, plus a direct Slack pause directive from Justin 5/21 Evryn is honoring. Full empirical arc captured in 2026-05-22 CHANGELOG entry.
 - **ADR-030 amendment landed today (2026-05-22).** Operator-Audience Carve-Out: cron pathways now load Operator-discipline (`operator.md` + Operator's profile + discipline_notice) because cron-Evryn may ping Operator via `notify_slack`. **Principle: audience over trigger.** Companion leak-vector guardrail: user pending_notes stay user-substantive; Operator-coordination state routes to Operator's profile or nowhere. Commit `b3c4c79` (meta) + `3a87137` (backend ARCHITECTURE.md updates).
 - **Bundled Mira + DC dispatch in flight for one Railway redeploy.** Mira PR (`mira/2026-05-22-bundle` branch in `evryn-backend`) bundles six identity items: (1) onboarding curiosity affordance, (2) Evryn-owns-relationships posture, (3) `[binding: until-X]` process-commitments, (4) write-discipline for user pending_notes (from amendment), (5) voice-samples preamble for `trust-arc-scripts.md`, (6) **mandatory activity-module-load gate before drafting** (deliberate compulsion-case for "do not write without proper anchors loaded" — added mid-bundle after Justin/AC0 discovered Evryn was drafting without `gatekeeper-onboarding.md` loaded). DC bundle (`evryn-backend/docs/ac-to-dc.md`) covers cron loads Operator-discipline (Item 2 from old 5/2 bundle, now unblocked) + voice-samples runtime + draft-no-email bug investigation. Companion-shipped, single redeploy. Picking up Monday.
