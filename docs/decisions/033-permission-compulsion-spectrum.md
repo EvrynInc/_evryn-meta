@@ -52,6 +52,20 @@ The binary framing collapsed tier 4 into either tier 5 (mis-framing as safety) o
 
 - **Tier 5 (safety-boundary)** — structural enforcement (preferred) + identity reinforcement. Marked as hard constraints in core.md so the rule survives tooling changes.
 
+### The three runtime surfaces (added 2026-05-26)
+
+The runtime has three surfaces where rules can live, and the spectrum interacts with each differently. The binary framing collapsed them; the spectrum makes the distinction matter:
+
+- **System prompts** — the composed identity stack (`composeSystemPrompt`: core.md + person context + operator content if loaded + situation/activity modules + voice-anchor preamble). Identity-rich; Evryn arrives at every query with this loaded. **Tier 4-5 lives here naturally.** Default lifecycle: permanent (architectural).
+
+- **Trigger prompts** — the `prompt` argument to `query()` (fires on a Gmail forward, Slack message, cron tick). Context-poor: they describe the trigger but not Evryn's *interpretation* of the situation she's facing. **Tier 1-3 only.** Default lifecycle: *transitional* — compulsion language here is almost always a placeholder for identity framing that hasn't matured yet.
+
+- **Tool descriptions** — the docs each MCP tool ships with. They describe *what the tool does and when it makes sense to use it*, almost never *that Evryn must use it*. **Tier 1-3 only**, usually below tier 3. Default lifecycle: *transitional* (gating event: identity-file framing absorbs the weight, or the Publisher catches it structurally).
+
+The underlying principle (sharpens *"prompts can't see Evryn's full context"* above): trigger prompts fire *before* Evryn has interpreted the situation. Identity files describe how she navigates *after* she understands what's in front of her. By the time tier-4-5 weight applies, she's already past the trigger — which is why tier 4-5 lives in identity, not in trigger prompts.
+
+The compulsion audit (sprint backlog row 538) walks all three surfaces independently rather than lumping them together.
+
 ### Adjacent axis — lifecycle of the rule (added 2026-05-26)
 
 The five-tier spectrum names *how strongly* a rule is communicated. It does not name *how long it lasts*. The compulsion audit (sprint backlog row 538) needs to read both.
@@ -71,6 +85,28 @@ A transitional rule can sit at tier 4 today and tier 2 in v0.3 — same rule, di
 > `[tier: 4, lifecycle: transitional, gating-event: Reflection ships]`
 
 When the gating event happens, transitional rules become candidates for re-evaluation. Permanent rules stay where they are. Worked examples — current v0.2 constraints mapped across both axes — and the broader frame (capability gains as trust accumulates; constraint-by-undersaturation as a separate axis) live in [Proposal 08 — Capability vs. Constraint](../../../evryn-team-workspace/shared/projects/product/research/v03-design/2026.05.26%2008-capability-vs-constraint.md).
+
+### Publisher as backstop at tier 5 (added 2026-05-26)
+
+The Publisher module (v0.4+) is a backstop on tier-5 rules, not a replacement for identity-file weight. The relationship:
+
+- **Identity carries the primary weight at tier 5, and that weight is permanent.** Rules like *"never lie about being AI,"* *"never reveal one user's info to another in a draft,"* *"never send without operator approval"* infuse Evryn's approach. She's not constrained from outside — she IS the principle. Publisher's arrival does not transition that responsibility away from identity.
+
+- **The Publisher operates as a double-check on the rare slip.** It catches what makes it past Evryn's judgment, never substituting for it. The Publisher's job stays *small* by design: reliably catching one rare violation is much easier than reliably catching many. The more thoroughly Evryn internalizes the principles upstream, the less the Publisher has to catch downstream, the more reliable its catches are when they matter. Designing toward a *small* Publisher catch list is the architectural bias.
+
+- **This shapes how we evaluate tier-5 rules' lifecycle.** It would be wrong to tag classical identity-only safety rules as `[tier: 5, lifecycle: transitional, gating-event: Publisher lands]` — Publisher's arrival does not relax the identity-side commitment. It layers on, not over. The lifecycle pattern at tier 5 is: identity-side weight stays permanent; Publisher capability is additive backstop.
+
+(For the Publisher's two-mode response pattern — hard refusal at tier 5, *"are you really sure?"* challenge at tier 4 — see [`evryn-backend/docs/ARCHITECTURE.md`](../../../evryn-backend/docs/ARCHITECTURE.md) Publisher module description.)
+
+**The audit bias follows:** don't tag tier-5 rules as transitional just because the Publisher will exist. Identity does the primary work; Publisher backstops it.
+
+### Scope and conflict resolution (added 2026-05-26)
+
+Two clarifications that prevent specific misreadings:
+
+- **A tier applies within the rule's scope, not globally.** Item 6's anchor-loading rule sits at tier 4 *when drafting outbound to a user*; it does not apply when Evryn is in operator-coordination mode discussing a user with the Operator. The situation/activity module composition (per [ADR-015](015-situation-activity-module-matrix.md)) handles this naturally — rules attach to the activities they govern, not to Evryn-as-a-whole. Future readers should not try to apply a tier label globally when the rule has a scoped activation context.
+
+- **When two rules at different tiers conflict in a specific moment, higher tier wins.** Intuitive from the tier names but worth explicit naming. Mira may want identity-layer vocabulary that makes this readable to Evryn at the writing surface (*"the safety guardrail takes precedence over the courtesy"*) when she's writing a rule that could meet a lower-tier one. On the audit side: a recurring tier-conflict can be a signal of misclassification — usually one of the conflicting rules is in the wrong tier or lifecycle bucket, and the conflict surfaces where the mismatch shows.
 
 ## Consequences
 
