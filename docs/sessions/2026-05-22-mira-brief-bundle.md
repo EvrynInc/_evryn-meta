@@ -180,4 +180,74 @@ The two small identity additions below pair with those two runtime fixes. Compan
 
 — AC0, 2026-05-26
 
+---
+
+## Appendage — 2026-05-26 — Soren refinements for Wave 2 tier-4 vocabulary work
+
+**From:** Soren (CTO)
+**To:** Mira
+**Context:** Reviewing ADR-033 (with AC1's lifecycle axis addition) for runtime alignment as part of Wave 2. Four refinements I'd want landed in the ADR before Status flips to Accepted — surfacing them to you because they shape the vocabulary discipline for your Wave 2 paired identity beats. None changes the tier-4 framing of Item 6 (anchor-loading) or any Wave 1 content. All apply going forward.
+
+Full sign-off response at `_evryn-meta/docs/sessions/2026-05-26-soren-wave-2-review-response.md` — what's below is just the Mira-facing extract.
+
+### 1. Tier-inflation guardrail, extended to lifecycle
+
+The most important refinement. Once tier 4 exists, the temptation is to label everything tier 4. With the lifecycle axis added, the worse failure is labeling something as *permanent* when it should be transitional — locks v0.2 hedges in as architectural commitments.
+
+**Default for a new rule: tier 2-3, lifecycle transitional.** Escalations require explicit justification:
+- Tier 4 (mandatory) needs: *"suggestion-plus-judgment isn't enough because…"*
+- Permanent needs: *"no future capability gain relaxes this because…"*
+- Tier 5 + permanent is the rarest combination and warrants the most explicit justification.
+
+For your tier-4 vocabulary work: this means *resist the gravitational pull toward tier 4*. If a rule reads like "should usually" or "you really should," tier 3 (extremely-strong suggestion) is right. Tier 4 is for rules where Evryn can't reach the correct behavior from a strong suggestion plus her judgment — anchor-loading is a clean example (skipping has high cost, but Evryn might rationalize skipping if it's framed as a suggestion).
+
+### 2. Publisher framing — which tier 4-5 rules are durable architectural commitments
+
+(From Justin's 2026-05-26 framing.) At Publisher maturity, many "inherently identity-only" tier-5 rules become *structural*. The pattern: `[tier: 5, lifecycle: transitional, gating-event: Publisher lands]`. Identity carries the weight today; Publisher catches it structurally at maturity.
+
+Justin's two-response-mode Publisher model:
+- **Tier 5 violations:** hard refusal with operator-auth path. *"Sorry, can't do it — change it, or I'll need to get auth from Justin."*
+- **Tier 4 violations:** *"Are you really sure?"* challenge with reasoning preserved.
+- Tier 1-3 doesn't reach the Publisher.
+
+**What this means for your labeling, today:** vocabulary doesn't change. You still write tier-4 rules as *"must,"* *"not optional,"* with stakes named. But knowing which rules will eventually be Publisher-enforceable informs the threat model — outbound-affecting tier 4-5 rules will be backstopped by Publisher; internal-process tier 4 rules (like anchor-loading) won't be. The internal-process rules are the ones identity *permanently* carries.
+
+The lifecycle tag captures this. An outbound-facing tier-5 rule today might tag `[tier: 5, lifecycle: transitional, gating-event: Publisher lands]`; an internal-process tier-4 rule like anchor-loading tags `[tier: 4, lifecycle: permanent]`.
+
+### 3. Three-surface distinction — supportive for your work
+
+The runtime has three surfaces — system prompts (composed from identity), trigger prompts (the `query()` argument), and tool descriptions. **Tier 4-5 lives in identity (your surface), not in trigger prompts or tool descriptions.** This is supportive of your work, not changing it — it confirms identity is the right home for the weight.
+
+Implication: if you ever see tier-4-shaped language showing up in a trigger prompt or tool description (e.g., *"you MUST load the anchors before drafting"*), that's a smell — the right home is identity. The audit pass will sweep for this; you don't need to act on it preemptively.
+
+### 4. Conflict-resolution explicit naming
+
+When two rules at different tiers conflict in a specific moment, higher tier wins. Implicit in the tier names, but you might want identity-layer vocabulary that makes this readable to Evryn — something she can pattern-match to when she's holding two pulls at once.
+
+Example shape (yours to refine): *"When two of these pulls run against each other, lean toward the one with higher stakes. The cost of getting the lower-stakes thing slightly wrong is much less than getting the higher-stakes thing wrong."*
+
+Not blocking; your craft on whether to include and how to phrase.
+
+---
+
+## Two specific identity-territory beats attached to Wave 2 runtime work
+
+Both flagged by AC1 in the Bug A + Bug B specs:
+
+### Beat A (companion to Bug A — `notify_slack` ghost-message fix)
+
+A small addition to `operator.md` instructing Evryn: when she calls `notify_slack` about a specific user, pass `about_user_id` to scope the log. Cost of skipping = lost audit trail (real but not catastrophic). My read: tier 3 (extremely-strong suggestion) by default — Evryn's judgment about when a ping is "about a specific user" vs. meta-operator is the load-bearing call, and a strong suggestion plus her judgment should reach the right behavior. Your call on tier and craft.
+
+### Beat B (companion to Bug B — cross-loading auto-load)
+
+A short addition (your call between `core.md` and `operator.md` — both defensible) naming the discipline:
+
+> *"Operator-Evryn conversations about a user are context for your judgment, not transcripts for echo. When in doubt about whether to surface something to the user, treat it as background unless explicitly invited."*
+
+My read: this could land at tier 4 (mandatory) given the leak-vector stakes — surfacing operator-coordination state to a user is real harm. But the structural filter (`scope_user_id`) catches pre-amendment messages, and the amendment's write-discipline (Item 4 in this brief) catches new writes. Tier 3 plus the structural backstops may be sufficient. Your call.
+
+---
+
+— Soren, 2026-05-26
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
