@@ -63,6 +63,47 @@ If anything needs Justin's eyes: ping `#team-alerts` with the specific question,
 - **Stage by file path explicitly. Never `git add -A`.** Parallel agents may have work in the tray.
 - Commit ONLY your own work. If you see another agent's edits uncommitted, surface to Justin — don't sweep them.
 
+**Targeted reading list for integration test execution** *(added 2026-05-25 evening by AC0)*
+
+The deep cascade (Hub + full ARCHITECTURE + full BUILD + full SPRINT) is the right load for *architecture work* — writing ADRs, evaluating tradeoffs, strategy conversations. For *executing the integration test*, it's expensive context for navigation knowledge you can encode here as line ranges. This list trades the full mental map for surgical reads at the right moments.
+
+**Always-load (foundation, before any test work):**
+1. `_evryn-meta/CLAUDE.md` (auto)
+2. `_evryn-meta/docs/hub/roadmap.md` — light, orients in space
+3. `_evryn-meta/docs/current-state.md`
+4. This handoff doc (AC0 sections above)
+5. `evryn-backend/docs/dc-to-ac.md` (mailbox state)
+6. `evryn-backend/tests/integration-test-v02.md` — the protocol you're executing
+
+**Targeted line ranges — read these sections only, not the whole file:**
+
+`evryn-backend/docs/ARCHITECTURE.md`:
+- 70-200 — User Model + Operator Track (thread scope per ADR-030) + System Actors + Three Modes
+- 502-575 — Pipeline Design: Email + Slack Processing + Approval Gate
+- 632-780 — Identity Composition (pathway-by-pathway trigger composition, post-2026-05-22 amendment)
+- 918-925 — Outbound Approval Gate (architectural invariant)
+
+`evryn-backend/docs/BUILD-EVRYN-MVP.md`:
+- 68-99 — Critical Principles (Mark's Trust, Build for One, Permission not Compulsion)
+- 114-165 — What Evryn Does (MVP): the workflow you're testing
+- 379-417 — Build Order: Phase 0/1/2 status tables (what's wired, what's deferred)
+
+`evryn-backend/docs/SPRINT-MARK-LIVE.md`:
+- 66-110 — Sprint Tracker table (Day 6 rows carry the freshest status)
+- 412-464 — Day 6 narrative content (post-sprint context, real-Mark pivot)
+- **466-487 — Pre-Go-Live Cleanup** (CRITICAL — visually verify squeaky-clean DB + Gmail before real-Mark email goes live)
+- 518-526 — 2026-05-01 three-fix bundle status
+- 530-555 — Backlog (includes the emergency-alerts Mark-live blocker)
+
+**Trigger-load — read only if X happens during the test:**
+- *Operator / cron / thread-scope behavior surprises you* → ADR-030 full + Amendment 2026-05-22 + ADR-031 (late-scope recovery)
+- *Evryn produces output that looks off* → `evryn-backend/identity/core.md` + the relevant activity module (`onboarding.md`, `gatekeeper-onboarding.md`, `triage.md`, `conversation.md`)
+- *Tool or SDK behavior surprises you* → `_evryn-meta/AGENT_PATTERNS.md` §"SDK Integration & Tool Wiring"
+- *Strategy or principle question the foundation doesn't cover* → the relevant Hub spoke
+- *Anything else off-pattern you can't ground in the above* → STOP, ask Justin before proceeding. Don't infer through gaps.
+
+**Note on line numbers:** accurate as of 2026-05-25. If a target doc has been substantially edited since, the section headers ("Operator Track," "Pipeline Design," "Identity Composition," "Pre-Go-Live Cleanup," etc.) are stable anchors — grep for those.
+
 ---
 
 ## For new Mira
