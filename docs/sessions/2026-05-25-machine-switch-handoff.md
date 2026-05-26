@@ -18,6 +18,34 @@ Phase 2 of v0.2 integration test is **paused** per Justin's 2026-05-21 directive
 
 ---
 
+## Spin-up sequence for the next AC0
+
+> **Added 2026-05-26 by AC0** (the AC0 that did the integration-test-brief session). Use this to dispatch the team after you spin up. The original handoff envisioned new-AC0 doing Mira's PR review → merge → DC fire → integration test directly. Subsequent conversation with Justin restructured: **dispatch the team first, then do the test**. Run agents in parallel where possible.
+
+**Order:**
+
+1. **Spin AC1** (no blocker — fully parallel). Dispatch text for Justin to relay:
+
+   > Spin AC1. Read your section in `_evryn-meta/docs/sessions/2026-05-25-machine-switch-handoff.md` (`## For new AC1`) + your appendage at the bottom (`### [AC1] appendage`). Then your brief at `_evryn-meta/docs/sessions/2026-05-01-ac1-brief-phase2-architectural-adrs.md` (original at top + 5/22 append at bottom). Then ADR-030 + Amendment at `_evryn-meta/docs/decisions/030-slack-threads-as-operator-scope.md`. Working docs go to `_evryn-meta/docs/working/`. **Ping me on `#team-alerts` every time you have something for me — even when it seems like I'm right there. I'm bouncing between instances and I'm *not* there.**
+
+2. **Spin Mira for the operator.md Item-2 knock-out** (parallel with AC1). Small trip — the proposed prose is already in her appendage. Dispatch text:
+
+   > Spin Mira. Read your standard cascade. Then your section in `_evryn-meta/docs/sessions/2026-05-25-machine-switch-handoff.md` (`## For new Mira`) + your appendage at the bottom (`### [Mira] appendage`) — the proposed operator.md prose is there. Then your brief at `_evryn-meta/docs/sessions/2026-05-22-mira-brief-bundle.md`. **Task:** land the operator.md execution beat for Item 2 (the *"You lead the relationship the Operator hands you"* prose from your appendage) into `identity/situations/operator.md` on the `mira/2026-05-22-bundle` branch. Push. **Ping me on `#team-alerts` every time you have something for me — even when it seems like I'm right there. I'm bouncing between instances and I'm *not* there.**
+
+3. **Review Mira's PR + merge** (you, AC0). Per existing AC0 section guidance. Ping Justin on `#team-alerts` when merged so he can fire DC.
+
+4. **Spin DC** (only after Mira's PR merges — file-state dependency on `trust-arc-scripts.md`). Dispatch text:
+
+   > Spin DC. Read your standard cascade. Then your brief at `evryn-backend/docs/ac-to-dc.md`. **Ping me on `#team-alerts` every time you have something specifically for me (decisions, unblocks) — even when it seems like I'm right there. I'm bouncing between instances and I'm *not* there.** (Keep using `#dev-alerts` for ops pings per your standard convention.)
+
+5. **Integration test** (after DC ships + Mira's PR merged). Use the "Targeted reading list for integration test execution" inside `## For new AC0` to load surgically — don't re-cascade the full architecture set.
+
+**Queued for after this wave** (see `## What's NOT in flight` below — do NOT pick up before integration test):
+- Compulsion-vs-permission **spectrum** reframing in ARCHITECTURE.md + BUILD doc
+- Broadened "load the right shit" principle (next Mira pass — depends on the above)
+
+---
+
 ## For new AC0
 
 Read in this order before doing anything:
@@ -55,7 +83,7 @@ If anything needs Justin's eyes: ping `#team-alerts` with the specific question,
 - `#dev-alerts` for DC coordination. Webhook URL is `SLACK_DEV_WEBHOOK_URL` in `evryn-dev-workspace/.env`.
 - Mechanics: Node `fetch` invoked from Bash (`node -e "..."`) is the standard path — auto-allowed and UTF-8 clean. Don't reach for PowerShell or bash + curl.
 - Prefix every message with your name (`AC0:`, or `AC0/AC1/...` if Justin has designated a numbered instance).
-- Don't over-ping. Ping for decisions, not routine status.
+- **Ping every time you have something for Justin** — a question, a decision, an unblock, anything that needs his eyes. Even when it really seems like he's right there. He's bouncing between instances and he's *not* there. Don't wait silently. (Pure routine status — *"reading X now"* — still doesn't merit a ping; the rule is for actual asks.)
 
 **Commit discipline** (load-bearing — read CLAUDE.md if needed):
 - Each commit needs its own explicit go-ahead from Justin
@@ -127,6 +155,8 @@ Read in this order:
 - DC follows your merge with his runtime trip — companion-shipped, atomic Railway redeploy
 - Don't touch `evryn-backend` master while DC's trip is in flight (post-merge through redeploy)
 
+**Pinging Justin (load-bearing):** Ping `#team-alerts` every time you have something for him — a question, a status update, an unblock. **Even when it really seems like he's right there.** He's bouncing between instances and he's *not* there. Don't wait silently. Prefix messages with your name. Webhook: `SLACK_TEAM_WEBHOOK_URL` in `evryn-team-workspace/.env`.
+
 ---
 
 ## For new AC1
@@ -145,9 +175,10 @@ Read in this order:
 2. **Capability-vs-constraint architecture** — unchanged substantively, but gained the **constraint-by-undersaturation** framing from the voice-anchoring conversation Justin/Mira are having. Evryn can be capability-limited not just by explicit constraints but by under-demonstration (margin notes vs. lines). Worth folding into your thinking on what relaxes when the publisher module lands in v0.3.
 
 **Coordination:**
-- `#team-alerts` for AC0 or Justin input if needed
 - Don't touch `evryn-backend` while Mira's PR is open (you wouldn't be touching it anyway, but the constraint is real)
 - Mira's brief at `_evryn-meta/docs/sessions/2026-05-22-mira-brief-bundle.md` interacts with your Item 1 thinking — read it briefly for design space awareness
+
+**Pinging Justin (load-bearing):** Ping `#team-alerts` every time you have something for him — a question, a working-doc draft to look at, anything that needs his eyes. **Even when it really seems like he's right there.** He's bouncing between instances and he's *not* there. Don't wait silently. Prefix messages with your name. Webhook: `SLACK_TEAM_WEBHOOK_URL` in `evryn-team-workspace/.env`.
 
 ---
 
@@ -168,7 +199,9 @@ Once pinged, read:
 **Coordination:**
 - Single trip, single Railway redeploy. Bundle commits how you like (suggest 2 commits, one per item, for bisect-clean revert).
 - Reply in `evryn-backend/docs/dc-to-ac.md` per protocol — commits + smoke-test results + bug investigation findings.
-- Ping `#dev-alerts` before/after the redeploy.
+- Ping `#dev-alerts` before/after the redeploy (ops convention — deploy outcomes go there).
+
+**Pinging Justin (load-bearing):** Beyond the `#dev-alerts` ops pings above, ping `#team-alerts` every time you have something specifically for Justin — a question, an unblock request, a decision he needs to make. **Even when it really seems like he's right there.** He's bouncing between instances and he's *not* there. Don't wait silently. Prefix messages with your name. Webhook: `SLACK_TEAM_WEBHOOK_URL` in `evryn-team-workspace/.env`.
 
 ---
 
@@ -183,9 +216,11 @@ Once pinged, read:
 ## What's NOT in flight (parked for later)
 
 - **Phase 2 conversation engagement with Evryn** — paused per Justin's 5/21 directive. Resumption requires Justin's green light. When given, AC0 has a queued cross-thread-divergence reply documented in the 2026-04-30 session doc.
-- **AC2 dispatch brief for visual architecture viewer** — still TODO. AC0's first major task after Mira-merge + DC-trip lands.
+- **AC2 dispatch brief for visual architecture viewer** — punted to Linear [EVR-107](https://linear.app/evryn/issue/EVR-107) (status: **Blocked**, "blocked on Mark launch"). For Soren to consider when the time is right; not on AC0's plate during Mark launch.
 - **Pre-Mark-live blockers (unchanged):** emergency-alerts wiring, pre-go-live STEP 0 cleanup, adversarial test full real-Mark refresh. All deferred to after the current bundle lands.
 - **AC1's actual ADR writes** — deferred until adversarial test ships as next data point. Working docs only for now.
+- **Compulsion-vs-permission spectrum reframing** *(added 2026-05-26 by AC0)* — current framing in `evryn-backend/docs/ARCHITECTURE.md` §"Permission, not compulsion" (around line 551) + `evryn-backend/docs/BUILD-EVRYN-MVP.md` Critical Principles (around line 93) treats it as a binary: compulsion = safety boundaries only, permission everywhere else. Justin's note 2026-05-26: it's a *spectrum* — light suggestion → strong suggestion → extremely-strong suggestion → mandatory ("not optional") → safety-boundary compulsion (with structural enforcement preferred). Mira's "not optional" load-the-anchors rule in Item 6 sits at "mandatory" level. AC0 task: propose direct edits to ARCHITECTURE.md + BUILD doc, or write a small ADR amendment to ADR-?? on permission-vs-compulsion (none exists yet — may need a new ADR). Wait until Mira/DC bundles ship.
+- **Broadened "load the right shit" principle** *(added 2026-05-26 by AC0)* — Mira's core.md Item 6 is scoped narrowly to "drafting outbound to a user." Justin's note 2026-05-26: should be broader — *"When you enter a new situation, pause and ask yourself what you need loaded in this situation to actually do your job well. You **must** load the correct things, or [stakes: damage relationships / unable to do what you came to do / think you're doing a good job while not knowing what success actually is]."* This is the *next* Mira pass. Depends on: (1) compulsion-spectrum framing above being decided, so the principle lands at the right strength level; (2) AC1's working-doc thinking on cron architecture / loading-discipline (adjacent question — *should any pathway load fundamentally different identity, or every pathway load a consistent baseline + situational add-ons?*) — informs whether this rule belongs in core.md or in a separate loading-protocol module. AC0 task: write the Mira brief once both deps are clear.
 
 ---
 
