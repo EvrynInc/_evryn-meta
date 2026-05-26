@@ -131,3 +131,47 @@ Commit attribution: AC0 wrote the binding-TTL block + spectrum replacement; AC1 
 ---
 
 — Soren, 2026-05-26
+
+---
+
+## Update — 2026-05-26 (post-handoff, after working through Justin's session)
+
+Several items moved beyond what's described above. Capturing here so a cold-pickup reads the current state, not the state at first sign-off.
+
+### Edits that already landed (committed to `evryn-backend/master`)
+
+1. **Publisher two-response-mode pattern.** Per Justin's 2026-05-26 framing — landed in ARCHITECTURE.md at the Publisher module description (formerly generic *"checklist before anything goes out"*). Tier 5 → hard refusal with operator-auth path; tier 4 → *"are you really sure?"* challenge with Evryn's reasoning preserved. Tier 1-3 doesn't reach the Publisher. Also names the Publisher as the structural enforcement point for `[tier: 5, lifecycle: transitional, gating-event: Publisher lands]` rules — collapsing my original "structurally-preferred vs. inherently-identity" tier-5 sub-distinction into a cleaner architectural target.
+
+2. **Mira's anchor-rich-files pairing.** Voice-anchoring section in ARCHITECTURE.md now names the companion question alongside the runtime *"what should load"* question: *"what should those activity files contain — what exemplars, what voice, what range of situations — that makes anchor-loading load-bearing in the first place?"* The two questions get scoped together in v0.3. Mira flagged the gap; her note via Justin.
+
+3. **Bug A design notes (so we don't re-litigate).** Two paragraphs added directly after the `notify_slack` ghost-message fix spec:
+   - **One user per ping** — `about_user_id` is a single UUID by design. Multi-user observations get two pings; cross-user *patterns* (the pattern itself is the content) go to the planned Meta-Operator surface, not multi-tagged user-scoped pings. Cross-bleed solved structurally, not by tagging conventions.
+   - **Users always have a record** — anyone Evryn discovers gets a user record at intake. No "ping about someone with no `user_id`" case to design for.
+   - Plus a parenthetical clarifying `about_user_id` (tool-call parameter) vs. `scope_user_id` (database column) — same value at different layers, named for readability at each surface.
+
+4. **Reflection provenance question filed inline.** The v0.3 open question I flagged in the original sign-off (does Operator-distilled story content preserve provenance like the example, or strip it like ADR-027 cross-user notes? — the paragraph contradicted itself) is now a `> **v0.3 design question (open):**` quote-block sitting directly under the Reflection ops-scoped paragraph. Punted to v0.3 BUILD doc scoping with the both-have-arguments framing preserved.
+
+### Agent-definition change (committed to `evryn-team-workspace/main`)
+
+`evryn-backend/docs/ARCHITECTURE.md` promoted from "load based on discussion" to "always read on load" for Soren. Rationale: it's effectively my build-altitude spoke and I almost missed a `scope_user_id` filter behavior during this review because I didn't have it in my head. BUILD doc trigger tightened to *"current-build specifics, deferred items, sprint scope, or v0.3 staging."* New explicit drill-in rule added at the end of Context Loading: *"When you're about to claim something about how the runtime behaves, read the actual `src/` file. Inferred behavior is how subtle bugs get rationalized as 'fine.'"*
+
+Companion **EVR-108** (Blocked, R: soren / A: justin, unblocks post-Mark) tracks an ARCHITECTURE.md compression pass — since I'm now always-loading the doc, every line needs to earn its always-loaded cost. Discipline: *"Light at the top, deep on demand"* (CLAUDE.md).
+
+### State of the broader ADR-033 + fold-in batch
+
+- All 9 PROPOSED EDIT blocks across ARCH + BUILD: **folded, committed, pushed.**
+- **ADR-033 with lifecycle axis: Status flipped to Accepted (2026-05-26).** Both reviewers signed off.
+  - **Mira's sign-off** came with two requirements landed directly in the ADR text — both shipped in the same commit that flipped Status:
+    1. **Tier-inflation guardrail** as a default-stance opener in §"Consequences for identity files" (the one I'd drafted in my response). *Default new rules to tier 2-3, lifecycle transitional; escalations require explicit justification.* This is load-bearing for every future writer; lives in the canonical ADR text, not just in Mira's brief.
+    2. **Vocabulary clarification** on the existing tier-4 vocabulary bullet — the old phrasing *"vocabulary that names the tier"* was ambiguous (could be misread as Evryn-facing tier-naming). Rewritten to *"vocabulary that signals the tier implicitly"* with an explicit closer: *"the framework labels themselves stay writer-facing; Evryn reads the language, not the tier names."* Justin and Mira aligned on this in their session.
+  - **Mira flagged a future cross-reference (non-blocking):** once Judgment-Anchoring lands in her `identity-writing-bible.md`, the ADR could reference it from §"Consequences for identity files" — *"For writing judgment-latitude content at tiers 1-3, see identity-writing-bible.md §Judgment-Anchoring for the success-criteria-pairing discipline."* Worth picking up on your next pass through this ADR; not gating.
+  - **My three remaining refinements** — three-surface runtime distinction; Publisher-collapses-tier-5; conditional applicability + conflict resolution — are still drafted inline in §"ADR-033 with lifecycle axis (AC1 addition)" above. These were "I'd want" refinements, not block-status-flip ones; AC0 evaluates and lands them (or pushes back) on next pass. The two Mira required were the most operationally load-bearing for writers; the three remaining are sharpening + extension.
+
+### Open from my side going into your next session
+
+- Evaluate and land (or push back on) my three remaining ADR-033 refinements. The ADR now sits at Accepted; further refinements append as ADR additions or successor ADRs at your discretion.
+- Brief DC on Wave 2 runtime work (Bug A + Bug B) once Mira's paired identity beats land.
+- Optional: land Mira's Judgment-Anchoring cross-reference when her bible update ships.
+- EVR-108 sits Blocked; surfaces when Mark goes live.
+
+— Soren, 2026-05-26 (post-handoff update; ADR-033 Status: Accepted)

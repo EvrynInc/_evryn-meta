@@ -1,6 +1,6 @@
 # ADR-033: Permission-Compulsion Spectrum
 
-**Status:** Proposed (2026-05-26)
+**Status:** Accepted (2026-05-26)
 **Author:** AC0
 **Reviewers:** Mira (identity-file vocabulary), Soren (runtime alignment)
 **Related:** [ADR-017](017-situation-per-context-not-per-person.md) (situation per context — motivating context for the original permission-not-compulsion framing); `evryn-backend/docs/ARCHITECTURE.md` §"Permission, not compulsion"; `evryn-backend/docs/BUILD-EVRYN-MVP.md` §"Permission, Not Compulsion"; [Proposal 08 — Capability vs. Constraint](../../../evryn-team-workspace/shared/projects/product/research/v03-design/2026.05.26%2008-capability-vs-constraint.md) (broader frame — names the lifecycle axis below and a constraint-by-undersaturation axis that sits alongside instruction strength).
@@ -76,7 +76,8 @@ When the gating event happens, transitional rules become candidates for re-evalu
 
 ### For identity files (Mira's territory)
 
-- Mandatory-tier rules (e.g., Item 6's anchor-loading rule; the ADR-030 verify-and-lock beat) use vocabulary that names the tier: "this is mandatory" / "not optional" + the stakes if violated.
+- **Default stance for new rules: tier 2-3, lifecycle transitional.** Escalations require explicit justification — tier 4 needs *"suggestion-plus-judgment isn't enough because…"*; permanent needs *"no future capability gain relaxes this because…"*. Tier 5 + permanent is the rarest combination and warrants the most explicit justification. This is the guardrail against tier-inflation — once tier 4 exists, the temptation is to label everything tier 4, and once lifecycle-permanent exists, the temptation is to lock in v0.2 hedges as architectural commitments. Resist both.
+- Mandatory-tier rules (e.g., Item 6's anchor-loading rule; the ADR-030 verify-and-lock beat) use vocabulary that signals the tier implicitly: "this is mandatory" / "not optional" + the stakes if violated. The framework labels themselves stay writer-facing; Evryn reads the language, not the tier names.
 - Safety-boundary rules continue to use "never" / "cannot" language and are marked as hard constraints.
 - Suggestion-tier guidance doesn't need explicit tier-naming — strength is conveyed through phrasing ("consider," "you should," "you really should").
 
