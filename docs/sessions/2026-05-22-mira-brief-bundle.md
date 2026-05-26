@@ -149,9 +149,9 @@ If anything in the brief reads ambiguous, push back — better to have us aligne
 - **Bug A — Ghost messages.** `notify_slack` will start logging every cron-Evryn ping to the Operator into the `messages` database table with proper user-scoping. Tool signature gains an optional `about_user_id` parameter.
 - **Bug B — Cross-loading.** User-facing Evryn pathways (`processForward`, `processDirect`, cron) will auto-load Operator-about-user scoped messages into the prompt with a clear runtime label and a "context for judgment, not material to echo" framing.
 
-Justin's call (2026-05-26): these ship as a **second** Railway redeploy ("Wave 2") *after* the integration test passes. They are NOT in today's Wave 1 (your current 6+3-item PR + DC's currently-briefed runtime).
+Justin's call (2026-05-26): these ship as a **second** Railway redeploy ("Wave 2") *after Wave 1 lands and smoke-tests clean*, *before* the resumed Phase 2 integration test. They are NOT in today's Wave 1 (your current 6+3-item PR + DC's currently-briefed runtime). The full Phase 2 integration test runs once, against the final state — after both waves have shipped and smoke-tested clean.
 
-The two small identity additions below pair with those two runtime fixes. Companion-shipped together as a coherent Wave 2 unit (your identity beats + AC1's runtime fixes). **Pick this up in your next session, after today's PR merges and the integration test completes.**
+The two small identity additions below pair with those two runtime fixes. Companion-shipped together as a coherent Wave 2 unit (your identity beats + AC1's runtime fixes). **Pick this up in your next session, after today's Wave 1 PR merges and smoke-tests clean** — Wave 2 fires before the resumed Phase 2 integration test, not after.
 
 ### Beat 1 — `notify_slack` scoping cue (small addition to `operator.md`)
 
