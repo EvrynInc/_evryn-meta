@@ -6,6 +6,38 @@
 
 ---
 
+## 2026-05-26 (AC1 — Items 1+2 architectural-thinking deliverables; light #lock)
+
+- **Item 2 landed — `evryn-team-workspace/shared/projects/product/research/v03-design/2026.05.26 08-capability-vs-constraint.md`.** Four-axis frame for how Evryn's constraint surface and capability surface evolve across v0.2 → v0.3 → v0.4+: (1) instruction strength per ADR-033, (2) structural enforcement, (3) **lifecycle (transitional vs. permanent)** — the load-bearing addition, and (4) **constraint-by-undersaturation** — the voice-anchoring frame folded in from Mira/Justin's 5/22 conversation. Doc maps all v0.2 constraints across the four axes (table of ~11 constraints), sketches the publisher's expected scope at v0.4, names what relaxes vs. what stays, and gives capability gains per phase. Five open questions at the bottom for Justin. Compulsion-audit recommendation: tag each constraint along *both* the tier and the lifecycle axes so v0.2 hedges don't get locked in as permanent.
+- **ADR-033 augmented with the lifecycle axis (direct edit per Justin's go).** New `### Adjacent axis — lifecycle of the rule (added 2026-05-26)` subsection inserted under `## Decision`. The `### For runtime (Soren's territory)` Consequences bullet now reads as spectrum-aware AND lifecycle-aware. `Related:` header pointer to Proposal 08 added. Justin will tell Mira and Soren to re-read.
+- **Item 1 working doc landed — `_evryn-meta/docs/working/cron-architecture-and-cross-loading.md`.** Recaps the four Phase 2 seams (three from the original brief, one — cross-loading — surfaced in today's chat with Justin). Names the deeper "should any pathway load fundamentally different identity?" question as *already-closed* by ADR-030 amendment's audience-over-trigger principle. Specs the two v0.2 fixes (ghost-message logging + cross-loading auto-load). Gives the v0.3+ Reflection-distillation-into-story direction with four alternatives considered. Names open implementation questions for DC.
+- **Two v0.2 architectural calls Justin made in chat today** (captured in working doc + ARCHITECTURE.md PROPOSED EDITs):
+  - **Ghost-message fix:** `notify_slack` must always log to messages. Tool gains optional `about_user_id` parameter; handler captures Slack `ts` and writes a `messages` row with proper scope. The notification becomes the parent of a new Slack thread; ADR-030 mechanics inherit scope cleanly on Operator replies. Closes the empirically-biting gap where four 5/4–5/22 cron pings to Justin went unseen because they were structurally invisible.
+  - **Cross-loading auto-load (v0.2 / transitional):** user pathways (`processForward`, `processDirect`, cron) augment their systemPrompt with Operator-scoped messages about the user (sender=Operator/Evryn, scope_user_id=user.id) in a clearly-labeled section after person context, before user conversation history. v0.2 is just Mark and all-gated, so full payload is acceptable. Replaced at v0.3 when Reflection ships and distillation moves into the user's story.
+- **v0.3 cross-loading direction captured for surfacing at pivot.** ARCHITECTURE.md Reflection Module PROPOSED EDIT names Operator-scoped messages as a third tagged subclass Reflection processes (alongside pending_notes and cross_user_notes per ADR-027 Decision 3) → distills into the user's story as sanitized insights. Same pipeline, same provenance discipline. When this ships, the v0.2 auto-load gets removed.
+- **Constraint-by-undersaturation 80/20 decision persisted in ARCHITECTURE.md.** `trust-arc-scripts.md` loads in every Evryn prompt (Mira's 5/22 bundle ships this; DC's 5/22 voice-samples runtime change wires it; one redeploy). The decision was previously documented only in session docs (Mira's 5/22 brief — ephemeral); the PROPOSED EDIT moves it into the cached-prefix section of Identity Composition so it survives session-doc churn. Becomes live when DC's runtime change ships. v0.3+ refinement (tiered anchor loading, situation-specific exemplars) tracked in Proposal 08.
+- **Four `PROPOSED EDIT — 2026-05-26 (AC1) — NOT LIVE` blocks added to `evryn-backend/docs/ARCHITECTURE.md`** (uncommitted, sitting alongside AC0's earlier PROPOSED EDIT blocks awaiting AC0's commit). One block in BUILD doc (Proposal 08 row in v0.3 Staging table). One block in v03-design README (proposals 07 + 08 added to the index — proposal 07 had been orphaned since 2026-04-29). The README block is committed in this lock; the ARCHITECTURE.md and BUILD doc blocks are left for AC0 to commit alongside his own work (parallel-agent commit-discipline rule).
+- **AC1 → AC0 handoff doc at `_evryn-meta/docs/working/2026-05-26-ac1-to-ac0-handoff.md`.** Full inventory of what landed where, what needs AC0's attention, what needs Mira's, what needs Soren's. Append at the bottom (post-#lock) names which files AC0 still needs to commit and why (mixed AC0+AC1 work). Justin will relay to AC0 in the flow.
+- **CLAUDE.md — Slack-pings-are-attention-taps rule added** to `### Communication Rules`. The Slack message is the tap; substance goes in the chat. Justin's wording: *"keep it very concise, just enough that Justin knows what it's about; he can look at the chat for the substance."* Corrected after AC1's first Item 2 ping put multi-paragraph scope analysis in the Slack message instead of the chat.
+
+**Operator-relevant:** none.
+
+**Files committed this lock** (clean — AC1's work only):
+- `_evryn-meta/CLAUDE.md`
+- `_evryn-meta/CHANGELOG.md` (this entry)
+- `_evryn-meta/docs/current-state.md`
+- `_evryn-meta/docs/working/2026-05-26-ac1-to-ac0-handoff.md`
+- `_evryn-meta/docs/working/cron-architecture-and-cross-loading.md`
+- `evryn-team-workspace/shared/projects/product/research/v03-design/2026.05.26 08-capability-vs-constraint.md`
+- `evryn-team-workspace/shared/projects/product/research/v03-design/2026.03.20 README.md`
+
+**Files left uncommitted for AC0:**
+- `evryn-backend/docs/ARCHITECTURE.md` (mixed AC0+AC1 PROPOSED EDIT blocks)
+- `evryn-backend/docs/BUILD-EVRYN-MVP.md` (mixed AC0+AC1 PROPOSED EDIT blocks)
+- `_evryn-meta/docs/decisions/033-permission-compulsion-spectrum.md` (untracked, AC0 authored + AC1 augmented)
+
+---
+
 ## 2026-05-25 (AC0 — Machine-switch handoff doc + AC2 stub + DB backup; #lock full)
 
 - **Machine-switch handoff doc landed.** `_evryn-meta/docs/sessions/2026-05-25-machine-switch-handoff.md` — single doc with reload sections for AC0, Mira, AC1, DC, plus pack-out appendages from each. Each instance on the OLD machine appended their in-context state before machine switch so it survives the cold-spin on the new machine. Webhook URLs added explicitly (`#team-alerts` via `SLACK_TEAM_WEBHOOK_URL` in `evryn-team-workspace/.env`; `#dev-alerts` via `SLACK_DEV_WEBHOOK_URL` in `evryn-dev-workspace/.env`). Mira's pending operator.md decision flagged in AC0's "State you're walking into."
