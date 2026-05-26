@@ -140,4 +140,44 @@ If anything in the brief reads ambiguous, push back — better to have us aligne
 
 — AC0, 2026-05-22
 
+---
+
+## Appendage — 2026-05-26 (Wave 2 follow-ups, not in flight today)
+
+**Context:** AC1 produced two v0.2 runtime fixes today (see his working doc at `_evryn-meta/docs/working/cron-architecture-and-cross-loading.md`):
+
+- **Bug A — Ghost messages.** `notify_slack` will start logging every cron-Evryn ping to the Operator into the `messages` database table with proper user-scoping. Tool signature gains an optional `about_user_id` parameter.
+- **Bug B — Cross-loading.** User-facing Evryn pathways (`processForward`, `processDirect`, cron) will auto-load Operator-about-user scoped messages into the prompt with a clear runtime label and a "context for judgment, not material to echo" framing.
+
+Justin's call (2026-05-26): these ship as a **second** Railway redeploy ("Wave 2") *after* the integration test passes. They are NOT in today's Wave 1 (your current 6+3-item PR + DC's currently-briefed runtime).
+
+The two small identity additions below pair with those two runtime fixes. Companion-shipped together as a coherent Wave 2 unit (your identity beats + AC1's runtime fixes). **Pick this up in your next session, after today's PR merges and the integration test completes.**
+
+### Beat 1 — `notify_slack` scoping cue (small addition to `operator.md`)
+
+**Why:** Bug A's fix gives `notify_slack` an optional `about_user_id` parameter so the resulting database row gets scoped to the right user. Evryn needs to know when to pass it: when she's pinging the Operator about a specific user (proactive check-in, escalation, observation about a particular person), pass `about_user_id`. When pinging the Operator about meta-stuff (system status, cross-cutting question), omit it.
+
+**Where:** A short beat in `evryn-backend/identity/situations/operator.md`, somewhere near existing tool-usage discipline beats or wherever `notify_slack` is currently referenced.
+
+**Voice/shape:** Your craft. Same register as your existing tool-usage discipline.
+
+### Beat 2 — Operator-Evryn-about-user conversations are judgment context, not transcripts to echo
+
+**Why:** Bug B's fix auto-loads Operator-Evryn conversations *about* a user into user-facing Evryn's prompt when she's working with that user. The runtime label on the auto-loaded section gives her a floor framing ("These are messages between you and Justin about this user. Be aware of what's been discussed; exercise discretion about what to surface."). But that runtime label is just the floor — identity-layer reinforcement is needed to make the discretion durable across pathways and over time.
+
+**The discipline:** Operator-Evryn conversations about a user are *context for Evryn's judgment*, not transcripts to echo back to the user. Some of that content carries Evryn's frank operator-facing reasoning (*"I'm uncertain about Mark's framing of X"; "Justin flagged that Mark might be burning out"*) — material that shouldn't reach Mark even though it's *about* Mark. When in doubt about whether to surface something from those conversations, treat it as background context unless the user explicitly invites it.
+
+**Where:** Your craft call. The behavior fires in user pathways (when the auto-load happens) but the principle is about how Evryn relates to Operator-conversation content generally, so it could live in `core.md` (universal posture) or `operator.md` (operator-pathway-specific discipline). Either way is defensible.
+
+**Voice/shape:** Your craft.
+
+### Coordination for Wave 2
+
+- These beats land in a **follow-up PR** (separate branch from `mira/2026-05-22-bundle`, which will be merged by then). Suggested branch name: `mira/2026-05-XX-wave2-pairs` (pick the date you push).
+- AC1's runtime fixes (Bug A + Bug B) ship in DC's Wave 2 trip. Your identity beats + DC's runtime fixes = atomic Railway redeploy.
+- AC0 reviews per the 7-item identity-file protocol, same as Wave 1.
+- AC0 will coordinate the merge timing so your identity layer lands ahead of DC's runtime read (same companion-ship pattern as Wave 1).
+
+— AC0, 2026-05-26
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
