@@ -6,8 +6,8 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-05-27T14:23-07:00*
-*Last #lock (full): 2026-05-27 (AC0 — Wave 1 verified + packout for next AC0)*
+*Last updated: 2026-05-27T15:30-07:00*
+*Last #lock (full): 2026-05-27 (AC0 — Wave 2 ship + integration-test prep + branch-discipline learnings + packout for next AC0)*
 *Last #lock (light): 2026-05-27 (AC standalone — Supabase ops: Data API grant discipline + Evryn-Agents project freeze)*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
@@ -24,17 +24,18 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Waves 1 + 2 both shipped (2026-05-26 → 2026-05-27).** Wave 1 deployed 5/26 (deploy `55adcbd9` / commit `a0a4ae5`); verified end-to-end 5/27 via 7am PT cron fire (Mark's `last_proactive_check_at` bumped 07:00:41 PT; new dormant-day pending_note written; 0 outbound, 0 emailmgr_items touched — clean held behavior; cross-instance memory through pending_notes structurally validated). **Wave 2 deployed 5/27 at 14:12 PT (deploy `865af3cf`, DC commits `5565f27` + `8465675` stacked on Mira's `add0414` + AC's ARCH `b4ec4aa`).** Wave 2 contents: Bug A (notify_slack ghost-message fix), Bug B (user-pathway cross-loading auto-load), `handleRevisionNotes` Operator-discipline normalization, `submitDraftForApproval` retry-rollback fix, + Mira's two paired identity beats (notify_slack scoping cue + Operator-conversations-as-judgment-context discipline). ARCH.md updated to match the new handleRevisionNotes classification. ADR-033 Accepted earlier in the day with both reviewer sign-offs; DC's CLAUDE.md gained the retry-with-backoff Build Mandate bullet.
-- **Phase 2 of v0.2 integration test still paused** per Justin's 2026-05-21 directive — *but now structurally unblocked by Wave 2.* Resume mechanism: Justin sends Evryn the resume directive via Slack, she writes to Mark's `pending_notes`, cron picks it up next fire. Bug B's auto-load (now live) also surfaces Operator-Evryn-about-Mark conversations directly to cron-Evryn.
-- **Sequencing:** resumed Phase 2 integration test → adversarial test → go/no-go → Mark email.
-- **Pre-Mark-live blockers:** emergency-alerts wiring; pre-go-live STEP 0 cleanup (kill test-Mark UUID + create fresh real-Mark record + clear inboxes + visual verify). **Adversarial test doc-refresh downgraded to nice-to-have (Justin 2026-05-27)** — adversarial test runs against post-go-live live-Mark system; Rachel character is fine for architectural categories, and privacy categories are *more* relevant against live-Mark profile. Full reasoning in SPRINT backlog.
-- **DC flagged 7 future-trip candidates** from Wave 2 work: Railway auto-deploy still off (manual `railway up` workaround); `updateEmailmgrItem` metadata-merge inconsistency; idempotency key on drafts (next layer of Item 4 hardening); no automated test for Item 4 failure path; webhook-fallback startup-window audit-gap edge case in notify_slack logging; notify_slack tool re-throw posture needs an identity-layer hint about half-submitted state. Pending AC0 + Justin call on which to route to SPRINT backlog.
+- **Wave 2 live on production (deploy `865af3cf` at 14:12 PT 2026-05-27).** Wave 1 (5/26, deploy `55adcbd9`) verified via the 7am PT cron fire that morning. Wave 2 contents: Bug A (notify_slack ghost-message fix), Bug B (user-pathway cross-loading auto-load), handleRevisionNotes Operator-discipline normalization, submitDraftForApproval retry-rollback fix, plus Mira's two paired identity beats + Mira PR #3 (submit_draft failure hint, post-Item-4 reinforcement, merged `d4be5d0`). ARCH.md updated to match new handleRevisionNotes classification. ADR-033 Accepted; DC's CLAUDE.md gained retry-with-backoff Build Mandate bullet.
+- **Integration test (Phase 2) staged and ready.** Awaiting Justin's opening message in `#evryn-approvals`. DB wiped clean for Mark (UUID preserved, profile + emailmgr_items + scope-Mark messages zeroed; backup at `evryn-backend/backups/mark-data-pre-integration-test-wipe-2026-05-27.json`). Scripts at `evryn-backend/tests/fixtures/`; protocol at `evryn-backend/tests/integration-test-v02.md`. Cleanliness audit confirmed Operator profile + other users' notes have no Mark refs.
+- **Sequencing:** integration test → adversarial test (Rachel character fine per Justin's CEO call — runs against post-go-live live-Mark) → go/no-go → Mark email.
+- **Pre-Mark-live blockers:** emergency-alerts wiring; pre-go-live STEP 0 cleanup (kill test-Mark UUID + create fresh real-Mark record + clear inboxes + visual verify).
+- **DC's Wave 2 flags routed:** 5 added to SPRINT-MARK-LIVE.md backlog (Railway auto-deploy off; `updateEmailmgrItem` metadata-merge trap; idempotency key on drafts; no automated test for Item 4 failure path; webhook-fallback startup-window audit-gap). 1 shipped via Mira PR #3. 1 was a callout (no action).
+- **Branch-discipline learnings** from today added to AC CLAUDE.md (verify branch before commit + PR review file-state-vs-merge-base diff check). LEARNINGS stubs 49-50.
 - **Legal: Fenwick Phase 1 complete.** ToS and Privacy Notice finalized. Phase 2 (v0.3 terms) in progress.
 
 ## Active Projects
 
-- **_evryn-meta** — CLAUDE.md additions committed (`674f8e7`): directing-is-build-work expansion + Slack pings block + keep-Justin-contextualized rule. Wave 2 absorption commits pending (CHANGELOG entry, this current-state update, packout DC-channel fix, additional CLAUDE.md DC-ping-channel note).
-- **evryn-backend** — **Wave 2 deployed live to Railway** (`865af3cf` at 14:12 PT 2026-05-27). Master at DC's `8465675` (post-sequence: AC ARCH `b4ec4aa` → Mira Wave 2 beats `da7ca6f`/`1ec930e`/`add0414` → DC Items 1+2 `5565f27` → DC Items 3+4 `8465675`). operator-guide.md updated with new send_error stamp alert row.
+- **_evryn-meta** — Wave 2 lock landed: CLAUDE.md cumulative today (directing-is-build-work + Slack pings + keep-Justin-contextualized + DC ping-channel + branch-discipline x2); current-state + CHANGELOG + LEARNINGS + packout (mid-integration-test) all updated.
+- **evryn-backend** — Wave 2 live on Railway (`865af3cf` at 14:12 PT). Master at `656d0c9`. DB wiped clean for integration test; backup committed. operator-guide + SPRINT-MARK-LIVE backlog updated.
 - **evryn-team-workspace** — Mira's bundle merged including bonus `evryn-backend/docs/identity-writing-bible.md` (Judgment-Anchoring principle); AC1's Proposal 08 + cron-architecture working doc committed.
 - **evryn-dev-workspace** — DC's CLAUDE.md gained Build Mandate retry-with-backoff bullet (live as `065e1c4`).
 - **evryn-ops** — Created. OC CLAUDE.md ready. Not yet active.

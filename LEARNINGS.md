@@ -58,6 +58,8 @@
 46. *Promoted → team workspace MEMORY.md hygiene + #lock and #consolidate protocols ("Strip Instructions from Data Files").*
 47. *Promoted → AGENT_PATTERNS Research & Grounding ("Anchor-Then-Expand for Web Research"). Mira incorporated into evryn-backend `identity/activities/onboarding.md` "Look Them Up" section (commits 3771ca8 + 416cd44).*
 48. *Promoted → AGENT_PATTERNS Research & Grounding ("Inside Details Are Highest-Signal-Per-Token"). Mira incorporated into onboarding.md.*
+49. *Promoted → AC CLAUDE.md Communication Rules ("Verify branch before every commit"). 2026-05-27 — bit AC0 twice in one session; multi-agent shared local repo state. When another agent's instance runs `git checkout` or `git checkout -b`, the shared working tree switches for everyone — verify branch with `git status` before staging.*
+50. *Promoted → AC CLAUDE.md Communication Rules ("For PR reviews, check the file-state diff against the merge-base diff"). 2026-05-27 — caught Mira's Wave 2 PR based on the pre-rebase `mira/2026-05-22-bundle` branch. `gh pr diff` (merge-base) vs `git diff master..pr-branch` (file-state) — if they disagree wildly, stale base; rebase before merge.*
 49. *Promoted → AGENT_PATTERNS Research & Grounding ("Hold Research with Humility — Breadcrumbs, Not Firehose"). Mira incorporated into onboarding.md.*
 50. *Promoted → AGENT_PATTERNS Research & Grounding (implicit framing: every user matters, no VIP tiering of research). Implicit in Mira's onboarding.md framing.*
 55. *Promoted → AGENT_PATTERNS SDK Integration & Tool Wiring ("Built-in Tools Need Dual Listing — `tools[]` AND `allowedTools[]`"). Empirically verified during 2026-04-29 v0.2 deploy; fix in commit `e4d0cec`.*
