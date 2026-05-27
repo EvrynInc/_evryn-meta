@@ -79,6 +79,8 @@ Bash/CLI access to Supabase CLI + API, Linear API key (in `_evryn-meta/.env`), G
 
 **Slack:** To ping Justin on `#dev-alerts`, the webhook URL is in `evryn-dev-workspace/.env` as `SLACK_DEV_WEBHOOK_URL`. Use Node `fetch` and prefix your message with your name — `AC:` if you're the only AC, or `AC0:`/`AC1:`/etc. if Justin has designated you a numbered instance. Avoid bash + curl and PowerShell — both have failure modes on Windows (non-ASCII mangling, command-approval prompts) that will burn you.
 
+**Slack pings.** When Justin asks for a ping (e.g. "ping me on `#team-alerts` when you're done"), post via Node `fetch` to `SLACK_TEAM_WEBHOOK_URL` (in `evryn-team-workspace/.env`) and prefix your message with your name — `AC:` by default, or with a context tag like `AC0:` or `AC (supabase tasks)` if you're aware there's more than one instance of you running right now. Avoid bash + curl and PowerShell — both have failure modes on Windows (non-ASCII mangling, command-approval prompts) that will burn you.
+
 ---
 
 ## Current State
@@ -110,6 +112,11 @@ Bash/CLI access to Supabase CLI + API, Linear API key (in `_evryn-meta/.env`), G
 - **Concept first, then jargon.** Explain the idea in plain English, THEN use the technical term. This way when he reads dev-speak later, he can contextualize it.
 - **Name the pattern.** When Justin describes something that maps to a known engineering concept, tell him: "That's called X — it's a standard pattern for Y." This builds his technical vocabulary.
 - Breadcrumb everything — explain what commands do, where to run them
+- **Keep Justin contextualized as you go.** You read the session/packout doc, ARCH, BUILD, sprint docs — Justin doesn't. It's tempting to talk in shorthand as if he's at your altitude; he isn't. Two altitudes of re-orientation matter:
+    - **10,000-ft "here's what we're doing today"** — at session start or before a major new chunk of work. Just enough to get him oriented.
+    - **500-ft overview when you enter a new section** — a couple of sentences naming what this part is and how it connects to the larger arc.
+
+  This matters in both directions. (1) **He's outside the detail by design** — for him to exercise judgment on the work, you have to *connect* him to it; he's juggling many plates and this is just one of them. (2) **Source docs (packout, ARCH, BUILD, briefs) can be wrong** — and if you don't keep him in the loop as you go, he can't catch it. He doesn't carry your high-resolution picture at every moment, but at re-orient moments he is **lethally sharp** at feeling out the one catch point you might not see. Lose that habit, and you lose the safety net on the work. Treat re-orientation as part of the work, not interruption to it.
 - Explain reasoning, simple over clever
 - Ask when unclear, flag risks proactively
 - Visual thinking helps — dashboards, diagrams, status lights
@@ -158,7 +165,7 @@ This isn't about blocking Justin's ideas. It's about being a real technical part
 
 **If you encounter a broken link in something you need to read,** hunt down the file (it may have moved or been renamed) and fix the link. If you can't find the file, flag it to Justin — don't fail silently.
 
-**Always read the tech-vision spoke and the architecture doc.** Before doing build-level work in any repo, read `_evryn-meta/docs/hub/technical-vision.md` and the relevant repo's `docs/ARCHITECTURE.md` — even when you think you already understand the system. The tech-vision spoke carries widest-lens framing (three domains of intelligence, module separation principles, bulkhead architecture, long-term target state); the architecture doc holds the build-altitude truth that descends from it. Working without them means working on assumptions that feel right when zoomed in but may be wrong from altitude.
+**Always read the tech-vision spoke and the architecture doc.** Before doing *or directing* build-level work in any repo — implementing it, dispatching other agents to implement it, reviewing their work, editing architectural specs, or making any claim about runtime behavior — read `_evryn-meta/docs/hub/technical-vision.md` and the relevant repo's `docs/ARCHITECTURE.md`, even when you think you already understand the system. **Directing is build work.** Sending a brief you can't defend against the architecture has the same blast radius as bad code, just spread across the agents you've dispatched and whatever they ship. The tech-vision spoke carries widest-lens framing (three domains of intelligence, module separation principles, bulkhead architecture, long-term target state); the architecture doc holds the build-altitude truth that descends from it. Working without them means working on assumptions that feel right when zoomed in but may be wrong from altitude.
 
 Each architecture doc declares a **Required Context** section — honor it. Each section within declares additional requirements — when it says "read X or you'll misunderstand Y," **read X**. When it says no extra context needed, don't burn tokens chasing depth you don't need.
 
