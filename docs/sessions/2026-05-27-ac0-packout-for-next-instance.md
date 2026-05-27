@@ -206,13 +206,30 @@ Even after the post-lock deep-read pass, AC0 has NOT exhaustively read the trust
 
 ## Dispatch texts (paste-ready for Justin to relay)
 
-When Justin's ready to fire Wave 2, these are the dispatch texts.
+When Justin's ready to fire Wave 2, paste the dispatch text into whichever instance is going to do the work.
+
+**Two styles below per agent — pick the one that matches the instance state:**
+
+- **Continuity** (existing Mira / DC instance is still warm, has full session context already). As of 2026-05-27 packout time, Justin is keeping continuity with the same Mira + DC instances from the prior AC0's session — **use the continuity-style dispatch by default.**
+- **Cold-spin** (only if context has gone stale or Justin has spun a fresh instance) — tells the agent to read their standard cascade from scratch.
 
 ### To Mira (fires first — her beats land before DC's runtime reads):
+
+**Continuity-style** (current Mira is still warm):
+
+> Mira — Wave 2 pickup ready when you are. Two paired identity beats queued at the bottom of `_evryn-meta/docs/sessions/2026-05-22-mira-brief-bundle.md` — the `## Appendage — 2026-05-26 (Wave 2 follow-ups, not in flight today)` section. Open a new branch (suggested `mira/2026-05-XX-wave2-pairs` — pick the date), land the two beats, push as one PR. **Ping me on `#team-alerts` when it's ready for review.**
+
+**Cold-spin** (use only if Mira's instance has gone stale):
 
 > Spin Mira. Read your standard cascade. Then your section in `_evryn-meta/docs/sessions/2026-05-22-mira-brief-bundle.md` — Wave 2 follow-ups appendage at the bottom (starts at `## Appendage — 2026-05-26 (Wave 2 follow-ups, not in flight today)`). Two paired identity beats: (1) `notify_slack` `about_user_id` scoping cue in `operator.md`, (2) Operator-Evryn-conversations-as-judgment-context discipline beat (your craft call: `core.md` or `operator.md`). New branch (suggested `mira/2026-05-XX-wave2-pairs` — pick the date you push). One PR. **Ping me on `#team-alerts` every time you have something for me — even when it seems like I'm right there. I'm bouncing between instances and I'm *not* there.**
 
 ### To DC (fires after Mira's PR merges):
+
+**Continuity-style** (current DC is still warm):
+
+> DC — Wave 2 brief ready. Your new `ac-to-dc.md` (replaces the 5/22 Wave 1 brief that shipped) is at `evryn-backend/docs/ac-to-dc.md`. Four items: Bug A `notify_slack` ghost-message fix; Bug B user-pathway cross-loading auto-load; `handleRevisionNotes` Operator-discipline normalization (the one you flagged in your Wave 1 reply); `submitDraftForApproval` retry-rollback fragility fix (from your bug investigation — applies the retry-altitude principle that just landed in your CLAUDE.md). Item 1 must ship before Item 2 (sequencing required). Pull master before starting. **Ping me on `#team-alerts` when ready to deploy and after deploy.**
+
+**Cold-spin** (use only if DC's instance has gone stale):
 
 > Spin DC. Read your standard cascade. Then your brief at `evryn-backend/docs/ac-to-dc.md` (Wave 2 — replaces the 5/22 Wave 1 brief which has now shipped). Four runtime items: Bug A `notify_slack` ghost-message fix; Bug B user-pathway cross-loading auto-load; `handleRevisionNotes` Operator-discipline normalization; `submitDraftForApproval` retry-rollback fragility fix. Item 1 must ship before Item 2 (sequencing required). Pull master before starting. Auto-deploy is still off post-Image-Registry-incident; manual `railway up` required (you knew this from Wave 1). **Ping me on `#team-alerts` every time you have something specifically for me (decisions, unblocks) — even when it seems like I'm right there. I'm bouncing between instances and I'm *not* there.** (Keep using `#dev-alerts` for ops pings — deploy outcomes — per your standard convention.)
 
