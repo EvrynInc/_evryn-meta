@@ -7,6 +7,8 @@
 **Date:** 2026-05-27 (afternoon)
 **Status:** Active. Wave 2 live on production end-to-end. DB wiped clean for Mark. **Integration test (Phase 2) is staged and ready — Justin's about to drive it (or already is when you spin up).**
 
+> **Note on references in this doc:** "the morning packout" or "this morning's packout" refers to `docs/sessions/historical/2026-05-27-ac0-packout-for-next-instance.md` — moved to `historical/` at this afternoon's lock. Load it if you want the longer architectural reference index + DC dispatch texts; this packout (the one you're reading) is the leaner mid-flight handoff.
+
 ---
 
 ## TL;DR — what to do first

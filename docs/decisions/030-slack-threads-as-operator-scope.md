@@ -264,7 +264,7 @@ This amendment is mechanically realized by:
 
 - **ARCHITECTURE.md** Identity Composition + Cache Prefix sections updated 2026-05-22 to reflect the audience-not-trigger framing.
 - **DC Item 2 brief** (2026-05-02 `evryn-backend/docs/ac-to-dc.md`): runtime mechanics that realize this amendment.
-- **Mira identity-craft items** (2026-05-01 `_evryn-meta/docs/sessions/2026-05-01-mira-brief-phase2-discoveries.md`): identity-layer language realizing the write-discipline above + the structural `[binding: ...]` mechanism for cross-instance commitments.
+- **Mira identity-craft items** (2026-05-01 `_evryn-meta/docs/sessions/historical/2026-05-01-mira-brief-phase2-discoveries.md`): identity-layer language realizing the write-discipline above + the structural `[binding: ...]` mechanism for cross-instance commitments.
 - **2026-05-22 session work** (this session's lock notes): empirical evidence — 18-note arc on Mark's profile — that motivates the amendment.
 
 ---
