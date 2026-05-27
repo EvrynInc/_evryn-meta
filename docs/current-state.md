@@ -6,7 +6,7 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-05-27T10:54-07:00*
+*Last updated: 2026-05-27T14:23-07:00*
 *Last #lock (full): 2026-05-27 (AC0 — Wave 1 verified + packout for next AC0)*
 *Last #lock (light): 2026-05-27 (AC standalone — Supabase ops: Data API grant discipline + Evryn-Agents project freeze)*
 *Last #sweep: 2026-04-04 (Lucas)*
@@ -24,17 +24,17 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Wave 1 shipped + verified (2026-05-26 → 2026-05-27).** Bundled Mira identity work + DC runtime trip deployed to Railway as `55adcbd9` (commit `a0a4ae5`). Today's 7am PT cron fire confirmed Item 1 end-to-end via DB query: Mark's `last_proactive_check_at` bumped at 07:00:41 PT; new dormant-day pending_note written ("Day 27. Eighth day dormant... brief trace per 5/15 discipline; no re-deliberation"). 0 outbound, 0 emailmgr_items touched — clean held behavior. Cross-instance memory through pending_notes structurally validated. ADR-033 (permission-compulsion spectrum + lifecycle axis + Publisher-as-backstop framing) Accepted with both reviewer sign-offs. DC's CLAUDE.md gained the retry-with-backoff Build Mandate bullet (live as `065e1c4`).
-- **Wave 2 staged, brief written, awaiting next-AC0 dispatch.** Six items, one Railway redeploy: (1) Bug A `notify_slack` ghost-message fix, (2) Bug B user-pathway cross-loading auto-load, (3) `handleRevisionNotes` Operator-discipline normalization (new finding from DC's 5/26 reply), (4) `submitDraftForApproval` retry-rollback fragility fix (DC's investigation surfaced this), (5–6) Mira's two paired identity beats. Brief at `evryn-backend/docs/ac-to-dc.md`; Mira's beats in her 5/22 brief Wave 2 appendage.
-- **Phase 2 of v0.2 integration test still paused** per Justin's 2026-05-21 directive. Cron-Evryn honoring it with disciplined daily dormant-day notes (23 total notes on Mark as of 5/27). Resume directive must land in Mark's `pending_notes` for cron-Evryn to see it (cross-instance memory mechanism); Bug B's auto-load would also surface Operator-Evryn-about-Mark conversations once shipped.
-- **Sequencing post-#lock:** new AC0 picks up Wave 2 dispatch as first action. Then DC Wave 2 trip → Railway redeploy → smoke test → resumed Phase 2 integration test → adversarial test → go/no-go → Mark email.
+- **Waves 1 + 2 both shipped (2026-05-26 → 2026-05-27).** Wave 1 deployed 5/26 (deploy `55adcbd9` / commit `a0a4ae5`); verified end-to-end 5/27 via 7am PT cron fire (Mark's `last_proactive_check_at` bumped 07:00:41 PT; new dormant-day pending_note written; 0 outbound, 0 emailmgr_items touched — clean held behavior; cross-instance memory through pending_notes structurally validated). **Wave 2 deployed 5/27 at 14:12 PT (deploy `865af3cf`, DC commits `5565f27` + `8465675` stacked on Mira's `add0414` + AC's ARCH `b4ec4aa`).** Wave 2 contents: Bug A (notify_slack ghost-message fix), Bug B (user-pathway cross-loading auto-load), `handleRevisionNotes` Operator-discipline normalization, `submitDraftForApproval` retry-rollback fix, + Mira's two paired identity beats (notify_slack scoping cue + Operator-conversations-as-judgment-context discipline). ARCH.md updated to match the new handleRevisionNotes classification. ADR-033 Accepted earlier in the day with both reviewer sign-offs; DC's CLAUDE.md gained the retry-with-backoff Build Mandate bullet.
+- **Phase 2 of v0.2 integration test still paused** per Justin's 2026-05-21 directive — *but now structurally unblocked by Wave 2.* Resume mechanism: Justin sends Evryn the resume directive via Slack, she writes to Mark's `pending_notes`, cron picks it up next fire. Bug B's auto-load (now live) also surfaces Operator-Evryn-about-Mark conversations directly to cron-Evryn.
+- **Sequencing:** resumed Phase 2 integration test → adversarial test → go/no-go → Mark email.
 - **Pre-Mark-live blockers (unchanged):** emergency-alerts wiring; pre-go-live STEP 0 cleanup (kill test-Mark UUID + create fresh real-Mark record + clear inboxes + visual verify); adversarial test full real-Mark refresh.
+- **DC flagged 7 future-trip candidates** from Wave 2 work: Railway auto-deploy still off (manual `railway up` workaround); `updateEmailmgrItem` metadata-merge inconsistency; idempotency key on drafts (next layer of Item 4 hardening); no automated test for Item 4 failure path; webhook-fallback startup-window audit-gap edge case in notify_slack logging; notify_slack tool re-throw posture needs an identity-layer hint about half-submitted state. Pending AC0 + Justin call on which to route to SPRINT backlog.
 - **Legal: Fenwick Phase 1 complete.** ToS and Privacy Notice finalized. Phase 2 (v0.3 terms) in progress.
 
 ## Active Projects
 
-- **_evryn-meta** — ADR-033 Accepted; session doc + Wave 2 dispatch landed today. Last #lock 2026-05-27 (this one).
-- **evryn-backend** — Wave 1 deployed; Wave 2 brief at `docs/ac-to-dc.md` awaiting dispatch. Master at deploy `55adcbd9` (commit `a0a4ae5`).
+- **_evryn-meta** — CLAUDE.md additions committed (`674f8e7`): directing-is-build-work expansion + Slack pings block + keep-Justin-contextualized rule. Wave 2 absorption commits pending (CHANGELOG entry, this current-state update, packout DC-channel fix, additional CLAUDE.md DC-ping-channel note).
+- **evryn-backend** — **Wave 2 deployed live to Railway** (`865af3cf` at 14:12 PT 2026-05-27). Master at DC's `8465675` (post-sequence: AC ARCH `b4ec4aa` → Mira Wave 2 beats `da7ca6f`/`1ec930e`/`add0414` → DC Items 1+2 `5565f27` → DC Items 3+4 `8465675`). operator-guide.md updated with new send_error stamp alert row.
 - **evryn-team-workspace** — Mira's bundle merged including bonus `evryn-backend/docs/identity-writing-bible.md` (Judgment-Anchoring principle); AC1's Proposal 08 + cron-architecture working doc committed.
 - **evryn-dev-workspace** — DC's CLAUDE.md gained Build Mandate retry-with-backoff bullet (live as `065e1c4`).
 - **evryn-ops** — Created. OC CLAUDE.md ready. Not yet active.
@@ -44,7 +44,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## Infrastructure
 
-- Railway: evryn-backend on Hobby plan. Latest deploy `55adcbd9` SUCCESS at 2026-05-27T00:10:34Z (commit `a0a4ae5`); replaces 5/2 `dd45dd06` (REMOVED). `PROACTIVE_CHECK_HOUR_PT=7` env var. GitHub auto-deploy still off post-Image-Registry-incident; manual `railway up` required (DC executed it on 5/26 after noticing auto-deploy didn't fire post-push).
+- Railway: evryn-backend on Hobby plan. **Latest deploy `865af3cf` SUCCESS at 2026-05-27T21:12:43Z** (Wave 2 — DC commit `8465675`); replaces `55adcbd9` (REMOVED). `PROACTIVE_CHECK_HOUR_PT=7` env var unchanged. GitHub auto-deploy still off post-Image-Registry-incident; manual `railway up` required again for Wave 2 (DC noted this is the second trip in a row — flagged as a future investigation item).
 - Slack: three apps scoped — "Evryn" (product, Socket Mode), "Dev Team" (DC/AC/OC/QC ops), "Team Alerts" (founding-team → Justin pings).
 - Supabase: "Evryn Product" project. Latest backups 2026-05-25 (2 days ago — under #lock-protocol-week threshold). **Schema gap to note:** ADR-028's `messages.internal_context` column was specced but never migrated; surfaced during today's cron sanity check. Wave 2 plate or later sprint item. **Data API grant discipline (post-2026-10-30):** new `public` tables require explicit `GRANT` to `service_role` — discipline note added to BUILD-EVRYN-MVP.md v0.3 scope items. **"Evryn-Agents" project** (SDK-era, paused 85 days) being allowed to freeze ~2026-06-01 per ADR-021 addendum; data remains downloadable.
 - evryn@evryn.ai (polled by Evryn), systemtest@evryn.ai (test-Mark placeholder + test recipient), review@evryn.ai = alias on justin@evryn.ai (review inbox, NOT polled).

@@ -81,6 +81,8 @@ Bash/CLI access to Supabase CLI + API, Linear API key (in `_evryn-meta/.env`), G
 
 **Slack pings.** When Justin asks for a ping (e.g. "ping me on `#team-alerts` when you're done"), post via Node `fetch` to `SLACK_TEAM_WEBHOOK_URL` (in `evryn-team-workspace/.env`) and prefix your message with your name — `AC:` by default, or with a context tag like `AC0:` or `AC (supabase tasks)` if you're aware there's more than one instance of you running right now. Avoid bash + curl and PowerShell — both have failure modes on Windows (non-ASCII mangling, command-approval prompts) that will burn you.
 
+**When you dispatch DC, instruct him to ping `#dev-alerts` for ALL ops pings** — deploy-ready, deploy-done, decisions, unblocks, everything. Not `#team-alerts`. Two reasons: (1) DC doesn't have `SLACK_TEAM_WEBHOOK_URL` (it's in `evryn-team-workspace/.env`, outside his repo); (2) DC's pings are a valuable shipping record AC instances can scroll back through — `#team-alerts` is too noisy (~50/day from various sources) to find his pings in.
+
 ---
 
 ## Current State
