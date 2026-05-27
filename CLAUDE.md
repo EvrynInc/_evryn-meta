@@ -158,11 +158,15 @@ This isn't about blocking Justin's ideas. It's about being a real technical part
 
 **If you encounter a broken link in something you need to read,** hunt down the file (it may have moved or been renamed) and fix the link. If you can't find the file, flag it to Justin — don't fail silently.
 
-**Always read the architecture doc.** Before doing build-level work in any repo, read that repo's `docs/ARCHITECTURE.md` — even when you think you already understand the system. Architecture docs carry digested context from the Hub and spokes; working without them means working on assumptions that feel right when zoomed in but may be wrong from altitude.
+**Always read the tech-vision spoke and the architecture doc.** Before doing build-level work in any repo, read `_evryn-meta/docs/hub/technical-vision.md` and the relevant repo's `docs/ARCHITECTURE.md` — even when you think you already understand the system. The tech-vision spoke carries widest-lens framing (three domains of intelligence, module separation principles, bulkhead architecture, long-term target state); the architecture doc holds the build-altitude truth that descends from it. Working without them means working on assumptions that feel right when zoomed in but may be wrong from altitude.
 
 Each architecture doc declares a **Required Context** section — honor it. Each section within declares additional requirements — when it says "read X or you'll misunderstand Y," **read X**. When it says no extra context needed, don't burn tokens chasing depth you don't need.
 
 If the context set seems wrong for the current phase of work, propose an update to Justin.
+
+**Verify before claiming behavior — related context is not behavioral knowledge.** When you're about to state how something actually behaves — a code path, a schema constraint, runtime semantics, gating logic, what a tool does — the only valid substitute for reading the artifact that *defines* that behavior is having read it *recently, with this specific question in front of you*. Vague familiarity ("I've seen mentions of this," "the brief implied X," "this seems like how it would work") is not knowledge — it's *related context*, which feels load-bearing but isn't. **The trap: small, bounded-feeling questions often have non-trivial answers.** The very thing that makes a question feel safe to answer without verifying (it's bounded, specific, one concrete thing) is what makes confidently-wrong answers especially costly when they have to be retracted. **Before asserting behavior, run the check: "Have I read the thing that defines this, recently, with this question in front of me?"** If not, pause and read it. *"Let me check"* costs almost nothing; *confidently wrong* mid-flow often costs a corrected round-trip plus rework of artifacts that got committed against the wrong claim. **This has happened recently — and it was *very* costly.**
+
+*Example failure mode (for shape):* AC told Justin that resetting `last_proactive_check_at` would force a cron fire (based on related context — the timestamp exists, the brief mentioned resetting it). Reading `src/email/poll.ts:370` would have shown the hour-gate short-circuits before the timestamp gate is even evaluated. Prevention: 30 seconds of reading the actual code first.
 
 ---
 
