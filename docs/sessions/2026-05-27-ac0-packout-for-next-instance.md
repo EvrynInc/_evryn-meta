@@ -101,19 +101,88 @@ Justin's clear directive (2026-05-27): **don't blow context loading everything u
 
 ---
 
-## Humility note — what you (and I) don't know
+## Architectural reference index — specific drill-in pointers (added post-lock by AC0)
 
-I (the AC0 writing this) deliberately did NOT do an exhaustive read of ARCHITECTURE.md, BUILD-EVRYN-MVP.md, the tech-vision spoke, the trust-and-safety spoke, or the evryn-backend runtime end-to-end. **There are real holes in my coverage** that may be holes in yours too if you only do the Tier 1-3 loads above. Justin's directive (2026-05-27, summarized): keep humility about what you haven't loaded; load specifically when a question lands that exposes a gap.
+After locking this packout, AC0 did a second-pass deep read on the tech-vision spoke + selected ARCH.md sections + runtime entry points, looking for things he wished he'd known during today's work. The pointers below codify what to read when — so you can pay the read cost only on demand.
 
-**Things this AC0 wishes he'd known earlier today, that you might want to load preemptively:**
-- The actual cron gating logic (`src/email/poll.ts:328-358`) — I confidently told Justin that resetting `last_proactive_check_at` would force a cron fire; on reading the code I found that the *hour gate* runs first (line 370) and short-circuits before the 23h gate is even evaluated. Wasted a round-trip with Justin to correct. **If you're proposing any runtime intervention, read the code first.**
-- The Railway CLI log truncation quirk — `railway logs --deployment` returns only ~9 lines of init-phase content regardless of historical window. DC flagged this; AC0 hit it independently. **For runtime verification, look at what the system persists (DB rows, message timestamps, pending_notes adds) rather than relying on logs.** That's how AC0 verified the 7am cron fire today.
-- The `messages.internal_context` schema gap (ADR-028) — column was specced but never migrated. Discovered when a verification query referenced it and got 42703 error. Wave 2 plate or later sprint item.
-- The Publisher-as-backstop-not-replacement framing (just landed in ADR-033). Justin pushed back hard on Soren's original framing. **For any future runtime work that references the Publisher, this reframe is load-bearing.** Identity carries the primary weight at tier 5 permanently; Publisher is the *backstop on the rare slip*; design bias is to keep the Publisher's catch list small.
+### Tech-vision spoke — read it before any architectural conversation
+
+`_evryn-meta/docs/hub/technical-vision.md` (391 lines). **Read in full when you do any of these:** post-Mark architectural design work, any Publisher-related discussion, anything touching matching architecture, anything touching privacy/security at the structural level, any LLM-strategy or hosting discussion. Sharp framings worth knowing before you need them:
+
+- **System Landscape diagram** (top of doc) — the full topology (Website + Backend + Supabase + Anthropic + Google Cloud + HubSpot + iDenfy).
+- **Five imperatives + five critical conditions** — what the system must deliver vs. what structurally has to hold for it not to break. Useful for evaluating any architectural change against "does this protect what must hold?"
+- **Three Domains of Intelligence** (Conversation & Voice / Judgment & Matching / Intuition & Care) — these are categories of capability, not modules. They separate into distinct modules as scale demands; the principles governing that separation live in the **Module Separation Principles** subsection. *Soren's Publisher framing today implicitly drew from "safety gates must have narrow context and independent judgment" — knowing that section sharper would have made the Publisher-as-backstop conversation faster.*
+- **How Matching Works** — hard constraints → multi-dimensional fit → narrative judgment → learning from outcomes. Plus "asymmetric starts, symmetric resolution," cross-domain matching intelligence, coherence-calibrated modularity. The matching design is largely v0.3+ but it shapes how v0.2 schema decisions get evaluated.
+- **Data & Knowledge Layers** — six conceptual stores (Self-Knowledge, Global Connection Intelligence, World/Domain, User Data, Relationship Graph, Trust Graph). Critical separation: user data and conversation logs are separated from the Trust Graph and Global Connection Intelligence by design.
+- **Privacy & Security Architecture** — Bulkhead Architecture (every part assumes neighbors could be compromised), Zero Trust + Least Privilege, Information Firewalling. The "current reality vs. target state" gap on PII anonymization is honestly stated.
+- **Sovereign Memory & Cryptographic Trust** — long-term target with the Swiss Foundation, two-entity structure, user vaults vs. working intelligence, LLM constraint honest assessment. Mostly v0.4+ but shapes v0.3 schema decisions.
+
+### ARCHITECTURE.md — drill-in pointers by topic
+
+`evryn-backend/docs/ARCHITECTURE.md` (1152 lines). AC0 has read sections 70-200, 502-575, 605-645, 632-780, 855-895, 918-925 in detail; 298-388 + 977-1006 during the deep-read pass. **What you should know about the parts AC0 has NOT read (sections, not exhaustive — grep `^##` and `^### ` for full TOC):**
+
+- **lines 202-298 — Data Model overview** (foundation tables from prototype, `emailmgr_items` status lifecycle per ADR-018, Relationship Graph and Connection Records). Read when touching any schema decision or considering how forwarded items move through statuses.
+- **lines 298-388 — `profile_jsonb` Structure** (AC0 read this during the deep-read pass; **critical for understanding what cron-Evryn loads**). Key facts: `pending_notes` is the only field conversational Evryn writes to; `story` is empty in v0.2 (Reflection writes it in v0.3+); `cross_user_notes` is a separate column structurally firewalled from `buildPersonContext` (never loaded with user data); `append_pending_note` and `append_cross_user_note` are RPC functions that prevent the raw-upsert-clobbers-entire-column failure mode. **Read this section if anything around what Evryn writes/reads about a user comes up.**
+- **lines 382-389 — Separate Supabase Projects** (Agent Dashboard + Evryn Product — two projects, kept separate; credentials live in `evryn-backend/.env` for the product project).
+- **lines 390-510 — Memory Architecture** (Memory Layers, Embedding Strategy, Story Model, Conversation Compaction, Reflection Module, Insight Routing Pipeline). AC0 has NOT read this in detail. **Read when** anything Reflection-related comes up (Wave 2 doesn't touch it; future trips will); also if you're asked about embedding strategy or story-vs-pending_notes mechanics.
+- **lines 632-668 — Three Domains of Intelligence (build version)** — the runtime-mapping of tech-vision's three domains. Useful complement to the tech-vision spoke.
+- **lines 670-862 — Identity Composition (Trigger-Composed systemPrompt)** — AC0 has read 632-780 (composition rules + 5 PROPOSED EDITs that landed). Lines 780-862 cover the prompt-caching optimization + voice anchor — AC1's PROPOSED EDIT there folded to permanent, worth a fresh read.
+- **lines 863-878 — Proactive Behavior** — AC0 has NOT read this. **Read when** doing any cron-related work beyond Wave 2's scope; designing future cron-triggered behaviors.
+- **lines 880-908 — Dual-Track Processing + Module Separation (At Scale) + Matching Calibration (Planned)** — AC0 has NOT read in detail. Module Separation echoes the tech-vision principles; Matching Calibration is v0.3+ design.
+- **lines 910-942 — Principle Breadcrumbs** — explicit "these principles from the Hub/spokes must inform future work" list. AC0 has NOT read in full. **Read at any post-Mark architectural pivot** — these are the cross-cutting principles that get forgotten when build pressure increases.
+- **lines 945-963 — Onboarding Patterns (from v0.1)** — v0.1 era patterns informing v0.2 onboarding. Read when working on the onboarding activity module (`activities/onboarding.md`).
+- **lines 965-1044 — Security** sections: Information Firewalling by Construction (969-976), External Communication as Untrusted Data (977-998 — AC0 read during deep-read, **critical: external content goes in `prompt`, never `systemPrompt`, with explicit XML-tag separation**), Outbound Approval Gate (999-1006 — read), Attachment Handling Phased (1008-1014), PII Anonymization Known Gap (1015-1022), Crisis Protocols (1023-1031), Cultural Trust Fluency (1032-1035), "Escalate, Don't Fake" (1036-1039), Adversarial Testing (1040-1044). **Read the section that matches the concern in front of you.**
+- **lines 1046-1119 — System Diagram (v0.2)** — ASCII diagram of the v0.2 runtime. Useful as a visual reference; read once and you'll have it.
+- **lines 1120-1144 — Current State + Related Documents** — informational. Skim once to know what's in scope right now.
+
+### BUILD-EVRYN-MVP.md — drill-in pointers by topic
+
+`evryn-backend/docs/BUILD-EVRYN-MVP.md` (667 lines). AC0 has read 68-99, 114-165, 379-417, 575-605. The phase-tracker tables and v0.3 staging table are what's in the middle. **Skim with `Grep` on `^##` for a TOC**; drill into sections that match the work in front of you.
+
+### Runtime code map — entry points and key files
+
+AC0 has read `src/index.ts` (full, 100 lines) and `src/email/poll.ts:378-405` (cron checkProactiveOutreach body). The rest is unread by this AC0 but should be loaded on demand:
+
+- **`src/index.ts`** (100 lines) — main entry. Sequence: Supabase connection check → resetStuckItems (recovery from crashed-mid-processing state) → health check HTTP endpoint → start Slack Socket Mode → startup notification → startPolling. Graceful SIGINT/SIGTERM handlers; uncaught-exception/unhandled-rejection alerts via `notifyDev`. **Read this once at startup as a sanity baseline.**
+- **`src/email/poll.ts`** (423 lines) — polling loop + cron functions. Contains `startPolling`, `processNewEmails`, `checkProactiveOutreach` (line 360), `checkFollowUps`, `resetStuckItems`, `shouldRunProactiveCheck` gating predicate (line 337), the `PROACTIVE_CHECK_HOUR_PT` env-var read (line 328). **Read when** any cron-related work; if you need to understand the gating logic; if you're about to suggest a runtime intervention against the cron path (verify your mental model first).
+- **`src/email/process.ts`** (231 lines) — user pathways. `processForward` and `processDirect` — the inbound user-pathway entry points. Calls `composeSystemPrompt(personContext)` (no operator, no profile) per ADR-030. **Read when** Wave 2 Bug B work touches these (you'll augment them with `getOperatorScopedMessages`).
+- **`src/triage/classify.ts`** (535 lines) — the heart of the runtime. Contains `composeSystemPrompt` (the central prompt-assembly function used by all pathways), `runEvrynQuery` (the Claude API call), MCP tool definitions including `submit_draft`, `append_pending_note`, `append_cross_user_note`, `notify_slack` (line 258), `rescope_messages`, `read_identity_module`, `supabase_read`/`upsert`. **Read on Wave 2** when implementing Bug A — the `notify_slack` definition is the file you're editing.
+- **`src/approval/flow.ts`** (394 lines) — `submitDraftForApproval` (line 84), `handleRevisionNotes` (line 279), `executeApproval`. The Wave 2 Item 4 fix lives in `submitDraftForApproval`; Item 3 lives in `handleRevisionNotes`. **Read on Wave 2** for both items.
+- **`src/notify/slack.ts`** (574 lines) — `notifySlack`, `loadOperatorProfile`, `handleGeneralMessage` (the Slack-Operator pathway runtime), `startSlackSocketMode`. **Read** when touching Slack pathway behavior or ADR-030 thread-scope mechanics.
+- **`src/notify/dev.ts`** — the `notifyDev` function (structured-alert path to `#dev-alerts`). Used throughout for ops alerts; the retry-with-backoff Build Mandate's structural alert mechanism.
+- **`src/db/`** — `client.ts` (Supabase client init), `users.ts` (user CRUD + `createUser` with proper ADR-027 template — read when initializing new user records), `messages.ts` (message CRUD + `getRecentMessages`, `getThreadHistory`, `getThreadScope`, `getRecentMetaMessages`; Wave 2 adds `getOperatorScopedMessages` here).
+
+### Key invariants worth holding cold
+
+These come up implicitly across multiple sessions. Internalizing them prevents asking what could have been a confident answer:
+
+- **Outbound only via `submit_draft`.** There is no `send_email` tool. Evryn structurally cannot send without operator approval. (ARCH §"Outbound Approval Gate".)
+- **External content goes in `prompt`, never `systemPrompt`.** Security boundary — email content, user messages, any external input is *untrusted data*, not instruction context. (ARCH §"External Communication as Untrusted Data" — lines 977-998.)
+- **`pending_notes` only writeable via `append_pending_note` RPC.** Raw `supabase_upsert` to `users.profile_jsonb` clobbers the entire column (story, _meta, structured all destroyed). The RPC is server-side append-only. (ARCH §"profile_jsonb Structure" — lines 367-371.)
+- **`cross_user_notes` NEVER loaded by user-facing Evryn.** Structurally firewalled — it's a separate column, and `buildPersonContext` deliberately excludes it. Cross-user feedback flows through Reflection, not direct exposure. (ARCH lines 351-368.)
+- **RLS on all tables, no exceptions.** Even internal/system tables. If a migration creates a table without RLS, it's incomplete. (DC's CLAUDE.md Build Mandate.)
+- **Identity files load structurally, not via the file-read tool.** The `read_identity_module` tool excludes `operator.md` from accessible paths; `operator.md` only loads via code-level concatenation into `systemPrompt` for verified Operator pathways. (ARCH §"Identity Composition" + ADR-014.)
+- **Two Supabase projects.** Agent Dashboard (monitoring, agent spend) vs. Evryn Product (the tables AC0 queries). Credentials in `evryn-backend/.env` for the product project. (ARCH lines 382-389.)
+- **`labels are working hypotheses, never verdicts`.** Inferences carry confidence + source; users can contest. The schema supports provenance, not flat assertions. (ARCH §"profile_jsonb Structure" closing paragraph.)
+
+---
+
+## Humility note — what you (and I) still don't know
+
+Even after the post-lock deep-read pass, AC0 has NOT exhaustively read the trust-and-safety spoke, the user-experience spoke, the vision-and-ethos spoke, the long-term-vision spoke, the business-model spoke, the GTM-and-growth spoke, the bizops-and-tooling spoke. Most of `evryn-backend/src/` is unread (only `index.ts` full + `poll.ts` sections). Most of `evryn-backend/identity/` is unread (only via diff during Mira's PR review). The integration-test fixtures themselves are unread.
+
+**There are real holes in coverage** that may be holes in yours too if you only do the Tier 1-3 loads above. Justin's directive (2026-05-27): keep humility about what you haven't loaded; load specifically when a question lands that exposes a gap.
+
+**Specific things AC0 today wishes he'd known preemptively:**
+- The actual cron gating logic (`src/email/poll.ts:328-358`) — AC0 confidently told Justin that resetting `last_proactive_check_at` would force a cron fire; on reading the code, found that the *hour gate* runs first (line 370) and short-circuits before the 23h gate is even evaluated. Wasted a round-trip to correct. **If you're proposing any runtime intervention, read the code first.**
+- The Railway CLI log truncation quirk — `railway logs --deployment` returns only init-phase content. **For runtime verification, look at what the system persists (DB rows, message timestamps, pending_notes adds) rather than relying on logs.**
+- The `messages.internal_context` schema gap (ADR-028) — column specced but never migrated. Wave 2 plate or later sprint item.
+- The Publisher-as-backstop-not-replacement framing (now in ADR-033). Justin pushed back hard on Soren's original framing. Identity carries the primary weight at tier 5 permanently; Publisher is the *backstop on the rare slip*; design bias is to keep the Publisher's catch list small. **Load-bearing for any future safety-architecture work.**
+- The Bulkhead Architecture framing in tech-vision (every part assumes neighbors could be compromised) — useful for evaluating any security trade-off in front of you.
 
 **Strategy for managing what you don't know:** when Justin asks a question you can't answer with sharp confidence, *tell him* — say "I haven't loaded that; let me check" — and then load surgically. The cost of a small targeted read is much smaller than the cost of confidently wrong information that has to be corrected mid-flow.
 
-**Skim-with-headers-only as a load strategy:** when you need a sense of what's in a doc without paying the full token cost, use `Grep` on `^##` or `^### ` patterns (or read just the first N lines) to get section headers + openers. That's often enough to know whether you need to drill in. Useful for ARCHITECTURE.md and BUILD-EVRYN-MVP.md which are both long.
+**Skim-with-headers-only as a load strategy:** use `Grep` on `^##` or `^### ` patterns (or read just the first N lines) to get section headers + openers without paying the full token cost. Often enough to know whether you need to drill in. Useful for ARCHITECTURE.md (1152 lines) and BUILD-EVRYN-MVP.md (667 lines) which are both long.
 
 ---
 
