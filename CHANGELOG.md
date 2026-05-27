@@ -6,6 +6,22 @@
 
 ---
 
+## 2026-05-27 (AC standalone — Supabase ops: Data API grant discipline added to v0.3 scope; Evryn-Agents project allowed to freeze; light #lock)
+
+- **Supabase Data API grant change absorbed.** Email from Supabase (2026-05-27) flagged that all new `public` tables on existing projects will require explicit `GRANT` statements before `supabase-js` / PostgREST can access them, enforced 2026-10-30. Existing tables grandfathered. evryn-backend uses `@supabase/supabase-js` with `service_role` ([src/db/client.ts](../evryn-backend/src/db/client.ts)), so this affects every future migration. New top-of-section item added to `evryn-backend/docs/BUILD-EVRYN-MVP.md` v0.3 Web App — Additional Scope Items: migration template now requires `GRANT SELECT, INSERT, UPDATE, DELETE ON public.X TO service_role;` + `ENABLE ROW LEVEL SECURITY;` on every `CREATE TABLE public.X`. When v0.3 introduces `anon` / `authenticated` Data API consumers, grants for those roles added too. One-time Security Advisor sweep before Oct 30. Discipline starts now so v0.3 tables landing pre-cliff still match the post-cliff shape.
+- **ADR-021 amended: "Evryn-Agents" Supabase project allowed to freeze.** SDK-era project (paused 85 days) flagged by Supabase for permanent freeze in 5 days (~2026-06-01). Justin chose to let it freeze rather than restore. Schema preserved in `evryn-team-agents/sql/schema.sql`; per Supabase, data remains downloadable from dashboard even post-freeze — what's lost is the ability to restore as a live Postgres instance. ADR-021's "frozen as insurance" framing still holds for the codebase; the database itself is now archived. Addendum dated 2026-05-27 added to the ADR.
+
+**Operator-relevant:** none.
+
+**Files committed this lock:**
+- `_evryn-meta/docs/current-state.md` (timestamp bump + Supabase infrastructure line extended)
+- `_evryn-meta/docs/decisions/021-cowork-replaces-sdk-agents.md` (addendum)
+- `_evryn-meta/CHANGELOG.md` (this entry)
+- `evryn-backend/docs/BUILD-EVRYN-MVP.md` (v0.3 scope items: new migration-discipline entry)
+- `evryn-team-workspace/shared/current-state/current-state.md` (appendage)
+
+---
+
 ## 2026-05-26 → 2026-05-27 (AC0 — Wave 1 dispatched + shipped + verified; ADR-033 Accepted; Wave 2 staged; #lock full + packout for next AC0)
 
 - **Wave 1 deployed and verified end-to-end.** Bundled Mira identity work + DC runtime trip shipped to Railway as deploy `55adcbd9` (commit `a0a4ae5`). DC noticed auto-deploy didn't fire post-push and ran manual `railway up` himself. Today's (5/27) 7am PT cron fire confirmed Item 1 (cron loads full Operator-discipline) via DB query: Mark's `last_proactive_check_at` bumped at 07:00:41 PT, new disciplined dormant-day pending_note written ("Day 27. Eighth day dormant... brief trace per 5/15 discipline; no re-deliberation"), 0 outbound, 0 emailmgr_items touched. Pending_notes are demonstrably working as cross-instance memory substrate — today's note references prior decisions by date (5/19 standdown, 5/15 discipline) and specific emailmgr_item UUIDs from days ago. Item 2 (voice anchor — `trust-arc-scripts.md` every prompt) validated via 5/26 evening Slack-Operator smoke test: Justin's casual *"hey, we're back online"* triggered Evryn response that felt qualitatively closer to v0.1 magic ("much more like her").

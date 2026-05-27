@@ -6,8 +6,9 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-05-27T10:30-07:00*
+*Last updated: 2026-05-27T10:54-07:00*
 *Last #lock (full): 2026-05-27 (AC0 — Wave 1 verified + packout for next AC0)*
+*Last #lock (light): 2026-05-27 (AC standalone — Supabase ops: Data API grant discipline + Evryn-Agents project freeze)*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
 
@@ -45,7 +46,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 - Railway: evryn-backend on Hobby plan. Latest deploy `55adcbd9` SUCCESS at 2026-05-27T00:10:34Z (commit `a0a4ae5`); replaces 5/2 `dd45dd06` (REMOVED). `PROACTIVE_CHECK_HOUR_PT=7` env var. GitHub auto-deploy still off post-Image-Registry-incident; manual `railway up` required (DC executed it on 5/26 after noticing auto-deploy didn't fire post-push).
 - Slack: three apps scoped — "Evryn" (product, Socket Mode), "Dev Team" (DC/AC/OC/QC ops), "Team Alerts" (founding-team → Justin pings).
-- Supabase: "Evryn Product" project. Latest backups 2026-05-25 (2 days ago — under #lock-protocol-week threshold). **Schema gap to note:** ADR-028's `messages.internal_context` column was specced but never migrated; surfaced during today's cron sanity check. Wave 2 plate or later sprint item.
+- Supabase: "Evryn Product" project. Latest backups 2026-05-25 (2 days ago — under #lock-protocol-week threshold). **Schema gap to note:** ADR-028's `messages.internal_context` column was specced but never migrated; surfaced during today's cron sanity check. Wave 2 plate or later sprint item. **Data API grant discipline (post-2026-10-30):** new `public` tables require explicit `GRANT` to `service_role` — discipline note added to BUILD-EVRYN-MVP.md v0.3 scope items. **"Evryn-Agents" project** (SDK-era, paused 85 days) being allowed to freeze ~2026-06-01 per ADR-021 addendum; data remains downloadable.
 - evryn@evryn.ai (polled by Evryn), systemtest@evryn.ai (test-Mark placeholder + test recipient), review@evryn.ai = alias on justin@evryn.ai (review inbox, NOT polled).
 
 ## Task Management

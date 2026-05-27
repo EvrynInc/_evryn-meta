@@ -28,4 +28,10 @@ Use Cowork to play the founding team roles instead of building custom SDK agents
 - Agent identity files (`.claude/agents/*.md`) are the single source of agent behavior — verbatim transfers from founding team profiles
 - Team coordination (priorities, current-state, decisions, projects) lives in `shared/`
 - `evryn-team-agents` stays frozen — references in other docs remain valid, rename deferred until Cowork is proven
+
+## Addendum 2026-05-27: Supabase project allowed to freeze
+
+The Supabase project that backed the SDK-era agent build (project name "Evryn-Agents") was paused 85 days. Supabase notified on 2026-05-27 that permanent freeze would occur in 5 days (~2026-06-01) unless restored. Justin chose to let it freeze rather than restore.
+
+Rationale: schema is preserved in git at `evryn-team-agents/sql/schema.sql`; any future SDK-build resume would re-provision a fresh project anyway; Cowork is the active path. Per Supabase: data remains downloadable from the dashboard even after permanent freeze — what is lost is the ability to restore the project as a live Postgres instance. The "frozen as insurance" language above still holds for the codebase; the database itself is now archived.
 - Hub repo table needs updating to include `evryn-team-workspace`
