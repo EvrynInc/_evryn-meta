@@ -1,8 +1,34 @@
 # Changelog — _evryn-meta
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see it, reload or read in sections until you confirm the complete file.
+
 **How to use this file:** Brief one-liners per change. Detail lives in git log. Most recent changes at top.
 
 **Monthly archive:** At the end of each month, move that month's entries to `docs/historical/changelog-historical/changelog-YYYY-MM.md`. Keeps this file from blasting context.
+
+---
+
+## 2026-05-29 (AC0 — integration test Day 1 + Day 2: empirical load-discipline material, Justin's caching insight, new DC list to 7 items, Mira pile to 4 items, v0.3 deferred questions surfaced)
+
+- **Integration test ran live across 2026-05-28 → 2026-05-29.** First intro email shipped to Mark at 22:54Z 2026-05-28 (subject "Justin sent me your way"); Justin-as-Mark replied at 23:07Z; second-volley draft (`6383fdc2`) was rejected as "not recognizable as Evryn" (transactional voice, "real signal," "three lanes," "junk classifications" jargon leak, gatekeeper-onboarding beats treated as soft suggestions). Justin issued standing-instruction at 00:08Z 2026-05-29 — load all activity modules every volley, lead each response with a header naming what's loaded. Slack re-draft (NULL-scoped thread `1780009886.535399`) was substantially better but not submitted. Test is mid-Phase 2 → Phase 3 transition at #lock. Hybrid path agreed: finish Phase 2 + 1-2 Phase 3 volleys → ship DC fixes → re-run cleanly post-fix as the Mark-live readiness signal.
+- **DC pre-Mark-live knock list grew from 4 to 7 items, full text in `docs/sessions/2026-05-28-integration-test.md`.** Headline: **User/Operator dossier refactor + force-load ALL identity modules + `handleGeneralMessage` → `handleOperatorMessage` rename** (subsumes the Slack-Operator cross-thread scope-loading item; everything gets loaded structurally so the load-discipline failure mode resolves at the architecture level rather than relying on Evryn's discipline). New items: markdown → HTML email rendering (`**bold**` literals are reaching recipients); `submit_draft` notification scope-logging (Bug A shape, different path — the notification's Slack messages row isn't getting `scope_user_id` from the emailmgr_item, breaking scope inheritance on Justin's replies); and quiet hours + reminder cadence (Evryn pinged Justin every 15 min from 5:10 PT 5/28 through 7:43 AM 5/29; saved by Slack DND, but catastrophic when emergency-alerts ships). MCP tool-call logging kept on the list per Justin's call — even with force-load, empirical verification of what loaded beats designed observability.
+- **Mira pile grew from 2 to 4 items.** Added: activity-module forward-load beat (with lifecycle note about transitional-vs-permanent under force-load); tighten gatekeeper-onboarding.md so first-touch landing is unambiguous (with open question — should we just script it the way trust-arc-scripts.md does?).
+- **New v0.3 deferred questions section.** Three items including Justin's 2026-05-29 caching insight from API-log review: force-load + Anthropic prompt caching may invert ADR-012's selective-loading token economy. At Mark scale ~90% of queries are cached; at v0.3 multi-user scale, force-load + identical identity prefix across all users could be dramatically cheaper than selective-load + cache misses. **Decision to land at v0.3 architecture pass with Soren: amend or supersede ADR-012 to make force-load the standing shape, with caching as the named cost lever.** Cognitive-load concern empirically refuted 2026-05-28 — Evryn's best work happened when she had everything loaded, not worst.
+- **Empirical failure modes named in-session for Mira's craft work:** introspection gap (she can't reliably introspect what she's loaded — claimed onboarding/gatekeeper-onboarding files she may not have actually called `read_identity_module` for); reasoning-field-as-unreliable-audit-trail (she can cite files she didn't load to legitimize prose); "performing forward motion" (skipping the question to ship an artifact); slick-phrasing tell ("no tool, no call" pattern-matched as substance but unpacked to nothing); hyper-brevity collapsing into minimalism (cutting beats that read as light-but-vague when they should have been concrete); "Should also cover" reading-as-soft-suggestion; bare yes/no = least useful feedback (per feedback-guidance.md, ignored despite core.md flagging it).
+- **Empirical wins that validated architecture in-session:** the cross-instance memory worked (Evryn correctly read the 5/21 pause directive + 5/27 "I'll let you know when we un-pause" from NULL-scoped meta-history that loaded structurally on turn 1); the discretion-floor language worked (she handled Mark's sobriety story exactly per the principle — "public but his to lead with, not mine"); the late-scope-recovery beat fired correctly (she flagged the scope drift in the standing-instruction thread); the hallucination-and-correction discipline worked (she caught and corrected the "destroy what you hate" musing-as-quote when Justin probed); the Operator-profile-write mechanic worked (she wrote a quotes-convention working-knowledge note when Justin asked).
+- **AC0 CLAUDE.md / DC CLAUDE.md / team CLAUDE.md / Soren agent def updates 2026-05-28:** Railway CLI flag discipline + `--help` pointer (the prior packout's "9-line truncation" framing was AC0 using the wrong invocation); cross-repo file references in chat output use `../`-prefixed sibling paths (in-document path convention unchanged); "Stop and recall the craft, every time" pause discipline in Architectural Mandate / Build Mandate (and as a memory note to Soren); Soren MEMORY.md note from AC0 framing the discipline as tactical companion to his 2026-05-27 "soul-load" framing.
+- **Railway: Hobby → Pro upgrade 2026-05-29.** 4× longer log retention (30 days vs 7), much higher CPU/RAM ceilings, collaboration support. $15/mo delta; pays for itself in time saved on the next "where did the logs go" hunt.
+- **#lock executed light** per `docs/protocols/lock-protocol.md` (Founding Team current-state explicitly deferred to Soren per Justin's instruction; Linear update deferred; operator guide deferred until DC fixes ship). Settings.local.json absent, MEMORY.md clean, DB backups within 1-week threshold (2026-05-27), .env unchanged, no ADRs written this session (caching question deferred to v0.3 ADR-012 amendment work with Soren), no Hub/spokes changes, no identity-file changes shipped (Mira pile queued), no Build doc changes (DC list captured in session doc).
+
+**Operator-relevant:** none shipped this session. Operator-guide updates will land when DC ships the quiet-hours fix and the markdown→HTML rendering.
+
+**Files committed this lock (across the session, prior to the final lock commit):**
+- `_evryn-meta`: `CLAUDE.md` (Railway logs + chat-link convention + Stop-and-recall-the-craft); `docs/sessions/2026-05-28-integration-test.md` (created + multiple updates carrying the running lists)
+- `evryn-dev-workspace`: `CLAUDE.md` (Railway logs + chat-link + Stop-and-recall)
+- `evryn-team-workspace`: `CLAUDE.md` (chat-link convention); `.claude/agents/soren.md` (Railway CLI access section); `.claude/agent-memory/soren/MEMORY.md` (cross-agent note from AC0)
+- `evryn-backend`: `docs/SPRINT-MARK-LIVE.md` (cron heartbeat backlog item)
+
+**Files committed this final lock turn:** `docs/current-state.md` (this update), `CHANGELOG.md` (this entry), `LEARNINGS.md` (3 fresh entries), `docs/sessions/2026-05-29-ac0-packout-day2.md` (new packout), `docs/sessions/historical/2026-05-27-ac0-packout-mid-integration-test.md` (moved from `sessions/`).
 
 ---
 
@@ -185,3 +211,5 @@
 ---
 
 *April 2026 and earlier: archived to `docs/historical/changelog-historical/`*
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
