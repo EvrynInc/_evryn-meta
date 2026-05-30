@@ -221,7 +221,7 @@ User profile snapshots, behavior metadata, and match outcomes are periodically a
 
 **Third-party AI risk:** Outbound prompts to external LLMs are scrubbed of PII before transmission. External AIs are stateless text generators, never system-of-record.
 
-**Current reality:** PII anonymization is NOT yet implemented. Today, full user data (including names, email addresses, message content) goes to Anthropic's API without tokenization. Implementing the tokenization layer is a near-term architectural priority. We are also pursuing Anthropic's Zero Data Retention (ZDR) arrangement — data processed in real-time and immediately discarded. Target state: anonymized data in, zero retention on the other end. See `evryn-backend/docs/ARCHITECTURE.md` for current-state security.
+**Current reality:** PII anonymization is NOT yet implemented. Today, full user data (including names, email addresses, message content) goes to Anthropic's API without tokenization. Implementing the tokenization layer is a near-term architectural priority. We are also pursuing Anthropic's Zero Data Retention (ZDR) arrangement — data processed in real-time and immediately discarded. Target state: anonymized data in, zero retention on the other end. See `evryn-backend/docs/ARCHITECTURE.md` for current-state security. (Anonymization is also the *strategic decoupler* for safely using alternative/cheaper model providers — the provider never sees raw identity — and ZDR is available at no extra cost and is caching-compatible. Analysis: `evryn-team-workspace/shared/projects/product/research/2026.05.30-open-source-llm-evaluation.md`.)
 
 **Data minimization:** Only store what's necessary, only as long as needed. Verification artifacts (ID photos) discarded after confirmation. Users can request deletion, export, or corrections at any time.
 
@@ -298,6 +298,8 @@ Four-phase transition path from external LLM to potentially self-hosted:
 
 Every phase is reversible. Likely long-term: **hybrid model** — in-house for standard queries, premium external for sensitive moments.
 
+> **Evidence base (2026-05):** The cost/quality/provenance analysis grounding this transition path, the current open-model landscape, and why the two near-term moves are an *abstraction seam + PII anonymization* (not a model swap) live in `evryn-team-workspace/shared/projects/product/research/2026.05.30-open-source-llm-evaluation.md`. Headline: stay on Claude for the conversational tier (its emotional-intelligence lead is the most durable quality gap), move the cheaper/checkable analytical tier first.
+
 ### Knowledge Layer: Retrieval, Not Recall
 
 Evryn doesn't memorize facts or improvise. When unsure, she searches over a curated internal knowledge base using **semantic search** (vector search). Content includes curated advice, verified responses, team-written guidance, and refined community-sourced wisdom.
@@ -358,6 +360,8 @@ There's one hard constraint on the "gibberish all the way down" vision: LLM infe
 The long-term path (see How Evryn Learns, LLM Strategy): self-hosted or hybrid models that can run *inside* the Foundation's secure infrastructure — in hardware-protected environments where even the host operating system can't read what's being processed. At that point, data never leaves the vault in plaintext at any stage. Every phase of this transition is reversible.
 
 This is real technology, not a theoretical aspiration. Secure computation environments exist today and are used in production by major platforms for exactly this kind of sensitive data processing. The constraint is cost and complexity at our scale, not physics.
+
+> **Convergence note (2026-05):** Sealed, network-isolated self-hosted inference is simultaneously the cost-optimal-at-scale, the trust-ideal, *and* the backdoor-neutralizing architecture — with no egress path, even an undetectably-backdoored open-weights model cannot exfiltrate (it can be triggered but can't transmit). Three goals, one architecture. Full reasoning + the backdoor-threat literature: `evryn-team-workspace/shared/projects/product/research/2026.05.30-open-source-llm-evaluation.md` §2, §4.
 
 ### Identity Without Exposure
 
