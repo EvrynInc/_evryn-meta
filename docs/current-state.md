@@ -8,9 +8,9 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-05-29T14:30-07:00*
-*Last #lock (full): 2026-05-29 (AC0 — integration test Day 1 + Day 2 + load-discipline empirical material + Justin's caching insight + Day 2 packout)*
-*Last #lock (full, prior): 2026-05-27 (AC0 — Wave 2 ship + integration-test prep)*
+*Last updated: 2026-05-29T17:58-07:00*
+*Last #lock (full): 2026-05-29 evening (AC0 — Phase 4 done + DC1 Wave 3 shipped pre-Mark + Mira working + DC3 review trip dispatched + AC1 paused until DC1+Mira ship)*
+*Last #lock (full, prior): 2026-05-29 (AC0 — integration test Day 1 + Day 2 + load-discipline empirical material + Justin's caching insight + Day 2 packout)*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
 
@@ -26,35 +26,37 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## What's Next
 
-- **Integration test ran across 2026-05-28 and 2026-05-29 (mid-test at #lock).** Phase 2 partially complete — first intro email shipped to Mark at 22:54Z 5/28; Justin-as-Mark replied at 23:07Z. Second-volley draft from Evryn was rejected as "not recognizable as Evryn" (transactional, jargon-leaking, gatekeeper-onboarding beats treated as soft suggestions). Justin issued a standing-instruction to load all activity modules every volley with a header; Slack re-draft was substantially better. **All running lists for the post-test work are in [docs/sessions/2026-05-28-integration-test.md](sessions/2026-05-28-integration-test.md) — read that doc first when resuming.**
-- **Day 2 packout for next AC0 at [docs/sessions/2026-05-29-ac0-packout-day2.md](sessions/2026-05-29-ac0-packout-day2.md).** Previous (Day 1) packout archived to `docs/sessions/historical/`.
-- **Sequencing (hybrid path per Justin 2026-05-29):** finish Phase 2 + 1-2 Phase 3 volleys to exercise multi-turn email pipeline → stop → ship DC fixes (force-load is the headline) → re-run test cleanly post-fix as the Mark-live readiness signal.
-- **Pre-Mark-live DC list grew to 7 items** (full text in session doc): cron heartbeat, MCP tool-call logging, Slack-Operator cross-thread scope-loading (Bug B parallel), **User/Operator dossier refactor + force-load + handleOperatorMessage rename** (the big one), markdown→HTML email rendering, submit_draft notification scope-logging (Bug A shape, different path), and quiet hours + reminder cadence (overnight pestering surfaced 2026-05-29).
-- **Mira pile grew to 4 items** (full text in session doc): verification-block-always discipline; tighten meta-note-from-scoped-thread mechanic; activity-module forward-load beat; tighten gatekeeper-onboarding first-touch landing (with open question: should we just script it like trust-arc-scripts.md?).
-- **NEW v0.3 deferred questions section in session doc** — three items including Justin's caching insight (force-load + Anthropic prompt caching may invert ADR-012's selective-loading economy; potential v0.3+ architecture and ADR-012 amendment candidate; Soren territory).
-- **Other pre-Mark-live blockers still standing:** emergency-alerts wiring (will couple with DC item 7); pre-go-live STEP 0 cleanup (kill test-Mark UUID + create fresh real-Mark record + clear inboxes + visual verify).
+- **First integration test considered DONE.** Phase 1-4 ran 2026-05-28 → 2026-05-29. Phase 4 verification 2026-05-29 evening confirmed criteria-capture is gold-standard; gaps trace to Blocks D (edge cases) + F (logistics) never firing because `gatekeeper-onboarding.md` didn't drive Evryn to them — not bugs in what she did. Phase 5 (triage validation) skipped this run; will run on the post-fix re-run.
+- **DC1 Wave 3 shipped pre-Mark at 17:22 PT 5/29** — Railway deploy `4e79b834` SUCCESS (replaces `865af3cf`). Single commit `05bd1ff`: 7 runtime items (force-load dossier refactor + `handleOperatorMessage` rename, MCP tool-call logging, cron heartbeat, markdown→HTML email, `submit_draft` notification scope-logging, quiet hours + 60-min reminder cadence, approval mechanism redesign with short-id + dual-route + thread-history-in-drafts + deterministic Evryn-voice confirmation) + ARCH.md rewrite (Identity Composition four-layer dossier). 42+ test assertions pass. **DC3 dispatched to independently review** (brief at `evryn-backend/docs/ac-to-dc.md` — top priority: verify `loadCommonPrefix` glob filter discipline).
+- **Mira working on her 8-item pre-Mark identity bundle** (brief at `_evryn-meta/docs/sessions/2026-05-29-mira-brief-bundle.md`). When she merges, second redeploy picks up her identity edits (the dossier's `loadCommonPrefix` is process-cached).
+- **AC1 PAUSED** — silent-failure audit waits until DC1 + Mira ship. Audit against pre-refactor codebase would identify fixes for files about to be replaced. AC1 spun up, sitting idle.
+- **QC standup as likely pre-Mark blocker (pending AC1's CLAUDE.md first-trip opinion).** Backlog row added to SPRINT-MARK-LIVE.md.
+- **DC CLAUDE.md gained "AC's spec is a contract" rule** — distinguishes DC's domain (implementation choices) from AC's (sequencing, protocol, dossier shape, cross-agent coordination). Driven by DC1 shipping without waiting for Mira despite explicit spec.
+- **Next critical path post-Mira-merge:** Railway redeploy → re-run integration test from top, straight through Phase 5 → AC0 + AC1 review for silent-failure audit → DC2 ships catches → Mark goes live.
+- **ADR candidates flagged for next-AC0 to write:** ADR-034 (force-load dossier composition as v0.2 architecture, with v0.3 amendment-of-ADR-012 expected) + ADR-035 (approval mechanism redesign with short-id + dual-route + Evryn-voice confirmation). Not written this lock — wanted Justin's review of the broader work first.
+- **Pre-Mark-live blockers still standing:** emergency-alerts wiring (DC item 7 of the original 7-item list, now likely post-Mark per Justin's "Evryn fails silently = no, dev-alerts during business hours = fine" framing); pre-go-live STEP 0 cleanup (kill test-Mark UUID + create fresh real-Mark record + clear inboxes + visual verify).
 - **Legal: Fenwick Phase 1 complete.** ToS and Privacy Notice finalized. Phase 2 (v0.3 terms) in progress.
 
 ## Active Projects
 
-- **_evryn-meta** — Wave 2 lock landed: CLAUDE.md cumulative today (directing-is-build-work + Slack pings + keep-Justin-contextualized + DC ping-channel + branch-discipline x2); current-state + CHANGELOG + LEARNINGS + packout (mid-integration-test) all updated.
-- **evryn-backend** — Wave 2 live on Railway (`865af3cf` at 14:12 PT). Master at `656d0c9`. DB wiped clean for integration test; backup committed. operator-guide + SPRINT-MARK-LIVE backlog updated.
-- **evryn-team-workspace** — Mira's bundle merged including bonus `evryn-backend/docs/identity-writing-bible.md` (Judgment-Anchoring principle); AC1's Proposal 08 + cron-architecture working doc committed.
-- **evryn-dev-workspace** — DC's CLAUDE.md gained Build Mandate retry-with-backoff bullet (live as `065e1c4`).
-- **evryn-ops** — Created. OC CLAUDE.md ready. Not yet active.
-- **evryn-quality** — Created. QC CLAUDE.md ready. Not yet active.
+- **_evryn-meta** — Evening #lock: DC1 Wave 3 absorbed; Mira brief + AC1 brief + DC3 review brief written; DC CLAUDE.md updated with "AC's spec is a contract" rule; session doc carries DC list at 8 items + Mira pile at 8 items + v0.3 questions at 3.
+- **evryn-backend** — Wave 3 live on Railway (`4e79b834` SUCCESS at 17:22 PT). Master at `05bd1ff`. ARCH.md rewritten for four-layer dossier composition. operator-guide updated for post-Wave-3 (short-id approval, quiet hours, conversation context in review@).
+- **evryn-team-workspace** — Mira working in parallel on 8-item identity bundle. Soren's 2026-05-29 force-load + caching working doc still the v0.3 sidebar input.
+- **evryn-dev-workspace** — DC CLAUDE.md gained "AC's spec is a contract" rule in Build Mandate.
+- **evryn-ops** — Not yet active.
+- **evryn-quality** — Not yet active. QC standup likely pre-Mark blocker (pending AC1's first-trip opinion).
 - **evryn-website** — Live at evryn.ai.
 - **evryn-team-agents** — FROZEN (ADR-021).
 
 ## Infrastructure
 
-- Railway: evryn-backend **upgraded from Hobby to Pro on 2026-05-29** (4× longer log retention, much higher resource ceilings, collaboration). Latest deploy still `865af3cf` SUCCESS at 2026-05-27T21:12:43Z (Wave 2 — DC commit `8465675`). `PROACTIVE_CHECK_HOUR_PT=7` env var unchanged. GitHub auto-deploy still off post-Image-Registry-incident; manual `railway up` required.
-- Slack: three apps scoped — "Evryn" (product, Socket Mode), "Dev Team" (DC/AC/OC/QC ops), "Team Alerts" (founding-team → Justin pings).
-- Supabase: "Evryn Product" project. Latest backups 2026-05-25 (2 days ago — under #lock-protocol-week threshold). **Schema gap to note:** ADR-028's `messages.internal_context` column was specced but never migrated; surfaced during today's cron sanity check. Wave 2 plate or later sprint item. **Data API grant discipline (post-2026-10-30):** new `public` tables require explicit `GRANT` to `service_role` — discipline note added to BUILD-EVRYN-MVP.md v0.3 scope items. **"Evryn-Agents" project** (SDK-era, paused 85 days) being allowed to freeze ~2026-06-01 per ADR-021 addendum; data remains downloadable.
+- Railway: evryn-backend on Pro plan. **Latest deploy `4e79b834` SUCCESS at 2026-05-30T00:22:12Z (17:22 PT 5/29) — Wave 3 / pre-Mark trip, commit `05bd1ff`.** Previous deploy `865af3cf` (Wave 2) REMOVED. `PROACTIVE_CHECK_HOUR_PT=7` unchanged. New env vars from Wave 3: `QUIET_START_HOUR_PT=18`, `QUIET_END_HOUR_PT=8` (defaults; configurable). GitHub auto-deploy still off — `railway up` manual is the path (DC's 3rd flag in his Wave 3 reply).
+- Slack: three apps scoped — "Evryn" (product, Socket Mode), "Dev Team" (DC/AC/OC/QC ops), "Team Alerts" (founding-team → Justin pings). New post-Wave-3: `#evryn-approvals` Slack pings suppressed 18:00–08:00 PT default (configurable); `#emergency-alerts` channel exists but no code triggers it (still backlog).
+- Supabase: "Evryn Product" project. Latest backups 2026-05-25 (4 days ago — under #lock-protocol-week threshold). **Schema gap still unaddressed:** ADR-028's `messages.internal_context` column was specced but never migrated.
 - evryn@evryn.ai (polled by Evryn), systemtest@evryn.ai (test-Mark placeholder + test recipient), review@evryn.ai = alias on justin@evryn.ai (review inbox, NOT polled).
 
 ## Task Management
 
-[Linear (EVR workspace)](https://linear.app/evryn) — the team's task tracking system with RACI labels. Protocol + API key in `evryn-team-workspace/shared/protocols/linear-protocol.md`. EVR-108 (Blocked, post-Mark) tracks ARCHITECTURE.md compression pass per Soren's 5/26 agent-definition change (always-load ARCHITECTURE.md).
+[Linear (EVR workspace)](https://linear.app/evryn) — the team's task tracking system with RACI labels. Protocol + API key in `evryn-team-workspace/shared/protocols/linear-protocol.md`. EVR-108 (Blocked, post-Mark) tracks ARCHITECTURE.md compression pass per Soren's 5/26 agent-definition change. EVR-109 (Needs Authorization) tracks force-load + caching v0.3 sidebar with Soren.
 
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED

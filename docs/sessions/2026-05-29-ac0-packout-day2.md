@@ -108,13 +108,17 @@ This AC0 has NOT read the trust-and-safety spoke, user-experience spoke, vision-
 
 - **Cadence rule installed mid-session 2026-05-29:** Pitch ideas to Justin in chat, get his go-ahead (or notes), THEN write to files. Saves the write-and-fix-and-write churn when he tweaks the idea. Doc edits happen in the same turn as the chat pitch's approval; commit waits for explicit commit go-ahead.
 
-- **Persistence discipline installed mid-session 2026-05-29:** Every list change (DC, Mira, v0.3) is reflected in the session doc in the same turn. No more "I'll capture it later" — context compaction will eat the chat history.
+- **Persistence discipline installed mid-session 2026-05-29 — with three refinements landed 2026-05-29 afternoon:**
+  - (1) **DC/Mira/v0.3 lists update in the session doc only after Justin says "good to add."** AC will often pitch a change in chat, then talk through it with Justin until the wording shifts. Don't bog the process by writing and rewriting and rewriting — wait for the explicit "good to add."
+  - (2) **The in-flight section (rolling status snapshot) updates much less frequently.** It's not a chat log; don't re-write it every turn.
+  - (3) **Respond + ping FIRST, then go write.** Don't make Justin sit waiting while AC composes a file edit. If AC has a response, the sequence is: chat reply → Slack ping → THEN write whatever has been authorized, while Justin is reading the chat. (Mechanically: chat text + tool calls go in the same turn since text renders first, but the intent is that file edits never *delay* the response.)
 
 ---
 
 ## Coordination notes
 
 - **Ping Justin every response on `#team-alerts`.** Standing discipline this session — Justin runs multiple instances in parallel and won't switch back to AC0 without a notification.
+- **Division of labor during live tests (installed 2026-05-29 afternoon):** Justin has eyes on Slack + email; AC0 has eyes on *everything else* (DB state, Railway logs, tool calls, lifecycle, scope, audit trails). Justin can do in tens of minutes what AC0 can do in milliseconds — so if visibility into backend behavior matters, AC0 owns the look. The pattern is: Justin posts/approves/replies → AC0 immediately checks backend → AC0 reports back with the all-clear or the flags. This is how the test moves fast without blowing context.
 - **Justin's CLAUDE.md cadence rules** (commit discipline, slack pings, full lists with letters/numerals) all hold. The new ones from this session (cadence rule + persistence discipline) live above in Humility note.
 - **DC and Mira are stood down post-test.** Don't dispatch until Justin says — the dispatch will be batched after the Phase 3 volleys + the hybrid-path decision lands.
 
