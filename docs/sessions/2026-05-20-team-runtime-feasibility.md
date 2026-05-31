@@ -1,5 +1,7 @@
 # Team Runtime Feasibility — 2026-05-20
 
+> **⚠️ DIRECTION UPDATE — 2026-05-30 (Soren):** This doc's "Budget unit economics" and its implicit **Claude-Agent-SDK build path** are **superseded** by `evryn-team-workspace/shared/projects/ops/2026.05.30-team-agents-runtime-cost-model.md`. Two changes: (1) **Pricing** — this doc used stale Opus $15/$75; current is $5/$25 (~3× lower). (2) **Build direction reversed** — Justin's call (2026-05-30): build the team harness **model-agnostic (Mastra / Vercel AI SDK), NOT the Claude Agent SDK**, and run it **hybrid** (cheap-open for high-volume work, Claude on tap for deep-judgment moments) so the team can burn bright-and-cheap regardless of cash state — throttling-to-save is backwards under cash stress. **The team-runtime ADR should be authored as a model-agnostic build, not an SDK build — and as ADR-036, not 033** (in the interim 033 was reassigned to Permission-Compulsion Spectrum; 034 = force-load, 035 = approval — so this doc's older "033-team-runtime-sdk" references are stale, and the next available number is 036). AC to re-scope + estimate the build-delta (days-to-first-autonomous-Lucas vs. the SDK path) + design an open-model pilot (tool-use reliability). Full reasoning in the cost-model doc.
+
 > **Session doc — ephemeral.** Working notes from AC's feasibility study on porting the founding team agents (starting with Lucas) from Claude-Code-session-based to Agent-SDK-based autonomous runtime. Absorb into ADR + spec at #lock.
 >
 > **Author:** AC, 2026-05-20T12:34-07:00
