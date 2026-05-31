@@ -8,6 +8,33 @@
 
 ---
 
+## 2026-05-30 evening (AC0 — handoff #lock: ADRs 034+035 + worktree dig-out + 3 PRs in flight from Mira/Soren/DC3 + Monday packout)
+
+- **ADR-034 (force-load dossier composition v0.2) + ADR-035 (approval mechanism redesign) written + committed.** Capture the architectural decisions DC1 Wave 3 shipped. ADR-034 carries the four-layer composition spec + operator.md gating rationale + relationship to ADR-012 (amendment) + v0.3 trajectory via EVR-109 sidebar with Soren. ADR-035 captures the four coupled changes (short-id + strict parser + dual-route + Evryn-voice confirmation) + the approval_hint silent-diversion failure mode that drove the redesign.
+- **AC CLAUDE.md branch-discipline rule tightened from "before commit" to "before EDIT, not just commit"** + surface-to-Justin-on-multi-agent-activity + worktrees-per-agent as the durable shared-tree fix with one-line setup command. Team-workspace CLAUDE.md gained the same rule (adapted for team agents). Driven by 2026-05-29 evening AC0 making unstaged edits in evryn-backend without checking branch (Mira's checkout had silently switched the shared tree).
+- **Per-agent worktree dig-out executed for evryn-backend.** AC at `c:/Users/Justin/Evryn/Code/evryn-backend-ac/` on master; Soren at `evryn-backend-soren/` on `soren/build-doc-linear-tickets`; DC3 at `evryn-backend-dc3/` on `dc3/wave3-review`; Mira keeps `evryn-backend/` on her bundle branch. EVR-110 created for Lucas (R: lucas, A: justin, Backlog) to roll out the worktree pattern as standing practice post-Mark.
+- **Three feature branches pushed to origin tonight, all waiting for AC0 review + merge Monday:**
+  - `mira/2026-05-29-pre-mark-bundle` — Mira's 8-item identity bundle (3 commits: gatekeeper-onboarding `faa54e6` + operator.md `fccb8e9` + core.md `901a204`)
+  - `soren/build-doc-linear-tickets` — Soren's BUILD doc v0.3 scope addition (`c43a3e5` — Evryn writes Linear tickets about her own runtime)
+  - `dc3/wave3-review` — DC3's independent review of DC1 Wave 3 (`4efae10` — 7 concerns, clean verdict on load-bearing items)
+- **DC3's mailbox has a follow-up assignment** in `evryn-backend/docs/ac-to-dc.md` "ADDITIONAL FIX" section: quiet-hours queue+replay + cron-time conform `PROACTIVE_CHECK_HOUR_PT=7→8`. Monday work, separate branch off master, separate PR.
+- **DC1 reply preserved on master.** AC0's lock commit `d8253fd` carried DC1's Wave 3 reply (he wrote it after his ship commit but didn't commit himself). Preserved for DC3 review + future AC0 instances.
+- **Monday handoff packout** at `_evryn-meta/docs/sessions/2026-05-30-ac0-monday-handoff.md`. Yesterday's packout archived to `historical/`.
+- **Final sweep verified all 4 main repos + 3 worktrees clean and in sync with origin.** Mira's tree even cleaned up her untracked scripts. Nothing held in chat-only ephemeral state.
+
+**Operator-relevant:** none shipped this lock (all client-side / Slack-config changes still pending Justin's hand).
+
+**Files committed across this evening's locks:**
+- `_evryn-meta` (committed `b2b7435` + this final lock): ADRs 034 + 035, CLAUDE.md branch-discipline + worktrees rule, current-state.md refresh, CHANGELOG.md (this entry), Monday packout (new), archived yesterday's packout to historical/.
+- `evryn-backend` (committed `d8253fd` via AC worktree): operator-guide.md Wave 3 absorption, SPRINT-MARK-LIVE.md QC standup backlog row, ac-to-dc.md (DC3 review brief + spec recovery + ADDITIONAL FIX section), dc-to-ac.md (DC1 reply preserved).
+- `evryn-dev-workspace` (committed `703b33c`): CLAUDE.md "AC's spec is a contract" Build Mandate rule.
+- `evryn-team-workspace` (committed `10949ea`): CLAUDE.md branch-before-edit + worktrees rule.
+
+**Pushed branches in evryn-backend (not yet merged):**
+- `mira/2026-05-29-pre-mark-bundle`, `soren/build-doc-linear-tickets`, `dc3/wave3-review` — all need Monday AC0 review.
+
+---
+
 ## 2026-05-29 evening (AC0 — Phase 4 done + DC1 Wave 3 shipped pre-Mark + Mira + DC3 + AC1 paused + DC CLAUDE.md "AC's spec is a contract")
 
 - **First integration test considered done — Phase 4 verified, Phase 5 deferred to post-fix re-run.** Phase 4 DB query of Mark's profile (5 pending_notes, story empty per ADR-027) compared against `tests/fixtures/test-gatekeeper-profile.md` answer key. Verdict: criteria-capture from Mark's reply is gold-standard; gaps (AK note 9 edge-cases entirely missing, AK note 10 personal-depth thin, AK notes 2-6 research note missed F/V Ava Jane / Mat Cerf / four-time Sundance / Tom Douglas + Taichi Kitamura / Salish Lodge + Sankai / NRDC + Audubon Alaska) trace cleanly to Evryn never running Blocks D (edge cases) or F (logistics) — not bugs in what she did but in what `gatekeeper-onboarding.md` drove her to do. Confirmed Mira-pile diagnosis. Per Justin: wrestling with Phase 5 against a known-broken Evryn would coaching-corrupt the test; full re-run from top post-fix is the Mark-live readiness signal.
