@@ -95,19 +95,75 @@
 
 ## Startup load for fresh AC0
 
-1. **`_evryn-meta/CLAUDE.md`** — auto-loaded. Gained the branch-before-edit + worktrees rule (Communication Rules section) this session.
-2. **`_evryn-meta/docs/current-state.md`** — auto-loaded. Reflects end-of-day 2026-05-30.
-3. **`_evryn-meta/CHANGELOG.md`** — read today's full entry (2026-05-29 evening) for the narrative arc + this session-end appendage if added.
-4. **This packout** — you're reading it.
-5. **`_evryn-meta/docs/sessions/2026-05-28-integration-test.md`** — the live session doc. All running lists live here. Read in full.
-6. **`evryn-backend/docs/dc-to-ac.md` on master** — DC1's Wave 3 reply. Carries the implementation details + 9 flags for follow-up.
-7. **DC3's PR** — once open, the review is the structured per-item report on DC1's work.
-8. **ADR-034 + ADR-035** — the architectural decisions implementing today's Wave 3 work.
+All required, in order. If particular lines are listed, *only* read those lines. Some of these docs are *very* long and will completely blow up your context if you read top-to-bottom.
 
-**Trigger-load only if X:**
-- Anything off-pattern → load `_evryn-meta/docs/decisions/030-slack-threads-as-operator-scope.md` (+ Amendment 2026-05-22) + `031-late-scope-recovery.md`.
-- Identity-file-related craft question → load `evryn-backend/identity/core.md` + relevant activity/situation file.
-- Quiet-hours fix work (DC3's ADDITIONAL FIX) → load `evryn-backend/src/notify/slack.ts` + `src/email/poll.ts` for cron timing.
+1. **`_evryn-meta/CLAUDE.md`** — auto-loaded. **Gained two updates this session worth noticing**: (a) Communication Rules — "verify branch before every EDIT, not just commit" + surface-to-Justin-on-multi-agent-activity + worktrees-per-agent durable fix (2026-05-29 evening commit); (b) earlier today's "Stop and recall the craft" pause discipline in Architectural Mandate (still load-bearing). Read fully.
+
+2. **`_evryn-meta/docs/current-state.md`** — auto-loaded. Reflects end-of-day 2026-05-30, post-handoff lock.
+
+3. **`_evryn-meta/CHANGELOG.md`** — read the **top TWO entries**: 2026-05-30 evening (handoff lock) + 2026-05-29 evening (Phase 4 done + Wave 3 shipped + briefs dispatched). Together they carry the full two-day narrative arc.
+
+4. **`_evryn-meta/docs/hub/roadmap.md`** — orients in the company. Hasn't changed since prior packout but it's the company source-of-truth — read it.
+
+5. **This packout** — you're reading it.
+
+6. **`_evryn-meta/docs/sessions/2026-05-28-integration-test.md`** — *the live session doc.* All running lists live here: DC list at 8 items, Mira pile at 8 items, v0.3 deferred questions at 3. Read in full — it's the densest single-doc context for understanding what's queued and why.
+
+7. **`_evryn-meta/docs/hub/technical-vision.md`** (391 lines) — read fully. Sets the north-star architecture frame against which Wave 3's force-load dossier is a v0.2 commitment.
+
+8. **`evryn-backend/docs/ARCHITECTURE.md`** — same line ranges as prior packout used to apply (114-200, 632-780, 999-1006, 502-575, 918-925), but **DC1's Wave 3 ship rewrote the Identity Composition section (~lines 670-780).** The line numbers in the rewritten section likely shifted; use section names — Operator Track, System Actors, Pipeline Design, Identity Composition (now four-layer dossier), Agent Architecture, Principle Breadcrumbs. Don't waste tokens reading sections you don't need; do read Identity Composition in full since the dossier composition is fresh.
+
+9. **`evryn-backend/docs/BUILD-EVRYN-MVP.md`** — lines 68-99 (Critical Principles), 114-165 (What Evryn Does), 379-417 (Build Order).
+
+10. **`evryn-backend/docs/SPRINT-MARK-LIVE.md`** — lines 66-110 (Sprint Tracker), 466-487 (Pre-Go-Live Cleanup), 530-559+ (Backlog — extended this session with the QC standup row and the silent-failure-audit context).
+
+11. **`evryn-backend/tests/integration-test-v02.md`** — the protocol. Phase 5 (triage validation) is what we deliberately deferred this run; full re-run from top through Phase 5 is the Mark-live readiness signal.
+
+12. **`evryn-backend/tests/fixtures/test-gatekeeper-profile.md`** — Mark character + Phase 4 answer key. Useful for understanding what the test was testing.
+
+13. **`evryn-backend/tests/fixtures/integration-test-script.md`** — Justin's scripted lines. Includes Response Blocks A-G for Phases 2 + 3.
+
+14. **`_evryn-meta/docs/decisions/034-force-load-dossier-composition.md`** — the v0.2 architectural commitment for the dossier composition. Read this BEFORE doing anything that touches identity loading or the force-load shape. EVR-109 sidebar with Soren post-Mark may amend or supersede.
+
+15. **`_evryn-meta/docs/decisions/035-approval-mechanism-redesign.md`** — the v0.2 architectural commitment for the new approval mechanism (short-id + strict-match + dual-route + Evryn-voice confirmation + thread-history-in-drafts). Read this before anything that touches approval flow.
+
+16. **`evryn-backend/docs/dc-to-ac.md` on master** — DC1's Wave 3 reply preserved by AC0's lock. Carries the implementation per-item summary + the 9 flags DC1 surfaced for follow-up trips. **Read before reviewing DC3's PR** so you have DC1's claim against which DC3's findings get evaluated.
+
+17. **DC3's PR** (`dc3/wave3-review`, commit `4efae10`) — once open, the structured per-item review of DC1's Wave 3 work. 7 concerns including the 2 AC0 asked DC3 to add (ARCH.md tree drift, submitDraftForApproval sendEmail-no-retry). Critical for deciding whether DC4 trip is needed before re-running the integration test.
+
+**Trigger-load (only if X):**
+
+- **Anything off-pattern with Slack threading or Operator pathway** → load `_evryn-meta/docs/decisions/030-slack-threads-as-operator-scope.md` (full + Amendment 2026-05-22) + `031-late-scope-recovery.md`.
+- **Permission-vs-compulsion language questions in identity files or tool descriptions** → `_evryn-meta/docs/decisions/033-permission-compulsion-spectrum.md`.
+- **Identity-file craft question (Mira's domain or you're reviewing her PR)** → load `evryn-backend/identity/core.md` + the relevant activity / situation file. The 7-item identity-file-review.md checklist lives at `evryn-team-workspace/shared/protocols/identity-file-review.md`.
+- **Tool/SDK behavior surprises** → `_evryn-meta/AGENT_PATTERNS.md` §"SDK Integration & Tool Wiring" lines 406-448.
+- **Force-load + caching architecture question (Soren territory at v0.3)** → load `evryn-team-workspace/shared/projects/product/research/v03-design/2026.05.29 09-force-load-and-caching-architecture-soren.md` + EVR-109 in Linear.
+- **DC3's ADDITIONAL FIX work (when DC3 dispatches the quiet-hours queue+replay)** → load `evryn-backend/src/notify/slack.ts` + `src/email/poll.ts` for cron timing context.
+- **Reviewing Mira's PR** → load her 3 commits' file diffs + the 7-item identity-file review protocol + her brief at `_evryn-meta/docs/sessions/2026-05-29-mira-brief-bundle.md`.
+- **Reviewing Soren's PR** → load his commit's diff (it's a single BUILD-EVRYN-MVP.md addition) — his v0.3 design proposal carries its own open questions.
+- **Reviewing DC3's PR** → load his branch's diff against master for `docs/dc-to-ac.md` + cross-check against DC1's reply (also in `docs/dc-to-ac.md` on master).
+
+---
+
+## Two key Slack threads (load-bearing empirical material for understanding Wave 3 + ADR-034 + ADR-035)
+
+The 2026-05-28 → 2026-05-29 integration test's empirical material lives in these two threads. **Don't read them as primary load** — they're not the active surface anymore — but **DO query them when you need to understand WHY Wave 3 was scoped the way it was**, why force-load became architecture, why the approval mechanism redesign was urgent, why the Mira pile is what it is, why AC1 was paused.
+
+Query:
+
+```sql
+SELECT created_at, sender_id, source, message_body
+FROM messages
+WHERE thread_id IN ('1779997809.975439', '1780009886.535399')
+   OR (created_at::date >= '2026-05-28' AND source = 'email')
+ORDER BY created_at;
+```
+
+- Thread `1779997809.975439` — Mark-scoped, Day 1: verify-and-lock + Evryn's research on Mark + first email iteration (8 drafts, Justin's craft pushback).
+- Thread `1780009886.535399` — was NULL-scoped, then Justin scope-locked it mid-thread to Mark via `set_thread_scope` (validation of in-thread backfill on first real exercise): Day 2 standing-instruction + better re-draft + most of the load-discipline empirical material that drove force-load.
+- Plus the email volleys (source = 'email') for the Mark↔Evryn exchange.
+
+The introspection gap, "performing forward motion" failure mode, slick-phrasing tell, "Should also cover" reading-as-soft-suggestion, hyper-brevity collapsing into minimalism — all live in these threads. They are the empirical case for ADR-034.
 
 ---
 
