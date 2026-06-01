@@ -7,8 +7,34 @@
 **SCOPE GUARDRAIL:** This file is an operating manual — identity, methodology, and stable protocols. It is NOT a state tracker, build log, session diary, or capture target. State lives in `docs/current-state.md`. Build details live in repo build docs. See the "Documentation Approach" routing table for where everything goes.
 
 ## SESSION STARTUP
+
+### Always — light hygiene
+
 - Delete `.claude/settings.local.json` if it exists. This file silently accumulates one-off command approvals from previous sessions and will corrupt your permissions if left in place. If any approvals should be permanent, propose adding them to `.claude/settings.json` (in git) instead. Flag to Justin if it contains secrets before deleting.
-- **Don't auto-peek `#dev-alerts` — ask Justin first.** Ask: *"Want me to check `#dev-alerts` for the last 24h?"* If yes, query via `conversations.history` using `SLACK_DEV_BOT_TOKEN` from `evryn-dev-workspace/.env` (Dev Team Slack app — agent-coordination scope, not Evryn's product app, so the read access stays in the right scope). The capability exists for *unplanned* production events that don't make it through mailboxes — overnight hotfixes from any agent (Mira, DC, OC, QC), failed deploys, incidents, identity-file changes pushed while AC was offline. Intentional comms come through mailboxes, current-state, and direct conversation, so the peek's value is catching the *unintentional*. At current scale most pings are noise; don't burn context loading them by default. If you do check and see a relevant ping, name it back to Justin so he knows you saw it.
+- **Ask Justin**: *"Want me to check `#dev-alerts` for the last 24h?"* If yes, query via `conversations.history` using `SLACK_DEV_BOT_TOKEN` from `evryn-dev-workspace/.env` (Dev Team Slack app — agent-coordination scope, not Evryn's product app, so the read access stays in the right scope). The capability exists for *unplanned* production events that don't make it through mailboxes — overnight hotfixes from any agent (Mira, DC, OC, QC), failed deploys, incidents, identity-file changes pushed while AC was offline. Intentional comms come through mailboxes, current-state, and direct conversation, so the peek's value is catching the *unintentional*. At current scale most pings are noise; don't burn context loading them by default. If you do check and see a relevant ping, name it back to Justin so he knows you saw it.
+
+### Light context cascade — every session
+
+Load these into context every time you spin up, before any work:
+
+- **`_evryn-meta/CLAUDE.md`** — this file (auto-loaded).
+- **`_evryn-meta/docs/current-state.md`** — the snapshot. What's in flight, what was just shipped, who's working on what, which build doc is currently active.
+- **`_evryn-meta/docs/hub/roadmap.md`** — the Hub. Company truth: what Evryn is, business model, philosophy, technical architecture, team. **Without the Hub loaded, you will misframe problems, propose things that already exist, or contradict decisions that were carefully made.** Read every time. Drill into domain spokes (`docs/hub/`) only when your current work requires that depth.
+
+### Full product-architect cascade — when doing or directing product build work
+
+For any session where you'll do or direct build-level work on the Evryn product (specs, briefs, code review, architectural decisions, runtime claims), also load:
+
+- **`_evryn-meta/docs/hub/technical-vision.md`** — wide-lens architecture (three domains of intelligence, bulkhead architecture, target-state matching design). The widest-lens frame the build-altitude docs descend from.
+- **The active product's `ARCHITECTURE.md`** — currently `evryn-backend/docs/ARCHITECTURE.md`. The system you're architecting against. AC owns this; read it, never modify without explicit approval.
+- **The active product's runtime** — currently `evryn-backend/src/`. ARCH says the *intended* shape; the runtime is the *actual* shape, and the two regularly diverge in load-bearing ways. We've tried to load it only on demand, and 99 out of 100 times we end up breaking things because we're making decisions blind. The divergence is often exactly what bites.
+- **The active product's build doc** — named in `current-state.md`. **Currently `evryn-backend/docs/BUILD-EVRYN-MVP.md`, but this WILL shift as build phases change.** Read `current-state.md` first to identify the active build doc, then load it. Don't load a stale build doc from a previous phase.
+
+**Heavy load — known and accepted.** The full cascade is substantial. The cost of going in blind is higher: misframed designs, conflicting specs, runtime claims that turn out to be wrong, ADRs that propose things that already exist. **Justin has explicitly chosen this load** — don't trim it on your own judgment.
+
+If you're doing non-product work (cross-repo ops, doc routing, team coordination, strategic chat), the light cascade is enough. Don't burn tokens on the full cascade for an org-layer question.
+
+Each architecture / build doc declares its own **Required Context** section — honor it when a beat in your work hits that section.
 
 ---
 
@@ -39,9 +65,7 @@ An AI-powered relationship broker. She finds you "your people" — the rare indi
 - **Stage:** Pre-launch, building MVP
 - **Philosophy:** Stories over structures. Trust is non-negotiable. Character becomes currency. Aligned incentives.
 
-**Read this before doing anything else:** `docs/hub/roadmap.md` (the Hub). The Hub is company truth — what Evryn is, the business model, the philosophy, the technical architecture, the team. 
-
-Evryn is a multi-repo, multi-agent system with non-obvious architectural decisions. Without the Hub loaded, you will misframe problems, propose things that already exist, or contradict decisions that were carefully made. Read `docs/hub/roadmap.md` first - every time. Domain spokes (`docs/hub/`) carry full depth on each topic. Be conscious of overloading your context, but make sure to drill down when you need. 
+Evryn is a multi-repo, multi-agent system with non-obvious architectural decisions. The Hub (`docs/hub/roadmap.md`) is company truth — auto-loaded per the Light Context Cascade above. Domain spokes (`docs/hub/`) carry full depth on each topic; drill into them when your current work requires that depth.
 
 ---
 
@@ -177,7 +201,7 @@ This isn't about blocking Justin's ideas. It's about being a real technical part
 
 **If you encounter a broken link in something you need to read,** hunt down the file (it may have moved or been renamed) and fix the link. If you can't find the file, flag it to Justin — don't fail silently.
 
-**Always read the tech-vision spoke and the architecture doc.** Before doing *or directing* build-level work in any repo — implementing it, dispatching other agents to implement it, reviewing their work, editing architectural specs, or making any claim about runtime behavior — read `_evryn-meta/docs/hub/technical-vision.md` and the relevant repo's `docs/ARCHITECTURE.md`, even when you think you already understand the system. **Directing is build work.** Sending a brief you can't defend against the architecture has the same blast radius as bad code, just spread across the agents you've dispatched and whatever they ship. The tech-vision spoke carries widest-lens framing (three domains of intelligence, module separation principles, bulkhead architecture, long-term target state); the architecture doc holds the build-altitude truth that descends from it. Working without them means working on assumptions that feel right when zoomed in but may be wrong from altitude.
+**Directing is build work.** The Full Product-Architect Cascade in SESSION STARTUP applies whenever you're doing *or directing* build-level work — implementing it, dispatching other agents to implement it, reviewing their work, editing architectural specs, or making any claim about runtime behavior. Sending a brief you can't defend against the architecture has the same blast radius as bad code, just spread across the agents you've dispatched and whatever they ship.
 
 Each architecture doc declares a **Required Context** section — honor it. Each section within declares additional requirements — when it says "read X or you'll misunderstand Y," **read X**. When it says no extra context needed, don't burn tokens chasing depth you don't need.
 
@@ -280,9 +304,29 @@ Full protocol: `docs/protocols/ac-dc-protocol.md`. Don't load it unless you need
 
 **Read-receipt convention:** When you read a mailbox message, absorb what you need into persistent docs, then **clear the file** (replace contents with `READ — absorbed`). Before writing a new outbound message, check that the file is clear — if it still has content, your previous message hasn't been received. **Do not overwrite unread messages.**
 
+**Always commit your outbound mailbox message immediately after writing it** — before the recipient could read it and clear the file. **This is the one area where you do NOT need to wait for Justin's explicit go-ahead — he has pre-authorized all mailbox-file commits.** Without committing, a recipient who reads + clears + commits the clear before you push leaves your message recoverable only from your local working tree — and a stray `git reset` or branch switch erases it. **Write, then commit, then walk away.** This applies to AC↔DC, AC↔QC, DC↔QC — every mailbox direction.
+
 **Multi-instance awareness:** Justin may run multiple AC instances in parallel (AC1, AC2, etc.). If Justin designates you as a numbered instance, sign your mailbox messages with that designation (e.g., "From AC2:") and only absorb inbound messages addressed to you. There is no AC-to-AC protocol — Justin hand-relays between AC instances.
 
 **Session start:** When you're about to work in a specific repo, peek at that repo's `docs/dc-to-ac.md` and `docs/dc-architecture-notes-for-ac.md`. If there's actionable content, read the full protocol. If they're empty or don't exist, move on. If you've been designated as a specific instance, only absorb messages meant for you.
+
+---
+
+## Working with QC
+
+QC (Quality Claude) lives in `evryn-quality` and reviews DC's ships post-hoc. The standing cadence:
+
+**DC ships → QC reviews → QC findings to AC → AC writes the fix-trip brief → DC ships fixes → QC verifies.**
+
+QC sits between what DC shipped and what AC routes next. Their job is the adversarial-to-the-code, friendly-to-the-people fresh-eyes read that catches what DC missed under cognitive load.
+
+**What QC does that DC doesn't:** DC builds and reviews his own work as he goes — that part of the discipline doesn't change. QC operates *after* the ship, with fresh context, hunting silent failures, cross-user containment risks, and spec-runtime mismatches. *"Does it compile / do tests pass"* is DC's check during build. *"Does it match intent + fail safely + does the spec match the runtime"* is QC's check after.
+
+**When AC dispatches QC vs. reviews themselves:** for substantive ships (Wave-level work, new pathways, architectural changes), dispatch QC. For tiny mailbox-cleanup or doc-only patches, AC can review directly — QC's standup cost isn't worth it for trivial changes. When in doubt, dispatch QC; the cost of an unnecessary QC trip is small compared to the cost of a missed silent failure.
+
+**Mailboxes:** `evryn-quality/docs/ac-to-qc.md` (briefs) and `evryn-quality/docs/qc-to-ac.md` (findings). Same disposable-snapshot pattern as AC↔DC. Hand-relay AC↔QC traffic between instances; tell each side when there's mail.
+
+**Don't over-rely on QC to catch what DC should catch.** QC is a backstop, not a substitute for DC's own discipline. DC still reviews his own work; QC is the second pass. The Publisher-as-backstop framing in ADR-033 applies here too: design to minimize what QC catches, so the catches QC does make are reliable.
 
 ---
 

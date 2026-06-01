@@ -8,6 +8,37 @@
 
 ---
 
+## 2026-06-01 evening (AC0 — Monday session: ADR-036 (twice, after cross_user_notes correction) + QC standup + CLAUDE.md tiered-cascade restructure + DC3 next-trip brief + handoff doc)
+
+- **ADR-036 (Triage Interaction History Loopback v0.2 calibration phase) written, then rewritten.** Justin caught a misframing in the first draft: I had proposed using `cross_user_notes` as the substrate for triage closure notes. Wrong — `cross_user_notes` is reserved for *connection feedback* (third-party feedback on Evryn-mediated connections, BLIND WRITE, firewalled from buildPersonContext, processed by v0.3+ Reflection). The correct substrate is `emailmgr_items` + a new `original_from_user_id` UUID FK column. Rewritten ADR covers: createUser MCP tool (already on SPRINT backlog) + runtime auto-creates Eva in `processForward` + the new FK column + a Mira identity beat on triage.md Phase 2 (check prior interaction history before classifying). No new read tool required (supabase_read with filter works; typed wrapper optional per DC's judgment). Status: Proposed. Implementation routing pending Justin's Acceptance.
+- **QC repo stood up.** Created `c:/Users/Justin/Evryn/Code/evryn-quality/` with CLAUDE.md, `docs/ac-to-qc.md` first-trip brief, `docs/qc-to-ac.md` empty mailbox, `.claude/settings.json`, README.md, .gitignore. **Not yet `git init`d or pushed to GitHub** — Justin's hand needed. First-trip scope: silent-failure + correctness audit on post-Wave-3 runtime, plus shape QC's standing operating discipline from the first trip's experience.
+- **QC CLAUDE.md substantively revised based on subagent evaluation.** Spun a fresh general-purpose subagent with rich context (Evryn mission, Mark stakes, agent ecosystem, recent failure patterns) and asked it to evaluate the QC CLAUDE.md from a fresh-QC perspective. Subagent returned 30 findings; ~12 applied. Major additions: tiered auto-load (Tier 0/1/2), "Current operational stakes" section (Mark, ~200 emails/day, trust-breaking-at-3am), "Failures this role exists to catch" section with 5 historical patterns (2026-04-27 polling loop, 2026-04-29 Mark-identity leak, 2026-05-28/29 force-load discipline, 2026-05-29 approval-parser silence, cooked-context markers), severity rubric (BLOCKER/NON-BLOCKER/COSMETIC + SUSPECTED modifier), Observability & Ground Truth section (Railway logs, Supabase verify-via-persistence, notifyDev), full AC-style commit discipline, worked-example finding shape, mailbox dirty-state handling, DC↔QC routing-through-AC default.
+- **AC CLAUDE.md restructured.** SESSION STARTUP now has a tiered cascade structure: (a) light hygiene (settings.local.json, #dev-alerts ask); (b) light context cascade every session (CLAUDE.md + current-state.md + Hub); (c) full product-architect cascade when doing/directing product build work (above + tech-vision + active ARCHITECTURE.md + active build doc per current-state + the `evryn-backend/src/` runtime). The runtime-startup-load amendment is now baked into the cascade rather than living as a separate Context Discipline paragraph. The "Heavy load — known and accepted; Justin has explicitly chosen this" framing is explicit. Redundant Hub + tech-vision/ARCH instructions trimmed from "What Is Evryn?" and Context Discipline (absorbed into the cascade).
+- **AC CLAUDE.md gained "Working with QC" section.** After AC/DC Communication Protocol. Covers the standing cadence (DC ships → QC reviews → AC routes → DC fixes → QC verifies), when to dispatch QC vs. AC-reviews-themselves (substantive ships dispatch QC; trivial doc-patches AC handles), and the don't-over-rely-on-QC backstop framing.
+- **Commit-before-mail rule added to AC, DC, QC CLAUDE.md** with explicit pre-authorization: *"This is the one area where you do NOT need to wait for Justin's explicit go-ahead — he has pre-authorized all mailbox-file commits."* Closes the failure mode where an outbound mailbox message exists only in the local working tree until the recipient clears it. Per Justin's call.
+- **DC CLAUDE.md QC line expanded** with the cadence + "QC is a second pair of eyes, not a substitute for your own care" framing + the "AC's call on dispatch" rule.
+- **DC3 next-trip brief written** to `evryn-backend/docs/ac-to-dc.md` on master. Three required items + one optional: CONCERN 1 fix (handleRevisionNotes scope), CONCERN 3 hardening (existsSync guard), ADDITIONAL FIX (quiet-hours queue+replay + cron-hour conform), optional CONCERN 5 (underscore filter). Justin to tell DC3 when ready to dispatch.
+- **Mira's gatekeeper-onboarding PR reviewed.** 6/7 identity-file-review-protocol items pass; one concern flagged: real-Mark `e.g.` examples in the scripted template (the same failure mode that motivated the protocol). Mira already on the cleanup. After her commit lands, the PR is mergeable.
+- **Monday packout (2026-05-30 evening) archived to `historical/`.** Today's handoff doc at `_evryn-meta/docs/sessions/2026-06-01-ac0-evening-handoff.md` succeeds it.
+- **Cross_user_notes correction documented** explicitly in the handoff doc as a "do not repeat" note for future AC0 instances.
+
+**Operator-relevant:** none shipped this session (Slack per-channel config and Railway env var `PROACTIVE_CHECK_HOUR_PT=7→8` still pending Justin's hand after DC3 ships the ADDITIONAL FIX).
+
+**Files committed this session:**
+- `_evryn-meta`: `CLAUDE.md` (tiered cascade restructure + Working with QC + commit-before-mail), `docs/decisions/036-cross-user-interaction-loopback.md` (new), `docs/sessions/2026-06-01-ac0-evening-handoff.md` (new), `docs/sessions/historical/2026-05-30-ac0-monday-handoff.md` (moved from sessions/), `CHANGELOG.md` (this entry).
+- `evryn-dev-workspace`: `CLAUDE.md` (QC line expansion + commit-before-mail).
+- `evryn-backend` (via AC worktree at evryn-backend-ac/, on master): `docs/ac-to-dc.md` (DC3 next-trip brief).
+
+**Not committed (Justin's hand needed):**
+- `evryn-quality/` — repo files exist locally; not yet `git init`d or pushed to GitHub.
+
+**Pushed branches in evryn-backend (unchanged from Friday — still pending merge):**
+- `mira/2026-05-29-pre-mark-bundle` (pending Mira's cleanup commit for fictional-example swap)
+- `soren/build-doc-linear-tickets` (clean, mergeable)
+- `dc3/wave3-review` (clean, mergeable)
+
+---
+
 ## 2026-05-30 evening (AC0 — handoff #lock: ADRs 034+035 + worktree dig-out + 3 PRs in flight from Mira/Soren/DC3 + Monday packout)
 
 - **ADR-034 (force-load dossier composition v0.2) + ADR-035 (approval mechanism redesign) written + committed.** Capture the architectural decisions DC1 Wave 3 shipped. ADR-034 carries the four-layer composition spec + operator.md gating rationale + relationship to ADR-012 (amendment) + v0.3 trajectory via EVR-109 sidebar with Soren. ADR-035 captures the four coupled changes (short-id + strict parser + dual-route + Evryn-voice confirmation) + the approval_hint silent-diversion failure mode that drove the redesign.
