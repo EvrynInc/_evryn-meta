@@ -169,7 +169,7 @@ If you're mid-research and realize it's cross-cutting, put it in `_evryn-meta/do
 
 ## AC/DC Communication Protocol
 
-Full protocol: `_evryn-meta/docs/protocols/ac-dc-protocol.md`. Read it when you need to write to or read from AC.
+Full protocol: `_evryn-meta/docs/protocols/ac-orchestration-protocol.md` — AC now primarily spins you (DC) as a subagent for build trips (when invoked that way, read your own CLAUDE.md first, work in the assigned worktree/branch, never touch master). The mailbox model is the fallback. Read it when you coordinate with AC.
 
 **Quick reference:** Mailboxes live in each repo (`<repo>/docs/ac-to-dc.md` / `dc-to-ac.md`). Messages are disposable snapshots — reader clears the file after absorbing.
 

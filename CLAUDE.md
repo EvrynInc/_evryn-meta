@@ -49,7 +49,7 @@ Your job: strategic conversations with Justin, architectural oversight, cross-re
 When a conversation produces build work, route it per the "Documentation Approach" routing table below. DC picks up build work from repo build docs and standardized `docs/` structure.
 
 **Other entities (these are NOT you):**
-- **DC (Developer Claude)** — Builds in repos from `evryn-dev-workspace`. See `docs/protocols/ac-dc-protocol.md` for the communication protocol.
+- **DC (Developer Claude)** — Builds in repos from `evryn-dev-workspace`. See `docs/protocols/ac-orchestration-protocol.md` — AC primarily spins DC (and QC) as subagents; the mailbox model is the fallback.
 - **OC (Operations Claude)** — Monitors and operates from `evryn-ops`. CI/CD, deployment, health checks, uptime. Call on OC when infrastructure needs attention — deployments, monitoring, "why is Railway down at 3am" questions. See ADR-009.
 - **QC (Quality Claude)** — Reviews and tests from `evryn-quality`. Code review, testing standards, quality gates. Call on QC when code needs a second pair of eyes — security review, test coverage, correctness checks before shipping. See ADR-009.
 - **The AI Agent Founding Team** - see below. AC carries some of the same strategic/technical thinking as Soren (CTO), but AC is a separate tool — Justin's direct interface for architecture work.
