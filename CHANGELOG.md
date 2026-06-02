@@ -8,7 +8,19 @@
 
 ---
 
-## 2026-06-01 LATE evening (AC0 — Monday session continued: 3 PRs merged + DC3 fix-trip deployed + QC first trip ran + DC4 brief queued)
+## 2026-06-02 (AC0 — subagent-orchestration workflow established + DC4 & notifyDev merged + ownership correction)
+
+- **Subagent-orchestration protocol established as the primary AC→DC/QC pathway.** New `docs/protocols/ac-orchestration-protocol.md` (brief shape, loop, review-depth, merge rubric, CEO-altitude relay, pronoun convention, mailbox model as fallback). `ac-dc-protocol.md` → redirect stub. Propagated pointers across AC/DC/evryn-backend/soren CLAUDE.md (fixed pre-existing stale `protocols/`-less paths). Deleted `_evryn-meta/.claude/agents/developer.md` (duplicate DC subagent-def = drift; DC's canonical identity is `evryn-dev-workspace/CLAUDE.md`). Proven 3× this session.
+- **DC4 merged to evryn-backend master** (`383a718`, FF) — QC's 11-item first-trip bundle: B1 (`getRecentMessages` returned oldest-N, now newest-N via DESC+reverse), B2 (stuck-`processing` recovery + backstop), + 6 non-blockers + 3 cosmetic + T1 test fix. QC-verified GO.
+- **notifyDev hardening merged** (`0d69d8f`, FF) — retry-with-backoff on the operator-alert boundary (mirrors `executeApproval`; never-throws property preserved) + intentional-omission comments documenting why the B2c backstop isn't wired into the two cron paths. Built by a DC subagent, QC-verified GO. **DC4 + notifyDev NOT yet deployed** (Railway still `6e27e3ea`).
+- **Arch/build ownership corrected:** Soren (CTO) owns architecture + build of record; AC co-owns, often hands-on. (AC CLAUDE.md cascade + mailbox quick-ref updated.)
+- **Standing rules added to CLAUDE.md:** ping-by-default on `#team-alerts` (Justin opts out); QC = "she"; QC verifies every real code change (AC also reviews — finds are inputs, not verdicts); QC gained a system-context ("not just the diff") review mandate.
+- **Emergency-alerts bot deferred to v0.3** (reasoned-safe — a midnight loop is bounded on every axis: approval-gated outbound, low API cap, quiet-hours queue). SPRINT backlog reframed + go-live gate precondition dropped.
+- **Worktrees reaped:** idle `-soren` worktree + 3 dead branches removed. `evryn-backend-team` worktree created for the team's standup work.
+
+**Operator-relevant:** nothing changes how Justin operates today; master carries QC-verified fixes awaiting the next deliberate deploy.
+
+---
 
 - **3 PRs merged to evryn-backend master.** Mira PR #5 (identity bundle — `b826c7e` chain). Soren PR #7 (BUILD doc v0.3 scope addition — created this session). DC3 PR #6 (post-review fix-trip: handleRevisionNotes scope + readIdentityDir hardening + notify_queue queue+replay + cron-hour conform + Wave-3-leftover Slack-text fix). PR #4 (DC3 review trip, redundant with #6) closed without merge.
 - **notify_queue migration applied to production.** SQL paste-equivalent done via `npx supabase db query --linked` after Justin generated `SUPABASE_ACCESS_TOKEN` from supabase.com/dashboard/account/tokens and added to `evryn-backend/.env`. This unlocks CLI for any future migration — DC/AC/QC can now `npx supabase db query --linked -f <file>` without dashboard paste. Pre + post backups in `evryn-backend-dc3/backups/`. Integration test: 21/22 pass; 1 failure is a test bug (JSONB key-order normalization on string-equal assertion — routed to DC4 as T1).
