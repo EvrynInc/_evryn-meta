@@ -8,6 +8,27 @@
 
 ---
 
+## 2026-06-01 LATE evening (AC0 — Monday session continued: 3 PRs merged + DC3 fix-trip deployed + QC first trip ran + DC4 brief queued)
+
+- **3 PRs merged to evryn-backend master.** Mira PR #5 (identity bundle — `b826c7e` chain). Soren PR #7 (BUILD doc v0.3 scope addition — created this session). DC3 PR #6 (post-review fix-trip: handleRevisionNotes scope + readIdentityDir hardening + notify_queue queue+replay + cron-hour conform + Wave-3-leftover Slack-text fix). PR #4 (DC3 review trip, redundant with #6) closed without merge.
+- **notify_queue migration applied to production.** SQL paste-equivalent done via `npx supabase db query --linked` after Justin generated `SUPABASE_ACCESS_TOKEN` from supabase.com/dashboard/account/tokens and added to `evryn-backend/.env`. This unlocks CLI for any future migration — DC/AC/QC can now `npx supabase db query --linked -f <file>` without dashboard paste. Pre + post backups in `evryn-backend-dc3/backups/`. Integration test: 21/22 pass; 1 failure is a test bug (JSONB key-order normalization on string-equal assertion — routed to DC4 as T1).
+- **Railway deploy live.** Deploy `6e27e3ea` SUCCESS at 2026-06-01 18:58 PT, contains all DC3 work + Mira + Soren. `PROACTIVE_CHECK_HOUR_PT=8` env var set + verified. Sanity smoke clean: Supabase connected, Slack Socket Mode connected, polling started, `[notifySlack] QUEUED during quiet hours: Evryn is awake. Polling started.` confirms queue+replay live.
+- **QC repo git-init + pushed to GitHub.** `https://github.com/EvrynInc/evryn-quality` exists. CLAUDE.md + first-trip brief + mailbox files all committed as initial commit `825ac6b`.
+- **QC0 first trip complete.** ~7.5 min wall. Findings: 2 BLOCKERs (`getRecentMessages` returns oldest N not most recent; `processing`-status stuck with no monitor/recovery), 6 non-blockers (findPendingByShortId silent collision; catchUpOnReconnect doesn't process missed messages; handleApprovalMessage confirm-failure silent; checkProactiveOutreach woke-noop heartbeat; submit_draft swallows orchestrator failures — SUSPECTED), 2 security observations (S1 service_role bypass; S2 WebFetch SSRF), 3 cosmetic (formatConversationHistory raw UUID; misleading send-error text; redundant PT-hour gate), 6 quality-patterns proposals, 4 CLAUDE.md refinement proposals. QC's full findings preserved in git history (`evryn-quality` initial commit) before mailbox cleared.
+- **QC findings routed to DC4 brief.** `evryn-backend/docs/ac-to-dc.md` (commit `9fe4709`) carries the 11-item bundle: B1 + B2a/b/c + N3 + N4 + N5 + N7 + N8 + C1 + C2 + C3 + T1 (the test bug from migration ceremony). Self-contained brief, per-item fix sketches, branch/PR strategy, reporting structure.
+- **S1 + S2 backlog entries added** to `evryn-backend/docs/SPRINT-MARK-LIVE.md`. S1: service_role hardening for v0.3 (Soren-territory — design candidates: table allow-list, RLS-respecting role, dedicated typed tools). S2: WebFetch SSRF — Mira identity-side mini-fix v0.2 + Soren architectural v0.3.
+- **QC mailbox cleared.** `evryn-quality/docs/qc-to-ac.md` set to `READ — absorbed` per the protocol.
+- **AC CLAUDE.md commit-before-mail rule** is paying off — DC3's mailbox commits (his fix-trip reply at commit `111d0e6`) survived through the session despite multiple branch operations. Was tested under load this session.
+
+**Operator-relevant:** approval format unchanged (still `approve <id4>`). Quiet-hours queue+replay now LIVE — pings during 18:00–08:00 PT queue and replay at window close (instead of silent-drop). PROACTIVE_CHECK_HOUR_PT changed from 7 → 8 (first cron of the day now fires at quiet-hours-end, surfaces immediately).
+
+**Files committed this late-session batch:**
+- `evryn-backend` (via AC worktree): `docs/ac-to-dc.md` (DC4 brief — `9fe4709`); `docs/SPRINT-MARK-LIVE.md` (S1 + S2 backlog + QC status — `11e4117`). Plus merge commits from PRs #5 #6 #7.
+- `evryn-quality` (new repo): initial commit `825ac6b`; mailbox-clear commit (this lock).
+- `_evryn-meta`: this CHANGELOG entry; handoff-doc update; current-state.md update.
+
+---
+
 ## 2026-06-01 evening (AC0 — Monday session: ADR-036 (twice, after cross_user_notes correction) + QC standup + CLAUDE.md tiered-cascade restructure + DC3 next-trip brief + handoff doc)
 
 - **ADR-036 (Triage Interaction History Loopback v0.2 calibration phase) written, then rewritten.** Justin caught a misframing in the first draft: I had proposed using `cross_user_notes` as the substrate for triage closure notes. Wrong — `cross_user_notes` is reserved for *connection feedback* (third-party feedback on Evryn-mediated connections, BLIND WRITE, firewalled from buildPersonContext, processed by v0.3+ Reflection). The correct substrate is `emailmgr_items` + a new `original_from_user_id` UUID FK column. Rewritten ADR covers: createUser MCP tool (already on SPRINT backlog) + runtime auto-creates Eva in `processForward` + the new FK column + a Mira identity beat on triage.md Phase 2 (check prior interaction history before classifying). No new read tool required (supabase_read with filter works; typed wrapper optional per DC's judgment). Status: Proposed. Implementation routing pending Justin's Acceptance.

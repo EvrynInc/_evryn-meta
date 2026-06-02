@@ -8,9 +8,9 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-05-30T17:23-07:00*
-*Last #lock (full): 2026-05-30 evening (AC0 — handoff for Monday: Mira+Soren+DC3 all pushed branches; ADRs 034+035; per-agent worktree dig-out; clean hatches-down state for weekend)*
-*Last #lock (full, prior): 2026-05-29 evening (AC0 — Phase 4 done + DC1 Wave 3 shipped + Mira/AC1/DC3 dispatched + DC CLAUDE.md AC-spec-is-a-contract)*
+*Last updated: 2026-06-01 LATE evening*
+*Last #lock (full): 2026-06-01 LATE evening (AC0 — 3 PRs merged + DC3 fix-trip deployed + QC first trip ran + DC4 queued)*
+*Last #lock (full, prior): 2026-05-30 evening (AC0 — handoff for Monday)*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
 
@@ -22,42 +22,39 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 **Key framing:** Evryn is a broker, not a SaaS. v0.2 surfaces connections from a gatekeeper's inbox — not sorting email, brokering connections. Everyone is a "user," both sides pay per-connection.
 
-**Runway:** See the latest team current-state snapshot (`evryn-team-workspace/shared/current-state/`) for current bank balance and runway status.
+**Runway:** See the latest team current-state snapshot (`evryn-team-workspace/shared/current-state/`).
 
 ## What's Next
 
-- **First integration test considered DONE.** Phase 1-4 ran 2026-05-28 → 2026-05-29. Phase 5 (triage validation) deliberately deferred to the post-fix re-run.
-- **DC1 Wave 3 LIVE on Railway** — deploy `4e79b834`, commit `05bd1ff`, 7 runtime items + ARCH.md rewrite. **ADR-034** (force-load dossier composition) + **ADR-035** (approval mechanism redesign) committed 2026-05-29 evening capturing the architectural decisions.
-- **Three open PRs / branches waiting for review + merge** (pushed end-of-day 2026-05-30):
-  - `mira/2026-05-29-pre-mark-bundle` — Mira's 8-item identity-file bundle (3 commits: gatekeeper-onboarding.md, operator.md, core.md). Working tree at `c:/Users/Justin/Evryn/Code/evryn-backend/`.
-  - `soren/build-doc-linear-tickets` — Soren's v0.3 BUILD doc scope addition (Evryn writes Linear tickets about her own runtime). 1 commit. Worktree at `c:/Users/Justin/Evryn/Code/evryn-backend-soren/`.
-  - `dc3/wave3-review` — DC3's independent review of DC1's Wave 3 (7 concerns). 1 commit on `docs/dc-to-ac.md`. Worktree at `c:/Users/Justin/Evryn/Code/evryn-backend-dc3/`.
-- **AC1 PAUSED.** Silent-failure audit brief at `_evryn-meta/docs/working/2026-05-29-ac1-brief-silent-failure-audit.md`. Don't unblock until DC1+Mira+DC2 ship + DC3 review clears.
-- **DC3's next assignment in his mailbox** — `evryn-backend/docs/ac-to-dc.md` on master, "ADDITIONAL FIX" section: quiet-hours queue+replay + cron-time conform `PROACTIVE_CHECK_HOUR_PT=7→8`. Monday work.
-- **Per-agent worktree pattern established.** AC at `c:/Users/Justin/Evryn/Code/evryn-backend-ac/` (on master); Soren + DC3 each on their own branches; Mira on her branch in the original `c:/Users/Justin/Evryn/Code/evryn-backend/` tree. EVR-110 queues full per-agent rollout for Lucas post-Mark.
-- **Critical path to Mark-live:** Merge 3 PRs → DC3 ships ADDITIONAL FIX → Justin updates Railway env var + Slack per-channel notification config → AC0 unblocks AC1 for silent-failure audit → DC2 ships AC1's fixes → re-run integration test top-to-bottom through Phase 5 → STEP 0 cleanup → Justin sends Mark go-email.
+- **Pre-Mark-live runtime LIVE** — Railway deploy `6e27e3ea` SUCCESS 2026-06-01 18:58 PT. Contains: Wave 3 (force-load dossier + approval redesign + quiet hours + cron heartbeats) + Mira's identity bundle + DC3's post-review fixes (handleRevisionNotes scope + readIdentityDir hardening + notify_queue queue+replay + cron-hour conform). `PROACTIVE_CHECK_HOUR_PT=8` env var set.
+- **QC stood up + first trip complete.** Repo at `evryn-quality`, GitHub `https://github.com/EvrynInc/evryn-quality`. Findings: 2 BLOCKERs + 6 non-blockers + 2 security (S1 service_role / S2 WebFetch — both deferred to v0.3, in SPRINT backlog) + 3 cosmetic. Mailbox cleared post-absorption.
+- **DC4 brief queued** at `evryn-backend/docs/ac-to-dc.md` (commit `9fe4709`). 11 items. Justin to dispatch DC4 when ready.
+- **Critical path to Mark-live:** Justin spins DC4 → DC4 ships → QC reviews DC4 → AC routes any new findings → re-run integration test top-to-bottom through Phase 5 → STEP 0 cleanup (kill test-Mark UUID + create real-Mark + clear inboxes) → Justin sends Mark go-email.
+- **Justin's outstanding hand:** (a) Slack per-channel notification config (in progress as of session end), (b) DC4 dispatch.
+- **ADR-036 (triage interaction history loopback)** — Proposed, awaits review. Implementation routing pending Acceptance.
 - **Legal: Fenwick Phase 1 complete.** ToS and Privacy Notice finalized. Phase 2 (v0.3 terms) in progress.
 
 ## Active Projects
 
-- **_evryn-meta** — Two #locks landed 2026-05-29 → 2026-05-30. ADR-034 + ADR-035 committed. AC CLAUDE.md gained branch-before-edit + worktrees rule. Monday handoff packout at `docs/sessions/2026-05-30-ac0-monday-handoff.md`. Session doc carries DC list at 8 items + Mira pile at 8 items + v0.3 questions at 3.
-- **evryn-backend** — Master at `d8253fd` (AC0 lock: operator-guide Wave 3 absorption + DC3 review brief + DC1 reply preserved). Wave 3 LIVE on Railway (`4e79b834`). Three open feature branches waiting for review + merge (Mira, Soren, DC3).
-- **evryn-team-workspace** — Mira shipped her 8-item bundle. Soren shipped v0.3 BUILD doc addition. Team-workspace CLAUDE.md gained branch-before-edit + worktrees rule.
-- **evryn-dev-workspace** — DC CLAUDE.md "AC's spec is a contract" rule live as of 2026-05-29.
+- **_evryn-meta** — CLAUDE.md restructured 2026-06-01 with tiered context cascade (light vs. full product-architect). New "Working with QC" section. Commit-before-mail rule with pre-authorization. ADRs 034 + 035 + 036 (Proposed) committed. Today's handoff at `docs/sessions/2026-06-01-ac0-evening-handoff.md`.
+- **evryn-backend** — Master at `11e4117` (SPRINT backlog: S1/S2 + QC status). All 3 PRs merged today (Mira #5, Soren #7, DC3 #6). PR #4 (DC3 review trip) closed without merge — superseded by #6. DC4 brief sitting in mailbox.
+- **evryn-team-workspace** — Mira's bundle shipped. Soren's BUILD addition shipped. No new agent-side changes.
+- **evryn-dev-workspace** — DC CLAUDE.md got QC awareness expansion + commit-before-mail rule (commit `17edb9e`).
+- **evryn-quality** — **ACTIVE.** Repo live on GitHub. QC0 first trip complete, findings routed. Standing cadence (DC ships → QC reviews → AC routes → DC fixes → QC verifies) codified.
 - **evryn-ops** — Not yet active.
-- **evryn-quality** — Not yet active. QC standup question (Mark-live blocker?) pending AC1's first-trip opinion.
 - **evryn-website** — Live at evryn.ai.
 - **evryn-team-agents** — FROZEN (ADR-021).
 
 ## Infrastructure
 
-- Railway: evryn-backend on Pro plan. **Latest deploy `4e79b834` SUCCESS at 2026-05-30T00:22:12Z (17:22 PT 5/29) — Wave 3 / pre-Mark trip, commit `05bd1ff`.** Previous deploy `865af3cf` (Wave 2) REMOVED. `PROACTIVE_CHECK_HOUR_PT=7` unchanged. New env vars from Wave 3: `QUIET_START_HOUR_PT=18`, `QUIET_END_HOUR_PT=8` (defaults; configurable). GitHub auto-deploy still off — `railway up` manual is the path (DC's 3rd flag in his Wave 3 reply).
-- Slack: three apps scoped — "Evryn" (product, Socket Mode), "Dev Team" (DC/AC/OC/QC ops), "Team Alerts" (founding-team → Justin pings). New post-Wave-3: `#evryn-approvals` Slack pings suppressed 18:00–08:00 PT default (configurable); `#emergency-alerts` channel exists but no code triggers it (still backlog).
-- Supabase: "Evryn Product" project. Latest backups 2026-05-25 (4 days ago — under #lock-protocol-week threshold). **Schema gap still unaddressed:** ADR-028's `messages.internal_context` column was specced but never migrated.
-- evryn@evryn.ai (polled by Evryn), systemtest@evryn.ai (test-Mark placeholder + test recipient), review@evryn.ai = alias on justin@evryn.ai (review inbox, NOT polled).
+- Railway: evryn-backend on Pro plan. **Latest deploy `6e27e3ea` SUCCESS at 2026-06-01 18:58 PT** — contains DC3 fix-trip + queue+replay live. Previous `4e79b834` (Wave 3) REMOVED. `PROACTIVE_CHECK_HOUR_PT=8` (was 7); `QUIET_START_HOUR_PT=18`, `QUIET_END_HOUR_PT=8` (defaults). GitHub auto-deploy still off — `railway up` manual is the path.
+- **Supabase CLI now functional** — `SUPABASE_ACCESS_TOKEN` in `evryn-backend/.env` enables `npx supabase db query --linked` for any DC/AC/QC. Future migrations don't need dashboard paste. AC worktree linked.
+- Slack: three apps scoped (Evryn / Dev Team / Team Alerts). `#evryn-approvals` Slack pings suppressed 18:00–08:00 PT default with queue+replay (notify_queue table live). `#emergency-alerts` channel exists but no code triggers it (backlog).
+- Supabase: "Evryn Product" project. **`notify_queue` table added 2026-06-01** (DC3 migration). Pre + post backups in `evryn-backend-dc3/backups/`. Schema gap from ADR-028 (`messages.internal_context`) still unaddressed.
+- evryn@evryn.ai (polled), systemtest@evryn.ai (test-Mark placeholder + test recipient), review@evryn.ai = alias on justin@evryn.ai.
 
 ## Task Management
 
-[Linear (EVR workspace)](https://linear.app/evryn) — the team's task tracking system with RACI labels. Protocol + API key in `evryn-team-workspace/shared/protocols/linear-protocol.md`. EVR-108 (Blocked, post-Mark) tracks ARCHITECTURE.md compression pass per Soren's 5/26 agent-definition change. EVR-109 (Needs Authorization) tracks force-load + caching v0.3 sidebar with Soren.
+[Linear (EVR workspace)](https://linear.app/evryn) — RACI labels. EVR-108 (Blocked, post-Mark) ARCHITECTURE.md compression. EVR-109 (Needs Auth) force-load + caching v0.3 sidebar. EVR-110 per-agent worktree rollout post-Mark.
 
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED

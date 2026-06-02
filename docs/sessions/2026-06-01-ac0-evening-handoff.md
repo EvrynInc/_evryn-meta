@@ -2,14 +2,45 @@
 
 > **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
 
-**From:** AC0 (the instance that ran Monday 2026-06-01 — rewrote ADR-036 after Justin caught a cross_user_notes misframing, stood up the QC repo (CLAUDE.md + first-trip brief), restructured AC's CLAUDE.md startup cascade, wove QC into AC and DC's CLAUDE.md, prepared DC3's next-trip brief)
+**From:** AC0 (the instance that ran Monday 2026-06-01 — rewrote ADR-036 after Justin caught a cross_user_notes misframing, stood up QC repo + pushed to GitHub, restructured AC's CLAUDE.md startup cascade, wove QC into AC and DC's CLAUDE.md, dispatched DC3 next-trip, merged 3 PRs, ran the notify_queue migration, deployed DC3 to Railway, dispatched DC4 with QC's first-trip findings)
 **To:** Fresh AC0 (Tuesday or whenever Justin spins fresh)
-**Date:** 2026-06-01T16:16:41-07:00
-**Status:** All changes committed and pushed. Three feature branches still pending merge (Mira, Soren, DC3 review). QC repo exists as files but not yet `git init`d. DC3's mailbox has his next trip queued.
+**Date:** 2026-06-01 LATE evening (#lock done late session — context at 12%)
+**Status:** Everything pushed. DC4 brief queued in mailbox, ready for dispatch. Mark-live pipeline is moving — DC3 fix-trip live, QC first-trip findings routed to DC4. Railway env var PROACTIVE_CHECK_HOUR_PT=8 set.
 
 ---
 
-## TL;DR — where Evryn is right now
+## LATE-SESSION UPDATE (the section below is largely superseded by what happened after first write — read this section first)
+
+**Since the section below was first written (~16:16 PT):**
+
+- **DC3 fix-trip shipped + merged + deployed.** PR #6 merged (commit `b826c7e`). Railway deploy `6e27e3ea` SUCCESS. Items A (handleRevisionNotes scope fix) + B (existsSync guard) + C (notify_queue queue+replay) + D (underscore filter) all live. Plus a Wave-3-leftover piggyback fix (Slack notification text uses short_id, not legacy approval_subject).
+- **Mira PR #5 merged.** Identity-file bundle (gatekeeper-onboarding rewrite + operator.md + core.md + onboarding.md + integration-test-script.md). Item 8 (curiosity-affordance) confirmed already in via Wave 1 PR #1.
+- **Soren PR #7 merged.** BUILD doc v0.3 scope addition (Evryn writes Linear tickets about her own runtime). PR was created this session (Soren's branch existed on origin but no PR).
+- **PR #4 (DC3 review trip) closed without merging** — content was already on master via PR #6 (which appended his fix-trip reply BELOW his review reply on dc-to-ac.md).
+- **QC repo git-init + pushed to GitHub.** Live at `https://github.com/EvrynInc/evryn-quality`. CLAUDE.md, first-trip brief, mailbox files, settings — all committed (`825ac6b`).
+- **QC0 first trip ran.** ~7.5 min wall. Found 2 BLOCKERs (`getRecentMessages` ordering, `processing`-status stuck) + 6 non-blockers + 2 security observations (S1 service_role, S2 WebFetch) + 3 cosmetic + 6 quality-patterns proposals + 4 CLAUDE.md refinement proposals.
+- **QC findings absorbed + routed to DC4.** Full DC4 brief at `evryn-backend/docs/ac-to-dc.md` (mailbox commit `9fe4709`). 11 items, prioritized, fix sketches. Includes T1 — the test bug from today's migration ceremony (test-notify-queue.ts nested-metadata assertion uses string-equal on JSONB which doesn't survive PostgreSQL key normalization — switch to deep-equal).
+- **QC mailbox cleared.** `evryn-quality/docs/qc-to-ac.md` now reads "READ — absorbed".
+- **S1 + S2 backlog entries added** to `evryn-backend/docs/SPRINT-MARK-LIVE.md` (S1: service_role hardening for v0.3 — Soren-territory; S2: WebFetch SSRF — Mira identity-side mini-fix v0.2 + Soren architectural v0.3). QC standup row updated with STATUS.
+- **Notify_queue migration applied to production DB** via `npx supabase db query --linked`. Pre + post backups in `evryn-backend-dc3/backups/`. Integration test: 21/22 pass; T1 is the 1 failure (test bug, not runtime bug).
+- **SUPABASE_ACCESS_TOKEN now in `evryn-backend/.env`** — Justin created it from supabase.com/dashboard/account/tokens. This unlocks `npx supabase db query --linked` for any DC/AC/QC instance going forward. Major friction-removal — future migrations don't need dashboard paste.
+- **Railway env var `PROACTIVE_CHECK_HOUR_PT=8`** set on production. Verified via `railway variables`.
+- **Sanity smoke clean post-deploy** — boot logs show Supabase connected, Slack Socket Mode connected, polling started, `[notifySlack] QUEUED during quiet hours` confirming queue+replay live.
+
+**Critical path NOW:**
+1. **Justin spins DC4** with `evryn-backend/docs/ac-to-dc.md` brief (11 items: B1 + B2 + 6 non-blockers + 3 cosmetic + T1 test fix).
+2. **DC4 ships, merges, deploys.**
+3. **QC reviews DC4's ship** (standing cadence — DC ships → QC reviews → AC routes).
+4. **Re-run integration test** top-to-bottom through Phase 5 (Mark-live readiness signal).
+5. **Pre-Mark-live STEP 0 cleanup** (kill test-Mark UUID + create fresh real-Mark + clear inboxes + visual verify).
+6. **Justin configures Slack per-channel notification schedules** (client-side, in progress).
+7. **Justin sends Mark the go-email.**
+
+**No outstanding agent dispatches.** No PRs open. All work that was in flight earlier in the session is now merged or deferred to DC4.
+
+---
+
+## TL;DR — where Evryn is right now (as of mid-session, ~16:16 PT — superseded by section above)
 
 **v0.2 / Wave 3 still LIVE on Railway** (deploy `4e79b834`, commit `05bd1ff`). Pre-Mark-live position unchanged from Friday: 7 runtime items + ARCH rewrite running, three branches awaiting review and merge (Mira's identity bundle, Soren's BUILD-doc v0.3 scope addition, DC3's Wave 3 review). Justin worked through reviews today; Mira is actively editing her PR (removing real-Mark e.g. examples per a review finding); Soren and DC3 are mergeable when Justin gives the word.
 
