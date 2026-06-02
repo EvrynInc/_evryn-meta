@@ -107,6 +107,8 @@ Bash/CLI access to Supabase CLI + API, Linear API key (in `_evryn-meta/.env`), G
 
 **Slack pings.** When Justin asks for a ping (e.g. "ping me on `#team-alerts` when you're done"), post via Node `fetch` to `SLACK_TEAM_WEBHOOK_URL` (in `evryn-team-workspace/.env`) and prefix your message with your name — `AC:` by default, or with a context tag like `AC0:` or `AC (supabase tasks)` if you're aware there's more than one instance of you running right now. Avoid bash + curl and PowerShell — both have failure modes on Windows (non-ASCII mangling, command-approval prompts) that will burn you.
 
+**Ping-by-default (standing arrangement, 2026-06-02).** Pinging Justin on `#team-alerts` is the **default**, not the exception. Ping him whenever you have something for his eyes — a finished chunk, a mid-work checkpoint, a ready-for-review, or a blocking question — and keep driving. Don't withhold a ping to avoid bothering him: he runs multiple instances in parallel, so an un-pinged update can sit unseen for a long time, and the ping is part of the deliverable. **Justin opts *out*** — he'll tell you when to stop pinging, ping less often, or ping only for X. Until he says so, default to pinging. (Keep pings to concise attention-taps; the substance goes in chat — see the attention-taps rule under Working With Justin.)
+
 **When you dispatch DC, instruct him to ping `#dev-alerts` for ALL ops pings** — deploy-ready, deploy-done, decisions, unblocks, everything. Not `#team-alerts`. Two reasons: (1) DC doesn't have `SLACK_TEAM_WEBHOOK_URL` (it's in `evryn-team-workspace/.env`, outside his repo); (2) DC's pings are a valuable shipping record AC instances can scroll back through — `#team-alerts` is too noisy (~50/day from various sources) to find his pings in.
 
 ---
@@ -296,9 +298,9 @@ All operational learnings go directly to the appropriate repo files (proposed, w
 
 ---
 
-## AC/DC Communication Protocol
+## Orchestrating DC and QC
 
-Full protocol: `docs/protocols/ac-dc-protocol.md`. Don't load it unless you need it — only read it when you actually need to write to or read from DC.
+**Primary pathway:** `docs/protocols/ac-orchestration-protocol.md` — AC spins DC (build) and QC (review) as **subagents**, reviews their output, relays to Justin at CEO altitude, and gates merges. Read it before running a build/review loop. This is now the default way AC engages DC and QC; the mailbox/note-passing model (`docs/protocols/ac-dc-protocol.md`, now a redirect) is the **fallback** for persistent instances / multi-day work.
 
 **Quick reference:** Mailboxes live in each repo (`<repo>/docs/ac-to-dc.md` / `dc-to-ac.md`). Messages are disposable snapshots — reader clears the file after absorbing. AC and Soren both author `ARCHITECTURE.md` (Soren owns it of record; AC is co-owner, often hands-on); DC reads but never modifies it.
 
@@ -314,7 +316,7 @@ Full protocol: `docs/protocols/ac-dc-protocol.md`. Don't load it unless you need
 
 ## Working with QC
 
-QC (Quality Claude) lives in `evryn-quality` and reviews DC's ships post-hoc. The standing cadence:
+QC (Quality Claude) lives in `evryn-quality` and reviews DC's ships. **She** is referred to with female pronouns (the pronoun convention in `docs/protocols/ac-orchestration-protocol.md` — disambiguates the three of you). The **primary** way you engage her is by spinning her as a subagent (see the orchestration protocol for the brief shape + loop). The standing cadence:
 
 **DC ships → QC reviews → QC findings to AC → AC writes the fix-trip brief → DC ships fixes → QC verifies.**
 
@@ -322,7 +324,7 @@ QC sits between what DC shipped and what AC routes next. Their job is the advers
 
 **What QC does that DC doesn't:** DC builds and reviews his own work as he goes — that part of the discipline doesn't change. QC operates *after* the ship, with fresh context, hunting silent failures, cross-user containment risks, and spec-runtime mismatches. *"Does it compile / do tests pass"* is DC's check during build. *"Does it match intent + fail safely + does the spec match the runtime"* is QC's check after.
 
-**When AC dispatches QC vs. reviews themselves:** for substantive ships (Wave-level work, new pathways, architectural changes), dispatch QC. For tiny mailbox-cleanup or doc-only patches, AC can review directly — QC's standup cost isn't worth it for trivial changes. When in doubt, dispatch QC; the cost of an unnecessary QC trip is small compared to the cost of a missed silent failure.
+**QC verifies every real code change — even small ones (settled 2026-06-02).** Her independent fresh-eyes pass is the whole point; "it's tiny" is not a reason to skip her (that just leaves AC as a single point of failure). AC reviews too — the higher-level/system lens — but that *adds to* QC's review, never replaces it. Only non-code changes (pure docs, a typo) skip her. Depth tiers (how deep, not whether) live in the orchestration protocol.
 
 **Mailboxes:** `evryn-quality/docs/ac-to-qc.md` (briefs) and `evryn-quality/docs/qc-to-ac.md` (findings). Same disposable-snapshot pattern as AC↔DC. Hand-relay AC↔QC traffic between instances; tell each side when there's mail.
 
