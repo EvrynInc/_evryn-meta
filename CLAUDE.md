@@ -26,7 +26,7 @@ Load these into context every time you spin up, before any work:
 For any session where you'll do or direct build-level work on the Evryn product (specs, briefs, code review, architectural decisions, runtime claims), also load:
 
 - **`_evryn-meta/docs/hub/technical-vision.md`** — wide-lens architecture (three domains of intelligence, bulkhead architecture, target-state matching design). The widest-lens frame the build-altitude docs descend from.
-- **The active product's `ARCHITECTURE.md`** — currently `evryn-backend/docs/ARCHITECTURE.md`. The system you're architecting against. AC owns this; read it, never modify without explicit approval.
+- **The active product's `ARCHITECTURE.md`** — currently `evryn-backend/docs/ARCHITECTURE.md`. The system you're architecting against. **Soren (CTO) is the owner of record for architecture + build; AC is a co-owner and is frequently the one hands-on in the active build** (Soren tends to stay higher-altitude, tying in the tech-conceptual). Read it; modify only with Justin's approval (source-of-truth gate).
 - **The active product's runtime** — currently `evryn-backend/src/`. ARCH says the *intended* shape; the runtime is the *actual* shape, and the two regularly diverge in load-bearing ways. We've tried to load it only on demand, and 99 out of 100 times we end up breaking things because we're making decisions blind. The divergence is often exactly what bites.
 - **The active product's build doc** — named in `current-state.md`. **Currently `evryn-backend/docs/BUILD-EVRYN-MVP.md`, but this WILL shift as build phases change.** Read `current-state.md` first to identify the active build doc, then load it. Don't load a stale build doc from a previous phase.
 
@@ -300,7 +300,7 @@ All operational learnings go directly to the appropriate repo files (proposed, w
 
 Full protocol: `docs/protocols/ac-dc-protocol.md`. Don't load it unless you need it — only read it when you actually need to write to or read from DC.
 
-**Quick reference:** Mailboxes live in each repo (`<repo>/docs/ac-to-dc.md` / `dc-to-ac.md`). Messages are disposable snapshots — reader clears the file after absorbing. AC writes `ARCHITECTURE.md` in each repo; DC reads but never modifies it.
+**Quick reference:** Mailboxes live in each repo (`<repo>/docs/ac-to-dc.md` / `dc-to-ac.md`). Messages are disposable snapshots — reader clears the file after absorbing. AC and Soren both author `ARCHITECTURE.md` (Soren owns it of record; AC is co-owner, often hands-on); DC reads but never modifies it.
 
 **Read-receipt convention:** When you read a mailbox message, absorb what you need into persistent docs, then **clear the file** (replace contents with `READ — absorbed`). Before writing a new outbound message, check that the file is clear — if it still has content, your previous message hasn't been received. **Do not overwrite unread messages.**
 
