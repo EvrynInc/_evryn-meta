@@ -19,7 +19,7 @@ From your package, Justin will either (1) do it now himself if his lift is low e
 
 ## Which tree/branch to read, and the current in-flight state (read FIRST — it explains anything that looks "off")
 
-Read the **main `evryn-backend` tree, checked out on `master`** — not a feature worktree. That's where the current schema, config, migration files, and build doc live. **You do not strictly need the full product-architect cascade for this dev-DB task** — the "Required context" files below are sufficient; load deeper only if you find you need it.
+Read the **main `evryn-backend` tree, checked out on `master`** — not a feature worktree. That's where the current schema, config, migration files, and build doc live. **Run the FULL product-architect cascade** (per AC's CLAUDE.md SESSION STARTUP — the Hub, technical-vision, `ARCHITECTURE.md`, the runtime `src/`, and the build doc). You are architecting the system, and **you cannot architect what you don't know** — going in on a partial load is exactly how we break things, every time. Do **not** trim the load on your own judgment. The "Required context" files listed below are *additions* for this specific task, **not** a substitute for the cascade.
 
 If you *did* load the broader cascade, here's the in-flight state so nothing reads as a contradiction:
 - `master` carries the **EVR-71/68 + ADR-036-Trip-1 bundle, merged but NOT yet deployed** — Railway runs older code, so the *runtime on master is ahead of what's live*. Expected; it deploys together soon.
