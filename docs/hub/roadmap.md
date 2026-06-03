@@ -88,7 +88,7 @@ Everyone who interacts with Evryn is a "user" — whether they came through a ga
 
 - **Double opt-in.** Evryn proposes a match, each person approves what's shared at every step. Either can say no at any point — Evryn softens any rejection. Neither knows the other exists until both have agreed.
 - **Evryn is the broker, not the sorter.** She explains *why* someone matters, not just *that* they match. Connection quality is the product.
-- **Trust-based pricing at the point of connection.** Both sides pay what they believe is fair. 100% satisfaction guarantee.
+- **Trust-based pricing at the point of connection.** Both sides pay what they believe is fair — and if it doesn't deliver, Evryn refunds.
 - **After-care.** Evryn follows up: "How did that feel?" Feedback calibrates her judgment over time.
 
 ## Business Model
