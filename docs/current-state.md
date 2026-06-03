@@ -8,9 +8,8 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-06-02 (AC0 #lock)*
-*Last #lock (full): 2026-06-02 (AC0 — subagent-orchestration protocol established + DC4 & notifyDev merged to master + arch/build ownership corrected)*
-*Last #lock (prior): 2026-06-01 LATE evening (AC0 — 3 PRs merged + DC3 deployed + QC first trip + DC4 queued)*
+*Last updated: 2026-06-03 (AC0 #lock — pre-changeover batten-down)*
+*Last #lock (full): 2026-06-03 (AC0 — EVR-71/68 + ADR-036 Trip 1 merged; Trip 2 on branch; dev-DB committee spun; auto-deploy verified OFF)*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
 
@@ -20,35 +19,31 @@
 
 Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v0.2 "Gatekeeper's Inbox") for Mark (real-Mark = Mark Titus, Seattle filmmaker / Eva's Wild founder) first. See `evryn-backend/docs/BUILD-EVRYN-MVP.md`. Evryn is a broker, not a SaaS — surfaces connections from a gatekeeper's inbox; everyone is a "user," both sides pay per-connection.
 
-## How AC works now (NEW — 2026-06-02)
+## How AC works now
 
-AC drives DC and QC by spinning them as **subagents** (build/review loops), not hand-relayed mailbox notes. Protocol: `docs/protocols/ac-orchestration-protocol.md` (primary; `ac-dc-protocol.md` → redirect, mailbox model = fallback). QC verifies every real code change (AC also reviews; her finds are inputs, not verdicts). Ping-by-default on `#team-alerts`. **Arch/build owned by Soren (CTO); AC co-owns, often hands-on.**
+AC drives DC and QC as **subagents** (build/review loops), not hand-relayed mailbox notes. Protocol: `docs/protocols/ac-orchestration-protocol.md`. QC verifies every real code change (her finds are inputs, not verdicts). **Ping-by-default** on `#team-alerts`. **Arch + BUILD docs: AC holds full edit rights** (extension of Soren, not barred), but **editing either needs Justin's explicit auth first** (the BUILD doc is NOT a "free edit"). Subagent memory: subagents **output** memory text, AC writes it (don't let subagents write memory).
 
 ## What's Next (critical path to Mark-live)
 
-- **evryn-backend master = `0d69d8f`** — DC4's 11-item QC-fix bundle (B1 getRecentMessages ordering, B2 stuck-processing, + non-blockers) + notifyDev retry hardening. **Both QC-verified GO. NOT yet deployed** (Railway still on `6e27e3ea`).
-- **Next (Justin):** deploy master → clear 3 inboxes (`evryn@`/`systemtest@`/`review@`) → run integration test through Phase 5 (fix its stale `getRecipient` Pre-Flight line first) → ADR-036 (work together).
-- **ADR-036 (triage interaction-history loopback)** — Proposed; v0.2-calibration item (reuses `findOrCreateUser` + `original_from_user_id` FK + Mira triage beat).
-- **Emergency-alerts bot → DEFERRED to v0.3** (reasoned-safe: a midnight loop is bounded — approval-gated, API-capped, quiet-hours-queued). Go-live gate precondition dropped.
-- **main↔master standardization** → next clean moment (standardize on `main`).
-- **Legal: Fenwick Phase 1 complete.** Phase 2 (v0.3 terms) in progress.
+- **evryn-backend master = `b87ceb6`** — EVR-71 (email-drop fix) + EVR-68 (cold-start approval replay) + ADR-036 Trip 1 (createUser tool + `original_from_user_id` FK + processForward auto-create) + build-doc v0.3 items. **All QC-verified GO, pushed, NOT deployed.**
+- **ADR-036 Trip 2** (Mira's triage prior-history beat) on branch `mira/adr036-triage-beat` (`5cfd226`, pushed) — AC + Justin reviewed, **NOT merged** (rides identity-file-review at deploy).
+- **036 migration** (`backups/adr-036-original-from-user-id-migration.sql`) **written, NOT applied** — rides the deploy.
+- **Next (a FRESH AC0 — Justin wants a sharp instance for this):** merge Mira's beat (identity-file-review) → apply 036 migration (+ verify/add `users.email` UNIQUE constraint, idempotency hardening — non-blocking) → `railway up` + (master already pushed) → fix the stale `getRecipient` integration-test pre-flight line → run integration test through Phase 5.
+- **Dev/staging DB → pre-Mark (decided).** AC1 spun to run the exploratory committee (brief: `docs/sessions/2026-06-03-dev-db-committee-brief-for-ac1.md`). Runs in parallel with the integration test.
+- **EVR-72** (follow-up loads gatekeeper not contact) — **ENABLED by 036's FK but NOT fixed** (`checkFollowUps` not yet updated to load the contact record). Fold into a follow-up trip.
 
-## Active Projects
+## Pending doc-syncs (need Justin's auth — flagged, not done)
 
-- **_evryn-meta** — New `ac-orchestration-protocol.md` (subagent-primary). CLAUDE.md: ownership correction, ping-by-default, QC=she. `developer.md` subagent-def deleted (drift). Handoff: `docs/sessions/2026-06-02-ac0-handoff.md`.
-- **evryn-backend** — master `0d69d8f` (DC4 + notifyDev, QC-verified, not deployed). SPRINT: emergency-alerts deferred to v0.3.
-- **evryn-quality** — ACTIVE. CLAUDE.md gained a system-context review mandate. QC spun as subagent now (2 trips this session: DC4 review + notifyDev verify).
-- **evryn-dev-workspace** — DC CLAUDE.md repointed to orchestration protocol.
-- **evryn-team-workspace** — soren.md repointed (team mid-standup 2026-06-02). **evryn-ops** — not yet active. **evryn-website** — live. **evryn-team-agents** — FROZEN (ADR-021).
+- `ARCHITECTURE.md` Data Model: reflect the 036 `original_from_user_id` FK + the `create_user` MCP tool. `LEARNINGS.md` / `AGENT_PATTERNS.md`: session learnings (verify-don't-assume on deploy state; don't trim the architect load; subagent Edit/Write blocked on `.claude/` paths). **team CLAUDE.md** "identity-pushes-trigger-redeploys" line is **stale** (auto-deploy is OFF) — Soren to reconcile.
 
 ## Infrastructure
 
-- Railway: evryn-backend Pro. **Live deploy still `6e27e3ea` (2026-06-01)** — master is ahead (`0d69d8f`), NOT yet redeployed. `PROACTIVE_CHECK_HOUR_PT=8`; quiet hours 18–8 PT. Auto-deploy off; `railway up` manual.
-- Supabase CLI functional (`SUPABASE_ACCESS_TOKEN` in `evryn-backend/.env`). "Evryn Product" project; `notify_queue` table live. **real-Mark fully OUT of the DB** (test uses the `systemtest@evryn.ai` record).
-- Slack: `#evryn-approvals` pings quiet 18–8 PT w/ queue+replay. `#emergency-alerts` deferred to v0.3 (off-hours pass-through is now VIP/sender-based — needs a VIP'd bot).
+- **Railway: AUTO-DEPLOY OFF — and staying off by design (Justin, 2026-06-03).** Standing model: **push freely** (integrate + back up — pushes are safe, they deploy nothing), then ***choose* deploy moments** via manual `railway up`. The deliberate `railway up` is the only loaded gun — care goes *there*, not on pushes. Verified OFF 2026-06-03 (pushed master, no deploy fired). **Live deploy = `6e27e3ea` (2026-06-01)** — master is ahead, not redeployed. `PROACTIVE_CHECK_HOUR_PT=8`; quiet hours 18–8 PT.
+- Supabase: "Evryn Product" project (`maruxkjwlfltlmureqkt`), single prod DB (no dev separation — Phase 0d deferred; dev-DB committee active). **real-Mark fully OUT of the DB** (test uses `systemtest@`). Latest backup 2026-06-02.
+- Slack: `#evryn-approvals` quiet 18–8 PT w/ queue+replay. `#emergency-alerts` deferred to v0.3.
 
 ## Task Management
 
-[Linear (EVR workspace)](https://linear.app/evryn) — EVR-108 (post-Mark ARCH compression), EVR-109 (force-load/caching v0.3), EVR-110 (per-agent worktree rollout). v0.3 candidates to ticket: emergency-bot, model-pin re-eval.
+[Linear (EVR workspace)](https://linear.app/evryn) — **EVR-68 + EVR-71 fixed** (pending deploy), **EVR-72 enabled-not-fixed**. EVR-67 = v0.3 S1 hardening. EVR-108/109/110 standing. Soren-owned; Justin/Lucas update per this state.
 
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED

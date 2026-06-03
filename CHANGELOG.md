@@ -8,6 +8,21 @@
 
 ---
 
+## 2026-06-03 (AC0 — EVR-71/68 + ADR-036 shipped; QC manual hardened; dev-DB committee spun; pre-changeover #lock)
+
+- **EVR-71 + EVR-68 fixed, merged** (`5a038b2`, `24d41cf`, FF to master). EVR-71: inbound emails were silently dropped on a transient/storage failure (`markProcessed` ran after a swallowed throw + the Gmail history cursor advanced past failed mail). Fix: `handleNewEmail` returns `done`/`permanent-skip`/`transient`; cursor advances only if no email failed transiently; held cursor re-fetches + dedup short-circuits. EVR-68 residual: cold-start reconnect now replays missed operator messages via a durable `slack_ts` cursor. DC subagent built, QC-verified GO.
+- **ADR-036 Trip 1 (runtime) merged** (`ffdfb78`→`ba72f7a`, FF). `create_user` MCP tool (find-or-create), `emailmgr_items.original_from_user_id` FK (migration written-not-applied), `processForward` auto-creates the sender at forward time (row born with the FK — improved on the ADR). DC subagent built, QC-verified GO. Closes the 6,000-Evas + resubmit-to-game-triage gaps once Trip 2 + deploy land.
+- **ADR-036 Trip 2 (identity) — Mira-as-subagent experiment, on branch** (`mira/adr036-triage-beat`, `5cfd226`, pushed, NOT merged). Mira reconciled the existing `triage.md` dedup beat (which keyed on "notification sent" — a pass produces none, so it structurally missed the gaming case) into a prior-history beat on the new FK, + the gaming-resubmit→flag-Operator outcome, calibrated to judgment-not-compulsion. AC tweaks: name `create_user` explicitly + gold follow-up pass-on. AC + Justin reviewed.
+- **QC manual hardened.** System-context (ARCHITECTURE.md + full runtime + touched ADRs) now mandatory every review (every subagent spin is cold; "I traced the runtime instead" forbidden). Blast-radius discipline: read-all-now; when the runtime outgrows full-read, QC scopes the *runtime* blast radius herself (architecture-as-map + tracing + judgment) — never inherits a pre-scoped list. Re-ran QC with architecture loaded → grounded GO.
+- **CLAUDE.md: arch/build doc edit-rights model corrected.** AC holds full edit rights to ARCHITECTURE.md + the BUILD doc (extension of Soren, not barred), but editing either needs Justin's explicit auth first. Reverted a wrong "BUILD doc = free direct edit" carve-out. + "Worktree & Branch Discipline" section as the protocol's canonical target.
+- **Subagent memory policy:** subagents are blocked from Edit/Write on `.claude/` paths (shell works, with an encoding trap) — so subagents now **output** memory text and AC writes it.
+- **Dev/staging DB → pre-Mark (decided, catastrophe-asymmetry).** AC1 spun to run the exploratory committee; bulletproof brief at `docs/sessions/2026-06-03-dev-db-committee-brief-for-ac1.md`.
+- **Auto-deploy verified OFF** (pushed master, no deploy fired — deploys are manual `railway up`). Recorded in current-state; team CLAUDE.md "pushes-trigger-redeploys" line is stale.
+- **Build doc:** added v0.3 hardening backlog (QC's EVR-71/68 findings), the Dev/Staging DB note, and a "Gaming-Resubmit Detection at Scale" v0.3 item.
+- **All committed + pushed** (master `b87ceb6`, docs repos, Mira branch) — **NOT deployed.** Next (fresh AC0): migrate → deploy → integration test.
+
+---
+
 ## 2026-06-02 (AC0 — subagent-orchestration workflow established + DC4 & notifyDev merged + ownership correction)
 
 - **Subagent-orchestration protocol established as the primary AC→DC/QC pathway.** New `docs/protocols/ac-orchestration-protocol.md` (brief shape, loop, review-depth, merge rubric, CEO-altitude relay, pronoun convention, mailbox model as fallback). `ac-dc-protocol.md` → redirect stub. Propagated pointers across AC/DC/evryn-backend/soren CLAUDE.md (fixed pre-existing stale `protocols/`-less paths). Deleted `_evryn-meta/.claude/agents/developer.md` (duplicate DC subagent-def = drift; DC's canonical identity is `evryn-dev-workspace/CLAUDE.md`). Proven 3× this session.
