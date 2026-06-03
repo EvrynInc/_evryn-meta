@@ -21,6 +21,7 @@
 - **Build doc:** added v0.3 hardening backlog (QC's EVR-71/68 findings), the Dev/Staging DB note, and a "Gaming-Resubmit Detection at Scale" v0.3 item.
 - **Emergency DND-override alert → reclassified to a HARD go-live gate** (was deferred to v0.3 on 2026-06-02). Research showed the deferral only bounded the runaway-*loop* risk and missed the **silent-death** case (auth expiry / crash / polling stops → Evryn goes dark → Mark's forwards pile up → Mark ghosted, Justin never knows = pilot-ending). Reconciled the SPRINT (un-deferred, reclassified) ↔ build-doc-Phase-0e (already a blocker) contradiction. Per Justin.
 - **All committed + pushed** (master `b87ceb6`, docs repos, Mira branch) — **NOT deployed.** Next (fresh AC0): migrate → deploy → integration test.
+- **Post-#lock follow-ups (same session):** corrected the emergency-alert mechanism to a **Slack `#emergency-alerts` bot, NOT Twilio** (stale SPRINT line); added a pre-go-live whole-system **production-readiness gate** (Next-AC0 spins AC2, coordinated with AC1's dev-DB committee); added a #lock-protocol step to **surface superseded session docs before retiring** (Justin veto); retired the 2026-06-02 handoff to `historical/`; fixed the handoff to **name the cascade tree/branch + in-flight state** (the same gap AC1 hit); corrected the BUILD-doc **model-pin example** (`opus-4-5`→`4-7`, point to `classify.ts` as source-of-truth, reference the v0.3 re-eval per ADR-020).
 
 ---
 
