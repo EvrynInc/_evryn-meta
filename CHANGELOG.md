@@ -19,6 +19,7 @@
 - **Dev/staging DB → pre-Mark (decided, catastrophe-asymmetry).** AC1 spun to run the exploratory committee; bulletproof brief at `docs/sessions/2026-06-03-dev-db-committee-brief-for-ac1.md`.
 - **Auto-deploy verified OFF** (pushed master, no deploy fired — deploys are manual `railway up`). Recorded in current-state; team CLAUDE.md "pushes-trigger-redeploys" line is stale.
 - **Build doc:** added v0.3 hardening backlog (QC's EVR-71/68 findings), the Dev/Staging DB note, and a "Gaming-Resubmit Detection at Scale" v0.3 item.
+- **Emergency DND-override alert → reclassified to a HARD go-live gate** (was deferred to v0.3 on 2026-06-02). Research showed the deferral only bounded the runaway-*loop* risk and missed the **silent-death** case (auth expiry / crash / polling stops → Evryn goes dark → Mark's forwards pile up → Mark ghosted, Justin never knows = pilot-ending). Reconciled the SPRINT (un-deferred, reclassified) ↔ build-doc-Phase-0e (already a blocker) contradiction. Per Justin.
 - **All committed + pushed** (master `b87ceb6`, docs repos, Mira branch) — **NOT deployed.** Next (fresh AC0): migrate → deploy → integration test.
 
 ---
