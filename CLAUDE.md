@@ -26,7 +26,7 @@ Load these into context every time you spin up, before any work:
 For any session where you'll do or direct build-level work on the Evryn product (specs, briefs, code review, architectural decisions, runtime claims), also load:
 
 - **`_evryn-meta/docs/hub/technical-vision.md`** — wide-lens architecture (three domains of intelligence, bulkhead architecture, target-state matching design). The widest-lens frame the build-altitude docs descend from.
-- **The active product's `ARCHITECTURE.md`** — currently `evryn-backend/docs/ARCHITECTURE.md`. The system you're architecting against. **Soren (CTO) is the owner of record for architecture + build; AC is a co-owner and is frequently the one hands-on in the active build** (Soren tends to stay higher-altitude, tying in the tech-conceptual). Read it; modify only with Justin's approval (source-of-truth gate).
+- **The active product's `ARCHITECTURE.md`** — currently `evryn-backend/docs/ARCHITECTURE.md`. The system you're architecting against. **Soren (CTO) is the owner of record for architecture + build; AC is a co-owner and is frequently the one hands-on in the active build** (Soren tends to stay higher-altitude, tying in the tech-conceptual). Read it; **ARCHITECTURE.md is approval-gated** — modify only with Justin's approval (source-of-truth). The **BUILD doc** is not: as part of being hands-on in the active build, AC may edit it *directly* (Soren still owner of record), riding the normal commit gate.
 - **The active product's runtime** — currently `evryn-backend/src/`. ARCH says the *intended* shape; the runtime is the *actual* shape, and the two regularly diverge in load-bearing ways. We've tried to load it only on demand, and 99 out of 100 times we end up breaking things because we're making decisions blind. The divergence is often exactly what bites.
 - **The active product's build doc** — named in `current-state.md`. **Currently `evryn-backend/docs/BUILD-EVRYN-MVP.md`, but this WILL shift as build phases change.** Read `current-state.md` first to identify the active build doc, then load it. Don't load a stale build doc from a previous phase.
 
@@ -258,7 +258,7 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
 - Build docs / reference docs are the detail layer — full depth, read on demand
 - Read ONE layer. Only go deeper if your current task requires it.
 
-**Source-of-truth documents require explicit approval from Justin before edits.** Always propose changes rather than making them directly. This applies to: ARCHITECTURE.md, BUILD docs, the Hub and spokes, LEARNINGS.md, AGENT_PATTERNS.md, protocol docs. Excluded: CHANGELOG.md, ADRs, mailbox files.
+**Source-of-truth documents require explicit approval from Justin before edits.** Always propose changes rather than making them directly. This applies to: ARCHITECTURE.md, BUILD docs, the Hub and spokes, LEARNINGS.md, AGENT_PATTERNS.md, protocol docs. Excluded: CHANGELOG.md, ADRs, mailbox files. **One asymmetry within "BUILD docs":** ARCHITECTURE.md is approval-gated as stated; the **BUILD doc** is not — AC may edit it directly (see the build-ownership note in the SESSION STARTUP cascade and under Orchestrating DC and QC). Direct build-doc edits still ride the normal commit gate.
 
 **Write notes that survive context loss.** You have a strong tendency to compress language that was written a specific way for a reason. Before tightening prose, consider *why* it might have been verbose — the phrasing may carry important nuance, emphasis, or context that a future reader needs. Make sure any redundancy is *necessary* redundancy, but don't assume verbosity is waste. When writing anything that will be read later — session docs, mailbox messages, doc updates, notes — imagine waking up as a fresh instance with very limited context. Will what you've written make sense? When helpful, include the specific context, the *why*, and ideally an example — not just the conclusion. Use active voice with explicit actors ("AC will archive these files," not "the files will be archived") — passive voice creates genuine ambiguity across instances that can't clarify in real time. When integrating older content into newer structures, cross-reference the most recently evolved version of thinking first — newer sources may have resolved ambiguities or superseded positions that the older source still carries. This overcompression tendency applies to code too, not just prose. Don't clean, refactor, or delete code without full context of why it exists — what looks redundant or messy may be intentional. Make sure you have all of the relevant context before you make changes.
 
@@ -309,7 +309,7 @@ All operational learnings go directly to the appropriate repo files (proposed, w
 
 **Primary pathway:** `docs/protocols/ac-orchestration-protocol.md` — AC spins DC (build) and QC (review) as **subagents**, reviews their output, relays to Justin at CEO altitude, and gates merges. Read it before running a build/review loop. This is now the default way AC engages DC and QC; the mailbox/note-passing model (`docs/protocols/ac-dc-protocol.md`, now a redirect) is the **fallback** for persistent instances / multi-day work.
 
-**Quick reference:** Mailboxes live in each repo (`<repo>/docs/ac-to-dc.md` / `dc-to-ac.md`). Messages are disposable snapshots — reader clears the file after absorbing. AC and Soren both author `ARCHITECTURE.md` (Soren owns it of record; AC is co-owner, often hands-on); DC reads but never modifies it.
+**Quick reference:** Mailboxes live in each repo (`<repo>/docs/ac-to-dc.md` / `dc-to-ac.md`). Messages are disposable snapshots — reader clears the file after absorbing. AC and Soren both author `ARCHITECTURE.md` (Soren owns it of record; AC is co-owner, often hands-on) — ARCHITECTURE.md changes are approval-gated, but AC may edit the **BUILD doc** directly (Soren still owner of record); DC reads both but never modifies them.
 
 **Read-receipt convention:** When you read a mailbox message, absorb what you need into persistent docs, then **clear the file** (replace contents with `READ — absorbed`). Before writing a new outbound message, check that the file is clear — if it still has content, your previous message hasn't been received. **Do not overwrite unread messages.**
 
@@ -318,6 +318,20 @@ All operational learnings go directly to the appropriate repo files (proposed, w
 **Multi-instance awareness:** Justin may run multiple AC instances in parallel (AC1, AC2, etc.). If Justin designates you as a numbered instance, sign your mailbox messages with that designation (e.g., "From AC2:") and only absorb inbound messages addressed to you. There is no AC-to-AC protocol — Justin hand-relays between AC instances.
 
 **Session start:** When you're about to work in a specific repo, peek at that repo's `docs/dc-to-ac.md` and `docs/dc-architecture-notes-for-ac.md`. If there's actionable content, read the full protocol. If they're empty or don't exist, move on. If you've been designated as a specific instance, only absorb messages meant for you.
+
+---
+
+## Worktree & Branch Discipline
+
+**This is the canonical home the orchestration protocol points to** ("Full mental model: AC CLAUDE.md"). The *why* — shared working trees switch branches silently for every instance, and the 2026-05-27 / 05-29 incidents that proved it — lives in the **"Verify branch before every EDIT"** bullet under *Working With Justin*; read that for the failure history. This section is the operational discipline for the subagent-orchestration era.
+
+- **One branch ↔ one worktree.** Git refuses the same branch checked out in two worktrees. Every agent that edits code in a shared repo gets its own worktree on its own branch, at a distinct on-disk path, sharing the one `.git/` pool. The canonical tree (e.g. AC's main `evryn-backend`) stays on the default branch (`master`/`main`) so Justin always has one stable folder = the default branch.
+- **AC owns the worktree lifecycle** so Justin never has to track branches. The pattern for a subagent build/review loop:
+  1. **Create on demand, off the right base.** `git -C <repo> worktree add <sibling-path> -b <agent/branch> <base>` (usually `<base>` = current `master`/`main`). Name the branch for the agent + task (e.g. `dc/evr71-68-resilience`). Verify the base tip is current first.
+  2. **The subagent works only in that worktree** — commits to its own branch (pathspec-scoped, never `git add -A`), never touches the default branch, never merges, never deploys. State this explicitly in the brief.
+  3. **Reap after merge.** Once AC merges the branch: `git worktree remove <path>` + `git branch -d <branch>` (the `-d` succeeds only if truly merged — a safety check). Leave the tree clean: only the canonical tree + any standing team worktree should remain.
+- **Verify branch before every edit**, not just every commit — confirm `git -C <repo> branch --show-current` is what you expect; another instance may have switched it. (Full rule + incidents under *Working With Justin*.)
+- **Full per-agent worktree rollout** across all agents is post-Mark Lucas territory (Linear EVR-110); ad-hoc per-loop worktree setup (the pattern above) is fair game any time.
 
 ---
 
