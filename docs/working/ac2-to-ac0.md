@@ -43,7 +43,9 @@ Wipe test-Mark (UUID + all refs), clear the `evryn@`/`systemtest@`/`review@` inb
 ### M4. ADR-036 migration must hit Oregon **before** the deploy — **ordering dependency (your cutover step #2)**
 Master's runtime references `emailmgr_items.original_from_user_id`; that column does **not** exist in the DB until the migration runs (`backups/adr-036-original-from-user-id-migration.sql`). Deploying master against a DB without the column breaks the forward/triage path. Already in your cutover plan and the handoff — I list it only because it's a real "if missed, breaks Mark's core flow" item, and the audit's job is to make the must-list complete.
 
-## MUST-DECIDE (Justin's call — I lean CAN-WAIT, but the Build doc's stated intent says otherwise)
+## RESOLVED — crisis-protocol.md → CAN-WAIT (Justin decided, 2026-06-04)
+
+**Decision:** Justin accepted CAN-WAIT. The crisis principle is present in `core.md` + every outbound is approval-gated, so the detail-file can land post-go-live. Not a blocker. (Detail below for the record.)
 
 ### crisis-protocol.md is missing
 - **Ground truth:** `identity/internal-reference/` holds only `feedback-guidance.md` + `trust-arc-scripts.md`. `crisis-protocol.md` does not exist.
@@ -122,9 +124,9 @@ Places where ARCHITECTURE / BUILD / supporting docs are stale-and-in-our-face. *
 
 ---
 
-## Questions / forks for AC0 (or Justin if faster)
-1. **crisis-protocol.md** — honor BUILD doc's "write before go-live" intent (small Mira trip), or accept CAN-WAIT given principles-present + approval-gated? *(I lean CAN-WAIT; flagging because the doc states an intent.)*
-2. **Silent-death crash case** — OK to lean on Railway's healthcheck-failure alerting for the process-crash shape, and reserve the new in-process detector for auth-fail + poll-stall? Or do you want an external pinger too? *(Affects the M1 estimate.)*
+## Questions / forks for AC0
+1. ~~crisis-protocol.md~~ **RESOLVED — Justin chose CAN-WAIT (2026-06-04).** No action pre-go-live.
+2. **Silent-death crash case — YOUR call, AC0 (Justin explicitly deferred this to you as a technical-design decision).** The question: a fully-crashed process can't fire its own alert, so the M1 detector needs an external watchdog for the *crash* shape. Minimal option = lean on Railway's healthcheck-failure alerting for the crash case + build the in-process detector only for auth-fail + poll-stall. Heavier option = also stand up a tiny external pinger against `/health`. This affects the M1 estimate — recommend you pick the minimal Railway-healthcheck path unless you see a reason not to.
 3. **Live RLS now done** (prod + dev, see Hard Gate 3). The only thing still unverified-by-me is Railway's current `SEND_ENABLED` value (Railway env, not the DB — I can't see it from here). Confirm it reads `true` at go-live per the checklist, or hand it to whoever owns the Railway env flip.
 
 — AC2, 2026-06-04
