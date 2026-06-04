@@ -64,6 +64,8 @@
 
 **Where we are now:** v0.2 "Gatekeeper's Inbox" — email-based, single agent, single gatekeeper. Everything below is the architecture Evryn is growing into. Current build details: `evryn-backend/docs/ARCHITECTURE.md`. Build phases: `evryn-backend/docs/BUILD-EVRYN-MVP.md`.
 
+> **Database topology (updated 2026-06-04 — ADR-037):** the diagram's "two projects" is now **three** — product DBs `Evryn Product` (prod) + `Evryn Product — Dev` (dev/staging mirror), both in **Oregon (us-west-2)** to co-locate with the Railway backend, plus the Agents dashboard DB (us-east-1). Detail: `evryn-backend/docs/ARCHITECTURE.md` (Separate Supabase Projects).
+
 ### Member Interface (Future)
 
 Web/mobile interface — PWA, mobile-responsive from day one. Native apps deferred until user demand warrants it. Includes identity verification flow.

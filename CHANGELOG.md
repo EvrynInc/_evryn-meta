@@ -15,6 +15,7 @@
 - **`evryn-backend/.env` fixed** — deduped runtime keys (a stray second `SUPABASE_URL`/`SERVICE_KEY` block would have pointed a local backend at the *dev* DB); runtime = Oregon prod (one each), admin DB urls `SUPABASE_DB_URL_PROD`/`_DEV`/`_EAST`, dev API creds in Bitwarden only.
 - **Backup model finalized** — Pro daily auto-backups (primary) + periodic real `pg_dump` (portable/archival). README + ARCHITECTURE repointed off the dead JSON method (`b2d370b`); #lock + DC mandate repointed this pass.
 - **ADR-037** records the full decision set (Pro + Oregon conformance + separate-project dev DB + backup model + drop `emailmgr_queue`). Agents-DB region/role flagged as an open question in the meta-meeting doc (`a40708e`).
+- **Doc-hygiene + a DB-comment fix (session close):** committee brief archived to `docs/sessions/historical/`; `technical-vision` spoke + `SPRINT-MARK-LIVE` synced to the us-west-2/dev reality; backups README rewritten to the real `pg_dump` method; `#lock`/DC/QC docs repointed. Fixed a **`users.profile_jsonb` DB-comment drift** — the live column COMMENT had lagged at pre-ADR-027 wording (gatekeeper_criteria/roles) while code+docs were ADR-027; corrected on **dev + prod** (dev-first — the dev DB's first migration rehearsal), `backups/fix-profile-jsonb-comment-2026-06-04.sql`.
 
 ---
 
