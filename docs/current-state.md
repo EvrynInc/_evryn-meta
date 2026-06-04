@@ -8,8 +8,8 @@
 
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
-*Last updated: 2026-06-03 (AC0 #lock — pre-changeover batten-down)*
-*Last #lock (full): 2026-06-03 (AC0 — EVR-71/68 + ADR-036 Trip 1 merged; Trip 2 on branch; dev-DB committee spun; auto-deploy verified OFF)*
+*Last updated: 2026-06-03 evening (AC0 #lock — Mark wiped to zero; create-from-zero test; go-live reconciled; DB move to Oregon in progress)*
+*Last #lock (full): 2026-06-03 evening (AC0)*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
 
@@ -21,27 +21,29 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## How AC works now
 
-AC drives DC and QC as **subagents** (build/review loops), not hand-relayed mailbox notes. Protocol: `docs/protocols/ac-orchestration-protocol.md`. QC verifies every real code change (her finds are inputs, not verdicts). **Ping-by-default** on `#team-alerts`. **Arch + BUILD docs: AC holds full edit rights** (extension of Soren, not barred), but **editing either needs Justin's explicit auth first** (the BUILD doc is NOT a "free edit"). Subagent memory: subagents **output** memory text, AC writes it (don't let subagents write memory).
+AC drives DC and QC as **subagents** (build/review loops), not hand-relayed mailbox notes. Protocol: `docs/protocols/ac-orchestration-protocol.md`. QC verifies every real code change. **AC promotes QC's standing patterns** into QC's CLAUDE.md "Patterns This Role Watches For" section (QC can't write her own; new 2026-06-03). **Ping-by-default** on `#team-alerts`. Arch + BUILD docs: AC holds edit rights, **editing needs Justin's explicit auth first**.
 
 ## What's Next (critical path to Mark-live)
 
-- **evryn-backend master = `b87ceb6`** — EVR-71 (email-drop fix) + EVR-68 (cold-start approval replay) + ADR-036 Trip 1 (createUser tool + `original_from_user_id` FK + processForward auto-create) + build-doc v0.3 items. **All QC-verified GO, pushed, NOT deployed.**
-- **ADR-036 Trip 2** (Mira's triage prior-history beat) on branch `mira/adr036-triage-beat` (`5cfd226`, pushed) — AC + Justin reviewed, **NOT merged** (rides identity-file-review at deploy).
-- **036 migration** (`backups/adr-036-original-from-user-id-migration.sql`) **written, NOT applied** — rides the deploy.
-- **Next (a FRESH AC0 — Justin wants a sharp instance for this):** merge Mira's beat (identity-file-review) → apply 036 migration (+ verify/add `users.email` UNIQUE constraint, idempotency hardening — non-blocking) → `railway up` + (master already pushed) → fix the stale `getRecipient` integration-test pre-flight line → run integration test through Phase 5.
-- **Dev/staging DB → pre-Mark (decided).** AC1 spun to run the exploratory committee (brief: `docs/sessions/2026-06-03-dev-db-committee-brief-for-ac1.md`). Runs in parallel with the integration test.
-- **Pre-go-live: whole-system production-readiness pass (AC / spin-off AC).** One top-to-bottom audit of testing→production gaps before going live everywhere. **Confirmed HARD gates:** **backups + rollback** (the current DB plan takes NONE: fine for testing, unsafe in prod); the **emergency "wake-Justin-on-silent-failure" alert** — a **Slack `#emergency-alerts` bot** (NOT Twilio), CONFIRMED hard gate 2026-06-03 — a 3am silent death = auth expiry / crash / polling stops → Evryn ghosts Mark, Justin never knows = pilot-ending; the 2026-06-02 v0.3 deferral only bounded the runaway-*loop* risk, missing this; **RLS verification**. *Nice (harden over a few days):* PII anonymization, Sentry, dashboard, rate-limiting. AC1's DB findings feed it; strong candidate for its own charter. (Justin, 2026-06-03.)
-- **EVR-72** (follow-up loads gatekeeper not contact) — **ENABLED by 036's FK but NOT fixed** (`checkFollowUps` not yet updated to load the contact record). Fold into a follow-up trip.
+- **🚧 BLOCKER — Supabase DB move east → Oregon (us-west), in progress (AC1 + Justin).** The "Evryn Product" project is us-east; Railway runs us-west — every query crosses the country both ways, hundreds/day. Replicating to an Oregon project (`backups/*-oregon-2026-06-03.sql`). **Blocks deploy / migrate / integration-test** until it lands + envs re-stitched (`SUPABASE_URL`/`SUPABASE_SERVICE_KEY` → Oregon; **Bitwarden re-upload** after). Surfaced 2026-06-03 while standing up a dev DB.
+- **evryn-backend master = `f24aa0e`** — EVR-71/68 + ADR-036 Trip 1 + Mira's `triage.md` prior-history beat (merged 2026-06-03 eve, reviewed clean) + this session's go-live reconciliation, ADR-029 phantom-control cleanup, the QC create-from-zero blocker fix (flow.ts) + AC1's Oregon-backup commit. **QC-verified GO, pushed, NOT deployed** (live = `6e27e3ea`; deploy blocked on the DB move). NOTE: Mira's beat references the 036 migration column — must not go live before the migration applies (already the order).
+- **Mark wiped to ZERO (2026-06-03).** Test-Mark row + 49 messages + 4 items deleted; DB now holds only Evryn + Operator + a Google-Workspace test lead (kept — trains "ignore Google pings"). Backup committed `f26414c`.
+- **Integration test is now CREATE-FROM-ZERO** (was look-up-existing). Phase 2: operator introduces a never-seen Mark → Evryn creates his record via `create_user` (first real test of the ADR-036 tool); new Phase 2b re-tests the ADR-030 verify-and-lock *find* path. Test materials conformed (`f7f48a0`, `1627b8b`).
+- **Go-live simplified to match.** No hand-created real-Mark row / no `TEST_RECIPIENT` flip — you introduce real Mark, Evryn creates his record; the approval gate is the backstop the removed redirect (ADR-029) gave. operator-guide STEP 0 + SPRINT reconciled.
+- **036 migration** (`backups/adr-036-original-from-user-id-migration.sql`) **written, NOT applied** — rides the (blocked) deploy. Verify/add `users.email` UNIQUE at apply time.
+- **Next (a FRESH AC0):** DB move lands → migrate (036 + UNIQUE) → `railway up` → run the create-from-zero integration test. Full handoff: `docs/sessions/2026-06-04-ac0-handoff.md`.
+- **Pre-go-live: whole-system production-readiness pass (AC2).** HARD gates: DB backups+rollback, the `#emergency-alerts` Slack bot (silent-death detector — NOT Twilio), RLS verification. (Justin, 2026-06-03.)
+- **EVR-72** (follow-up loads gatekeeper not contact) — ENABLED by 036's FK, NOT fixed.
 
 ## Pending doc-syncs (need Justin's auth — flagged, not done)
 
-- `ARCHITECTURE.md` Data Model: reflect the 036 `original_from_user_id` FK + the `create_user` MCP tool. `LEARNINGS.md` / `AGENT_PATTERNS.md`: session learnings (verify-don't-assume on deploy state; don't trim the architect load; subagent Edit/Write blocked on `.claude/` paths). **team CLAUDE.md** "identity-pushes-trigger-redeploys" line is **stale** (auto-deploy is OFF) — Soren to reconcile.
+- `ARCHITECTURE.md` Data Model: 036 `original_from_user_id` FK + `create_user` tool — **possibly in progress (AC1 had an uncommitted `ARCHITECTURE.md` change in the tree 2026-06-03 eve).** `LEARNINGS.md`/`AGENT_PATTERNS.md`: session learnings. **team CLAUDE.md** "identity-pushes-trigger-redeploys" stale — Soren to reconcile.
 
 ## Infrastructure
 
-- **Railway: AUTO-DEPLOY OFF — and staying off by design (Justin, 2026-06-03).** Standing model: **push freely** (integrate + back up — pushes are safe, they deploy nothing), then ***choose* deploy moments** via manual `railway up`. The deliberate `railway up` is the only loaded gun — care goes *there*, not on pushes. Verified OFF 2026-06-03 (pushed master, no deploy fired). **Live deploy = `6e27e3ea` (2026-06-01)** — master is ahead, not redeployed. `PROACTIVE_CHECK_HOUR_PT=8`; quiet hours 18–8 PT.
-- Supabase: "Evryn Product" project (`maruxkjwlfltlmureqkt`), single prod DB (no dev separation — Phase 0d deferred; dev-DB committee active). **real-Mark fully OUT of the DB** (test uses `systemtest@`). Latest backup 2026-06-02.
-- Slack: `#evryn-approvals` quiet 18–8 PT w/ queue+replay. `#emergency-alerts` deferred to v0.3.
+- **Railway: AUTO-DEPLOY OFF — staying off by design.** Push freely; choose deploy moments via manual `railway up`. Live deploy = `6e27e3ea` (2026-06-01); master ahead, not redeployed. `PROACTIVE_CHECK_HOUR_PT=8`; quiet hours 18–8 PT.
+- **Supabase: MOVING east → Oregon (see blocker).** Current `maruxkjwlfltlmureqkt` (us-east). DB wiped to system actors + 1 Google lead (2026-06-03). Latest backup 2026-06-03 (pre-wipe).
+- Slack: `#evryn-approvals` quiet 18–8 PT w/ queue+replay. `#emergency-alerts` = HARD go-live gate (Slack bot, NOT Twilio).
 
 ## Task Management
 

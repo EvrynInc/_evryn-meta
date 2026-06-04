@@ -8,6 +8,22 @@
 
 ---
 
+## 2026-06-03 evening (AC0 — Mark wiped to zero; integration test → create-from-zero; go-live reconciled; ADR-029 cleanup; QC patterns restructure)
+
+- **Mark wiped to ZERO** (clean slate for the DB move + the create-from-zero test). Deleted test-Mark's user row + 49 messages (sender/recipient/scope) + 4 emailmgr_items; kept Evryn + Operator + the Google-Workspace test lead (trains "ignore Google pings"). Dual backup + a notify_queue supplement (table the old backup script missed) committed `f26414c`. Done via a one-shot Node script — select-ids-then-delete-by-id, because `.or()` doesn't resolve on a supabase-js `.delete()`; temp scripts removed after.
+- **Integration test pivoted to CREATE-FROM-ZERO** (`f7f48a0`, `1627b8b`). Was look-up-existing-Mark; now Phase 2 = operator introduces a never-seen Mark → Evryn creates his record via the ADR-036 `create_user` tool (first real test of cold gatekeeper creation), with a new Phase 2b re-testing the ADR-030 verify-and-lock *find* path against the now-existing record. QC verified it's runtime-valid (`create_user` reachable from `handleOperatorMessage`; `submit_draft` requires the user to exist first, so "she must create him before drafting" is a real gate).
+- **Go-live model reconciled** to create-from-zero (operator-guide STEP 0 + SPRINT, `1627b8b`). No hand-created real-Mark row, no `TEST_RECIPIENT` flip — you introduce real Mark and Evryn creates his record; the approval gate is the backstop the removed `getRecipient` redirect (ADR-029) used to provide. (Justin caught my first SPRINT edit perpetuating the obsolete model.)
+- **ADR-029 phantom-controls cleanup** (`f7f48a0`). Removed orphaned `config.testRecipient`, the phantom `TEST_RECIPIENT` go-live SPRINT step, the wrong "back to 'new'" startup ping (index.ts + operator-guide), a stale getRecipient pre-flight line; swapped a dead Mark UUID in a test. (`TEST_RECIPIENT` env-var removal routed to AC1.)
+- **QC blocker fixed** (`1627b8b`): `createEvrynInitiatedPlaceholder`'s "no user record" error steered Evryn to `supabase_upsert` (malformed record) at the first-real-send moment — repointed to `create_user`. Two QC review passes this session (both GO).
+- **QC patterns home restructured** (`106bce9`, `9bf4ee4`). Killed all references to a `quality-patterns.md` ledger (never existed, wasn't auto-loaded); renamed QC's "Failures this role exists to catch" → "Patterns This Role Watches For" (holds failures AND plain patterns); added 2 patterns (error-strings-as-instructions; orphaned-config-after-safety-removal). Proposals now ride QC's subagent output; **AC promotes** them into her CLAUDE.md (new responsibility in AC CLAUDE.md + orchestration protocol).
+- **LEARNINGS** (`87df2d9`): "Phantom safety controls outlive the mechanism they configured."
+
+**Operator-relevant:** go-live STEP 0 changed (operator-guide updated) — you introduce real Mark and Evryn creates his record; no manual record creation, no env flip.
+
+**Not deployed. Deploy / migrate / integration-test blocked on the east→Oregon Supabase move (AC1 + Justin, in progress).**
+
+---
+
 ## 2026-06-03 (AC0 — EVR-71/68 + ADR-036 shipped; QC manual hardened; dev-DB committee spun; pre-changeover #lock)
 
 - **EVR-71 + EVR-68 fixed, merged** (`5a038b2`, `24d41cf`, FF to master). EVR-71: inbound emails were silently dropped on a transient/storage failure (`markProcessed` ran after a swallowed throw + the Gmail history cursor advanced past failed mail). Fix: `handleNewEmail` returns `done`/`permanent-skip`/`transient`; cursor advances only if no email failed transiently; held cursor re-fetches + dedup short-circuits. EVR-68 residual: cold-start reconnect now replays missed operator messages via a durable `slack_ts` cursor. DC subagent built, QC-verified GO.
