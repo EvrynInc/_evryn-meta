@@ -8,7 +8,7 @@
 
 ---
 
-## 2026-06-03 evening (AC0 — Mark wiped to zero; integration test → create-from-zero; go-live reconciled; ADR-029 cleanup; QC patterns restructure)
+## 2026-06-03 evening (AC0 — Mark wiped to zero; integration test → create-from-zero; go-live reconciled; ADR-029 cleanup; QC patterns restructure; Mira beat merged; Oregon DB move done)
 
 - **Mark wiped to ZERO** (clean slate for the DB move + the create-from-zero test). Deleted test-Mark's user row + 49 messages (sender/recipient/scope) + 4 emailmgr_items; kept Evryn + Operator + the Google-Workspace test lead (trains "ignore Google pings"). Dual backup + a notify_queue supplement (table the old backup script missed) committed `f26414c`. Done via a one-shot Node script — select-ids-then-delete-by-id, because `.or()` doesn't resolve on a supabase-js `.delete()`; temp scripts removed after.
 - **Integration test pivoted to CREATE-FROM-ZERO** (`f7f48a0`, `1627b8b`). Was look-up-existing-Mark; now Phase 2 = operator introduces a never-seen Mark → Evryn creates his record via the ADR-036 `create_user` tool (first real test of cold gatekeeper creation), with a new Phase 2b re-testing the ADR-030 verify-and-lock *find* path against the now-existing record. QC verified it's runtime-valid (`create_user` reachable from `handleOperatorMessage`; `submit_draft` requires the user to exist first, so "she must create him before drafting" is a real gate).
@@ -17,10 +17,13 @@
 - **QC blocker fixed** (`1627b8b`): `createEvrynInitiatedPlaceholder`'s "no user record" error steered Evryn to `supabase_upsert` (malformed record) at the first-real-send moment — repointed to `create_user`. Two QC review passes this session (both GO).
 - **QC patterns home restructured** (`106bce9`, `9bf4ee4`). Killed all references to a `quality-patterns.md` ledger (never existed, wasn't auto-loaded); renamed QC's "Failures this role exists to catch" → "Patterns This Role Watches For" (holds failures AND plain patterns); added 2 patterns (error-strings-as-instructions; orphaned-config-after-safety-removal). Proposals now ride QC's subagent output; **AC promotes** them into her CLAUDE.md (new responsibility in AC CLAUDE.md + orchestration protocol).
 - **LEARNINGS** (`87df2d9`): "Phantom safety controls outlive the mechanism they configured."
+- **Mira's `triage.md` prior-history beat merged** (`f24aa0e`) — reviewed clean against the identity-file checklist, then cherry-picked onto master (its branch base was badly stale; the file-state diff showed a phantom -5044-line "revert" — cherry-pick in an isolated worktree avoided it). Goes live at the next deploy alongside the 036 migration it depends on.
+- **ARCHITECTURE.md Data Model sync** (`7eddc9d`) — documented `emailmgr_items.original_from_user_id` (the ADR-036 FK) + the `create_user` tool (find-or-create; prefer over supabase_upsert). Closes the pending 036 doc-sync.
+- **DB move east → Oregon: DONE** (AC1). Prod migrated to a us-west-2 Supabase project "Evryn Product (West Coast)" — faithful copy (identical rows, RLS/policies/comments/citext+vector preserved, system-actor UUIDs intact), connection-verified. Fixes the cross-country latency (Railway us-west ↔ Supabase us-east). **Cutover is AC0's** (Justin): repoint Railway env → Oregon, apply 036 to Oregon, deploy, retire old East (still live until then).
 
 **Operator-relevant:** go-live STEP 0 changed (operator-guide updated) — you introduce real Mark and Evryn creates his record; no manual record creation, no env flip.
 
-**Not deployed. Deploy / migrate / integration-test blocked on the east→Oregon Supabase move (AC1 + Justin, in progress).**
+**Not deployed.** The east→Oregon Supabase move is **done** (AC1); deploy/migrate/integration-test is now the **cutover** (AC0 owns the Railway side) — pending Justin. See `docs/sessions/2026-06-04-ac0-handoff.md`.
 
 ---
 
