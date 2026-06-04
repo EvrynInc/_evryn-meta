@@ -9,6 +9,7 @@
 **Keep this file under 50 lines.** If a project needs more than 2-3 lines, the detail belongs in that repo's own state file or build doc — not here.
 
 *Last updated: 2026-06-03 evening (AC0 #lock — Mark wiped to zero; create-from-zero test; go-live reconciled; DB move to Oregon in progress)*
+*Updated: 2026-06-04 (AC1 — dev/staging DB created + seeded; Supabase Pro; pg_dump backup model. Decisions: ADR-037)*
 *Last #lock (full): 2026-06-03 evening (AC0)*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
@@ -26,6 +27,7 @@ AC drives DC and QC as **subagents** (build/review loops), not hand-relayed mail
 ## What's Next (critical path to Mark-live)
 
 - **DB move east → Oregon: DONE (AC1, 2026-06-03 eve).** Prod migrated to a new us-west-2 Supabase project "Evryn Product (West Coast)" — faithful copy verified (identical rows, RLS/policies/comments/citext+vector preserved, **system-actor UUIDs intact**), runtime connection test passed. Old East (`maruxkjwlfltlmureqkt`) still live + untouched, **retire after cutover.** **Cutover — AC0 owns the Railway side (Justin, 2026-06-03):** (1) repoint Railway `SUPABASE_URL`/`SUPABASE_SERVICE_KEY` → Oregon (creds in `backend/.env`); (2) apply the 036 migration to **Oregon** (mirrors East's pre-036 state); (3) `railway up`; (4) confirm healthy on Oregon → retire East. **Bitwarden re-upload** after the env change.
+- **Dev/staging DB: UP (AC1, 2026-06-04).** `Evryn Product — Dev` (us-west-2, ref `maqkdesopsskptpxjbqs`) created + seeded as a **faithful mirror of prod** (5 tables, citext+vector, RLS, policies, comments, test data). Enables QC live-tests + **dev-first migrations**. Org now **Supabase Pro** (~$45/mo, 3 projects). `.env`: runtime = Oregon prod; admin DB urls `SUPABASE_DB_URL_PROD`/`_DEV`/`_EAST` (dev API creds in Bitwarden, not active `.env`). Full decisions: **ADR-037**.
 - **evryn-backend master = `f24aa0e`** — EVR-71/68 + ADR-036 Trip 1 + Mira's `triage.md` prior-history beat (merged 2026-06-03 eve, reviewed clean) + this session's go-live reconciliation, ADR-029 phantom-control cleanup, the QC create-from-zero blocker fix (flow.ts) + AC1's Oregon-backup commit. **QC-verified GO, pushed, NOT deployed** (live = `6e27e3ea`; deploy blocked on the DB move). NOTE: Mira's beat references the 036 migration column — must not go live before the migration applies (already the order).
 - **Mark wiped to ZERO (2026-06-03).** Test-Mark row + 49 messages + 4 items deleted; DB now holds only Evryn + Operator + a Google-Workspace test lead (kept — trains "ignore Google pings"). Backup committed `f26414c`.
 - **Integration test is now CREATE-FROM-ZERO** (was look-up-existing). Phase 2: operator introduces a never-seen Mark → Evryn creates his record via `create_user` (first real test of the ADR-036 tool); new Phase 2b re-tests the ADR-030 verify-and-lock *find* path. Test materials conformed (`f7f48a0`, `1627b8b`).
@@ -42,7 +44,7 @@ AC drives DC and QC as **subagents** (build/review loops), not hand-relayed mail
 ## Infrastructure
 
 - **Railway: AUTO-DEPLOY OFF — staying off by design.** Push freely; choose deploy moments via manual `railway up`. Live deploy = `6e27e3ea` (2026-06-01); master ahead, not redeployed. `PROACTIVE_CHECK_HOUR_PT=8`; quiet hours 18–8 PT.
-- **Supabase: MIGRATED to Oregon (us-west-2) — "Evryn Product (West Coast)"** (AC1, 2026-06-03; faithful copy, connection-verified). Old East (`maruxkjwlfltlmureqkt`) live until cutover-retire. DB state: system actors + 1 Google lead (Mark wiped 2026-06-03). Latest backup 2026-06-03.
+- **Supabase: on PRO. Prod migrated to Oregon (us-west-2) "Evryn Product (West Coast)"** (AC1; faithful copy, connection-verified) + **dev project "Evryn Product — Dev"** (Oregon, seeded mirror, 2026-06-04). Old East (`maruxkjwlfltlmureqkt`) live until cutover-retire; its `pg_dump` (`backups/full-public-2026-06-03.sql`) is the archive. DB state: system actors + 1 Google lead (Mark wiped 2026-06-03). **Backup model:** Pro **daily auto-backups** (primary, live on prod+dev) + periodic real **`pg_dump`** (portable/archival) — replaces the old non-restorable JSON dumps (ADR-037).
 - Slack: `#evryn-approvals` quiet 18–8 PT w/ queue+replay. `#emergency-alerts` = HARD go-live gate (Slack bot, NOT Twilio).
 
 ## Task Management

@@ -8,6 +8,16 @@
 
 ---
 
+## 2026-06-04 (AC1 — dev/staging DB up; Supabase Pro; backup model finalized; ADR-037)
+
+- **Dev/staging DB created + seeded** — `Evryn Product — Dev` (us-west-2, ref `maqkdesopsskptpxjbqs`), a faithful mirror of Oregon prod via the same `pg_dump` replication script (5 tables, citext+vector, RLS, policies, all comments, test data; deprecated `emailmgr_queue` dropped). Enables QC live-tests + dev-first migrations. Org now on **Supabase Pro** (~$45/mo, 3 projects).
+- **First real restorable backup** of prod via `pg_dump` (`evryn-backend/backups/{full,schema}-public-2026-06-03.sql` + `replicate-to-oregon-…sql`), committed `0df5e0c` (pushed). The old descriptive-JSON dumps captured none of the DDL/comments/RLS/functions — corrected.
+- **`evryn-backend/.env` fixed** — deduped runtime keys (a stray second `SUPABASE_URL`/`SERVICE_KEY` block would have pointed a local backend at the *dev* DB); runtime = Oregon prod (one each), admin DB urls `SUPABASE_DB_URL_PROD`/`_DEV`/`_EAST`, dev API creds in Bitwarden only.
+- **Backup model finalized** — Pro daily auto-backups (primary) + periodic real `pg_dump` (portable/archival). README + ARCHITECTURE repointed off the dead JSON method (`b2d370b`); #lock + DC mandate repointed this pass.
+- **ADR-037** records the full decision set (Pro + Oregon conformance + separate-project dev DB + backup model + drop `emailmgr_queue`). Agents-DB region/role flagged as an open question in the meta-meeting doc (`a40708e`).
+
+---
+
 ## 2026-06-03 evening (AC0 — Mark wiped to zero; integration test → create-from-zero; go-live reconciled; ADR-029 cleanup; QC patterns restructure; Mira beat merged; Oregon DB move done)
 
 - **Mark wiped to ZERO** (clean slate for the DB move + the create-from-zero test). Deleted test-Mark's user row + 49 messages (sender/recipient/scope) + 4 emailmgr_items; kept Evryn + Operator + the Google-Workspace test lead (trains "ignore Google pings"). Dual backup + a notify_queue supplement (table the old backup script missed) committed `f26414c`. Done via a one-shot Node script — select-ids-then-delete-by-id, because `.or()` doesn't resolve on a supabase-js `.delete()`; temp scripts removed after.
