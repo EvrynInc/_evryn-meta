@@ -15,7 +15,7 @@
 2. **Operational gates (no building, you have checklists):** flip `SEND_ENABLED=true` + prod env at go-live; run STEP 0 cleanup (wipe test-Mark → introduce real Mark); the create-from-zero integration test must pass first (that's your lane, AC0). [M2/M3]
 3. **One ordering dependency (your cutover already covers it):** the ADR-036 DB migration must land on Oregon **before** the deploy, or triage breaks. [M4]
 4. **Backups + rollback (Hard Gate 2): essentially DONE** (AC1/ADR-037). Just wants a one-line written rollback procedure. **Not a blocker.**
-5. **RLS / row-level security (Hard Gate 3): verified ON for all 5 tables** (from the dump that was restored to Oregon). Wants a ~5-min live confirm post-cutover. **Not a blocker.**
+5. **RLS / row-level security (Hard Gate 3): LIVE-VERIFIED ON for all 5 tables on both prod AND dev** (ran the query directly against Oregon). **Not a blocker — done.**
 6. **Everything else** (4 QC resilience items, SSRF hardening, EVR-72, adversarial test, dashboard, PII anonymization, ~10 small backlog items) is **legitimately CAN-WAIT** — most already marked so, and I agree.
 
 ---
@@ -94,10 +94,10 @@ See **M1** above for the full recommendation (minimal-sufficient version, the ex
 - **Rollback:** code rollback is the Railway dashboard "Rollback to previous deployment" (`operator-guide.md:60-65`); DB rollback = restore from daily backup or the `pg_dump`; **old East prod stays live as the net until cutover-retire**; the new **dev DB gives a rehearsal surface** for risky changes.
 - **Minimal-sufficient remaining:** the *mechanics* exist but the **written rollback procedure is thin** — recommend a one-line "here's exactly how we roll back the DB" note in operator-guide (low effort). **AC1 owns this gate's DB piece** per the lane split; I'm folding his status in, not rebuilding.
 
-### Hard Gate 3 — RLS verification → **NOT a blocker (verified ON; wants a live confirm)**
-- **Verified:** all **5 live tables have row-level security ENABLED** — `users`, `emailmgr_items`, `messages`, `evryn_knowledge`, `notify_queue` — read directly from `backups/full-public-2026-06-03.sql` (the faithful `pg_dump` that was **restored into Oregon** via `replicate-to-oregon-2026-06-03.sql`). Service-role access policies exist on `users` / `emailmgr_items` / `messages`.
-- **Nuance:** `evryn_knowledge` and `notify_queue` have RLS **on but no explicit policy** → default **deny-all** for non-service roles. That's fine (arguably safest) at v0.2: the runtime uses the `service_role` key, which **bypasses RLS** entirely, and there is no anon/authenticated surface yet (no web app). Those two tables will want explicit policies **before** the v0.3 web app introduces `anon`/`authenticated` roles.
-- **⚠ Honesty flag (unverified-live):** the above is from the committed dump that was restored to Oregon — **not** a live query against running Oregon prod/dev (I have no `psql` on PATH and I'm staying out of the DB-credential/cutover lane). **Minimal-sufficient remaining:** AC1 runs a ~5-min live confirm post-cutover (`SELECT relname, relrowsecurity FROM pg_class WHERE relnamespace='public'::regnamespace`) against Oregon prod **and** dev. Not a build blocker.
+### Hard Gate 3 — RLS verification → **NOT a blocker (LIVE-VERIFIED, prod + dev)**
+- **Live-verified (2026-06-04, read-only `psql` against Oregon — thanks to the DB instructions AC just added to `backups/README.md`):** all **5 live tables have row-level security ENABLED on both prod AND dev** — `users`, `emailmgr_items`, `messages`, `evryn_knowledge`, `notify_queue` (`relrowsecurity = t` for all 5 on each DB). This is no longer inferred from the dump; it's a live query against the running databases.
+- **Policies (live, identical prod + dev):** service-role policies on `users` (×2), `emailmgr_items`, `messages`. **`evryn_knowledge` and `notify_queue` have RLS on but NO explicit policy** → default **deny-all** for non-service roles. That's fine (arguably safest) at v0.2: the runtime uses the `service_role` key, which **bypasses RLS** entirely, and there is no anon/authenticated surface yet (no web app). `relforcerowsecurity = false` on all (irrelevant while service_role is the only caller).
+- **Only remaining (CAN-WAIT, v0.3):** add explicit policies to `evryn_knowledge` + `notify_queue` **before** the v0.3 web app introduces `anon`/`authenticated` roles. Not a go-live item. **This gate is satisfied.**
 
 ---
 
@@ -125,6 +125,6 @@ Places where ARCHITECTURE / BUILD / supporting docs are stale-and-in-our-face. *
 ## Questions / forks for AC0 (or Justin if faster)
 1. **crisis-protocol.md** — honor BUILD doc's "write before go-live" intent (small Mira trip), or accept CAN-WAIT given principles-present + approval-gated? *(I lean CAN-WAIT; flagging because the doc states an intent.)*
 2. **Silent-death crash case** — OK to lean on Railway's healthcheck-failure alerting for the process-crash shape, and reserve the new in-process detector for auth-fail + poll-stall? Or do you want an external pinger too? *(Affects the M1 estimate.)*
-3. Anything you want me to **verify live** that I marked unverified (Railway `SEND_ENABLED`, live RLS on Oregon) — say the word and I'll find a path, or hand those two to AC1's DB lane.
+3. **Live RLS now done** (prod + dev, see Hard Gate 3). The only thing still unverified-by-me is Railway's current `SEND_ENABLED` value (Railway env, not the DB — I can't see it from here). Confirm it reads `true` at go-live per the checklist, or hand it to whoever owns the Railway env flip.
 
 — AC2, 2026-06-04
