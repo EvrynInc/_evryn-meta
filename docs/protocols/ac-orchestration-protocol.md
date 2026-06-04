@@ -38,6 +38,7 @@ This shape is proven (2026-06-02: QC's review of DC4, DC's notifyDev build). Hon
 - **Build:** AC spins DC → DC builds on its branch → AC (or QC) reviews → merge gate.
 - **Review:** AC spins QC → QC reviews the diff in its severity rubric → returns GO / NO-GO + findings.
 - **Fix:** if QC returns blockers, AC spins DC again to fix → re-review.
+- **Promote:** when QC surfaces a standing **pattern** (a reusable review beat, not just a one-off finding) in her output, and AC + Justin agree it's worth keeping, AC writes it into the **Patterns This Role Watches For** section of `evryn-quality/CLAUDE.md` (Justin approves first — it's a source-of-truth edit). QC can't write her own CLAUDE.md, and she's almost always a fresh subagent — so without this hand-off her patterns die at subagent death instead of compounding into what the next QC auto-loads.
 
 The DC and QC briefs differ only in *task* — the six-part shape and the mechanics are identical. That's why this is **one** protocol, not two.
 

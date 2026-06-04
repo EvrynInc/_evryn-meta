@@ -351,6 +351,8 @@ QC sits between what DC shipped and what AC routes next. Their job is the advers
 
 **Don't over-rely on QC to catch what DC should catch.** QC is a backstop, not a substitute for DC's own discipline. DC still reviews his own work; QC is the second pass. The Publisher-as-backstop framing in ADR-033 applies here too: design to minimize what QC catches, so the catches QC does make are reliable.
 
+**Promote QC's patterns to her patterns list.** QC can't write her own CLAUDE.md, so the standing patterns she surfaces (in her subagent output, or a mailbox reply) persist only if AC carries them over. When QC proposes a pattern and you + Justin agree it's worth keeping, AC writes it into the **Patterns This Role Watches For** section of `evryn-quality/CLAUDE.md` (after Justin approves — it's a source-of-truth edit). This is the closing half of QC's pattern loop: she's almost always a fresh subagent with zero carryover, so a pattern she surfaces evaporates at subagent death unless AC promotes it into the one place a future QC will auto-load. (Nearly lost a real one this way on 2026-06-03.)
+
 ---
 
 ## Autonomous Work Protocol
