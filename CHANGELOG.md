@@ -8,6 +8,18 @@
 
 ---
 
+## 2026-06-04 evening (AC0 #2 — Oregon cutover DONE; create-from-zero test Phase 2 PASSED; live-test findings routed)
+
+- **Oregon cutover COMPLETE.** 036 migration rehearsed on dev, then applied to Oregon prod (`wvaaqwapueycyxyhxdnh`) with pre/post `pg_dump` (`backend/backups/oregon-{pre,post}-036-2026-06-04.sql`, untracked); Railway env repointed → Oregon; master (`1610f3b`) deployed + healthy. Apply mechanism: full-path PG17 psql + `SUPABASE_DB_URL_{PROD,DEV,EAST}` (per `backups/README.md`). **East still live — AC0 retires it once fully confident West is flawless.**
+- **AC2 pre-go-live audit DONE** (`docs/working/ac2-to-ac0.md`). One true build blocker = **M1 silent-death detector**; backups + RLS already satisfied (RLS live-verified ON, 5 tables, prod+dev). Round-2 (codify delineation + clean stale ARCH/BUILD/SPRINT) staged in `docs/working/ac0-to-ac2.md` — Justin relays the go.
+- **Create-from-zero integration test Phase 2 PASSED + full approval→send validated end-to-end.** Evryn looked Mark up → found nothing → `create_user` (NOT `supabase_upsert`) → `set_thread_scope` → deep research (wow-bar) → draft → Justin approved → `review@` → sent to Mark. Continuity works. **Paused mid-onboarding** (Phases 3-6 resume later).
+- **Live-test findings routed (drafts in `docs/working/`):** (a) **context-architecture → Soren** — context/history should be 100% runtime-owned (kill the doubled context block; label history with name+email from the incoming string; Evryn out of the context game); (b) **Mira** — verify-and-lock needs *teeth* (gate substantive scoped work, not just the scope lock), "gold" is internal-only (not customer-facing), test-vs-script "tell me about your world" gap; (c) **dummy/wrong-Mark scenario → adversarial test** (6/8).
+- **Delineation set** (today: cutover✓/test/real-email · tomorrow: M1 · wk-of-6/8: adversarial+resilience+EVR-72+dead-config-sweep · v0.3: S1/S2/dashboard/Sentry/PII/RLS-policies/web-app).
+- **Clarification:** meta-layer carry-forward is *intended* (not a bug) — 3-tier operator-instruction model: identity files (permanent) / operator profile (durable curated) / meta layer (soft toggleable). "Always draft in Slack first" stays a meta instruction.
+- **NOT committed** — written for Justin's source-control review (his standing instruction this session).
+
+---
+
 ## 2026-06-04 (AC1 — dev/staging DB up; Supabase Pro; backup model finalized; ADR-037)
 
 - **Dev/staging DB created + seeded** — `Evryn Product — Dev` (us-west-2, ref `maqkdesopsskptpxjbqs`), a faithful mirror of Oregon prod via the same `pg_dump` replication script (5 tables, citext+vector, RLS, policies, all comments, test data; deprecated `emailmgr_queue` dropped). Enables QC live-tests + dev-first migrations. Org now on **Supabase Pro** (~$45/mo, 3 projects).

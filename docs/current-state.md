@@ -10,6 +10,7 @@
 
 *Last updated: 2026-06-03 evening (AC0 #lock — Mark wiped to zero; create-from-zero test; go-live reconciled; DB move to Oregon in progress)*
 *Updated: 2026-06-04 (AC1 — dev/staging DB created + seeded; Supabase Pro; pg_dump backup model. Decisions: ADR-037)*
+*Updated: 2026-06-04 evening (AC0 #2 — Oregon cutover DONE; create-from-zero test Phase 2 PASSED + paused; live-test findings routed to Mira/Soren; M1 silent-death = the one go-live blocker)*
 *Last #lock (full): 2026-06-03 evening (AC0)*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
@@ -26,15 +27,16 @@ AC drives DC and QC as **subagents** (build/review loops), not hand-relayed mail
 
 ## What's Next (critical path to Mark-live)
 
-- **DB move east → Oregon: DONE (AC1, 2026-06-03 eve).** Prod migrated to a new us-west-2 Supabase project "Evryn Product (West Coast)" — faithful copy verified (identical rows, RLS/policies/comments/citext+vector preserved, **system-actor UUIDs intact**), runtime connection test passed. Old East (`maruxkjwlfltlmureqkt`) still live + untouched, **retire after cutover.** **Cutover — AC0 owns the Railway side (Justin, 2026-06-03):** (1) repoint Railway `SUPABASE_URL`/`SUPABASE_SERVICE_KEY` → Oregon (creds in `backend/.env`); (2) apply the 036 migration to **Oregon** (mirrors East's pre-036 state); (3) `railway up`; (4) confirm healthy on Oregon → retire East. **Bitwarden re-upload** after the env change.
+- **Oregon cutover: DONE (AC0 #2, 2026-06-04 eve).** Prod is now Oregon ("Evryn Product (West Coast)", ref `wvaaqwapueycyxyhxdnh`): 036 migration applied + verified, pre/post `pg_dump` taken (`backend/backups/oregon-{pre,post}-036-2026-06-04.sql`, untracked), Railway repointed → Oregon, master (`1610f3b`) deployed + healthy (Supabase/Slack/polling confirmed). **Old East (`maruxkjwlfltlmureqkt`) still live — AC0 retires it once FULLY confident West is flawless; don't delete yet.** Apply mechanism: full-path PG17 psql + `SUPABASE_DB_URL_{PROD,DEV,EAST}` (see `backups/README.md`).
 - **Dev/staging DB: UP (AC1, 2026-06-04).** `Evryn Product — Dev` (us-west-2, ref `maqkdesopsskptpxjbqs`) created + seeded as a **faithful mirror of prod** (5 tables, citext+vector, RLS, policies, comments, test data). Enables QC live-tests + **dev-first migrations**. Org now **Supabase Pro** (~$45/mo, 3 projects). `.env`: runtime = Oregon prod; admin DB urls `SUPABASE_DB_URL_PROD`/`_DEV`/`_EAST` (dev API creds in Bitwarden, not active `.env`). Full decisions: **ADR-037**.
-- **evryn-backend master = `f24aa0e`** — EVR-71/68 + ADR-036 Trip 1 + Mira's `triage.md` prior-history beat (merged 2026-06-03 eve, reviewed clean) + this session's go-live reconciliation, ADR-029 phantom-control cleanup, the QC create-from-zero blocker fix (flow.ts) + AC1's Oregon-backup commit. **QC-verified GO, pushed, NOT deployed** (live = `6e27e3ea`; deploy blocked on the DB move). NOTE: Mira's beat references the 036 migration column — must not go live before the migration applies (already the order).
+- **evryn-backend master (`1610f3b`) DEPLOYED to Oregon** (AC0 #2) — the validated bundle (EVR-71/68 + ADR-036 + Mira's triage beat + go-live reconciliation + AC1 DB/doc work). 036 column live on Oregon. `POLL_INTERVAL_MS=10000` (test cadence — slow at Mark-live); `SEND_ENABLED=true` (already on in prod); `TEST_RECIPIENT`/`NODE_ENV=development` = dead config (6/8 sweep).
+- **Create-from-zero integration test: Phase 2 PASSED** (AC0 #2) — `create_user` (not upsert), scope-lock, deep research, draft→approve→send all validated end-to-end; **PAUSED mid-onboarding** (Phases 3-6 resume later). **Real-Mark email: Justin's call, not yet confirmed sent.** **Live-test findings routed** (drafts in `docs/working/`): context-architecture → Soren (runtime owns context attachment+labeling); verify-and-lock teeth + "gold"-internal-only + test-vs-script → Mira; dummy-Mark → adversarial. **Next AC0:** finish test → **M1 silent-death (the one go-live blocker, ~½ day)** → go-live tunables → real Mark. Handoff (Session-2 addendum): `docs/sessions/2026-06-04-ac0-handoff.md`.
 - **Mark wiped to ZERO (2026-06-03).** Test-Mark row + 49 messages + 4 items deleted; DB now holds only Evryn + Operator + a Google-Workspace test lead (kept — trains "ignore Google pings"). Backup committed `f26414c`.
 - **Integration test is now CREATE-FROM-ZERO** (was look-up-existing). Phase 2: operator introduces a never-seen Mark → Evryn creates his record via `create_user` (first real test of the ADR-036 tool); new Phase 2b re-tests the ADR-030 verify-and-lock *find* path. Test materials conformed (`f7f48a0`, `1627b8b`).
 - **Go-live simplified to match.** No hand-created real-Mark row / no `TEST_RECIPIENT` flip — you introduce real Mark, Evryn creates his record; the approval gate is the backstop the removed redirect (ADR-029) gave. operator-guide STEP 0 + SPRINT reconciled.
-- **036 migration** (`backups/adr-036-original-from-user-id-migration.sql`) **written, NOT applied** — apply to **Oregon** at cutover (step 2). Verify/add `users.email` UNIQUE at apply time.
+- **036 migration: APPLIED to Oregon** (AC0 #2) — column + index + FK live; `users.email` UNIQUE confirmed already present (verify-only, no add needed).
 - **Next (FRESH AC0 + Justin):** run the cutover above (AC0-owned) → `railway up` → create-from-zero integration test (Justin plays Mark). Full handoff: `docs/sessions/2026-06-04-ac0-handoff.md`.
-- **Pre-go-live: whole-system production-readiness pass (AC2).** HARD gates: DB backups+rollback, the `#emergency-alerts` Slack bot (silent-death detector — NOT Twilio), RLS verification. (Justin, 2026-06-03.)
+- **AC2 pre-go-live audit: DONE.** One true blocker = **M1 `#emergency-alerts` silent-death detector** (~½ day, tomorrow; NOT Twilio). Backups + RLS already satisfied (RLS live-verified ON, prod+dev). AC2 round-2 (codify delineation + clean stale ARCH/BUILD/SPRINT) staged — Justin relays go.
 - **EVR-72** (follow-up loads gatekeeper not contact) — ENABLED by 036's FK, NOT fixed.
 
 ## Pending doc-syncs (need Justin's auth — flagged, not done)
@@ -43,7 +45,7 @@ AC drives DC and QC as **subagents** (build/review loops), not hand-relayed mail
 
 ## Infrastructure
 
-- **Railway: AUTO-DEPLOY OFF — staying off by design.** Push freely; choose deploy moments via manual `railway up`. Live deploy = `6e27e3ea` (2026-06-01); master ahead, not redeployed. `PROACTIVE_CHECK_HOUR_PT=8`; quiet hours 18–8 PT.
+- **Railway: AUTO-DEPLOY OFF — staying off by design.** Manual `railway up`. Live deploy = `1610f3b` on **Oregon** (2026-06-04 eve, AC0 #2). `PROACTIVE_CHECK_HOUR_PT=8`; quiet hours 18–8 PT; `POLL_INTERVAL_MS=10000` (test cadence — slow at Mark-live).
 - **Supabase: on PRO. Prod migrated to Oregon (us-west-2) "Evryn Product (West Coast)"** (AC1; faithful copy, connection-verified) + **dev project "Evryn Product — Dev"** (Oregon, seeded mirror, 2026-06-04). Old East (`maruxkjwlfltlmureqkt`) live until cutover-retire; its `pg_dump` (`backups/full-public-2026-06-03.sql`) is the archive. DB state: system actors + 1 Google lead (Mark wiped 2026-06-03). **Backup model:** Pro **daily auto-backups** (primary, live on prod+dev) + periodic real **`pg_dump`** (portable/archival) — replaces the old non-restorable JSON dumps (ADR-037).
 - Slack: `#evryn-approvals` quiet 18–8 PT w/ queue+replay. `#emergency-alerts` = HARD go-live gate (Slack bot, NOT Twilio).
 
