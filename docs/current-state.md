@@ -11,7 +11,8 @@
 *Last updated: 2026-06-03 evening (AC0 #lock — Mark wiped to zero; create-from-zero test; go-live reconciled; DB move to Oregon in progress)*
 *Updated: 2026-06-04 (AC1 — dev/staging DB created + seeded; Supabase Pro; pg_dump backup model. Decisions: ADR-037)*
 *Updated: 2026-06-04 evening (AC0 #2 — Oregon cutover DONE; create-from-zero test Phase 2 PASSED + paused; live-test findings routed to Mira/Soren; M1 silent-death = the one go-live blocker)*
-*Last #lock (full): 2026-06-03 evening (AC0)*
+*Updated: 2026-06-05 (AC2 #lock — pre-go-live audit delivered + ARCH/BUILD/SPRINT reconciled + sprint doc collapsed 597→290, all pushed; EVR-114 Soren meta-architecting + v0.2 maintenance-plan stub)*
+*Last #lock (full): 2026-06-05 (AC2)*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
 
@@ -36,7 +37,7 @@ AC drives DC and QC as **subagents** (build/review loops), not hand-relayed mail
 - **Go-live simplified to match.** No hand-created real-Mark row / no `TEST_RECIPIENT` flip — you introduce real Mark, Evryn creates his record; the approval gate is the backstop the removed redirect (ADR-029) gave. operator-guide STEP 0 + SPRINT reconciled.
 - **036 migration: APPLIED to Oregon** (AC0 #2) — column + index + FK live; `users.email` UNIQUE confirmed already present (verify-only, no add needed).
 - **Next (FRESH AC0 + Justin):** run the cutover above (AC0-owned) → `railway up` → create-from-zero integration test (Justin plays Mark). Full handoff: `docs/sessions/2026-06-04-ac0-handoff.md`.
-- **AC2 pre-go-live audit: DONE.** One true blocker = **M1 `#emergency-alerts` silent-death detector** (~½ day, tomorrow; NOT Twilio). Backups + RLS already satisfied (RLS live-verified ON, prod+dev). AC2 round-2 (codify delineation + clean stale ARCH/BUILD/SPRINT) staged — Justin relays go.
+- **AC2 pre-go-live audit + doc reconciliation: DONE + PUSHED** (commits `1e67163`, `a02c760`, `afeeb95`). One true build blocker = **M1 `#emergency-alerts` silent-death detector** (~½ day; NOT Twilio; the process-crash shape needs an external watchdog). Backups + RLS satisfied (**RLS live-verified ON, all 5 tables, prod+dev**). Codified the dated **Go-Live Delineation** in SPRINT + reconciled the stale ARCH/BUILD/SPRINT (collapsed the sprint doc 597→290 to a status-prefixed Build Record + grouped backlog; **adversarial test corrected to dev/fictional-gatekeeper, never live-Mark**). **EVR-114** opened (Soren meta-architecting + a v0.2 maintenance-plan stub).
 - **EVR-72** (follow-up loads gatekeeper not contact) — ENABLED by 036's FK, NOT fixed.
 
 ## Pending doc-syncs (need Justin's auth — flagged, not done)
@@ -51,6 +52,6 @@ AC drives DC and QC as **subagents** (build/review loops), not hand-relayed mail
 
 ## Task Management
 
-[Linear (EVR workspace)](https://linear.app/evryn) — **EVR-68 + EVR-71 fixed** (pending deploy), **EVR-72 enabled-not-fixed**. EVR-67 = v0.3 S1 hardening. EVR-108/109/110 standing. Soren-owned; Justin/Lucas update per this state.
+[Linear (EVR workspace)](https://linear.app/evryn) — **EVR-68 + EVR-71 fixed + DEPLOYED** (in the Oregon cutover 2026-06-04; verified in `src/email/poll.ts` — held-cursor + HandleOutcome dedup. **Soren can close EVR-71/68** per Lucas's 2026-06-05 note). **EVR-72 enabled-not-fixed**. **EVR-114** = Soren meta-architecting meeting (R: soren, A: justin), opened 2026-06-05. EVR-67 = v0.3 S1 hardening. EVR-108/109/110 standing. Soren-owned; Justin/Lucas update per this state.
 
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED

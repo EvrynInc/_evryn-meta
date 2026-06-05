@@ -8,6 +8,18 @@
 
 ---
 
+## 2026-06-05 (AC2 — pre-go-live audit delivered; ARCH/BUILD/SPRINT reconciled + sprint doc collapsed; EVR-114)
+
+- **Pre-go-live production-readiness audit delivered** to AC0 (`docs/working/ac2-to-ac0.md`, commits `04ce3d8`/`4b5158d`/`0224f51`). Verdict: **one true build blocker** before Mark — the **M1 `#emergency-alerts` silent-death detector** (~½ day; NOT Twilio; the process-crash shape needs an external watchdog since a dead process can't alert itself). The other two hard gates are essentially satisfied: **DB backups/rollback** (AC1 / ADR-037) and **RLS** — which AC2 **live-verified ON for all 5 tables on prod AND dev** (read-only `psql` against Oregon; `evryn_knowledge` + `notify_queue` are RLS-on-no-policy = deny-all, fine until the v0.3 web app adds anon/authenticated roles). Definitive must-do/can-wait list + the SPRINT emergency-alerts self-contradiction are in the report.
+- **ARCHITECTURE / BUILD / SPRINT reconciled to reality** (commit `1e67163`, pushed). Worst stale blocks fixed: ARCH "Current State" (said pre-work/not-deployed → now a thin pointer-snapshot), BUILD Status header (April-7/Fenwick → current), the SPRINT emergency-alerts self-contradiction (now consistently a hard gate per 2026-06-03). Added a dated **Go-Live Delineation** to SPRINT (cutover/test → M1 → immediate-post-launch), a **v0.3 Security Hardening** section + **v0.2 Maintenance Plan** stub to BUILD, and corrected the **adversarial test** everywhere to run in **dev against a fictional gatekeeper (Rachel/Megan), NEVER live-Mark** (per Justin 2026-06-05 — injecting adversarial fixtures into a prod DB holding real Mark's data is the disaster the dev DB now prevents).
+- **SPRINT doc collapsed 597 → 290 lines** (commits `a02c760` + `afeeb95`, pushed). Replaced the redundant summary table + verbose day-by-day prose with one status-prefixed **Build Record** (Steps 1–6 + go-live gate); Day→Step, intended dates dropped, buried build-log updates removed. Backlog status-prefixed + grouped by status; v0.3-scope items moved to BUILD. Verified no substantive info loss (extract-specifics + `comm`-diff against the pre-collapse version; caught + re-added one drop — the M1 implementation spec).
+- **EVR-114 created** (R: soren, A: justin, Authorized): Justin wants a meeting on Soren owning **meta-architecting** — the connective/cross-cutting pieces (e.g. the v0.2 maintenance plan: observability/metrics, judgment-tuning loop, regression suite, review cadence) so Justin isn't holding them — + a recurring check-in cadence.
+- **Decisions captured in-doc** (no new ADRs — reconciliation + audit, no new architecture): crisis-protocol.md = CAN-WAIT (core.md carries the principle + approval gate); adversarial test = dev/fictional-gatekeeper; `EVRYN_USER_ID` constant-dedup = post-launch Open cleanup, not v0.3.
+
+**Operator-relevant:** none new — the doc reconciliation doesn't change how Justin operates; `SEND_ENABLED` confirmed already `true` on Railway (AC0).
+
+---
+
 ## 2026-06-04 evening (AC0 #2 — Oregon cutover DONE; create-from-zero test Phase 2 PASSED; live-test findings routed)
 
 - **Oregon cutover COMPLETE.** 036 migration rehearsed on dev, then applied to Oregon prod (`wvaaqwapueycyxyhxdnh`) with pre/post `pg_dump` (`backend/backups/oregon-{pre,post}-036-2026-06-04.sql`, untracked); Railway env repointed → Oregon; master (`1610f3b`) deployed + healthy. Apply mechanism: full-path PG17 psql + `SUPABASE_DB_URL_{PROD,DEV,EAST}` (per `backups/README.md`). **East still live — AC0 retires it once fully confident West is flawless.**
