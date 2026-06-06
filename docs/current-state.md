@@ -43,6 +43,7 @@ AC drives DC and QC as **subagents** (build/review loops), not hand-relayed mail
 ## Pending doc-syncs (need Justin's auth — flagged, not done)
 
 - `ARCHITECTURE.md` Data Model: 036 FK + `create_user` — **DONE 2026-06-03 eve.** `LEARNINGS.md`/`AGENT_PATTERNS.md`: largely captured (phantom-controls in LEARNINGS; QC patterns in her CLAUDE.md). **team CLAUDE.md** "identity-pushes-trigger-redeploys" stale — **routed to Soren** (flagged in team current-state + here; not yet fixed).
+- **`ARCHITECTURE.md` full top-to-bottom accuracy pass — OWED (AC2, 2026-06-05).** This session only did *targeted* fixes (the 3 worst stale blocks — Current State, date stamp, East project ref — plus staleness-grep hits), **not** the exhaustive line-by-line accuracy read needed to vouch the whole ~1,188-line doc is clean (e.g. Proactive Behavior's "Target: v0.2 or first thing after it" framing is stale now the proactive cron is built). Also minor: **`evryn-backend/docs/operator-guide.md`** date-stamp drift (stamped 2026-05-29 but carries later create-from-zero content). Justin chose "leave for now" 2026-06-05 → **pick up at #sweep**.
 
 ## Infrastructure
 
