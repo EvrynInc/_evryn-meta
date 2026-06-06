@@ -12,7 +12,8 @@
 *Updated: 2026-06-04 (AC1 — dev/staging DB created + seeded; Supabase Pro; pg_dump backup model. Decisions: ADR-037)*
 *Updated: 2026-06-04 evening (AC0 #2 — Oregon cutover DONE; create-from-zero test Phase 2 PASSED + paused; live-test findings routed to Mira/Soren; M1 silent-death = the one go-live blocker)*
 *Updated: 2026-06-05 (AC2 #lock — pre-go-live audit delivered + ARCH/BUILD/SPRINT reconciled + sprint doc collapsed 597→290, all pushed; EVR-114 Soren meta-architecting + v0.2 maintenance-plan stub)*
-*Last #lock (full): 2026-06-05 (AC2)*
+*Updated: 2026-06-06 (AC0 #lock — subagent loading hardened: Startup Context Cascade + #cascade-override standardized across DC/QC + protocol; protocol simplified; AskUserQuestion banned. Orchestration tooling, not build work. 4 UNVERIFIED backend silent-failure candidates routed to AC1 — see docs/sessions/2026-06-06-ac0-subagent-loading.md)*
+*Last #lock (full): 2026-06-06 (AC0)*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
 
@@ -24,7 +25,7 @@ Team agent build (Lucas) paused — not cancelled. Building Evryn product MVP (v
 
 ## How AC works now
 
-AC drives DC and QC as **subagents** (build/review loops), not hand-relayed mailbox notes. Protocol: `docs/protocols/ac-orchestration-protocol.md`. QC verifies every real code change. **AC promotes QC's standing patterns** into QC's CLAUDE.md "Patterns This Role Watches For" section (QC can't write her own; new 2026-06-03). **Ping-by-default** on `#team-alerts`. Arch + BUILD docs: AC holds edit rights, **editing needs Justin's explicit auth first**.
+AC drives DC and QC as **subagents** (build/review loops), not hand-relayed mailbox notes. Protocol: `docs/protocols/ac-orchestration-protocol.md`. Subagent startup loading is standardized via the **Startup Context Cascade** (verbatim "read and faithfully follow" trigger + receipts watch on the task-specific additions), with **`#cascade-override`** the only guard-railed way to narrow a load (2026-06-06). QC verifies every real code change. **AC promotes QC's standing patterns** into QC's CLAUDE.md "Patterns This Role Watches For" section (QC can't write her own; new 2026-06-03). **Ping-by-default** on `#team-alerts`. Arch + BUILD docs: AC holds edit rights, **editing needs Justin's explicit auth first**.
 
 ## What's Next (critical path to Mark-live)
 

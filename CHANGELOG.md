@@ -8,6 +8,22 @@
 
 ---
 
+## 2026-06-06 (AC0 — subagent loading hardened: Startup Context Cascade + #cascade-override; AskUserQuestion banned)
+
+- **Standardized subagent startup loading.** "Startup Context Cascade" is now the single term for what DC/QC load at startup — a section by that exact name in each of their CLAUDE.mds (AC's own cascade renamed to Light/Full Startup Context Cascade to match). The orchestration protocol gives AC the verbatim "exact words" to trigger it. Closes the old ambiguity where the protocol said "load context cascade" but the three manuals each called it something different.
+- **`#cascade-override` escape hatch added.** DC/QC manuals are now binary: the full cascade loads every trip UNLESS the brief contains the literal token `#cascade-override` + an explicit file list. Natural-language framing ("just check X," "quick," "self-contained") is explicitly NOT authorization to skip. Near-never guardrails in the protocol (compelling reason only — known-self-contained or a corrupted part to isolate; AC owns the risk).
+- **Validated by bait tests (4 subagent spins).** Pre-hardening, a tempting "just check poll.ts / skip the docs" brief made QC skip ARCHITECTURE.md and DC skip his whole cascade. Post-hardening both loaded the full set and *cited the binary rule*; the override loaded exactly its scoped list and acknowledged running scoped. DC's broadened trigger (any work, not just "build") + all-three-mandatory closed his partial-skip seam (confirming spin loaded Hub+ARCH+BUILD and the docs caught a brief error code-only would have missed).
+- **Protocol simplified:** dropped the belt-and-suspenders cascade enumeration (the binary rule does that job); AC now enumerates only *task-specific* additions ("required reading, not suggestions") and trains the watchful eye on that additional list (where rationalized skips still happen). Added "QC is token-heavy → batch her work" note (a QC spin ≈ a loaded AC's review; ~100K load, doesn't compound since she's one-shot; parallel reads cut count/cost, not final context size).
+- **AskUserQuestion tool banned in AC's CLAUDE.md** — it hangs with no ping, silently deadlocking the session.
+- **VS Code multi-root workspace created** (`Code/evryn.code-workspace`, not version-controlled) so Source Control shows every repo + active worktree in one window.
+- Commits (all pushed): `79a6c2f` + `1a89335` + `3bad3c2` (meta); `68c2a8f` + `6849d99` (dev-workspace); `c396438` + `d2c04c0` (quality).
+
+**Operator-relevant:** none — this is AC/DC/QC orchestration methodology, not product behavior.
+
+**Surfaced for AC1 (UNVERIFIED, `evryn-backend`):** 4 silent-failure candidates from the bait-test code reads, handed to AC1 to verify in build context — `checkStaleItems` ignores the query `error` field; `findPendingByShortId` swallows DB errors as "none"; send-succeeds-then-record-fails → double-send on re-approve; cron checkers fail with only `console.error`. Detail in `docs/sessions/2026-06-06-ac0-subagent-loading.md`.
+
+---
+
 ## 2026-06-05 (AC2 — pre-go-live audit delivered; ARCH/BUILD/SPRINT reconciled + sprint doc collapsed; EVR-114)
 
 - **Pre-go-live production-readiness audit delivered** to AC0 (`docs/working/ac2-to-ac0.md`, commits `04ce3d8`/`4b5158d`/`0224f51`). Verdict: **one true build blocker** before Mark — the **M1 `#emergency-alerts` silent-death detector** (~½ day; NOT Twilio; the process-crash shape needs an external watchdog since a dead process can't alert itself). The other two hard gates are essentially satisfied: **DB backups/rollback** (AC1 / ADR-037) and **RLS** — which AC2 **live-verified ON for all 5 tables on prod AND dev** (read-only `psql` against Oregon; `evryn_knowledge` + `notify_queue` are RLS-on-no-policy = deny-all, fine until the v0.3 web app adds anon/authenticated roles). Definitive must-do/can-wait list + the SPRINT emergency-alerts self-contradiction are in the report.
