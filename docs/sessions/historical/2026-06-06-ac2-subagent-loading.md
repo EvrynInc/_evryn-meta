@@ -1,4 +1,4 @@
-# Session — 2026-06-06 (AC0): Subagent loading hardening
+# Session — 2026-06-06 (AC2): Subagent loading hardening
 
 **How to use this file:** Ephemeral session record. The durable outputs are already absorbed — orchestration changes into `docs/protocols/ac-orchestration-protocol.md` + DC/QC CLAUDE.mds, the pattern into `AGENT_PATTERNS.md`, the summary into `CHANGELOG.md`. This doc exists to (a) hand the UNVERIFIED bug candidates to AC1, and (b) record the don't-split-QC decision. Delete once AC1 has absorbed the candidates.
 

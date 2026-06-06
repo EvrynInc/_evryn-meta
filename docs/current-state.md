@@ -12,8 +12,8 @@
 *Updated: 2026-06-04 (AC1 — dev/staging DB created + seeded; Supabase Pro; pg_dump backup model. Decisions: ADR-037)*
 *Updated: 2026-06-04 evening (AC0 #2 — Oregon cutover DONE; create-from-zero test Phase 2 PASSED + paused; live-test findings routed to Mira/Soren; M1 silent-death = the one go-live blocker)*
 *Updated: 2026-06-05 (AC2 #lock — pre-go-live audit delivered + ARCH/BUILD/SPRINT reconciled + sprint doc collapsed 597→290, all pushed; EVR-114 Soren meta-architecting + v0.2 maintenance-plan stub)*
-*Updated: 2026-06-06 (AC0 #lock — subagent loading hardened: Startup Context Cascade + #cascade-override standardized across DC/QC + protocol; protocol simplified; AskUserQuestion banned. Orchestration tooling, not build work. 4 UNVERIFIED backend silent-failure candidates routed to AC1 — see docs/sessions/2026-06-06-ac0-subagent-loading.md)*
-*Last #lock (full): 2026-06-06 (AC0)*
+*Updated: 2026-06-06 (AC2 #lock — subagent loading hardened: Startup Context Cascade + #cascade-override standardized across DC/QC + protocol; protocol simplified; AskUserQuestion banned. Orchestration tooling, not build work. 4 UNVERIFIED backend silent-failure candidates routed to AC1 — see docs/sessions/historical/2026-06-06-ac2-subagent-loading.md)*
+*Last #lock (full): 2026-06-06 (AC2)*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
 

@@ -8,7 +8,7 @@
 
 ---
 
-## 2026-06-06 (AC0 — subagent loading hardened: Startup Context Cascade + #cascade-override; AskUserQuestion banned)
+## 2026-06-06 (AC2 — subagent loading hardened: Startup Context Cascade + #cascade-override; AskUserQuestion banned)
 
 - **Standardized subagent startup loading.** "Startup Context Cascade" is now the single term for what DC/QC load at startup — a section by that exact name in each of their CLAUDE.mds (AC's own cascade renamed to Light/Full Startup Context Cascade to match). The orchestration protocol gives AC the verbatim "exact words" to trigger it. Closes the old ambiguity where the protocol said "load context cascade" but the three manuals each called it something different.
 - **`#cascade-override` escape hatch added.** DC/QC manuals are now binary: the full cascade loads every trip UNLESS the brief contains the literal token `#cascade-override` + an explicit file list. Natural-language framing ("just check X," "quick," "self-contained") is explicitly NOT authorization to skip. Near-never guardrails in the protocol (compelling reason only — known-self-contained or a corrupted part to isolate; AC owns the risk).
@@ -20,7 +20,7 @@
 
 **Operator-relevant:** none — this is AC/DC/QC orchestration methodology, not product behavior.
 
-**Surfaced for AC1 (UNVERIFIED, `evryn-backend`):** 4 silent-failure candidates from the bait-test code reads, handed to AC1 to verify in build context — `checkStaleItems` ignores the query `error` field; `findPendingByShortId` swallows DB errors as "none"; send-succeeds-then-record-fails → double-send on re-approve; cron checkers fail with only `console.error`. Detail in `docs/sessions/2026-06-06-ac0-subagent-loading.md`.
+**Surfaced for AC1 (UNVERIFIED, `evryn-backend`):** 4 silent-failure candidates from the bait-test code reads, handed to AC1 to verify in build context — `checkStaleItems` ignores the query `error` field; `findPendingByShortId` swallows DB errors as "none"; send-succeeds-then-record-fails → double-send on re-approve; cron checkers fail with only `console.error`. Detail in `docs/sessions/historical/2026-06-06-ac2-subagent-loading.md`.
 
 ---
 
