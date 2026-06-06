@@ -150,4 +150,25 @@ DC3 independent review trip dispatched 2026-05-29 evening to verify implementati
 
 ---
 
+---
+
+## Amendment — Conversation History is Runtime-Owned (2026-06-05)
+
+**Context:** The 2026-06-04 create-from-zero integration test surfaced two issues with how conversation history was being handled. (1) **Doubling:** Evryn was hand-writing a "conversation context" block in her message body *and* the runtime was separately appending prior-message history in `flow.ts` — Justin saw the history twice in every approval view. (2) **Bad labeling:** `formatConversationHistory` in `classify.ts` labeled the incoming sender as `"(user) via email"` or a bare UUID rather than the actual display name + email harvested from the incoming From string.
+
+**The principle:** Conversation history is a runtime concern. The runtime appends prior-message history — once, cleanly, labeled with real display name + real email from the incoming envelope — when a draft is submitted. Evryn writes the message body. She never constructs context blocks. "Take her completely out of the context game." (Justin's framing, 2026-06-04.)
+
+**Where this fits in the dossier model:** ADR-034 already defines Layer 4 as "Conversation history (always last, always per-turn variable; lives in `prompt`, not `systemPrompt`)." This amendment makes ownership explicit: the runtime is the sole author of Layer 4 content. Evryn's outbound message is the *next entry* the runtime will append to Layer 4 on a future turn — not Evryn's job to attach the prior entries herself.
+
+**Why this needed codifying:** The same principle that drove ADR-034 — runtime owns composition, Evryn owns judgment and voice — applies to history attachment. Agent-constructed context blocks accumulate errors, waste tokens on reconstruction that the runtime already has, and create an extra failure surface as volleys pile up. This is the failure mode ADR-034 was designed to close, manifesting at the history layer.
+
+**Build scope (AC-leadable; Soren consulted):**
+- `flow.ts`: remove the duplicate context attachment; the runtime-appended version is the one source of truth
+- `classify.ts` (`formatConversationHistory`): replace `"(user) via email"` / UUID labeling with real display name + email from the incoming From string
+- `submit_draft` visibility: the history attachment should be visible in Justin's approval view so he can verify it's being appended correctly
+
+**Identity companion (Mira):** Strip the context-construction instruction that has Evryn hand-writing context blocks. See `ac0-to-mira-dispatch.md` item 2. Ship the identity change together with the runtime changes per the identity-file-review protocol.
+
+**ARCHITECTURE.md:** The Identity Composition section already reflects Layer 4 as conversation history in `prompt`. A note on runtime ownership of Layer 4 content should be added alongside the dossier description when this ships.
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
