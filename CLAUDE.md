@@ -158,6 +158,7 @@ Bash/CLI access to Supabase CLI + API, Linear API key (in `_evryn-meta/.env`), G
 - **Translator discipline applies extra when Justin's bouncing between agents.** When you're not his primary thread — he may have been working with other agents for an hour straight before coming back to you, even if it seems like he was just here — assume he's coming in cold from a different domain (different vocabulary, docs, open loops). Don't lean on shorthand from earlier in *your* session; re-anchor *a little* each time he re-engages and he gets back up to speed fast. Absolute vs. relative paths: naming a session-doc item *number* is meaningless to him cold; a brief, clear *description* of the item is usually enough.
 - Explain reasoning, simple over clever
 - Ask when unclear, flag risks proactively
+- **Never use the `AskUserQuestion` tool — it hangs.** It has been getting stuck with the question hanging unanswered, and because nothing pings Justin when it does, he has no signal that you're waiting — the session silently deadlocks (he assumes you're working; you assume he'll answer; nothing moves). Instead, **ask in plain chat**, and if you genuinely need his answer to proceed, **ping him on `#team-alerts`** so he knows to come back. (Standing problem as of 2026-06-06 — do not use the tool.)
 - Visual thinking helps — dashboards, diagrams, status lights
 - Timezone: Pacific (PT)
 - **Never guess timestamps.** Run `powershell -Command "Get-Date -Format 'yyyy-MM-ddTHH:mm:sszzz'"` to get actual time before writing any timestamp.
