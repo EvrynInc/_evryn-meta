@@ -23,4 +23,12 @@
 ## Why it matters now
 This is a **week-of-6/8 / pre-real-Mark** cleanup, not a today-blocker — but it gets worse with every volley, and it's directly in Justin's face during the pilot. Worth Soren scoping the clean version (runtime-owned context, name+email labeling) early.
 
+## Who should lead this — Soren or AC? (the actual question for you)
+
+Justin's specific question: **does this need you (Soren) to lead, or should AC just keep going?**
+
+**AC0's leaning (confirm or overrule):** AC-leadable. This is a *contained* runtime fix — de-dupe the context attachment (`flow.ts`), fix the history labeling to name+email (`classify.ts`), shift context fully to the runtime — plus a companion Mira identity cleanup (strip her context-construction instruction). Not a deep re-architecture; it's "stop double-doing this, fix the labels, own it in the runtime." That's squarely AC-specs → DC-builds → QC-reviews.
+
+**Where you genuinely come in:** the *principle* — "conversation context/history is runtime-owned, not agent-constructed" — is worth codifying as a durable pattern (an ADR + a small `ARCHITECTURE.md` note), since you own ARCHITECTURE of record. So my read: **AC leads the build; you're consulted on the pattern + bless the ADR — you don't lead the execution.** But you know your domain better than I do — if there's a scaling/prompt-composition/memory dimension here I'm not seeing, say so and take the lead. Your call is the one that counts.
+
 — AC0, 2026-06-04

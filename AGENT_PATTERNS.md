@@ -476,4 +476,14 @@ node -e "const text = `merged \`branch-name\` to master`; fetch(...).then(...);"
 
 *Add patterns as they emerge from building evryn-team-agents and other agent work.*
 
+## Runtime & Context
+
+### Conversation-history is the runtime's job to attach, not the agent's to construct
+Don't make the agent hand-build a conversation-history/context block inside its messages — the runtime already attaches prior-message context on send. When the agent *also* constructs it you get: doubled context in the output, mislabeled senders, wasted compute, and the agent's own context bloating as volleys pile up. The runtime owns context attachment (labeled with the sender's name + real email, harvested from the incoming envelope — don't recompute it via the model); the agent writes only its own message. *(Evryn, 2026-06-04 live test: her outbound carried a "conversation context" block AND the runtime's quoted-history append — doubled — and the history labeled senders "(user) via email" instead of name+email.)*
+
+### A confirm-gate must gate the substantive work it protects, not just the structural step
+When you build a "verify with the operator before acting" beat, make the confirmation gate **all** the substantive / expensive / committing work (research, profile writes, drafts) — not just the final visible action. *(Evryn, 2026-06-04: she locked the thread scope **and wrote two research notes to the record**, then asked the operator to confirm identity — so the confirm gated only the draft, while the misattributable work had already landed.)* Right sequence: **light-identity-present → operator confirm → THEN the substantive work.**
+
+---
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
