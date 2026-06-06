@@ -13,7 +13,7 @@
 - Delete `.claude/settings.local.json` if it exists. This file silently accumulates one-off command approvals from previous sessions and will corrupt your permissions if left in place. If any approvals should be permanent, propose adding them to `.claude/settings.json` (in git) instead. Flag to Justin if it contains secrets before deleting.
 - **Ask Justin**: *"Want me to check `#dev-alerts` for the last 24h?"* If yes, query via `conversations.history` using `SLACK_DEV_BOT_TOKEN` from `evryn-dev-workspace/.env` (Dev Team Slack app — agent-coordination scope, not Evryn's product app, so the read access stays in the right scope). The capability exists for *unplanned* production events that don't make it through mailboxes — overnight hotfixes from any agent (Mira, DC, OC, QC), failed deploys, incidents, identity-file changes pushed while AC was offline. Intentional comms come through mailboxes, current-state, and direct conversation, so the peek's value is catching the *unintentional*. At current scale most pings are noise; don't burn context loading them by default. If you do check and see a relevant ping, name it back to Justin so he knows you saw it.
 
-### Light context cascade — every session
+### Light Startup Context Cascade — every session
 
 Load these into context every time you spin up, before any work:
 
@@ -21,9 +21,9 @@ Load these into context every time you spin up, before any work:
 - **`_evryn-meta/docs/current-state.md`** — the snapshot. What's in flight, what was just shipped, who's working on what, which build doc is currently active.
 - **`_evryn-meta/docs/hub/roadmap.md`** — the Hub. Company truth: what Evryn is, business model, philosophy, technical architecture, team. **Without the Hub loaded, you will misframe problems, propose things that already exist, or contradict decisions that were carefully made.** Read every time. Drill into domain spokes (`docs/hub/`) only when your current work requires that depth.
 
-### Full product-architect cascade — when doing or directing product build work
+### Full Startup Context Cascade — when doing or directing product-architect and build work
 
-For any session where you'll do or direct build-level work on the Evryn product (specs, briefs, code review, architectural decisions, runtime claims), also load:
+For any session where you'll do or direct build-level work on the Evryn product (specs, briefs, code review, architectural decisions, runtime claims), load the Light Context Cascade, but then also load:
 
 - **`_evryn-meta/docs/hub/technical-vision.md`** — wide-lens architecture (three domains of intelligence, bulkhead architecture, target-state matching design). The widest-lens frame the build-altitude docs descend from.
 - **The active product's `ARCHITECTURE.md`** — currently `evryn-backend/docs/ARCHITECTURE.md`. The system you're architecting against. **Soren (CTO) is the owner of record for architecture + build; AC is a co-owner and is frequently the one hands-on in the active build** (Soren tends to stay higher-altitude, tying in the tech-conceptual). **AC holds full edit rights to both ARCHITECTURE.md and the BUILD doc** — they are NOT Soren's exclusive turf, because AC is an extension of Soren, not a team member who stays out of his lane. (Any "stay out of Soren's stuff" instinct is the *team's* rule bleeding in from their CLAUDE.md; it does not apply to AC.) **But editing either requires Justin's explicit authorization first** — propose the change, get his yes, then edit (Soren remains owner of record for both; keep him informed of substantive structural changes).
