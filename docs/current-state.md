@@ -13,7 +13,8 @@
 *Updated: 2026-06-04 evening (AC0 #2 — Oregon cutover DONE; create-from-zero test Phase 2 PASSED + paused; live-test findings routed to Mira/Soren; M1 silent-death = the one go-live blocker)*
 *Updated: 2026-06-05 (AC2 #lock — pre-go-live audit delivered + ARCH/BUILD/SPRINT reconciled + sprint doc collapsed 597→290, all pushed; EVR-114 Soren meta-architecting + v0.2 maintenance-plan stub)*
 *Updated: 2026-06-06 (AC2 #lock — subagent loading hardened: Startup Context Cascade + #cascade-override standardized across DC/QC + protocol; protocol simplified; AskUserQuestion banned. Orchestration tooling, not build work. 4 UNVERIFIED backend silent-failure candidates routed to AC1 — see docs/sessions/historical/2026-06-06-ac2-subagent-loading.md)*
-*Last #lock (full): 2026-06-06 (AC2)*
+*Updated: 2026-06-08 (AC3 #lock — evryn-backend default branch renamed master→main via GitHub native rename; default moved + canonical tree synced + Railway healthy. Doc master-ref sweep = AC0's, pending. Repo-ops only, no build/arch change.)*
+*Last #lock (full): 2026-06-08 (AC3)*
 *Last #sweep: 2026-04-04 (Lucas)*
 *Last #align: 2026-04-04 (Lucas)*
 
@@ -43,11 +44,13 @@ AC drives DC and QC as **subagents** (build/review loops), not hand-relayed mail
 
 ## Pending doc-syncs (need Justin's auth — flagged, not done)
 
+- **`master`→`main` doc-reference sweep (`_evryn-meta` + `evryn-backend` docs) — OWED (AC0).** The branch rename is DONE (AC3, 2026-06-08); triaging the textual `master` references in docs (live-vs-historical judgment — e.g. historical deploy records like "deployed `1610f3b` on master" should likely stay) is AC0's call. AC3 left all doc refs untouched per scope.
 - `ARCHITECTURE.md` Data Model: 036 FK + `create_user` — **DONE 2026-06-03 eve.** `LEARNINGS.md`/`AGENT_PATTERNS.md`: largely captured (phantom-controls in LEARNINGS; QC patterns in her CLAUDE.md). **team CLAUDE.md** "identity-pushes-trigger-redeploys" stale — **routed to Soren** (flagged in team current-state + here; not yet fixed).
 - **`ARCHITECTURE.md` full top-to-bottom accuracy pass — OWED (AC2, 2026-06-05).** This session only did *targeted* fixes (the 3 worst stale blocks — Current State, date stamp, East project ref — plus staleness-grep hits), **not** the exhaustive line-by-line accuracy read needed to vouch the whole ~1,188-line doc is clean (e.g. Proactive Behavior's "Target: v0.2 or first thing after it" framing is stale now the proactive cron is built). Also minor: **`evryn-backend/docs/operator-guide.md`** date-stamp drift (stamped 2026-05-29 but carries later create-from-zero content). Justin chose "leave for now" 2026-06-05 → **pick up at #sweep**.
 
 ## Infrastructure
 
+- **evryn-backend default branch: `main`** — renamed from `master` 2026-06-08 (AC3, GitHub native rename: default moved, redirects set, canonical tree synced, `origin/master` deleted). Now in line with all other repos. Deploy-neutral (`railway up` is branch-agnostic; auto-deploy off) — verified healthy.
 - **Railway: AUTO-DEPLOY OFF — staying off by design.** Manual `railway up`. Live deploy = `1610f3b` on **Oregon** (2026-06-04 eve, AC0 #2). `PROACTIVE_CHECK_HOUR_PT=8`; quiet hours 18–8 PT; `POLL_INTERVAL_MS=10000` (test cadence — slow at Mark-live).
 - **Supabase: on PRO. Prod migrated to Oregon (us-west-2) "Evryn Product (West Coast)"** (AC1; faithful copy, connection-verified) + **dev project "Evryn Product — Dev"** (Oregon, seeded mirror, 2026-06-04). Old East (`maruxkjwlfltlmureqkt`) live until cutover-retire; its `pg_dump` (`backups/full-public-2026-06-03.sql`) is the archive. DB state: system actors + 1 Google lead (Mark wiped 2026-06-03). **Backup model:** Pro **daily auto-backups** (primary, live on prod+dev) + periodic real **`pg_dump`** (portable/archival) — replaces the old non-restorable JSON dumps (ADR-037).
 - Slack: `#evryn-approvals` quiet 18–8 PT w/ queue+replay. `#emergency-alerts` = HARD go-live gate (Slack bot, NOT Twilio).

@@ -8,6 +8,17 @@
 
 ---
 
+## 2026-06-08 (AC3 — evryn-backend default branch renamed `master` → `main`)
+
+- **Renamed evryn-backend's default branch `master` → `main`** to bring it in line with all other Evryn repos. Done via GitHub's **native branch rename** (`gh api .../branches/master/rename`), which atomically moved the default, set up redirects, and would have retargeted any open PRs (none were open). Canonical local tree synced (`branch -m`, `fetch --prune`, upstream → `origin/main`, `origin/HEAD` re-pointed); `origin/master` deleted.
+- **Blast radius was near-zero** (AC3 recon, AC0-verified): no CI in the repo (no `.github/`), no in-repo Railway config + auto-deploy off → `railway up` is branch-agnostic so the rename is deploy-neutral (Railway verified healthy, no deploy fired), no branch protection to migrate, and no `master` references in code/config (Dockerfile, package.json, scripts all clean).
+- **Process:** recon → blast-radius report → **held** for AC0's all-clear (the open-PR / in-flight-merge state is exactly what a single instance can't see) → executed only after AC0 confirmed AC1's ship landed + redeployed and gave the greenlight. Full record: `docs/sessions/historical/2026-06-08-ac3-master-to-main-recon.md`.
+- **Still owed (AC0, #lock/#sweep):** the textual `master`→`main` reference sweep across `_evryn-meta` + `evryn-backend` docs (live-vs-historical judgment) — AC3 left all doc refs untouched per scope.
+
+**Operator-relevant:** none — Justin operates via `railway up` and agents handle git; branch name doesn't touch the deployed runtime or any operator step.
+
+---
+
 ## 2026-06-06 (AC2 — subagent loading hardened: Startup Context Cascade + #cascade-override; AskUserQuestion banned)
 
 - **Standardized subagent startup loading.** "Startup Context Cascade" is now the single term for what DC/QC load at startup — a section by that exact name in each of their CLAUDE.mds (AC's own cascade renamed to Light/Full Startup Context Cascade to match). The orchestration protocol gives AC the verbatim "exact words" to trigger it. Closes the old ambiguity where the protocol said "load context cascade" but the three manuals each called it something different.
