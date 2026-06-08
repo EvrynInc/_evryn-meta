@@ -195,10 +195,10 @@ Once both users have opted in, approved their information sharing, and are ident
 - A minimal modal that slides up from the bottom of the screen, with the chat still visible above
 - A dollar input field (clean, prominent)
 - A "Pay and connect" button
-- Below the button: "30-day 100% satisfaction guarantee"
+- Below the button: "30-day refund if it doesn't deliver"
 - Payment processed via **Stripe** — simple pay-in-the-moment. No Evryn Wallet, no pre-purchased credits, no installment plans in v0.3.
 
-**The satisfaction guarantee:** If the connection doesn't feel right, the user can request a full refund within 30 days. No explanation required (though feedback *much* appreciated). (Specific ToS language for this guarantee is a question for Fenwick — see meeting prep doc, Q4.)
+**The refund window:** If the connection doesn't feel right, the user can request a full refund within 30 days. No explanation required (though feedback *much* appreciated). (Specific ToS language for the refund policy is a question for Fenwick — see meeting prep doc, Q4.)
 
 **Refunds:** Users can request a refund by telling Evryn directly in conversation, or by emailing support@evryn.ai. Evryn will ask what didn't feel right — not to gatekeep the refund, but because the feedback genuinely helps her improve. The refund itself is processed regardless of whether feedback is given. Refunds are processed back through Stripe.
 

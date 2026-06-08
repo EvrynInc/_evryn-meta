@@ -82,7 +82,7 @@ When no one in the network fits a seeker's need, Evryn can go find them — web 
 
 ## Three Revenue Streams
 
-1. **Trust-Based Match Payments** — per-connection, user-named price, 100% satisfaction guarantee. Payment = trust signal. Revenue scales with match quality and network density.
+1. **Trust-Based Match Payments** — per-connection, user-named price, with a 30-day refund if the connection doesn't deliver. Payment = trust signal. Revenue scales with match quality and network density.
 2. **Post-Match Transactions** — user-to-user payments (via Stripe Connect) for follow-up work, tipping, repeat gigs. Evryn can take a small commission. She's a relationship steward, not a marketplace. Introductions aren't enough — follow-through matters. By facilitating payments and re-engagements, Evryn becomes not just the introducer, but the connective tissue for real working relationships.
 3. **Participant-Based Business Access ("Ads Without Ads")** — companies become users, like any other — they're introduced only if they're trusted, and the best fit for what you're asking for. Users can exclude any or all companies. No boosting, no buying visibility. Businesses earn access, they don't buy it. Data stays in Evryn's system — Evryn doesn't hand over user information. Users give explicit per-introduction consent.
 
