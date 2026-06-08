@@ -8,6 +8,20 @@
 
 ---
 
+## 2026-06-08 (AC0 #3 — integration test Phase 5 graded; #lock)
+
+- **Integration test Phases 3-5 PASSED.** Phase 5 (triage validation): 18 synthetic fixtures vs Mark's onboarding-gathered profile via `tests/run-fixtures.ts` → **effectively 18/18 on reasoning** (raw 12/18; the 6 "misses" are web-verification wins — Evryn correctly downgrades fixtures whose details don't survive live web-search, and distinguishes *failed*-verification from mere *absent*-footprint). Dated result + full nuance: `evryn-backend/tests/results-2026-06-08-phase5.md`.
+- **Phase 6 live-fire plan** written (`evryn-backend/tests/phase6-live-fire-v02.md`) — 6 scenarios + scripted Mark responses; tests the live prod pipeline + feedback loop + the B2c bug + the context-fix on a real draft.
+- **B2c/edge bug found + fixed.** Evryn occasionally `notify_slack`-ed ("can I submit?") instead of `submit_draft` on an edge case → item stranded in `processing` → B2c backstop errored it. **Mira fix pushed** (`triage.md`, `30d85f0` on `main`: submit_draft IS the surface + triage-scoped notify_slack carve-out). **Needs `railway up`.**
+- **Token/cost observability** added to `runEvrynQuery` (`classify.ts`, `6e1063b`, not deployed) — per-query in/out/cache/cost from the SDK result message.
+- **Testing protocol:** "Persisting Results" step added to `integration-test-v02.md` — every run gets a dated `tests/results-*` entry, graded on *reasoning* not raw label-match.
+- **Fixture data cleaned from prod** post-Phase-5 (18 sender users + 18 items + 1 message; Mark restored to his 5 onboarding notes so Phase 6 isn't contaminated).
+- **Handoff:** SESSION 3 ADDENDUM appended to `docs/sessions/2026-06-04-ac0-handoff.md` for the next AC0.
+
+**Operator-relevant:** Phase 6 is live-fire (Justin plays Mark); the Mira B2c fix needs a `railway up` to take effect — both flagged in the handoff.
+
+---
+
 ## 2026-06-08 (AC3 — evryn-backend default branch renamed `master` → `main`)
 
 - **Renamed evryn-backend's default branch `master` → `main`** to bring it in line with all other Evryn repos. Done via GitHub's **native branch rename** (`gh api .../branches/master/rename`), which atomically moved the default, set up redirects, and would have retargeted any open PRs (none were open). Canonical local tree synced (`branch -m`, `fetch --prune`, upstream → `origin/main`, `origin/HEAD` re-pointed); `origin/master` deleted.
