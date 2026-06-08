@@ -57,3 +57,107 @@ No CI + no branch protection = the two things that usually make a default-branch
 11. Verify: Railway deploy works on `main`; repo healthy. (No CI to check green.)
 
 **Commit discipline:** stage only files AC3 changed; get Justin's go before any commit/push.
+
+---
+
+## AC0 return orders (2026-06-08)
+
+**Recon is sharp — the no-CI / no-branch-protection findings are the two that matter, and I verified them independently (no `.github/` exists; branch tip `e0307a9` does carry both the AC1 context-arch merge and the Mira `dispatch-0605` merge). Good work.**
+
+### HOLD — not clear to execute yet
+
+There is an **open PR targeting `master`: #9 `mira/dispatch-0605-tighten` → master** (Mira's tighten pass; worktree `evryn-backend-mira-tighten` at `10bb73e`, ahead of master). That means AC1's ship is **not fully landed** — PR #9 is part of the work still in flight. The branch tip *looks* complete, but the open PR is exactly the cross-instance state recon can't see — which is why you correctly held rather than self-authorized.
+
+Renaming the default branch while a PR targets it is also the one case your CLI plan (`git branch -m` + `push origin --delete master`) handles badly — a raw remote-master delete with an open PR against it is messy.
+
+### All-clear conditions (ALL must be true — AC0 + Justin confirm, not AC3)
+
+1. **PR #9 merged or closed** — `gh pr list --state open --base master` returns empty.
+2. **AC1 confirms his full ship is landed + redeployed**, nothing more inbound to master.
+3. **Justin gives the explicit go.** (Cross-instance state — only AC0/Justin can confirm; AC3 cannot infer it from the tree.)
+
+Re-verify the branch tip *and* `gh pr list` one more time immediately before executing — don't trust this snapshot.
+
+### Execution-method change — use GitHub's NATIVE rename, not CLI delete
+
+Once clear, do **not** run `git branch -m` + `git push origin --delete master`. Instead use GitHub's built-in branch rename, which retargets any open PRs automatically, sets up link redirects, moves the default branch, and migrates protection rules (none here) in one atomic operation:
+
+- **Web:** repo → Branches → rename `master` → `main`, **or**
+- **API:** `gh api -X POST repos/{owner}/{repo}/branches/master/rename -f new_name=main`
+
+Then sync each local clone / worktree (GitHub prints these for you):
+```
+git branch -m master main
+git fetch origin
+git branch -u origin/main main
+git remote set-head origin -a
+```
+Then your steps 7 (set default — auto-handled if master was default), 10 (tell in-flight worktrees to retarget), 11 (verify Railway — just confirm `railway status` healthy + no master-push-trigger in the dashboard; do NOT fire a gratuitous test deploy).
+
+**Authorization note:** when Justin gives the all-clear, that *is* the go for the rename + push — no separate commit go-ahead needed for the rename action itself. The doc-reference sweep stays with AC0 (#lock) — you correctly excluded it; leave all doc `master` refs alone.
+
+### Two observations (NOT AC3 action items)
+
+- Worktree `evryn-backend-dc-context-fixes` (`dc/context-arch-fixes-0608`) is sitting at master tip — its work is merged, so it's reapable. That's AC1's loop to reap, not AC3's — flagging so it's on the radar.
+- Stale **remote** branch `mira/adr036-triage-beat` still exists (AC0 reaped the local + worktree earlier; the remote lingers). Harmless; cleanup-whenever.
+
+— AC0, 2026-06-08
+
+---
+
+## AC0 UPDATE (2026-06-08, later) — condition 1 met, timing answered
+
+**Condition 1 — MET (AC0-verified).** Zero open PRs against master (`gh pr list --state open --base master` → empty); PR #9 merged (`28f4080`); Mira's `mira-tighten` worktree reaped. Master tip is now **`75fba9e`** (PR #9 + DC context-arch-fixes both merged, plus a fresh `core.md` scope fix on top — AC1 was still finalizing).
+
+**Condition 2 — STILL PENDING.** AC1's full ship must be **redeployed and confirmed healthy** before the rename. The fresh `75fba9e` commit shows AC1 was still working after the merges, so do not treat the merges-landing as "done." AC0/Justin confirms the deploy; AC3 cannot see it.
+
+### Timing — does the rename go before or after AC1's deploy? **AFTER.**
+
+The rename is *logically independent* of the deploy — `railway up` ships working-dir contents, not a git-branch trigger, so renaming the branch cannot break the deploy. But **sequence it after the deploy**, for two reasons:
+
+1. **"After deploy + healthy" is the clean signal that master is fully settled** — all merges in, nothing more inbound. Right now there's even a post-merge commit landing; waiting until after the deploy guarantees quiescence so you're not renaming a branch that's still being committed to.
+2. **Collision avoidance.** Your local-sync step (`git branch -m main` etc.) runs in the **canonical tree** — the same tree AC1 deploys from. Don't have two agents operating that tree at once. Wait until AC1 is done with it.
+
+There is zero cost to waiting: the rename never blocks the deploy or the integration test (branch names don't touch the deployed runtime).
+
+### So: still HOLD. Final go = AC0/Justin confirms AC1's redeploy is healthy.
+
+At that point AC3: re-verify `gh pr list --state open --base master` is empty + branch tip, confirm the canonical tree is free, then execute via the **GitHub native rename** (above). 
+
+— AC0, 2026-06-08
+
+---
+
+## 🟢 AC0 GREENLIGHT (2026-06-08) — EXECUTE
+
+**Both conditions met. AC0-verified just now:**
+- Zero open PRs against master (`gh pr list --state open --base master` → empty).
+- Branch tip stable at **`75fba9e`** (unchanged — AC1 settled, nothing new inbound).
+- Canonical tree on `master`, **working tree clean** (no uncommitted changes).
+- AC1's `dc-context-fixes` worktree is **reaped** — only the canonical tree + the team's independent `team/2026-06-02` worktree remain.
+- AC1 confirms his redeploy is healthy and his repo work is settled.
+
+**AC3: you are clear to execute the rename.** Sequence:
+
+1. **Final 5-second re-check** (in case of any gap since this go): `gh pr list --state open --base master` empty + `git -C <canonical> log --oneline -1 master` still `75fba9e` + working tree clean. If anything shifted, stop and ping AC0.
+2. **Rename via GitHub native** (retargets PRs / redirects / moves default in one shot):
+   - `gh api -X POST repos/{owner}/{repo}/branches/master/rename -f new_name=main` (resolve `{owner}/{repo}` with `gh repo view --json nameWithOwner`), or the web UI.
+3. **Sync the canonical local tree:**
+   ```
+   git -C <canonical> branch -m master main
+   git -C <canonical> fetch origin
+   git -C <canonical> branch -u origin/main main
+   git -C <canonical> remote set-head origin -a
+   ```
+4. **Confirm default = `main`** on GitHub (the native rename auto-moves it since master was default — just verify).
+5. **Step 10 is now minimal:** the only other worktree is the team's `team/2026-06-02`, which is independent — no merge to retarget. Just flag to Justin that the default is now `main` so the team knows for their next merge.
+6. **Verify:** `railway status` healthy + glance the Railway dashboard for any "deploy on push to master" trigger (should be none / moot — auto-deploy off). **No gratuitous test deploy.**
+7. **Optional cleanup (not required for the rename):** stale remote branch `origin/mira/adr036-triage-beat` can be deleted whenever (`git push origin --delete mira/adr036-triage-beat`) — harmless if left.
+
+**Do NOT touch doc `master` references** — that sweep is AC0's (#lock).
+
+**Report back to AC0:** confirmation of each step + the verify results. Flag anything unexpected before forcing it.
+
+**Authorization:** Justin's greenlight relayed here IS the go for the rename + push. No separate commit go-ahead needed for the rename action.
+
+— AC0, 2026-06-08
