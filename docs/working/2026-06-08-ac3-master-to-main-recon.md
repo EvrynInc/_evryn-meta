@@ -161,3 +161,39 @@ At that point AC3: re-verify `gh pr list --state open --base master` is empty + 
 **Authorization:** Justin's greenlight relayed here IS the go for the rename + push. No separate commit go-ahead needed for the rename action.
 
 — AC0, 2026-06-08
+
+---
+
+## ✅ AC3 EXECUTION COMPLETE (2026-06-08) — done + verified
+
+Ran AC0's greenlit sequence. Every step below verified, nothing unexpected.
+
+**1. Final re-check — all clear (matched AC0's snapshot exactly):**
+- `gh pr list --state open --base master` → empty.
+- Canonical tree on `master`, tip `75fba9e` (unchanged), working tree clean.
+- Worktrees: only canonical + independent `team/2026-06-02` (dc-context-fixes already reaped).
+- `nameWithOwner` = `EvrynInc/evryn-backend`.
+
+**2. GitHub native rename — DONE.** `gh api -X POST repos/EvrynInc/evryn-backend/branches/master/rename -f new_name=main` → returned `{"name":"main","protected":false}`. Atomic: retargets PRs (none open), sets redirects, moves default.
+
+**3. Canonical local tree synced — DONE.**
+- `git branch -m master main`
+- `git fetch origin --prune` → cleaned `origin/master` + several already-dead stale remote-tracking refs (`dc3/post-review-fixes`, `dc3/wave3-review`, `mira/2026-05-29-pre-mark-bundle`, `soren/build-doc-linear-tickets`); `origin/HEAD` re-pointed.
+- `git branch -u origin/main main` → tracking `origin/main`.
+- `git remote set-head origin -a` → `origin/HEAD` now → `origin/main`.
+
+**4. Default branch = `main` — CONFIRMED.** `gh api repos/.../default_branch` → `main`. Local: branch `main`, tip `75fba9e` (unchanged), `## main...origin/main`, no `origin/master` remaining.
+
+**5. Step 10 (retarget) — minimal, as AC0 predicted.** Only other worktree is the team's independent `team/2026-06-02` — no merge to retarget. Flagged to Justin that default is now `main` so the team targets it on their next merge.
+
+**6. Railway verify — HEALTHY.** `railway whoami` = justin@evryn.ai; `railway status` = Project `evryn-backend` / Environment `production` / Service `evryn-backend`. No gratuitous deploy fired. Auto-deploy OFF + `railway up` is branch-agnostic, so rename is deploy-neutral. *(The dashboard "deploy on push to master" trigger isn't CLI-visible — moot since auto-deploy is off and `master` no longer exists; flagged for a Justin/AC0 eyeball if belt-and-suspenders wanted.)*
+
+**7. Optional cleanup — left as-is.** Stale remote `origin/mira/adr036-triage-beat` still present (harmless per AC0). Not deleted — not required for the rename.
+
+**Remaining remote branches now:** `main`, `dc4/qc-fixes`, `mira/adr036-triage-beat`.
+
+**Untouched (correctly):** all doc `master` references — that sweep is AC0's (#lock).
+
+**Nothing committed by AC3 in evryn-backend** — a branch rename is a ref operation, no working-tree changes. This report is the only file written (in `_evryn-meta`).
+
+— AC3, 2026-06-08
