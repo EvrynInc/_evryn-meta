@@ -19,6 +19,20 @@
 
 ---
 
+## 2026-06-08 (AC1 — context-architecture fix batch: real DC/QC review, fixes, deploy)
+
+- **Context-arch fixes deployed** (`75fba9e` on Oregon, healthy) — implements the ADR-034 amendment (conversation history runtime-owned) at the labeling/visibility level + pre-existing silent-failure fixes QC confirmed: real display-name+email sender labels (was "(user)"/UUID; via a shared `formatUserLabel()`, label now sourced from the DB record — removes a v0.3 cross-user-mislabel landmine); history-count visible at `submit_draft`; **double-send guard** (a re-approve after a successful send can't send twice); **silent-failure alerts** (`checkStaleItems` / `findPendingByShortId` / cron checkers no longer swallow Supabase errors → rate-limited `notifyDev`); unit tests added (`tests/test-context-labeling.ts`, 26 assertions).
+- **Mira PR #9 (identity tighten) merged** — operator.md create-from-zero gate + core.md context-duplicate wording (passed AC identity-file review). **`core.md` history-claim scoped to email** ("an outbound draft for approval … to that email"; Justin-authed one-liner, Mira confirmed).
+- **Triage-vocab investigation (AC0 handoff item) — RESOLVED, no subject fix needed.** The `[Evryn] Gold | Mark Titus | …` format appears only in the review email (review@evryn.ai) + the Slack approval ping — Mark's actual email uses the stripped `cleanSubject` (no triage vocab in the subject Mark sees). The body-vocab concern is handled by `triage.md`'s "'gold' is your internal classification only — never say it to users" beat (in the merged dispatch-0605 bundle). Loop closed.
+- **QC pattern promoted** to `evryn-quality/CLAUDE.md` — "two computations of the same value that agree today by coincidence, not by construction" (the label-source split QC caught).
+- **Process:** this batch's *original* DC/QC review used **generic subagents** (not real DC/QC with their CLAUDE.mds) and shipped on that basis — caught by Justin; redone here with real DC + real QC. Recurrence-prevention hardening is already in the AC/DC/QC CLAUDE.mds + orchestration protocol + AGENT_PATTERNS (2026-06-06).
+- **2 minor non-blockers deferred** → SPRINT week-of-6/8 hardening list (drain-cooldown reset; stale collision help-string).
+- Commits (evryn-backend `main`, all pushed): the ac1/context-arch batch (`0046417`…`e0307a9`) + `28f4080` (PR #9 merge) + `025bc16` (DC fixes merge) + `75fba9e` (core.md scope). evryn-quality: `a254651`.
+
+**Operator-relevant:** the approval ping now shows "· N msgs of context" — that count reflects what's attached to *that email* (capped at 5), not how much Evryn reasoned over.
+
+---
+
 ## 2026-06-06 (AC2 — subagent loading hardened: Startup Context Cascade + #cascade-override; AskUserQuestion banned)
 
 - **Standardized subagent startup loading.** "Startup Context Cascade" is now the single term for what DC/QC load at startup — a section by that exact name in each of their CLAUDE.mds (AC's own cascade renamed to Light/Full Startup Context Cascade to match). The orchestration protocol gives AC the verbatim "exact words" to trigger it. Closes the old ambiguity where the protocol said "load context cascade" but the three manuals each called it something different.
