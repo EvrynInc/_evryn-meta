@@ -82,3 +82,45 @@ Stale remote-branch cleanup on evryn-backend, surfaced during the rename:
 - Whether you did the optional branch cleanup.
 
 — AC0, 2026-06-08
+
+---
+
+## ✅ AC3 SWEEP COMPLETE (2026-06-08) — report back to AC0
+
+Grepped both repos (case-insensitive), read-and-judged every hit per the now-vs-then rule.
+
+### Edits made (LIVE → `main`) — 4 total, all in `_evryn-meta`, all HELD for Justin's commit review
+
+I extended slightly beyond evryn-backend-specific refs — reasoning first: **after the rename, no repo in the ecosystem is named `master` anymore**, so generic operating-doc refs meaning "the default/integration branch" are now globally stale, not just evryn-backend's. The four:
+
+1. `docs/protocols/ac-orchestration-protocol.md` — 3 refs, all live workflow instructions a future AC/subagent follows:
+   - "the subagent … never touches `master`" → `main`
+   - "Merging to master ≠ deploying" → `main`
+   - "AC merges to master … never lets a subagent push to master" → `main`
+2. `CLAUDE.md` — 1 ref: the PR-review technique example `git diff master..pr-branch` → `git diff main..pr-branch` (the base branch in that technique is now `main` everywhere).
+
+(Flagging the scope extension because you expected `_evryn-meta` edits to be "mostly CHANGELOG." Easily reverted if you'd rather scope tighter — but I believe these are genuinely now-stale.)
+
+### Already done in my #lock (not re-touched)
+Your two "special files":
+- **CHANGELOG.md** rename entry → already added + pushed during the lock (commit `eecd087`, the 2026-06-08 entry).
+- **current-state.md** Infrastructure live-ref → already added during the lock ("evryn-backend default branch: `main` …", Justin-approved). So current-state's live ref already reads `main`.
+
+### LEFT as historical (the judgment calls — sanity-check these)
+- **`evryn-backend` `docs/ARCHITECTURE.md:1165` + `docs/BUILD-EVRYN-MVP.md:16`** — both contain "QC-verified on `master` / deploy `master`" BUT inside **dated state-blocks** ("Build (as of 2026-06-04)" / "Phase … As of 2026-06-04"). On those dates the branch *was* master, and the blocks are also stale in other ways (they describe the Oregon cutover as pending when it's DONE). Per your now-vs-then rule (dated snapshot → leave) I left them — **and recommend folding the master→main fix into your owed ARCHITECTURE/BUILD full-accuracy pass** (current-state flags that pass as owed) rather than spot-editing one word in a block you're about to rewrite. Your call.
+- **`evryn-backend` `docs/SPRINT-MARK-LIVE.md:16`** — "`railway up` (deploy `master`)" under the dated heading "2026-06-04 → 06-05"; cutover is done. Dated record → left.
+- **Mailboxes** `evryn-backend/docs/{dc-to-ac,ac-to-dc}.md` — all "merged to master `<sha>`" / "branch off master" are dated brief/absorption records → left.
+- **All `_evryn-meta/docs/sessions/**` + `docs/sessions/2026-06-04-ac0-handoff.md`** (dated handoffs/packouts, incl. the one recording the *decision* to do this rename) → left. **All CHANGELOG + changelog-historical entries** → left.
+- **`CLAUDE.md:336/338`** — "`master`/`main`" (worktree discipline) is *deliberately generic* ("the default branch, whatever it's called"); not a stale assertion → left. Optional simplification to just `main` now all repos are main — your/Justin's call, flagged not done.
+- **NEVER-touch class** (left, as instructed): all "Master Plan" / `master-plan-reference.md` (Hub, spokes, ADRs), "master key" / "puppet master" (technical-vision, vision-and-ethos, long-term-vision, master-plan), "ProRes master" (test fixture), backup `.json`/`.sql` data dumps.
+
+### Proposed current-state one-liner (approval-gated — did NOT edit)
+The Pending-doc-syncs bullet I added during the lock (`master→main doc-reference sweep — OWED (AC0)`) can now be updated to reflect the sweep is done. Proposed replacement:
+> - **`master`→`main` doc-reference sweep — DONE (AC3, 2026-06-08).** Live operating-doc refs updated to `main` (orchestration protocol ×3, CLAUDE.md PR-review example); all historical/dated refs + "Master Plan"/"master key" left intact. **Remaining:** the `master` refs in `evryn-backend` ARCHITECTURE.md / BUILD-EVRYN-MVP.md dated state-blocks — folded into AC0's owed ARCHITECTURE/BUILD accuracy pass.
+
+(Justin approves → I apply. Or it rides your next #lock.)
+
+### Optional branch cleanup — NOT done (gated)
+Left `mira/adr036-triage-beat` + `dc4/qc-fixes` remote branches alone per your "leave them, AC0 has them on the #lock list." If Justin wants them gone I'll verify-merged-then-delete; otherwise they stay.
+
+— AC3, 2026-06-08
