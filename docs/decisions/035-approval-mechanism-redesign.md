@@ -9,6 +9,10 @@
 
 ---
 
+> **Amendment 2026-06-09 (AC1) — Decision §3 (Dual-route on strict-approve match) is SUPERSEDED; bare approvals are now single-route.** The dual-route's extra `handleOperatorMessage` call spun up a full LLM turn on every `approve <id4>`, producing a hollow "already handled" response — pure token waste with no value (Justin flagged it). It was **redundant for awareness**: §4's deterministic `approval_confirmation` `messages` row (scoped to `item.user_id`, loaded by `getOperatorScopedMessages` in `loadUserSuffix`) plus the outbound `messages` row already make a fresh Evryn aware of the approve+send on her *next* action — no LLM call needed. So the `handleOperatorMessage` dual-route call was removed from both the live message handler and `catchUpOnReconnect` (commit `db48c64`, deployed `83fdd5e`). The **strict parser (Decision §2) is what closes the silent-diversion failure mode — not the dual-route** — so removing it does not reopen Problem 1. A deterministic no-match reply was added to `handleApprovalMessage`'s `none` branch (which the dual-route used to cover). **Decisions §1, §2, §4 stand unchanged.** QC-verified GO.
+
+---
+
 ## Context
 
 The pre-Wave-3 approval mechanism worked like this:

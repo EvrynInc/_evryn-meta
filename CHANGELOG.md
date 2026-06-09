@@ -8,6 +8,21 @@
 
 ---
 
+## 2026-06-09 (AC1 — email-format + approval-flow polish shipped + deployed; #lock)
+
+- **Review/sent email formatting fixed + deployed** (`83fdd5e`, Railway `7aa4ce10`). The review@ email is now classification → draft → context (recent conversation newest-first, **printed once** — a render-time `extractNewContent` helper fixes the ~7× reprint caused by `stripReplyChain` being a no-op on real Gmail nested quotes); the email to Mark carries **only the draft + the incoming forward**, not the rolling history. `src/email/detect.ts` + `src/approval/flow.ts`. DC built, AC + QC verified GO.
+- **Bare approvals are single-route** (`db48c64`). `approve <id4>` fires only the deterministic path; the redundant `handleOperatorMessage` LLM call (the hollow "already handled" spin-up) is removed — awareness is preserved by the persisted records (see ADR-035 amendment). Added a deterministic no-match reply so a bad id isn't silent.
+- **Direct-message review dedup** (`4f4d36e`) + **SDK usage-type cast fixed** (`c4bb5bd` — `npm run typecheck` now green).
+- **Mira's 2 identity changes rode the deploy:** `30d85f0` (triage submit_draft beat) + `ec998af` (feedback-guidance "Closing the Loop").
+- **CLAUDE.md (AC):** two-mode full-cascade load rule (`2efc9c4`) — lean when AC self-selects depth; full runtime read non-negotiable when Justin invokes the full cascade.
+- **Cleanup:** stale `evryn-backend/docs/ac0-to-ac1.md` deleted; stale `origin/mira/adr036-triage-beat` branch deleted (content already on `main`).
+- **QC patterns promoted** to `evryn-quality/CLAUDE.md` (`bd0f102`): "same value in two stores → render-time duplicate" + "trace a dropped path's side effects."
+- **BUILD-doc test-env corrected** (tsx scripts now / Vitest at v0.3 — not the claimed-but-absent Vitest/Biome) + hardening item 8 (phantom-parser test). **Lock-protocol step 10 + 17 sharpened** (team current-state = short/team-altitude; fragment sweep = thorough, not quick).
+
+**Operator-relevant:** the review@ email layout changed (draft near the top, context below it); approving no longer produces a second "already handled" message; a mistyped `approve <id>` now gets a "that id didn't match" reply. `operator-guide.md` updated.
+
+---
+
 ## 2026-06-08 (AC0 #3 — integration test Phase 5 graded; #lock)
 
 - **Integration test Phases 3-5 PASSED.** Phase 5 (triage validation): 18 synthetic fixtures vs Mark's onboarding-gathered profile via `tests/run-fixtures.ts` → **effectively 18/18 on reasoning** (raw 12/18; the 6 "misses" are web-verification wins — Evryn correctly downgrades fixtures whose details don't survive live web-search, and distinguishes *failed*-verification from mere *absent*-footprint). Dated result + full nuance: `evryn-backend/tests/results-2026-06-08-phase5.md`.
