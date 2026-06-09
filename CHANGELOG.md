@@ -8,6 +8,12 @@
 
 ---
 
+## 2026-06-09 (AC1 — CLAUDE.md operating-manual rules: ping + authorization + keep-working)
+
+- **CLAUDE.md (AC operating manual):** added the **"a plan you present is a request to vet, not a green light"** rule (the general form of the commit/deploy/merge gates); **strengthened the ping rule** to *every response, no exceptions* (a mid-flight ping never replaces the end-of-turn one); and **consolidated** the ping / authorization / keep-working rules into Communication Rules (moved out of the Slack/tools section, merged 4 overlapping bullets into 3, keep-working hard-scoped so it can't weaken the other two). From Justin's 2026-06-09 process feedback; no product/build change.
+
+---
+
 ## 2026-06-09 (AC1 — "Oregon" → proper nomenclature across live docs)
 
 - **Naming convention (canonical, per Justin):** the prod database/project is **"Evryn Product (West Coast)"**; its **region** is **Oregon/us-west-2**. Bare "Oregon" as a label is deprecated — it was an AC-of-the-day shorthand (the region was listed as "Oregon"). Use the project name for the DB, the region descriptor for the region.
