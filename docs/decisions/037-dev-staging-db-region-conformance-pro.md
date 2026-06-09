@@ -1,4 +1,4 @@
-# ADR-037: Dev/Staging DB + Oregon Region Conformance + Supabase Pro + Backup Model
+# ADR-037: Dev/Staging DB + Oregon/us-west-2 Region Conformance + Supabase Pro + Backup Model
 
 **Status:** Accepted — 2026-06-04. Executed on the DB side (prod migrated, dev seeded); production cutover pending (AC0's coordinated deploy).
 
@@ -18,18 +18,18 @@ The Free plan also caps an org at **2 active projects** (prod + the Agents dashb
 ## Decisions
 
 1. **Upgrade the Supabase org to Pro** (~$45/mo all-in: $25 base + a Micro instance per project − $10 credit, across 3 projects). Pro unlocks the project cap **and** turns on automated daily backups.
-2. **Conform region to Oregon (`us-west-2`)** — co-located with Railway (kills the cross-coast tax), correct for the Seattle launch and the v0.3 real-time web app. **Migrated prod East→Oregon** via a real `pg_dump` restore into a new project, **verified a faithful, UUID-preserving copy** (identical rows, grants, RLS, policies, all column comments).
-3. **Dev/staging = a separate Supabase project** (`Evryn Product — Dev`, Oregon), **not** a Supabase branch (a branch is its own billed instance anyway and forces a git/migrations workflow we don't use). Seeded as a faithful mirror of prod.
+2. **Conform region to Evryn Product (West Coast) (`us-west-2`)** — co-located with Railway (kills the cross-coast tax), correct for the Seattle launch and the v0.3 real-time web app. **Migrated prod East→Oregon/us-west-2** via a real `pg_dump` restore into a new project, **verified a faithful, UUID-preserving copy** (identical rows, grants, RLS, policies, all column comments).
+3. **Dev/staging = a separate Supabase project** (`Evryn Product — Dev`, Oregon/us-west-2), **not** a Supabase branch (a branch is its own billed instance anyway and forces a git/migrations workflow we don't use). Seeded as a faithful mirror of prod.
 4. **New backup model (two layers):** Supabase Pro **automated daily backups** (primary, 7-day retention) + periodic real **`pg_dump`** snapshots (portable + long-term archival, covering the ">retention-window" corruption case). This **replaces** the descriptive-JSON dumps. At v0.3+ scale, data-bearing dumps move to encrypted cloud storage, not git.
 5. **Dropped the deprecated `emailmgr_queue` table** during migration (it carries zero query load; the migration was the clean moment).
 6. **Runtime keys:** use the **legacy `service_role` JWT** (drop-in match for the existing backend); the new `sb_publishable_`/`sb_secret_` key system is deferred to a later deliberate task.
 
 ## Consequences
 
-- **Three Supabase projects (all in the Pro org):** `Evryn Product` (Oregon, prod, ref `wvaaqwapueycyxyhxdnh`), `Evryn Product — Dev` (Oregon, dev, ref `maqkdesopsskptpxjbqs`), `Evryn-Agents` (us-east-1, dashboard DB, ref `hpqglvctjcdqoepzrifq`). ~$45/mo.
+- **Three Supabase projects (all in the Pro org):** `Evryn Product` (Oregon/us-west-2, prod, ref `wvaaqwapueycyxyhxdnh`), `Evryn Product — Dev` (Oregon/us-west-2, dev, ref `maqkdesopsskptpxjbqs`), `Evryn-Agents` (us-east-1, dashboard DB, ref `hpqglvctjcdqoepzrifq`). ~$45/mo.
 - **Old East prod** (`maruxkjwlfltlmureqkt`) stays live as the rollback net and is **retired after the cutover** is health-checked. Its faithful `pg_dump` (`evryn-backend/backups/full-public-2026-06-03.sql`) is the archive.
-- **The cutover** — Railway env (`SUPABASE_URL`/`SUPABASE_SERVICE_KEY`) repointed to Oregon, the ADR-036 migration applied to **Oregon** (not East), `railway up`, health-check, then retire East — is owned by **AC0's coordinated deploy**, not this committee.
-- **`evryn-backend/.env` shape:** runtime uses one `SUPABASE_URL` + one `SUPABASE_SERVICE_KEY` (= Oregon prod) + the org-level `SUPABASE_ACCESS_TOKEN`. Admin/tooling DB connection strings are `SUPABASE_DB_URL_PROD` / `_DEV` / `_EAST`. The runtime only ever talks to prod; dev is reached only by admin tooling (pg_dump/psql). Dev project API creds live in Bitwarden (not active `.env` lines) for future QC live-testing.
+- **The cutover** — Railway env (`SUPABASE_URL`/`SUPABASE_SERVICE_KEY`) repointed to Evryn Product (West Coast), the ADR-036 migration applied to **Oregon/us-west-2** (not East), `railway up`, health-check, then retire East — is owned by **AC0's coordinated deploy**, not this committee.
+- **`evryn-backend/.env` shape:** runtime uses one `SUPABASE_URL` + one `SUPABASE_SERVICE_KEY` (= Evryn Product (West Coast)) + the org-level `SUPABASE_ACCESS_TOKEN`. Admin/tooling DB connection strings are `SUPABASE_DB_URL_PROD` / `_DEV` / `_EAST`. The runtime only ever talks to prod; dev is reached only by admin tooling (pg_dump/psql). Dev project API creds live in Bitwarden (not active `.env` lines) for future QC live-testing.
 - **Whose job changes** (the "tell everyone whose job changes" requirement):
   - **DC:** schema migrations are now **dev-first** — write → apply to dev (`SUPABASE_DB_URL_DEV`) → verify → apply the same SQL to prod at a coordinated deploy. Backups are now real `pg_dump`s, not JSON.
   - **QC:** can now run **live tests against the dev DB** (a real capability gain — previously limited to static review + no-DB tests).

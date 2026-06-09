@@ -8,6 +8,13 @@
 
 ---
 
+## 2026-06-09 (AC1 — "Oregon" → proper nomenclature across live docs)
+
+- **Naming convention (canonical, per Justin):** the prod database/project is **"Evryn Product (West Coast)"**; its **region** is **Oregon/us-west-2**. Bare "Oregon" as a label is deprecated — it was an AC-of-the-day shorthand (the region was listed as "Oregon"). Use the project name for the DB, the region descriptor for the region.
+- **Applied** across the live source-of-truth docs (`_evryn-meta`: current-state, technical-vision, ADR-037; `evryn-backend`: ARCHITECTURE, BUILD, SPRINT, schema-reference). Historical / session / archive docs left as-is (dated record). The team current-state **body** is flagged, not edited — it follows its own careful update process.
+
+---
+
 ## 2026-06-09 (AC0 #4 — Phase 6 live-fire started: run sheet + S3a; #lock)
 
 - **Phase 6 live-fire run sheet written** (`evryn-backend/tests/phase6-live-fire-v02.md`, bottom + a resume banner) — 8 copy-paste scenarios, forwarded-email-formatted (parse-correct against the runtime) + scripted Mark responses, calibrated to Mark's real onboarding criteria: S1 gold, S2 gold-you-reject, **S3a edge + S3b Justin-as-42-Pictures** (full edge→clarify→relay via Justin's real inbox), S7 claims-to-know-you, **S8 Amy Lillard** real-friend gold, S4 pass, S5 direct, S6 garbage ×3. Committed `da4cc38`.
