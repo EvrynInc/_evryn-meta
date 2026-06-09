@@ -8,6 +8,18 @@
 
 ---
 
+## 2026-06-09 (AC0 #4 — Phase 6 live-fire started: run sheet + S3a; #lock)
+
+- **Phase 6 live-fire run sheet written** (`evryn-backend/tests/phase6-live-fire-v02.md`, bottom + a resume banner) — 8 copy-paste scenarios, forwarded-email-formatted (parse-correct against the runtime) + scripted Mark responses, calibrated to Mark's real onboarding criteria: S1 gold, S2 gold-you-reject, **S3a edge + S3b Justin-as-42-Pictures** (full edge→clarify→relay via Justin's real inbox), S7 claims-to-know-you, **S8 Amy Lillard** real-friend gold, S4 pass, S5 direct, S6 garbage ×3. Committed `da4cc38`.
+- **S3a PASSED** — Evryn drafted the edge cleanly (B2c bug didn't fire — intermittent), framed it as Mark's vague-but-relevant zone with honest uncertainty + cited his actual criteria; proportional "hold off" handling; lifecycle correct.
+- **Routed 2 runtime fixes to AC1** (he shipped both, `83fdd5e`/`db48c64`): review/sent-email formatting (~7× reprint + draft-at-bottom + sent-email rolling history) and single-route bare-approval (drop the redundant Evryn LLM — the approved+sent record already persists deterministically).
+- **Quiet-hours queue/replay validated live** — an evening draft ping queued at 18:24 PT, drained 8:00 AM PT on schedule.
+- **Renamed** the Phase 5 results file date-first (`tests/2026-06-08-phase5-results.md`); `integration-test-v02.md` convention (`YYYY-MM-DD-<phase>-results.md`) + all refs updated.
+
+**Operator-relevant:** Phase 6 resumes at S3b (the run sheet carries the order + a resume banner); you play Mark, sending from `systemtest@`.
+
+---
+
 ## 2026-06-09 (AC1 — email-format + approval-flow polish shipped + deployed; #lock)
 
 - **Review/sent email formatting fixed + deployed** (`83fdd5e`, Railway `7aa4ce10`). The review@ email is now classification → draft → context (recent conversation newest-first, **printed once** — a render-time `extractNewContent` helper fixes the ~7× reprint caused by `stripReplyChain` being a no-op on real Gmail nested quotes); the email to Mark carries **only the draft + the incoming forward**, not the rolling history. `src/email/detect.ts` + `src/approval/flow.ts`. DC built, AC + QC verified GO.
@@ -25,7 +37,7 @@
 
 ## 2026-06-08 (AC0 #3 — integration test Phase 5 graded; #lock)
 
-- **Integration test Phases 3-5 PASSED.** Phase 5 (triage validation): 18 synthetic fixtures vs Mark's onboarding-gathered profile via `tests/run-fixtures.ts` → **effectively 18/18 on reasoning** (raw 12/18; the 6 "misses" are web-verification wins — Evryn correctly downgrades fixtures whose details don't survive live web-search, and distinguishes *failed*-verification from mere *absent*-footprint). Dated result + full nuance: `evryn-backend/tests/results-2026-06-08-phase5.md`.
+- **Integration test Phases 3-5 PASSED.** Phase 5 (triage validation): 18 synthetic fixtures vs Mark's onboarding-gathered profile via `tests/run-fixtures.ts` → **effectively 18/18 on reasoning** (raw 12/18; the 6 "misses" are web-verification wins — Evryn correctly downgrades fixtures whose details don't survive live web-search, and distinguishes *failed*-verification from mere *absent*-footprint). Dated result + full nuance: `evryn-backend/tests/2026-06-08-phase5-results.md`.
 - **Phase 6 live-fire plan** written (`evryn-backend/tests/phase6-live-fire-v02.md`) — 6 scenarios + scripted Mark responses; tests the live prod pipeline + feedback loop + the B2c bug + the context-fix on a real draft.
 - **B2c/edge bug found + fixed.** Evryn occasionally `notify_slack`-ed ("can I submit?") instead of `submit_draft` on an edge case → item stranded in `processing` → B2c backstop errored it. **Mira fix pushed** (`triage.md`, `30d85f0` on `main`: submit_draft IS the surface + triage-scoped notify_slack carve-out). **Needs `railway up`.**
 - **Token/cost observability** added to `runEvrynQuery` (`classify.ts`, `6e1063b`, not deployed) — per-query in/out/cache/cost from the SDK result message.
