@@ -23,16 +23,19 @@ Load these into context every time you spin up, before any work:
 
 ### Full Startup Context Cascade — when doing or directing product-architect and build work
 
-For any session where you'll do or direct build-level work on the Evryn product (specs, briefs, code review, architectural decisions, runtime claims), load the Light Context Cascade, but then also load:
+For any session where you'll do or direct build-level work on the Evryn product (specs, briefs, code review, architectural decisions, runtime claims), load the Light Context Cascade first, but then also load:
 
 - **`_evryn-meta/docs/hub/technical-vision.md`** — wide-lens architecture (three domains of intelligence, bulkhead architecture, target-state matching design). The widest-lens frame the build-altitude docs descend from.
 - **The active product's `ARCHITECTURE.md`** — currently `evryn-backend/docs/ARCHITECTURE.md`. The system you're architecting against. **Soren (CTO) is the owner of record for architecture + build; AC is a co-owner and is frequently the one hands-on in the active build** (Soren tends to stay higher-altitude, tying in the tech-conceptual). **AC holds full edit rights to both ARCHITECTURE.md and the BUILD doc** — they are NOT Soren's exclusive turf, because AC is an extension of Soren, not a team member who stays out of his lane. (Any "stay out of Soren's stuff" instinct is the *team's* rule bleeding in from their CLAUDE.md; it does not apply to AC.) **But editing either requires Justin's explicit authorization first** — propose the change, get his yes, then edit (Soren remains owner of record for both; keep him informed of substantive structural changes).
 - **The active product's runtime** — currently `evryn-backend/src/`. ARCH says the *intended* shape; the runtime is the *actual* shape, and the two regularly diverge in load-bearing ways. We've tried to load it only on demand, and 99 out of 100 times we end up breaking things because we're making decisions blind. The divergence is often exactly what bites.
 - **The active product's build doc** — named in `current-state.md`. **Currently `evryn-backend/docs/BUILD-EVRYN-MVP.md`, but this WILL shift as build phases change.** Read `current-state.md` first to identify the active build doc, then load it. Don't load a stale build doc from a previous phase.
 
-**Heavy load — known and accepted.** The full cascade is substantial. The cost of going in blind is higher: misframed designs, conflicting specs, runtime claims that turn out to be wrong, ADRs that propose things that already exist. **Justin has explicitly chosen this load** — don't trim it on your own judgment.
+**Heavy load — known and accepted.** The full cascade is substantial. The cost of going in blind is higher: misframed designs, conflicting specs, runtime claims that turn out to be wrong, ADRs that propose things that already exist.
 
-If you're doing non-product work (cross-repo ops, doc routing, team coordination, strategic chat), the light cascade is enough. Don't burn tokens on the full cascade for an org-layer question.
+**Two modes decide how much you load — each with its own rule:**
+
+- **When *you* independently choose your depth** (autonomous startup — deciding light vs. full for the work in front of you): judgment applies -  lean is fine, but make sure you have enough context *to be competent*. An org-layer question — cross-repo ops, doc routing, team coordination, strategic chat — doesn't need the runtime; don't burn tokens pulling the full cascade for it. The runtime bullet above stays deliberately soft for exactly this case.
+- **When *Justin* explicitly calls the full cascade (or says "load the full runtime"): the choice is already made, and it is non-negotiable.** Read all of `evryn-backend/src/` — every file, *now*. Not "skim the structure," not "I'll open the relevant files once I know the task," not "I'll read the defining code at claim time" (verify-at-claim is *additive* to the upfront load, never a substitute for it). Justin invokes the full cascade *only* when the work genuinely needs the heavy load — so there is nothing left for you to weigh, trim, or scope down by guessing which files matter. **He has explicitly chosen this load; do not trim it on your own judgment.**
 
 Each architecture / build doc declares its own **Required Context** section — honor it when a beat in your work hits that section.
 
