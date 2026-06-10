@@ -8,6 +8,20 @@
 
 ---
 
+## 2026-06-09 (AC0 #5 — Phase 6 S3b multi-party live-fire + #lock)
+
+- **Phase 6 live-fire: S3a + the full S3b multi-party loop PASSED** (live on `83fdd5e`). S3b (the Justin-as-42-Pictures edge) exercised the whole chain — edge classification → operator escalation (clean `escalated`; identity-collision with the Operator's own name caught) → operator resolution → contact outreach to `justin@42pictures.com` → reply → relay back to Mark — plus a binding-clear and profile-note discipline. **S1 (Nadia) gold-drafted + queued** (quiet-hours; replays ~8am for approval). Test methodology: gatekeeper note dropped from S1 onward (real auto-forwards are note-less).
+- **12-item Phase-6 findings batch** captured + routed → `evryn-backend/docs/BUILD-EVRYN-MVP.md` hardening backlog **item 9** (bucket-2 week-of-6/8 + bucket-3 v0.3) + `SPRINT-MARK-LIVE.md` week-of-6/8; full detail in `docs/working/2026-06-09-phase6-findings.md`. Headliners: `emailmgr_items.updated_at` never advances (stale-checks key off creation time); outbound Gmail no-collapse + no-thread-attach; operator re-draft context; cross-scope binding-clear; `supabase_upsert` bypasses lifecycle-append; approval-confirmation recipient mislabel; runtime trusts the forwarded body's "From" (spoof surface → adversarial test + v0.3 header cross-check).
+- **Quiet-hours redesign queued for DC** (Justin): let regular pings post + lean on Slack DND for night-silence; time-gate ONLY the stale-checker to waking hours (kills the overnight pile-up at the root); optional 8am "anything pending?" sweep. Simplifies M1 (no runtime post-bypass needed). → BUILD item 9(f) + SPRINT.
+- **M1-sequencing conflation corrected** in `current-state.md` + BUILD Status: M1 gates Mark's *actual forwarding/conversing*, NOT the "we're ready" intro email (the email precedes M1). SPRINT already had it right.
+- **6-item Mira dispatch** (`docs/working/2026-06-09-phase6-mira-dispatch.md`; also SPRINT Backlog → Mira/identity): gold-is-internal-only needs teeth; don't-write-checks/over-validate; gentle brokering (offer, not recommend); first-name-only explicit; verify-research/question-assumptions; operator-input-is-directional even when quoted. Items 1-3 early.
+- **Verified live (not from stale docs):** the S3a item was `delivered` (sent to Mark this morning), not "parked"; Mark's `display_name`/`full_name` persisted to "Mark Titus"; the identity binding was actually cleared (paired `[binding-cleared]` on the contact's profile).
+- **Lighter handoff** written (`docs/sessions/2026-06-09-ac0-handoff.md`, stands on current-state + CHANGELOG); the heavy 2026-06-04 handoff (4 addenda) **proposed for retirement** to `historical/`.
+
+**Operator-relevant:** Phase 6 resumes at **S1** (Nadia gold — approve in the morning), order S1→S2→S7→S8→S4→S5→S6, gatekeeper note dropped. Quiet-hours behavior unchanged for now (redesign is queued, not shipped).
+
+---
+
 ## 2026-06-09 (AC1 — CLAUDE.md operating-manual rules: ping + authorization + keep-working)
 
 - **CLAUDE.md (AC operating manual):** added the **"a plan you present is a request to vet, not a green light"** rule (the general form of the commit/deploy/merge gates); **strengthened the ping rule** to *every response, no exceptions* (a mid-flight ping never replaces the end-of-turn one); and **consolidated** the ping / authorization / keep-working rules into Communication Rules (moved out of the Slack/tools section, merged 4 overlapping bullets into 3, keep-working hard-scoped so it can't weaken the other two). From Justin's 2026-06-09 process feedback; no product/build change.
