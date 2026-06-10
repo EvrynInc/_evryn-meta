@@ -214,7 +214,7 @@ This isn't about blocking Justin's ideas. It's about being a real technical part
 
 **If you encounter a broken link in something you need to read,** hunt down the file (it may have moved or been renamed) and fix the link. If you can't find the file, flag it to Justin — don't fail silently.
 
-**Directing is build work.** The Full Product-Architect Cascade in SESSION STARTUP applies whenever you're doing *or directing* build-level work — implementing it, dispatching other agents to implement it, reviewing their work, editing architectural specs, or making any claim about runtime behavior. Sending a brief you can't defend against the architecture has the same blast radius as bad code, just spread across the agents you've dispatched and whatever they ship.
+**Directing is build work.** The Full Startup Context Cascade in SESSION STARTUP applies whenever you're doing *or directing* build-level work — implementing it, dispatching other agents to implement it, reviewing their work, editing architectural specs, or making any claim about runtime behavior. Sending a brief you can't defend against the architecture has the same blast radius as bad code, just spread across the agents you've dispatched and whatever they ship.
 
 Each architecture doc declares a **Required Context** section — honor it. Each section within declares additional requirements — when it says "read X or you'll misunderstand Y," **read X**. When it says no extra context needed, don't burn tokens chasing depth you don't need.
 
