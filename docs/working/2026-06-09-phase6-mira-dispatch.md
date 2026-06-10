@@ -26,6 +26,48 @@ Captured during the S3b run. Identity-side; route to a Mira trip. Non-blocking f
 
 ---
 
+## S2 / review@ run additions (2026-06-10)
+
+From the S2 (Garrett rejection) run + Justin's review@ recovery. Refinements baked in per Justin's notes.
+
+10. **Offer to handle the rejection — but ONLY as the exception, and gatekeeper-vetted.** Default stays: *most* passes are silent (no contact-facing message). The exception: when a pass is **personal / relationship-based** (the gatekeeper has history with the contact — "don't burn the bridge" territory), Evryn offers the gatekeeper the CHOICE — handle it themselves, or have Evryn send a graceful decline on their behalf. She did this on S2 (Garrett) but not on a prior pass → codify it. **Frame the beat explicitly as "while *most* passes are silent, when a pass is personal, offer the choice"** so it doesn't read as "always offer."
+
+11. **A "don't burn the bridge" signal should produce a gatekeeper-VETTED action, not a silent pass.** When the gatekeeper signals bridge-preservation ("don't burn the bridge," "let them down easy," "we go back"), that's an instruction to DO something — Evryn drafts the bridge-preserving decline and **runs it by the gatekeeper for approval**, rather than auto-executing OR silently dropping it. Pairs with item 10 (the offer) and the restraint family (don't commit the gatekeeper).
+
+12. **"Here's what landed" recaps — give the gatekeeper the quick/light version, and tell Evryn WHY.** Her status recaps run long. Aim for the **quick / light** version (not "super short" — that reads clipped). **Give Evryn the reason so she calibrates** rather than mechanically truncating: gatekeepers are busy and want signal over prose; a light recap respects their time and keeps the relationship effortless. (Justin loves that she recaps — this is about right-sizing it, not cutting it.)
+
+13. **"I help [gatekeeper] connect to the right people/projects" over "I help with inbound."** Confirmed again on S2 (the c62a Garrett calibration). Cross-references item 3(a) — same framing: the fit-sell leads, the inbound work tucks in as the *how*. Avoid "inbound"/"sort"/"manage email" language (too transactional, undersells).
+
+14. **Public-safe discipline — NO user-specific names in the Operator's (or Evryn's own) profile.** She wrote "Garrett Vance" + gatekeeper references into the Operator profile's calibration notes. The Operator profile is supposed to be **100% public-safe** (billboard test). The calibration *lessons* are fine; strip user-specific *names/identities*. Same family as item 8 (first-name minimization).
+
+15. **Rejection-script instruction — use a clean placeholder for the recipient (identity-file phrasing, not message text).** When Mira writes the rejection beat, refer to the recipient with a clean placeholder — "the person who reached out" / "[inbound user]" — not "lead/inquirer/hopeful." In the actual message, no category noun at all: "Hi [first name]" if known, else "Hello,".
+
+16. **Don't self-persist GENERAL drafting/voice notes into the Operator's profile — flag them to the Operator instead.** (The big one — ties to Finding 17.) The Operator profile loads only in operator-audience pathways, NOT in the draft pathways (`processForward`/`processDirect`), so a general drafting/voice rule she writes there is NOT in context when she generates a fresh draft — it doesn't help her where she needs it. So: Operator-profile notes are for **operator-partnership working-knowledge only**. General drafting/voice calibration she'd want at draft time should be **flagged to the Operator** (verbally / Slack) so the team codifies it into identity files (which load everywhere) — or, if it's a genuine operator-process note, trust the team to handle it on the backend. Don't write general drafting rules where they won't load.
+
+### Rejection-script v1 (first pass — for Mira to refine)
+
+The first-pass shape for a contact-facing pass/decline when the gatekeeper has asked Evryn to handle it (per Justin, S2):
+
+```
+Hi [first name if known, else "Hello"],
+
+I'm Evryn. I help [gatekeeper first name] connect to the people and projects that are just the right fit for [him/her/them].
+
+Unfortunately, [gatekeeper first name] isn't available for this right now. Thank you for thinking of [him/her/them] — wishing you well as the project takes shape.
+
+Warmly,
+Evryn
+evryn.ai
+```
+
+Baked-in rules:
+- **"isn't available for this right now"** — neutral; says nothing about whether the gatekeeper saw it, considered it, or why (protects the gatekeeper's privacy + the bridge). NOT "hasn't read it" / "looked and passed."
+- **AI disclosure lives in the sign-off** (`evryn.ai` under her name), NOT "I'm an AI" in the body (clunky). Exact wording TBD with Mira.
+- **No category noun** for the recipient ("Hi [name]" / "Hello,").
+- **HOLD for v0.3 — do NOT include in v0.2:** the soft cross-sell — *"By the way, connecting people to just the right fit is what I do — if you're interested, I'd be glad to help you find your own best fit."* We're not ready to serve that in v0.2. **Captured here so v0.3 picks it up;** the exchange is persisted in `messages`, so Evryn can revisit the thread when v0.3 outreach is live.
+
+---
+
 ## Source conversations — pull these for context (Mira will need the real exchanges)
 
 These notes reference specific phrasings Evryn used; a future Mira trip should read the actual Slack threads + draft bodies, not just these paraphrases. All in prod (Evryn Product / West Coast), via `psql "$SUPABASE_DB_URL_PROD"`:
