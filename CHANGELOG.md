@@ -8,6 +8,15 @@
 
 ---
 
+## 2026-06-10 (AC0 #5 — post-#lock housekeeping)
+
+- **Retired the 2026-06-04 `ac0-to-mira-dispatch.md`** (working note) — its 4 items all shipped via **Mira PR #8** (`mira/dispatch-0605`, merged 6/05) + the **PR #9** tightening, absorbed into the deployed identity files; killed rather than archived (recoverable from git). *(Breadcrumb: Soren's agent-memory still names this doc — its content lives in Mira PR #8/#9 + git history.)*
+- **Archived the `ac0-to-soren-context-architecture.md` dispatch** → `docs/sessions/historical/` (its runtime context-arch work shipped — ADR-034 amendment + AC1's deploy); Soren's memory pointer repointed to the new path.
+- **BUILD item 9 (Phase-6 findings) reformatted** — lettered findings rendered as nested bullets (readable subsets of 9); the v0.3-scoped items moved out of the week-of-6/8 backlog into a new "v0.3 Hardening / Polish (Phase-6 deferred)" section.
+- **CLAUDE.md (AC):** "Full Product-Architect Cascade" → "Full Startup Context Cascade" (terminology alignment).
+
+---
+
 ## 2026-06-09 (AC0 #5 — Phase 6 S3b multi-party live-fire + #lock)
 
 - **Phase 6 live-fire: S3a + the full S3b multi-party loop PASSED** (live on `83fdd5e`). S3b (the Justin-as-42-Pictures edge) exercised the whole chain — edge classification → operator escalation (clean `escalated`; identity-collision with the Operator's own name caught) → operator resolution → contact outreach to `justin@42pictures.com` → reply → relay back to Mark — plus a binding-clear and profile-note discipline. **S1 (Nadia) gold-drafted + queued** (quiet-hours; replays ~8am for approval). Test methodology: gatekeeper note dropped from S1 onward (real auto-forwards are note-less).
