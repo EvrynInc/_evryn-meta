@@ -8,6 +8,19 @@
 
 ---
 
+## 2026-06-10 (AC02 — cost-capture shipped + persistence #lock)
+
+- **Per-event LLM cost-capture: BUILT (DC) + AC/QC-reviewed (GO) + DEPLOYED** (evryn-backend `23f9858`; prod migration applied + verified). New `llm_usage` table — one row per `runEvrynQuery` (the single Anthropic choke point), capturing pathway · scope_user_id · emailmgr_item_id · model · raw+cached tokens · `total_cost_usd` · num_turns · activity, for EVERY spend event (incl. no-message pathways: pass/ignore triage, proactive no-ops, operator chat). Best-effort write (never breaks the pipeline). Pulled forward from a v0.3 item per Justin (capture from Mark's first email; observe/dashboard layer is the fast-follow). Migration: RLS on, `service_role`-only, FKs `ON DELETE SET NULL`, anon/authenticated REVOKEd. Decision: **ADR-038**.
+- **Systemic security issue surfaced:** the Supabase project blanket-grants `anon`/`authenticated` on every new public table (hits `notify_queue` too) → **BUILD v0.3 Security Hardening §4** (retro-fix + change project defaults before the web app).
+- **Multi-inbox gatekeeper identity** (forward-from ≠ reply-to) decided + scoped: alias-set + reply-to on the gatekeeper record, narrow-now/robust-scoped, build *ahead* of Mark's return + runtime/identity-doc it. **ADR-039**; build parked behind the test findings.
+- **Cleanups:** cron-architecture working doc archived to `docs/sessions/historical/`; 3 live runtime comments repointed to ARCHITECTURE.md (rode the cost deploy); stale `evryn-backend-team` worktree reaped (fully merged).
+- **AC0 live-log backlog notes folded in** → BUILD resilience items 10 (proactive-cron heartbeat log-noise; **singleton confirmed = 1 replica**, so the doubled heartbeat is a log artifact, NOT duplicate sends) + 11 (Slack pong-warn error-level noise).
+- **Protocol updates:** lock-protocol worktree-hygiene reap step; orchestration-protocol "distill DC/QC output, don't dump it" rule.
+
+**Operator-relevant:** cost-capture is live — every Evryn run now records its spend; no operator action. The cost *dashboard* (sortable/filterable spend, onboarding-cost view) is a fast-follow, not built yet.
+
+---
+
 ## 2026-06-10 (AC0 #5 — post-#lock housekeeping)
 
 - **Retired the 2026-06-04 `ac0-to-mira-dispatch.md`** (working note) — its 4 items all shipped via **Mira PR #8** (`mira/dispatch-0605`, merged 6/05) + the **PR #9** tightening, absorbed into the deployed identity files; killed rather than archived (recoverable from git). *(Breadcrumb: Soren's agent-memory still names this doc — its content lives in Mira PR #8/#9 + git history.)*

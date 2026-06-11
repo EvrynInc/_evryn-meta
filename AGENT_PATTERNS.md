@@ -499,6 +499,9 @@ Don't make the agent hand-build a conversation-history/context block inside its 
 ### A confirm-gate must gate the substantive work it protects, not just the structural step
 When you build a "verify with the operator before acting" beat, make the confirmation gate **all** the substantive / expensive / committing work (research, profile writes, drafts) — not just the final visible action. *(Evryn, 2026-06-04: she locked the thread scope **and wrote two research notes to the record**, then asked the operator to confirm identity — so the confirm gated only the draft, while the misattributable work had already landed.)* Right sequence: **light-identity-present → operator confirm → THEN the substantive work.**
 
+### Independently verify a subagent's self-reported isolation — don't trust the self-report
+When a DC/QC subagent works in a dedicated worktree, **verify the shared/canonical tree is actually clean yourself** after it returns — don't rely on the subagent's account of its own isolation. *(DC, 2026-06-10 cost-capture build: DC reported it had accidentally edited the shared `evryn-backend` main tree, then "moved the changes to its branch and restored main to clean." AC independently ran `git -C <canonical> status` + confirmed the tip + that the parallel agent's committed work was intact.)* The risks a self-report can hide: residue left in the shared tree (sweeps into another agent's next commit), or a blanket "restore to clean" that **wipes a parallel agent's uncommitted work**. The subagent's tool calls are observable but its reasoning is opaque — ground-truth the tree state with git, especially when another instance is live in the same repo.
+
 ---
 
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
