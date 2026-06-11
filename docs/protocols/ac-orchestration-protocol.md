@@ -114,6 +114,8 @@ Justin is not an engineer and should never have to parse jargon to make a call. 
 
 Technical detail (`file:line`, the QC severity rubric, commit SHAs, internal labels like "B2c" or "N4") folds **below**, for the record — Justin can ignore it. **The test:** if Justin would have to look up a term to respond, rewrite it. Lead with the decision he needs to make, in his language. Internal finding-labels (B1, N4, etc.) are for the agents; never make Justin decode them.
 
+**Don't relay DC's or QC's raw output to Justin — distill it.** A subagent's full report (receipts, finding-by-finding detail, verdict rationale, the GO/NO-GO write-up) is for **AC** to read and act on — it is mostly noise to Justin. The flow is: AC reads the subagent output, **verifies AC is satisfied** with the work (agreeing/pushing back/reframing per "findings are inputs, not verdicts"), then writes **AC's own distillation** — the few things Justin actually needs, plus any call that's genuinely his. Do **not** paste the subagent's output wholesale, even lightly summarized; the receipts + per-finding detail + rubric stay with AC. Justin gets the *verified outcome* and *his decisions*, in his language.
+
 ---
 
 ## Commit discipline for subagents
