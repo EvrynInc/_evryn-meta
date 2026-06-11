@@ -111,3 +111,12 @@ S7 (Rick) = correct silent clean-pass (well-reasoned name-drop resistance). S8 (
 A silent pass (correct, by design) is **indistinguishable from an outage** from the operator's side (S7/Rick alarmed Justin for exactly this reason). Justin does NOT want ~200 Slack pass-pings/day. Options to weigh: (a) a **dashboard / live-updating feed** (watch items tick through all day, status lights) — Justin's lean; (b) **on-demand** "AC, read the DB and tell me what's happening" (works today, zero build); (c) a lightweight operator-only daily digest. **For AC02.**
 
 *Source: S7/S8 live-fire 2026-06-10. Verified against prod via psql + Railway tool-call logs.*
+
+---
+
+## Update — S5 close-the-loop (2026-06-10)
+
+- **Finding 20 — A gatekeeper's *verbal* close-the-loop neither resolves the item nor clears the binding (it accretes one). [2/3 — extends Finding 9 + the close-the-loop scenario]**
+  S5: Mark verbally closed the 42pictures loop ("I reached out to Justin, thanks"). Outcome on prod: item `352bef4b` stayed **`delivered`** (never transitioned to a terminal/matched state), and Mark's open `[binding:` count went **19 → 20** — she **added** a binding rather than **clearing** the 42pictures one (Mark's profile now: 20 open `[binding:` / 0 paired `[binding-cleared]`). So a gatekeeper's verbal close does *not* (a) transition the related work item to terminal, nor (b) clean the related binding. Live confirmation + extension of Finding 9 (binding hygiene — accretes, never clears). The close-the-loop beat (RUN STEP 11) needs both: recognize the verbal close → transition the item + write the paired `[binding-cleared]`. *v0.2:* Mira beat (gatekeeper verbal close → resolve item + clear binding). *v0.3:* Reflection binding-TTL audit. Note: the *conversational* handling itself was fine; this is the backend-state gap.
+
+*Source: S5 close-the-loop 2026-06-10. Verified against prod via psql.*
