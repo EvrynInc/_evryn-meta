@@ -8,6 +8,18 @@
 
 ---
 
+## 2026-06-11 (AC02 — quiet-hours rebuild + cost analysis v2 + SPRINT 3-gate restructure)
+
+- **Quiet-hours redesign: BUILT (DC) + QC-verified GO** (branch `dc/quiet-hours-redesign` `91cc963`; **ADR-040**). Retires the `notify_queue` replay machinery — Slack pings now post immediately (operator-owned Slack DND handles night-silence); only the stale re-checker is time-gated to waking hours (the actual overnight pile-up source). **Not deployed** — bundles with the go-live deploy; the `notify_queue` table-drop rides after (deploy-then-drop). Decisions: 1a (drop the table), 2a (add a predictable morning sweep). Supersedes Wave-3 Item-6 + the 2026-06-01 enqueue fix.
+- **Cost analysis delivered** (v1 + v2; **v2 canonical** → `evryn-team-workspace/shared/projects/product/research/2026.06.11 evryn-cost-analysis.md`). Fitted a 3-param cost model to the 4 hard captures + extrapolated to ~27 dump items (HARD/MODELED tagged). **Headline: ~$11k/mo today → ~$2k (warm) – $6.5k (cold) v0.2 → ~$200/mo irreducible** — ~95% avoidable. New finding: a **~$0.81 cold-cache write tax per query** → **cache temperature is the dominant swing** (measure cache-create-vs-read week one; Anthropic's 1-hr cache TTL nearly erases cold pockets). A **levers table** is the centerpiece; the deterministic pass-stamp is lever #1.
+- **Reflection pulled v0.3 → v0.2** (Justin's call — the profile-bloat *recurring re-read tax*; test-Mark hit ~28k tokens force-loaded every turn). **LEAN scope** (token-cutting consolidation only; matching-aware Reflection stays v0.3); an early fast-follow, not a launch gate. Saves ~$2.65–4.26k/mo for ~$1/wk.
+- **SPRINT Go-Live Delineation restructured** into 3 gates by *moment* — Gate A (before Justin's invite email — nothing technical blocks it) / Gate B (before Evryn contacts Mark — wipe ✓, M1, cost-fix) / v0.2 Hardening. First-principles spine: the approval gate backstops anything Evryn would *say* wrong, so the only hard blockers are what it can't catch (silent death → M1, runaway cost → cost-fix, contaminated state → the wipe).
+- **Next: a fresh AC0** rebuilds the sprint as **`SPRINT-V0.2-HARDENING`** (one status-driven Steps list, killing intra-doc drift) + runs the v0.2-hardening campaign (M1 + cost-fix). Brief: `docs/sessions/2026-06-11-ac0-handoff.md`.
+
+**Operator-relevant:** the cost problem is *solvable* — ~$11k/mo today is ~95% avoidable (deterministic pass-stamp + tight notes + a profile-consolidation pass), and we'll likely land near the ~$2k end if the prompt cache stays warm. Evening Evryn-pings will work once the quiet-hours fix deploys with go-live.
+
+---
+
 ## 2026-06-11 (AC0 #lock — Phase 6 live-fire COMPLETE + session captures)
 
 - **Phase 6 live-fire COMPLETE** — all scenarios run on `83fdd5e`(+cost-capture): Nadia gold→matched, Garrett edge→pass (+ the review@ phantom-user cascade), Rick silent clean-pass, Amy slam-dunk gold→matched (nothing to the real Amy), StreamlineHub silent-pass, direct-message check-in + 42pictures self-handled close (≈ step-11), S6 robustness (empty-skip / attachment-silent-pass / Spanish-edge).

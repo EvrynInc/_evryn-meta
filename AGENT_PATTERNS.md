@@ -404,6 +404,9 @@ Agents maintaining state across many tool calls over extended periods will see m
 ### End-State Evaluation Over Step Evaluation
 For agents mutating state across many turns, evaluate final outcomes rather than intermediate steps. Agents may find alternative paths to the same goal. This is especially true for self-modifying systems (notes, memory, config) — check that the end state is structurally sound, not that every intermediate step was "correct."
 
+### Subagent Worktree Isolation Is Scoped to the Dispatcher's Repo (cross-repo gotcha)
+The Agent tool's `isolation: worktree` creates the worktree in the **current** repo (the dispatcher's cwd) — not the repo the subagent will actually edit. So when AC (running in `_evryn-meta`) dispatches a DC subagent to build in a *sibling* repo (`evryn-backend`), `isolation: worktree` makes an `_evryn-meta` worktree, which is useless for the build. The clean fix DC used (2026-06-11, quiet-hours build): the subagent creates its **own** worktree in the *target* repo (`git -C <target-repo> worktree add <sibling-path> -b <agent/branch> main`), works there, and leaves the dispatcher's canonical tree untouched on `main`. **Brief cross-repo subagents to expect this** — tell them to spin their own worktree in the target repo (or set one up before dispatch). The receipts will show whether they did.
+
 ---
 
 ## Single-Agent-With-Perspectives (SDK Era)
