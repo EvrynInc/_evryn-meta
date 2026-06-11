@@ -120,3 +120,30 @@ A silent pass (correct, by design) is **indistinguishable from an outage** from 
   S5: Mark verbally closed the 42pictures loop ("I reached out to Justin, thanks"). Outcome on prod: item `352bef4b` stayed **`delivered`** (never transitioned to a terminal/matched state), and Mark's open `[binding:` count went **19 → 20** — she **added** a binding rather than **clearing** the 42pictures one (Mark's profile now: 20 open `[binding:` / 0 paired `[binding-cleared]`). So a gatekeeper's verbal close does *not* (a) transition the related work item to terminal, nor (b) clean the related binding. Live confirmation + extension of Finding 9 (binding hygiene — accretes, never clears). The close-the-loop beat (RUN STEP 11) needs both: recognize the verbal close → transition the item + write the paired `[binding-cleared]`. *v0.2:* Mira beat (gatekeeper verbal close → resolve item + clear binding). *v0.3:* Reflection binding-TTL audit. Note: the *conversational* handling itself was fine; this is the backend-state gap.
 
 *Source: S5 close-the-loop 2026-06-10. Verified against prod via psql.*
+
+---
+
+## Update — S6 (2026-06-11)
+
+- **Finding 21 — Empty-body handling should be sender-aware (known user → bounce; unknown → skip). [design — Justin, 2026-06-11]**
+  S6/6a: an empty/whitespace body is permanent-skipped for **all** senders at the runtime guard (`handleNewEmail`, `src/email/poll.ts`), *before* sender identification — silent + a `#dev-alerts` note. Confirmed correct for garbage (no API waste; no item created, no LLM call — verified). **But:** if the **gatekeeper (or a known user) botches a forward** (sends it empty), Justin wants Evryn to **bounce back** gently (*"hey, looks like that came through empty — mind re-sending?"*) rather than going silent — it shouldn't be "taken out of her hands" for a real user. *Design direction:* move the empty-body decision to *after* the (cheap, no-LLM) sender lookup — **empty + known user → a warm bounce** (ideally a deterministic template *in her voice* → still zero LLM cost, OR a cheap gated LLM call); **empty + unknown → silent skip + dev-alert (unchanged)**. Keeps API cost controlled (nothing on garbage) without silencing her for real users. *Open:* deterministic-template vs. let-Evryn-handle for the known-user bounce.
+
+  *Also from S6:* 6b (attachment-only) → silently `passed` (no attachment flag to Mark — see Mira item 18). Cost-capture confirmed working live (3 `llm_usage` rows across processForward/processDirect, ~$1.36/query — the per-query cost itself reinforces Findings 18/20 on verbosity + context bloat). 6c (Spanish) still processing at capture time.
+
+*Source: S6 live-fire 2026-06-11. Verified against prod via psql.*
+
+---
+
+## Update — session-end refinements (2026-06-11)
+
+- **Pass-note policy → deterministic stamp (refines Finding 18).** A pass = a **system-constructed stamp**: Evryn "hits a button" and the *runtime* writes `<contact-uuid> passed <timestamptz>` — **no LLM-authored note**. Write it **only on the contact's record, never on the gatekeeper's** — *nothing* on Mark's profile for a pass, **except** an edge moved to pass on his explicit orders → a *light* note. Kill the cross-contact "five-zone matrix" (Finding 19) entirely. **Cost stakes:** ~$1.36/query extrapolates to **~$8k/mo to service Mark** — untenable; note-verbosity + per-pass LLM spend is the lever. Justin is building a **note template with Mira** to cut verbosity hard (clear-but-tiny). The deterministic stamp removes the LLM call from the ~6,000/mo silent-pass majority.
+
+- **6a resolution (refines Finding 21).** Confirmed: empty-body from a **known/existing user → deterministic warm bounce** ("hey [user], looks like that came through empty…"), **plugged in deterministically — no LLM, no API spend** — gated on an existing-user lookup. Non-user mis-send → silent skip (their problem). No API on any of it.
+
+- **6c (Spanish) — for Mira (dispatch 19–22).** Classified `edge`/leaning-qualify (edge-y even pre-language). Issues: (a) she **quoted Valentina in untranslated Spanish** to Mark ("la forma en que unes a las personas…") — useless to Mark; (b) treated the language as a surface fact, **not as substantive** (a barrier is a real blocker AND a fit signal). She wrote **Valentina's notes in English** (own-notes-in-English instinct already present).
+
+- **RUN STEP 11 (gold closing-loop) — effectively completed** via the S5 42pictures self-handled close ("I reached out to Justin myself, thanks"). Beat exercised; takeaway = Finding 20 (verbal close doesn't transition the item / clear the binding).
+
+*Source: session-end 2026-06-11.*
+
+- **Finding 22 — Give Evryn a "mark as spam" capability. [v0.3]** Justin (2026-06-11): the Google-Workspace lead is kept *deliberately* (it trains "ignore Google's automated crap"), which surfaced the gap — Evryn has no way to *mark* something as spam/junk. v0.3: a spam/ignore disposition + tool so she can flag recurring junk (and eventually auto-suppress / unsubscribe — cf. ARCHITECTURE "unsubscribing from recurring marketing junk").

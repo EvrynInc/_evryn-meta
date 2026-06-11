@@ -8,6 +8,17 @@
 
 ---
 
+## 2026-06-11 (AC0 #lock — Phase 6 live-fire COMPLETE + session captures)
+
+- **Phase 6 live-fire COMPLETE** — all scenarios run on `83fdd5e`(+cost-capture): Nadia gold→matched, Garrett edge→pass (+ the review@ phantom-user cascade), Rick silent clean-pass, Amy slam-dunk gold→matched (nothing to the real Amy), StreamlineHub silent-pass, direct-message check-in + 42pictures self-handled close (≈ step-11), S6 robustness (empty-skip / attachment-silent-pass / Spanish-edge).
+- **Findings 13-21 + Mira items 10-22 captured** (`docs/working/2026-06-09-phase6-{findings,mira-dispatch}.md`) — headlines: **pass-note → deterministic system stamp on the contact only** (the ~$8k/mo cost lever; `llm_usage` ≈ $1.36/query); review@/internal-address phantom-user fix; attribution anchor; notify_slack dual-post; fabricated-UUID guard; Operator-profile-doesn't-load-at-draft-time; 6a known-user empty→deterministic bounce; 6c language-as-substance + don't-quote-untranslated; binding hygiene; verbosity → Mira note template.
+- **Cost-capture confirmed working live** (every pathway logging spend).
+- **Next:** Pre-Go-Live DB wipe → real-Mark "we're ready" email → M1.
+
+**Operator-relevant:** Phase 6 done; Evryn's judgment validated across the gold/pass/edge/robustness spectrum. Big pre-launch direction: slash note-verbosity (cost) + a handful of identity/runtime fixes before Mark forwards.
+
+---
+
 ## 2026-06-10 (AC02 — cost-capture shipped + persistence #lock)
 
 - **Per-event LLM cost-capture: BUILT (DC) + AC/QC-reviewed (GO) + DEPLOYED** (evryn-backend `23f9858`; prod migration applied + verified). New `llm_usage` table — one row per `runEvrynQuery` (the single Anthropic choke point), capturing pathway · scope_user_id · emailmgr_item_id · model · raw+cached tokens · `total_cost_usd` · num_turns · activity, for EVERY spend event (incl. no-message pathways: pass/ignore triage, proactive no-ops, operator chat). Best-effort write (never breaks the pipeline). Pulled forward from a v0.3 item per Justin (capture from Mark's first email; observe/dashboard layer is the fast-follow). Migration: RLS on, `service_role`-only, FKs `ON DELETE SET NULL`, anon/authenticated REVOKEd. Decision: **ADR-038**.

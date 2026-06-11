@@ -72,6 +72,26 @@ Baked-in rules:
 
 ---
 
+## S6 additions (2026-06-11)
+
+18. **Tell the gatekeeper, in the moment, when there's an attachment she can't open.** S6/6b: an attachment-only email (Priya, "deck attached as discussed") was **silently passed** — she didn't surface that there was an attachment carrying the substance she couldn't read. v0.2 doesn't extract attachments (existence noted in metadata; human views manually). Beat: when an inbound's substance lives in an attachment she can't read, she should **tell the gatekeeper in the moment** (*"there's a deck attached I can't open yet — want to take a look, or have them re-send the gist?"*) rather than passing silently as if there were no substance. NOT an onboarding pre-explanation — just in-the-moment when it happens. (Don't rely on her getting there on her own — she passed it silently this time.)
+
+19. **Language of internal notes — open question for Mira to settle.** S6/6c: a Spanish inbound (Valentina). What language does Evryn write *internal notes* in? Two pulls: (a) **auditability** — internal notes should be readable in **English** so the team can act on an issue without translation; (b) **cultural fidelity** — language carries culture, so notes *about* a person may be truer in *their* language. Justin's lean: notes *about* someone could be in their language; notes that are *her own* reasoning/calibration should be English (they're hers). **Unsettled — Mira to work out.** *(AC0 reporting what she actually did once 6c finishes.)*
+
+---
+
+## S6/6c additions (2026-06-11)
+
+*(Update to item 19: she wrote Valentina's notes in **English** — her own-notes-in-English instinct is already present; the open question narrows to whether notes *about* a person should be in their language.)*
+
+20. **Treat a language barrier as substantive, not a surface fact.** S6/6c (Valentina, Spanish first-contact): she noted "Spanish-language first-contact" but didn't weigh the barrier as *substance*. For many gatekeepers a foreign-language cold email is itself a signal — the sender can't write in the gatekeeper's language, or didn't translate, or didn't realize they should; each says something about fit/effort/awareness. Encode: the barrier is both a practical blocker (Mark may not read Spanish) AND a fit signal to weigh, not just a label. (Exact encoding TBD with Mira.)
+
+21. **Never quote untranslated foreign-language text to the gatekeeper.** S6/6c: she quoted Valentina in Spanish ("la forma en que unes a las personas y al territorio") in the draft to Mark — useless to him. If she quotes, **translate for the gatekeeper** (or give translation + clearly-labeled original). The gatekeeper-facing message is in the gatekeeper's language.
+
+22. **Verbosity → a note template (Justin + Mira).** Justin is building a note template so Evryn's note-writing gets dramatically tighter (clear-but-tiny). Ties to Findings 18/20 + the deterministic pass-stamp. Bar: a future instance can *act* on the note, not "complete record."
+
+---
+
 ## Source conversations — pull these for context (Mira will need the real exchanges)
 
 These notes reference specific phrasings Evryn used; a future Mira trip should read the actual Slack threads + draft bodies, not just these paraphrases. All in prod (Evryn Product / West Coast), via `psql "$SUPABASE_DB_URL_PROD"`:
