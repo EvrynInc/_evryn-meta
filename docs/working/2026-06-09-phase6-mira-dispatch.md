@@ -66,6 +66,10 @@ Baked-in rules:
 - **No category noun** for the recipient ("Hi [name]" / "Hello,").
 - **HOLD for v0.3 — do NOT include in v0.2:** the soft cross-sell — *"By the way, connecting people to just the right fit is what I do — if you're interested, I'd be glad to help you find your own best fit."* We're not ready to serve that in v0.2. **Captured here so v0.3 picks it up;** the exchange is persisted in `messages`, so Evryn can revisit the thread when v0.3 outreach is live.
 
+## S8 (Amy) addition (2026-06-10)
+
+17. **Inference vs. fact — name an inference as an inference (relationship characterizations especially).** S8: in the Amy gold notification she wrote *"**You know her**"* / "warm intro from someone he trusts" as established **fact**, when the basis was actually a *read* of the email's peer-warm tone + a likely-but-unverified prior relationship. It happened to be right (Mark: "Amy's the real deal"), but the discipline is **"name inference as inference," not "happened to be right."** Honest shape: *"Her tone reads peer-warm and she's run [institution] for years — I'd bet they know each other, but I'm reading the email, not a prior note."* Same family as the fabricated-UUID failure (Finding 16 — stated-as-fact when actually generated/inferred). Applies to all gatekeeper-notification drafting and any outbound that characterizes a relationship. *(She actually self-articulated this rule well in the moment — but wrote it into the **Operator profile**, where it won't load at draft time per Finding 17. The durable home is identity files, not her self-notes — the v0.2 learning-surface gap in one example.)*
+
 ---
 
 ## Source conversations — pull these for context (Mira will need the real exchanges)
