@@ -8,6 +8,16 @@
 
 ---
 
+## 2026-06-12 (ACf — cost-lever sessions consolidated; input for AC0's hardening campaign)
+
+- **Two parallel cost sessions (ACf + ACo) consolidated** into `docs/sessions/2026-06-12-acf-cost-levers.md`; ACo's `2026-06-12-aco-cache-and-tiering.md` absorbed → `docs/sessions/historical/`. Current pricing verified (Opus $5/$25) — **resolves cost-analysis v2's "2.86× appendix mystery"** (stale list rates; the SDK bill matches current list within ~8%).
+- **Decisions (Justin):** **daily triage cluster + morning package** (time-clustering chosen over Anthropic's Batch API — investigated, out); **Haiku pre-screen pulled to v0.2 hardening** (shadow-mode-gated, PASS-only authority, over-escalate); **proportional-research beat** for triage.md (Mira); keepalive + 1h-TTL dropped (clustering supersedes). Repriced floor: **~$250–450/mo all-in during Mark** (vs ~$11k today) — v2's "irreducible" floor reachable in v0.2.
+- **No SPRINT/BUILD/ADR/v2-appendix edits this session by design** — AC0 (running the hardening campaign) reads the session doc and integrates; ADR candidates flagged in-doc for spec time.
+
+**Operator-relevant:** the triage cost path is now ~$11k/mo → ~$300/mo with no quality loss — and the operating shape becomes "Mark gets one vetted package every morning."
+
+---
+
 ## 2026-06-11 (AC02 — quiet-hours rebuild + cost analysis v2 + SPRINT 3-gate restructure)
 
 - **Quiet-hours redesign: BUILT (DC) + QC-verified GO** (branch `dc/quiet-hours-redesign` `91cc963`; **ADR-040**). Retires the `notify_queue` replay machinery — Slack pings now post immediately (operator-owned Slack DND handles night-silence); only the stale re-checker is time-gated to waking hours (the actual overnight pile-up source). **Not deployed** — bundles with the go-live deploy; the `notify_queue` table-drop rides after (deploy-then-drop). Decisions: 1a (drop the table), 2a (add a predictable morning sweep). Supersedes Wave-3 Item-6 + the 2026-06-01 enqueue fix.
