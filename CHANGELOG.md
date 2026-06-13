@@ -8,6 +8,15 @@
 
 ---
 
+## 2026-06-13 (AC0 — v0.2-hardening build wave + cost-levers review; weekend set-down)
+
+- **Orchestrated the go-live build wave (DC + QC subagents, worktree-per-agent):** M1 emergency channel (Stage 1 — DND-break-through `notifyEmergency`, its own VIP'd webhook, isolated from the normal Slack path); the **deterministic pass-stamp** (`record_pass` MCP tool — the cost lever; server-resolves the contact from the item, contact-record-only invariant, lifecycle-routed; B-1 server-resolution + idempotency-guard hardening from QC); morning-digest + C2 cleanup. All **built + QC-GO on their own branches, pushed — none merged, NOT deployed** (deliberate weekend hold).
+- **CLAUDE.md guardrails (DC + AC):** identity files are Mira's docs → any edit is *coordinated with her, never quietly* (not a hard "never" — DC may make a runtime-coupled edit, loudly flagged). **QC-batching nuance:** batch the piddly stuff, never two big builds at once (afford the tokens; quality wins).
+- **Cost-levers review** (`docs/sessions/2026-06-12-acf-cost-levers.md`): AC's outside perspective — keystone = §4 runtime-does-bookkeeping + structured verdict (the pass-stamp is its first instance); §5 Haiku **screen-out/escalate** pre-screen (shadow-mode → zero-missed-gold); §6b **daily clustering + morning package DECIDED** (Mark won't notice at his volume; up-to-the-minute = a paid premium). Folds in as the next thrust, gating Mark-at-*volume* (not this deploy).
+- **3 new findings:** forward content not mirrored to `messages` (backlog-critical — only the TTL'd item holds it), `triage.md` prior-history → `messages`/pass-stamp redirect (past the item TTL), contact name-capture (deterministic extract + Opus-only verify).
+- **identity-as-runtime** mental model (Justin) agreed — to be represented in the 3 CLAUDE.mds + a QC review lens.
+- **Dashboard AC2 brief** for the product vitals tab (M1 liveness feed + cluster heartbeat); **next-AC0 handoff** (`docs/sessions/2026-06-13-ac0-handoff.md`) covers the bundle-close → integration-QC release gate → deploy, then the cost thrust. **AC1 closed out.**
+
 ## 2026-06-13 (AC1 — sprint-doc restructure: one home per item)
 
 - **Created `SPRINT-V0.2-HARDENING.md`** — the single active v0.2 sprint: one canonical status-driven Steps list (51 Steps / 6 phases, Gate B → cost-bound → hardening), owner-tagged for DC-batching. **No Current-State section** (derive state by scanning the DONE→TODO boundary) and **no v0.3 list** — by design, to kill the intra-doc drift the old sprint had. Consolidates the go-live gates + the v0.2 resilience/hardening backlog + the Phase-6 runtime findings + the 7 cost levers + the Mira batch, one home each.
