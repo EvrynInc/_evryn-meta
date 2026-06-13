@@ -8,6 +8,15 @@
 
 ---
 
+## 2026-06-13 (AC0 — Google non-user marker + 6/11 go-live-prep catch-up)
+
+- **Google account-notifications record redesigned** (prod `users`): the former "Google Workspace" test-lead → `noreply@google.com` / "Google Notifications" / **role `system` + status `inactive`** (dormant for all user-functions — proactive/matching/real-user queries skip it; survives a `role NOT IN (system,admin)` wipe) + **one pending note** telling Evryn these are Google's account notifications that **must** be relayed to the Operator. Justin unsubscribed from the noisy source; the marker stays so Evryn escalates (doesn't triage) any that still arrive. *(Flag: ARCHITECTURE.md still says "two system actors" — now three; doc-reconcile for the arch pass.)*
+- **Catch-up — done 2026-06-11 but not recorded at the time:** the pre-Mark-email go-live prep — **DB wipe + Justin's own-eyes clean-verify + inbox clearing + Justin sending Mark the "we're ready" email** — all happened 6/11. Logged now so the docs stop reading as if the email hasn't gone out.
+
+**Operator-relevant:** all pre-Mark-email testing is done and the "we're ready" email is sent; Mark-go-live now waits on his reply + M1 + the cost-hardening, nothing else.
+
+---
+
 ## 2026-06-12 (ACf — cost-lever sessions consolidated; input for AC0's hardening campaign)
 
 - **Two parallel cost sessions (ACf + ACo) consolidated** into `docs/sessions/2026-06-12-acf-cost-levers.md`; ACo's `2026-06-12-aco-cache-and-tiering.md` absorbed → `docs/sessions/historical/`. Current pricing verified (Opus $5/$25) — **resolves cost-analysis v2's "2.86× appendix mystery"** (stale list rates; the SDK bill matches current list within ~8%).
