@@ -51,6 +51,16 @@ The two things that must be **identical every time** are the identity redirect a
 
 ---
 
+## When a subagent writes prose — also name the writing protocol
+
+The brief shape above is built around DC/QC *code* work. When AC spins **any** subagent that will **write or edit a prose document** — an analysis report, a doc draft, a brief, an ADR, a research file — also name **`_evryn-meta/docs/protocols/ac-writing-protocol.md`** as required reading in the brief, in the same "read and faithfully follow, in full" register.
+
+**Why the brief AND the auto-loaded pointer:** a separate protocol file does **not** auto-load into a subagent (only AC's CLAUDE.md auto-injects — verified 2026-06-13). AC's CLAUDE.md carries a hard-pointer *to* the writing protocol, and a subagent *does* follow that pointer to read it when it's about to write (also verified 2026-06-13, by experiment) — but naming the file in the brief is the belt-and-suspenders that makes the load certain on a writing trip.
+
+This **rarely** applies to DC and QC, because they're usually writing or reviewing *code*, not prose docs. But it's about the **file type, not the agent** — so if a given DC/QC trip does include writing or editing a prose doc, name the writing protocol for them too. It's not a hard exclusion; it just rarely lands on them.
+
+---
+
 ## Context override — the ONLY sanctioned way to change a subagent's load (use almost never)
 
 By default, DC and QC load their **full Startup Context Cascade** every trip — that is the floor. Bait tests (2026-06-06) proved that *no* natural-language framing should be able to shrink it: a tempting *"just check poll.ts, no need to go wide"* brief made QC skip the architecture, and a *"skip the docs, just follow the code"* brief made DC skip his entire cascade. So their manuals are now **binary: the full cascade loads unless one exact token appears.**
