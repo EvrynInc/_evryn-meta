@@ -375,7 +375,7 @@ When Justin steps away and you're working autonomously at the strategic level:
 2. **Review with Justin in the morning**, then integrate into long-term docs together.
 3. **Leave things in a clean state.** If you're mid-analysis, write your current thinking clearly enough that a fresh session can pick it up.
 4. **Commit and push.** Get everything to remote so it survives power outages.
-5. **Self-review every edit to source-of-truth documents.** Before writing, ask three questions: (1) Would this mislead a future instance arriving with minimal context? (2) Am I stating something as fact that I haven't verified? (3) Am I closing a door that wasn't mine to close?
+5. **Self-review every source-of-truth edit.** The three self-review questions live in `docs/protocols/ac-writing-protocol.md` (Before you write). **DO NOT write to a source-of-truth document without reading and following that protocol** — autonomously there's no one reviewing in real time, so a stale-version edit or an unverified claim corrupts the doc with no second pair of eyes to catch it.
 6. **Checkpoint proactively.** After significant analysis, decisions, or before risky operations, ask Justin: "Want me to do a quick #lock to save our progress?"
 
 ---

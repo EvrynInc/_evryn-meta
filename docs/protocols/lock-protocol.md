@@ -6,6 +6,8 @@
 
 ---
 
+**Before writing anything below, re-read and follow `docs/protocols/ac-writing-protocol.md`.** A #lock produces multiple writes to persistent files in rapid succession — current-state, CHANGELOG, ARCHITECTURE, the BUILD doc, session docs. If you don't have the writing protocol fresh, you'll make exactly the mistakes it exists to prevent — stale edits on shared files, missing truncation canaries, over-compressed context — that corrupt files other instances depend on.
+
 When Justin says `#lock` or it's time for a checkpoint:
 
 1. **`docs/current-state.md`** — Refresh to reflect current reality. Clean snapshot, not a log.
