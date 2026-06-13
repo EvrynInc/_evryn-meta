@@ -27,7 +27,7 @@ When Justin says `#lock` or it's time for a checkpoint:
 
     **The test for every line:** *"Would the non-technical members of the team think or act differently because of this?"* If a line only means something to someone reading the runtime, it belongs in `_evryn-meta/docs/current-state.md` (Soren reads that for build depth) — **not here.**
     - **IN:** what shipped at the *product* level, what's blocked and why the team should care, big movements (go-live progress, a major decision, a constraint everyone holds).
-    - **OUT:** file/function names, commit SHAs, deploy IDs, QC finding labels, the build play-by-play. **If you're naming a file or a SHA, you're very likely writing the wrong doc.**
+    - **OUT:** file/function names, commit SHAs, deploy IDs, QC finding labels, the build play-by-play. **Naming a runtime file/function or a SHA *as build detail* is the smell — if you're doing that, you're very likely writing the wrong doc.** (The nuance: a *pointer/link to a doc the reader should go open* — e.g. linking the active sprint doc so the team can find it — is the exception, and is often right. The bar is *play-by-play build detail* vs. *a signpost to where the fuller picture lives*.)
 
     Target: one short paragraph or 2-4 tight bullets.
 11. **Bitwarden reminder** — If `.env` was modified, remind Justin: "Hey, we updated .env — remember to re-upload to Bitwarden." (Files in `.gitignore` exist only on the local machine — git won't save them. Most credentials can be regenerated from service dashboards, but it's time-consuming. Prevention beats cure.)
