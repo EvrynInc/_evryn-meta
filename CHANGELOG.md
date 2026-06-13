@@ -8,6 +8,20 @@
 
 ---
 
+## 2026-06-13 (AC1 — sprint-doc restructure: one home per item)
+
+- **Created `SPRINT-V0.2-HARDENING.md`** — the single active v0.2 sprint: one canonical status-driven Steps list (51 Steps / 6 phases, Gate B → cost-bound → hardening), owner-tagged for DC-batching. **No Current-State section** (derive state by scanning the DONE→TODO boundary) and **no v0.3 list** — by design, to kill the intra-doc drift the old sprint had. Consolidates the go-live gates + the v0.2 resilience/hardening backlog + the Phase-6 runtime findings + the 7 cost levers + the Mira batch, one home each.
+- **Gutted `SPRINT-MARK-LIVE.md` to pure history** — the Go-Live Delineation, the v0.2-Hardening bucket, the Backlog, and the superseded v0.3 projection moved to their proper homes (lean pointers left); culminates in the DB-verify + inbox-clear + the **sent Mark "we're ready" email** (all 2026-06-11).
+- **Created `SPRINT-V0.3-CANDIDATES.md`** — the granular v0.3 candidate items (the Phase-6-deferred bug/polish list), so BUILD stays at v0.3 *scope + architecture* altitude, not a bug-list.
+- **`BUILD-EVRYN-MVP.md`** — deleted the frozen v0.2 resilience backlog + the granular v0.3 bug-list (both → calibrated "go read the real doc" pointers); cross-refs to the sprint made **descriptive** (renumber-proof); Status block now names **M1 + the cost pass-stamp** as the two Gate-B gates (corrects the stale "M1 is the one gate").
+- **`ARCHITECTURE.md`** — Proactive Behavior staleness fixed (the basic daily cron IS live; the intelligent-timing layer — per-interaction timers, `care_queue`, two-layer consent — is v0.3; verified against `checkProactiveOutreach`, no overclaim); `SPRINT-MARK-LIVE`→new-sprint reference repoints; `SPRINT-V0.3-CANDIDATES` added to Related Documents.
+- **`current-state.md`** — corrected the stale "main not pushed" line + the resolved Proactive-Behavior staleness note; gate framing corrected to M1 + cost.
+- **Method:** rollback checkpoint committed first (`19c2d87`), then the restructure (`7ad3390`); **two fully-contextualized AC subagent reviews** (both verdict'd sound); Justin reviewed + tweaked between rounds. **Docs-only — no runtime, schema, or deploy change.**
+
+**Operator-relevant:** the v0.2 build plan is now one clean sprint doc you scan top-to-bottom (the DONE→TODO boundary *is* the current state); the old Mark-Live sprint is frozen history; a new doc holds the v0.3 candidate items. Nothing changed about how you operate Evryn.
+
+---
+
 ## 2026-06-13 (AC0 — Google non-user marker + 6/11 go-live-prep catch-up)
 
 - **Google account-notifications record redesigned** (prod `users`): the former "Google Workspace" test-lead → `noreply@google.com` / "Google Notifications" / **role `system` + status `inactive`** (dormant for all user-functions — proactive/matching/real-user queries skip it; survives a `role NOT IN (system,admin)` wipe) + **one pending note** telling Evryn these are Google's account notifications that **must** be relayed to the Operator. Justin unsubscribed from the noisy source; the marker stays so Evryn escalates (doesn't triage) any that still arrive. *(Flag: ARCHITECTURE.md still says "two system actors" — now three; doc-reconcile for the arch pass.)*
