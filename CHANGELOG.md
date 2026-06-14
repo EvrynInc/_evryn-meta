@@ -8,6 +8,15 @@
 
 ---
 
+## 2026-06-13 (AC1 — AC writing protocol carved out + subagent-loading model verified)
+
+- **New `docs/protocols/ac-writing-protocol.md`** — extracted the doc-writing *craft* out of `CLAUDE.md` into an AC-owned protocol (salience, write-for-a-fresh-instance, no-overcompress, structure-over-walls, path convention, truncation canaries, doc headers, research breadcrumbs, self-review), mirroring the team's writing-protocol structure with AC fidelity. CLAUDE.md keeps doc *architecture* (Diátaxis, altitudes, routing table, one-home, source-of-truth-approval) + a "Writing discipline" hard-pointer to the protocol; moved craft excised; bullets-over-walls split (chat-half stays, doc-half moves); the autonomous-work self-review slimmed to a pointer. AC's + the team's protocols are deliberately kept separate, with a **#sweep cross-ref note on each** (compare + cross-pollinate, don't merge).
+- **`ac-orchestration-protocol.md`** — added a beat: name the writing protocol when spinning a prose-writing subagent (rarely DC/QC — file type, not agent).
+- **`lock-protocol.md`** — added a team-style "before writing anything below, re-read and follow the writing protocol" at the top (a #lock fires many rapid persistent-file writes) + the file-name-nuance tweak to step 10 (a link to a doc the reader should open IS the exception to "no file names").
+- **Subagent-loading model VERIFIED by live experiment** (3 probes, canary-checked): only the *spawner's* CLAUDE.md auto-loads (separate files don't); strong "read and faithfully follow, in full" naming reliably loads named files; AND a hard-pointer in the auto-loaded CLAUDE.md is followed even when the brief doesn't repeat it (a subagent found `lock-protocol.md` from the CLAUDE.md `#lock` pointer with no path given). **Team `CLAUDE.md` line 223 + `AGENT_PATTERNS.md`** updated from the "might be a glitch / assume the worst" framing to this verified model. This is what makes moving craft *out* of CLAUDE.md safe (the auto-loaded hard-pointer routes subagents to the protocol).
+- **3 deferred AC1 finish-edits** (from the sprint-restructure session) landed: current-state owed-line reword, team-current-state sprint-doc link, lock-protocol file-name nuance.
+- **Method:** built → fully-contextualized AC subagent analysis → AC judgment → live verification experiments → adversarial AC verification subagent (changeover verdict'd clean) → Justin reviewed/tweaked throughout. **Docs/process only — no runtime, schema, or deploy change.**
+
 ## 2026-06-13 (AC0 — v0.2-hardening build wave + cost-levers review; weekend set-down)
 
 - **Orchestrated the go-live build wave (DC + QC subagents, worktree-per-agent):** M1 emergency channel (Stage 1 — DND-break-through `notifyEmergency`, its own VIP'd webhook, isolated from the normal Slack path); the **deterministic pass-stamp** (`record_pass` MCP tool — the cost lever; server-resolves the contact from the item, contact-record-only invariant, lifecycle-routed; B-1 server-resolution + idempotency-guard hardening from QC); morning-digest + C2 cleanup. All **built + QC-GO on their own branches, pushed — none merged, NOT deployed** (deliberate weekend hold).
