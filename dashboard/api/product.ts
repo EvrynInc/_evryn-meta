@@ -17,8 +17,8 @@ export const config = {
   runtime: 'edge',
 };
 
-// Copied verbatim from api/data.ts — identical Basic-auth behavior (same
-// DASHBOARD_PASSWORD env, same `evryn` user, same default fallback string).
+// Mirrors api/data.ts Basic-auth (same DASHBOARD_PASSWORD env, same `evryn`
+// user). Fail-closed: no hardcoded fallback — denies if the env var is unset.
 function checkAuth(request: Request): Response | null {
   const authHeader = request.headers.get('authorization');
 
