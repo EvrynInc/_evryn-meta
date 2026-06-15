@@ -211,6 +211,107 @@
     .refresh { position: fixed; top: 16px; right: 16px; background: #333; border: none; color: #fff; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; z-index: 50; }
     .refresh:hover { background: #444; }
     .timestamp { color: #666; font-size: 0.75rem; margin-bottom: 16px; }
+
+    /* Tab switcher */
+    .tabs { display: flex; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid #333; }
+    .tab-btn {
+      padding: 8px 16px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: #888;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .tab-btn.active { color: #fff; border-bottom-color: #22c55e; }
+    .tab-btn:hover:not(.active) { color: #ccc; }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* Product tab — phone-first vitals */
+    .liveness-banner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 24px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-left: 4px solid #666;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .liveness-banner.live { border-left-color: #22c55e; }
+    .liveness-banner.check { border-left-color: #ef4444; }
+    .liveness-status { font-size: 1.4rem; font-weight: 700; }
+    .liveness-banner.live .liveness-status { color: #22c55e; }
+    .liveness-banner.check .liveness-status { color: #ef4444; }
+    .liveness-meta { display: flex; flex-direction: column; gap: 2px; font-size: 0.8rem; color: #888; }
+    .liveness-meta .err { color: #ef4444; font-weight: 600; }
+
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; margin-bottom: 16px; }
+    .stat-card {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 12px;
+      text-align: center;
+    }
+    .stat-value { font-size: 1.6rem; font-weight: 700; color: #fff; }
+    .stat-value.green { color: #22c55e; }
+    .stat-value.yellow { color: #eab308; }
+    .stat-label { font-size: 0.7rem; color: #888; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .cost-row { display: flex; gap: 8px; margin-bottom: 8px; }
+    .cost-row .stat-card { flex: 1; }
+    .cost-value { font-size: 1.4rem; font-weight: 700; color: #60a5fa; }
+    .cost-breakdown { font-size: 0.75rem; color: #888; }
+    .cost-breakdown-row { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid #1a1a1a; }
+    .cost-breakdown-row:last-child { border-bottom: none; }
+
+    .cluster-card {
+      background: #111;
+      border: 1px dashed #333;
+      border-radius: 6px;
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .cluster-card .stat-value { color: #666; }
+    .cluster-card .stat-label { color: #666; }
+
+    .product-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    .product-table th {
+      text-align: left;
+      padding: 8px 6px;
+      border-bottom: 1px solid #333;
+      color: #666;
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 0.65rem;
+      letter-spacing: 0.5px;
+    }
+    .product-table td { padding: 8px 6px; border-bottom: 1px solid #1a1a1a; color: #ccc; vertical-align: top; }
+    .product-table .col-time { white-space: nowrap; color: #666; width: 90px; }
+    .status-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.65rem;
+      background: #333;
+      color: #ccc;
+      text-transform: lowercase;
+    }
+    .status-pill.delivered, .status-pill.matched { background: #14532d; color: #22c55e; }
+    .status-pill.pending_approval { background: #422006; color: #eab308; }
+    .status-pill.passed, .status-pill.ignored { background: #1f2937; color: #9ca3af; }
+    .status-pill.error, .status-pill.escalated, .status-pill.bad_actor { background: #7f1d1d; color: #ef4444; }
+    .result-pill { font-size: 0.65rem; padding: 2px 6px; border-radius: 3px; }
+    .result-pill.gold { background: #422006; color: #fbbf24; }
+    .result-pill.edge { background: #1e3a5f; color: #60a5fa; }
+    .result-pill.pass { background: #1f2937; color: #9ca3af; }
+    .product-notice { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 24px; text-align: center; color: #888; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
@@ -235,8 +336,14 @@
   <h1>Evryn Dashboard</h1>
   <div class="timestamp" id="timestamp">Loading...</div>
 
+  <!-- Tab switcher -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="agents-tab">Agents</button>
+    <button class="tab-btn" data-tab="product-tab">Product / Evryn</button>
+  </div>
+
   <!-- Agents Tab -->
-  <div id="agents-tab">
+  <div id="agents-tab" class="tab-pane active">
     <h2>Status</h2>
     <div class="legend" id="status-legend">
       <div class="legend-item"><div class="legend-dot" style="background:#22c55e;"></div> Active (5 min)</div>
@@ -333,6 +440,13 @@
       </table>
     </div>
     <button class="load-more" id="load-more" style="display:none;">Load More</button>
+  </div>
+
+  <!-- Product / Evryn Tab -->
+  <div id="product-tab" class="tab-pane">
+    <div id="product-content">
+      <div class="loading">Loading...</div>
+    </div>
   </div>
 
   <script>
@@ -639,9 +753,162 @@
         // Refresh usage chart
         loadUsageData();
 
+        // Refresh product/Evryn vitals
+        loadProductData();
+
       } catch (err) {
         console.error(err);
         document.getElementById('agent-grid').innerHTML = '<div class="error">Failed to load data</div>';
+      }
+    }
+
+    // ========== Tab switcher ==========
+    document.querySelector('.tabs').addEventListener('click', (e) => {
+      const btn = e.target.closest('.tab-btn');
+      if (!btn) return;
+      const target = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.toggle('active', p.id === target));
+    });
+
+    // ========== Product / Evryn vitals ==========
+    function timeAgo(isoString) {
+      if (!isoString) return 'never';
+      const diffMs = Date.now() - new Date(isoString).getTime();
+      if (diffMs < 0) return 'just now';
+      const mins = Math.floor(diffMs / 60000);
+      if (mins < 1) return 'just now';
+      if (mins < 60) return mins + 'm ago';
+      const hrs = Math.floor(mins / 60);
+      if (hrs < 48) return hrs + 'h ago';
+      return Math.floor(hrs / 24) + 'd ago';
+    }
+
+    function formatUptime(seconds) {
+      if (seconds == null) return '';
+      const s = Math.floor(seconds);
+      if (s < 60) return s + 's';
+      const m = Math.floor(s / 60);
+      if (m < 60) return m + 'm';
+      const h = Math.floor(m / 60);
+      if (h < 48) return h + 'h ' + (m % 60) + 'm';
+      return Math.floor(h / 24) + 'd ' + (h % 24) + 'h';
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function renderProduct(data) {
+      const el = document.getElementById('product-content');
+
+      if (data.configured === false) {
+        el.innerHTML = '<div class="product-notice">Product DB not yet connected — set ' +
+          '<code>PRODUCT_SUPABASE_URL</code> and <code>PRODUCT_SUPABASE_SERVICE_ROLE_KEY</code> ' +
+          'env vars in Vercel.</div>';
+        return;
+      }
+
+      const live = data.liveness || {};
+      const act = data.today_activity || {};
+      const cost = data.cost || {};
+
+      // Liveness: green if process up OR last activity within ~26h.
+      const recentMs = live.lastActivityAt ? (Date.now() - new Date(live.lastActivityAt).getTime()) : Infinity;
+      const isLive = (live.processUp && live.processUp.ok) || recentMs <= 26 * 60 * 60 * 1000;
+      const banner = isLive ? 'live' : 'check';
+      const statusText = isLive ? '● Live' : '● Check';
+      const uptimeStr = (live.processUp && live.processUp.ok)
+        ? 'uptime ' + formatUptime(live.processUp.uptimeSeconds) : '';
+      const errClass = (live.recentErrors > 0) ? 'err' : '';
+
+      let html = `
+        <div class="liveness-banner ${banner}">
+          <div class="liveness-status">${statusText}</div>
+          <div class="liveness-meta">
+            <span>last activity ${timeAgo(live.lastActivityAt)}</span>
+            ${uptimeStr ? `<span>${uptimeStr}</span>` : ''}
+            <span class="${errClass}">${live.recentErrors || 0} errors (24h)</span>
+          </div>
+        </div>
+
+        <h2>Today's Activity</h2>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="stat-value">${act.itemsProcessed || 0}</div><div class="stat-label">Processed</div></div>
+          <div class="stat-card"><div class="stat-value">${act.passed || 0}</div><div class="stat-label">Passed</div></div>
+          <div class="stat-card"><div class="stat-value green">${act.goldEdgeSurfaced || 0}</div><div class="stat-label">Gold/Edge</div></div>
+          <div class="stat-card"><div class="stat-value green">${act.delivered || 0}</div><div class="stat-label">Delivered</div></div>
+          <div class="stat-card"><div class="stat-value ${act.pendingApproval > 0 ? 'yellow' : ''}">${act.pendingApproval || 0}</div><div class="stat-label">Pending</div></div>
+        </div>
+
+        <h2>Cost</h2>
+        <div class="cost-row">
+          <div class="stat-card"><div class="cost-value">$${(cost.todayUsd || 0).toFixed(2)}</div><div class="stat-label">Today</div></div>
+          <div class="stat-card"><div class="cost-value">$${(cost.monthUsd || 0).toFixed(2)}</div><div class="stat-label">Month</div></div>
+        </div>`;
+
+      const byActivity = cost.todayByActivity || {};
+      const actKeys = Object.keys(byActivity).filter(k => byActivity[k] > 0);
+      if (actKeys.length > 0) {
+        html += '<div class="cost-breakdown">';
+        actKeys.sort((a, b) => byActivity[b] - byActivity[a]).forEach(k => {
+          html += `<div class="cost-breakdown-row"><span>${escapeHtml(k)}</span><span>$${byActivity[k].toFixed(2)}</span></div>`;
+        });
+        html += '</div>';
+      }
+
+      // Cluster heartbeat placeholder
+      html += `
+        <h2>Cluster Heartbeat</h2>
+        <div class="cluster-card">
+          <div class="stat-value">—</div>
+          <div class="stat-label">daily cluster — coming soon</div>
+        </div>`;
+
+      // Recent items (status-only)
+      html += '<h2>Recent Items</h2>';
+      const items = data.recentItems || [];
+      if (items.length === 0) {
+        html += '<div class="product-notice">No items yet.</div>';
+      } else {
+        html += '<table class="product-table"><thead><tr>' +
+          '<th class="col-time">Time</th><th>Status</th><th>Result</th><th>Subject</th>' +
+          '</tr></thead><tbody>';
+        items.forEach(it => {
+          const result = it.triage_result
+            ? `<span class="result-pill ${escapeHtml(it.triage_result)}">${escapeHtml(it.triage_result)}</span>` : '';
+          html += `<tr>
+            <td class="col-time">${formatDateTime(it.created_at)}</td>
+            <td><span class="status-pill ${escapeHtml(it.status)}">${escapeHtml(it.status)}</span></td>
+            <td>${result}</td>
+            <td>${escapeHtml(it.subject) || '<span style="color:#555;">(no subject)</span>'}</td>
+          </tr>`;
+        });
+        html += '</tbody></table>';
+      }
+
+      el.innerHTML = html;
+    }
+
+    async function loadProductData() {
+      if (!authHeader) return;
+      try {
+        const res = await fetch('/api/product', { headers: { 'Authorization': authHeader } });
+        if (res.status === 401) {
+          localStorage.removeItem('evryn_auth');
+          authHeader = null;
+          showLogin(true);
+          return;
+        }
+        if (!res.ok) throw new Error('Failed to fetch product data');
+        const data = await res.json();
+        renderProduct(data);
+      } catch (err) {
+        console.error('Product vitals error:', err);
+        document.getElementById('product-content').innerHTML =
+          '<div class="error">Failed to load product vitals</div>';
       }
     }
 
