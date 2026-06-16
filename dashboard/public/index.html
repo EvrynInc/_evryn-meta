@@ -610,6 +610,7 @@
         localStorage.setItem('evryn_auth', authHeader);
         hideLogin();
         loadData();
+        loadProductData();
       }
     }
 
@@ -752,9 +753,6 @@
 
         // Refresh usage chart
         loadUsageData();
-
-        // Refresh product/Evryn vitals
-        loadProductData();
 
       } catch (err) {
         console.error(err);
@@ -934,9 +932,14 @@
     // Initialize date range and load
     initDateRange();
     loadData();
+    // Product/Evryn vitals load on their OWN track — independent of loadData — so an
+    // Agents-endpoint (/api/data) failure can never block the Product tab. Different
+    // database, different tab; they must not be coupled.
+    loadProductData();
 
     // Auto-refresh every 30 seconds
     setInterval(loadData, 30000);
+    setInterval(loadProductData, 30000);
 
     // ========== Usage Chart ==========
     const agentColors = {
