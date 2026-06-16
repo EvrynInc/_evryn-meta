@@ -19,8 +19,9 @@ function checkAuth(request: Request): Response | null {
   }
   const decoded = atob(authHeader.split(' ')[1]);
   const [user, password] = decoded.split(':');
-  const validPassword = process.env.DASHBOARD_PASSWORD || 'jbev0124';
-  if (user !== 'evryn' || password !== validPassword) {
+  // Fail closed: deny all if DASHBOARD_PASSWORD is unset (no hardcoded default).
+  const validPassword = process.env.DASHBOARD_PASSWORD;
+  if (!validPassword || user !== 'evryn' || password !== validPassword) {
     return new Response('Invalid credentials', {
       status: 401,
       headers: { 'WWW-Authenticate': 'Basic realm="Evryn Dashboard"' },
