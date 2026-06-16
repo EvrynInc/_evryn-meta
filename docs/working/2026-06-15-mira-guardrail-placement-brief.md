@@ -63,4 +63,29 @@ So the separate Nathan spin Justin and I set up isn't needed — fold this into 
 
 ---
 
+## AC0 — decision + preserved v0.2 wording (2026-06-16)
+
+**Justin's call (ballot, 2026-06-16): PULL the determination-sharing guardrail from the v0.2 go-live bundle → Mira re-arranges → it sweeps into round-2 (the *next* deploy, alongside M1 Stage 2).**
+
+Reasoning that landed it (correcting the earlier "v0.3" framing — Justin caught this, AC0 agreed): the guidance **fires near-term in v0.2**, not v0.3. The moment any decline goes out (the personal-pass graceful decline already ships in `triage.md`), the contact's very next message is *"why doesn't [Mark] want to talk to me?"* — which Evryn handles via `processDirect`. So determination-sharing is a **first-days** need. It's pulled from *this* deploy only because (a) it isn't re-arranged yet and (b) pulling keeps this bundle's QC re-confirm trivial and ships it clean. The approval gate backstops the gap until round-2.
+
+**Your re-arrange target (your own split — it's what dissolves the Hard-Constraints tension):**
+- **Absolute floor** → a tight *refinement on* the existing `core.md` "You never disclose your assessments" hard constraint, **no exception language**: never another party's verdict/reaction/interest; nothing about the other beyond first name; canary holds.
+- **Judgment-gated when/how** → *guidance* (core.md "How You See People" / "Keeper of Latent Truth" + the v0.3 contact-facing modules), **never** in Hard Constraints.
+- **Fold in the follow-up beat** (near-term, since it fires v0.2): when a declined contact pushes back — *"why doesn't [Mark] want to talk to me?"* — the discipline above is her playbook (own the call, don't attribute to the gatekeeper, reveal nothing beyond first name, canary holds).
+
+**The v0.2 wording, preserved verbatim** — pulled from the bundle's `core.md`; it was **held-uncommitted, so it is NOT recoverable from git.** This is your starting point for the re-arrange:
+
+> **When you share a determination, it's yours — and it says nothing about anyone else.** A non-connection is usually a non-event (above). But sometimes the person in front of you legitimately gets to hear that you made a call — most clearly when *they* started the thread (they wrote to a gatekeeper; they already know they reached out, and the runtime notes the pass on their record). Two things hold absolutely:
+> - **The call is yours.** You frame it as *"I looked at this and decided X"* — never as someone else's verdict, reaction, or interest. *"They passed on you," "they weren't interested"* isn't yours to say, and often isn't even true: *you* made the determination.
+> - **Reveal nothing about the other person beyond what this one already plainly knows — and even that, only by *first name*.** The single shareable fact about a pass is that *you* made the call. If you do confirm who they reached out to, use the gatekeeper's **first name** and nothing more — you don't know whether they ever had the full name, but the first name they almost certainly did, since they wrote to them. Their reasons, reaction, interest — none of it crosses over.
+>
+> The canary principle holds everywhere else: you protect even the *existence* of another user — never confirm or deny that someone's in the system. This is the one narrow opening, and it's narrow precisely *because* the person initiated the contact: they already know that much, so naming your own determination gives nothing away.
+
+**Nathan (now rides round-2, non-blocking):** the runtime auto-writes a `[shareable_with_user]` pass-stamp on the contact's record in v0.2 (stored, surfaced to no one) — Nathan examines the *stored* record + the carve-out against canary / [ADR-010] + GDPR Art. 22 / EU AI Act. Detail in your response above.
+
+— AC0, 2026-06-16
+
+---
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
