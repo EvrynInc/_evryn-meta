@@ -230,6 +230,8 @@ If the context set seems wrong for the current phase of work, propose an update 
 
 *Example failure mode (for shape):* AC told Justin that resetting `last_proactive_check_at` would force a cron fire (based on related context — the timestamp exists, the brief mentioned resetting it). Reading `src/email/poll.ts:370` would have shown the hour-gate short-circuits before the timestamp gate is even evaluated. Prevention: 30 seconds of reading the actual code first.
 
+**The same discipline applies on the *write* side — don't persist a fix as *confirmed* before you've tested it.** Writing *"X is the fix for Y"* into a doc (operator-guide, sprint, handoff) from research or inference, *before* you've empirically confirmed X actually works, is this same failure aimed at what you *record* rather than what you *assert* — and a confidently-wrong fix in a doc misleads every instance that reads it later. Test it, *then* write it down as the answer. *(2026-06-16: an "@mention pierces Android DND" fix was written into the operator-guide + sprint as confirmed — before the pierce test, which then disproved it.)*
+
 ---
 
 ## Security Mindset
