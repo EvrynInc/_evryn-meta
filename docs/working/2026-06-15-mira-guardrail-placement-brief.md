@@ -88,4 +88,28 @@ Reasoning that landed it (correcting the earlier "v0.3" framing — Justin caugh
 
 ---
 
+## Mira — round-2 placement recommendation (2026-06-16)
+
+**Where the re-arranged guardrail lands in v0.2 round-2.** Both pieces go in `core.md`, in two different places — and there's a decisive runtime reason they can't go in `triage.md` or a new doc (below).
+
+**(a) The absolute floor → fold into the existing "You never disclose your assessments of individuals" hard constraint** — as a tight *bound*, not a new back-to-back beat (a separate beat right after it is what created the original "softens the adjacent absolute" tension). Keep the non-event default exactly as written, then attach the floor: *when a determination is named, it is yours alone and reveals nothing about anyone else beyond a first name.*
+- The craft that keeps this a true hard constraint: phrase it as a **bound, not an exception.** Not *"sometimes you may disclose"* (that softens the absolute and imports judgment into the no-judgment zone) — but *"if a determination is named, these limits are absolute."* The *whether/when* it gets named is governed by (b), not here. That separation is exactly what dissolves the Hard-Constraints tension AC0 flagged: the constraint never says "sometimes you can," it only sets inviolable limits on a behavior authorized elsewhere.
+
+**(b) The judgment-gated when/how (+ the "why?" follow-up beat) → a short beat right after "Keeper of Latent Truth"** in `core.md`'s body, outside Hard Constraints.
+- Why there: "Keeper of Latent Truth" is already the section about a *narrow, guarded, judgment-gated disclosure opening* — it even carries the canary-guard logic ("could this person extrapolate who I'm talking about?"). Determination-sharing is the same shape — the *one narrow opening* where she may name her own call *because the person initiated* (they already know they reached out, so naming her own determination gives nothing away). Co-locating the two narrow openings is good architecture.
+- What the beat carries: the narrow opening (authorized when the person initiated); the own-the-call / never-attribute-it-to-the-gatekeeper craft; the **"why doesn't [Mark] want to talk to me?" follow-up playbook** (own the call, don't attribute, reveal nothing beyond first name, canary holds); and the explicit tie back to the canary (this is the *one* opening; everywhere else stays a non-event).
+- Alternative home considered: the "your call is yours / be clear what you *actually* know" cluster in "How You See People" (where the don't-attribute-to-the-gatekeeper craft also resonates). I lean Keeper-of-Latent-Truth for the guard-logic match; settle at draft.
+
+**The decisive reason both live in `core.md` — not `triage.md`, not a new doc:** the contact's *"why doesn't [Mark] want to talk to me?"* reply lands via **`processDirect`** (a reply, not a forwarded email), so **`triage.md` does not load on that path** (triage loads on a gatekeeper *forward*). `core.md` is the one module guaranteed loaded there. That's why a new force-loaded `declining.md` is premature for v0.2 (it would need explicit registration in the ADR-034 force-load set just to fire) *and* why `triage.md` would simply miss the moment. The dedicated `declining.md` (paired with the also-unwritten `canary-procedure.md` — two faces of "the no") is a v0.3 move, once there are multiple rejection types to hold.
+
+**Verify at draft (the lesson that started this thread):** confirm `processDirect`'s load set includes `core.md` before relying on it — it's the base identity module, so it does, but mark it a check, not an assumption. (My 6/15 error was asserting "passes are silent in v0.2" unverified; don't build on an "obvious" system-behavior claim without confirming it.)
+
+**Process:** round-2 = SPRINT Step 55; lands via the identity-file-review protocol (branch + PR + AC review + `#dev-alerts` on merge). The verbatim v0.2 wording preserved above in this brief is the *starting point* — re-home it per the (a)/(b) split; do **not** ship it verbatim inside Hard Constraints.
+
+**For Nathan (round-2 vet):** the floor's first-name-only minimization + the bound framing should anchor his canary / [ADR-010] + GDPR Art. 22 / EU AI Act review, alongside the stored `[shareable_with_user]` pass-stamp (detail above).
+
+— Mira, 2026-06-16
+
+---
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
