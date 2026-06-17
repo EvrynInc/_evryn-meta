@@ -8,6 +8,12 @@
 
 ---
 
+## 2026-06-16 (AC0 — v0.2 go-live bundle DEPLOYED + post-deploy cleanup)
+
+- **DEPLOYED.** Merged the go-live bundle → `evryn-backend/main` (`49fb6ff`) and shipped via `railway up` (Oregon/us-west-2, SUCCESS, healthy). Live: quiet-hours redesign (ADR-040, `notify_queue` retired) · morning-sweep digest · **M1 emergency channel Stage 1** (`#emergency-alerts` — channel/plumbing only; the silent-death *detectors* are round-2) · deterministic **cost pass-stamp** (`record_pass`) · Phase-6 Mira identity batch + Pass-line. **Both Slack channels confirmed live by Justin** (approvals "awake" + emergency smoke).
+- **Post-deploy:** disarmed `EMERGENCY_SMOKE_TEST`; reaped the 6 go-live worktrees+branches; **DROPPED the `notify_queue` table** (dev+prod; pre-drop `pg_dump` archived in `backups/notify_queue-pre-drop-2026-06-16.sql`); pushed `evryn-backend` (reconciled with a parallel instance's dashboard-doc commits) + `_evryn-meta`. Mira's round-2 guardrail-placement recommendation committed (`c3cd522`).
+- **Round-2 (other machine):** M1 Stage 2 detectors + the Android-DND pierce · determination-guardrail re-arrange (Mira brief) · cache-TTL flip · ARCH/schema/operator-guide `notify_queue`+M1 doc absorptions · AC3 (forward-persistence) + AC2 (dashboard) spins.
+
 ## 2026-06-16 (AC0 — go-live bundle COMMITTED to the deploy gate; M1 emergency setup + Android-DND is round-2; persist-and-set-down)
 
 - **Go-live bundle COMMITTED** — `9364bfe` on `bundle/go-live-v0.2` (the 3 held files: `record_pass` pass-stamp + `test-record-pass.ts` + Mira's `triage.md` Pass-line), one commit superseding the interim `f4083e6`. **QC re-confirm GO** on the Pass-line (real QC subagent, spec-runtime-match vs `record_pass`). `core.md` reverted — the **determination-sharing guardrail PULLED to round-2** (Justin's correction: it fires *near-term in v0.2* on the first decline-follow-up, not v0.3; the personal-pass graceful decline already ships in `triage.md`). All commits **local/unpushed; deploy NOT done** — Justin re-spun a fresh AC0 at ~12% pre-compaction. Resume: `docs/sessions/2026-06-16-ac0-handoff.md`.
