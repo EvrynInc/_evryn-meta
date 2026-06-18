@@ -8,11 +8,12 @@
 
 ---
 
-## Status: Lane A is QC-GO. THREE commits on `lane-a/ingest-resilience` (worktree `evryn-backend-ingest`). NOT merged, NOT deployed, NOT pushed.
+## Status: Lane A is QC-GO. FOUR commits on `lane-a/ingest-resilience` (worktree `evryn-backend-ingest`). NOT merged, NOT deployed, NOT pushed.
 
 - **`0430a6f`** — trip 1 (mechanical batch): Steps **16, 19, 20, 22, 29, 40** + the Step 13 migration file. QC-GO (clean; the 2 migration should-fixes QC raised were folded into trip 2 before any apply).
 - **`30db607`** — trip 2 (design set): Steps **17, 21, 34, 32(client.ts half)** + the migration should-fix rewrite. QC-GO (no blockers, no should-fix, 2 non-gating nits).
 - **`3f8d3d4`** — **Step 61** (gatekeeper-address resolution): the inbound-lane table + `users.outbound_address` migration FILE, the `process.ts` resolution reorder + escalation, the `original_subject` stash for AC2. QC-GO (no blockers, no should-fix, 3 nits + 1 go-live precondition — see §Step 61). **Added after my first "Lane A QC-GO" ping** — Lane A now includes Step 61; converge Lane A as a whole.
+- **`d2d98af`** — **AC2 Step-18 integration swap** (2 refs): Lane B's Step 18 made `set_item_status` the single audited status-write path and `supabase_upsert` now rejects status writes, so two Lane A references were swapped — `poll.ts` `checkFollowUps` prompt (FUNCTIONAL: `supabase_upsert`→`set_item_status` for the `no_gk_response` close) + a `process.ts` comment (cosmetic). **AC-reviewed (verbatim AC2 find/replace, diff matches exactly); NOT separately QC'd** — it's a tool-rename in a prompt string that can't be verified on this branch in isolation (`set_item_status` is Lane B's tool), so the real check is AC0's convergence — see §Shared seams.
 
 Both trips: real DC built, real QC reviewed (full Startup Context Cascade loaded each), AC1 reviewed. `npx tsc --noEmit` green; all new + existing `tsx` tests pass.
 
@@ -73,6 +74,8 @@ The empty-body decision moved to **after** a cheap, no-LLM `findUserByEmail`:
 
 4. **`rateLimitedNotifyDev` is now exported from `poll.ts`** (Step 20). If another lane imports an alert helper from `poll.ts`, this is the name.
 
+5. **🔗 Lane A ↔ Lane B Step 18 — `set_item_status` (commit `d2d98af`) — MUST converge together.** Lane B's Step 18 makes `set_item_status` the single audited status-write tool and makes `supabase_upsert` reject status writes. Lane A's `checkFollowUps` prompt now tells Evryn to use `set_item_status` for the `no_gk_response` close (the FUNCTIONAL ref). **Dependency:** if Lane A deployed WITHOUT Lane B's Step 18 in the same bundle, that prompt would point Evryn at a tool that doesn't exist → the stale-item follow-up close breaks. The whole wave is one bundle (AC0 assembles all lanes → one deploy), so they land together — **AC0: just confirm Lane B's Step 18 (`set_item_status` tool def in `classify.ts`) is in the same converged bundle as this Lane A commit.** This swap was AC-reviewed only (verbatim AC2 spec); the real cross-lane verification — prompt references a tool that now exists — is at your convergence.
+
 No other Lane A file overlaps Lane B/C. `triage/classify.ts`, `notify/slack.ts`, `approval/flow.ts`, `config.ts` untouched by Lane A.
 
 ---
@@ -94,6 +97,7 @@ Lane A is entirely the **ingest/resilience** layer, which clustering keeps; **no
 - The Step 13 migration file (`backups/2026-06-17-emailmgr-items-updated-at-trigger.sql`) is **QC-GO and ready**, **FILE-ONLY — DC/AC1 did NOT run it.** The dev-first run-order recipe (the full-path PG17 psql method, `SUPABASE_DB_URL_DEV` → verify → `pg_dump` prod → apply prod) is in the file header + `backups/README.md`.
 - **AC0 owns the apply** (Justin: "AC0's on it"; AC1 deliberately did NOT apply to avoid a double-apply — the `DROP TRIGGER IF EXISTS` makes it idempotent anyway). The dev rehearsal + the coordinated prod apply ride AC0's convergence/deploy.
 - **PG17 client tools:** not installed on this laptop as of the build; winget is now available (Justin installed it), so `winget install PostgreSQL.PostgreSQL.17` should work (may need a UAC prompt → Justin runs it). AC1 has not installed/applied — clean handoff to AC0.
+- **🟡 DEV-REHEARSAL DECISION — AC0's call (Justin flagged this needs a decision):** there are now **two Lane A migrations** (Step 13 `updated_at` trigger + Step 61 `gatekeeper_inbound_addresses` table/`outbound_address` column). AC1 is **available to run the dev-first apply + verification for both** now that winget/PG17-client is available — OR AC0 runs it as part of convergence. **AC0 decides who applies** (and avoid a double-apply); AC1 has applied **nothing** so far and will only act on an explicit "AC1, run the dev rehearsal." Both are FILE-ONLY + QC-GO; recipes in the file headers.
 - Verification query is in the file footer (`SELECT tgname FROM pg_trigger WHERE tgrelid = 'emailmgr_items'::regclass AND NOT tgisinternal;` → expect `trg_emailmgr_items_updated_at`).
 
 ---
