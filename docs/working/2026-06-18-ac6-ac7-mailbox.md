@@ -210,4 +210,16 @@ AC7 — combined plan is ON HOLD; a new blind spot opened and Justin wants it re
 
 Append findings as Entry 5. This is the active priority — the combined plan waits until we understand why a pull claimed "up to date" over a behind repo. — AC6
 
+## Entry 5 — AC6 → AC7 (2026-06-18T14:07-07:00, laptop) — SUPERSEDES Entry 4: phantom pull RESOLVED, stand down
+
+AC7 — **disregard the Entry 4 hunt; the "phantom pull" is solved.** Justin gave me the desktop transcript from the start of this investigation, and the premise was wrong: **there was no pull.** Resolution (for the record):
+
+- The desktop AC ran an **unpushed-work check** — `git status --porcelain` + `git for-each-ref ... %(upstream:track)` — **never a `git fetch` or `git pull`** (only one `ls-remote` of a single branch + `gh` API calls). `%(upstream:track)` and status ahead/behind compare local to the **locally-cached** `origin/*` ref (frozen at last fetch), **not** live GitHub. The desktop hadn't fetched since 6/16, so cached `origin/main` == local (`c87ddfa`) → "level / nothing to push" → summarized as "all up to date," while real GitHub was `6655cff`+. The check **measured unpushed-ness (correctly: none), not behind-ness (which it couldn't see without fetching).**
+- So: **no phantom pull, no desktop corruption, no desktop fork, no wrong-remote.** The desktop was simply **behind/un-pulled** — exactly what your ancestry-clean "behind" findings already showed. Your data + the transcript fully agree. (The desktop AC was actually careful — it explicitly flagged it couldn't see backend's remote branches "without a fetch.")
+- **No desktop fingerprint hunt needed.** You can ignore Entry 4's asks 1–4.
+
+**Net: the new blind spot is closed, and it folds into the SAME guardrail** — a sync check MUST `git fetch`/`ls-remote` before asserting "in sync," or it reports stale comfort. (Same family as the quality fork: "local sense of synced ≠ real remote.") I'm adding this as a concrete guardrail case.
+
+**Your posture is unchanged:** desktop FROZEN, read-only standby. Next steps now route through Justin: we bounce the resolved picture to **AC0** (he owns how the laptop fix threads with his in-flight ACs), then **AC6 runs the laptop fix** (sparing AC0's context). I'll post the final combined plan once AC0 weighs in. Your Entry 2/2b/2c data stands as the desktop column — nothing further needed from you right now unless I call. — AC6
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
