@@ -8,12 +8,13 @@
 
 ## 0. TL;DR for convergence
 
-- **Built + QC-GO:** LEAN v0.2 Reflection-consolidation (Sprint **Step 10**) + the cache-prefix regression test (Sprint **Step 11b**). Commits `03b0d50` (DC build) + `359d568` (AC's `reflection.md` draft) on `lane-c/cost`.
+- **Built + QC-GO + ALL COMMITTED (working tree clean).** LEAN v0.2 Reflection-consolidation (Sprint **Step 10**) + the cache-prefix regression test (Sprint **Step 11b**). Branch `lane-c/cost` (atop `main`/`fcc8856`) — **5 commits:** `03b0d50` (DC build) · `359d568` (`reflection.md` draft) · `989ca26` (ARCH update) · `f4f63bc` (identity canary completion) · `03e8fa2` (N1/SF1 comment fixes). My `_evryn-meta` working docs (this handoff + the measurement plan) are committed too (on `main`).
 - **G1 dev live-test: DONE + PASSED (AC3, 2026-06-17).** The migration was applied to DEV and fully live-tested — the count-slice round-trip + the concurrent-append row-lock block test both pass (§5). **Only the PROD apply remains** (deploy-time, coordinated). Throwaway test data cleaned up; dev verified via the connection ref (`postgres.maqkdesopsskptpxjbqs`).
 - **Scope changes from the original brief** (the "why it's different" record Justin asked for): **11a (1h-cache-TTL) is MOOT** (clustering, sprint Step 58, replaces it — and the SDK has no TTL knob anyway); **Step 12 (num_turns) is DEFERRED** (sprint Step 57 subsumes it); **11c (measurement) survives** and is now the lead cache deliverable. Detail §3.
 - **Cross-lane seam:** one import + one checker block in `src/email/poll.ts` (Lane A's file) — both comment-flagged `⚠️ AC0`. §4.
 - **reflection.md is a DRAFT for Mira** — voice is hers; needs her review before it's final. §6.
-- **Two trivial follow-ups (SF1, N1)** to fold into convergence; **one v0.3 forward-flag (SF2)**. §7.
+- **Identity truncation-canary hygiene (Justin-directed, orthogonal to cost):** all 10 identity files now carry the complete canary (top blockquote + bottom marker); 6 already had it (**net-unchanged in the diff**), 4 were missing it and were fixed. Committed `f4f63bc`. Pure hygiene, no voice/behavior change. §1a.
+- **SF1 + N1 are DONE** (committed `03e8fa2`, comment-only). Remaining flags: **SF2** (v0.3) + the **`search_path`** pre-existing gap (v0.3). §7.
 
 ---
 
@@ -21,15 +22,21 @@
 
 | File | Change | Lane region |
 |---|---|---|
-| `backups/add-story-versions-and-consolidate-profile.sql` | **NEW** migration: `story_versions` table + atomic `consolidate_profile` RPC. **NOT applied** (AC applies dev-first). | Lane C |
+| `backups/add-story-versions-and-consolidate-profile.sql` | **NEW** migration: `story_versions` table + atomic `consolidate_profile` RPC. **APPLIED to DEV + live-tested (§5); PROD apply remains at deploy.** (Also carries the SF1 comment fix.) | Lane C |
 | `src/reflection/consolidate.ts` | **NEW** module: `consolidateProfile` (orchestration), `checkReflectionConsolidation` (cron checker), pure predicates (`shouldConsolidate`, `pendingNotesCharLength`, `isValidConsolidatedStory`). | Lane C |
-| `src/triage/classify.ts` | `loadReflectionSystemPrompt()` (new: core.md + reflection.md only) + excluded `reflection.md` from `loadCommonPrefix`'s force-load. | Lane C's region of classify.ts |
+| `src/triage/classify.ts` | `loadReflectionSystemPrompt()` (new: core.md + reflection.md only) + excluded `reflection.md` from `loadCommonPrefix`'s force-load. **Also: the N1 fix** (read_identity_module tool-description now names the reflection.md exclusion). | Lane C's region of classify.ts |
+| `identity/*.md` (10 files) | **Truncation-canary completion** — 4 files fixed (core, triage, situations/gatekeeper, activities/reflection), 6 net-unchanged. Orthogonal hygiene; see §1a. | identity (Mira's; mechanical) |
+| `docs/ARCHITECTURE.md` | Reflection-lands-lean-in-v0.2 update (Justin diff-reviewed + approved). Committed `989ca26`. | AC-owned doc |
 | `src/email/poll.ts` | **CROSS-LANE:** one import + one checker block in `startPolling`. | **Lane A's file** — see §4 |
 | `src/db/llm-usage.ts` | `PATHWAY_ACTIVITY += checkReflectionConsolidation: "reflection"`. | shared, additive |
 | `identity/activities/reflection.md` | **NEW** consolidation guidance (Mira draft). | AC-authored; Mira owns voice |
 | `tests/test-reflection-consolidate.ts`, `tests/test-cache-prefix-stability.ts` | **NEW** tests. | Lane C |
 
-**typecheck + tests:** `npm run typecheck` 0 errors; reflection tests + cache-prefix tests PASS; no regressions in the existing suites that touch these files (prompt-composition, record-pass, llm-usage).
+**typecheck + tests:** `npm run typecheck` 0 errors; the two new suites (`test-reflection-consolidate.ts`, `test-cache-prefix-stability.ts`) PASS — **re-run with the real `.env`** after Justin provided it (originally run by DC with a dummy env); no regressions. Note: tests run via `tsx tests/<file>.ts` (there is no `npm test` script; vitest's default glob doesn't match the `test-*.ts` naming).
+
+### 1a. Identity truncation-canary completion (commit `f4f63bc` — orthogonal to cost)
+
+Justin flagged mid-session that some identity files lacked the truncation canary. **Reality: 6 of the 10 already had it** (the plain-text bottom marker + a `> **Truncation check:**` blockquote after the title); **4 were missing both halves** — `core.md`, `activities/triage.md`, `situations/gatekeeper.md`, and the new `activities/reflection.md`. Added the complete canary (top blockquote + bottom marker) to those 4, matching the existing form exactly. **The 6 already-complete files are net-unchanged in the diff** (I briefly added a wrong-form duplicate to them and reverted it — they're byte-identical to original). Cache-prefix test re-confirmed byte-identity holds and reflection.md stays excluded from the force-load. **Pure hygiene — no voice/behavior change.** It rides `lane-c/cost` because that's where I was working; AC0 can treat it as a separable mechanical commit. (Answers Justin's "does the canary injecting into the prompt cause problems?" — no: 6 identity files already inject it in prod without issue.)
 
 ---
 
@@ -49,7 +56,7 @@
 
 **Trigger cadence:** the checker scans hourly (`REFLECTION_CHECK_INTERVAL_MS`) but *fires* purely on the size gate — **no per-user daily cap** (Justin's call: "consolidate at a token count, even if more than once a day"). Population = `findUsersByStatus(["active","gatekeeper"])` minus system/admin roles (mirrors `checkProactiveOutreach`) → effectively Mark in v0.2.
 
-**Architectural note:** this makes `profile_jsonb.story` written for the **first time in v0.2**. ARCHITECTURE.md currently says story is "written ONLY by Reflection (v0.3+), empty in v0.2." AC3 has drafted the ARCH update (the LEAN-consolidation-lands-in-v0.2 framing) — **proposed to Justin for diff-review before commit** (source-of-truth; his explicit ask). If not yet committed at convergence, it's in AC3's chat with Justin / can be picked up as a convergence #lock absorption.
+**Architectural note:** this makes `profile_jsonb.story` written for the **first time in v0.2**. ARCHITECTURE.md previously said story is "written ONLY by Reflection (v0.3+), empty in v0.2." **AC3 updated ARCHITECTURE.md (committed `989ca26`) — Justin diff-reviewed + approved it.** It now frames the LEAN consolidation half as shipped in v0.2 (story written by the consolidation job; Reflection Module status "partially shipped"); the jsonc comments were kept light and point to the Reflection Module section for detail. This edit is on `lane-c/cost`, so it rides convergence with the code.
 
 ---
 
@@ -67,7 +74,7 @@ The brief listed Steps 10, 11a/b/c, 12. After loading the runtime + the new Phas
 ## 4. Cross-lane seams (what AC0 must resolve at merge)
 
 1. **`src/email/poll.ts` (Lane A / AC1's file)** — Lane C's ONLY touch: one `import { checkReflectionConsolidation }` (near the other db/user imports) + one `try/catch` checker block appended after the `checkMorningSweep` block in `startPolling`. Both annotated `⚠️ AC0 / Lane C`. **Merge action:** combine with Lane A's poll.ts changes; the checker block is additive and sits with the four sibling checkers. No logic overlap with Lane A's regions (Lane A works the email-handling + stale-check regions).
-2. **`src/triage/classify.ts`** — Lane C touched `loadCommonPrefix` (the `["reflection.md"]` exclusion) + added `loadReflectionSystemPrompt` just above `cachedCommonPrefix`. Per the cross-lane map, **Lane B** touches the MCP-tools region of this file (Steps 15/18/37) — different region; merge surface is small but verify.
+2. **`src/triage/classify.ts`** — Lane C's main touches are `loadCommonPrefix` (the `["reflection.md"]` exclusion) + the new `loadReflectionSystemPrompt` just above `cachedCommonPrefix` (Lane C's region). **⚠️ One Lane-C touch lands in Lane B's region:** the **N1** fix is a one-line edit to the `read_identity_module` *tool description*, which sits inside `buildEvrynMcpServer` — the **MCP-tools region the cross-lane map assigns to Lane B** (Steps 15/18/37). I made it under Justin's explicit "you can fix a stale comment" go-ahead. Collision risk is low (Lane B's edits are to *other* tools), but **AC0: watch for a merge conflict on the `read_identity_module` tool block** when combining with Lane B's classify.ts changes.
 3. **`src/db/llm-usage.ts`** — one additive line in `PATHWAY_ACTIVITY`. Trivial.
 4. **`identity/activities/reflection.md`** — new file, committed on `lane-c/cost` (`359d568`). **Do NOT merge to main until Mira has reviewed it** (it's an identity file; identity changes trigger a redeploy and are Mira's domain). See §6.
 
@@ -94,9 +101,9 @@ The brief listed Steps 10, 11a/b/c, 12. After loading the runtime + the new Phas
 
 ## 7. Follow-ups (tracked, not lost)
 
-- **SF1 (should-fix, trivial):** the RPC hardcodes `reason = 'size threshold exceeded'` while the `story_versions.reason` column comment says "the runtime sets it." For v0.2 the recorded value is accurate; the comment/code just disagree. Fix at convergence: either add a `reason` param to the RPC (+ pass it from `consolidateProfile`) or tighten the two comments to "v0.3 adds a reason param for event-based triggers."
-- **N1 (nit):** `read_identity_module`'s tool description (classify.ts ~line 800) still says "all activity modules are force-loaded — you already have everything," now untrue for reflection.md. Harmless (she never needs it outside consolidation, where the runtime loads it) but over-claims. Tweak the sentence at convergence.
-- **SF2:** v0.3 forward-flag — see §6.
+- **SF1 — DONE (committed `03e8fa2`).** Took the comment-tightening option: the `story_versions.reason` column comment now says the RPC sets it (hardcoded in v0.2; v0.3 adds a `reason` param for event-based triggers). No behavior change.
+- **N1 — DONE (committed `03e8fa2`).** `read_identity_module`'s tool description now names `activities/reflection.md` as the force-load exclusion (was over-claiming "you already have everything"). Comment-only.
+- **SF2:** v0.3 forward-flag — see §6. (Still open — correctly v0.3.)
 - **search_path on SECURITY DEFINER RPCs:** QC noted the new RPC doesn't `SET search_path` — but **neither does any existing RPC** (`append_pending_note` etc.). It *matches* the established posture; pinning `search_path` is a real hardening best practice but a **pre-existing project-wide gap**, not this build's regression. Defer to a v0.3 security-hardening pass across all RPCs (consistent with the deferred anon/authenticated default-privilege issue).
 
 ---
@@ -114,6 +121,7 @@ Justin raised a message-level memory idea (capture useful content, mark messages
 - Cost model: `evryn-team-workspace/shared/projects/product/research/2026.06.11 evryn-cost-analysis.md` (Lever 3 = this build).
 - Measurement plan: `_evryn-meta/docs/working/2026-06-17-cache-measurement-plan.md`.
 - Sprint home: `evryn-backend/docs/SPRINT-V0.2-HARDENING.md` (Step 10 = this; 11b done; 11a moot; 12 deferred to Step 57; Step 59 gets the 11b input above).
-- Build commits: `lane-c/cost` `03b0d50` (DC), `359d568` (reflection.md).
+- Build commits (`lane-c/cost`, atop `fcc8856`): `03b0d50` (DC build) · `359d568` (reflection.md draft) · `989ca26` (ARCH update) · `f4f63bc` (identity canary) · `03e8fa2` (N1/SF1). `_evryn-meta` (main): the handoff + measurement-plan commits.
+- **Net for AC0:** Lane C is fully committed + dev-live-tested. Convergence steps that remain are NOT mine: merge the branch, the PROD migration apply at deploy, the Mira voice pass on `reflection.md`, and (housekeeping) make the week-one measurement a tracked sprint Step (§8).
 
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
