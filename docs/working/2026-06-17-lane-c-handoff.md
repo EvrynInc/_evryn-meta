@@ -9,7 +9,7 @@
 ## 0. TL;DR for convergence
 
 - **Built + QC-GO:** LEAN v0.2 Reflection-consolidation (Sprint **Step 10**) + the cache-prefix regression test (Sprint **Step 11b**). Commits `03b0d50` (DC build) + `359d568` (AC's `reflection.md` draft) on `lane-c/cost`.
-- **ONE hard gate before this ships:** the migration must be **live-tested on DEV** (count-slice round-trip + a concurrent-append block test). AC3 could NOT run it — **no dev DB connection string on this laptop** (psql IS installed). This is a desktop/convergence task. Recipe is embedded in the migration file (lines 268-301) + see §5 below.
+- **G1 dev live-test: DONE + PASSED (AC3, 2026-06-17).** The migration was applied to DEV and fully live-tested — the count-slice round-trip + the concurrent-append row-lock block test both pass (§5). **Only the PROD apply remains** (deploy-time, coordinated). Throwaway test data cleaned up; dev verified via the connection ref (`postgres.maqkdesopsskptpxjbqs`).
 - **Scope changes from the original brief** (the "why it's different" record Justin asked for): **11a (1h-cache-TTL) is MOOT** (clustering, sprint Step 58, replaces it — and the SDK has no TTL knob anyway); **Step 12 (num_turns) is DEFERRED** (sprint Step 57 subsumes it); **11c (measurement) survives** and is now the lead cache deliverable. Detail §3.
 - **Cross-lane seam:** one import + one checker block in `src/email/poll.ts` (Lane A's file) — both comment-flagged `⚠️ AC0`. §4.
 - **reflection.md is a DRAFT for Mira** — voice is hers; needs her review before it's final. §6.
@@ -75,14 +75,12 @@ The brief listed Steps 10, 11a/b/c, 12. After loading the runtime + the new Phas
 
 ## 5. The migration apply + the live-test GATE (G1 — must happen before ship)
 
-**The migration is written but NOT applied.** Apply **dev-first** per ADR-037 (`backups/README.md` method): PG17 psql full path + `SUPABASE_DB_URL_DEV`, `pg_dump` before/after. **This needs the dev DB connection string (not on AC3's laptop) — likely the desktop session.**
+**Dev apply + G1 live-test: DONE + PASSED (AC3, 2026-06-17).** Applied to **dev** (`postgres.maqkdesopsskptpxjbqs`, verified via the connection ref — note `current_user` shows the generic `postgres` role under Supabase's pooler, so the *ref* is the authoritative project identifier) via the `backups/README.md` method (PG17 psql + `SUPABASE_DB_URL_DEV`). All G1 checks pass:
+- **Objects:** `story_versions` created, RLS = `t`, `service_role` granted, no anon/authenticated, `consolidate_profile` is `SECURITY DEFINER`.
+- **Count-slice round-trip** (ROLLBACK-wrapped): `consolidate_profile(user,'NEW STORY',3)` on a 5-note user → `{archived_count:3, remaining_count:2}`; story overwritten; **first 3 notes cleared, last 2 kept in order** (`[n4,n5]`); archive row = `OLD STORY` + `[n1,n2,n3]` + `note_count:3`; ROLLBACK clean (0 leftover).
+- **Concurrent row-lock block test** (the invariant only a live DB proves): one session held `… FOR UPDATE` on the row; a second session's write to the same row **blocked** (`canceling statement due to statement timeout … while locking tuple … in relation "users"`) and never applied. Race-safety proven. Throwaway rows cleaned up.
 
-**QC's hard gate (G1):** after applying to dev, run the migration's embedded ROLLBACK-wrapped round-trip (lines 268-301) and confirm:
-- `consolidate_profile(user, 'NEW STORY', 3)` on a 5-note user → `{archived_count:3, remaining_count:2}`; story overwritten; first 3 notes cleared, **last 2 kept in order**; `story_versions` row = old story + first-3 raw notes + new story + `note_count=3`.
-- Grant posture: RLS = `t`, `service_role` ×4 table grants, no anon/authenticated.
-- **The concurrent-append block test** (the one invariant only a live DB proves): two psql sessions — `BEGIN` a `consolidate_profile` (takes `FOR UPDATE`), then from session 2 fire `append_pending_note` on the same user → session 2 **blocks** until session 1 commits, and the appended note survives in `remaining_notes`.
-
-Then apply to PROD at the coordinated deploy (same recipe), `pg_dump` after, re-pull `docs/schema-reference.md`.
+**Only the PROD apply remains** — at the coordinated deploy (same recipe against `SUPABASE_DB_URL_PROD`), `pg_dump` before/after, re-pull `docs/schema-reference.md`. The migration is `CREATE TABLE IF NOT EXISTS` / `CREATE OR REPLACE FUNCTION` — idempotent + additive (does not touch existing data). **Dev now carries the migration** (left applied, as the dev-first state).
 
 ---
 
