@@ -19,16 +19,16 @@ This replaced the hand-relayed mailbox model on 2026-06-02. **Why:** it is drama
 
 ---
 
-## Spinning a DC or QC subagent — the brief shape
+## Spinning a DC, QC, or OC subagent — the brief shape
 
-> **"Startup Context Cascade" — the standardized term.** Each of DC and QC has a section by *exactly* that name in its CLAUDE.md (DC: `evryn-dev-workspace/CLAUDE.md`, "Startup Context Cascade — How to Orient in a New Repo"; QC: `evryn-quality/CLAUDE.md`, "Startup Context Cascade — Auto-load (tiered)"), listing precisely what it must load at startup. That uniform name is the anchor this whole protocol turns on: AC triggers it with the **verbatim words** in "The exact words" below, and the subagent has an unambiguous referent to load — no guessing what "your cascade" means. (AC's own startup cascade lives in `_evryn-meta/CLAUDE.md` under its own tier names — Light / Full — and is *not* invoked this way, since AC is never spun as a subagent.)
+> **"Startup Context Cascade" — the standardized term.** Each of DC, QC, and OC has a section by *exactly* that name in its CLAUDE.md (DC: `evryn-dev-workspace/CLAUDE.md`, "Startup Context Cascade — How to Orient in a New Repo"; QC: `evryn-quality/CLAUDE.md`, "Startup Context Cascade — Auto-load (tiered)"; OC: `evryn-ops/CLAUDE.md`, "Startup Context Cascade — How OC Orients"), listing precisely what it must load at startup. That uniform name is the anchor this whole protocol turns on: AC triggers it with the **verbatim words** in "The exact words" below, and the subagent has an unambiguous referent to load — no guessing what "your cascade" means. (AC's own startup cascade lives in `_evryn-meta/CLAUDE.md` under its own tier names — Light / Full — and is *not* invoked this way, since AC is never spun as a subagent.)
 
 This shape is proven (2026-06-02: QC's review of DC4, DC's notifyDev build). Honor all six parts — the failure modes below are real:
 
 1. **Identity override + cascade trigger + the PRECISE LOAD LIST.** Every brief must do three things in the subagent's first instruction: (a) redirect it off AC's identity and name its own operating manual; (b) trigger its load-defining section by name (its **Startup Context Cascade** or equivalent — terminology varies; see the anchor set in part 2); and (c) — **mandatory** — **name every file of its load explicitly** in the brief: *"load your cascade, INCLUDING explicitly: X, Y, Z."* Do NOT rely on *"load your cascade"* resolving on its own. **Confirmed empirically (2026-06-02):** a spawned subagent DOES auto-inherit AC's CLAUDE.md (it arrives in the `# claudeMd` system-reminder, no tool call) — but it does NOT auto-load the target agent's own CLAUDE.md, its agent definition, or its cascade. **And confirmed the hard way (2026-06-17):** a *correct manual is not enough either* — DC's cascade section existed and DC still skipped it (the trigger can misfire even when the anchor is present), which lobotomized an entire build wave. So the spinner does the loading work up front (part 2) and hands over the exact file list; the subagent's job is to *read* the named files, not to *discover* them. **Use the verbatim wording in "The exact words" below — paste it, don't paraphrase** — then append the explicit file list. (Keep the identity redirect permanently, even if loading behavior ever changes.)
 2. **Assemble the load yourself, up front — grep-the-cascade.** Before you spin, **grep the subagent's load-defining file(s) for the anchor SET, read just the matched sections (heading → next `##`), assemble the union of every file named, and pass that explicit list in the brief.** This reverses the older "don't read their manual, to save context" instinct: grepping only the load-lines is cheap, and it is the control that makes loading *provable* rather than *plausible*. The load can be **split across more than one file** — a team agent's is split across its team manual, its agent-definition, and its memory file (see "Spinning a team subagent") — so grep all of them. Assemble two layers: the agent's **base cascade**, PLUS everything *beyond* it this trip needs — the diff target, the specific runtime files (make sure to respect the logic in the agent's own manual/definition as to why its runtime load is as it is), and **the higher-altitude docs that frame the work (the Hub, the technical-vision spoke, the relevant build docs). Slow down before deciding any of those is irrelevant** — higher-level context is what stops a subagent from working generically instead of for what *this* trip actually needs. State plainly that the whole list is **required reading, not suggestions** — *"load all of these in full; they're part of the job."* Unnamed = unread.
 
-   **Always name the agent's "Context Discipline" section as part of the base load** (every Evryn manual now carries one). That section is the canary-check + stop-on-gaps + *"an agent without its full cascade isn't that agent — it's a blank model guessing"* discipline — i.e. the lobotomy antidote itself. It's cheap to name and it's exactly the beat that lets a subagent self-catch a bad load mid-run.
+   **Always name the agent's "Context Discipline" section as part of the base load** (every Evryn manual now carries one). Tell the agent that executing the Context Discipline is non-negotiable, and that it can *only* begin work once it has been passed successfully (the `<mandatory_load>` block in "The exact words" below encodes this as a gate). That section is the canary-check + stop-on-gaps + *"an agent without its full cascade isn't that agent — it's a blank model guessing"* discipline — i.e. the lobotomy antidote itself. It's cheap to name and it's exactly the beat that lets a subagent self-catch a bad load mid-run.
 
    **The anchor SET.** The primary anchor **"Startup Context Cascade"** is now used across AC / DC / QC / OC (as their load-section *heading*) and all eight team agent-definitions (as the **"Startup Context Cascade:"** label inside each def's `## Context Loading` section) — standardized 2026-06-19. The SET below *retains* the legacy/variant terms ("Context Loading", "Always read on load", "How … Orients") as **defense against an un-synced or older manual** (the exact failure that lobotomized QC off a stale fork — never assume the on-disk copy is current). Grep the agent's manual(s) for:
    `Startup Context Cascade | Context Loading | How .* Orients | Required Context | Always read on load | Auto-load`
@@ -42,13 +42,36 @@ This shape is proven (2026-06-02: QC's review of DC4, DC's notifyDev build). Hon
 
 ## The exact words — paste this verbatim (fill the brackets)
 
-The two things that must be **identical every time** are the identity redirect and the Startup Context Cascade trigger. Paste this block at the very top of every DC/QC brief, fill the brackets, then add the enumerated file list (part 2), the task (part 3), isolation (part 4), and the questions-first gate (part 5) below it:
+**Every DC/QC/OC brief is laid out in this tagged structure.** XML-style tags make the boundary between *what you must load* and *what you're asked to do* **utterly unambiguous** — so a subagent can't slide out of the load straight into the task and skip it (the exact slip this guards against). Paste the skeleton verbatim; fill the brackets, the file list, and the task. The `<identity>` and `<mandatory_load>` blocks are **identical every time** (only the bracketed name/manual and the file list change); the rest is per-trip. Map of the six parts → tags: part 1 = `<identity>` + `<mandatory_load>`; part 2 (the assembled file list) lives inside `<mandatory_load>`; part 3 = `<task>`; part 4 = `<isolation>`; part 5 = `<questions_first>`; part 6 (receipts) = `<receipts>`.
 
-> You are **[DC | QC]**. The `CLAUDE.md` that auto-loaded into your context is **AC's** (Architect Claude's) operating manual — that is **NOT yours**, and you are not AC. Your operating manual is **[`evryn-dev-workspace/CLAUDE.md` | `evryn-quality/CLAUDE.md`]**. Read it in full, first, before anything else.
->
-> Then load your **Startup Context Cascade** — the section by exactly that name in your CLAUDE.md — and load **every file it names, in full**, before you do any work. This is not optional and not a formality: an agent that has not loaded its Startup Context Cascade is **not [DC | QC]** — it is a generic model guessing, missing the methodology, constraints, and context that make it competent, and it **will produce confident, wrong work that breaks real things**.
->
-> Begin your reply with the exact list of files you actually read (your receipts), before any other output.
+```
+<identity>
+You are [DC | QC | OC]. The CLAUDE.md that auto-loaded into your context is AC's (Architect Claude's) operating manual — that is NOT yours, and you are not AC. Your operating manual is [evryn-dev-workspace/CLAUDE.md | evryn-quality/CLAUDE.md | evryn-ops/CLAUDE.md]. Read it in full, first, before anything else.
+</identity>
+
+<mandatory_load>
+Load your Startup Context Cascade — the section by exactly that name in your CLAUDE.md — and load every file listed below, IN FULL, before you do anything in <task>. This is not optional and not a formality: an agent that has not loaded its Startup Context Cascade is NOT [DC | QC | OC] — it is a generic model guessing, missing the methodology, constraints, and context that make it competent, and it WILL produce confident, wrong work that breaks real things.
+
+Load all of these, in full — required reading, not suggestions:
+- [explicit file list: every file the grep-the-cascade step surfaced, PLUS any task-specific files]
+
+Then execute your CLAUDE.md's "Context Discipline" section as a GATE: confirm every file above loaded completely (canary-check each). This gate is NON-NEGOTIABLE — you may begin <task> ONLY once it has passed. If anything is missing, empty, or truncated, STOP and flag it; never proceed half-loaded.
+</mandatory_load>
+
+<receipts>
+Begin your reply with the exact list of files you actually read (your receipts), before any other output.
+</receipts>
+
+<task>
+[the concrete task — part 3]
+</task>
+
+<questions_first>
+Do the work — or, if a real gap would compromise it, output a numbered list of blocking questions INSTEAD and stop. Don't guess past a real gap; don't manufacture questions to dodge the work.
+</questions_first>
+```
+
+For build/review work, add an `<isolation>` block (part 4): *"You work in a dedicated worktree on your own branch; you never touch `main`; you never deploy (`railway up`)."* For a read-only task, omit `<isolation>` and say "read-only — you write nothing, edit nothing, touch no files" inside `<task>`.
 
 **Why verbatim:** "Startup Context Cascade" is a section that exists by *exactly* that name in DC's and QC's CLAUDE.md. The precise, standardized name is the anchor — it removes the ambiguity that let older paraphrases ("read your context cascade") point at nothing in particular. **Keep the wording in this block and the section names in their CLAUDE.md in lockstep** — if one changes, change the other in the same commit, or the anchor breaks silently.
 
@@ -68,11 +91,35 @@ So name all of them, in order, in the same "read and faithfully follow, in full"
 3. **`evryn-team-workspace/.claude/agent-memory/<name>/MEMORY.md`** — the agent's persistent memory. **Run the truncation-canary check** (memory files can silently truncate — confirm the bottom canary line; if it's missing, the load is partial → reload before relying on it).
 4. **Whatever that agent's definition itself names** as its context set (spokes, project docs, current-state) — the *full* set per the definition, grep-assembled, not just the definition file. (Note: a definition's `## Context Loading` section may NOT name its own MEMORY.md — that's loaded by a separate team-startup instruction a subagent doesn't auto-run — which is exactly why you name all four explicitly.)
 
-**The exact words for a team subagent — paste verbatim (fill the brackets):**
+**The exact words for a team subagent — same tagged structure; paste verbatim (fill the brackets):**
 
-> You are **[Soren | Mira | …]**, [role]. The `CLAUDE.md` that auto-loaded into your context is **AC's** (Architect Claude's) operating manual — that is **NOT yours**, and you are not AC. Your identity and operating context live across several files that did **NOT** auto-load. Load these, in full, in order, before anything else: (1) **`evryn-team-workspace/CLAUDE.md`**; (2) **`evryn-team-workspace/.claude/agents/[name].md`** (your definition); (3) **`evryn-team-workspace/.claude/agent-memory/[name]/MEMORY.md`** (your memory — confirm its truncation canary; if missing, reload); and (4) everything your definition names as your context set, INCLUDING explicitly: **[List the agent's specific context-set files]**.
->
-> Begin your reply with the exact list of files you **actually** loaded this turn (your receipts), before any other output.
+```
+<identity>
+You are [Soren | Mira | …], [role]. The CLAUDE.md that auto-loaded into your context is AC's (Architect Claude's) operating manual — that is NOT yours, and you are not AC. Your identity and operating context live across several files that did NOT auto-load.
+</identity>
+
+<mandatory_load>
+Load these, IN FULL, before you do anything in <task> — required reading, not suggestions:
+1. evryn-team-workspace/CLAUDE.md (the team operating manual)
+2. evryn-team-workspace/.claude/agents/[name].md (your definition)
+3. evryn-team-workspace/.claude/agent-memory/[name]/MEMORY.md (your memory — confirm its truncation canary; if missing, reload)
+4. everything your definition names as your context set, INCLUDING explicitly: [list the agent's specific context-set files]
+
+Then execute the "Context Discipline" section (in evryn-team-workspace/CLAUDE.md) as a GATE: confirm every file above loaded completely. NON-NEGOTIABLE — begin <task> ONLY once it has passed; if anything is missing, empty, or truncated, STOP and flag it.
+</mandatory_load>
+
+<receipts>
+Begin your reply with the exact list of files you actually loaded this turn (your receipts), before any other output.
+</receipts>
+
+<task>
+[the concrete task]
+</task>
+
+<questions_first>
+Do the work — or, if a real gap would compromise it, output a numbered list of blocking questions INSTEAD and stop. Don't guess past a real gap; don't manufacture questions.
+</questions_first>
+```
 
 ---
 
