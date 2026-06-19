@@ -161,6 +161,8 @@ The vision: a world where the *default* would be that people can be trusted and 
 
 ## Repositories
 
+> **Canonical repo list** — expected remote, canonical branch, live sync status — is `docs/repo-inventory.md`. The table below is a purpose-orientation snapshot; if it and the inventory ever disagree on status, the inventory is almost always the definitive edition, and this version should be updated.
+
 | Repo | Purpose | Status |
 |------|---------|--------|
 | `_evryn-meta` | AC's home. Hub, cross-repo docs | Active |

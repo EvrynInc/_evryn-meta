@@ -31,22 +31,8 @@ Org: **`EvrynInc`**. All remotes are `https://github.com/EvrynInc/<repo>.git`.
 
 ---
 
-## Session-start / machine-switch sync ritual (lightweight)
+## Session-start sync check → moved to the manuals
 
-Before relying on any repo (especially after switching machines), per repo: `git fetch`, then assert **local HEAD == `origin/<canonical branch>`**, **working tree clean**, and **branch == canonical**. Anything that fails gets surfaced to Justin, not silently worked around. (A tiny script is OC's domain — AC6 §7.)
-
-The fastest check that the branch is right everywhere:
-
-```bash
-cd /path/to/Evryn/Code
-for d in _evryn-meta evryn-backend evryn-dev-workspace evryn-quality evryn-ops \
-         evryn-team-workspace evryn-team-agents evryn-website \
-         evryn-langgraph-archive evryn-prelaunch-landing; do
-  [ -d "$d" ] && echo "$d -> $(git -C "$d" branch --show-current)"
-done
-# Expected: all 'main' EXCEPT evryn-team-agents -> master (frozen).
-```
-
-**Load-bearing-file rule (AC6 §7):** when a source-of-truth / identity file is edited (CLAUDE.md, protocols, identity, this inventory), it isn't "done" until the commit is confirmed on GitHub's canonical branch — author-then-verify, because the 2026-06-06 QC standardization was authored but its landing on the shared chain was never verified, which is exactly how the fork went unnoticed.
+The session-start / machine-switch **sync ritual** + the **load-bearing-file rule** now live in **AC's `CLAUDE.md` → SESSION STARTUP ("Repo-sync check")**, and each agent's manual carries a one-line branch-check — because a sync ritual is only useful *at startup*, not when someone finally opens this inventory (ADR-042 / AC6 §7). This file stays the canonical **data**: the table above (each repo's canonical branch + status) is what those checks assert against.
 
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
