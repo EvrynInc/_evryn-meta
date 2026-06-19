@@ -89,14 +89,7 @@ Their `evryn-team-workspace\shared\current-state` is append-only between standup
 
 ### Repositories
 
-- `_evryn-meta` — AC's home. Source-of-truth documents (Hub, spokes, ADRs, final legal documents) and AC operations (current-state, mailboxes, sessions, protocols). Active work, drafts, and research go in `evryn-team-workspace`.
-- `evryn-team-agents` — SDK-era agent build. Frozen (ADR-021). Insurance if Cowork/Code proves insufficient.
-- `evryn-team-workspace` — Agent team built for use inside Claude Code and Claude CoWork.
-- `evryn-dev-workspace` — DC's home. Identity and methodology.
-- `evryn-ops` — OC's home. Operations, monitoring, deployment. Created when Phase 0 scaffolding is running (see sprint doc).
-- `evryn-quality` — QC's home. Code review, testing, quality gates. Created when triage pipeline is running (see sprint doc).
-- `evryn-website` — Marketing site (evryn.ai). Live.
-- `evryn-backend` — Product backend. Active (MVP build).
+**The repo list — every repo, its expected remote, its canonical branch, and active/frozen status — lives in ONE canonical home: [`docs/repo-inventory.md`](docs/repo-inventory.md).** Read it there; don't keep a second copy here — that's the drift this kills ([ADR-042](docs/decisions/042-subagent-loading-discipline.md)). AC's home is `_evryn-meta` (source-of-truth docs + AC ops); the one routing nuance worth keeping inline: **active work, drafts, and research go in `evryn-team-workspace`**, not here.
 
 ### AC's known tools (as of March 2026)
 
