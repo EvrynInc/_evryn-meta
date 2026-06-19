@@ -56,9 +56,9 @@ If you look at this list and reason that you don't need all of it for the task i
 
 - [explicit file list — EVERY file, including the agent's own CLAUDE.md (list it here too, even though <identity> already told them to read it, so the list is complete and unambiguous), the full cascade, and any task-specific files]
 
-If any file comes back only partially (a tool or token cap returns part of it), KEEP GOING BACK and reading the next section until you have loaded the WHOLE reading assignment. A partial load is NOT a load.
+If any file comes back only partially (a tool or token cap returns part of it), GO BACK and read until you have loaded the WHOLE reading assignment. A partial load is NOT a load.
 
-Then execute your CLAUDE.md's "Context Discipline" section as a GATE: confirm every file above loaded completely (Truncation Canary-check each). This gate is NON-NEGOTIABLE — you may begin <task> ONLY once it has passed. If anything is missing, empty, or truncated, STOP and flag it as a blocking question; never proceed half-loaded. 
+Then execute your CLAUDE.md's "Context Discipline" section as a GATE: confirm every file above loaded completely (Truncation Canary-check each). This gate is NON-NEGOTIABLE — you may begin <task> ONLY once it has passed. If anything is missing, empty, or truncated, go back and get what you need. If you can't, then just STOP and flag it as a blocking question; never proceed half-loaded. 
 
 **"It's enough for this narrow task" is NOT a valid reason to proceed past the gate** — that exact judgment is the failure this gate exists to catch. Trust me: YOU'VE BEEN WRONG **MANY** TIMES IN THE PAST when you've told yourself "I don't need to load what I'm being told to load". I promise you: you DON'T HAVE THE CONTEXT TO MAKE THAT JUDGMENT.
 </mandatory_load>
@@ -110,9 +110,9 @@ If you look at this list and reason that you don't need all of it for the task i
 3. evryn-team-workspace/.claude/agent-memory/[name]/MEMORY.md (your memory — confirm its truncation canary; if missing, reload)
 4. everything your definition names as your context set, INCLUDING explicitly: [list the agent's specific context-set files]
 
-If any file comes back only partially (a tool or token cap returns part of it), KEEP GOING BACK and reading the next section until you have loaded the WHOLE reading assignment. A partial load is NOT a load.
+If any file comes back only partially (a tool or token cap returns part of it), GO BACK and read until you have loaded the WHOLE reading assignment. A partial load is NOT a load.
 
-Then execute the "Context Discipline" section (in evryn-team-workspace/CLAUDE.md) as a GATE: confirm every file above loaded completely. NON-NEGOTIABLE — begin <task> ONLY once it has passed; if anything is missing, empty, or truncated, STOP and flag it as a blocking question. 
+Then execute the "Context Discipline" section (in evryn-team-workspace/CLAUDE.md) as a GATE: confirm every file above loaded completely. NON-NEGOTIABLE — begin <task> ONLY once it has passed; if anything is missing, empty, or truncated, go back and get what you need. If you can't, then just STOP and flag it as a blocking question. 
 
 **"It's enough for this narrow task" is NOT a valid reason to proceed past the gate** — that exact judgment is the failure this gate exists to catch. Trust me: YOU'VE BEEN WRONG **MANY** TIMES IN THE PAST when you've told yourself "I don't need to load what I'm being told to load". I promise you: you DON'T HAVE THE CONTEXT TO MAKE THAT JUDGMENT.
 </mandatory_load>
