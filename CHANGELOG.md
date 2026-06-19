@@ -8,6 +8,13 @@
 
 ---
 
+## 2026-06-18 (AC0 — lobotomized-subagent disaster: forensics + clean-respin packout)
+
+- **The 2026-06-17 5-AC v0.2-hardening wave (AC1-5) ran on lobotomized subagents** — DC/QC/Soren spun without the startup load cascade, so AC↔DC↔QC coordination never fired. **Caught before any merge; all wave code is junk — NO merge.**
+- **Root cause (AC6 forensics — `docs/working/2026-06-18-sync-forensics-report.md`):** no git corruption (the desktop was just un-pulled since 6/16, misread as up-to-date by a status check that never fetched); QC lobotomized because the laptop's `evryn-quality` is on a stale `master` (good manual on `main`); **DC's manual was fine and it STILL skipped the cascade** → lesson: precise-load every subagent on every spin; "testing shows it works" is not sufficient. Plus a protocol gap — `ac-orchestration-protocol.md` has no provision for loading *team* subagents (→ a lobotomized Soren vet).
+- **Recovery (`docs/sessions/2026-06-18-ac0-handoff.md`):** a protocol-fix AC runs FIRST (verify every agent can *receive* its load + fix the protocol incl. team-subagents; bake in precise-load + the grep-the-cascade technique) — MUST precede any re-spin — then harvest each AC's pre-spin thinking + Q&A and re-spin AC1-5 clean. AC6 ran a laptop git reconciliation (quality `master→main`, etc.).
+- **Stands (AC0 doc-work, zero subagents):** the sprint cost-levers integration (`SPRINT-V0.2-HARDENING.md` Phase 2b / Steps 57-60, Step 44 → Haiku pre-screen, Step 61 gatekeeper-resolution, numbering-convention note, process-tightening); the day-1 orchestration briefs + designs (lane brief, M1, staging, AC6 forensics brief); **ADR-041** (M1 silent-death, AC5). **ADR owed** for the loading-discipline fix (protocol-fix AC, at design time).
+
 ## 2026-06-16 (AC0 — v0.2 go-live bundle DEPLOYED + post-deploy cleanup)
 
 - **DEPLOYED.** Merged the go-live bundle → `evryn-backend/main` (`49fb6ff`) and shipped via `railway up` (Oregon/us-west-2, SUCCESS, healthy). Live: quiet-hours redesign (ADR-040, `notify_queue` retired) · morning-sweep digest · **M1 emergency channel Stage 1** (`#emergency-alerts` — channel/plumbing only; the silent-death *detectors* are round-2) · deterministic **cost pass-stamp** (`record_pass`) · Phase-6 Mira identity batch + Pass-line. **Both Slack channels confirmed live by Justin** (approvals "awake" + emergency smoke).
