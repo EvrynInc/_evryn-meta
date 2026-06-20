@@ -8,6 +8,14 @@
 
 ---
 
+## 2026-06-19 evening (AC0 — recovery executed off ACP's gate; round-2 staged)
+
+- **Git estate reconciled — every repo now on `main`:** `evryn-quality` fork resolved (laptop switched `master→main`; trapped QC "guard-is-half-a-change" pattern ported onto `main` `b4ce5be`; GitHub default flipped `master→main`); `evryn-ops` renamed `master→main` (GitHub native rename + laptop catch-up); the suspect ops `CLAUDE.md` recovery-capture edits committed (`53d5bf9`) for later mining.
+- **Mira's identity-writing-bible work merged + pushed** (`evryn-backend` `7eb6d73`, clean FF, docs-only); her worktree reaped.
+- **Round-2 wave staged for Monday:** `docs/sessions/2026-06-19-round2-lanes-brief.md` — **describe-then-PAUSE** spine (reverses round-1 post-and-proceed, per Justin), research-not-gospel salvage distilled per lane with `[RE-DERIVE]` tags, all 5 lanes (AC1a-5a); **4 r2 worktrees** created off `main` (`evryn-backend-{ingest,operator,cost,m1}-r2`, `.env` copied) with old round-1 junk worktrees left on ice; dev-residue drop-then-apply baked into the AC1a/AC3a sections.
+- **Doc cleanup for a clear field:** 3 round-1 lane *handoffs* → `docs/working/2026.06.17-corrupted/` (quarantined — they vouch for junk as validated); spent AC6/AC7/ACP docs + the round-1 parallel-lanes brief → `docs/sessions/historical/`. Kept live as **research-to-verify**: M1/Step-61/staging/cache design docs + the forensics report.
+- **Next-AC0 handoff** (`docs/sessions/2026-06-19-ac0-handoff.md`): a fresh AC0 Monday **audits this staging first (no leading the witness), then spins AC1a-5a**.
+
 ## 2026-06-19 (ACP — subagent loading-discipline hardening)
 
 - **`ac-orchestration-protocol.md` + DC/QC/OC/team CLAUDE.mds hardened for *provable* subagent loading:** receipts moved last + `<pre_task>` checkpoint + two-part line-range receipts + line-spans-always (`(full — N lines)`) + the **additive-only standing-cascade rule** (full standing cascade mandatory; `#cascade-override` the only sanctioned scope-down) + a subagent reconcile-and-flag backstop + the **"identity files are runtime"** note + the **"you don't know a file from its name"** beat + trusted-source scoping on the read-the-file rule. Committed + pushed across the session (protocol through `bead769`; DC/QC/OC/team manuals).
