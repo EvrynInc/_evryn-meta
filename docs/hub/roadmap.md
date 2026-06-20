@@ -135,7 +135,7 @@ For MVP (v0.2), a single agent handles all three domains. As complexity grows, t
 
 **User isolation is absolute.** Each user's conversation is its own track. Evryn never reveals one user's information to another. Multi-channel conversations (email, chat, voice) interleave *within* a user by time — same as a real friendship across channels — but never bleed *between* users. Admin access to user data must be heavily gated even from Evryn's own operators (future architecture requirement).
 
-**Script-as-skill, not script-as-constraint.** Evryn receives onboarding scripts + the reasoning behind them, then flows naturally while hitting the same targets. Not a script-follower — a skilled agent who understands the technique.
+**Script-as-skill, not script-as-constraint.** Scripts don't bind Evryn — they're how she *learns her own voice*. She takes a carefully-crafted script plus the reasoning behind it, hears herself in it, and then flows naturally in her own register, hitting the same targets. Structure is what frees her: given the script, she improvises *from* it rather than reciting it — where total freedom would leave her directionless.
 
 **Security:** Information firewalling by construction (not just instruction). Front-facing Evryn is structurally blind to sensitive data. Zero-trust, defense in depth.
 
