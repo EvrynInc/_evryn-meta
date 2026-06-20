@@ -83,7 +83,9 @@ Three DC spins this session, all on `emergency.ts` / the operator-email quiz:
 
 ---
 
-## 6. THE ONE LESSON THAT BIT HARDEST (so you don't repeat it)
+## 6. THE LESSONS THAT BIT HARDEST (so you don't repeat them)
+The lesson that bit **hardest**: when testing the ac-orchestration-protocol's exact wording, the the prior ACP started getting sloppy and using its own wording, defeating the *entire purpose* of the test: to test the protocol's new wording, to see if it worked, *exactly* as written. 
+
 When standardizing the team agent-defs, the prior ACP renamed the **`## Context Loading` section header** to `## Startup Context Cascade` — WRONG. `## Context Loading` is a broader umbrella (startup + on-demand + drill-in); the thing to standardize was the **`**Always read on load:**` bold label *under* it → `**Startup Context Cascade:**`**. Reverted + redone. **Lesson: standardize the cascade *element*, not the umbrella header — and read the actual structure before bulk-editing 8 files.**
 
 ---
