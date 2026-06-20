@@ -8,6 +8,13 @@
 
 ---
 
+## 2026-06-19 (ACP — subagent loading-discipline hardening)
+
+- **`ac-orchestration-protocol.md` + DC/QC/OC/team CLAUDE.mds hardened for *provable* subagent loading:** receipts moved last + `<pre_task>` checkpoint + two-part line-range receipts + line-spans-always (`(full — N lines)`) + the **additive-only standing-cascade rule** (full standing cascade mandatory; `#cascade-override` the only sanctioned scope-down) + a subagent reconcile-and-flag backstop + the **"identity files are runtime"** note + the **"you don't know a file from its name"** beat + trusted-source scoping on the read-the-file rule. Committed + pushed across the session (protocol through `bead769`; DC/QC/OC/team manuals).
+- **Proven FULL-load across DC, QC, OC, and Soren (team split-file).** A spinner-side truncation regression (an AC dropping QC's identity files by judgment) was caught and closed. Loading is reliable *when AC checks the two-part receipts and re-runs on any partial* — **not** deterministic (it's still prompting). **Gate clears for AC0** to harvest the AC1-5 salvage + re-spin clean.
+- **Durable fix queued: an SDK force-load harness** (per-call `query({systemPrompt})` force-load — the mechanism Evryn's runtime already uses) as the real deterministic answer. Formal ADR deferred until scoped.
+- Verified: batch-3 (cross-repo links in the active CLAUDE.mds) already conforms to the sibling-relative convention — no fix needed. Still open: the OC session-start sync-ritual script (flagged in `docs/repo-inventory.md` + ADR-042).
+
 ## 2026-06-18 (AC0 — lobotomized-subagent disaster: forensics + clean-respin packout)
 
 - **The 2026-06-17 5-AC v0.2-hardening wave (AC1-5) ran on lobotomized subagents** — DC/QC/Soren spun without the startup load cascade, so AC↔DC↔QC coordination never fired. **Caught before any merge; all wave code is junk — NO merge.**
