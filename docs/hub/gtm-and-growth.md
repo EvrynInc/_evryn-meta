@@ -27,6 +27,20 @@ The Master Plan's GTM was written assuming a traditional startup with a human te
 
 ---
 
+## Voice Is the Growth Engine
+
+Evryn's growth engine is not built alongside the product — it *is* the product's voice. Because Evryn grows by word of mouth (the bar is "a conversation they'd tell a friend about"), the felt quality of talking to her is what makes someone tell a friend. The voice and the growth engine are the same thing.
+
+This reframes the growth function: the job is not to build a separate acquisition machine and bolt it onto the product — it is to **protect and amplify the organic engine already being built into Evryn's voice.** Supply-side recruiting, community presence, PR, and paid channels are *supplements* that make the organic engine more efficient, never replacements for it.
+
+Two forces make this strategic, not sentimental:
+- **Voice degradation reverses the cascade.** In a high-trust community, people feel it when a platform's voice goes hollow under commercial or internal pressure — and word of mouth runs in reverse as fast as it ran forward. Protecting the voice *is* protecting growth.
+- **The architecture protects the voice on purpose.** Evryn's identity and voice modules are loaded into every single interaction so her voice stays anchored under load — a structural defense of the growth engine, not just a craft preference.
+
+The operating consequence under cost pressure: **cut waste, never voice.** "Voice" here is not tone or phrasing — it is *who Evryn is*, expressed through how she speaks. So where her per-interaction cost must come down, it comes down by trimming wasted processing and verbose internal notes — never by flattening the character, warmth, and judgment that make her *her*. "I'd rather pay a higher bill and have a genuinely Evryn Evryn" (Justin, 2026-06-19).
+
+---
+
 ## Film Industry as Ignition Point
 
 The plan targets the film industry first because:
