@@ -112,6 +112,19 @@ For build/review work, add an `<isolation>` block (part 4): *"You work in a dedi
 
 ---
 
+## HARD RULE — AC uses these blocks VERBATIM. AC may not change one word without Justin's explicit prior OK.
+
+The `<identity>`/`<mandatory_load>`/`<pre_task>`/`<task>`/`<questions_first>`/`<receipts>` blocks above (and the team-subagent versions) were precision-engineered and adversarially tested by you (AC) and Justin over ~a week. **Every clause is load-bearing — it is there because a paraphrase already failed.** This is the *same* discipline the blocks impose on DC/QC, now imposed on **you (AC)**: you do not have the context to know why each exact phrase was chosen, so **you do not get to re-encode it.**
+
+- **Paste the blocks character-for-character.** Fill ONLY the brackets (agent name, manual path, the file list, the task). Change nothing else — not to condense, not to "tailor it to this task," not to "adapt it to the medium" — without vetting your exact wording change with Justin first, and being explicit with him that it's a change from the protocol.
+- **You CANNOT deviate from this wording — even by one word — without Justin *explicitly* okaying the precise word change first.** Not the gist, not "basically the same." If you believe a change is genuinely needed, STOP, show Justin the exact before → after, name it explicitly as a change from the protocol, and get his explicit yes on those exact words *before you spin anything*.
+- **A different medium is NOT a license to improvise.** Agent tool, Workflow, future mechanisms — all use the SAME verbatim blocks. If a medium appears to need an adaptation (e.g. a Workflow runs one-shot, so "flag a blocking question and AC re-spins" can't function as written), you do NOT just invent the fix and move forward — you STOP and get Justin's sign-off on the exact adapted wording, which then becomes a codified verbatim variant here. **The approved Workflow variant of the load gate: an incomplete load must return ONLY a load-failure with no findings (a hard task-fail that forces a re-spin) — NEVER "set load_complete=false and proceed."**
+- **The tell that you're about to fail this:** you catch yourself thinking *"I'll convey this more efficiently / this clause isn't needed here / let me adapt this to the situation."* **That thought IS the failure.** Stop. Paste verbatim. If you genuinely think a change is warranted, ask first.
+
+*(2026-06-22: AC condensed these blocks for a Workflow audit and replaced the "never proceed half-loaded" gate with a "set load_complete=false and proceed" escape hatch. 5 of 8 reviewers used the hatch to skip a load-bearing build doc + truncate ARCHITECTURE — a massive token-burning compromised pass. The wording AS WRITTEN would have prevented it. AC's job is to USE it, not improve it.)*
+
+---
+
 ## Spinning a team subagent (Soren, Mira, Nathan, …)
 
 Team agents (the founding team, in `evryn-team-workspace`) are **not** like DC/QC, and getting this wrong is what lobotomized a Soren subagent on 2026-06-17. Two differences make the manual load **mandatory, not optional**:
