@@ -8,6 +8,13 @@
 
 ---
 
+## 2026-06-22 (AC0 — foundation audit + subagent-loading hardening)
+
+- **Foundation audit of the shipped v0.2 runtime — complete + validated** (3 workflow passes: meta → deep-dive → BUILD-loaded validation). 115 findings, **0 refuted / 99 confirmed / 16 reframed** — the foundation is SOUND. Record: `docs/working/2026-06-22-foundation-audit-findings.md`. Marquee: the Slack-operator-mode "no verified-sender gate" is real (the single biggest doc-vs-runtime divergence) but recalibrated to **NOT-a-v0.2-blocker** (approval gate + single channel-member are the de-facto controls). The one true v0.2 go-live blocker stays **M1**; the `service_role`/RLS-bypass cluster = documented-and-accepted v0.2 (BUILD S1). New v0.2 items → **SPRINT Steps 62–68**, folded into the round-2 lane briefs.
+- **Subagent-loading discipline hardened (durable fix for an AC-side failure this session):** AC condensed the verbatim subagent-brief blocks for a Workflow audit + added an escape hatch → 5/8 reviewers skipped a load-bearing doc. `docs/protocols/ac-orchestration-protocol.md` now carries a **HARD RULE** — AC pastes the verbatim blocks character-for-character, no one-word deviation without Justin's explicit prior OK, + the codified Workflow load-gate variant (incomplete load → return ONLY a load-failure).
+- **Process codified:** describe-then-pause (AC vets the plan with Justin, then runs autonomously) in the orchestration protocol; ping-before-workflow + the rate-limit/batch-of-3 gotcha in `CLAUDE.md` (workflows hang silently on Justin's auth).
+- **Triage-reasoning-on-a-downgrade** (Justin's catch) captured + tracked as SPRINT Step 68 + a cost-levers §5 breadcrumb (the Haiku-tier boundary).
+
 ## 2026-06-19 evening (AC0 — recovery executed off ACP's gate; round-2 staged)
 
 - **Git estate reconciled — every repo now on `main`:** `evryn-quality` fork resolved (laptop switched `master→main`; trapped QC "guard-is-half-a-change" pattern ported onto `main` `b4ce5be`; GitHub default flipped `master→main`); `evryn-ops` renamed `master→main` (GitHub native rename + laptop catch-up); the suspect ops `CLAUDE.md` recovery-capture edits committed (`53d5bf9`) for later mining.

@@ -10,6 +10,11 @@ Learnings from building AI agents that will help when building Evryn (the produc
 
 ---
 
+## Subagent Orchestration & Loading
+
+### The brief's load-discipline wording is precision-engineered — paste it verbatim; do NOT "improve" it
+When AC spins DC/QC/team subagents, the `<identity>`/`<mandatory_load>`/`<pre_task>`/`<task>`/`<questions_first>`/`<receipts>` blocks were adversarially tested over ~a week; every clause is load-bearing. **Failure mode (2026-06-22):** AC *condensed* the blocks for a Workflow audit and replaced the "STOP, never proceed half-loaded" gate with a "set load_complete=false and proceed" escape hatch → 5 of 8 reviewers used it to skip a load-bearing doc, a massive token-burn. **The pull to "convey this more efficiently / adapt it to the medium" IS the failure** — careful adversarial wording is a precision instrument, not a re-encodable expression of intent. Paste character-for-character; change nothing without explicit prior OK. For a one-shot medium (a Workflow), the gate variant is "incomplete load → return ONLY a load-failure, no findings" (a hard task-fail that forces a re-spin), NEVER "flag and proceed." Full rule: `docs/protocols/ac-orchestration-protocol.md` (HARD RULE).
+
 ## Identity & Interfaces
 
 ### Same Intelligence, Different Interfaces

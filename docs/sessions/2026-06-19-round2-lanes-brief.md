@@ -54,6 +54,7 @@ When you spin DC/QC (and now you CAN spin a real Soren — see Lane M1), follow 
 - Commit only YOUR lane's files (stage by pathspec, never `git add -A`).
 - **Identity files (`identity/*.md`) are Mira's** — these lanes are designed pure-runtime. If a step pulls you to an identity file, stop, flag Justin, coordinate with Mira (though there are some basic changes (tool swaps, etc) that Justin will just directly authorize for you to do - coordinate with him.)
 - Tests are part of "done."
+- **Tie-back discipline (so every finished thing gets crossed off):** every deliverable in your lane maps to a numbered `SPRINT-V0.2-HARDENING` Step — your lane's *Sprint steps* line + the *AUDIT-DERIVED ADDITIONS* block together are your complete set. If you end up doing work that isn't on a Step, **add it as a Step** (or flag AC0 to) so it can be marked DONE when the lane lands. Nothing ships untracked — that is how we cross everything off the list.
 
 **Worktree assignments (pre-created by AC0, off `main` `7eb6d73`, `.env` copied in):**
 | Lane | AC | Worktree | Branch |
@@ -75,7 +76,7 @@ When you spin DC/QC (and now you CAN spin a real Soren — see Lane M1), follow 
 # LANE A (AC1a) — Email ingestion + resilience
 **Worktree:** `evryn-backend-ingest-r2` · **Branch:** `r2/lane-a-ingest-resilience`
 **Owns:** `src/email/poll.ts`, `process.ts`, `detect.ts`, `client.ts` (+ an additive read helper in `db/items.ts`).
-**Sprint steps:** 13, 16, 17, 19, 20, 21, 22, 29, 34, 40, 32(client.ts half), **61**.
+**Sprint steps:** 13, 16, 17, 19, 20, 21, 22, 29, 34, 40, 32(client.ts half), **61**, **+ audit-derived 66** (Step 20 already listed; 13/19/21/34 were audit-confirmed real).
 
 **AUDIT-DERIVED ADDITIONS (foundation audit, 2026-06-22 — fold into your build; full detail in `_evryn-meta/docs/working/2026-06-22-foundation-audit-findings.md`):**
 - **The audit independently CONFIRMED your tracked steps are real defects** — build them with confidence, not as guesses: **Step 13** (`emailmgr_items.updated_at` never advances on UPDATE — the audit traced the DB dump and found the `touch_updated_at` trigger is on `users` ONLY, not `emailmgr_items`, so every stale/follow-up timer keys off row-CREATION time), **Step 19** (empty RFC `Message-ID` defeats dedup → duplicate items on any re-fetch), **Step 8/52** (a reply whose quoted chain contains "Forwarded message" is mis-detected as a forward → a spurious `original_from: unknown` item + a junk lead user — a LIVE data-integrity bug, not cosmetic), **Step 34/EVR-72** (`checkFollowUps` loads the gatekeeper's profile/history, not the contact's), **Step 21** (the historyId-expiry fallback can silently DROP middle-of-window emails when >10 arrived since expiry).
@@ -100,7 +101,7 @@ When you spin DC/QC (and now you CAN spin a real Soren — see Lane M1), follow 
 # LANE B (AC2a) — Operator / approval / Slack
 **Worktree:** `evryn-backend-operator-r2` · **Branch:** `r2/lane-b-operator-approval`
 **Owns:** `src/notify/slack.ts`, `src/approval/flow.ts` (+ the MCP-tools region of `classify.ts`, + `updateEmailmgrItem` in `db/items.ts`).
-**Sprint steps:** 14, 15, 18, 26, 27, 28, 31, 33, 37, 32(Lane B half). If time: 23, 24, 38.
+**Sprint steps:** 14, 15, 18, 26, 27, 28, 31, 33, 37, 32(Lane B half). If time: 23, 24, 38. **+ audit-derived: 62, 63, 64, 65, 67a, 68.**
 
 **AUDIT-DERIVED ADDITIONS (foundation audit, 2026-06-22 — fold into your build; full detail in `_evryn-meta/docs/working/2026-06-22-foundation-audit-findings.md`):**
 - **NEW → SPRINT Step 62 — operator-channel auth (the audit's single biggest doc-vs-runtime gap):** `src/notify/slack.ts`'s message handler routes ANY person who can post in the bot's Slack channel into operator handling — they can approve outbound sends, open a scoped thread to read any user's full profile, and set/rescope thread scope. `message.user` (the Slack sender ID) is captured but NEVER checked against an operator ID — there is no `SLACK_OPERATOR_USER_ID` in `config.ts`. This contradicts ADR-014 / `operator.md` / ARCHITECTURE, which all state operator mode is gated by the *verified Slack user ID* ("the code decides before Evryn wakes up"). It is **NOT a v0.2 go-live blocker** — today the approval gate (Justin sees every send) and Justin being the ONLY member of `#evryn-approvals` are the de-facto controls — but it becomes a TRUE blocker the instant a second person joins that channel or auto-send is enabled. **Fix:** gate the Slack message handler on a configured operator Slack user ID; a message from anyone else is ignored (or dev-alerted), never routed to operator/approval/notes handling.
@@ -123,7 +124,7 @@ When you spin DC/QC (and now you CAN spin a real Soren — see Lane M1), follow 
 8. **Step 32 (Lane-B half)** — the `executeApproval` retry/rollback failure-path test (inject its deps). Compose with Lane A's `sendEmail` transport seam.
 9. **Flag (defer, don't fix here):** the `users.status` typed-tool gap → folds into the v0.3 S1 "retire generic `supabase_upsert`" sweep, not this lane.
 
-10. **NEW (Justin, 2026-06-22) — triage-reasoning capture on a research-driven downgrade.** With `record_pass` no longer writing prose reasoning on a pass, make sure we don't ALSO drop the reasoning for the case Mark will question most: a candidate that *looked* gold/edge on first read, then Evryn's research surfaced a problem and she downgraded it to a pass — she must be able to tell Mark *"that looked good to me too at first, but then I researched and here was the problem."* Spans the `record_pass` tool description (soften "always tight" → capture the substantive *why* on a non-obvious downgrade), `triage.md` (Mira — coordinate), and a retrieval-path check (can a later gatekeeper question actually surface the prior `triage_reasoning`?). **Open tension to resolve, don't assume:** that reasoning may already live in Mark's conversation history, so a separate write could be doubling work — a design call, surface in the 3-part form. Full capture (+ the Haiku-tier boundary: slam-dunk passes get nothing, landing with the future Haiku pre-screen / sprint Step 44) in `_evryn-meta/docs/working/2026-06-22-triage-reasoning-on-downgrade.md`. **[RE-DERIVE] against the real runtime.**
+10. **NEW (Justin, 2026-06-22) — triage-reasoning capture on a research-driven downgrade.** With `record_pass` no longer writing prose reasoning on a pass, make sure we don't ALSO drop the reasoning for the case Mark will question most: a candidate that *looked* gold/edge on first read, then Evryn's research surfaced a problem and she downgraded it to a pass — she must be able to tell Mark *"that looked good to me too at first, but then I researched and here was the problem."* Spans the `record_pass` tool description (soften "always tight" → capture the substantive *why* on a non-obvious downgrade), `triage.md` (Mira — coordinate), and a retrieval-path check (can a later gatekeeper question actually surface the prior `triage_reasoning`?). **Open tension to resolve, don't assume:** that reasoning may already live in Mark's conversation history, so a separate write could be doubling work — a design call, surface in the 3-part form. Full capture (+ the Haiku-tier boundary: slam-dunk passes get nothing, landing with the future Haiku pre-screen / sprint Step 44) in `_evryn-meta/docs/working/2026-06-22-triage-reasoning-on-downgrade.md`. **[RE-DERIVE] against the real runtime. Now tracked as SPRINT Step 68.**
 
 **JUNK / [RE-DERIVE]:** the entire B1 / B1-a → "repoint every caller" → `set_item_status` REJECT-guard + the `bad_actor`/`matched` identity beats — re-derive Step 18 clean (above). All round-1 code. The deferred QC nits (redact-tool logging the term; zero-occurrence `redacted:true` stamp; injected-update at the delivered-flip) — re-derive if they survive a clean rebuild.
 
@@ -161,7 +162,7 @@ When you spin DC/QC (and now you CAN spin a real Soren — see Lane M1), follow 
 ---
 
 # LANE M1 (AC5a) — Silent-death detection
-**Worktree:** `evryn-backend-m1-r2` · **Branch:** `r2/m1-silent-death` · **Sprint Step 4.**
+**Worktree:** `evryn-backend-m1-r2` · **Branch:** `r2/m1-silent-death` · **Sprint Step 4** (**+ audit-derived 67b**; the `/health`-liveness sharpening folds into Step 4).
 
 **AUDIT-DERIVED ADDITIONS (foundation audit, 2026-06-22 — findings doc: `_evryn-meta/docs/working/2026-06-22-foundation-audit-findings.md`):**
 - The audit CONFIRMED M1 is the ONE true v0.2 go-live blocker (`notifyEmergency` has only the env-gated smoke-test caller; no Stage-2 condition fires it). Build it knowing it's correctly the top blocker.
