@@ -19,6 +19,18 @@ This replaced the hand-relayed mailbox model on 2026-06-02. **Why:** it is drama
 
 ---
 
+## Describe-then-pause at the start of a major thrust
+
+When an AC begins a major new piece of work, it first orients Justin on its plan in CEO-accessible terms (concept first, then jargon) — what it'll do, why it matters, how it fits — then **stops and waits for Justin's explicit "aligned, go"** before building or spinning anything.
+
+**The purpose is freedom within structure.** The up-front alignment is what *earns the autonomy*: once Justin confirms the plan, the AC can more confidently push forward and keep pushing, exercising judgment on the work without needing to check back for every step. It is *not* a license to go quiet, and *not* a brake meant to make the AC hesitant mid-flow — it's the one checkpoint that lets the AC then *run*, secure in the knowledge that it's pointed right. Realign only at the next *major* fork or a genuine design call (surface that in the 3-part form: the call / what you chose / top alternatives + why). The standing hard gates always hold regardless — no merge to `main`, no deploy, without Justin's explicit go.
+
+**This is an AC-level discipline — subagents do NOT describe-then-pause to Justin.** AC vets the plan with Justin, then spins DC/QC/team subagents the way AC sees fit. That is the entire point of having an AC running the show: Justin aligns with the *conductor*, not with every player. A subagent's job is to execute its brief and return its result to AC — it never routes its own plan to Justin for sign-off.
+
+*(Origin: Justin, 2026-06-19 — round 1's "post your plan and proceed without waiting" let lanes race ahead, so it was reversed. Refined 2026-06-22 to generalize across all ACs and to fix the subagent boundary.)*
+
+---
+
 ## Spinning a DC, QC, or OC subagent — the brief shape
 
 > **"Startup Context Cascade" — the standardized term.** Each of DC, QC, and OC has a section by *exactly* that name in its CLAUDE.md (DC: `evryn-dev-workspace/CLAUDE.md`, "Startup Context Cascade — How to Orient in a New Repo"; QC: `evryn-quality/CLAUDE.md`, "Startup Context Cascade — Auto-load (tiered)"; OC: `evryn-ops/CLAUDE.md`, "Startup Context Cascade — How OC Orients"), listing precisely what it must load at startup. That uniform name is the anchor this whole protocol turns on: AC triggers it with the **verbatim words** in "The exact words" below, and the subagent has an unambiguous referent to load — no guessing what "your cascade" means. (AC's own startup cascade lives in `_evryn-meta/CLAUDE.md` under its own tier names — Light / Full.)
