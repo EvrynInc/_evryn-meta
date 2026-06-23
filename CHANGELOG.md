@@ -8,6 +8,12 @@
 
 ---
 
+## 2026-06-23 (AC0 — doc naming convention + dotted-date retrofit)
+
+- **Naming convention for session & working docs codified in `CLAUDE.md`** (Document Hygiene): `YYYY.MM.DD-author-recipient-title.md` — **dotted** dates, lowercase instance tags. Recipient included when meaningful, **including self-handoffs** (`ac0`→`ac0` keeps both, e.g. `2026.06.16-ac0-ac0-handoff.md`, to distinguish "handed to himself" from `ac0`'s many handoffs to others); dropping recipients when multiple is *permission, not command*. Applies to new docs going forward; historical docs get dotted dates only (no author/recipient retrofit).
+- **Retrofit — 85 docs renamed** (all via `git mv`, history preserved): historical (65) → dotted dates only; working + current-session (20) → dotted dates **+ author/recipient inferred from each file's contents**; 5 no-date historical files dated from their contents.
+- **References fixed across all three repos:** the live `_evryn-meta` docs (CHANGELOG, current-state, ADRs 041/042, the renamed docs' own cross-refs), the canonical `evryn-backend/docs/SPRINT-V0.2-HARDENING.md`, and team-workspace (Mira's `MEMORY.md`, the team `current-state.md`, `v0.3/identity-files.md`). **Deliberately left** (out of scope / unsafe): 8 sprint-doc copies in other-branch worktrees (sync on rebase/merge), the Mira `archive/` snapshot, and historical docs' internal references. Synced: meta `6c79ccc`, backend `fd31d1d`, team `9e3da01`.
+
 ## 2026-06-22 (AC0 — foundation audit + subagent-loading hardening)
 
 - **Foundation audit of the shipped v0.2 runtime — complete + validated** (3 workflow passes: meta → deep-dive → BUILD-loaded validation). 115 findings, **0 refuted / 99 confirmed / 16 reframed** — the foundation is SOUND. Record: `docs/working/2026.06.22-ac0-foundation-audit-findings.md`. Marquee: the Slack-operator-mode "no verified-sender gate" is real (the single biggest doc-vs-runtime divergence) but recalibrated to **NOT-a-v0.2-blocker** (approval gate + single channel-member are the de-facto controls). The one true v0.2 go-live blocker stays **M1**; the `service_role`/RLS-bypass cluster = documented-and-accepted v0.2 (BUILD S1). New v0.2 items → **SPRINT Steps 62–68**, folded into the round-2 lane briefs.
