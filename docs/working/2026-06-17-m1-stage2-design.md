@@ -98,6 +98,8 @@ Rewrite `evryn-backend/docs/operator-guide.md`'s M1/DND section: the current sec
 
 ## Soren vet (2026-06-17) — verdict + final build spec (this is what DC builds to)
 
+> **⛔ SUPERSEDED (2026-06-22).** This entire "Soren vet — final build spec" section was a **lobotomized round-1 subagent** — do NOT build from it. The clean, real-Soren-vetted build spec lives in **`_evryn-meta/docs/working/2026-06-22-m1-build-spec.md`** — build from THAT. This section is kept for provenance only. (The clean SPINE sections above this one — Justin's decisions, the one-channel/one-breaker design, the corruption addendum below — stand.)
+
 **Verdict: GO-WITH-CHANGES.** Soren (CTO) independently vetted the safety mechanism (read-only). He **verified by grep** that `runEvrynQuery` (`classify.ts:1179`) is the *sole* `query()` / Anthropic call site — all six pathways funnel through it — so a kill-switch at the top of `runEvrynQuery` provably cuts ALL spend regardless of trigger. Core design sound; breaker belongs exactly there.
 
 **Shape-level changes (folded in):**

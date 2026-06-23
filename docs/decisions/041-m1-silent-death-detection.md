@@ -1,7 +1,7 @@
 # ADR-041 — M1 Silent-Death Detection: Circuit-Breaker + Single Alert Channel
 
-**Status:** Accepted (2026-06-17)
-**Deciders:** Justin (philosophy + the firm calls), AC5 (design), Soren (independent architectural vet — GO-WITH-CHANGES)
+**Status:** Accepted (2026-06-17); **re-vetted + sharpened 2026-06-22** (see Amendment at bottom)
+**Deciders:** Justin (philosophy + the firm calls), AC5/AC5a (design), Soren (independent architectural vet). ⚠️ **The round-1 (2026-06-17) Soren vet was a LOBOTOMIZED subagent — its refinement details were suspect.** A clean, fully-loaded **real Soren** re-vetted 2026-06-22 (GO-WITH-CHANGES, spine sound); the build spec + the Amendment at the bottom carry the corrected refinements.
 **Supersedes within M1:** an earlier AC0 two-tier-with-phone-call draft (2026-06-17), now reframed — its phone-pierce design is deferred to v0.3 (see "Deferred").
 
 > **Truncation check:** the last line should read `FULL FILE LOADED`.
@@ -65,5 +65,16 @@ Two facts shaped the design:
 - The daily affirmation's full **"cluster ran: N/M/K"** payload (lands with clustering, Step 58).
 
 ---
+
+## Amendment (2026-06-22) — real-Soren re-vet + build sharpenings (AC5a lane)
+
+The round-1 Soren vet (above) was a lobotomized subagent. A clean, fully-loaded **real Soren** re-vetted the design 2026-06-22 (receipts + code-level catches verified). **Verdict: spine SOUND, GO-WITH-CHANGES.** Justin's reframe (the halt must be clean/lossless/resumable → the threshold can then be aggressive-but-sweet-spot, because a false halt costs only a restart; and Mark's day drains in one supervised ~30-min cluster, bounding exposure) is the design's center of gravity. The spine (Decisions 1–7 above) is unchanged. The corrected/sharpened refinements (the authoritative build spec is `_evryn-meta/docs/working/2026-06-22-m1-build-spec.md`):
+
+1. **Clean in-flight pause (the keystone):** on a trip, the in-flight item is parked `processing → "new"` (not stamped `error`), `runEvrynQuery` returns a sentinel (not a throw), the caller propagates a new `"halted"` poll outcome that **holds the Gmail cursor**, and on restart the dedup **resumes** the parked `"new"` row (rather than skipping it). One emergency alert, zero error-storm, zero dropped mail.
+2. **Persistent Anthropic billing folds into the SAME breaker halt** (return-not-throw) — it's structurally "spend door unavailable" and the most-likely-to-fire halt; this makes the breaker genuinely the *only* halt.
+3. **No dedicated short-window rate gate** for the ~$1,400 fake-new-item-id burn-gap — instead one **calibrated velocity ceiling** (conservative pre-Mark, ratchet to ~1.5× the measured clustered peak post-Mark, Step 43). The clean halt + supervised window make a tighter single ceiling the right tool.
+4. **Loop-signature detector excludes operator-pathway activity** (`handleOperatorMessage`/`checkProactiveOutreach` pass no item-id and would false-trip); they still count toward velocity.
+5. **Watch-the-watchman needs a status-reporting `notifyEmergencyWithStatus`** (the channel swallows silently by design) — the daily affirmation pings an independent Healthchecks check only on a confirmed-OK emergency post.
+6. **Lane-A interlock (lands in the same convergence deploy):** the clean-resume guarantee depends on Lane A's **Step 21** (durable cursor — so restart doesn't fall back to "latest 10") AND **Step 19** (empty-`Message-ID` → fall back to Gmail `email.id` as `external_id`, so the dedup-resume can't double-create on a Message-ID-less email). AC0 must ensure both ride the converged bundle.
 
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
