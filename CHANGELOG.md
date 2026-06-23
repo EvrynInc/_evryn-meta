@@ -8,6 +8,11 @@
 
 ---
 
+## 2026-06-23 (AC — orchestration-protocol load-block consolidation)
+
+- **De-duplicated the two `<mandatory_load>` blocks in `docs/protocols/ac-orchestration-protocol.md`:** the DC/QC/OC block is now the single canonical home for the load-discipline body; the team-subagent section collapses to a **4-substitution delta list** (identity closer, opener cascade-reference, the 4-file split, gate path). Net **−28 lines**, and an edit to the canonical block now flows to team agents automatically — closing the two-places-to-mirror drift that had already crept in (the "trap" paragraph, the identity-files-are-runtime example, and the load-discipline plea had each diverged or gone team-only). Commits `c262645` + cosmetic cleanup pass.
+- **Moved into the canonical block:** the identity-files-are-runtime example + the "stop skimping" plea (were team-only → now reach DC/QC too). **Added** an AC-facing note in the HARD RULE tying the plea to AC's *own* loading discipline (*don't be the source of the failure you beg subagents to avoid*). Plus typo + punctuation cleanup of the hand-tuned block.
+
 ## 2026-06-23 (AC0 — doc naming convention + dotted-date retrofit)
 
 - **Naming convention for session & working docs codified in `CLAUDE.md`** (Document Hygiene): `YYYY.MM.DD-author-recipient-title.md` — **dotted** dates, lowercase instance tags. Recipient included when meaningful, **including self-handoffs** (`ac0`→`ac0` keeps both, e.g. `2026.06.16-ac0-ac0-handoff.md`, to distinguish "handed to himself" from `ac0`'s many handoffs to others); dropping recipients when multiple is *permission, not command*. Applies to new docs going forward; historical docs get dotted dates only (no author/recipient retrofit).
