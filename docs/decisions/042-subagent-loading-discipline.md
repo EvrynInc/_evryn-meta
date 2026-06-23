@@ -7,7 +7,7 @@
 
 ## Context
 
-On 2026-06-17 a five-AC parallel wave (AC1–5) spun DC / QC / Soren subagents that loaded **only** their `CLAUDE.md` (or, for QC, a stale forked `master` manual with no cascade anchor; for Soren, nothing of his split identity) with **no startup cascade**. The AC↔DC↔QC coordination system never fired, and all of the wave's code was junk — caught pre-merge by Justin. (Recovery handoff: `docs/sessions/2026-06-18-ac0-handoff.md`; forensics: `docs/working/2026-06-18-sync-forensics-report.md`.)
+On 2026-06-17 a five-AC parallel wave (AC1–5) spun DC / QC / Soren subagents that loaded **only** their `CLAUDE.md` (or, for QC, a stale forked `master` manual with no cascade anchor; for Soren, nothing of his split identity) with **no startup cascade**. The AC↔DC↔QC coordination system never fired, and all of the wave's code was junk — caught pre-merge by Justin. (Recovery handoff: `docs/sessions/2026.06.18-ac0-ac0-handoff.md`; forensics: `docs/working/2026.06.18-ac6-sync-forensics-report.md`.)
 
 Root cause was **two-fold**:
 

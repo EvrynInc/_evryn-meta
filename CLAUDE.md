@@ -320,6 +320,11 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
 
 **Every document gets a "how to use this" header** — the full rule (what belongs, what doesn't, how to write it) lives in `docs/protocols/ac-writing-protocol.md` (Formatting conventions). For *where new content goes*, use the routing table in "Documentation Approach" above.
 
+**Naming convention for session docs & working docs.** Name new docs `YYYY.MM.DD-author-recipient-title.md` — **date first** (dots, never dashes: `2026.06.23`), then **author**, then **recipient** *when there's a clear one*, then a short **title**. Example: `2026.06.23-ac0-ac2-launch-specifications.md`. Author/recipient are lowercase instance tags (`ac0`, `ac2`, `mira`, `justin`). Notes:
+- **Recipient — include it whenever it's meaningful, *including a self-handoff.*** When author and recipient are the same instance (e.g. an `ac0` packout/handoff written to the next `ac0`), keep **both** — `2026.06.16-ac0-ac0-handoff.md` — because it distinguishes "handed to himself" from `ac0`'s many handoffs to *other* instances. Drop the recipient only when there genuinely isn't a clear one (a doc for general consumption): `YYYY.MM.DD-author-title.md`.
+- **Multiple recipients:** you *may* drop recipients to keep the filename from bloating — this is *permission, not a command*. If the recipients are the most load-bearing part of the title, keep them in. The goal is a useful, scannable name; use judgment.
+- Applies to *new* docs going forward. Historical docs (`docs/sessions/historical/`) do not need to be retrofitted.
+
 ---
 
 ## Auto-Memory Hygiene
