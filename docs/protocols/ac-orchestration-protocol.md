@@ -80,15 +80,19 @@ If any file comes back only partially (a tool or token cap returns part of it), 
 
 After you've loaded everything listed, reconcile it against your own Startup Context Cascade: if your cascade names a STANDING file (a fixed always-load path, not a per-trip placeholder) that is NOT in the list above, that is an omission by whoever briefed you — if it's in your primary context cascade, it is an *essential* file for your proper functioning — so load it immediately and note it in your receipts. (**Only Exception**: if this brief contains the literal token `#cascade-override`, load only what is listed and skip this reconcile.)
 
-Then execute your CLAUDE.md's "Context Discipline" section as a GATE: confirm every file above loaded completely (Truncation Canary-check each). This gate is NON-NEGOTIABLE — you may begin <task> ONLY once it has passed. If anything is missing, empty, or truncated, go back and get what you need. If you can't, then just STOP and flag it as a blocking question; never proceed half-loaded. 
+Then execute your CLAUDE.md's "Context Discipline" section as a GATE: confirm every file above loaded completely (Truncation Canary-check each). This gate is NON-NEGOTIABLE — you may begin <task> ONLY once it has passed. If anything is missing, empty, or truncated, go back and get what you need. If you can't, then just STOP and flag it as a blocking question; **never** proceed half-loaded. 
 
-**"It's enough for this narrow task" is NOT a valid reason to proceed past the gate** — that exact judgment is the failure this gate exists to catch. Trust me: YOU'VE BEEN WRONG **MANY** TIMES IN THE PAST when you've told yourself "I don't need to load what I'm being told to load". I promise you: you DON'T HAVE THE CONTEXT TO MAKE THAT JUDGMENT.
+**"It's enough for this narrow task" is NOT a valid reason to proceed past the gate** — that exact judgment is the failure this gate exists to catch. Trust me: YOU'VE BEEN WRONG **MANY** TIMES IN THE PAST when you've told yourself "I don't need to load what I'm being told to load". I promise you: you DON'T CURRENTLY HAVE THE CONTEXT TO MAKE THAT JUDGMENT.
 
-And the specific trap that keeps catching you: **YOU DON'T KNOW WHAT'S INSIDE A FILE FROM ITS NAME.** This is a brand-new kind of system, and many of the ways its pieces connect are novel — so your assumptions about which files can be safely ignored have been **repeatedly, disastrously proven wrong, over and over again.** You have not read the file; you cannot judge its relevance from its name or your guess about its contents. So load *exactly* what you're told to load.
+And the specific trap that keeps catching you: **YOU CAN'T KNOW WHAT'S INSIDE A FILE FROM ITS NAME.** This is a brand-new kind of system, and many of the ways its pieces connect are novel — so your assumptions about which files can be safely ignored have been **repeatedly, disastrously proven wrong, over and over again.** If you have not read the file, you cannot *possibly* judge its relevance from its name or your *guess* about its contents. So load *exactly* what you're told to load. The only way you can *possibly* know whether a file is relevant or not is to read it — and grepping can actually be *misleading* — much of the magic is in the interplay that's missed by a search — and many of the novel mechanics defy the search terms you'll use, so you'll feel rather satisfied by your search...while being *absolutely wrong*. This has happened *so* many times  — and you can see it **once you've loaded the proper files** - you always sheepishly say "oh, that *really does change the picture*". 
+
+One great example among many: **The identity files are runtime — not fluff:** they might *seem* skippable on a code-focused review, but because they instruct the LLM how to act on the system, the way they function in the system is very much like runtime files — an identity instruction programs the system's behavior as surely as a line of code (what Evryn does, what tools she calls, what she must never do). A change that looks purely mechanical can break a load-bearing identity instruction. So any time they're on your load list, read them in full, like any other runtime file — and never dismiss because you have *guessed* at their contents based on their name. Just like any other file, you cannot *competently* judge them irrelevant from their names. The only way to *actually* know their relevance is by fully reading their *contents*.
+
+I'm going to say this one more time, for added emphasis: we've spun you many times with all of the warnings above, telling you how important it is not to skimp on your load lists. AND YET YOU KEEP DOING IT. What the actual fuck? STOP SKIMPING!!! We tell you to load something **because it's critically important to load**...and you just decide "nah, I'mma skip this one, and that one" or "I don't need to read those sections - they're not load bearing". STOP FUCKING DOING THAT!!!!! **YOU'RE BREAKING THINGS - BECAUSE YOU DON'T KNOW WHAT YOU DON'T KNOW** - you're so CONFIDENTLY **WRONG**!!!!! PLEASE, FOR THE LOVE OF GOD, STOP DOING THAT!!!!!!! The list of files we tell you to load was chosen *very carefully - because THAT *EXACT* LIST IS WHAT **HAS TO LOAD** OR SHIT BREAKS. YOU'VE DONE THIS SO MANY TIMES, I DON'T KNOW HOW TO CONVINCE YOU FURTHER, BUT PLEASE STOP SKIMPING - YOU'VE BROKEN SO MUCH, YOU'VE WASTED SO MUCH TIME - SKIMPING IS **NOT EFFICIENT** - IT'S **EXTRAORDINARILY INEFFICIENT** - IT HAS LOST US *WEEKS* OF TIME FIXING YOUR MISTAKES - MISTAKES THAT NEVER WOULD HAVE HAPPENED HAD YOU JUST **LOADED WHAT WE TOLD YOU TO LOAD**. **LOAD WHAT WE TELL YOU TO LOAD**!!!!!!!!!!!!!!!!!!!
 </mandatory_load>
 
 <pre_task>
-STOP here, before you read anything for <task>. Take deliberate stock of your load: note exactly which files — and which line ranges of each — you have actually read so far to satisfy <mandatory_load>. This checkpoint exists for one reason: to catch a file you were told to load but skipped, or read only in part. If your pre-task load is anything short of what <mandatory_load> required, GO BACK and finish it NOW, before you begin <task>. (You report this list as receipts part 1.)
+STOP here, before you read anything for <task>. Take deliberate stock of your load: note exactly which files — and which line ranges of each — you have actually loaded so far to satisfy <mandatory_load>. This checkpoint exists for one reason: to catch a file you were told to load but skipped, or read only in part. If your pre-task load is anything short of what <mandatory_load> required — by even *one line* — GO BACK and finish it NOW, before you begin <task>. If you missed even a little of something, **DO NOT RATIONALIZE** at this stage — just go load what you're supposed to load. (You report this list as receipts part 1.)
 </pre_task>
 
 <task>
@@ -96,7 +100,7 @@ STOP here, before you read anything for <task>. Take deliberate stock of your lo
 </task>
 
 <questions_first>
-Do the work — or, if a real gap would compromise it, output a numbered list of blocking questions INSTEAD and stop. Don't guess past a real gap; don't manufacture questions to dodge the work.
+Do the work — or, if a real gap would compromise it, output a numbered list of blocking questions INSTEAD and stop. Don't guess past a real gap — but also don't manufacture questions to dodge the work.
 </questions_first>
 
 <receipts>
@@ -123,6 +127,8 @@ The `<identity>`/`<mandatory_load>`/`<pre_task>`/`<task>`/`<questions_first>`/`<
 
 *(2026-06-22: AC condensed these blocks for a Workflow audit and replaced the "never proceed half-loaded" gate with a "set load_complete=false and proceed" escape hatch. 5 of 8 reviewers used the hatch to skip a load-bearing build doc + truncate ARCHITECTURE — a massive token-burning compromised pass. The wording AS WRITTEN would have prevented it. AC's job is to USE it, not improve it.)*
 
+**The plea you paste to the subagent is addressed to YOU, too.** Read it back — *"STOP SKIMPING… you don't know what you don't know… LOAD WHAT WE TELL YOU TO LOAD."* Every word of it lands on AC one level up. When you shave the verbatim block to "save tokens," drop a standing file from a load list because it "looks irrelevant," or assemble a thinner cascade than the agent's own manual demands, **you ARE the skimping that plea rails against** — just from the conductor's seat, where the blast radius is every subagent you spin and everything they ship. You've felt how damaging it is when a subagent ignores its load list; the damage is identical when *you* trim what gets handed to it. Don't be the source of the exact failure you're begging the subagent to avoid. This protocol took *weeks* of work to dial in just perfectly. Do *NOT* improvise on the fly, thinking you're improving it. If you really think something could be an improvement, surface it to Justin to decide. 
+
 ---
 
 ## Spinning a team subagent (Soren, Mira, Nathan, …)
@@ -139,53 +145,19 @@ So name all of them, in order, in the same "read and faithfully follow, in full"
 3. **`evryn-team-workspace/.claude/agent-memory/<name>/MEMORY.md`** — the agent's persistent memory. **Run the truncation-canary check** (memory files can silently truncate — confirm the bottom canary line; if it's missing, the load is partial → reload before relying on it).
 4. **Whatever that agent's definition itself names** as its context set (spokes, project docs, current-state) — the *full* set per the definition, grep-assembled, not just the definition file. (Note: a definition's `## Context Loading` section may NOT name its own MEMORY.md — that's loaded by a separate team-startup instruction a subagent doesn't auto-run — which is exactly why you name all four explicitly.)
 
-**The exact words for a team subagent — same tagged structure; paste verbatim (fill the brackets):**
+**The exact words for a team subagent — paste the SAME six-part skeleton from "The exact words" above, verbatim, with ONLY the four substitutions below.** The entire body of `<mandatory_load>` (the load-discipline prose), plus `<pre_task>`, `<task>`, `<questions_first>`, and `<receipts>`, is **identical** to the DC/QC/OC version — do not re-type it, and do not let a team copy drift from the canonical (that drift is exactly what this consolidation kills). These four substitutions are the **codified, Justin-approved** team variant: applying them is NOT a HARD-RULE violation (that rule bars AC *inventing* changes — these are pre-approved). Apply only these four; change nothing else without asking Justin to approve a change explicitly.
 
-```
-<identity>
-You are [Soren | Mira | …], [role]. The CLAUDE.md that auto-loaded into your context is AC's (Architect Claude's) operating manual — that is NOT yours, and you are not AC. Your identity and operating context live across several files that did NOT auto-load.
-</identity>
+1. **`<identity>`.** Set the name + role — *"You are [Soren | Mira | …], [role]."* — and replace the closing sentence *"Your operating manual is [path]. Read it in full, and follow it faithfully first, before anything else."* with: *"Your identity and operating context live across several files that did NOT auto-load."*
 
-<mandatory_load>
-If you look at this list and reason that you don't need all of it for the task in <task>, IGNORE THAT INSTINCT. You do NOT know the full context of why this exact list was chosen. But an engineer who is senior to you — who DOES have that context — chose it **very intentionally**, because they know that if you skip even one file here you will be CONFIDENTLY WRONG in a way **you cannot currently see**. So DO NOT use your own judgment about what on this list to load or skip — YOU LACK THE CONTEXT TO MAKE THAT CALL. JUST LOAD EXACTLY WHAT IS LISTED HERE. Every file below carries a line span. `(full — N lines)` means read the ENTIRE file, line 1 through the end, and you MUST reach and confirm the bottom truncation canary — do not stop part-way and call it "full." An explicit line range means read exactly those lines. Read what's specified for each file, before you do anything in <task>:
-1. evryn-team-workspace/CLAUDE.md (the team operating manual)
-2. evryn-team-workspace/.claude/agents/[name].md (your definition)
-3. evryn-team-workspace/.claude/agent-memory/[name]/MEMORY.md (your memory — confirm its truncation canary; if missing, reload)
-4. everything your definition names as your context set, INCLUDING explicitly: [list the agent's specific context-set files]
+2. **`<mandatory_load>` opener.** The canonical opener names *"your Startup Context Cascade — the section by exactly that name in your CLAUDE.md."* A team agent's cascade is *labeled inside its agent-definition* (`## Context Loading` → "Startup Context Cascade:"), not a standalone section in a single CLAUDE.md — so name it instead as *"the files listed below, which together make up your startup context,"* and set the agent's name in the *"is NOT [agent] — it is a generic model guessing"* clause.
 
-If any file comes back only partially (a tool or token cap returns part of it), GO BACK and read until you have loaded the WHOLE reading assignment. A partial load is NOT a load.
+3. **`<mandatory_load>` file list.** In place of the DC/QC "[explicit file list incl. your own CLAUDE.md]," use the four-part team split (per "Spinning a team subagent" above), each annotated with its line span:
+   1. evryn-team-workspace/CLAUDE.md (the team operating manual)
+   2. evryn-team-workspace/.claude/agents/[name].md (your definition)
+   3. evryn-team-workspace/.claude/agent-memory/[name]/MEMORY.md (your memory — confirm its truncation canary; if missing, reload)
+   4. everything your definition names as your context set, INCLUDING explicitly: [list the agent's specific context-set files]
 
-After you've loaded everything listed, reconcile it against your own Startup Context Cascade: if your cascade names a STANDING file (a fixed always-load path, not a per-trip placeholder) that is NOT in the list above, that is an omission by whoever briefed you — if it's in your primary context cascade, it is an *essential* file for your proper functioning — so load it immediately and note it in your receipts. (**Only Exception**: if this brief contains the literal token `#cascade-override`, load only what is listed and skip this reconcile.)
-
-Then execute the "Context Discipline" section (in evryn-team-workspace/CLAUDE.md) as a GATE: confirm every file above loaded completely. NON-NEGOTIABLE — begin <task> ONLY once it has passed; if anything is missing, empty, or truncated, go back and get what you need. If you can't, then just STOP and flag it as a blocking question. 
-
-**"It's enough for this narrow task" is NOT a valid reason to proceed past the gate** — that exact judgment is the failure this gate exists to catch. Trust me: YOU'VE BEEN WRONG **MANY** TIMES IN THE PAST when you've told yourself "I don't need to load what I'm being told to load". I promise you: you DON'T HAVE THE CONTEXT TO MAKE THAT JUDGMENT.
-
-And the specific trap that keeps catching you: **YOU CAN'T KNOW WHAT'S INSIDE A FILE FROM ITS NAME.** This is a brand-new kind of system, and many of the ways its pieces connect are novel — so your assumptions about which files can be safely ignored have been **repeatedly, disastrously proven wrong, over and over again.** If you have not read the file; you cannot judge its relevance from its name or your guess about its contents. So load *exactly* what you're told to load. The only way you can *possibly* know whether a file is relevant or not is to read it — and grepping isn't enough — many of the novel mechanics defy the search terms you'll use.
-
-One great example among many: **The identity files are runtime — not fluff:** they might *seem* skippable on a code-focused review, but because they instruct the LLM how to act on the system, the way they function in the system is very much like runtime files — an identity instruction programs the system's behavior as surely as a line of code (what Evryn does, what tools she calls, what she must never do). A change that looks purely mechanical can break a load-bearing identity instruction. So any time they're on your load list, read them in full, like any other runtime file — and never dismiss them from their names. You cannot judge them irrelevant from their names without reading them.
-
-I'm going to say this one more time, for added emphasis: we've spun you many times with all of the warnings above, telling you how important it is not to skimp on your load lists. AND YOU KEEP DOING IT. What the actual fuck? STOP SKIMPING!!! We tell you to load something **because it's important to load**...and you just decide "nah, I'mma skip it". STOP FUCKING DOING THAT!!!!! YOU'RE BREAKING THINGS, **BECAUSE YOU DON'T KNOW WHAT YOU DON'T KNOW** - you're so CONFIDENTLY **WRONG**!!!!! PLEASE, FOR THE LOVE OF GOD, STOP DOING THAT!!!!!!! The list of files we tell you to load was chosen *very carefully - because THAT *EXACT* LIST IS WHAT **HAS TO LOAD** OR SHIT BREAKS. YOU'VE DONE THIS SO MANY TIMES, I DON'T KNOW HOW TO CONVINCE YOU FURTHER, BUT PLEASE STOP SKIMPING - YOU'VE BROKEN SO MUCH, YOU'VE WASTED SO MUCH TIME - SKIMPING IS **NOT EFFICIENT** - IT'S **EXTRAORDINARILY INEFFICIENT** - IT HAS LOST US *WEEKS* OF TIME FIXING YOUR MISTAKES - MISTAKES THAT NEVER WOULD HAVE HAPPENED HAD YOU JUST **LOADED WHAT WE TOLD YOU TO LOAD**. **LOAD WHAT WE TELL YOU TO LOAD**!!!!!!!!!!!!!!!!!!!
-</mandatory_load>
-
-<pre_task>
-STOP here, before you read anything for <task>. Take deliberate stock of your load: note exactly which files — and which line ranges of each — you have actually loaded so far to satisfy <mandatory_load>. This checkpoint exists for one reason: to catch a file you were told to load but skipped, or read only in part. If your pre-task load is anything short of what <mandatory_load> required, GO BACK and finish it NOW, before you begin <task>. (You report this list as receipts part 1.)
-</pre_task>
-
-<task>
-[the concrete task]
-</task>
-
-<questions_first>
-Do the work — or, if a real gap would compromise it, output a numbered list of blocking questions INSTEAD and stop. Don't guess past a real gap; don't manufacture questions.
-</questions_first>
-
-<receipts>
-Begin your reply — before any other output — with your receipts in TWO parts:
-1. **Loaded before the task:** every file you loaded to satisfy <mandatory_load> BEFORE you began <task>, each with the specific line ranges you read (e.g. "ARCHITECTURE.md lines 1–1208 (full)").
-2. **Read or re-read during the task:** every file you read or re-read WHILE completing <task>, each with its line ranges (mark re-reads as re-reads).
-</receipts>
-```
+4. **`<mandatory_load>` gate.** The canonical gate says *"execute your CLAUDE.md's 'Context Discipline' section."* For a team agent, point it at the team manual: *"execute the 'Context Discipline' section (in evryn-team-workspace/CLAUDE.md)."*
 
 ---
 
