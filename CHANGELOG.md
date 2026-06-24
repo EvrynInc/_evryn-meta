@@ -8,6 +8,17 @@
 
 ---
 
+## 2026-06-23 (AC3a — Lane C round-2 v0.2-hardening: lean Reflection + cache, built to QC-GO on its branch)
+
+- **Lane C (cost) built to QC-GO on `r2/lane-c-cost`** — **NOT merged/deployed; live-inert until Step-66 enrollment** (AC0 converges, Justin deploys). Handoff: `docs/working/2026.06.23-ac3a-ac0-lane-c-r2-handoff.md`.
+- **Step 10 — lean Reflection (consolidation):** periodic per-user `pending_notes`→`story` re-synthesis. New `src/reflection/consolidate.ts` (deps-injectable orchestration + pure guards); `story_versions` archive table + atomic race-safe `consolidate_profile(uuid,text,integer)` RPC (FOR UPDATE, archive-before-overwrite, drop-exactly-first-N — N captured before the LLM call); `loadReflectionPrefix()` (core+reflection only) + `reflection.md` excluded from the force-load; `checkReflectionConsolidation` cron (additive, hourly-gated, per-user-isolated); `consolidateProfile` wrapper + `PATHWAY_ACTIVITY` tag. **ADR-043.**
+- **Step 11b — cache byte-identity guard** test. **Step 59 answered:** the Agent SDK exposes no `cache_control`/breakpoints (#89) → the only cache lever is placement (**ADR-044**). **11a MOOT, 12 deferred.**
+- **Mira identity pass (committed on branch, AC identity-file-reviewed 7/7):** `reflection.md` full voice-pass + `core.md` note-voice beat (first-person notes/story) + binding reconciliation (a live `[binding]` carried to the story foot during consolidation) + 3 truncation canaries.
+- **Migration applied + verified on DEV** (drop round-1 residue → clean apply → integration test on real Postgres); **prod at AC0 convergence.**
+- **Verified 4 ways:** typecheck + pure suites + dev integration test + a **live real-Opus consolidation** against Mira's `reflection.md` (in-voice, through-line, `[binding]` carried, provenance held, ~2,900 chars, ~$0.35). QC-GO (full-load review + live DEV checks).
+- **Docs (committed to `main`, NOT the lane):** ARCH/BUILD `story`-written-in-v0.2 staleness fix; SPRINT Steps 69 (week-one cache-measurement RUN), 70 (epithelial restructure — ADR-044, measurement-gated), 71 (binding safety-net), 72 (`search_path` pin); ADR-043 + ADR-044; QC mailbox cleared; cache-measurement plan updated.
+- **For AC0:** wire Reflection → Lane A's `findCareEligibleUsers()` (Step 66); apply prod migration; `#dev-alerts` on identity merge; mark Steps 10/11b DONE.
+
 ## 2026-06-23 (AC1a — Lane A round-2 v0.2-hardening: built to full QC-GO on its branch)
 
 - **Lane A (email ingestion + resilience) built to full QC-GO on `r2/lane-a-ingest-resilience`** — 6 commits, **NOT merged/deployed** (AC0 converges, Justin deploys). Handoff: `docs/working/2026.06.23-ac1a-ac0-handoff.md`.
