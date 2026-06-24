@@ -8,6 +8,15 @@
 
 ---
 
+## 2026-06-23 (AC5a — Lane M1 round-2 v0.2-hardening: silent-death detection, built to QC-GO on its branch)
+
+- **Lane M1 (silent-death detection — the ONE true v0.2 go-live blocker) built to QC-GO on `r2/m1-silent-death`** — **NOT merged/deployed** (AC0 converges, Justin deploys). Handoff: `docs/working/2026.06.23-ac5a-ac0-lane-m1-r2-handoff.md`. Build spec: `docs/working/2026.06.22-ac5a-m1-build-spec.md`. ADR-041 amended (real-Soren re-vet + sharpenings).
+- **Circuit-breaker** kill-switch at the top of `runEvrynQuery` (the sole Anthropic spend door) — tripped → zero spend regardless of trigger. **Clean lossless halt (the keystone):** the in-flight item is parked `processing→"new"` (not error-stamped), `runEvrynQuery` returns a sentinel (not a throw), the caller propagates a new `"halted"` poll outcome that holds the Gmail cursor, and on restart the dedup **resumes** the parked `"new"` row → one emergency alert, no error-storm, no dropped mail.
+- **Runaway detectors:** in-process attempts counter (not `llm_usage`) → `shouldTripOnLoopSignature` (`(pathway,scopeUserId,emailmgrItemId)` repetition; **operator-pathway excluded**) + `shouldTripOnVelocity` (conservative **600/hr** default, env-tunable; ratchet post-Mark, Step 43). **Persistent Anthropic-billing folds into the same clean halt** (return-not-throw → one alert, not a per-email error-storm — the most-likely-to-fire halt).
+- **Tier-B alert-only:** external Healthchecks.io heartbeat pinged from *inside* the poll loop after a successful ingest (NOT `/health` — confirmed always-200, audit Step 67b); persistence-gated hard-auth alert distinguishing Anthropic-auth from Gmail-auth; polling-dead wall-clock escalation. **Watch-the-watchman:** daily affirmation via a new `notifyEmergencyWithStatus()`, gated on a confirmed emergency post. **Send-bypass** tier-5 assertion. **Cron** `PROACTIVE_CHECK_HOUR_PT` 8→10.
+- **Architecture:** all NEW `src/safety/*` modules (8) + minimal DI hooks (`registerStopPolling` breaks the import cycle); pure `shouldRun*`-pattern predicates. **Real-Soren re-vet** (round-1 was lobotomized — receipts verified; spine SOUND, GO-WITH-CHANGES) → **real-DC build** → **real-QC heightened review = GO, no blockers**; typecheck + 2 new suites + full regression green. No schema/migration. Operator-guide M1 section + DND-respecting model written.
+- **For AC0:** converge into the go-live bundle; ensure the two Lane-A interlocks ride it — Step 19 (Message-ID fallback, AC1a DONE) **and Step 21 (durable cursor — verify; not in AC1a's DONE list)**; mark Step 4 (+67b) DONE + the 4 fast-follow sub-steps; ARCH M1-absorption at convergence.
+
 ## 2026-06-23 (AC3a — Lane C round-2 v0.2-hardening: lean Reflection + cache, built to QC-GO on its branch)
 
 - **Lane C (cost) built to QC-GO on `r2/lane-c-cost`** — **NOT merged/deployed; live-inert until Step-66 enrollment** (AC0 converges, Justin deploys). Handoff: `docs/working/2026.06.23-ac3a-ac0-lane-c-r2-handoff.md`.
