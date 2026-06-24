@@ -8,6 +8,16 @@
 
 ---
 
+## 2026-06-23 (AC1a — Lane A round-2 v0.2-hardening: built to full QC-GO on its branch)
+
+- **Lane A (email ingestion + resilience) built to full QC-GO on `r2/lane-a-ingest-resilience`** — 6 commits, **NOT merged/deployed** (AC0 converges, Justin deploys). Handoff: `docs/working/2026.06.23-ac1a-ac0-handoff.md`.
+- **Batch 1 (12 fixes, QC-GO `816f4a9`):** `emailmgr_items.updated_at` trigger (Step 13); empty-Message-ID dedup fallback (19); rate-limited transient alert + removed double-`notifyDev` (20); proactive-heartbeat once/PT-day (22); internal-address sender-skip (16); empty-body sender-aware warm bounce — deterministic, no-LLM, no-PII gate-bypass (17); `checkFollowUps` contact context (34 — later reverted); `sendEmail` injectable-transport seam (32, Lane-B seam); `findCareEligibleUsers` replacing the dead `'gatekeeper'` status token (66, Lane-C seam); forward-misdetection tightened to a strict separator (52); comment/dead-config hygiene (29, 40).
+- **Step 61 (QC-GO `b94fd23`):** gatekeeper-address resolution — new `gatekeeper_inbound_addresses` table (many inbound lanes → one gatekeeper) + settable `users.outbound_address` gold-destination + escalate-unregistered-forward (Operator-anchored `escalated` item, no blind triage); resolver throws-not-swallows on DB error.
+- **ARCH + BUILD doc edits (`abbf417`)** for Step 61 (identity-resolution, schema inventory, pipeline, system-actors, onboarding precondition); sprint-step tags stripped from the prose.
+- **Step 34 reverted (`0e04edc`, QC-GO):** the contact-record pull was unnecessary at v0.2 (the original email already identifies the contact); removed.
+- **Mira identity edits (`0cca657`) + bounce copy (`6a6b38b`), QC-GO:** gatekeeper "Setup Check-In" (gather forward-from addresses + gold destination → `notify_slack` to Operator) + triage lead/gatekeeper boundary; Mira's empty-body bounce wording placed.
+- **Both DB migrations applied + verified on DEV** (`add-emailmgr-items-updated-at-trigger.sql`, `add-gatekeeper-inbound-addresses.sql`); **prod applies at AC0 convergence.** `.roles` stale comment is already clean on dev (fixed 2026-06-04) — AC0 verifies on prod.
+
 ## 2026-06-23 (AC — orchestration-protocol load-block consolidation)
 
 - **De-duplicated the two `<mandatory_load>` blocks in `docs/protocols/ac-orchestration-protocol.md`:** the DC/QC/OC block is now the single canonical home for the load-discipline body; the team-subagent section collapses to a **4-substitution delta list** (identity closer, opener cascade-reference, the 4-file split, gate path). Net **−28 lines**, and an edit to the canonical block now flows to team agents automatically — closing the two-places-to-mirror drift that had already crept in (the "trap" paragraph, the identity-files-are-runtime example, and the load-discipline plea had each diverged or gone team-only). Commits `c262645` + cosmetic cleanup pass.
