@@ -8,6 +8,14 @@
 
 ---
 
+## 2026-06-25 (AC0 — round-2 CONVERGENCE: all 5 lanes merged into the bundle branch, tsc-clean; NOT merged-to-main/deployed)
+
+- **`r2/convergence-bundle` (tip `d149535`, pushed) = `main` + Lane C + Lane A/Step21/allowlist + register + M1 + Lane B.** `tsc --noEmit` clean; full pure-logic suite green. Merge order C→A→register→M1→B.
+- **Cross-lane seams wired:** Step 66 (`checkReflectionConsolidation` → Lane A's `findCareEligibleUsers`); Step 14/61 gold-destination (`submitDraftForApproval` `draft_to` → `goldDestination(recipientUser)` = `outbound_address ?? email`; degrades to email for non-gatekeepers — ADR-046).
+- **Delicate merges resolved + verified:** M1's dedup-RESUME × Lane A's Step-61 resolution-reorder in `process.ts` (keep Lane A's `resolveExternalId` key + M1's resume-vs-skip; escalate returns `"completed"` for M1's `ProcessOutcome`) — `test-breaker-resume` + `test-step61-process` pass. B's `classify.ts` 4-way resolved by taking HEAD's accumulated version + 3-way-applying B's discrete diff (14 hunks, clean). `db/users.ts`/`poll.ts`/`items.ts` keep-both unions.
+- **ADR-046** (gatekeeper-address resolution + self-registration) written. **Persistence checklist** `docs/working/2026.06.25-ac0-ac0-persistence-checklist.md` maps every loose round-2 item → its home. Runbook: `docs/working/2026.06.24-ac0-ac0-convergence-plan.md` (CONVERGENCE EXECUTION STATE §).
+- **Remaining (next AC0):** integration-QC → Step-32 test → persist (SPRINT v0.2 DONE-marks + NEW steps + v0.3 + ARCH/BUILD absorptions) → **[gated]** merge-to-main + prod migrations (Lane A 13/61, Lane C 10) + deploy WITH Justin → cleanup. The 6 live-DB tests "fail" only on prod state (migrations unapplied / prod wiped) — expected.
+
 ## 2026-06-25 (AC4a — STAGING lane round-2: design finalized + send-allowlist built [QC-GO] + ADR-045; staging-DB topology call)
 
 - **Staging lane (decoupled) deliverables DONE; the actual standup is gated on Justin's account actions before Mark** (not in AC0's current convergence bundle). Handoff: `docs/working/2026.06.24-ac4a-ac0-lane-staging-r2-handoff.md`.
