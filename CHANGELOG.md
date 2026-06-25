@@ -8,6 +8,15 @@
 
 ---
 
+## 2026-06-25 (AC0 — round-2 persistence pass, PRE-QC / persist-first; UNCOMMITTED, Justin SCM-review pending)
+
+- **Persist-first reorder (Justin's call):** the persistence pass runs BEFORE integration-QC so QC vets against the *true* round-2 model (not stale ARCH/BUILD). Status badges kept honest — round-2 work is "built + in bundle `r2/convergence-bundle`, deploy-pending," NOT "shipped."
+- **`SPRINT-V0.2-HARDENING.md` (on the bundle branch):** Section-A DONE-marks across Lane A (13,16,17,19,20,22,29,34,40,61,66; 32 = IN PROGRESS, test half deferred), Lane B (14,15,18b,26,27,28,31,37,62,63,64,65,68), Lane C (10; 11b), M1 (4), ACc (21); **new Steps 73–84**; Step-34 EVR-72 reframe; 69–72 verified present.
+- **`SPRINT-V0.3-CANDIDATES.md`:** added the round-2 v0.3 remainders (Step-64 recipient-binding, batch-redact, Step-34 contact-enrich, Step-66 leads→care, unregistered-direct-sender gap, Reflection validation soft-edge, L6 cluster light, Step-18b removal).
+- **Framing corrections (Justin flagged 2 persistent mischaracterizations):** (1) **DND** — ARCH + BUILD now state the emergency channel does NOT pierce Android OS-DND (2026-06-16 finding); money runaways are protected by the M1 *halt*, other emergencies are alert-only/morning-visibility; true pierce = open round-2. (2) **Redeploy** — `ac-orchestration-protocol.md` corrected: a merge does NOT auto-redeploy (Railway auto-deploy OFF for now, may be re-enabled); identity changes take effect on the next manual `railway up`.
+- **⚠️ Two discrepancies caught by AC0's code-read:** (a) **Step-52 numbering collision** — the strict-forward-separator fix is coded as "Step 52" but live SPRINT Step 52 is the GA task → decision owed (which renumbers; AC0 runs the grep-pass). (b) **Step-67b NOT actually done** — the stale `bypassQuietHours` ref is still in `emergency.ts`'s JSDoc despite the convergence-plan's "closed" claim → fold into DC's code-comment trip.
+- **Still owed in the pass (the continuation):** deep ARCH architecture-section absorptions (M1 safety layer → Pipeline/Security; Step-61 → Data Model/System Actors; Reflection `story_versions` → Data Model/Memory Architecture) + operator-guide additions + BUILD Status-block round-2 refresh + CHANGELOG May→`historical` split (cleanup). — [AC0]
+
 ## 2026-06-25 (AC0 — round-2 CONVERGENCE: all 5 lanes merged into the bundle branch, tsc-clean; NOT merged-to-main/deployed)
 
 - **`r2/convergence-bundle` (tip `d149535`, pushed) = `main` + Lane C + Lane A/Step21/allowlist + register + M1 + Lane B.** `tsc --noEmit` clean; full pure-logic suite green. Merge order C→A→register→M1→B.

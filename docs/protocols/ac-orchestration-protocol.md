@@ -205,7 +205,7 @@ The DC and QC briefs differ only in *task* — the six-part shape and the mechan
 
 - **Substantive build** (new pathway, multi-file, architectural, judgment-laden): DC build → QC full review → AC review → merge.
 - **Small / mechanical / pattern-mirror fix:** DC build → QC verifies (lighter, but she still looks) → AC review → merge.
-- **Heightened scrutiny (mandatory deep review):** anything touching a security boundary, cross-user isolation, the approval gate, or identity files (identity files also go through `identity-file-review.md` — they trigger a live redeploy).
+- **Heightened scrutiny (mandatory deep review):** anything touching a security boundary, cross-user isolation, the approval gate, or identity files (identity files also go through `identity-file-review.md`; note: a merge does NOT auto-redeploy — Railway auto-deploy is **OFF for now** (may be re-enabled later), so identity changes take effect only on the next **manual** `railway up`/restart, since the files are read at process start).
 
 The only changes that skip QC are non-code (pure docs, a typo). When unsure, QC verifies.
 
