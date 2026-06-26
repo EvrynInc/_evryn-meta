@@ -104,6 +104,14 @@ Let agents choose per-task, but log and audit. Quality over cost savings - bette
 ### Prompt Caching Matters at Scale
 Repeated context (system prompts, agent instructions, recent history) can be cached for ~90% cost reduction. Design agent prompts to be cacheable - stable prefixes, variable suffixes.
 
+### The load-failure callout lands harder in `<task>` than in `<mandatory_load>` (2026-06-25 experiment)
+
+Subagents partial-load even WITH the full `<mandatory_load>` discipline — a DC read lines 1–420 of a 749-line BUILD doc and called the rest irrelevant, despite all the load-gate prose, then admitted it in receipts. The unlock (Justin's experiment): **re-spun on the byte-identical brief with a load-failure callout added to the `<task>` block** — the SAME DC then loaded the doc IN FULL (1–750, canary confirmed) and self-flagged it as the file it had skipped.
+
+Why it works: `<mandatory_load>` is the block the agent is tempted to skim (it reads as "setup" before the "real work"); `<task>` is where the agent is actually reading *for what it has to do*, so a load-failure framing there gets read with attention. And the framing matters — a **"we already spun you once and you didn't fully load some of the files — this is your second chance"** device (generally true: instances commit this exact failure over and over) motivates far harder than an abstract warning, **even on a first spin** (a deliberate, fair fiction). Folding in the agents' own frequent offer — *"if you want, you can spin me again and I'll load everything"* — preempts it ("so here we are; this IS that re-spin").
+
+Codified as a **standing, verbatim `<task>` callout** in `docs/protocols/ac-orchestration-protocol.md` ("The exact words" skeleton). Paste it on every spin, re-spin or not; don't "correct" it to fire only on actual re-spins. It is **additive to**, not a replacement for, the precise-load-every-file + two-part-receipts discipline — but it's the highest-leverage single lever found so far on the chronic partial-load failure.
+
 ### Modular Context Loading
 Don't load everything every time. Split agent context into:
 - **Core:** Always loaded (identity, key principles, hard constraints)

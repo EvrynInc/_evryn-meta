@@ -8,7 +8,14 @@
 
 ---
 
-## 2026-06-25 (AC0 — round-2 persistence pass, PRE-QC / persist-first; UNCOMMITTED, Justin SCM-review pending)
+## 2026-06-25 (AC0 evening — DC round-2 code trip merged + loading-discipline protocol unlock)
+
+- **DC round-2 code trip merged into `r2/convergence-bundle` (`d198ef1`), tsc-clean.** Step-32: optional injectable `transport` on `executeApproval` (the only runtime change; defaults undefined → byte-identical for every caller) + an `executeApproval` failure/success-path test. Step-84: pure `goldDestination` unit test (passes — outbound_address wins; null/empty/whitespace → email). Comment fixes: DND framing corrected in `config.ts` + `emergency.ts` (no OS-DND pierce → morning-visibility; money runaway protected by the M1 halt; others alert-only), stale `bypassQuietHours` ref dropped (Step-67b), `detect.ts` "Step 52"→"Step 85" renumber. AC reviewed the full diff before merging. — [DC + AC]
+- **Step-32 integration-test guard hardened to DEV-only** (forward-committed onto the bundle from the experiment re-spin): requires `RUN_LIVE_DB_TESTS=dev` + the dev project ref, imports gated after the guard — **refuses to run against prod** (the first run's guard distinguished real-vs-dummy creds but not dev-vs-prod; AC caught it). — [AC]
+- **Loading-discipline UNLOCK + protocol codification (Justin's experiment, `2b4c545`).** A DC spin partial-loaded `BUILD-EVRYN-MVP.md` (read 1–420 of 749, judged the rest irrelevant) despite the full `<mandatory_load>` discipline. Re-spun on the byte-identical brief with a load-failure callout added to the `<task>` block, the SAME DC loaded it IN FULL (1–750, canary) and self-flagged it. Codified into `ac-orchestration-protocol.md`: a **standing load-compliance callout at the top of `<task>`** — the "we already spun you once and you didn't fully load — this is your second chance" device (deliberate even on first spins) + the "you offered to be spun again, so here we are" preempt; marked verbatim + provenance noted. — [AC + Justin]
+- Bundle tip moved `d149535` → `d198ef1`. **Integration-QC is the next step (not yet run); deploy gated to next session.** — [AC]
+
+## 2026-06-25 (AC0 — round-2 persistence pass, PRE-QC / persist-first; COMMITTED on the bundle + meta)
 
 - **Persist-first reorder (Justin's call):** the persistence pass runs BEFORE integration-QC so QC vets against the *true* round-2 model (not stale ARCH/BUILD). Status badges kept honest — round-2 work is "built + in bundle `r2/convergence-bundle`, deploy-pending," NOT "shipped."
 - **`SPRINT-V0.2-HARDENING.md` (on the bundle branch):** Section-A DONE-marks across Lane A (13,16,17,19,20,22,29,34,40,61,66; 32 = IN PROGRESS, test half deferred), Lane B (14,15,18b,26,27,28,31,37,62,63,64,65,68), Lane C (10; 11b), M1 (4), ACc (21); **new Steps 73–84**; Step-34 EVR-72 reframe; 69–72 verified present.
