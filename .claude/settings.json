@@ -17,5 +17,22 @@
       "Bash(git reset --hard*)",
       "Bash(rm -rf *)"
     ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "network": {
+      "allowedDomains": [
+        "hooks.slack.com",
+        "github.com",
+        "*.github.com",
+        "api.linear.app",
+        "*.railway.app",
+        "*.railway.com",
+        "*.supabase.co",
+        "*.supabase.com",
+        "registry.npmjs.org",
+        "*.npmjs.org"
+      ]
+    }
   }
 }
