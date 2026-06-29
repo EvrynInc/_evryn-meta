@@ -241,7 +241,7 @@
 - **BUILD doc (evryn-backend)** — Stale phase names stripped (8 locations), "Gmail as natural archive" corrected to Supabase, "triage system prompt" → "composable identity files", memory architecture table restored (had been over-trimmed to pointer-only — DC needs the build-resolution detail while writing core.md).
 - **ARCHITECTURE.md (evryn-backend)** — Sprint dates corrected (March 11-17), Current State section updated (Phase 0a/0b DONE, remaining identity files listed), stale "triage system prompt" terminology fixed.
 - **SPRINT doc (evryn-backend)** — AC1 task updated to "composable identity files" with correct directory structure. All "Build 2" references → "v0.3".
-- **Architecture trim brief** — Moved to `docs/sessions/historical/2026-03-09-architecture-trim-brief.md` (work complete).
+- **Architecture trim brief** — Moved to `docs/sessions/historical/2026.03/2026-03-09-architecture-trim-brief.md` (work complete).
 - **Claude Code permissions** — `settings.local.json` cleaned up from one-off approvals to structured allow list (reads scoped to Evryn repos, safe git/bash/dev tools auto-approved).
 - **#lock checkpoint** — current-state refreshed.
 
@@ -276,7 +276,7 @@
 - **trust-and-safety spoke** — "spam is people" principle added to spam mitigation bullet (redirect before blocking; bad actors get blocked, bad habits get redirected).
 - **LEARNINGS.md** — 4 new entries (#36-39: forward ≠ triage, situation per-context, untrusted input in prompt, catch-up-on-reconnect).
 - **AGENT_PATTERNS.md** — 3 new patterns (per-context situation determination, defense-in-depth for privileged modes, catch-up-on-reconnect).
-- **ARCHITECTURE.md trim brief** written at `docs/sessions/historical/2026-03-09-architecture-trim-brief.md` — reading list, strategy, constraints for a fresh instance to trim from 847 to ~500 lines. *(Executed in subsequent session — trim complete.)*
+- **ARCHITECTURE.md trim brief** written at `docs/sessions/historical/2026.03/2026-03-09-architecture-trim-brief.md` — reading list, strategy, constraints for a fresh instance to trim from 847 to ~500 lines. *(Executed in subsequent session — trim complete.)*
 - **#lock checkpoint** — current-state refreshed.
 
 ## 2026-03-06 (Cross-repo gatekeeper flow alignment + doc cleanup)
@@ -329,7 +329,7 @@
 
 - **core.md v1–v4** written through 4 drafts with Justin's line-level feedback. v1 (instruction manual, rejected) → v2 (soul-first rewrite from Master Plan) → v3 (structural reorder, committed) → v4 (all final edits applied, on disk, pending one tiny edit from Justin before commit). File at `evryn-backend/identity/core.md`.
 - **Identity directory structure** created in evryn-backend: `identity/`, `identity/situations/`, `identity/activities/`, `identity/knowledge/`.
-- **Session doc** written at `docs/sessions/historical/2026-03-04-identity-writing-s1.md` — 9 architectural decisions, v4 draft, offloaded content routing (what moved from core to which module), source materials index, open questions, resume instructions. All decisions absorbed into ADRs and persistent docs.
+- **Session doc** written at `docs/sessions/historical/2026.03/2026-03-04-identity-writing-s1.md` — 9 architectural decisions, v4 draft, offloaded content routing (what moved from core to which module), source materials index, open questions, resume instructions. All decisions absorbed into ADRs and persistent docs.
 - **AGENT_PATTERNS.md** — 2 new patterns: Script-as-Skill, Two-Layer Pacing.
 - **LEARNINGS.md** — 2 new entries: "Rich insights" over "structured data" (#34), Soul DNA test (#35).
 
