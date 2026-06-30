@@ -6,8 +6,8 @@
       "Grep(~/Evryn/Code/**)",
       "Edit(~/Evryn/Code/**)",
       "Write(~/Evryn/Code/**)",
-      "Bash(*)",
-      "WebFetch(*)",
+      "Bash",
+      "WebFetch",
       "WebSearch",
       "mcp__claude_ai_Linear__*",
       "mcp__claude_ai_Gmail__*"
@@ -17,22 +17,5 @@
       "Bash(git reset --hard*)",
       "Bash(rm -rf *)"
     ]
-  },
-  "sandbox": {
-    "enabled": true,
-    "network": {
-      "allowedDomains": [
-        "hooks.slack.com",
-        "github.com",
-        "*.github.com",
-        "api.linear.app",
-        "*.railway.app",
-        "*.railway.com",
-        "*.supabase.co",
-        "*.supabase.com",
-        "registry.npmjs.org",
-        "*.npmjs.org"
-      ]
-    }
   }
 }
