@@ -64,3 +64,18 @@ Start from "what's the cheapest we can run?" and upgrade only where quality visi
 - **v0.3 planning must include a model tier analysis** before the BUILD doc is finalized. This analysis is a prerequisite, not a nice-to-have — building a cost model on the wrong tier assumptions leads to understated projections.
 - **The batch API's 50% discount applies regardless of tier.** This means switching a batch operation from Opus to Sonnet saves 50% on top of the batch discount — potentially significant at scale. The analysis should quantify this.
 - **If the analysis concludes "Opus for everything," that's a defensible position** — document the reasoning and move on. The product's quality justification is strong.
+
+---
+
+## Amendment (2026-06-30, Justin + AC2): one carve-out — the obvious-pass Haiku pre-screen
+
+**Status of the amendment:** shape ratified by Justin 2026-06-30; the carve-out goes live only after an empirical shadow trial passes (below). Build = SPRINT-V0.2-HARDENING Step 44 (cost lane ①). Spec: `_evryn-meta/docs/working/2026.06.30-ac2-haiku-prescreen-build-spec.md`.
+
+**What changes:** v0.2 is no longer *strictly* "Opus for everything." We carve out exactly ONE narrow operation to a cheaper tier — the **obvious-pass screen** on the gatekeeper-forward path. A self-contained `claude-haiku-4-5` call runs *before* the Opus triage and returns `pass` (obvious no-fit) or `escalate`; on an obvious `pass` it records the pass deterministically and **Opus never runs**. Everything else stays Opus — conversation, the gold/edge judgment itself, research synthesis, drafts to the gatekeeper, profile/note writing. The carve-out is *only* the obvious-no-fit screen.
+
+**Why this honors ADR-020 rather than breaking it:**
+- It is precisely ADR-020 §"v0.3+: Dedicated analysis" item 4 — *"operations that are genuinely low-judgment … where Haiku would perform identically"* — pulled forward to v0.2 because the volume (~5,650 obvious passes/mo) makes it worth doing now rather than waiting for v0.3. The "volume makes this free" premise that justified Opus-for-everything in v0.2 is exactly what flips here: at ~6,000 forwards/mo the obvious-pass tax is ~$1,800/mo, no longer negligible.
+- It keeps ADR-020's **burden of proof on downgrading.** The screen is not adopted on a cost argument alone; it ships dormant, runs in **shadow mode** (logging its would-be verdict against Opus's real verdict) against the 18 synthetic fixtures pre-live and ~1 week of real gatekeeper traffic, and only flips to active on **~0 false-pass + Justin's explicit sign-off.** This is the empirical side-by-side ADR-020 item 3 prescribed — done cheaply, before the carve-out can affect a single real lead.
+- The **asymmetric safety** is what makes a cheaper tier acceptable on this one operation where ADR-020's quality concern otherwise applies: the screen can only `pass` or `escalate`, never make a positive call, and the runtime **fails safe to escalate** on any error/timeout/ambiguity. A false-escalate costs one Opus query; a false-pass is the un-backstoppable error the shadow trial exists to drive to zero.
+
+**Consequence / scope of the precedent:** this is a *narrow, validated* carve-out, not a re-opening of "tier everything." The next tiering candidates (if any) still owe ADR-020's full analysis. The broader v0.3 model-tier analysis ADR-020 §"v0.3+" requires is unchanged and still owed; this amendment resolves the obvious-pass case only.
