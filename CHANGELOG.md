@@ -8,6 +8,10 @@
 
 ---
 
+## 2026-06-29 (AC — evryn-ops local clone synced to renamed `main`)
+
+- **evryn-ops brought up to date after the GitHub `master`→`main` rename (2026-06-19).** Local clone was stale on `master` tracking the now-deleted `origin/master`; the rename case (not the both-branches case). Local `master` was a clean ancestor of `origin/main` — no fork, 0 ahead / 6 behind, clean tree. Renamed local `master`→`main`, set tracking to `origin/main`, fixed dangling `origin/HEAD`, fast-forwarded `60db052`→`5df0f8d`. The 6 commits = the OC `CLAUDE.md` rebuild (tip `5df0f8d`, the `/health`-hollow pattern). Local-only catch-up — no commits authored, nothing pushed. Now matches the canonical inventory (`evryn-ops` → `main`). — [AC]
+
 ## 2026-06-29 (AC — Claude Code `Bash(*)` permission regression diagnosed + fixed)
 
 - **Root cause: the `Tool(*)` wildcard permission form silently broke in Claude Code 2.1.195.** `Bash(*)` and `WebFetch(*)` in `.claude/settings.json` stopped auto-allowing — every bash/webfetch command popped an approval prompt, despite the rules being present and unchanged for months. **Bare `Bash`/`WebFetch` (tool-name only) is the working form**, and the canonical one per the official docs (which say `Bash(*)` *should* be equivalent — so this is a regression, not a config error). Path-pattern rules (`Glob(~/Evryn/Code/**)` etc.) were unaffected; only the bare-`(*)` form broke. — [AC + Justin]
