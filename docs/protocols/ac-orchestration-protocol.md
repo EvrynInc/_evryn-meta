@@ -205,6 +205,29 @@ The DC and QC briefs differ only in *task* — the six-part shape and the mechan
 
 ---
 
+## Resuming a subagent — SendMessage-by-agentId (capability confirmed 2026-07-01)
+
+**Subagent resume now works in AC's setup, and it retains the subagent's full prior context.** This reverses the 2026-06-17 finding (still echoed in AC `CLAUDE.md` before this) that "no continuation tool is available … every subagent is unavoidably fresh." The mechanism: a **deferred `SendMessage` tool** (surface it with ToolSearch) now exists, and every Agent-tool spawn returns an `agentId` in its result. `SendMessage(to: <agentId>, message: …)` re-runs that completed agent **with its prior conversation intact** and returns its reply as a task result/notification.
+
+**What's proven (AC0 + Justin live test, 2026-07-01):**
+- A **fully-loaded QC subagent** (~490–500K tokens: full cascade + the whole runtime + identity files) was resumed and answered, **with zero new tool calls — pure memory**, exact runtime identifiers it had loaded but never stated before (`runEvrynQuery`, `consolidate_profile`, `outbound_address`), plus an unforgeable in-context passphrase it had invented. The *heavy* load genuinely survives resume, not just a trivial context.
+- Context **accumulates across resume hops** (a resumed agent also remembers the earlier resume messages), so a build→review→fix chain on one resumed agent is mechanically possible.
+- A spawn made **without** `run_in_background` still launched async and was **equally resumable** — there is no "foreground spawn that denies you a handle" case to worry about here.
+
+**Mechanism = transcript replay.** `SendMessage` reports *"resumed from transcript"* — resume rehydrates the agent's saved transcript (which holds all its `Read` results, hence the retained load). Two consequences: **(1)** each resume re-sends the whole transcript, so resuming a heavy agent is **not free** — cost scales with its loaded size; **(2)** resumability is tied to that transcript persisting.
+
+**OPEN — how long does resumability last?** Proven only **within-session, minutes apart.** The time-to-live (hours later? across AC-side compaction?) is **untested as of 2026-07-01** — a re-test is scheduled (live handles + re-quiz in `docs/working/2026.07.01-ac0-subagent-resume-test-state.md`). **Until that's answered, do not build any loop that depends on an agent still being resumable after a long gap** — treat resume as reliable only within the active session.
+
+**When resume helps vs. when to keep spinning fresh:**
+- **Helps:** a fix-trip to the *same DC* that already built (it keeps its build context + the runtime it loaded — no re-paying the full-cascade load), or any multi-turn exchange with one agent where continuity is the point.
+- **Keep fresh — do NOT resume:** **QC's independence depends on fresh eyes.** A re-review by a *resumed* QC is not an independent second look — it carries its prior framing. For QC verification, spin fresh. Resume is a continuity tool, not an independence tool.
+- **Caveat:** a resumed agent may still choose to call tools (in the test, one re-read files despite a "no tools" instruction) — steer it in the message; don't assume zero tool use.
+- **The fresh-spawn rule is unchanged:** a **new** `Agent()` call is still a clean, zero-memory instance — never brief a *new* spawn as if it did prior work. Resume (SendMessage-by-id) is the *only* path that carries context; a fresh Agent call does not.
+
+*(Capability discovery, not yet a process change. The durable force-load / SDK-harness thread in the loading-discipline work is separate. Once the time-to-live is known, fold the final rule in here and retire the working doc.)*
+
+---
+
 ## Review depth — QC verifies by default; AC always reviews too
 
 **QC verifies every real code change — even simple ones.** Independent fresh-eyes verification is QC's whole point; *"it's small"* is not a reason to skip her — that just reintroduces a single point of failure (AC alone). AC *also* reviews, bringing the system-level / higher-altitude lens — but AC's review *adds to* QC's, it never *replaces* it. The question is never *whether* QC runs, only *how deep* she goes. Subagent runs are 1–3 minutes; there is virtually no cost to letting her confirm.
