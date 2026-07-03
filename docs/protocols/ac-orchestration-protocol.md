@@ -216,7 +216,7 @@ The DC and QC briefs differ only in *task* — the six-part shape and the mechan
 
 **Mechanism = transcript replay.** `SendMessage` reports *"resumed from transcript"* — resume rehydrates the agent's saved transcript (which holds all its `Read` results, hence the retained load). Two consequences: **(1)** each resume re-sends the whole transcript, so resuming a heavy agent is **not free** — cost scales with its loaded size; **(2)** resumability is tied to that transcript persisting.
 
-**OPEN — how long does resumability last?** Proven only **within-session, minutes apart.** The time-to-live (hours later? across AC-side compaction?) is **untested as of 2026-07-01** — a re-test is scheduled (live handles + re-quiz in `docs/working/2026.07.01-ac0-subagent-resume-test-state.md`). **Until that's answered, do not build any loop that depends on an agent still being resumable after a long gap** — treat resume as reliable only within the active session.
+**Time-to-live — confirmed ≥ ~28h (re-test 2026-07-02); upper bound still unknown.** Both fully-loaded QC agents from the 2026-07-01 test were resumed **~28 hours later — overnight, across a session-day boundary** — and recalled their exact unforgeable passphrases + the loaded runtime identifiers **with zero re-reads (pure memory)**; the ~500K-token context survived intact. So resume is reliable well beyond a single active session — rely on it freely within a day. **Still unknown:** the absolute ceiling (only the ~28h point is measured), and whether it survives AC-side context *compaction* or a full session teardown (the transcript lives in the session's task files, so a teardown likely ends resumability). For a gap longer than measured, fire a cheap recall probe (an unforgeable token) before depending on the load.
 
 **When resume helps vs. when to keep spinning fresh:**
 - **Helps:** a fix-trip to the *same DC* that already built (it keeps its build context + the runtime it loaded — no re-paying the full-cascade load), or any multi-turn exchange with one agent where continuity is the point.
@@ -224,7 +224,7 @@ The DC and QC briefs differ only in *task* — the six-part shape and the mechan
 - **Caveat:** a resumed agent may still choose to call tools (in the test, one re-read files despite a "no tools" instruction) — steer it in the message; don't assume zero tool use.
 - **The fresh-spawn rule is unchanged:** a **new** `Agent()` call is still a clean, zero-memory instance — never brief a *new* spawn as if it did prior work. Resume (SendMessage-by-id) is the *only* path that carries context; a fresh Agent call does not.
 
-*(Capability discovery, not yet a process change. The durable force-load / SDK-harness thread in the loading-discipline work is separate. Once the time-to-live is known, fold the final rule in here and retire the working doc.)*
+*(Capability discovery, not yet a process change. The durable force-load / SDK-harness thread in the loading-discipline work is separate. The scheduled time-to-live re-test is done — 2026-07-02, ≥ ~28h — so `docs/working/2026.07.01-ac0-subagent-resume-test-state.md` can be archived.)*
 
 ---
 
