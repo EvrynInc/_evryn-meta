@@ -139,6 +139,8 @@ Bash/CLI access to Supabase CLI + API, Linear API key (in `_evryn-meta/.env`), G
 
 **Task management:** [Linear (EVR workspace)](https://linear.app/evryn) — the team's task tracking system with RACI labels. For protocol and API key, see `evryn-team-workspace/shared/protocols/linear-protocol.md`.
 
+**Live experiments / watch-list:** `evryn-team-workspace/shared/projects/product/watch-list.md` — the single home for what we're actively monitoring + experiments-in-flight (each entry: what we watch · the decision it feeds · its exit-criterion/trigger · owner). Soren's (tied to the v0.2 maintenance plan / EVR-114); AC0 folds new watches in as lanes generate them (e.g. the Haiku screen's shadow-mode + the cache-temperature measurement).
+
 **How work flows:** The gap between ARCHITECTURE.md (target) and current state (reality) = the work. Build docs scope the work. Linear tracks discrete tasks across sessions.
 
 ---
