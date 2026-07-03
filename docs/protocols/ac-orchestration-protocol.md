@@ -224,7 +224,7 @@ The DC and QC briefs differ only in *task* — the six-part shape and the mechan
 - **Caveat:** a resumed agent may still choose to call tools (in the test, one re-read files despite a "no tools" instruction) — steer it in the message; don't assume zero tool use.
 - **The fresh-spawn rule is unchanged:** a **new** `Agent()` call is still a clean, zero-memory instance — never brief a *new* spawn as if it did prior work. Resume (SendMessage-by-id) is the *only* path that carries context; a fresh Agent call does not.
 
-*(Capability discovery, not yet a process change. The durable force-load / SDK-harness thread in the loading-discipline work is separate. The scheduled time-to-live re-test is done — 2026-07-02, ≥ ~28h — so `docs/working/2026.07.01-ac0-subagent-resume-test-state.md` can be archived.)*
+*(Capability discovery, not yet a process change. The durable force-load / SDK-harness thread in the loading-discipline work is separate. The scheduled re-test is done — 2026-07-02, ≥ ~28h — and Justin extended it into a multi-day probe to find the ceiling, so `docs/working/2026.07.01-ac0-subagent-resume-test-state.md` (live handles + re-quiz) is retained until that concludes.)*
 
 ---
 
