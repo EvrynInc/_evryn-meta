@@ -8,6 +8,13 @@
 
 ---
 
+## 2026-07-06 (v0.2.6 SHIPPED — AC2 cost lane ① Haiku pre-screen, ships OFF; AC0 reconcile)
+
+- **`v0.2.6` DEPLOYED + LIVE** (`evryn-backend` merge `8e11e9d`, tag `v0.2.6`; `railway up` deployment `22901ffe` SUCCESS + clean boot — Supabase/Slack Socket Mode/polling, zero errors). **The #1 cost lever (~$1,800/mo) — but ships `off`, ZERO prod behavior change** until the Mark-gated shadow-trial → Justin's flip. Ledger: `docs/deploy-log.md`. — [AC2 deploy + Justin]
+- **What shipped:** a cheap `claude-haiku-4-5` **three-verdict** pre-screen (`src/triage/haiku-screen.ts`) placed IN FRONT of the Opus forward-triage (forwards only): `ignore` (obvious junk → `record_ignore`, terminal-dead, NO stamp) / `pass` (real-person no-fit → `record_pass`, contact stamped) / `escalate` (anything else, or any error/timeout/unparseable → full Opus — fail-safe). Gated by `HAIKU_SCREEN_MODE` (`off`|`shadow`|`active`), shipped `off`. Shadow store `haiku_screen_shadow` (RLS on, service_role-only) derives `false_filter`/`wrongly_junked` + a fresh-false-filter `notifyDev`. ADR-020 amendment. — [AC2; DC build; QC-GO]
+- **1 prod migration applied + verified** (`add-haiku-screen-shadow-table.sql`): prod ref `wvaaqwapueycyxyhxdnh` verified before apply (psql bypasses `assertNotProd`); table + 9 cols, RLS on, service_role-only grants, 5 indexes; pre/post `pg_dump` `backups/full-public-2026-07-06-{pre,post}-haiku.sql` committed. — [AC2]
+- **AC0 reconcile (this entry):** `current-state.md` bumped to `v0.2.6`; SPRINT **Step 44 flipped → DONE** (with the Mark-gated shadow-trial/flip tail noted — not "done-done" until `active`); this CHANGELOG entry; team current-state line. Deploy-log row + `v0.2.6` tag written by AC2 (the lane instance). **Lane state:** ② daily clustering (Step 58) is next (must be live before Mark forwards) — **AC0 gave the all-clear on v0.2.6**; ③ bookkeeping (Step 57) + Step 71 still ahead. — [AC0]
+
 ## 2026-07-03 (AC0 — session conduct: AC2/AC3 re-spin coordination + DB-in-3-places routing + CLAUDE.md watch-list pointer + #lock/push sweep)
 
 - **Loaded full cascade + entire `src/` runtime; verified live state vs git.** The wave has **narrowed to 2 active lanes + AC6 backburner:** AC1 (cleanup) + AC4 (security) both CLOSED/shipped (`v0.2.5` `0c8c74b` LIVE); AC2 (cost) finishing ① Haiku pre-screen (QC-GO, deploy-remaining, NEXT in queue); AC3 (identity/ops) on staging standup + the watch-list. `main` is docs-only ahead of the deployed tag. — [AC0]
