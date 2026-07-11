@@ -267,6 +267,7 @@
     .cost-row .stat-card { flex: 1; }
     .cost-value { font-size: 1.4rem; font-weight: 700; color: #60a5fa; }
     .cost-breakdown { font-size: 0.75rem; color: #888; }
+    .cost-breakdown-label { font-size: 0.65rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin: 8px 0 2px; }
     .cost-breakdown-row { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid #1a1a1a; }
     .cost-breakdown-row:last-child { border-bottom: none; }
 
@@ -850,9 +851,30 @@
       const byActivity = cost.todayByActivity || {};
       const actKeys = Object.keys(byActivity).filter(k => byActivity[k] > 0);
       if (actKeys.length > 0) {
+        html += '<div class="cost-breakdown-label">By activity</div>';
         html += '<div class="cost-breakdown">';
         actKeys.sort((a, b) => byActivity[b] - byActivity[a]).forEach(k => {
           html += `<div class="cost-breakdown-row"><span>${escapeHtml(k)}</span><span>$${byActivity[k].toFixed(2)}</span></div>`;
+        });
+        html += '</div>';
+      }
+
+      // By-model spend cut (Opus vs. Haiku). Degrades cleanly: renders only
+      // models with spend > 0, so when the Haiku screen ships OFF (Opus only)
+      // the block shows just Opus; when todayByModel is empty/absent it renders
+      // nothing at all (no empty box). Friendly label via substring test so a
+      // dated model id (claude-opus-4-7-YYYYMMDD) still maps to Opus/Haiku.
+      const byModel = cost.todayByModel || {};
+      const modelKeys = Object.keys(byModel).filter(k => byModel[k] > 0);
+      if (modelKeys.length > 0) {
+        html += '<div class="cost-breakdown-label">By model</div>';
+        html += '<div class="cost-breakdown">';
+        modelKeys.sort((a, b) => byModel[b] - byModel[a]).forEach(k => {
+          const lower = k.toLowerCase();
+          const label = lower.includes('opus') ? 'Opus'
+            : lower.includes('haiku') ? 'Haiku'
+            : k;
+          html += `<div class="cost-breakdown-row"><span>${escapeHtml(label)}</span><span>$${byModel[k].toFixed(2)}</span></div>`;
         });
         html += '</div>';
       }

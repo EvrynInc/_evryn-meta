@@ -184,12 +184,15 @@ export default async function handler(request: Request) {
     ]);
 
     // ---- Cost (from llm_usage; aggregate only) ----
-    // total_cost_usd + activity + created_at only. No scope_user_id /
-    // emailmgr_item_id leaves the server.
+    // total_cost_usd + activity + model + created_at only. No scope_user_id /
+    // emailmgr_item_id leaves the server. `model` is a non-PII model-id string
+    // (e.g. claude-opus-4-7 / claude-haiku-4-5) — safe to return; it powers the
+    // by-model spend cut (Opus vs. Haiku) so the pre-screen's net saving is
+    // legible. Still ONE round trip — model is added to the existing select.
     const [{ data: todayCostRows }, { data: monthCostRows }] = await Promise.all([
       supabase
         .from('llm_usage')
-        .select('total_cost_usd, activity')
+        .select('total_cost_usd, activity, model')
         .gte('created_at', todayStart),
       supabase
         .from('llm_usage')
@@ -209,6 +212,15 @@ export default async function handler(request: Request) {
     (todayCostRows || []).forEach((r) => {
       const key = r.activity || 'unknown';
       todayByActivity[key] = (todayByActivity[key] || 0) + (r.total_cost_usd || 0);
+    });
+    // Aggregate by the RAW model string (keyed as-is, so a future dated model id
+    // like claude-opus-4-7-YYYYMMDD sums under its own key rather than being
+    // dropped) — same reduce shape as todayByActivity. The frontend derives the
+    // friendly Opus/Haiku label via substring test.
+    const todayByModel: Record<string, number> = {};
+    (todayCostRows || []).forEach((r) => {
+      const key = r.model || 'unknown';
+      todayByModel[key] = (todayByModel[key] || 0) + (r.total_cost_usd || 0);
     });
 
     // ---- Recent items (STATUS-ONLY; subject truncated) ----
@@ -247,6 +259,7 @@ export default async function handler(request: Request) {
           todayUsd,
           monthUsd,
           todayByActivity,
+          todayByModel,
         },
         // STUB — daily-cluster heartbeat ships separately (a cost-levers
         // thrust). Frontend renders null as "—".
