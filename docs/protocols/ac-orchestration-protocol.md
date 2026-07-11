@@ -194,6 +194,25 @@ That token is **`#cascade-override`**. When AC puts the literal token in a brief
 
 ---
 
+## When the target is a SEPARATE codebase, not the Evryn runtime
+
+**The load *discipline* is unchanged — only the load *content* tracks the target.** Every file list and cascade shape in this protocol assumes the trip targets the **Evryn product runtime** (`evryn-backend/src/` + its `identity/*.md` + `ARCHITECTURE.md`/`BUILD`) — because that's what DC/QC almost always build and review. A few trips target a **genuinely separate codebase with its own tree and no `ARCHITECTURE.md`/`BUILD` of its own** — e.g. the monitoring **dashboard** (`_evryn-meta/dashboard/`). For those, the precise-load / full-load / gate / two-part-receipts discipline is **identical**, but the Evryn-runtime cascade is the *wrong content* — so a non-runtime trip is the one legitimate structural use of **`#cascade-override`** (its own guardrail already sanctions "use it only when full loading is actively *wrong*" — and loading the runtime cascade for a change that doesn't touch the runtime IS actively wrong).
+
+**The mechanism — a normal `#cascade-override`, used to swap in a whole different system's load** (NOT to thin the runtime load): the brief carries the literal token, a one-line reason (*"target is the [dashboard], a separate codebase; the Evryn-runtime cascade is not the system under change — this swaps in the target's complete load, it does not thin a runtime load"*), and an explicit file list that IS the target's full standing set:
+
+- **The subagent's own CLAUDE.md in full + its "Context Discipline" section** — always, unchanged; since `#cascade-override` means "load only the list," the CLAUDE.md must BE on the list (it's what makes DC be DC / QC be QC).
+- **The target's standing set:** the code being changed + the code it directly touches, in full; the **data/schema contract** it depends on (for the dashboard cost view: `evryn-backend/src/db/llm-usage.ts` for the `llm_usage` columns + the model-name constants, plus the aggregate-only / PII-firewalled posture in `dashboard/api/product.ts`); and the higher-altitude doc that frames the target (the ARCHITECTURE **Data Model** row for the table). Grep-and-read the target tree exactly as part 2 prescribes; annotate every file with its line span; the full-load gate applies to this list.
+
+**Why the token is *required* (not optional) here:** without it, the `<mandatory_load>` **reconcile step** makes the subagent re-pull every standing file its own cascade names — i.e. the Hub + the Evryn `ARCHITECTURE`/`BUILD` — which defeats the whole swap. `#cascade-override` is the *only* sanctioned way to skip that reconcile, so a genuine different-target trip must use it. This **broadens** `#cascade-override`'s legit cases (it was framed only as narrowing *within* the runtime); it is the SAME token, same required reason + receipts-acknowledgment, same "near-never" caution — not a new mechanism.
+
+**Loophole guard — this NEVER applies to the Evryn runtime.** Any change to `evryn-backend/src/` OR the identity files is a runtime trip that loads the full runtime cascade with **no override**, full stop. "This part feels peripheral / self-contained" is exactly the judgment the load gate + `#cascade-override`'s guardrails exist to override — this provision applies ONLY to a *literally separate codebase* (its own directory tree, its own concerns). If you're unsure whether a target counts as separate, it does NOT — load the full runtime, no override.
+
+Nothing else changes: the verbatim `<identity>`/`<mandatory_load>`/`<pre_task>`/`<task>`/`<questions_first>`/`<receipts>` blocks, the gate, the pleas, the loop, and the merge/deploy rubric all stand.
+
+*(Added 2026-07-10 by AC3 with Justin's explicit authorization, for the dashboard cost-view build — the first non-runtime DC/QC trip. Authorized scope: accuracy for a non-runtime target ONLY; the process discipline is untouched.)*
+
+---
+
 ## The loop
 
 - **Build:** AC spins DC → DC builds on its branch → AC (or QC) reviews → merge gate.
