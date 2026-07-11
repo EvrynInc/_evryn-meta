@@ -857,6 +857,25 @@
         html += '</div>';
       }
 
+      // By-model spend cut (Opus vs. Haiku). Degrades cleanly: renders only
+      // models with spend > 0, so when the Haiku screen ships OFF (Opus only)
+      // the block shows just Opus; when todayByModel is empty/absent it renders
+      // nothing at all (no empty box). Friendly label via substring test so a
+      // dated model id (claude-opus-4-7-YYYYMMDD) still maps to Opus/Haiku.
+      const byModel = cost.todayByModel || {};
+      const modelKeys = Object.keys(byModel).filter(k => byModel[k] > 0);
+      if (modelKeys.length > 0) {
+        html += '<div class="cost-breakdown">';
+        modelKeys.sort((a, b) => byModel[b] - byModel[a]).forEach(k => {
+          const lower = k.toLowerCase();
+          const label = lower.includes('opus') ? 'Opus'
+            : lower.includes('haiku') ? 'Haiku'
+            : k;
+          html += `<div class="cost-breakdown-row"><span>${escapeHtml(label)}</span><span>$${byModel[k].toFixed(2)}</span></div>`;
+        });
+        html += '</div>';
+      }
+
       // Cluster heartbeat placeholder
       html += `
         <h2>Cluster Heartbeat</h2>
