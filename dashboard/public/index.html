@@ -313,6 +313,113 @@
     .result-pill.edge { background: #1e3a5f; color: #60a5fa; }
     .result-pill.pass { background: #1f2937; color: #9ca3af; }
     .product-notice { background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 24px; text-align: center; color: #888; }
+
+    /* ===== Team Runtime tab ===== */
+    .tr-note { font-size: 0.72rem; color: #777; margin: 4px 0 14px; }
+    .tr-runtime-light {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.85rem; font-weight: 600;
+      padding: 8px 14px; border-radius: 8px;
+      background: #1a1a1a; border: 1px solid #333; margin-bottom: 4px;
+    }
+    .tr-runtime-light .dot { width: 10px; height: 10px; border-radius: 50%; background: #666; }
+    .tr-runtime-light.alive { border-color: #22c55e; color: #22c55e; }
+    .tr-runtime-light.alive .dot { background: #22c55e; }
+    .tr-runtime-light.down { border-color: #ef4444; color: #ef4444; }
+    .tr-runtime-light.down .dot { background: #ef4444; }
+
+    .tr-card {
+      background: #1a1a1a; border: 1px solid #333; border-radius: 8px;
+      padding: 16px; margin-bottom: 14px;
+    }
+    .tr-card.master { border-left: 4px solid #666; }
+    .tr-card.master.paused { border-left-color: #eab308; }
+    .tr-card.master.killed { border-left-color: #ef4444; }
+    .tr-card.agent { border-left: 4px solid #666; }
+    .tr-card.agent.active { border-left-color: #22c55e; }
+    .tr-card.agent.paused { border-left-color: #eab308; }
+    .tr-card.agent.hardpaused { border-left-color: #f97316; }
+    .tr-card.agent.killed { border-left-color: #ef4444; }
+
+    .tr-card-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .tr-title { font-size: 1.05rem; font-weight: 700; color: #fff; }
+    .tr-statuslight { display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .tr-statuslight .dot { width: 9px; height: 9px; border-radius: 50%; }
+    .tr-statuslight.active { color: #22c55e; } .tr-statuslight.active .dot { background: #22c55e; }
+    .tr-statuslight.paused { color: #eab308; } .tr-statuslight.paused .dot { background: #eab308; }
+    .tr-statuslight.hardpaused { color: #f97316; } .tr-statuslight.hardpaused .dot { background: #f97316; }
+    .tr-statuslight.killed { color: #ef4444; } .tr-statuslight.killed .dot { background: #ef4444; }
+
+    .tr-meta { font-size: 0.75rem; color: #888; margin-top: 6px; display: flex; flex-direction: column; gap: 2px; }
+    .tr-meta .k { color: #666; }
+
+    .tr-controls { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+    .tr-btn {
+      padding: 6px 14px; border-radius: 6px; cursor: pointer;
+      font-size: 0.78rem; font-weight: 600; border: 1px solid #333;
+      background: #222; color: #ddd;
+    }
+    .tr-btn:hover { background: #2a2a2a; }
+    .tr-btn.pause { border-color: #eab308; color: #eab308; }
+    .tr-btn.hard { border-color: #f97316; color: #f97316; }
+    .tr-btn.resume { border-color: #22c55e; color: #22c55e; }
+    .tr-btn.kill { border-color: #ef4444; color: #ef4444; }
+    .tr-btn.confirm { background: #7f1d1d; border-color: #ef4444; color: #fff; }
+
+    /* Reason UX */
+    .tr-reason-wrap { margin-top: 12px; }
+    .tr-reason-label { font-size: 0.68rem; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .tr-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+    .tr-chip {
+      padding: 3px 10px; border-radius: 12px; font-size: 0.72rem; cursor: pointer;
+      background: #222; border: 1px solid #333; color: #aaa;
+    }
+    .tr-chip:hover { background: #2a2a2a; color: #fff; }
+    .tr-reason-input {
+      width: 100%; max-width: 360px; padding: 6px 10px; border-radius: 6px;
+      background: #0a0a0a; border: 1px solid #333; color: #fff; font-size: 0.78rem;
+    }
+    .tr-reason-current { font-size: 0.75rem; color: #999; margin-top: 4px; }
+    .tr-reason-current .txt { color: #ddd; }
+
+    /* Capabilities panel */
+    .tr-caps { margin-top: 14px; border-top: 1px solid #262626; padding-top: 12px; }
+    .tr-caps-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+    .tr-caps-title { font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+    .tr-tiers { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tr-tier-btn {
+      padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; cursor: pointer;
+      background: #1e293b; border: 1px solid #334155; color: #93c5fd;
+    }
+    .tr-tier-btn:hover { background: #24344d; }
+    .tr-tier-note { font-size: 0.68rem; color: #666; margin-top: 4px; }
+
+    .tr-cap { border-bottom: 1px solid #1a1a1a; }
+    .tr-cap:last-child { border-bottom: none; }
+    .tr-cap-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; }
+    .tr-twirl { cursor: pointer; color: #666; font-size: 0.7rem; width: 12px; user-select: none; transition: transform 0.15s; display: inline-block; }
+    .tr-twirl.open { transform: rotate(90deg); }
+    .tr-cap-name { flex: 1; font-size: 0.8rem; color: #ddd; }
+    .tr-cap-name .star { color: #fbbf24; margin-right: 4px; }
+    .tr-cap-desc { display: none; font-size: 0.74rem; color: #888; padding: 0 0 8px 22px; line-height: 1.45; }
+    .tr-cap-desc.open { display: block; }
+
+    /* Toggle switch */
+    .tr-toggle { position: relative; width: 38px; height: 20px; flex-shrink: 0; }
+    .tr-toggle input { opacity: 0; width: 0; height: 0; }
+    .tr-toggle .slider {
+      position: absolute; inset: 0; cursor: pointer; background: #333;
+      border-radius: 20px; transition: background 0.15s;
+    }
+    .tr-toggle .slider::before {
+      content: ''; position: absolute; height: 14px; width: 14px; left: 3px; top: 3px;
+      background: #999; border-radius: 50%; transition: transform 0.15s;
+    }
+    .tr-toggle input:checked + .slider { background: #16653433; border: 1px solid #22c55e; }
+    .tr-toggle input:checked + .slider::before { transform: translateX(18px); background: #22c55e; }
+
+    .tr-section-label { font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 8px; }
+    .tr-empty { background: #111; border: 1px dashed #333; border-radius: 8px; padding: 20px; text-align: center; color: #666; font-size: 0.82rem; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
@@ -340,6 +447,7 @@
   <!-- Tab switcher -->
   <div class="tabs">
     <button class="tab-btn active" data-tab="product-tab">Evryn Product</button>
+    <button class="tab-btn" data-tab="team-tab">Team Runtime</button>
     <button class="tab-btn" data-tab="agents-tab">Agents</button>
   </div>
 
@@ -446,6 +554,13 @@
   <!-- Evryn Product Tab -->
   <div id="product-tab" class="tab-pane active">
     <div id="product-content">
+      <div class="loading">Loading...</div>
+    </div>
+  </div>
+
+  <!-- Team Runtime Tab -->
+  <div id="team-tab" class="tab-pane">
+    <div id="team-content">
       <div class="loading">Loading...</div>
     </div>
   </div>
@@ -612,6 +727,7 @@
         hideLogin();
         loadData();
         loadProductData();
+        loadTeamData();
       }
     }
 
@@ -932,6 +1048,294 @@
       }
     }
 
+    // ========== Team Runtime tab ==========
+    // Control panel for the founding-team autonomous runtime. Reads/writes the
+    // SAME agent_state / agent_capabilities rows the runtime's gate checks — the
+    // ~5s gate-cache TTL means a write bites within seconds. Renders inert off
+    // { configured:false } until Justin sets TEAM_SUPABASE_* in Vercel.
+    let teamData = null;
+    // Which capability twirl-downs are open (persist across the 30s re-render).
+    const teamOpenCaps = new Set(); // keys: `${agent}::${capability}`
+    // Which kill buttons are mid-confirm (are-you-sure), so a re-render doesn't
+    // silently reset them. Keys describe the exact action.
+    const teamConfirming = new Set();
+    const REASON_CHIPS = ['testing', 'misbehaving', 'budget', 'maintenance'];
+
+    // POST an action to /api/team, then reload the panel so the UI shows truth
+    // (the server echoes the updated row; we re-fetch the whole panel for the
+    // simplest correct render). Pause fires instantly — reason is applied AFTER.
+    async function teamAction(payload) {
+      if (!authHeader) return null;
+      try {
+        const res = await fetch('/api/team', {
+          method: 'POST',
+          headers: { 'Authorization': authHeader, 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (res.status === 401) {
+          localStorage.removeItem('evryn_auth'); authHeader = null; showLogin(true); return null;
+        }
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          console.error('Team action failed:', payload.action, json);
+          alert('Action failed: ' + (json.error || res.status));
+          return null;
+        }
+        await loadTeamData(); // re-render off fresh truth
+        return json;
+      } catch (err) {
+        console.error('Team action error:', err);
+        alert('Action error — see console.');
+        return null;
+      }
+    }
+
+    // Derive a status label/class from a state row's flags.
+    // killed = hard_paused AND a KILL-prefixed reason; hardpaused = hard_paused
+    // (pause); paused = inactive but not hard; active = active.
+    function trStatus(row) {
+      const reason = row.killed_reason || '';
+      if (!row.active && row.hard_paused && reason.startsWith('KILL')) return 'killed';
+      if (!row.active && row.hard_paused) return 'hardpaused';
+      if (!row.active) return 'paused';
+      return 'active';
+    }
+    function trStatusText(s) {
+      return { active: 'Active', paused: 'Paused', hardpaused: 'Hard-paused', killed: 'Killed' }[s] || s;
+    }
+    // Strip the PAUSE:/KILL: prefix for display of just the human text (if any).
+    function trReasonDisplay(reason) {
+      if (!reason) return '';
+      return escapeHtml(reason);
+    }
+
+    // Build the reason UX block (chips + free-text + current), wired to set_reason.
+    // target is the agent name or 'all'. NOTHING here blocks the pause — it only
+    // sets/edits the audit reason after the fact.
+    function trReasonBlock(target, currentReason) {
+      const chips = REASON_CHIPS.map(c =>
+        `<span class="tr-chip" data-tr-reason-chip="${escapeHtml(target)}" data-tr-reason-text="${c}">${c}</span>`
+      ).join('');
+      const curTxt = currentReason
+        ? `<div class="tr-reason-current">reason: <span class="txt">${trReasonDisplay(currentReason)}</span></div>` : '';
+      return `
+        <div class="tr-reason-wrap">
+          <div class="tr-reason-label">Reason (optional — editable any time)</div>
+          <div class="tr-chips">${chips}</div>
+          <input class="tr-reason-input" type="text" placeholder="add a note…"
+                 data-tr-reason-input="${escapeHtml(target)}">
+          ${curTxt}
+        </div>`;
+    }
+
+    // Capabilities panel for one agent (twirl-down + toggles + essentials-first + tiers).
+    function trCapsPanel(agent, capabilities, tiers) {
+      let tierBtns = (tiers || []).map(t =>
+        `<button class="tr-tier-btn" data-tr-tier="${escapeHtml(t.tier)}" data-tr-tier-agent="${escapeHtml(agent.agent)}"
+                 title="${escapeHtml(t.description || '')}">${escapeHtml(t.tier)}</button>`
+      ).join('');
+
+      let capRows = (capabilities || []).map(c => {
+        const key = agent.agent + '::' + c.capability;
+        const open = teamOpenCaps.has(key);
+        const star = c.essential ? '<span class="star" title="essential">★</span>' : '';
+        return `
+          <div class="tr-cap">
+            <div class="tr-cap-row">
+              <span class="tr-twirl ${open ? 'open' : ''}" data-tr-twirl="${escapeHtml(key)}">&#9654;</span>
+              <span class="tr-cap-name">${star}${escapeHtml(c.capability)}</span>
+              <label class="tr-toggle">
+                <input type="checkbox" ${c.granted ? 'checked' : ''}
+                       data-tr-cap-agent="${escapeHtml(agent.agent)}" data-tr-cap="${escapeHtml(c.capability)}">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="tr-cap-desc ${open ? 'open' : ''}" data-tr-desc="${escapeHtml(key)}">${escapeHtml(c.description || '')}</div>
+          </div>`;
+      }).join('');
+
+      return `
+        <div class="tr-caps">
+          <div class="tr-caps-head">
+            <span class="tr-caps-title">Capabilities</span>
+            <div class="tr-tiers">${tierBtns}</div>
+          </div>
+          <div class="tr-tier-note">Presets apply a role's default grants, then individual toggles override.</div>
+          ${capRows}
+        </div>`;
+    }
+
+    function renderTeam(data) {
+      const el = document.getElementById('team-content');
+
+      if (!data || data.configured === false) {
+        el.innerHTML = '<div class="product-notice">Team runtime DB not yet connected — set ' +
+          '<code>TEAM_SUPABASE_URL</code> and <code>TEAM_SUPABASE_SERVICE_ROLE_KEY</code> ' +
+          'env vars in Vercel.</div>';
+        return;
+      }
+
+      const rt = data.runtime || {};
+      const global = data.global || { active: true, hard_paused: false, killed_reason: null };
+      const agentsArr = data.agents || [];
+      const tiers = data.tiers || [];
+
+      // --- Runtime-alive light ---
+      const aliveCls = rt.aliveFresh ? 'alive' : 'down';
+      const aliveText = rt.aliveFresh ? 'Runtime alive' : 'Runtime down (or never booted)';
+      const hbStr = rt.heartbeat_at ? ' · heartbeat ' + timeAgo(rt.heartbeat_at) : '';
+
+      let html = `
+        <div class="tr-runtime-light ${aliveCls}"><span class="dot"></span>${aliveText}${hbStr}</div>
+        <div class="tr-note">Paused &ne; down — the heartbeat runs even while paused. Writes take effect on the runtime within ~5s (gate-cache TTL).</div>`;
+
+      // --- Master card (the global switch) ---
+      const gStatus = trStatus(global);
+      const masterCls = gStatus === 'killed' ? 'killed' : (gStatus === 'active' ? '' : 'paused');
+      html += `
+        <div class="tr-card master ${masterCls}">
+          <div class="tr-card-head">
+            <span class="tr-title">All agents (global switch)</span>
+            <span class="tr-statuslight ${gStatus}"><span class="dot"></span>${trStatusText(gStatus)}</span>
+          </div>
+          <div class="tr-controls">
+            <button class="tr-btn pause" data-tr-act="pause" data-tr-target="all">Pause</button>
+            <button class="tr-btn hard" data-tr-act="pause-hard" data-tr-target="all">Hard pause</button>
+            <button class="tr-btn resume" data-tr-act="resume" data-tr-target="all">Resume</button>
+            ${trKillBtn('kill-all', 'all', 'Kill all')}
+            ${trKillBtn('kill-all-mains', 'all-mains', 'Kill all mains')}
+          </div>
+          ${trReasonBlock('all', global.killed_reason)}
+        </div>`;
+
+      // --- Per-agent cards ---
+      html += '<div class="tr-section-label">Mains</div>';
+      if (agentsArr.length === 0) {
+        html += '<div class="tr-empty">No agent rows yet.</div>';
+      } else {
+        agentsArr.forEach(a => {
+          const st = trStatus(a);
+          const stClass = st === 'hardpaused' ? 'hardpaused' : st;
+          const lw = a.last_wake
+            ? `${formatDateTime(a.last_wake.created_at)} · ${escapeHtml(a.last_wake.reason || '')}` : 'never';
+          html += `
+            <div class="tr-card agent ${stClass}">
+              <div class="tr-card-head">
+                <span class="tr-title">${escapeHtml(a.agent)}</span>
+                <span class="tr-statuslight ${stClass}"><span class="dot"></span>${trStatusText(st)}</span>
+              </div>
+              <div class="tr-meta">
+                <span><span class="k">last wake:</span> ${lw}</span>
+                <span><span class="k">in-flight:</span> ${a.in_flight || 0}</span>
+                ${a.killed_reason ? `<span><span class="k">reason:</span> ${trReasonDisplay(a.killed_reason)}</span>` : ''}
+              </div>
+              <div class="tr-controls">
+                <button class="tr-btn pause" data-tr-act="pause" data-tr-target="${escapeHtml(a.agent)}">Pause</button>
+                <button class="tr-btn hard" data-tr-act="pause-hard" data-tr-target="${escapeHtml(a.agent)}">Hard pause</button>
+                <button class="tr-btn resume" data-tr-act="resume" data-tr-target="${escapeHtml(a.agent)}">Resume</button>
+                ${trKillBtn('kill-' + a.agent, a.agent, 'Kill')}
+              </div>
+              ${trReasonBlock(a.agent, a.killed_reason)}
+              ${trCapsPanel(a, a.capabilities, tiers)}
+            </div>`;
+        });
+      }
+
+      // --- Workers placeholder ---
+      html += '<div class="tr-section-label">Workers (by manager)</div>';
+      html += '<div class="tr-empty">Worker tier lands Phase 4.</div>';
+
+      el.innerHTML = html;
+    }
+
+    // A kill button that carries its are-you-sure state (two-step). confirmKey is
+    // stable across re-renders so a pending confirm survives the 30s refresh.
+    function trKillBtn(confirmKey, target, label) {
+      const pending = teamConfirming.has(confirmKey);
+      if (pending) {
+        return `<button class="tr-btn confirm" data-tr-act="kill-confirm" data-tr-confirm-key="${escapeHtml(confirmKey)}" data-tr-target="${escapeHtml(target)}">Sure? ${escapeHtml(label)}</button>`;
+      }
+      return `<button class="tr-btn kill" data-tr-act="kill-arm" data-tr-confirm-key="${escapeHtml(confirmKey)}" data-tr-target="${escapeHtml(target)}">${escapeHtml(label)}</button>`;
+    }
+
+    async function loadTeamData() {
+      if (!authHeader) return;
+      try {
+        const res = await fetch('/api/team', { headers: { 'Authorization': authHeader } });
+        if (res.status === 401) {
+          localStorage.removeItem('evryn_auth'); authHeader = null; showLogin(true); return;
+        }
+        if (!res.ok) throw new Error('Failed to fetch team runtime data');
+        teamData = await res.json();
+        renderTeam(teamData);
+      } catch (err) {
+        console.error('Team runtime error:', err);
+        document.getElementById('team-content').innerHTML =
+          '<div class="error">Failed to load team runtime</div>';
+      }
+    }
+
+    // Delegated event handling for the whole team tab.
+    document.getElementById('team-content').addEventListener('click', (e) => {
+      const twirl = e.target.closest('[data-tr-twirl]');
+      if (twirl) {
+        const key = twirl.dataset.trTwirl;
+        const desc = document.querySelector(`[data-tr-desc="${CSS.escape(key)}"]`);
+        if (teamOpenCaps.has(key)) { teamOpenCaps.delete(key); twirl.classList.remove('open'); if (desc) desc.classList.remove('open'); }
+        else { teamOpenCaps.add(key); twirl.classList.add('open'); if (desc) desc.classList.add('open'); }
+        return;
+      }
+
+      const chip = e.target.closest('[data-tr-reason-chip]');
+      if (chip) {
+        const target = chip.dataset.trReasonChip;
+        teamAction({ action: 'set_reason', target, reason: chip.dataset.trReasonText });
+        return;
+      }
+
+      const tierBtn = e.target.closest('[data-tr-tier]');
+      if (tierBtn) {
+        teamAction({ action: 'apply_tier', agent: tierBtn.dataset.trTierAgent, tier: tierBtn.dataset.trTier });
+        return;
+      }
+
+      const btn = e.target.closest('[data-tr-act]');
+      if (!btn) return;
+      const act = btn.dataset.trAct;
+      const target = btn.dataset.trTarget;
+
+      if (act === 'pause') { teamAction({ action: 'pause', target, hard: false }); }
+      else if (act === 'pause-hard') { teamAction({ action: 'pause', target, hard: true }); }
+      else if (act === 'resume') { teamAction({ action: 'resume', target }); }
+      else if (act === 'kill-arm') {
+        // First click: arm the confirm (re-render just this button set).
+        teamConfirming.add(btn.dataset.trConfirmKey);
+        renderTeam(teamData);
+      } else if (act === 'kill-confirm') {
+        teamConfirming.delete(btn.dataset.trConfirmKey);
+        teamAction({ action: 'kill', target });
+      }
+    });
+
+    // Reason free-text: commit on Enter or blur (fires set_reason).
+    document.getElementById('team-content').addEventListener('keydown', (e) => {
+      const input = e.target.closest('[data-tr-reason-input]');
+      if (input && e.key === 'Enter') {
+        teamAction({ action: 'set_reason', target: input.dataset.trReasonInput, reason: input.value });
+      }
+    });
+    document.getElementById('team-content').addEventListener('change', (e) => {
+      const cap = e.target.closest('[data-tr-cap]');
+      if (cap) {
+        teamAction({
+          action: 'set_capability',
+          agent: cap.dataset.trCapAgent,
+          capability: cap.dataset.trCap,
+          granted: cap.checked,
+        });
+      }
+    });
+
     // Set up login handlers
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('login-btn').addEventListener('click', doLogin);
@@ -958,10 +1362,13 @@
     // Agents-endpoint (/api/data) failure can never block the Product tab. Different
     // database, different tab; they must not be coupled.
     loadProductData();
+    // Team runtime loads on its own track too (a third, separate database).
+    loadTeamData();
 
     // Auto-refresh every 30 seconds
     setInterval(loadData, 30000);
     setInterval(loadProductData, 30000);
+    setInterval(loadTeamData, 30000);
 
     // ========== Usage Chart ==========
     const agentColors = {
