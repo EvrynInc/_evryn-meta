@@ -6,7 +6,7 @@
 
 > **Why this exists:** the 2026-06-17 lobotomized-subagent disaster was half a *machine-state* failure — `evryn-quality` was checked out on a stale forked `master` while the good manual lived on an unrelated `main`, and nobody could see the divergence because "push/pull" only ever moves committed work on the current branch. A canonical "expected branch per repo" + a session-start sync check makes that class of failure **detectable instead of invisible.** See [ADR-042](decisions/042-subagent-loading-discipline.md).
 
-*Last verified: 2026-06-19 (ACP — `git remote` + `gh repo view defaultBranchRef` across all repos; every active repo on `main`, only the frozen SDK build on `master`).*
+*Last verified: 2026-06-19 (ACP — `git remote` + `gh repo view defaultBranchRef` across all repos; every active repo on `main`, only the frozen SDK build on `master`). Row added 2026-07-11 (ACf, Justin-approved): `evryn-team-runtime` — created on `main`, default branch set via `gh repo edit`.*
 
 ---
 
@@ -22,6 +22,7 @@ Org: **`EvrynInc`**. All remotes are `https://github.com/EvrynInc/<repo>.git`.
 | `evryn-quality` | `main` | **Active** | QC's home — review identity & methodology. *(The stale `master` fork was retired 2026-06-18; `main` is canonical — never spin QC off `master`.)* |
 | `evryn-ops` | `main` | **Active (reactivating)** | OC's home — operations, monitoring, deploy. Renamed `master → main` on GitHub 2026-06-19; CLAUDE.md rebuild in progress. Had been dormant since 2026-03-20. |
 | `evryn-team-workspace` | `main` | **Active** | The AI founding team (Lucas, Soren, Mira, Emma, Marlowe, Nathan, Thea, Dominic) — agent identities (`.claude/agents/`), memory (`.claude/agent-memory/`), shared projects. |
+| `evryn-team-runtime` | `main` | **Active** (ADR-050) | Founding-team autonomous runtime: the SDK-mains harness + worker dispatch. **Identity content NEVER lives here** — single home is `evryn-team-workspace`; this repo is harness code only. Created 2026-07-11. |
 | `evryn-team-agents` | `master` | **Frozen** (ADR-021) | SDK-era agent build. Insurance if Cowork/Code proves insufficient. *(Canonical branch is `master` — it predates the org-wide `main` convention and was never migrated because it's frozen.)* |
 | `evryn-website` | `main` | **Live** | Marketing site (evryn.ai). Next.js on Vercel. |
 | `evryn-langgraph-archive` | `main` | **Sealed** | LangGraph-era code archive. |

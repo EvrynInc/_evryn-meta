@@ -261,6 +261,22 @@ Empirical example (Evryn, 2026-04-29): A test-Mark record carried the canonical 
 
 **Pattern:** when designing defense-in-depth placeholders, design the legibility signal at the same time. Stub records aren't a workaround; they're a first-class shape — make agents aware of the shape, not just the contents.
 
+### Fresh-Composed Wakes Over Persistent Sessions (for any autonomous agent)
+*Origin: the team-runtime memory deep-dive, 2026-07-10 (ADR-050 design). Applies to: any agent that runs repeatedly over time — the team mains, Evryn's product pathways, long-running orchestrators — wherever "the agent's continuity" must be trustworthy.*
+Don't use a long-lived SDK/CLI session as an agent's memory substrate. Sessions compact (summarize away) their history when they grow, and compaction is **observable but not steerable** — precision is shaved silently, mid-flight, unreviewably. Instead, compose the agent **fresh per wake** from durable layers (identity files → consolidated story → append-only notes → selected messages → task context) and keep continuity in your own storage. Sessions remain fine *within* one multi-turn task — never *across* them. (Evryn's runtime reached the same conclusion independently in v0.2 — "continuity lives in OUR memory layers, not the SDK's context window" — this generalizes it.)
+
+### Composition Manifests Make "The Agent Got Dumb" Diffable
+*Origin: team-runtime design, 2026-07-10; the structural answer to Justin's "if I don't know when precision got shaved, I'll never know why they got dumb." Applies to: any runtime that composes LLM context from parts — team wakes, Evryn's dossier composition, subagent briefs.*
+Log, for every composed invocation: the component list, each component's size, a content hash, and the source-repo commit SHA it was read from. An underperforming run then becomes a *diffable event* — compare manifests, find what changed or went missing — instead of a vibes investigation. Nothing should ever be summarized silently in-band; if precision can only change at explicit, versioned points (consolidation), the manifest proves it.
+
+### Append-Only Note Tails Preserve Cache Prefixes
+*Origin: team-runtime memory design, 2026-07-10, marrying ADR-023's story/notes model to ADR-034's cache economics. Applies to: any prompt-composition layer using Anthropic prompt caching.*
+Order composed memory as stable-story-then-append-only-notes: appends never invalidate the bytes above them, so the expensive stable prefix stays cached while the whole composition remains deterministic and auditable. Rewrites (consolidation) deliberately re-pay the cache; appends never should.
+
+### Select Messages by Class, Not Count
+*Origin: team-runtime design, 2026-07-10, answering "last-50 messages is sometimes too much, sometimes not enough, sometimes noise." Applies to: any agent loading conversation history — team wakes, Evryn's per-user history attach, support-style bots.*
+"Last N messages" is denominated in the wrong unit. Compose instead from: the triggering **thread** verbatim (capped), a one-line-per-live-thread **awareness digest**, a small **recency floor** of directly-addressed messages, and a **retrieval tool** so the agent can pull more when it knows it needs it. Then **type-tag noise out entirely** — system/heartbeat traffic never enters raw context. Fixing "too much/too little/noise" is a *classification* problem, not a windowing problem.
+
 ---
 
 ## Research & Grounding
@@ -424,6 +440,14 @@ For agents mutating state across many turns, evaluate final outcomes rather than
 ### Subagent Worktree Isolation Is Scoped to the Dispatcher's Repo (cross-repo gotcha)
 The Agent tool's `isolation: worktree` creates the worktree in the **current** repo (the dispatcher's cwd) — not the repo the subagent will actually edit. So when AC (running in `_evryn-meta`) dispatches a DC subagent to build in a *sibling* repo (`evryn-backend`), `isolation: worktree` makes an `_evryn-meta` worktree, which is useless for the build. The clean fix DC used (2026-06-11, quiet-hours build): the subagent creates its **own** worktree in the *target* repo (`git -C <target-repo> worktree add <sibling-path> -b <agent/branch> main`), works there, and leaves the dispatcher's canonical tree untouched on `main`. **Brief cross-repo subagents to expect this** — tell them to spin their own worktree in the target repo (or set one up before dispatch). The receipts will show whether they did.
 
+### Watchers Are Structured Extractors, Never Summarizers
+*Origin: Thea's roster consult, team-runtime design 2026-07-10. Applies to: any cheap-model "attention" layer — digest bots, monitoring agents, triage screens, the team's "little birds" — anywhere a small model watches a stream on a big model's (or a human's) behalf.*
+A watcher that free-form-summarizes destroys exactly the nuance that matters (this team has re-learned "summarization is destructive" repeatedly). Make watchers emit **typed records** instead: who committed / to what / by when / decided-vs-discussed / question-left-open / anomaly. Corollary: if the *writers* tag their messages with a type at write time (commitment/decision/question/fyi), the watcher layer becomes nearly-free lookups instead of interpretation jobs — one field at the source buys reliability across the whole attention stack.
+
+### "Cleared" ≠ "Sees Everything" — Read-Scoped Sub-Clearances Inside a Trust Boundary
+*Origin: four team agents (Lucas, Mira, Nathan, Thea) independently converging during the 2026-07-10 roster consults. Applies to: any multi-agent system with a trust boundary — cleared/uncleared worker tiers, Evryn's pathway-gated context loading, subagent tool scoping.*
+A binary trust boundary (cleared vs. not) invites "cleared = load anything." Wrong: least-privilege applies *inside* the boundary too. A cleared fact-checking worker needs tickets + memories but not identity files; a cleared scribe needs the meeting doc but not the trust graph. Give each cleared agent an explicit **read-scope list**, enforced at composition/tool level, so the blast radius of any one agent stays small even within the trusted tier. (This is Evryn's pathway-gating principle, generalized to worker fleets.)
+
 ---
 
 ## Single-Agent-With-Perspectives (SDK Era)
@@ -506,6 +530,14 @@ node -e "const text = `merged \`branch-name\` to master`; fetch(...).then(...);"
 // 2. node -e "const body = require('fs').readFileSync('.tmp-slack-payload.json', 'utf8'); fetch(url, {method:'POST', body, headers:{'Content-Type':'application/json; charset=utf-8'}})"
 // 3. rm .tmp-slack-payload.json
 ```
+
+### Blockable ≠ Steerable — a Veto Hook Is a Tripwire, Not a Control Surface
+*Origin: the team-runtime memory deep-dive's PreCompact analysis, 2026-07-10. Applies to: any hook/interceptor design — SDK lifecycle hooks, Evryn's PreToolUse gates, CI gates.*
+A hook that can *block* a process (e.g., PreCompact can veto compaction) but cannot *shape its output* (no way to steer what the compaction summary keeps) is a tripwire — good for alerting and refusing, useless for controlling quality. Don't architect as if a blockable step is a controllable one: if you need the output to be right, own the step yourself (compose fresh, run your own summarizer); use the hook only to detect and refuse.
+
+### Per-Turn Incremental Mirroring Beats Summary-on-Close
+*Origin: the interactive-session→database sync design, team-runtime 2026-07-10. Applies to: any pipeline persisting a live stream (session transcripts, message mirrors, audit logs) via lifecycle hooks.*
+Session-end hooks are not guaranteed to fire on a crash or force-close — so a persistence design that only writes "on close" loses everything exactly when things break. Backbone = an **incremental per-event mirror** (each turn written as it happens, idempotent by a stable key); the close-time summary is garnish; a sweeper closes orphans. If the data matters, it must be durable *before* the graceful-shutdown path runs.
 
 ---
 
