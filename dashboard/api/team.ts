@@ -434,6 +434,17 @@ async function handlePost(supabase: Supabase, request: Request): Promise<Respons
       // an active-inactive row that is hard_paused with a killed_reason is a kill;
       // otherwise a pause. When the operator clears the text, fall back to the
       // auto-record so who/when/how is never lost.
+      //
+      // INVARIANT — this upsert patches killed_reason ONLY, never active /
+      // hard_paused. On conflict, PostgREST updates only the provided columns,
+      // which is exactly what keeps this write safe: it cannot touch the
+      // pause/kill switches. Do NOT "helpfully" echo active/hard_paused from
+      // the read below into this patch — that would write back a stale read
+      // and could silently resurrect (or re-kill) an agent whose state changed
+      // in the read→upsert window. The runtime relies on this same PostgREST
+      // behavior for the same reason: see evryn-team-runtime/
+      // src/scheduler/index.ts (buildThreadLockUpsert — "Deliberately WITHOUT
+      // `active`").
       const agentRow = resolveOne(body.target);
       if (!agentRow) return badRequest('set_reason: invalid target');
       const { data: cur, error: curErr } = await supabase
