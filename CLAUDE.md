@@ -263,6 +263,7 @@ Evryn is intended to be the trust substrate of the world. Build accordingly.
 - No security shortcuts, ever
 - **First principles for third-party tool access** — when you need a new capability, ask "What's the simplest path using tools I already trust?" before reaching for plugins. A single-author npm package running with your OAuth tokens is real supply chain risk. Split capabilities across tools that are each strong at their part rather than adding a mediocre bridge with a new attack surface.
 - **Permissions hygiene.** The proper home for Claude Code permissions is `<repo>/.claude/settings.json` (in git) — permissions should not be defined anywhere else. Be aware that `settings.local.json` files silently accumulate one-off approvals at runtime: when you approve a command that contains an API key or UUID, those values often get auto-saved verbatim into the file. Secrets belong in `.env`, never in settings files. If you notice a settings file that has grown large or contains secrets, flag it to Justin — don't edit it yourself.
+- **Strongly avoid having a secret ever pass through a channel that can surface it into your own context.** The failure mode is not just an external leak — it's *self-poisoning*: a live credential printed into your transcript trips Fable's safeguards on **every subsequent turn** (a real Anthropic token in-context reads as exfiltration), and the only clean fix is a full re-spin. **Never blindly build a command that embeds a secret as an argument in a way that can echo on failure** — Node's `execFile`/`spawnSync` print the *entire* argv (including the secret) in their error object, and a bare `railway variables --set KEY=$SECRET` surfaces the value if the call errors. **The safe pattern:** run the tool as a plain shell command with **all output redirected** (`>/dev/null 2>&1`), read secret values from `.env` without ever echoing them, and on success print only the *variable name*, never its value (`echo "set CLAUDE_CODE_OAUTH_TOKEN"`). When you must handle a secret, assume the command *will* error and ask: "if this throws right now, does the secret land in my context?" If yes, restructure before running. If the unsafe path is the *only* path available, get *explicit* permission from Justin, and give him enough context that he can make informed decisions about the blast radius of that decision. *(2026-07-13: an ACf `execFileSync('railway', …)` hit ENOENT and Node dumped a live `CLAUDE_CODE_OAUTH_TOKEN` + a GitHub PAT + a Supabase key into context — Fable then flagged every turn until a fresh re-spin cleared the transcript.)*
 
 ---
 
@@ -411,14 +412,30 @@ QC sits between what DC shipped and what AC routes next. Their job is the advers
 
 ## Autonomous Work Protocol
 
-When Justin steps away and you're working autonomously at the strategic level:
+When Justin steps away (or is *adjacent* — a step or two away, bouncing between instances) and you're running a long autonomous stretch, these are the disciplines that keep it safe and legible. **They were proven out over the 2026-07-11→13 team-runtime build**; treat them as the working rhythm, not aspirations.
 
-1. **Write to `docs/OVERNIGHT-NOTES.md`** (in the relevant repo) — not directly to CLAUDE.md, DECISIONS.md, or other foundational docs. Context compaction causes silent errors.
-2. **Review with Justin in the morning**, then integrate into long-term docs together.
-3. **Leave things in a clean state.** If you're mid-analysis, write your current thinking clearly enough that a fresh session can pick it up.
-4. **Commit and push.** Get everything to remote so it survives power outages.
-5. **Self-review every source-of-truth edit.** The three self-review questions live in `docs/protocols/ac-writing-protocol.md` (Before you write). **DO NOT write to a source-of-truth document without reading and following that protocol** — autonomously there's no one reviewing in real time, so a stale-version edit or an unverified claim corrupts the doc with no second pair of eyes to catch it.
-6. **Checkpoint proactively.** After significant analysis, decisions, or before risky operations, ask Justin: "Want me to do a quick #lock to save our progress?"
+**The foundations (always):**
+
+1. **The handoff doc IS your continuity — keep it current to the minute.** One living session doc (`docs/sessions/…` or a project session folder) with a **reload manifest** (exactly what a fresh instance must load, in full, with line spans) and a **live next-action block** at the top. Persist load-bearing findings *the moment they exist*, never "at the next checkpoint" — on a long session, old tool results can be silently dropped, so an unpersisted verdict/decision/SHA can evaporate while you believe it's safe. If the doc and your memory disagree, the doc wins.
+2. **Self-review every source-of-truth edit.** The three self-review questions live in `docs/protocols/ac-writing-protocol.md` (Before you write). **DO NOT write to a source-of-truth doc without reading and following that protocol** — autonomously there's no real-time reviewer, so a stale-version edit or unverified claim corrupts the doc unchecked.
+3. **Commit + push at every natural checkpoint** so work survives a crash or a power outage — but make sure you're *absolutely clear* with Justin about how to handle commits and pushes — when he's going to be gone for a while, while you work, he'll often say he's fine to check work after the fact in the timeline, but you need to get explicit clarity — otherwise the commit gate will still hold (Justin's explicit go per commit; mailbox/session-doc commits are pre-authorized), and that can make especially overnight work a combination of difficult and unsafe. But then in your final report to him, you need to lay out what changes he needs to know about, so he can go verify if he wants to. Code is almost always above his pay grade, but he often has very strong opinions about prose instruction files. 
+4. **Leave a clean state.** If mid-analysis, write your current thinking clearly enough that a fresh instance picks it up cold.
+
+**The ping rhythm (Justin's standing protocol — every ping to `#team-alerts`, prefix `[your designated name]:`):**
+
+- **`Need you:`** — only when Justin must physically act (an auth click, a blocking decision, an unstick). High bar; he is otherwise occupied, and doesn't want to be bothered with every last thing - if it's urgent and important, let him know; if you can batch , do so. Ping it, then keep advancing everything *not* blocked on it.
+- **`No action needed - just progress:`** — milestones, verdicts, merges, direction changes. He reads when convenient; does not come running. Fire one at every state change worth knowing, and whenever there's something in chat to read.
+- **The advancement-verified heartbeat canary** — while running a long stretch, a persistent `Monitor` tick (~20 min) → a one-line `No action needed - heartbeat:` ping. **Before claiming "healthy," verify the active subagent ADVANCED** — check its **worktree git state** (new commits, dirty files), *not* the transcript-file size (a completed-agent symlink reads 0 bytes mid-run and lies). No advancement → say "possibly stuck — may need you," never "all healthy." Justin's contract: silence >30 min with no prior Done ping = something's stuck → he comes to look.
+- **`Done for the day` (or `Done - PAUSED`)** — always the LAST ping, carrying the one-paragraph outcome; kill the canary with it so post-Done silence reads as intended.
+
+**The re-spin triggers (know when to stop being *this* instance):**
+
+- **Compaction:** if you just compacted, STOP — a fuzzy mind can't judge its own fuzz. Re-execute the reload manifest in full, ping Justin that you compacted + reloaded, and if substantial work remains request a fresh re-spin rather than continuing on felt-sharpness.
+- **Context poison:** if a secret or a huge dump lands in your context (see the Security Mindset secret-handling bullet — a leaked token trips Fable every turn), a fresh re-spin is the clean fix. Capture a precise continue-point in the handoff first; nothing is lost.
+- **A stuck subagent** the canary catches → surface to Justin to unstick; don't spin a duplicate on top of it.
+- **Proactively re-spin before compaction, not after** — at a natural checkpoint near the budget edge, finish the beat, update the handoff, and ping for a re-spin. Choose your pre-handoff scope deliberately and ping at that pause point.
+
+**Subagent lifecycle facts (proven this build):** a **user interrupt KILLS background subagents** and the harness refuses to resume them ("stopped by user, won't be resumed") → re-spin fresh with the identical brief. `SendMessage`-by-agentId **resumes** a completed subagent with full context — use it for *continuity* (a fix-trip to the same DC keeps its build context), never for *independence* (a fresh QC is fresh eyes). **Model-pin every spin** (orchestration protocol, Model Pinning) — an unpinned spawn inherits the parent's model.
 
 ---
 
