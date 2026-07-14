@@ -222,4 +222,10 @@ Justin was right. `cross_user_notes` is the connection-feedback substrate (ADR-0
 
 ---
 
-Truncation canary — DO NOT REMOVE: FULL FILE LOADED
+## Amendment (ADR-051, 2026-07-14 — Runtime Bookkeeping / Step 57)
+
+Decision #2 here reifies the original sender as a `lead` user record at **forward time** ("defense-in-depth — Evryn doesn't have to remember"). The runtime-bookkeeping rewrite ([ADR-051](051-runtime-bookkeeping-structured-verdict.md)) moves that reification to **verdict time**, per Justin's ratified call (2026-07-14):
+
+- **User-record creation moves from forward-time to the verdict hook**, and **no record is created for an `ignore` verdict** (junk — spam / no-reply blasts / bots — no longer leaves a durable `lead` row that pollutes the map v0.3 matching is built on). Every real-person verdict (pass / gold / edge / bad_actor / handled_by_gatekeeper) still creates/finds the record — now *more* deterministically (the FK no longer depends on a parse racing a Supabase blip at ingest).
+- **The prior-triage-history lookup (Decision #4) still works.** Pre-verdict the item has no FK, so the runtime's pre-loaded history (ADR-051 has the runtime pre-load it, retiring the manual Phase-2 lookup) falls back to matching `original_from` by email; past real-person verdicts set FKs, and a beyond-TTL junk re-sender is simply re-screened cheaply by the Haiku pre-screen. The `original_from` text column and the `original_from_user_id` FK are both unchanged in shape — only *when* the FK is populated moves.
+- **`processDirect` is unaffected** — a person emailing Evryn directly is a real person initiating contact, so arrival-time creation stays there. This amendment scopes to the *forward* path only.

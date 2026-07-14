@@ -107,3 +107,13 @@ The legal docs (Terms, Privacy Policy) correctly use "match" because they descri
 - **`feedback-guidance.md`** (internal-reference module, pre-Mark-onboarding) should spec the gold→match confirmation flow alongside the training feedback flow — two separate concerns in the same module. Also: follow-up cadence and Evryn's judgment framework for checking on delivered items.
 - **Code changes for v0.2:** `executeApproval()` needs try/catch + retry around `sendEmail()`, status update from `"done"` to `"delivered"`, lifecycle metadata appended on every status change. Stale item checker extended for `delivered` items >7 days → triggers Evryn via `runEvrynQuery()`.
 - **Dedup instruction needed in triage.md:** Before classifying, Evryn checks if she's already sent a notification about this person to this gatekeeper. If so, evaluate whether the new email changes the picture — don't re-classify from scratch.
+
+---
+
+## Amendment (ADR-051, 2026-07-14 — Runtime Bookkeeping / Step 57)
+
+Two lifecycle refinements land with the runtime-bookkeeping rewrite ([ADR-051](051-runtime-bookkeeping-structured-verdict.md)):
+
+1. **`triage_result` is now canonically written for all three verdicts (gold / edge / pass), not just pass.** Decision #1 above kept `gold` as an immutable classification value, but at v0.2 only `pass` (via the deterministic `record_pass`) actually wrote `triage_result` — gold/edge left it null and lived in `metadata.draft.classification`. ADR-051 has the runtime write `triage_result` for gold/edge at `submit_draft` time, so the prediction-vs-outcome audit (Decision #6) becomes a direct two-field query for every verdict. **`triage_result` stays immutable** — it's still "what Evryn thought at triage time," now recorded uniformly.
+
+2. **`sender_type` (is-there-a-person) and `status` (item disposition) may legitimately diverge.** The status lifecycle (Decision #7) treated `ignore`/`bad_actor` as `sender_type`-driven straight-to-terminal transitions. ADR-051 adds the `handled_by_gatekeeper` verdict — a *real person* (`sender_type=lead`) whose *item* the gatekeeper asked to close (`status=ignored`), e.g. Mark forwarding *"I already took care of this — ignore it."* The two axes carry different meaning and are allowed to disagree; `ignored` on the status axis no longer implies "not a person." (Wave-off from the clustering note-turn is the same shape — status-only `ignored`, person preserved as a lead.)

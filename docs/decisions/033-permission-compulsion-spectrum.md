@@ -138,3 +138,12 @@ Two clarifications that prevent specific misreadings:
 
 - Do prompts ever need to *know* about the spectrum? Probably not — prompts describe situations and offer tools; the spectrum is a guide for *how to write* prompts, not content to load *into* prompts. Identity files are where tier-awareness lives.
 - The compulsion-audit (2026-04-30 backlog) now has the framework. Schedule after the current wave settles.
+
+---
+
+## Amendment (ADR-051, 2026-07-14 — Runtime Bookkeeping / Step 57)
+
+The runtime-bookkeeping rewrite ([ADR-051](051-runtime-bookkeeping-structured-verdict.md)) applies this ADR's **tier-5 "prefer structural enforcement"** principle to Evryn's database *write* surface — the write-side sibling of the read-lock in [ADR-047](047-v0.2-security-bulkheads.md).
+
+- **The raw `supabase_upsert` write tool is removed from every pathway.** Previously it was a tier-1-3 tool description ("write a record") exposed even in the injection-reachable triage pathways — an unbounded write surface an injection could steer. Removing it makes "Evryn cannot make an arbitrary write" structurally true, not instructionally hoped-for. All legitimate writes it carried move into *typed, bounded* tools (`record_verdict`, `record_outcome`, the verdict hook) that can only do the specific, validated thing they name.
+- **Flexible correction survives as a bounded, operator-channel-only tool** (`correct_user_field`), registered only in the operator-audience pathway (like `set_thread_scope`/`rescope_messages`/`redact_user_from_message`). The governing principle (Justin, 2026-07-14): *a write is only dangerous when untrusted content could steer it* — so the flexible-correction capability lives exactly where the trusted driver (the verified Operator) is, and is field-allowlisted so it can't touch the firewalled/status surfaces even there. This is tier-5 structural enforcement chosen over a command-gated raw tool: there is no raw tool to unlock, so a post-unlock injection has nothing to weaponize.
