@@ -2,7 +2,7 @@
 
 **Status:** Accepted (Justin, 2026-07-07) — build in progress (SPRINT-V0.2-HARDENING Step 58, "Clustering", cost lane ②).
 **Date:** 2026-07-07.
-**Owners:** AC2 (cost lane) + Justin. Build spec: `_evryn-meta/docs/working/2026.07.07-ac2-clustering-build-spec.md`.
+**Owners:** AC2 (cost lane) + Justin. Build spec: `_evryn-meta/docs/sessions/historical/2026.07/2026.07.07-ac2-clustering-build-spec.md` (archived — shipped `v0.2.7`).
 **Related:** ADR-020 amendment (Haiku Bouncer, ①) · ADR-018 (emailmgr_items lifecycle — this adds a status) · ADR-041 (M1 silent-death — this adds a heartbeat + a park-target seam) · ADR-046 (gatekeeper-address resolution) · SPRINT Step 57 "Runtime Bookkeeping" (③, the next change, which this composes with).
 
 ---
