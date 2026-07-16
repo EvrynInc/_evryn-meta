@@ -250,6 +250,29 @@
     .liveness-meta { display: flex; flex-direction: column; gap: 2px; font-size: 0.8rem; color: #888; }
     .liveness-meta .err { color: #ef4444; font-weight: 600; }
 
+    /* Per-subsystem health lights (Step 78 Half B). Same colour language as
+       .status-dot (active/halted/idle) + an amber `warn`, but a separate class:
+       .status-dot is position:absolute for the agent-card corner and can't be
+       reused inline. Wraps on narrow screens (phone-first). */
+    .health-lights { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .health-light {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 8px 12px;
+    }
+    .health-light.idle-light { opacity: 0.55; }
+    .health-dot { width: 9px; height: 9px; border-radius: 50%; background: #666; flex-shrink: 0; }
+    .health-dot.active { background: #22c55e; }
+    .health-dot.halted { background: #ef4444; }
+    .health-dot.warn { background: #eab308; }
+    .health-dot.idle { background: #666; }
+    .health-label { font-size: 0.75rem; font-weight: 600; color: #ccc; }
+    .health-sub { font-size: 0.68rem; color: #666; }
+
     .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; margin-bottom: 16px; }
     .stat-card {
       background: #1a1a1a;
@@ -916,6 +939,64 @@
         .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
+    // ===== Per-subsystem health lights (Step 78 Half B) =====
+    // Renders 5 lights off the /health `checks` (db / slack_socket / poll / m1)
+    // plus the existing 24h error count.
+    //
+    // GRACEFUL DEGRADE (load-bearing — Half A is not deployed yet): the /health
+    // live in prod still answers in the OLD shape (no `checks`), so the API sends
+    // checks:null. The 4 health lights then render IDLE ("—"), never a false red
+    // and never a broken layout. Same for an unreachable backend (health:null).
+    // The errors light always renders — it reads live.recentErrors, not /health.
+    function healthLight(label, dotClass, sub) {
+      const subHtml = sub ? `<span class="health-sub">${escapeHtml(sub)}</span>` : '';
+      const dim = dotClass === 'idle' ? ' idle-light' : '';
+      return `<div class="health-light${dim}"><span class="health-dot ${dotClass}"></span>` +
+        `<span class="health-label">${escapeHtml(label)}</span>${subHtml}</div>`;
+    }
+
+    function renderHealthLights(live) {
+      const checks = (live.health && live.health.checks) ? live.health.checks : null;
+
+      // db / slack_socket: green when ok, red when not, idle when checks absent.
+      function okLight(label, check) {
+        if (!checks || !check) return healthLight(label, 'idle', '—');
+        return healthLight(label, check.ok ? 'active' : 'halted', '');
+      }
+
+      let lights = '';
+      lights += okLight('DB', checks && checks.db);
+      lights += okLight('Slack', checks && checks.slack_socket);
+
+      // Poll — same tri-state, plus age_seconds as a subtle sub-label. The age is
+      // shown whether or not poll is ok: on a wedge it's the most useful number.
+      if (!checks || !checks.poll) {
+        lights += healthLight('Poll', 'idle', '—');
+      } else {
+        const age = checks.poll.age_seconds;
+        const ageSub = (typeof age === 'number') ? formatUptime(age) : '';
+        lights += healthLight('Poll', checks.poll.ok ? 'active' : 'halted', ageSub);
+      }
+
+      // M1 breaker. A trip is a DELIBERATE halt (M1 fires its own alert; no
+      // auto-reset — ADR-041), which is why /health reports it 200 "halted" not
+      // 503. So label it HALTED + the reason, not a generic "down".
+      if (!checks || !checks.m1) {
+        lights += healthLight('M1', 'idle', '—');
+      } else if (checks.m1.breaker_tripped) {
+        const reason = checks.m1.reason ? ('HALTED · ' + checks.m1.reason) : 'HALTED';
+        lights += healthLight('M1', 'halted', reason);
+      } else {
+        lights += healthLight('M1', 'active', 'OK');
+      }
+
+      // errors_24h — from the existing product-DB count, independent of /health.
+      const errs = live.recentErrors || 0;
+      lights += healthLight('Errors 24h', errs > 0 ? 'warn' : 'idle', String(errs));
+
+      return `<div class="health-lights">${lights}</div>`;
+    }
+
     function renderProduct(data) {
       const el = document.getElementById('product-content');
 
@@ -948,6 +1029,8 @@
             <span class="${errClass}">${live.recentErrors || 0} errors (24h)</span>
           </div>
         </div>
+
+        ${renderHealthLights(live)}
 
         <h2>Today's Activity</h2>
         <div class="stat-grid">
