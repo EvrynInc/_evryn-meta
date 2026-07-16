@@ -253,6 +253,17 @@ The DC and QC briefs differ only in *task* — the six-part shape and the mechan
 
 ---
 
+## Nested subagents — a grandchild's results can land at `main`, and a parent can checkpoint-and-stop waiting on its own child (observed 2026-07-15)
+
+A subagent you spawn can spawn *its own* subagents — nested orchestration works. But two lifecycle facts bite, both seen live when a Fable deep-dive AC (spawned by AC0) itself spawned an external-research sub-subagent:
+
+- **A grandchild may not be able to message its parent by name — it falls back to `main`.** The research sub-subagent tried to return its report to its parent (the deep-dive AC), couldn't resolve the parent's name via `SendMessage`, and so routed the whole report to `main` — i.e. **to AC0, the top-level conductor.** So when you run a fan-out subagent, expect that a grandchild's deliverable may arrive at *your* inbox rather than at the parent that asked for it.
+- **The parent can checkpoint-and-STOP, waiting on that child.** The deep-dive parent finished its own turn and stopped (a normal "task completed" notification) *while still logically waiting* for its child's research — its "result" was a mid-progress checkpoint, not the final deliverable. A completed-subagent notification is **not** proof the work is done; read the content.
+
+**What AC does about it:** (1) when a subagent's "completion" is really a waiting-on-a-child checkpoint, **resume the parent** (SendMessage-by-agentId, previous section) rather than treating it as finished; (2) if a grandchild's output landed at `main`, **relay it into the parent** via that resume so the parent doesn't re-run the work — pass the grandchild's content in the resume message (the parent never saw it). (3) When you *design* a fan-out subagent brief, you can pre-empt this by telling it to do its sub-research **inline** rather than via its own background child, if end-to-end delivery in one shot matters more than the parallelism.
+
+---
+
 ## Review depth — QC verifies by default; AC always reviews too
 
 **QC verifies every real code change — even simple ones.** Independent fresh-eyes verification is QC's whole point; *"it's small"* is not a reason to skip her — that just reintroduces a single point of failure (AC alone). AC *also* reviews, bringing the system-level / higher-altitude lens — but AC's review *adds to* QC's, it never *replaces* it. The question is never *whether* QC runs, only *how deep* she goes. Subagent runs are 1–3 minutes; there is virtually no cost to letting her confirm.
