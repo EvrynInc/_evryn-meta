@@ -970,12 +970,28 @@
 
       // Poll — same tri-state, plus age_seconds as a subtle sub-label. The age is
       // shown whether or not poll is ok: on a wedge it's the most useful number.
+      //
+      // A HALT SUBSUMES THE POLL-STALENESS IT CAUSED — do NOT "fix" this back to
+      // red. When the M1 breaker trips, haltForBreaker calls stopPolling(), so the
+      // poll loop stops and poll.ok legitimately goes false ~15 min later. That
+      // stale poll is EXPECTED (the halt CAUSED it), so it renders AMBER-expected
+      // rather than RED-alarm: ONE deliberate halt must not read to an operator as
+      // TWO failures and send them chasing a phantom second fault. This mirrors, at
+      // the presentation layer, Half A's decideHealthStatus precedence — where
+      // `halted` BEATS `wedged` and returns 200 not 503 (src/safety/liveness.ts).
+      // A stale poll with the breaker NOT tripped is a genuine wedge → stays RED.
       if (!checks || !checks.poll) {
         lights += healthLight('Poll', 'idle', '—');
       } else {
         const age = checks.poll.age_seconds;
         const ageSub = (typeof age === 'number') ? formatUptime(age) : '';
-        lights += healthLight('Poll', checks.poll.ok ? 'active' : 'halted', ageSub);
+        const haltCaused = !checks.poll.ok && !!(checks.m1 && checks.m1.breaker_tripped);
+        if (haltCaused) {
+          lights += healthLight('Poll', 'warn',
+            ageSub ? (ageSub + ' · expected — M1 halted') : 'expected — M1 halted');
+        } else {
+          lights += healthLight('Poll', checks.poll.ok ? 'active' : 'halted', ageSub);
+        }
       }
 
       // M1 breaker. A trip is a DELIBERATE halt (M1 fires its own alert; no
