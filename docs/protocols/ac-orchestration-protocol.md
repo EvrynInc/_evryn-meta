@@ -151,6 +151,37 @@ The `<identity>`/`<mandatory_load>`/`<pre_task>`/`<task>`/`<questions_first>`/`<
 
 ---
 
+## The generic-subagent exception — real, narrow, and easy to abuse (codified 2026-07-16)
+
+**Sometimes you genuinely need a plain, identity-less subagent** — and pretending otherwise would make this protocol dishonest, which is worse than having a hatch. AC's own manual already sanctions it: *"Sub-agents are fine for low-lift tasks like finding a file path or checking if something exists."*
+
+**But this is the hatch most likely to be abused, because abusing it always feels reasonable in the moment** — *"it's just a quick lookup, it doesn't need the whole cascade."* That sentence is correct **exactly** when the test below passes and catastrophically wrong every other time. So the boundary is a test, not a vibe:
+
+> ### 🔍 THE TEST: does anything this agent produces get RELIED UPON as a claim about the system?
+> **If YES → it is not a generic subagent.** It gets its identity block, its cascade, its load list, its receipts. No exceptions, no matter how small the task looks.
+> **If NO — it produces a fact that *anyone* could have looked up in one command — a generic subagent is fine.**
+
+**✅ Legitimately generic** (all pure mechanics; nothing downstream depends on judgment):
+- **Locating things:** a file path, whether a file exists, a line count, a grep count, enumerating a directory.
+- **Mechanical fan-out:** a broad search across many files where you need *where*, not *what it means* (the `Explore` agent type is built for exactly this).
+- **Plumbing tests:** exercising a tool/harness *mechanism itself*, where no domain context could change the result. *(The 2026-07-16 nested-routing experiment was this — the Hub and the runtime were genuinely irrelevant to "does `SendMessage` route to the parent," and loading them would have added nothing but noise.)* But think about this one *carefully*, to make sure that domain knowledge has *zero* impact. **Zero**.
+
+**🚫 NOT generic — no matter how small it looks:**
+- **Anything touching `evryn-backend/src/` or the identity files.** Ever. *("This change is tiny" is the exact judgment the load gate exists to override.)*
+- **Anything writing or editing a doc someone will read later** — that's a claim, and it also needs the writing protocol.
+- **Anything making a statement about how the system behaves,** or that another agent/Justin will act on.
+- **Any review, any build, any spec, any recommendation, any triage** — all judgment, all need the frame.
+- **"I just need a quick summary of X"** — 🚩 **the loudest red flag on this list.** Summarizing *is* judgment: because a generic subagent doesn't *deeply understand* what it's summarizing, it will compress away exactly the nuance that mattered and hand you back something *confidently misleading*. AC's own manual is explicit — *"sub-agents often lose context and summarize destructively… strip nuance… return summaries that can actively mislead."* **If precision or nuance matters, the subagent *must* be properly contextualized or it will be a disaster. And if precision or nuance *really* matters, consider just reading it yourself.**
+
+**The guardrails that keep this narrow:**
+- **Default is NOT generic.** If you're weighing it, you've already failed the test — a real lookup doesn't feel like a judgment call.
+- **The hatch is about the TASK's nature, not your budget.** *"The full load is expensive"* is never a reason. Tokens are cheap; a confidently-wrong claim is almost always **extraordinarily expensive**.
+- **You own what it returns.** A generic subagent has no cascade to catch its errors and no identity to make it competent — so **you** are the only check. If you'd have to trust its output without being able to verify it cheaply, it wasn't a generic-subagent task.
+- **Say so when you use it.** One line in your relay: *"used a generic subagent for the file inventory."* Visible, auditable, and it makes over-use obvious over time.
+- **This is NOT `#cascade-override`.** That token *narrows or swaps* the load of a **real** DC/QC/OC/AC (which keeps its identity and its discipline). This exception is about a task that never needed an identity at all. **Don't use the hatch to dodge a load — that's what the override exists for, with its own guardrails.**
+
+---
+
 ## Spinning a team subagent (Soren, Mira, Nathan, …)
 
 Team agents (the founding team, in `evryn-team-workspace`) are **not** like DC/QC, and getting this wrong is what lobotomized a Soren subagent on 2026-06-17. Two differences make the manual load **mandatory, not optional**:
@@ -198,7 +229,26 @@ The load discipline is unchanged. Two things in the canonical blocks are literal
 
    *(The closing clause is load-bearing: the auto-load arrives via system-reminder and can truncate, so the AC variant preserves the protocol's actual principle — a **provable** full load — rather than trusting the injection. **Always give the AC its designated instance name** — it needs it for its relay header and its mailbox signature; see "Relaying to Justin.")*
 
-2. **`<mandatory_load>` opener — say `Full Startup Context Cascade`** (both occurrences: the trigger, and the *"an agent that has not loaded its …"* clause) **and set the identity clause to *"is NOT AC"*.** "Full Startup Context Cascade" is an exact heading in `_evryn-meta/CLAUDE.md`, so the anchor holds. Choose the **Full** tier deliberately: the Light tier exists for org-layer work, but a spin worth paying for almost always needs the Full load — and per AC's own manual, when the Full cascade is called it is **non-negotiable and includes the entire runtime**.
+2. **`<mandatory_load>` opener — name the tier you chose (`Full` or `Light` Startup Context Cascade), in both occurrences** (the trigger, and the *"an agent that has not loaded its …"* clause) **and set the identity clause to *"is NOT AC"*.** Both `Light Startup Context Cascade` and `Full Startup Context Cascade` are exact headings in `_evryn-meta/CLAUDE.md`, so either anchor holds — **but you must pick one deliberately and name it; do not leave it to the sub-AC.** See the tier rule immediately below — **it is not optional, and getting it wrong is the most expensive mistake available to you here.**
+
+### 🔴 Choosing the sub-AC's tier — Full or Light — and then listing the ACTUAL files
+
+**Naming a tier is NOT enough. The tier is a *frame*; the file list is the *load*.** A sub-AC loads **your list**, not its own cascade (proven 2026-06-19: a QC loaded exactly the files listed and never reached the standing files its own cascade names). **So: pick the tier, then resolve it to every concrete file, each with its line span, per part 2 ("Assemble the load yourself").** Your omission IS its omission.
+
+**The tier rule:**
+
+- **Building, or evaluating a build? → FULL. Non-negotiable.** If the sub-AC will write code, review code, spec build work, edit ARCHITECTURE/BUILD, or make *any* claim about runtime behavior — **it gets the Full cascade and the entire runtime.** No judgment, no trimming. **99.99% of the times we have skimped here, it broke something.** The pattern is always identical: an AC decides some files are irrelevant, spins lean, and later — having *actually read them* — says *"oh crap, yeah, those 'irrelevant' files really do matter."* **You cannot know a file's relevance without reading it. You are not the exception.**
+- **Genuinely org-layer work? → LIGHT is fine.** Cross-repo ops, doc routing, coordination, scheduling, a strategic map that touches no runtime claim. Don't burn a full runtime load on a question that can't be answered wrong by lacking it.
+- **Unsure which? → FULL.** Always. The asymmetry is not close (see below).
+
+**⚠️ The ONE judgment call you are permitted — and the bar is deliberately brutal.** You may define a **subset** of the runtime for a sub-AC **only if ALL THREE hold**:
+1. **YOU have *recently* read that full runtime yourself** — not "I know the codebase," not "I read it last week." Recently, with this question in front of you.
+2. **You understand those files *well*** — well enough to know what connects to what, including the non-obvious couplings.
+3. **You know *for certain*** — not "I'm fairly confident" — **that the sub-AC needs only that subset.**
+
+**If you are in even a LITTLE doubt: OVER-LOAD.** Not "lean toward loading more" — **over-load.** **We have had roughly a thousand times as many failures from under-loading as from over-loading.** The costs are not symmetric and never have been: over-loading costs tokens (which are cheap, and cheaper than ever); under-loading costs a confidently-wrong build, shipped, that nobody catches until it breaks something real. **These protocols are shaped exactly the way they are because we paid for every line of them.**
+
+**And notice the trap in the carve-out itself:** the three conditions above are *self-assessed*, which means the very agent most likely to under-load (one that hasn't read enough to know what it's missing) is also the one most likely to believe it passes them. **If you find yourself reasoning toward the subset, that is evidence you should not use it.** When you do use it, say so explicitly in your relay — *"I scoped AC2 to a subset because I'd just read the full runtime; here's what I cut and why"* — so the call is visible and auditable rather than silent. And if you don't have a *really* well-constructed reason for why you cut, be prepared for Justin to demand a re-spin. The pain of past under-loading can't be overstated. 
 
 ### 🔴 Recursive propagation — an AC you spawn WILL spawn others, and it inherits NOTHING about how
 
@@ -238,7 +288,7 @@ A head AC that absorbs one of these has broken the protocol, not exercised judgm
 
 **2. 🟢 PARENT-ANSWERABLE — the head answers; it does not surface.**
 The sub-AC lacks context the head has: cross-lane collisions, sequencing, deploy order, shared seams, *"does this conflict with the other lane."* **This is the whole point of the head existing — answer it.**
-**But: the head reports a reasanably concise Justin-altitude descriptive summary** in its next relay — not a bunch of technical jargon — just what Justin needs to know — at his altitude — to be up to speed. This is the audit trail that lets Justin catch a head that's over-absorbing, without making him read the fine details of what it absorbed.
+**But: the head reports a reasonably concise Justin-altitude descriptive summary** in its next relay — not a bunch of technical jargon — just what Justin needs to know — at his altitude — to be up to speed. This is the audit trail that lets Justin catch a head that's over-absorbing, without making him read the fine details of what it absorbed.
 
 **3. 🟡 EVERYTHING ELSE — the actual judgment call.**
 
@@ -250,6 +300,55 @@ The sub-AC lacks context the head has: cross-lane collisions, sequencing, deploy
 - **The head's asymmetric default is also SURFACE.** If you're unsure whether you can answer, you can't — because the cost of a wrong absorb is a design that silently went the wrong way and *nobody ever knew to check*.
 
 **The invariant behind all of it: the absorption itself must be visible.** Justin cannot audit what he was never shown. A head AC's failure mode is not answering too many questions — it's answering them *invisibly*.
+
+---
+
+## The work brief — a sub-AC's communication surface, and the thing that makes re-spins free
+
+**Every head-AC ↔ sub-AC lane runs on a committed work brief in `_evryn-meta/docs/working/`.** Not chat, not the subagent's returned text — **a file**. The head creates it, names it in the sub-AC's `<mandatory_load>`, and tells it to read it in full. **From then on it is the lane's shared surface: the sub-AC appends its notes, the head appends its own.**
+
+**Why a file and not the conversation — this is the whole point:** *"if **either** of them crashes, the whole thing is preserved, instead of it just being lost."* (Justin, 2026-07-16.) A conversation is a single point of failure for two agents at once; a committed file is not.
+
+### 🔑 This is ALSO the answer to context exhaustion — the more important half
+
+**Sub-ACs run out of context, routinely, and far faster than DCs do** (they carry a full cascade *and* the lane's accumulated history; Justin re-spins lanes *many* times for exactly this). **A sub-AC's realistic lifecycle: spin → it returns with questions → resume it with answers → roughly ~3 resumes → its context is getting overloaded and it must be RE-SPUN fresh.** *(Rough working estimate, not a measured constant — and remember each resume replays the whole transcript, so a heavy AC's resumes are not free and the ceiling arrives sooner than it feels like.)*
+
+**⚠️ There is no known way for an agent to read its own remaining context** — no `whoami` for tokens, no meter it can query. **So do NOT design around measuring the cliff.** *(If a sub-AC can be made to self-report a useful estimate, that's worth testing — but nothing should depend on it.)*
+
+**The structural answer instead: make falling off the cliff FREE.** If the brief holds the real state — decisions, open questions, what's done, what's next, what was tried and rejected — then **a re-spin costs a load, not a memory.** The head kills the exhausted sub-AC, spins a fresh one, points it at the same brief, and the lane continues. **Don't measure context; make re-spins lossless.** That inverts the problem from "how do I keep this agent alive" to "how do I make its death not matter."
+
+**⇒ So the brief must ALWAYS be current enough to re-spin from cold.** The test, at every append: *"if this instance died right now, could a fresh one pick up from this file alone?"* If no, the brief is behind — fix it before doing anything else. This is the same discipline as the Autonomous Work Protocol's handoff doc (AC `CLAUDE.md`), applied one level down.
+
+### Consolidation — the brief WILL bloat, and that's a managed event
+
+An append-only brief grows until re-reading it costs more than it saves — and the sub-AC pays that cost on **every** re-spin, which is exactly when you can least afford it.
+
+- **The sub-AC consolidates — but only when the brief is getting genuinely long.** Not every trip; not proactively. Settled/shipped history collapses to a reasonably concise pointer; **live state + open items stay whole.** (Same shape as the working-brief rule in AC `CLAUDE.md` → Document Hygiene.)
+- **It then TELLS the head it consolidated.** Never silently — a silent consolidation is indistinguishable from silent data loss.
+- **The head VERIFIES the consolidation and modifies it if needed.** The head owns the brief's correctness. A sub-AC nearing its context limit is *precisely* the agent most likely to compress badly — which is the cruel irony here: **the consolidation is triggered by the same exhaustion that makes it untrustworthy.** So 1) re-spin sooner than you think you need to — if the brief is being propely maintained, there's no real cost to re-spinning and 2) the head's verification is not a formality; it is the how the head verifies that the lane is staying accurate.
+- **Commit the brief freely** — brief/mailbox-class traffic is pre-authorized (AC `CLAUDE.md`), and an uncommitted brief defeats the entire crash-survival rationale. **Write, then commit, then walk away.**
+
+---
+
+## Receipts up the chain — how a head AC knows a grandchild actually loaded
+
+**The problem:** AC0 spins AC2, AC2 spins DC. DC's receipts go to **AC2** — AC0 never sees them. So the load discipline that makes this whole protocol work could silently evaporate one level down, and AC0's report would look identical either way.
+
+**The rule — each layer attests for the layer below it:**
+
+1. **AC2 reports her OWN receipts to AC0, verbatim** — the full two-part form, since AC0 has spun her directly. No summarizing her own load.
+2. **AC2 does NOT forward DC's whole receipt list.** AC0 doesn't need it and it's noise at his altitude.
+3. **AC2 DOES verify DC's receipts, and report that she verified DC's receipts against the load list she gave him — explicitly, as an attestation.** *"DC's receipts checked out against my list: every file full, every canary confirmed."* Silence is not an attestation; **if AC2 doesn't say she checked, assume she didn't.**
+4. **Every DEVIATION gets reported up, with AC2's critical vetting and her justification for letting it stand.** A deviation she never mentions is a deviation she's hiding, whether or not she meant to.
+5. **If AC2 cannot adequately justify why she let a deviation stand → she RE-RUNS DC.** That's her call to make and her job to make correctly. "It was probably fine" is not a justification; the standard is the same one the protocol already sets — *a finding from a partially-loaded agent is UNVERIFIED by default.*
+6. **AC0 then decides whether AC2's justifications are acceptable** — that's why they travel up. AC0 may reject one and require the re-run. **Findings are inputs, not verdicts** applies between ACs exactly as it does between AC and QC.
+7. **AC0 then reports the state of receipts to Justin in the same way — one attestation, at HIS altitude, every relay.** Not a receipt list: Justin can't evaluate one and shouldn't have to. What he needs is exactly two things — **did the load discipline hold all the way down, and if not, what survived and why did you let it?**
+   - **The clean case is ONE line:** *"Load discipline held — I verified AC2's receipts directly; she verified DC's; no deviations."* Done.
+   - **Any deviation that SURVIVED gets named in plain English:** what was skipped, why AC2 let it stand, whether AC0 agrees, and **what it would mean if that judgment turns out to be wrong.** A deviation Justin is never told about is a deviation that has been *hidden from him*, whatever anyone intended.
+   - **If AC0 rejected a justification and forced a re-run, say so.** It costs one clause and it's evidence the chain is working — which is the thing Justin actually wants to know.
+   - **⚠️ Never report an attestation you did not personally make — and be precise about WHICH layer you're vouching for.** *"Receipts checked out"* must mean **AC0 read AC2's receipts against the list he gave her.** If he is merely passing on *her* claim about DC, he says exactly that: *"I verified AC2's directly; AC2 attests DC's were clean."* **That distinction is the whole point of the chain** — it tells Justin which layer is accountable when something later turns out to be wrong, and blurring it converts a two-layer check into an unfalsifiable one.
+
+**The invariant: an attestation is a claim someone is accountable for.** AC2 saying *"DC's receipts checked out"* means **she read them against her own list**, and if that turns out to be false, it's her failure — not DC's. That accountability is what makes the chain hold at depth. *(Added 2026-07-16 with the AC-under-AC model, on Justin's design.)*
 
 ---
 
@@ -344,11 +443,21 @@ The DC and QC briefs differ only in *task* — the six-part shape and the mechan
 > ### ⇒ THE RULE: **If you want the child to report to *it's parent*, NEVER tell a child where, or to whom, to report.**
 > Do not write *"report back to me,"* *"return your findings to your parent,"* *"send this to X"* — any of it. **Just describe the deliverable.** Delivery is automatic and correct by construction; every instruction you add can only break it. This is counter-intuitive and it is the single most important line in this section. The *only* time you'd violate this is if you actually wanted the child to *skip* the parent for some reason, and report to the grandparent — in that rare case, you could tell it to break this intentionally.  
 
-**The three delivery paths, ranked — use #1:**
+### ⇒ FOREGROUND IS THE DEFAULT — because background is INVISIBLE TO JUSTIN (his call, 2026-07-16)
 
-1. **Let the child finish (automatic).** Its output lands in the parent's completion notification. Zero addressing, zero failure modes. **This is the default and it is what you should use.**
-2. **Foreground** (`run_in_background: false`) — the child's output returns directly as a tool result. **And it does NOT force lanes serial:** two foreground children issued as two tool calls *in a single message block* run genuinely concurrently (proven 2026-07-16 by overlapping start/end windows, not wall-clock inference — and 4 children ran concurrently across foreground + background with no interference). *The real constraint:* a foreground block returns only when **every** child in it finishes — you get concurrency within a batch, but you're gated on the slowest member and can't interleave a new spawn mid-batch. Background has neither limit.
-3. **`SendMessage` to the parent's raw `agentId`** — works, but it confirms **queuing, not receipt** (*"queued for delivery at its next tool round"*). **A message sent to an idle or finished parent may never land.** Weakest path; the completion-notification route has no such hole. Use only for genuine mid-flight two-way exchange, never for final delivery.
+**The fact that decides this:** *"Background agents don't render **at all** on my screen — whereas foreground agents render **everything**."* (Justin, 2026-07-16.) **A background spin makes the entire chain invisible to him.** He cannot see that DC actually ran, that AC2 actually checked, that anything landed — he gets only your word for it. And he explicitly wants the audit: *"I kind of like being able to audit everything — I just need to know when I'm looking at DC's stuff vs AC2 vs AC0."*
+
+**That is exactly what the naming rules buy, and why they are not cosmetic.** With `#` reserved for the top-level AC, sub-ACs at `## AC2's read`, and DC/QC barred from `'s read` entirely, a wall of foreground output becomes **scannable**: Justin skims to the single `#` for the answer, and every layer beneath it is *there*, attributed, if he wants to check it. **Without those rules foreground is an unreadable wall; with them it's an audit trail.** So the naming discipline and the foreground default are one decision, not two.
+
+**Use BACKGROUND only when** the parent genuinely must keep working while a long child runs — and **know you are trading away Justin's visibility to do it. Say so explicitly when you do** (*"ran this in background so I could keep moving — you won't see its output"*), because otherwise he has no way to know the work happened at all.
+
+**The delivery paths:**
+
+1. **Foreground** (`run_in_background: false`) — **the default.** The child's output returns directly as a tool result, and Justin sees it. **It does NOT cost you concurrency:** two foreground children issued as two tool calls *in a single message block* run genuinely concurrently (proven 2026-07-16 by overlapping start/end windows, not wall-clock inference — 4 children ran concurrently across foreground + background with no interference). *The real constraints:* the block returns only when **every** child in it finishes (you're gated on the slowest), and you can't interleave a new spawn mid-batch. **Neither of those is usually worth trading Justin's visibility for.**
+2. **Background — let the child finish (automatic).** Its output lands in the parent's completion notification. Mechanically flawless — zero addressing, zero failure modes — **but invisible to Justin.** Reach for it only per the rule above.
+3. **`SendMessage` to the parent's raw `agentId`** — works, but it confirms **queuing, not receipt** (*"queued for delivery at its next tool round"*). **A message sent to an idle or finished parent may never land.** Weakest path. Use only for genuine mid-flight two-way exchange, never for final delivery.
+
+**In all three, the rule above still holds: never tell the child where to report.** It is orthogonal to foreground/background — it's about *addressing*, not *mode*.
 
 **Mechanics worth knowing (measured, not assumed):**
 - **A child CAN self-discover its parent's `agentId`** from the on-disk subagent metadata (`agent-<id>.meta.json` carries an explicit `parentAgentId`; depth is stamped as `spawnDepth`). It is **not** discoverable from anything in-context — there is no `whoami`. Irrelevant for path #1; it's why path #3 is possible at all.
@@ -382,7 +491,7 @@ The only changes that skip QC are non-code (pure docs, a typo). When unsure, QC 
 
 ## The merge / ship rubric (Justin's standing authorization, 2026-06-02)
 
-> ### 🔴 "AC" here means the TOP-LEVEL AC ONLY — a sub-AC NEVER merges, pushes, or deploys, unless *explicity* instructed to.
+> ### 🔴 "AC" here means the TOP-LEVEL AC ONLY — a sub-AC NEVER merges, pushes, or deploys, unless *explicitly* instructed to.
 > **Added 2026-07-16 with the AC-under-AC model, because this section was dangerously ambiguous the moment a sub-AC could read it.** A lane AC running under a head AC **is** an AC, and could read *"AC merges"* as authorization for itself. **It is not.** A sub-AC's ceiling is its **own feature branch** — exactly like DC's and QC's. Merging, pushing, prod migrations, and `railway up` belong to the **top-level AC in direct contact with Justin**, and every one of them sits on the escalation ladder's 🔒 **hard floor** (always reaches Justin; never absorbable). If you are a sub-AC reading this: **this rubric is not addressed to you.**
 
 For build-level work that sits below Justin's evaluation altitude:
@@ -410,9 +519,17 @@ Technical detail (`file:line`, the QC severity rubric, commit SHAs, internal lab
 
 **Subagents — and the briefs AC writes them — are banned from the `#` (H1) heading AND from the phrase `[their parent]'s read`; their highest heading is `##`.**
 
-**The `[parent]'s read` ban (added 2026-07-16 — Justin's catch).** DC and QC have been writing *"AC's read"* into their own output — apparently meaning *"AC, read this"* — but that is the **exact phrase AC uses to mark its own voice to Justin**, so it reads as though the subagent is the AC relaying. **The result is genuinely confusing output.** So: **no subagent — DC, QC, OC, a team agent, or a sub-AC — may write `'s read` in any form** (`AC's read`, `AC0's read`, `my read`, `QC's read`). That construction belongs to **one** thing only: the top-level AC talking to Justin.
-- **Sanctioned alternatives when a subagent wants its AC to look at something:** `## For AC0 — <topic>`, `## Flagging for AC2 — <topic>`, `## Needs ACf's attention — <topic>`.
-- **A sub-AC reporting to its head AC** uses `## Report to <head> — <topic>` (e.g. `## Report to AC0 — Step 57 build`). Never `## AC2's read`, because Justin may see that output and it will read as a relay when it isn't.
+**The `'s read` rules — who may say it, at what level (revised 2026-07-16 per Justin).** The phrase marks **an AC's own distilled judgment**. It is not a way to tell someone to read something. Three tiers:
+
+| Who | May write `'s read`? | Form |
+|---|---|---|
+| **Top-level AC** (talking to Justin) | ✅ **YES — and must** | `# AC0's read — <topic>` · **H1, name first.** Reserved exclusively for this. |
+| **Sub-AC** (e.g. AC2 under AC0) | ✅ **YES — at `##`** | `## AC2's read — <topic>` · **never `#`.** |
+| **DC · QC · OC · team agents** | 🚫 **BANNED — in any form** | Use `## For AC0 — <topic>` · `## Flagging for AC2 — <topic>` · `## Needs ACf's attention — <topic>` |
+
+- **Why DC/QC are banned (Justin's catch):** they've been writing *"AC's read"* meaning *"AC, read this"* — colliding with the exact phrase AC uses to mark its **own voice to Justin**, so their output reads as though the subagent is the AC relaying. **Genuinely confusing.** They aren't ACs and don't have "reads"; they have findings. The sanctioned alternatives say what they actually mean.
+- **Why sub-ACs KEEP it (Justin, 2026-07-16 — *"for AC2, I'd also love a `## AC2's read` — that way, if I want to audit the sub-AC's stuff, I can"*):** a sub-AC **is** an AC and genuinely has a read. Naming it `## AC2's read` makes her judgment **findable and auditable** when Justin wants to check whether AC0 relayed her faithfully — which is precisely the failure mode the escalation ladder exists to catch. The `##` cap is what keeps it from competing with AC0's `#`.
+- **The level does the disambiguating, not the phrase.** `#` = "the AC talking to Justin, here's the distillation." `##` = "a sub-AC's own judgment, available if you want to audit it." **So a sub-AC must never use `#` — that's the one thing that would break the boundary marker.**
 
 **Why the `#` ban:** the `#` level is **reserved exclusively for the top-level AC's relay-to-Justin voice** (the leading-name header above). This is the *structural* half of what makes that header work: with subagents capped at `##`, AC's single `#` reliably reads to Justin as *"a subprocess just ran and dumped a lot of output below — scan down to the `#`, and skip everything above it if you want."* If subagent output contains its own `#`, that boundary signal breaks and Justin can't find where AC takes over in the wall of output. **Enforcement:** state it in every subagent brief (*"cap headings at `##` — never use `#`; H1 is reserved for AC's voice to Justin"*), and hold the same rule in standing monitor/research agents you resume. *(Justin's convention, 2026-07-14.)*
 
