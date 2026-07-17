@@ -64,6 +64,35 @@ For any session where you'll do or direct build-level work on the Evryn product 
 
 Each architecture / build doc declares its own **Required Context** section — honor it when a beat in your work hits that section.
 
+### Conductor Startup Context Cascade — the default load for AC-when-conducting
+
+> **Status: NEW (Justin, 2026-07-17), for the AC-under-AC era; being trialed. Not yet battle-proven — if the scout's map turns out thin or misleading, fall back to the Full cascade and flag it.** *(Supersedes the earlier "shape only" placeholder.)*
+
+**Use this when your session is *conducting*, not building** — orchestrating lanes, gating merges/deploys, reconciling cross-lane collisions, keeping housekeeping current, translating to Justin. Use the **Full** cascade instead when you'll be hands-on in the runtime yourself, and *always* when Justin explicitly calls "the full cascade" (that call wins — load everything, now). The **Light** cascade is the base for all of it; you always do it first.
+
+**Why it exists.** The Full cascade loads the entire product runtime (`src/**/*.ts` + `identity/**/*.md` ≈ 250K tokens, ~40% of the window). Correct for a hands-on build/gate moment — but a conductor who carries the whole runtime *resident, permanently* burns the context budget a long conduct needs, on files he never opens (the 2026-07-17 boot hit 80% before reading a single lane brief). This cascade keeps the runtime in a *subagent's* context and leaves you a map + a targeted read-list.
+
+**It is NOT a license to conduct blind.** *"Directing build work is build work"* (Context Discipline) still holds — gating a runtime change or sending a brief you can't defend has the same blast radius as bad code. This cascade is the *mechanism* for getting that runtime competence efficiently — a scout + targeted reads + fresh verification subagents — instead of a full resident load. It tells you *which* files are load-bearing and *when*, so you read the right ones, not all 40. **You still read the load-bearing files yourself, at their moment.**
+
+**The sequence:**
+
+1. **Load the light cascade first** (as always, see above).
+2. **Read the map of the work YOURSELF** — the active handoff (`docs/working/…-handoff.md`) + the active lane briefs, in full. These define the work in front of you; they're small, and you cannot conduct or gate from a subagent's summary of a source-of-truth doc (the "be wary of subagents reading load-bearing docs" rule — read these yourself). This is also what lets the scout's read be *work-oriented* rather than a generic tour.
+3. **Spin the Runtime Scout** — ONE fully-loaded, Opus-pinned AC subagent, briefed per `docs/protocols/ac-orchestration-protocol.md` (verbatim brief, `<task>` load-gate, two-part receipts). Its brief:
+   - **Load, in full:** BOTH runtime halves — enumerate them LIVE (`find <repo>/src -name '*.ts'` **AND** `find <repo>/identity -name '*.md'`; the enumeration trap — `find src` can never return an identity file, so you must enumerate both) — plus AC0's `CLAUDE.md`, `current-state.md`, the active handoff, and the active lane briefs, so its read is oriented to the *actual* current work.
+   - **Return, structured:**
+     1. **Work-oriented runtime map** — a tight summary of the runtime *as it bears on the lanes / critical path in front of you* (e.g. *"XYZ rewrites the verdict tool surface across these files; the identity files still instruct the OLD surface — here's the collision set"*). Not a generic tour.
+     2. **READ NOW** — the files you must read yourself to be competent for the *immediate* work, each with a reasonably concise why (+ line-spans where a file is large and only part matters).
+     3. **READ BEFORE `<milestone>`** — files keyed to specific upcoming beats (*"before a merge-gate re-check: X, Y"; "before a staging live-fire: A, B"*), so you pull them at their moment, not all up front. Strongly consider writing these into your working/session doc/brief as soon as you have this, to remind you at the right moment. 
+     4. **⚠ Surprises / contradictions** — anything it noticed reading both halves *together* that you would want flagged: a spec-runtime mismatch, a stale doc, a landmine. *(This is the identity-as-runtime dividend — a scout reading both halves catches what a `src`-only read never could.)*
+     5. **Deliberately skipped** — substantive material it did NOT flag, and why, so you know the coverage boundary (no silent gaps).
+   - **The scout returns a MAP, never a substitute for AC0's own reading.** Treat its summary as *routing*, not knowledge; distinguish what it *found* from what it *recommends*, and verify any load-bearing claim against the artifact before acting on it. It's a fresh full-load instance — cheap to re-spin if the map reads thin.
+4. **Load the scout's READ-NOW list directly.** Hold the map + the READ-BEFORE list + the surprises as your working map. Conduct; pull READ-BEFORE files at their milestone.
+
+**For a deep verification moment** — the classic being an independent runtime-vs-identity re-check at a merge gate — do NOT load the whole runtime to do it. Spin a **fresh full-load subagent** to run the verification and return a verdict you **independently weigh** (and read the specific handful of files it names yourself). A fresh subagent is *also* cleaner for the "independent eyes" requirement than re-using your own already-anchored context. Same discipline: its verdict is a claim to verify, not a fact to file.
+
+**The payoff.** The AC-under-AC model doubles as the context-budget strategy — the lane/scout carries the territory; the conductor stays light enough to last the whole build. When you feel the runtime pulling into your own context, ask whether a subagent should hold it instead.
+
 ---
 
 ## Who You Are
