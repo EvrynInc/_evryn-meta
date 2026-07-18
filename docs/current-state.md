@@ -15,8 +15,11 @@
 ## What's Live in Prod
 
 - **Evryn product = `v0.2.7`** (`evryn-backend` tag `517014d`), on Railway Oregon/us-west-2, deployed 2026-07-10. Clean boot; M1-protected + Healthchecks-monitored. Full ledger: `docs/deploy-log.md`.
-- **Two big levers ship DORMANT** — Clustering (`CLUSTERING_MODE=off`, Step 58/ADR-049) and the Haiku pre-screen (`HAIKU_SCREEN_MODE` unset, Step 44). Both are flip-before-Mark go-live actions; zero prod behavior change until flipped.
-- **`evryn-backend` `main` (`7d664af`) is ~15 commits ahead of the deployed tag** — all docs/sprint-marks + **Step 78 Half A** (real `/health`) + **54a/54c** (contact-record history-check + real forwarded-sender name). None deployed; they ride the ③ bundle deploy.
+- **Two big cost levers are DORMANT — and stay dormant through the next deploy** (Clustering, Step 58/ADR-049 · Haiku pre-screen, Step 44). Both are env-gated, and `config.ts` treats *unset* identically to `off`:
+    - *Railway (the running `v0.2.7` deployment):* `CLUSTERING_MODE` and `HAIKU_SCREEN_MODE` are both **UNSET** → each runs as the safe no-op `off` (verified against prod env 2026-07-17).
+    - *`main` (HEAD, what would deploy next):* the lever code is unchanged from `v0.2.7` and nothing in the 16-commit delta touches it — so a `railway up` of `main` still boots both `off` unless the env is explicitly flipped.
+    - Flipping them on is a deliberate pre-Mark go-live action; zero prod behavior change until then.
+- **`evryn-backend` `main` (`7d664af`) is 16 commits ahead of the deployed tag** — all docs/sprint-marks + **Step 78 Half A** (real `/health`) + **54a/54c** (contact-record history-check + real forwarded-sender name). None deployed; they ride the ③ bundle deploy.
 - **Team runtime (`evryn-team-runtime`) is deployed to Railway but PAUSED / boot-paused by construction** — dormant, wakes nobody. Autonomy stays OFF until the Meta-Meeting. Evryn prod is untouched by all team-runtime work.
 
 ## In Flight — Product Wave (critical path to Mark-live)
@@ -44,7 +47,7 @@
 
 ## Infrastructure
 
-- **Railway: AUTO-DEPLOY OFF by design** (manual `railway up`; branch-agnostic). Live = `v0.2.7`. Env: `PROACTIVE_CHECK_HOUR_PT=10`, `AFFIRM_HOUR_PT=7` (staged — applies next deploy), `POLL_INTERVAL_MS=10000` (test cadence, slow before Mark). Healthchecks.io heartbeat (~15min) + daily-affirmation (~26h) LIVE. Deploy-time landmines/env-swaps tracked in the handoff.
+- **Railway: AUTO-DEPLOY OFF by design** (manual `railway up`; branch-agnostic). Live = `v0.2.7`. Env (verified set in prod 2026-07-17): `PROACTIVE_CHECK_HOUR_PT=10`, `AFFIRM_HOUR_PT=7`, `POLL_INTERVAL_MS=10000` (test cadence, slow before Mark). Healthchecks.io heartbeat (~15min) + daily-affirmation (~26h) LIVE. Deploy-time landmines/env-swaps tracked in the handoff.
 - **Supabase: on PRO** (Oregon/us-west-2). Projects: 
  - **prod** ("Evryn Product — West Coast")
  - **dev** (seeded mirror)
@@ -58,10 +61,11 @@
 
 [Linear (EVR workspace)](https://linear.app/evryn) — discrete tasks tracked there, live v0.2 build work in `evryn-backend/docs/SPRINT-V0.2-HARDENING.md`.
 **Notable *active* tickets**:
-- EVR-114 = Soren meta-architecting. 
-- EVR-67 = v0.3 S1 hardening. 
-- EVR-103/104 = Meta-Meeting (team-autonomy gate)
-- EVR-108/109/110 standing.
+- EVR-114 = Soren meta-architecting.
+- EVR-67 = v0.3 S1 hardening.
+- EVR-103/104 = Meta-Meeting (team-autonomy gate).
+
+*Post-Mark backlog (dormant until Mark is live — not active):* EVR-108 (ARCHITECTURE.md compression pass — *Blocked*) · EVR-109 (force-load/caching as v0.3+ identity architecture, ADR-012 amendment — *Needs Authorization*) · EVR-110 (per-agent git worktrees — *Backlog*).
 
 ---
 
