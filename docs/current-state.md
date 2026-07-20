@@ -67,6 +67,8 @@
 
 *Post-Mark backlog (dormant until Mark is live — not active):* EVR-108 (ARCHITECTURE.md compression pass — *Blocked*) · EVR-109 (force-load/caching as v0.3+ identity architecture, ADR-012 amendment — *Needs Authorization*) · EVR-110 (per-agent git worktrees — *Backlog*).
 
+**Weekend architecture capture — REVISIT MONDAY by a fully-loaded, dedicated AC (not critical-path to Mark).** Justin + a *lightly-loaded* AC think-through (2026-07-19) on the backend growing organically into a god-module (`triage/classify.ts`, 2,861 lines — core Evryn service fused into a feature file → hard to load / high compaction cost). Proposal shape: cheap **map** (regenerable dependency skeleton + a hand-maintained Code Atlas) soon; **extract `classify.ts`** in a quiet gap (collides with the in-flight ③ wave, so NOT now); build v0.3's new subsystems with clean seams. Napkin doc (explicitly *not* settled, re-derive from first principles): `docs/working/2026.07.19-ac-justin-restructure-napkin.md`.
+
 ---
 
 ## Strategic Pivot: Evryn Product First
