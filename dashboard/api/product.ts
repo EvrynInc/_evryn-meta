@@ -201,6 +201,26 @@ export default async function handler(request: Request) {
       .in('status', ['error', 'escalated'])
       .gte('updated_at', last24h);
 
+    // The actual error/escalated ROWS behind that count — the dashboard's drill-down
+    // panel (Step 78 Half B, Change 2). SAME column allowlist + truncation as the
+    // recentItems select below: created_at / status / subject ONLY, subject sliced
+    // to 60 — NO content_raw / original_from / metadata / user_id (PII firewall,
+    // HARD CONSTRAINT). Same 24h/status filter as the count; newest error activity
+    // first (order by updated_at desc — not returned, not PII); capped at 10.
+    const { data: recentErrorRows } = await supabase
+      .from('emailmgr_items')
+      .select('created_at, status, subject')
+      .in('status', ['error', 'escalated'])
+      .gte('updated_at', last24h)
+      .order('updated_at', { ascending: false })
+      .limit(10);
+
+    const recentErrorItems = (recentErrorRows || []).map((r) => ({
+      created_at: r.created_at,
+      status: r.status,
+      subject: r.subject ? String(r.subject).slice(0, 60) : null,
+    }));
+
     const health = await fetchHealth();
 
     // BACKWARD-COMPAT: the frontend's liveness banner reads liveness.processUp
@@ -339,6 +359,9 @@ export default async function handler(request: Request) {
         // thrust). Frontend renders null as "—".
         cluster_heartbeat: null,
         recentItems,
+        // Error/escalated rows for the drill-down panel (Change 2). Empty array (not
+        // null) when there are none → the panel renders nothing.
+        recentErrorItems,
       }),
       {
         headers: { 'Content-Type': 'application/json' },
