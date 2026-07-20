@@ -29,11 +29,16 @@
 - **WebFetch-timeout fast-follow** — BUILT (`dc/webfetch-timeout`, stacked on ③), adds a wall-clock cap so a hung fetch can't wedge the poll loop (real Mark-live risk). **Needs its live-path QC.**
 - **Step 78 (liveness/health)** — Half A (real 503-when-wedged `/health`) MERGED to `main` (`de3a5bd`), deploy-pending. Half B (dashboard's 5 per-subsystem lights) BUILT + QC-GO, UNMERGED on `_evryn-meta ac3/step78b-dashboard-lights` — **Vercel push IS the deploy → gated separately** (degrades gracefully, safe to ship before Half A).
 - **SPRINT 91** (halt-resume skips gatekeeper lane-resolution → phantom lead; AC0-confirmed, sequence *after* ③) and **SPRINT 92** (`schema-reference.md` full re-pull — 3 live tables missing, drift; interim DO-NOT-TRUST banner added) — minted from ACU's product-radar pass.
+- **Weekend architecture capture — REVISIT 7/20 by a fully-loaded, dedicated AC (not critical-path to Mark).** Justin + a *lightly-loaded* AC think-through (2026-07-19) on the backend growing organically into a god-module (`triage/classify.ts`, 2,861 lines — core Evryn service fused into a feature file → hard to load / high compaction cost). Proposal shape: cheap **map** (regenerable dependency skeleton + a hand-maintained Code Atlas) soon; **extract `classify.ts`** in a quiet gap (collides with the in-flight ③ wave, so NOT now); build v0.3's new subsystems with clean seams. Napkin doc (explicitly *not* settled, re-derive from first principles): `docs/working/2026.07.19-ac-justin-restructure-napkin.md`.
 
 ## In Flight — Team Runtime Wave (ACf lanes)
 
 - **Memory + wake-economics architecture designed + ratified (ADR-052).** Phase 1 building (ACf1 — scratchpad+headline / shared digest / membership wake-model / full-thread-load / serialization). Phase 2 approved-in-principle; scheduling routed to ACU. Design-of-record: `evryn-team-workspace/shared/projects/ops/team-runtime/2026.07.15-acf-team-runtime-memory-architecture.md`.
 - **Harness is built + merged + supervised-live-proven** (composition v2, Sunday controls, dashboard control tab live-inert). Still dormant/boot-paused; Lucas's 8 supervised paces are 4/8 done. Gates to live: remaining paces + Meta-Meeting.
+
+## Up Next
+
+*Post-Mark backlog (dormant until Mark is live — not active):* EVR-108 (ARCHITECTURE.md compression pass — *Blocked*) · EVR-109 (force-load/caching as v0.3+ identity architecture, ADR-012 amendment — *Needs Authorization*) · EVR-110 (per-agent git worktrees — *Backlog*).
 
 ## Active Instances
 
@@ -65,15 +70,11 @@
 - EVR-67 = v0.3 S1 hardening.
 - EVR-103/104 = Meta-Meeting (team-autonomy gate).
 
-*Post-Mark backlog (dormant until Mark is live — not active):* EVR-108 (ARCHITECTURE.md compression pass — *Blocked*) · EVR-109 (force-load/caching as v0.3+ identity architecture, ADR-012 amendment — *Needs Authorization*) · EVR-110 (per-agent git worktrees — *Backlog*).
-
-**Weekend architecture capture — REVISIT MONDAY by a fully-loaded, dedicated AC (not critical-path to Mark).** Justin + a *lightly-loaded* AC think-through (2026-07-19) on the backend growing organically into a god-module (`triage/classify.ts`, 2,861 lines — core Evryn service fused into a feature file → hard to load / high compaction cost). Proposal shape: cheap **map** (regenerable dependency skeleton + a hand-maintained Code Atlas) soon; **extract `classify.ts`** in a quiet gap (collides with the in-flight ③ wave, so NOT now); build v0.3's new subsystems with clean seams. Napkin doc (explicitly *not* settled, re-derive from first principles): `docs/working/2026.07.19-ac-justin-restructure-napkin.md`.
-
 ---
 
 ## Strategic Pivot: Evryn Product First
 
-Team agent build (Lucas) paused-not-cancelled → building the Evryn product MVP (v0.2 "Gatekeeper's Inbox") for Mark (real-Mark = Mark Titus, Seattle filmmaker / August Island Pictures / Eva's Wild) first. Real-Mark "we're ready" email SENT 2026-06-11; **Mark is not yet forwarding** (prod idle until he does). Build: `evryn-backend/docs/BUILD-EVRYN-MVP.md`.
+Team agent build was paused to focus on building the Evryn product MVP (v0.2 "Gatekeeper's Inbox") for Mark (real-Mark = Mark Titus, Seattle filmmaker / August Island Pictures / Eva's Wild) first. Real-Mark "we're ready" email SENT 2026-06-11; **Mark is not yet forwarding** (prod idle until he does). Team agent build has since resumed.
 
 ## How AC Works Now
 
