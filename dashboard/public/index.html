@@ -244,11 +244,51 @@
     }
     .liveness-banner.live { border-left-color: #22c55e; }
     .liveness-banner.check { border-left-color: #ef4444; }
+    /* wedged/halted are real faults → RED, distinct from green Live and NAMED by
+       the status text ("WEDGED" / "HALTED"). Same hue as .check; separate classes
+       so the two states stay semantically distinct (and could diverge later). */
+    .liveness-banner.wedged, .liveness-banner.halted { border-left-color: #ef4444; }
     .liveness-status { font-size: 1.4rem; font-weight: 700; }
     .liveness-banner.live .liveness-status { color: #22c55e; }
-    .liveness-banner.check .liveness-status { color: #ef4444; }
+    .liveness-banner.check .liveness-status,
+    .liveness-banner.wedged .liveness-status,
+    .liveness-banner.halted .liveness-status { color: #ef4444; }
     .liveness-meta { display: flex; flex-direction: column; gap: 2px; font-size: 0.8rem; color: #888; }
     .liveness-meta .err { color: #ef4444; font-weight: 600; }
+
+    /* Per-subsystem health lights (Step 78 Half B). A separate class from
+       .status-dot (which is position:absolute for the agent-card corner and can't
+       be reused inline). Wraps on narrow screens (phone-first).
+       COLOUR LANGUAGE (de-overloaded 2026-07-20):
+         active   GREEN            = healthy
+         halted   RED              = an actual fault (genuine poll wedge, M1 HALTED, db/slack down)
+         consequence ORANGE RING   = an EXPECTED downstream consequence, not an independent
+                                      alarm (ONLY the poll light during an M1 halt) — hollow so
+                                      it reads as "not an alarm" from SHAPE as well as hue
+         warn     AMBER (filled)   = a standing warning (ONLY errors_24h > 0)
+         idle     GREY (dimmed)    = no data */
+    .health-lights { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .health-light {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 8px 12px;
+    }
+    .health-light.idle-light { opacity: 0.55; }
+    .health-dot { width: 9px; height: 9px; border-radius: 50%; background: #666; flex-shrink: 0; }
+    .health-dot.active { background: #22c55e; }
+    .health-dot.halted { background: #ef4444; }
+    .health-dot.warn { background: #eab308; }
+    /* Expected-downstream-consequence: orange HOLLOW RING (not a filled dot), so it
+       reads as "not an independent alarm" from shape as well as hue. box-sizing is
+       border-box globally (the * reset), so the 2px border keeps the 9px footprint. */
+    .health-dot.consequence { background: transparent; border: 2px solid #f97316; }
+    .health-dot.idle { background: #666; }
+    .health-label { font-size: 0.75rem; font-weight: 600; color: #ccc; }
+    .health-sub { font-size: 0.68rem; color: #666; }
 
     .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; margin-bottom: 16px; }
     .stat-card {
@@ -916,6 +956,112 @@
         .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
+    // ===== Per-subsystem health lights (Step 78 Half B) =====
+    // Renders 5 lights off the /health `checks` (db / slack_socket / poll / m1)
+    // plus the existing 24h error count.
+    //
+    // GRACEFUL DEGRADE (load-bearing — Half A is not deployed yet): the /health
+    // live in prod still answers in the OLD shape (no `checks`), so the API sends
+    // checks:null. The 4 health lights then render IDLE ("—"), never a false red
+    // and never a broken layout. Same for an unreachable backend (health:null).
+    // The errors light always renders — it reads live.recentErrors, not /health.
+    function healthLight(label, dotClass, sub) {
+      const subHtml = sub ? `<span class="health-sub">${escapeHtml(sub)}</span>` : '';
+      const dim = dotClass === 'idle' ? ' idle-light' : '';
+      return `<div class="health-light${dim}"><span class="health-dot ${dotClass}"></span>` +
+        `<span class="health-label">${escapeHtml(label)}</span>${subHtml}</div>`;
+    }
+
+    function renderHealthLights(live) {
+      const checks = (live.health && live.health.checks) ? live.health.checks : null;
+
+      // db / slack_socket: green when ok, red when not, idle when checks absent.
+      // When RED, a "where to look" sub-label: /health carries NO reason string for
+      // these two (bare booleans — we deliberately keep internal error text OUT of
+      // the unauthenticated /health), so point the operator at where the why lives.
+      // Green and idle get no such sub-label.
+      function okLight(label, check) {
+        if (!checks || !check) return healthLight(label, 'idle', '—');
+        if (!check.ok) return healthLight(label, 'halted', 'see #dev-alerts / Railway logs');
+        return healthLight(label, 'active', '');
+      }
+
+      let lights = '';
+      lights += okLight('DB', checks && checks.db);
+      lights += okLight('Slack', checks && checks.slack_socket);
+
+      // Poll — same tri-state, plus age_seconds as a subtle sub-label. The age is
+      // shown whether or not poll is ok: on a wedge it's the most useful number.
+      //
+      // A HALT SUBSUMES THE POLL-STALENESS IT CAUSED — do NOT "fix" this back to
+      // red. When the M1 breaker trips, haltForBreaker calls stopPolling(), so the
+      // poll loop stops and poll.ok legitimately goes false ~15 min later. That
+      // stale poll is EXPECTED (the halt CAUSED it), so it renders as the ORANGE
+      // HOLLOW-RING `consequence` state (an expected downstream consequence, NOT an
+      // independent alarm) rather than RED: ONE deliberate halt must not read to an
+      // operator as TWO failures and send them chasing a phantom second fault. This
+      // mirrors, at the presentation layer, Half A's decideHealthStatus precedence —
+      // where `halted` BEATS `wedged` and returns 200 not 503 (src/safety/liveness.ts).
+      // A stale poll with the breaker NOT tripped is a genuine wedge → stays RED.
+      if (!checks || !checks.poll) {
+        lights += healthLight('Poll', 'idle', '—');
+      } else {
+        const age = checks.poll.age_seconds;
+        const ageSub = (typeof age === 'number') ? formatUptime(age) : '';
+        const haltCaused = !checks.poll.ok && !!(checks.m1 && checks.m1.breaker_tripped);
+        if (haltCaused) {
+          lights += healthLight('Poll', 'consequence',
+            ageSub ? (ageSub + ' · paused — M1 halted') : 'paused — M1 halted');
+        } else {
+          lights += healthLight('Poll', checks.poll.ok ? 'active' : 'halted', ageSub);
+        }
+      }
+
+      // M1 breaker. A trip is a DELIBERATE halt (M1 fires its own alert; no
+      // auto-reset — ADR-041), which is why /health reports it 200 "halted" not
+      // 503. So label it HALTED + the reason, not a generic "down".
+      if (!checks || !checks.m1) {
+        lights += healthLight('M1', 'idle', '—');
+      } else if (checks.m1.breaker_tripped) {
+        const reason = checks.m1.reason ? ('HALTED · ' + checks.m1.reason) : 'HALTED';
+        lights += healthLight('M1', 'halted', reason);
+      } else {
+        lights += healthLight('M1', 'active', 'OK');
+      }
+
+      // errors_24h — from the existing product-DB count, independent of /health.
+      // AMBER (filled `warn`) is now reserved for THIS light, and ONLY when > 0 (a
+      // standing warning). At zero it reads GREEN (`active`) — healthy, not dimmed;
+      // idle stays reserved for genuinely-absent /health data on the other lights.
+      const errs = live.recentErrors || 0;
+      lights += healthLight('Errors 24h', errs > 0 ? 'warn' : 'active', String(errs));
+
+      return `<div class="health-lights">${lights}</div>`;
+    }
+
+    // ===== Recent errors & escalations drill-down (Step 78 Half B, Change 2) =====
+    // The item-level trouble behind the 24h error count. Renders NOTHING when the
+    // array is empty or absent (no empty box). Rows are status + truncated subject
+    // + a short timestamp; every dynamic string is escapeHtml'd. Same status-only /
+    // subject-truncated PII posture as the Recent Items table (data.recentErrorItems
+    // is column-allowlisted server-side — created_at / status / subject only).
+    function renderErrorPanel(data) {
+      const rows = (data && data.recentErrorItems) || [];
+      if (rows.length === 0) return '';
+      let body = '';
+      rows.forEach(it => {
+        body += `<tr>
+          <td class="col-time">${formatDateTime(it.created_at)}</td>
+          <td><span class="status-pill ${escapeHtml(it.status)}">${escapeHtml(it.status)}</span></td>
+          <td>${escapeHtml(it.subject) || '<span style="color:#555;">(no subject)</span>'}</td>
+        </tr>`;
+      });
+      return '<h2>Recent errors &amp; escalations</h2>' +
+        '<table class="product-table"><thead><tr>' +
+        '<th class="col-time">Time</th><th>Status</th><th>Subject</th>' +
+        '</tr></thead><tbody>' + body + '</tbody></table>';
+    }
+
     function renderProduct(data) {
       const el = document.getElementById('product-content');
 
@@ -930,12 +1076,39 @@
       const act = data.today_activity || {};
       const cost = data.cost || {};
 
-      // Liveness: green if process up OR last activity within ~26h.
-      const recentMs = live.lastActivityAt ? (Date.now() - new Date(live.lastActivityAt).getTime()) : Infinity;
-      const isLive = (live.processUp && live.processUp.ok) || recentMs <= 26 * 60 * 60 * 1000;
-      const banner = isLive ? 'live' : 'check';
-      const statusText = isLive ? '● Live' : '● Check';
-      const uptimeStr = (live.processUp && live.processUp.ok)
+      // Liveness banner — consume the REAL /health status (Change 4). We can only
+      // TRUST health.status on the new Half-A shape, which is exactly when `checks`
+      // is present: the OLD always-200 /health reports status:'ok' unconditionally
+      // (untrustworthy), and an unreachable backend gives health:null. So:
+      //   - checks present (new shape)  → banner = f(health.status): ok→green Live,
+      //     wedged/halted → distinct, NAMED, non-green red state. This fixes the bug
+      //     where the banner read green "Live" while the Poll light was red-wedged.
+      //   - checks absent (old shape OR health null) → GRACEFUL DEGRADE, unchanged:
+      //     the original 26h last-activity fallback (this is the same checks-gating
+      //     the health lights use, so banner and lights degrade together).
+      const health = live.health || null;
+      const hasChecks = !!(health && health.checks);
+      let banner, statusText;
+      if (hasChecks && health.status === 'ok') {
+        banner = 'live'; statusText = '● Live';
+      } else if (hasChecks && health.status === 'halted') {
+        banner = 'halted'; statusText = '● HALTED';
+      } else if (hasChecks && health.status === 'wedged') {
+        banner = 'wedged'; statusText = '● WEDGED';
+      } else if (hasChecks) {
+        // Trustworthy shape but an unrecognized status → don't claim green.
+        banner = 'check'; statusText = '● Check';
+      } else {
+        // Degrade (old shape / unreachable): original 26h last-activity fallback.
+        const recentMs = live.lastActivityAt ? (Date.now() - new Date(live.lastActivityAt).getTime()) : Infinity;
+        const isLive = (live.processUp && live.processUp.ok) || recentMs <= 26 * 60 * 60 * 1000;
+        banner = isLive ? 'live' : 'check';
+        statusText = isLive ? '● Live' : '● Check';
+      }
+      // Show uptime whenever we have it — INCLUDING during a halt/wedge (uptime is
+      // useful in those states). processUp.uptimeSeconds is populated regardless of
+      // status; it's null only when the backend is unreachable.
+      const uptimeStr = (live.processUp && live.processUp.uptimeSeconds)
         ? 'uptime ' + formatUptime(live.processUp.uptimeSeconds) : '';
       const errClass = (live.recentErrors > 0) ? 'err' : '';
 
@@ -948,6 +1121,10 @@
             <span class="${errClass}">${live.recentErrors || 0} errors (24h)</span>
           </div>
         </div>
+
+        ${renderHealthLights(live)}
+
+        ${renderErrorPanel(data)}
 
         <h2>Today's Activity</h2>
         <div class="stat-grid">

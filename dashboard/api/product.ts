@@ -61,10 +61,63 @@ function maxTimestamp(
   return max;
 }
 
-// Optional server-side health fetch with a short timeout. Returns
-// { ok, uptimeSeconds } on success, or null on ANY failure / unset env.
-// Never throws — the handler must not 500 on an unreachable backend.
-async function fetchProcessUp(): Promise<{ ok: boolean; uptimeSeconds: number } | null> {
+// The /health `checks` block (Step 78 Half A — evryn-backend src/safety/health.ts).
+// Every field is a boolean, a timestamp, or a detector-name `reason` string
+// (e.g. "loop-signature") — NO PII, so it's safe to pass through to the
+// web-hosted dashboard under the aggregates-only posture above.
+interface HealthChecks {
+  db: { ok: boolean };
+  slack_socket: { ok: boolean };
+  poll: { ok: boolean; last_success_at: string | null; age_seconds: number | null };
+  m1: { breaker_tripped: boolean; reason: string | null };
+}
+
+interface HealthResult {
+  /** 'ok' | 'wedged' | 'halted' — an unrecognized value degrades to 'unknown'. */
+  status: string;
+  uptimeSeconds: number;
+  /** null against the OLD (pre-Half-A-deploy) /health, which has no `checks`. */
+  checks: HealthChecks | null;
+}
+
+// Validate + narrow the untrusted `checks` object off the /health body. Returns
+// null — the graceful-degrade signal the frontend renders as idle lights — when
+// the key is absent (the OLD always-200 /health shape, which is what's live in
+// prod until Half A deploys) or malformed. Each field is defensively coerced:
+// a partial/garbled body degrades to a conservative value, never throws.
+function parseHealthChecks(raw: unknown): HealthChecks | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const c = raw as Record<string, any>;
+  // All four subsystems must be present, else treat the body as the old shape.
+  if (!c.db || !c.slack_socket || !c.poll || !c.m1) return null;
+  return {
+    db: { ok: !!c.db.ok },
+    slack_socket: { ok: !!c.slack_socket.ok },
+    poll: {
+      ok: !!c.poll.ok,
+      last_success_at:
+        typeof c.poll.last_success_at === 'string' ? c.poll.last_success_at : null,
+      age_seconds: typeof c.poll.age_seconds === 'number' ? c.poll.age_seconds : null,
+    },
+    m1: {
+      breaker_tripped: !!c.m1.breaker_tripped,
+      reason: typeof c.m1.reason === 'string' ? c.m1.reason : null,
+    },
+  };
+}
+
+// Optional server-side /health fetch with a short timeout. Parses the Step 78
+// tri-state /health (ok / wedged / halted) + its per-subsystem `checks`.
+//
+// READS THE BODY EVEN ON A NON-200 (the change from the old `if (!res.ok) return
+// null`): the new /health returns **503 for `wedged`**, and that 503's body
+// carries exactly the status + checks we want to show. Bailing on !res.ok would
+// blank the lights in the one state they exist to surface.
+//
+// Returns null ONLY on a genuine failure: unset env, unreachable backend, abort/
+// timeout, or a non-JSON body. Never throws — the handler must not 500 on an
+// unreachable backend.
+async function fetchHealth(): Promise<HealthResult | null> {
   const healthUrl = process.env.RAILWAY_HEALTH_URL;
   if (!healthUrl) return null;
   try {
@@ -76,10 +129,16 @@ async function fetchProcessUp(): Promise<{ ok: boolean; uptimeSeconds: number } 
     } finally {
       clearTimeout(timer);
     }
-    if (!res.ok) return null;
-    const body = (await res.json()) as { status?: string; uptime?: number };
-    if (body.status !== 'ok') return null;
-    return { ok: true, uptimeSeconds: typeof body.uptime === 'number' ? body.uptime : 0 };
+    const body = (await res.json()) as {
+      status?: unknown;
+      uptime?: unknown;
+      checks?: unknown;
+    };
+    return {
+      status: typeof body.status === 'string' ? body.status : 'unknown',
+      uptimeSeconds: typeof body.uptime === 'number' ? body.uptime : 0,
+      checks: parseHealthChecks(body.checks),
+    };
   } catch {
     return null;
   }
@@ -142,7 +201,38 @@ export default async function handler(request: Request) {
       .in('status', ['error', 'escalated'])
       .gte('updated_at', last24h);
 
-    const processUp = await fetchProcessUp();
+    // The actual error/escalated ROWS behind that count — the dashboard's drill-down
+    // panel (Step 78 Half B, Change 2). SAME column allowlist + truncation as the
+    // recentItems select below: created_at / status / subject ONLY, subject sliced
+    // to 60 — NO content_raw / original_from / metadata / user_id (PII firewall,
+    // HARD CONSTRAINT). Same 24h/status filter as the count; newest error activity
+    // first (order by updated_at desc — not returned, not PII); capped at 10.
+    const { data: recentErrorRows } = await supabase
+      .from('emailmgr_items')
+      .select('created_at, status, subject')
+      .in('status', ['error', 'escalated'])
+      .gte('updated_at', last24h)
+      .order('updated_at', { ascending: false })
+      .limit(10);
+
+    const recentErrorItems = (recentErrorRows || []).map((r) => ({
+      created_at: r.created_at,
+      status: r.status,
+      subject: r.subject ? String(r.subject).slice(0, 60) : null,
+    }));
+
+    const health = await fetchHealth();
+
+    // BACKWARD-COMPAT: the frontend's liveness banner reads liveness.processUp
+    // { ok, uptimeSeconds }. Derive `ok` from status === 'ok' — the OLD /health
+    // reports status:"ok" unconditionally, so this stays true against the shape
+    // that's live in prod today, and the banner is unchanged. Under the new
+    // /health, `wedged`/`halted` yield ok:false, which is exactly what the old
+    // code did (it returned null for any non-"ok" status) — the banner falls
+    // through to its 26h last-activity check either way.
+    const processUp = health
+      ? { ok: health.status === 'ok', uptimeSeconds: health.uptimeSeconds }
+      : null;
 
     // ---- Today's activity (counts only) ----
     // Each is a head-count (count: 'exact', head: true) so no rows are
@@ -247,6 +337,10 @@ export default async function handler(request: Request) {
           lastLlmUsageAt,
           recentErrors: recentErrors ?? 0,
           processUp,
+          // Step 78 Half B: the tri-state status + per-subsystem checks for the
+          // status lights. null when /health is unreachable; `checks` null when
+          // /health answers in the OLD pre-Half-A shape → lights render idle.
+          health: health ? { status: health.status, checks: health.checks } : null,
         },
         today_activity: {
           itemsProcessed: itemsProcessed ?? 0,
@@ -265,6 +359,9 @@ export default async function handler(request: Request) {
         // thrust). Frontend renders null as "—".
         cluster_heartbeat: null,
         recentItems,
+        // Error/escalated rows for the drill-down panel (Change 2). Empty array (not
+        // null) when there are none → the panel renders nothing.
+        recentErrorItems,
       }),
       {
         headers: { 'Content-Type': 'application/json' },
