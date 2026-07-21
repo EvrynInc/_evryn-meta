@@ -8,6 +8,17 @@
 
 ---
 
+## 2026-07-21 (ACf — load-cascade refactor [per-build cascades + CLAUDE.md router] + protocol sharpening; team-runtime conducting)
+
+- **Load-cascade system refactored from product-only to per-build.** CLAUDE.md's Full + Conductor cascade sections collapsed to a **router table** → new `_evryn-meta/docs/protocols/load-cascades/`: `full-product-cascade.md`, `full-team-runtime-cascade.md` (must-load vs situational split, both halves), `conductor-cascade.md`, `full-website-cascade.md`, `full-dashboard-cascade.md`. Light cascade + the universal principles (two-halves, enumeration trap, two-modes) stay inline in CLAUDE.md. Website/dashboard cascades authored + independent-pass-validated via AC subagents (the full-load pass caught a real contract the self-scoped one missed — migration-015 capability). — [ACf]
+- **`evryn-team-runtime/docs/ARCHITECTURE.md`** gained a **"Why local reasoning often fails here — and why you must load BOTH halves"** section (the two build learnings: this runtime punishes local reasoning; the agent identity files ARE runtime). **Soren owns this doc of record** — flagging here so he sees the change. — [ACf, per the new persist-learnings standing order]
+- **CLAUDE.md: new "persist-learnings" standing order** (route durable learnings to their arch/build/sprint home, never trap them in a handoff) + a **full-cascade-only CHANGELOG-skim on load-in** (recent ships current-state can lag). — [ACf]
+- **Protocol sharpening — `#lock` + `#sweep`:** `#lock` gains a missed-ship reconcile (current-state vs changelog AND runtime, both directions) + a persist-learnings gate; `#sweep` gains the same reconcile + a **new cross-runtime steal-pass step** (product ↔ team-runtime, both directions — steal wins like "runtime does the bookkeeping"). *(#sweep is Lucas's doc — he'll catch it in his sweep; steal-pass home #sweep-vs-#align is his call there.)* — [ACf]
+- **Team-runtime memory lane (conducting):** ACf1 re-spun onto **item (b)** (shared-digest re-key, shape v3); his brief now routes reload through the new team-runtime cascade + carries the **L9 refuse-to-boot** build item (before item-(b)'s migration deploys). — [ACf conducting ACf1]
+- **Dashboard-rewire findings tracked (team-runtime tracker, D1–D4):** team-tab hand-mirrors `kill.ts` (fragility); `state_reason` display-desync (**live bug**); salvage the legacy Agents tab as an agent-spend sub-tab; `emailmgr_items` status-pill gap. Surfaced by the dashboard cascade authoring. — [ACf]
+
+**Operator-relevant:** docs / protocol / AC-ops only — **no runtime code changed, nothing deployed.** All committed locally (unpushed at write time; AC0 handles pushes).
+
 ## 2026-07-20 (AC0 — Step 78 Half B DEPLOYED to Vercel: the dashboard's 5 per-subsystem health lights go live; Half A still rides the ③ Railway bundle)
 
 - **Step 78 Half B — MERGED + DEPLOYED (Vercel).** AC3's dashboard health lights (`db · slack_socket · poll · m1 · errors_24h`, off the tri-state `/health`) merged to `_evryn-meta` main (`5cc6f28`, from `ac3/step78b-dashboard-lights` @ `c350006`) and shipped by the `_evryn-meta` push — **for the dashboard, the push IS the Vercel deploy.** 2 files (`dashboard/api/product.ts`, `dashboard/public/index.html`). Justin lifted the hold + authorized the deploy; AC3 built, a fresh QC returned GO (zero blockers). — [AC3 build/QC · AC0 merge+deploy · Justin's go]
