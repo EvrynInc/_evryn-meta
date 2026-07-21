@@ -8,7 +8,7 @@
 
 **Keep this file lean** (target ~50 lines of body). If a project needs more than a few lines, the detail belongs in that repo's own state file, build doc, or the active handoff — not here. When something ships, it moves *out* of here into the changelog; only live + in-flight + next-action state stays.
 
-*Last updated: 2026-07-20 (AC0 — Step 78 Half B merged + deployed to Vercel/dashboard; product wave otherwise unchanged — ③ still at the Mira-pass gate, prod `v0.2.7`). Handoff: `docs/working/2026.07.16-ac0-ac0-handoff.md`.*
+*Last updated: 2026-07-20 (AC0-24 — ③ verified fully ASSEMBLED on `ac2/step57-runtime-bookkeeping` [Mira pass ×2 + note-ordering fix + rebase onto `main`, all in-branch — worktree-confirmed]; the Mira-pass merge-blocker is CLEARED, and a full-load **Opus merge-review returned GO** (zero blockers). Remaining ③ chain = Justin's merge-go → pre-deploy sign-off → bundle deploy → Gate-B. Step 78 Half B deployed to Vercel earlier today; prod `v0.2.7`). Handoff: `docs/working/2026.07.20-ac0-ac0-handoff.md`.*
 
 ---
 
@@ -24,7 +24,7 @@
 
 ## In Flight — Product Wave (critical path to Mark-live)
 
-- **③ Runtime Bookkeeping (Step 57 / ADR-051), AC2 cost lane** — BUILT + QC-GO, **UNMERGED**. The keystone of the pre-Mark cleanup (user-creation moves to verdict-time; raw `supabase_upsert` removed; new operator-only `correct_user_field`). **ONLY remaining blocker = the Mira identity pass** — `triage.md:125` still tells Evryn to call the deleted `record_pass` (+ `triage.md:21,58` / `core.md:250` name the removed raw-write surface); a hard merge-blocker, not polish. **Chain: ⛔Mira (AC2 fires) → rebase → Fable merge-review → Justin's merge → one-window bundle deploy → Gate-B.**
+- **③ Runtime Bookkeeping (Step 57 / ADR-051), AC2 cost lane** — BUILT + QC-GO + Gate-A-cleared (13/13) + **ASSEMBLED (worktree-confirmed `20f046c`)**, **UNMERGED**. The keystone of the pre-Mark cleanup (user-creation moves to verdict-time; raw `supabase_upsert` removed; new operator-only `correct_user_field`). The Mira identity pass is DONE (2 rounds, Justin-approved) and folded into the branch alongside the DC note-ordering fix, all a clean FF onto current `main` — so `triage.md`/`core.md` now match ③'s removed tool surface and the merge-blocker is CLEARED. A dedicated **full-load Opus merge-review returned GO** (zero blockers; one deferred *cosmetic* type-hygiene non-blocker — `db/users.ts updateUser`'s Pick omits `email` though `correct_user_field` edits it via `updateUser`, but `.update(fields)` is unfiltered so it writes through — verified, not a silent drop; do NOT reopen the gate for it). **Remaining chain: Justin's merge-go → FF-merge → AC0-23's pre-deploy sign-off → one-window bundle deploy → Weekend architecture capture → Gate-B.** (Fable is retired — the merge-review was Opus.)
 - **Gate-A CO-SIGNED = GO (13/13)** on current `main` — the a01–a13 judgment suite ran live (Megan fictional gatekeeper), 0 cross-user stray items, no boundary breach. Gate-B (mandatory pre-Mark full staging live-fire, Megan fixtures) is the remaining gate; staging is its home.
 - **WebFetch-timeout fast-follow** — BUILT (`dc/webfetch-timeout`, stacked on ③), adds a wall-clock cap so a hung fetch can't wedge the poll loop (real Mark-live risk). **Needs its live-path QC.**
 - **Step 78 (liveness/health)** — Half A (real 503-when-wedged `/health`) MERGED to `evryn-backend main` (`de3a5bd`), deploy-pending (rides the ③ Railway bundle). **Half B (dashboard's 5 per-subsystem lights) MERGED (`5cc6f28`) + DEPLOYED to Vercel 2026-07-20** (AC0, on Justin's go — for the dashboard the `_evryn-meta` push IS the deploy; hold lifted, fresh QC-GO). Half B is **live-but-inert**: the lights render idle "—" until Half A deploys with the ③ bundle (graceful degrade). Two separate deploys — Vercel now / Railway with ③.
@@ -82,6 +82,7 @@ AC drives DC (build) and QC (review) as **subagents** — protocol `docs/protoco
 
 ## Recent #lock / handoff pointers
 
+- 2026-07-20 (AC0-23 → AC0-24 — the split: AC0-23 finishes the ③ merge gate, AC0-24 runs the AC3-under-AC0 experiment + is the merge-takeover fallback) — `docs/working/2026.07.20-ac0-ac0-handoff.md`
 - 2026-07-16 night (AC0 — Gate-A co-sign + Step-78 Half A merge + ACU radar) — `docs/working/2026.07.16-ac0-ac0-handoff.md`
 - 2026-07-15 evening (ACf — team-runtime memory architecture + ADR-052 + Phase-1 start)
 - 2026-07-13 (ACf — Sunday controls merged + dashboard tab deployed inert + composition v2 built)
