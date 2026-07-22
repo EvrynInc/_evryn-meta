@@ -86,6 +86,8 @@ Team agent build was paused to focus on building the Evryn product MVP (v0.2 "Ga
 
 AC drives DC (build) and QC (review) as **subagents** — protocol `docs/protocols/ac-orchestration-protocol.md`. QC verifies every real code change; AC promotes QC's standing patterns into her CLAUDE.md. Ping-by-default on `#team-alerts`. ARCH + BUILD docs: AC holds edit rights, editing needs Justin's explicit auth first. Lane-owning ACs own their lane's design; AC0 owns cross-lane orchestration + collisions + merge gates.
 
+**Load-list home = the cascade** (as of 2026-07-22): for any build, its self-sufficient full-load list is `docs/protocols/load-cascades/<build>-full-cascade.md`; *this* file is the **freshness-authority** the cascade cross-checks (which build/sprint is active *now*). Changelogs are **per-repo** — each repo's own `CHANGELOG.md` plus the meta one (`_evryn-meta/CHANGELOG.md`), which every AC skims on load.
+
 ## Recent #lock / handoff pointers
 
 - 2026-07-20 (AC0-23 → AC0-24 — the split: AC0-23 finishes the ③ merge gate, AC0-24 runs the AC3-under-AC0 experiment + is the merge-takeover fallback) — `docs/working/2026.07.20-ac0-ac0-handoff.md`

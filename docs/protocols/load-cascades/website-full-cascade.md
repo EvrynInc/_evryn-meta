@@ -37,7 +37,7 @@
 
 The site's own repo. All paths are in `evryn-website/`. **Enumerate live** (`git -C evryn-website ls-files`) rather than trusting this list frozen — the tree grows.
 
-- **Skim `evryn-website/CHANGELOG.md`** — top ~100 lines + section headers (~30s), so you know what recently shipped to the site. *(As of the July 2026 changelog split it's just a pointer — but skim it going forward.)*
+- **Skim two changelogs** (top ~100 lines + section headers, ~30s each): **`evryn-website/CHANGELOG.md`** (what recently shipped to the site — as of the July 2026 split it's just a pointer, but skim it going forward) **and `_evryn-meta/CHANGELOG.md`** (the **meta** changelog, read by every AC on load — changes to your operating manual, the protocols, and the cascades).
 
 - **`README.md` + `docs/ARCHITECTURE.md` + `docs/DECISIONS.md` + `docs/SETUP.md`** — the site's design system (palette, Karla type, "calm/spacious/trustworthy" voice), page structure, tech stack, deploy model, backlog, and the running decision log. `docs/ARCHITECTURE.md` is the site's own source-of-truth reference; **`app/page.tsx` is the source of truth for the actual copy** (ARCHITECTURE says so — don't trust a paraphrase of the copy).
 - **`CLAUDE.md`** — the DC-redirect stub. Read it so you know the build-here-via-DC rule (and don't try to build in-repo without DC's context).

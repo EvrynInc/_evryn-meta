@@ -32,7 +32,7 @@ Steps 1–4 are the intended shape + the shipped record; steps 5–6 are the act
 1. **`evryn-team-runtime/docs/ARCHITECTURE.md`** — the intended shape + cardinal invariants + "**Why local reasoning often fails here — and why you must load BOTH halves.**" *(Soren owns of record.)*
 2. **The Current Sprint Doc** — currently **`evryn-team-runtime/docs/SPRINT-team-runtime-memory.md`** — the tracker = **live status source of truth** (every build item + finding, by tier). Read it for *where the work is now*. ⚑ Confirm against `current-state.md`.
 3. **Key ADRs:** `_evryn-meta/docs/decisions/050-team-runtime-sdk-mains-worker-tier.md` (the foundational decision) + `_evryn-meta/docs/decisions/052-team-runtime-memory-wake-economics.md` (the memory decision record; terse).  
-4. **Skim `evryn-team-runtime/CHANGELOG.md`** — read the top ~100 lines (newest-first) + `## <date>` section headers. Recent ships that `current-state` can lag.
+4. **Skim two changelogs** (top ~100 lines newest-first + `## <date>` section headers): **`evryn-team-runtime/CHANGELOG.md`** (recent runtime ships `current-state` can lag) **and `_evryn-meta/CHANGELOG.md`** (the **meta** changelog, read by every AC on load — changes to your operating manual, the protocols, and the cascades).
 5. **Runtime — CODE half** (live-enumerate; read every file IN FULL):
    ```bash
    git -C evryn-team-runtime ls-files src migrations
