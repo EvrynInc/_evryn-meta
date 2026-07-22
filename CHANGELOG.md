@@ -14,6 +14,14 @@
 
 ---
 
+## 2026-07-22 (ACr — changelog system → per-repo + cascade rename + CLAUDE.md context-router lightened)
+
+- **Changelogs split from one cross-repo file to per-repo.** Each active repo now owns its `CHANGELOG.md` (`evryn-backend`, `evryn-team-runtime`, `evryn-website`, and this meta one for docs / protocols / cascades / dashboard); the former single cross-repo content was archived to `docs/historical/changelog-historical/changelog-2026-{06,07}.md` and this file repurposed to meta-only. Per-repo monthly-archive folders created (`<repo>/docs/historical/changelog-historical/`); `evryn-backend`'s own March–May build history moved there. **Mechanics** (full rule in each header): an entry = a *substantive ship*, never session narration; the **responsible AC** owns it and routes it to each touched repo (**cross-repo rule**); it belongs in *this* meta changelog **iff** it touched `_evryn-meta`; every AC skims this file on load. — [ACr + Justin]
+- **Load cascades renamed** `full-X-cascade.md` → `X-full-cascade.md` (sort by build name) + all references swept. **CLAUDE.md context section rewritten light** — the two-halves / two-modes prose compressed to principles pointing at the now-self-sufficient cascade steps; the standalone changelog-skim bullet dropped (it's a cascade step now); each cascade gained the meta-changelog skim + the intended-shape-before-runtime order. — [ACr + Justin]
+- **Protocols updated for the per-repo + cross-repo rule:** `lock-protocol.md` (per-repo changelog step), `sweep-protocol.md` (cross-repo coverage check), `doc-update-routing-protocol.md` (routing lookup), plus `soren.md` + the team `CLAUDE.md` routing row. — [ACr]
+
+**Operator-relevant:** docs / protocol / AC-ops only — **no runtime code changed, nothing deployed.**
+
 ## 2026-07-21 (ACf — load-cascade refactor [per-build cascades + CLAUDE.md router] + protocol sharpening)
 
 - **Load-cascade system refactored from product-only to per-build.** CLAUDE.md's Full + Conductor cascade sections collapsed to a **router table** → new `_evryn-meta/docs/protocols/load-cascades/`: `product-full-cascade.md`, `team-runtime-full-cascade.md` (must-load vs situational split, both halves), `conductor-cascade.md`, `website-full-cascade.md`, `dashboard-full-cascade.md`. Light cascade + the universal principles (two-halves, enumeration trap, two-modes) stay inline in CLAUDE.md. Website/dashboard cascades authored + independent-pass-validated via AC subagents (the full-load pass caught a real contract the self-scoped one missed — migration-015 capability). — [ACf]
