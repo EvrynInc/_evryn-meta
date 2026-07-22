@@ -8,7 +8,7 @@
 
 **Keep this file lean** (target ~50 lines of body). If a project needs more than a few lines, the detail belongs in that repo's own state file, build doc, or the active handoff — not here. When something ships, it moves *out* of here into the changelog; only live + in-flight + next-action state stays.
 
-*Last updated: 2026-07-20 (AC0-24 — ③ verified fully ASSEMBLED on `ac2/step57-runtime-bookkeeping` [Mira pass ×2 + note-ordering fix + rebase onto `main`, all in-branch — worktree-confirmed]; the Mira-pass merge-blocker is CLEARED, and a full-load **Opus merge-review returned GO** (zero blockers). Remaining ③ chain = Justin's merge-go → pre-deploy sign-off → bundle deploy → Gate-B. Step 78 Half B deployed to Vercel earlier today; prod `v0.2.7`). Handoff: `docs/working/2026.07.20-ac0-ac0-handoff.md`.*
+*Last updated: 2026-07-20 (AC0-24 — ③ verified fully ASSEMBLED on `ac2/step57-runtime-bookkeeping` [Mira pass ×2 + note-ordering fix + rebase onto `main`, all in-branch — worktree-confirmed]; the Mira-pass merge-blocker is CLEARED, and a full-load **Opus merge-review returned GO** (zero blockers). Remaining ③ chain = Justin's merge-go → pre-deploy sign-off → bundle deploy → Gate-B. Step 78 Half B deployed to Vercel earlier today; prod `v0.2.7`). Handoff: `docs/working/2026.07.20-ac0-ac0-handoff.md`. [AC0-25, 2026-07-21: ③ has since MERGED to `main` (`2d14c2b`) + pushed; prod still `v0.2.7`, deploy PAUSED on Justin's Anthropic key-split — AC2 owns deploy → #lock. Added the "Watch-list & Mark-triggers" section below.]*
 
 ---
 
@@ -39,6 +39,12 @@
 ## Up Next
 
 *Post-Mark backlog (dormant until Mark is live — not active):* EVR-108 (ARCHITECTURE.md compression pass — *Blocked*) · EVR-109 (force-load/caching as v0.3+ identity architecture, ADR-012 amendment — *Needs Authorization*) · EVR-110 (per-agent git worktrees — *Backlog*).
+
+## Watch-list & Mark-triggers
+
+**What we're actively watching:** `evryn-team-workspace/shared/projects/product/watch-list.md` (owner: Soren / EVR-114) — every live experiment + standing monitor with its trigger, exit-criterion, and owner. **Several are Mark-gated and auto-kick-in the moment Mark forwards** — the Haiku pre-screen `off→shadow` flip (→ ~$1,800/mo once ~0 false-filter is proven → Justin flips `active`), the cache-temperature measurement (Step 69 — cold-vs-warm readable in ~2-3 days), and the M1 velocity-ceiling ratchet (Step 76d). The onboarding flips themselves live in the operator-guide Go-Live Checklist + `evryn-backend/docs/gatekeeper-onboarding.md`.
+
+**v0.2 maintenance plan (Step 47 / EVR-114, Soren):** the watch-list is live; the fuller plan (deviation-alerting, judgment-quality loop, regression cadence) is *scoped* (`docs/working/2026.07.13-acu-ac0-step47-maintenance-plan-scoping.md`, awaiting Justin's decisions), not yet assembled into its plan doc.
 
 ## Active Instances
 
