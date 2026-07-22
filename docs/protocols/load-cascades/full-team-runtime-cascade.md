@@ -30,7 +30,7 @@
 Steps 1–4 are the intended shape + the shipped record; steps 5–6 are the actual runtime, both halves. **The whole set (1–6) is must-load and not subject to your unilateral override** — you never trim it because a file "looks irrelevant." In this runtime that instinct is almost always wrong: the irrelevant-looking file is where the seam-bug hides (see ARCHITECTURE → "why local reasoning often fails here"), and *"this change is small / self-contained"* is exactly the judgment this gate exists to override.
 
 1. **`evryn-team-runtime/docs/ARCHITECTURE.md`** — the intended shape + cardinal invariants + "**Why local reasoning often fails here — and why you must load BOTH halves.**" *(Soren owns of record.)*
-2. **The Current Sprint Doc** - currently `evryn-team-runtime/docs/SPRINT-team-runtime-memory.md`** — the tracker = **live status source of truth** (every build item + finding, by tier). Read it for *where the work is now*. ⚑ Confirm against `current-state.md`.
+2. **The Current Sprint Doc** — currently **`evryn-team-runtime/docs/SPRINT-team-runtime-memory.md`** — the tracker = **live status source of truth** (every build item + finding, by tier). Read it for *where the work is now*. ⚑ Confirm against `current-state.md`.
 3. **Key ADRs:** `_evryn-meta/docs/decisions/050-team-runtime-sdk-mains-worker-tier.md` (the foundational decision) + `_evryn-meta/docs/decisions/052-team-runtime-memory-wake-economics.md` (the memory decision record; terse).  
 4. **Skim `evryn-team-runtime/CHANGELOG.md`** — read the top ~100 lines (newest-first) + `## <date>` section headers. Recent ships that `current-state` can lag.
 5. **Runtime — CODE half** (live-enumerate; read every file IN FULL):
