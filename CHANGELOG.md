@@ -74,6 +74,6 @@
 
 ---
 
-*Older history: this repo's archive `docs/historical/changelog-historical/`. The unified **cross-repo** record (all repos, by month) lives in the same folder (`changelog-2026-06.md`, `-07.md`, and the pre-June months).*
+*Older history: this repo's archive `docs/historical/changelog-historical/` — **June 2026 is split to meta-only**; **Feb–May 2026 are still unified cross-repo** (not yet split per-repo — earlier months, lower priority). July lives in the live per-repo changelogs. **If something you expect isn't here, check the other repos' changelogs** — a change may have been mis-filed in the moment.*
 
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
