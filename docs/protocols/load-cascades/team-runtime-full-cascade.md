@@ -27,20 +27,21 @@
 
 ## The load — IN ORDER (intended shape first, runtime last)
 
-Steps 1–4 are the intended shape + the shipped record; steps 5–6 are the actual runtime, both halves. **The whole set (1–6) is must-load and not subject to your unilateral override** — you never trim it because a file "looks irrelevant." In this runtime that instinct is almost always wrong: the irrelevant-looking file is where the seam-bug hides (see ARCHITECTURE → "why local reasoning often fails here"), and *"this change is small / self-contained"* is exactly the judgment this gate exists to override.
+Steps 1–5 are the intended shape + the shipped record; steps 6–7 are the actual runtime, both halves. **The whole set (1–7) is must-load and not subject to your unilateral override** — you never trim it because a file "looks irrelevant." In this runtime that instinct is almost always wrong: the irrelevant-looking file is where the seam-bug hides (see ARCHITECTURE → "why local reasoning often fails here"), and *"this change is small / self-contained"* is exactly the judgment this gate exists to override.
 
 1. **`evryn-team-runtime/docs/ARCHITECTURE.md`** — the intended shape + cardinal invariants + "**Why local reasoning often fails here — and why you must load BOTH halves.**" *(Soren owns of record.)*
-2. **The Current Sprint Doc** — currently **`evryn-team-runtime/docs/SPRINT-team-runtime-memory.md`** — the tracker = **live status source of truth** (every build item + finding, by tier). Read it for *where the work is now*. ⚑ Confirm against `current-state.md`.
-3. **Key ADRs:** `_evryn-meta/docs/decisions/050-team-runtime-sdk-mains-worker-tier.md` (the foundational decision) + `_evryn-meta/docs/decisions/052-team-runtime-memory-wake-economics.md` (the memory decision record; terse).  
-4. **Skim two changelogs** (top ~100 lines newest-first + `## <date>` section headers): **`evryn-team-runtime/CHANGELOG.md`** (recent runtime ships `current-state` can lag) **and `_evryn-meta/CHANGELOG.md`** (the **meta** changelog, read by every AC on load — changes to your operating manual, the protocols, and the cascades).
-5. **Runtime — CODE half** (live-enumerate; read every file IN FULL):
+2. **The active build spec** — the team-runtime's build is two-part: the **current active build spec** is the memory + wake-economics **design-of-record** (`evryn-team-workspace/shared/projects/ops/team-runtime/2026.07.15-acf-team-runtime-memory-architecture.md`, ADR-052) — the spec for the in-flight Phase-1 memory build; read it **IN FULL** (revised several times — read the top stamps first; it exceeds one Read-call cap, page it to the canary). *(The prior-phase **harness** build-record is `evryn-team-runtime/docs/BUILD-PHASE-1.md` — situational, below.)* ⚑ Confirm the active build in `current-state.md`.
+3. **The Current Sprint Doc** — currently **`evryn-team-runtime/docs/SPRINT-team-runtime-memory.md`** — the tracker = **live status source of truth** (every build item + finding, by tier). Read it for *where the work is now*. ⚑ Confirm against `current-state.md`.
+4. **Key ADRs:** `_evryn-meta/docs/decisions/050-team-runtime-sdk-mains-worker-tier.md` (the foundational decision) + `_evryn-meta/docs/decisions/052-team-runtime-memory-wake-economics.md` (the memory decision record; terse).  
+5. **Skim two changelogs** (top ~100 lines newest-first + `## <date>` section headers): **`evryn-team-runtime/CHANGELOG.md`** (recent runtime ships `current-state` can lag) **and `_evryn-meta/CHANGELOG.md`** (the **meta** changelog, read by every AC on load — changes to your operating manual, the protocols, and the cascades).
+6. **Runtime — CODE half** (live-enumerate; read every file IN FULL):
    ```bash
    git -C evryn-team-runtime ls-files src migrations
    ```
    - **`src/**/*.ts`** — EVERY file (~36 as of 2026-07-21; enumerate live — the tree grows). Never "the relevant bits": every real defect lives in a *seam* — a value minted in one file, stored in a second, given meaning by a third — which a partial read cannot see.
    - **`migrations/*.sql`** — EVERY migration (001–015 as of 2026-07-21). The DB shape is half the contract; `src/db/types.ts` is hand-maintained against these.
    - **`tests/`** — skim for shape (what's pinned, what's a real catcher). Not a full read, but know what the suite guards.
-6. **Runtime — IDENTITY half** (the always-composed layer + the LIVE agent(s)):
+7. **Runtime — IDENTITY half** (the always-composed layer + the LIVE agent(s)):
    - **Team manual + runtime-ops (composer layer 1):** `evryn-team-workspace/CLAUDE.md` + `evryn-team-workspace/shared/protocols/runtime-ops.md`. `runtime-ops.md` is the agents' operative behavior doc (thread navigation, listen-permission, memory-discipline, standing gates) — composed into **every** wake, so it's must-load, always.
    - **The LIVE agent's definition + memory:** currently **Lucas only** — `evryn-team-workspace/.claude/agents/lucas.md` + `evryn-team-workspace/.claude/agent-memory/lucas/MEMORY.md` (confirm its bottom canary — memory files truncate silently). The runtime runs Lucas today; his identity **is** live behavior. (Grows to the other mains as they stamp on — Phase 3.)
 
@@ -48,7 +49,7 @@ Steps 1–4 are the intended shape + the shipped record; steps 5–6 are the act
 
 Judgment here is only ever about what to **add on top** of must-load. When in doubt, add it.
 
-- **Memory / composition / digest / wake work** — *the active lane, so effectively required right now* → the design-of-record IN FULL: `evryn-team-workspace/shared/projects/ops/team-runtime/2026.07.15-acf-team-runtime-memory-architecture.md` (ADR-052; revised several times — read the top stamps first; it exceeds one Read-call cap, page it to the canary).
+- *(**Memory / composition / digest / wake work** — the design-of-record is now **step 2** in the ordered load above, since it's the current active build spec. Load it there, in full.)*
 - **Fleet-wide / multi-agent design** (behavior *across* mains) → the OTHER agent definitions + memories: `find evryn-team-workspace/.claude/agents -name '*.md'` (8 total: `dominic · emma · lucas · marlowe · mira · nathan · soren · thea`) + their `agent-memory/*/MEMORY.md`.
 - **Skill-composition work** → the registry skill protocol docs named in `src/config/skills.ts` (read `config/skills.ts` for the live registry — it, not this line, is the source of truth).
 - **Harness-architectural "why is it shaped this way"** → design v2: `evryn-team-workspace/shared/projects/ops/team-runtime/2026.07.10-acf-justin-team-runtime-design-v2.md`.
