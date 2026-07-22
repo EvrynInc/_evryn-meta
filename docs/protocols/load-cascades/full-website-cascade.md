@@ -2,7 +2,7 @@
 
 > **Truncation check:** the last line of this file should read `FULL FILE LOADED`. If you don't see it, reload or read in sections until you confirm the complete file.
 >
-> **How to use this file:** the **per-build full cascade** for doing *or directing* build work on the **marketing website** (`evryn-website`, evryn.ai — Next.js on Vercel). It is the `evryn-website` branch of `_evryn-meta/CLAUDE.md`'s cascade router: **load the Light Startup Context Cascade (in CLAUDE.md) first, then this.** A **reference** (a precise load list), not an explanation. **The universal full-cascade PRINCIPLES** — "when Justin calls the full cascade it is non-negotiable — do not trim it," verify-at-claim-is-additive, which-state-did-you-load — **live in CLAUDE.md and govern this load; this file is the website FILE LIST + contract map those principles apply to.**
+> **How to use this file:** the **self-sufficient load list** for doing *or directing* build work on the **marketing website** (`evryn-website`, evryn.ai — Next.js on Vercel). Load the **Light Startup Context Cascade** (in `CLAUDE.md` — CLAUDE.md + `current-state.md` + the Hub) first, then execute this file. You should be able to do your full load from this file alone. **When Justin calls this cascade, load §1 in full** — don't trim it; if a step looks unneeded, flag it (⚑ below).
 >
 > **Owner: AC.** Edits need Justin's approval (propose first). This site is built by **DC** (its own `CLAUDE.md` is a redirect: *"Stop. Do not build here — use DC from `evryn-dev-workspace`"*), so in practice this cascade is what **AC loads to direct a DC website build**, and the file set AC hands DC.
 
@@ -26,9 +26,18 @@
 
 ---
 
+## Before loading
+
+- **Confirm WHICH state you're building against.** ⚠️ **On this repo the push IS the deploy** — a merge to `main` ships to evryn.ai immediately (the OPPOSITE of the product runtime, where merge ≠ deploy). In-progress work lives on feature branches. Know which you're on before you edit.
+- **There is no identity half.** The website is the ONE non-agentic system in the fleet — Next.js/React rendered to static HTML, no LLM, no composed wake. So there's nothing to enumerate separately; if you arrive from the product/team cascades reflexively hunting for "the identity files," there aren't any. (Its one non-code dependency is *brand truth*, which drifts — that's §2, not an identity half.)
+- **There is no separate BUILD or SPRINT doc.** The site's backlog lives inside `docs/ARCHITECTURE.md` + `docs/DECISIONS.md` (loaded in §1) — so those docs carry the "what's next" that a build/sprint doc would elsewhere.
+- **Honor each doc's own Required Context.**
+
 ## §1 — The STABLE SPINE (load in full for any real website build; this does not drift)
 
 The site's own repo. All paths are in `evryn-website/`. **Enumerate live** (`git -C evryn-website ls-files`) rather than trusting this list frozen — the tree grows.
+
+- **Skim `evryn-website/CHANGELOG.md`** — top ~100 lines + section headers (~30s), so you know what recently shipped to the site. *(As of the July 2026 changelog split it's just a pointer — but skim it going forward.)*
 
 - **`README.md` + `docs/ARCHITECTURE.md` + `docs/DECISIONS.md` + `docs/SETUP.md`** — the site's design system (palette, Karla type, "calm/spacious/trustworthy" voice), page structure, tech stack, deploy model, backlog, and the running decision log. `docs/ARCHITECTURE.md` is the site's own source-of-truth reference; **`app/page.tsx` is the source of truth for the actual copy** (ARCHITECTURE says so — don't trust a paraphrase of the copy).
 - **`CLAUDE.md`** — the DC-redirect stub. Read it so you know the build-here-via-DC rule (and don't try to build in-repo without DC's context).
@@ -53,5 +62,9 @@ The site renders brand truth it doesn't own. When your task touches *what the si
 **§1 is a normal must-load — you don't trim it.** The site is small, but "small" is not "skip the codebase"; a copy change still wants `app/page.tsx` and the design-system docs so you write in the site's actual voice and don't break its structure.
 
 **§2 is where the humility lives — and it is *additive verification*, never subtraction.** The brand surface is genuinely owned by the Hub and the identity files, so a snapshot in this doc would rot; the honest move is to point at the live source and read it at the moment it matters. That is a *requirement to re-read*, not permission to under-load. The failure this guards against is the opposite of under-loading: it's *stale confidence* — shipping copy that quietly contradicts what Evryn now is. When in doubt about whether a change touches the brand surface, it does — read §2.
+
+## ⚑ Flag rule
+
+If **anything** looks off as you load or build — the site's copy contradicts the live brand truth in §2, a claim on the site is no longer true, a doc contradicts `current-state`, a doc recommendation is stale, a link is broken — **surface it to Justin. Never silently resolve it.**
 
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED

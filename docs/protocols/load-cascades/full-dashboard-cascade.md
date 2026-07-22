@@ -2,7 +2,7 @@
 
 > **Truncation check:** the last line of this file should read `FULL FILE LOADED`. If you don't see it, reload or read in sections until you confirm the complete file.
 >
-> **How to use this file:** the **per-build full cascade** for doing *or directing* build work on the **monitoring dashboard** (`_evryn-meta/dashboard`, deployed at `evryn-dashboard.vercel.app`). It is the `dashboard` branch of `_evryn-meta/CLAUDE.md`'s cascade router: **load the Light Startup Context Cascade (in CLAUDE.md) first, then this.** A **reference** (a precise load list + a contract register), not an explanation. **The universal full-cascade PRINCIPLES** — "when Justin calls the full cascade it is non-negotiable — do not trim it," verify-at-claim-is-additive, which-runtime-state-did-you-load — **live in CLAUDE.md and govern this load; this file is the dashboard FILE LIST + CONTRACT REGISTER those principles apply to.**
+> **How to use this file:** the **self-sufficient load list + contract register** for doing *or directing* build work on the **monitoring dashboard** (`_evryn-meta/dashboard`, deployed at `evryn-dashboard.vercel.app`). Load the **Light Startup Context Cascade** (in `CLAUDE.md` — CLAUDE.md + `current-state.md` + the Hub) first, then execute this file. You should be able to do your full load from this file alone. **When Justin calls this cascade, load §1–§2 in full** (+ the §3 contract sources your task touches) — don't trim; if a step looks unneeded, flag it (⚑ below).
 >
 > **Owner: AC.** Edits need Justin's approval (propose first). Keep the CONTRACT REGISTER (§3) in lockstep with the runtimes — when a runtime renames a column, changes a status enum, alters `/health`, changes the team-runtime control semantics, or a new migration seeds a capability the dashboard renders, update the matching entry here and bump the reconcile date, or a stale register silently misleads a dashboard build.
 
@@ -33,9 +33,18 @@ The dashboard is a **non-agentic** static SPA (`public/index.html`, vanilla JS +
 
 ---
 
+## Before loading
+
+- **Confirm WHICH state you're building against.** ⚠️ **The dashboard ships from `_evryn-meta` — the `_evryn-meta` push IS the Vercel deploy** (no separate deploy step). In-progress work lives on feature branches / worktrees. Know which you're on before you edit.
+- **The dashboard has no identity half of its own** (non-agentic static SPA + Edge Functions) — but its whole job is to read (and, on the Team tab, WRITE) the state of **two agentic runtimes**. Those are **contracts owned elsewhere** (§3), and they drift — that's the register you re-verify live, not an identity half to enumerate.
+- **Read the ARCHITECTURE doc of the runtime today's work touches.** Both `evryn-backend/docs/ARCHITECTURE.md` and `evryn-team-runtime/docs/ARCHITECTURE.md` are named in §2 — they're the altitude the contracts sit at and are tiny against context room, so load the relevant one(s) rather than working blind. ⚑ **If which runtime this task targets wasn't stipulated, flag it and resolve it before building** — a Product-tab change and a Team-tab change pull different contracts.
+- **Honor each doc's own Required Context.**
+
 ## §1 — The dashboard's OWN codebase (STABLE SPINE; load in full)
 
 All in `_evryn-meta/dashboard/`. **Enumerate live** (`git -C _evryn-meta ls-files dashboard`).
+
+- **Skim `_evryn-meta/CHANGELOG.md`** — top ~100 lines + section headers (~30s). Dashboard ships are `_evryn-meta` ships, so its recent history lives in the meta changelog (e.g. the Step-78 Half-B lights, the by-model cost cut). Recent ships `current-state` can lag.
 
 - **`public/index.html`** (~2,000 lines) — the entire frontend: CSS, the three-tab SPA, the render + control logic, Basic-auth login, Chart.js usage chart. The load-bearing UI file — read it in full for any dashboard work. Note the three tabs load on **independent tracks** (`loadData` / `loadProductData` / `loadTeamData`, each on its own 30s interval) so one DB's failure never blanks another tab.
 - **`api/product.ts`** — the Evryn Product tab's edge function. The single richest read-contract surface: it holds the `llm_usage` / `messages` / `emailmgr_items` column allowlists, the `/health` fetch + `parseHealthChecks`, and — critically — the **PII posture**. ⚠️ **That aggregates-only / PII-firewall posture is a HARD CONSTRAINT** — the dashboard is web-hosted, so any new read you add must not surface raw user data. The live allowlist that leaves the server is only aggregates/statuses/costs/timestamps + `subject` truncated to 60 chars; it NEVER selects `content_raw` / `original_from` / `metadata` / `user_id` / `scope_user_id`.
@@ -93,5 +102,9 @@ All in `_evryn-meta/dashboard/`. **Enumerate live** (`git -C _evryn-meta ls-file
 **§1–§2 are a normal must-load — you don't trim them.** The dashboard is small, but a change to one tab's read still wants `public/index.html` (the render side) AND the matching `api/*.ts` (the data side) in full, or you'll break the pair.
 
 **§3 is where the humility lives — and it is *additive verification*, never subtraction.** The contracts are genuinely the runtimes' to define, and they move (the `state_reason` drift AND the migration-015 catalog growth above are the live proof), so a frozen copy in this doc would rot; the honest move is to name the live source and read it at build time. That is a *requirement to re-read the source*, not permission to skip it. The failure this guards against is a *silent* one — a dashboard that renders a stale, wrong, mis-labelled, or incomplete picture (or, on the Team tab, WRITES one) because a contract drifted and nobody re-checked. When you touch a contract, re-verify it against its live source **and** update this register's entry + the reconcile date in the same pass — so the next builder inherits the current map, not a stale one.
+
+## ⚑ Flag rule
+
+If **anything** looks off as you load or build — a §3 contract's live source no longer matches what the register says, a doc contradicts `current-state`, a runtime renamed a column the dashboard reads, the Team-tab write-path diverges from the runtime's gate, a doc recommendation is stale, a link is broken — **surface it to Justin, re-verify against the live source, and update the register + reconcile date in the same pass. Never silently resolve it.**
 
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
