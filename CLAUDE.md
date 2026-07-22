@@ -47,10 +47,10 @@ For any session where you'll do or direct build-level work on **any** Evryn buil
 
 | Working on… | Load its full cascade |
 |---|---|
-| **Evryn Product** (`evryn-backend`) | `docs/protocols/load-cascades/full-product-cascade.md` |
-| **Team Runtime** (`evryn-team-runtime`) | `docs/protocols/load-cascades/full-team-runtime-cascade.md` |
-| **Website** (`evryn-website`) | `docs/protocols/load-cascades/full-website-cascade.md` |
-| **Dashboard** (`_evryn-meta/dashboard`) | `docs/protocols/load-cascades/full-dashboard-cascade.md` |
+| **Evryn Product** (`evryn-backend`) | `docs/protocols/load-cascades/product-full-cascade.md` |
+| **Team Runtime** (`evryn-team-runtime`) | `docs/protocols/load-cascades/team-runtime-full-cascade.md` |
+| **Website** (`evryn-website`) | `docs/protocols/load-cascades/website-full-cascade.md` |
+| **Dashboard** (`_evryn-meta/dashboard`) | `docs/protocols/load-cascades/dashboard-full-cascade.md` |
 | **Conducting** a build (directing DC/QC/lane-ACs, not hands-on) | `docs/protocols/load-cascades/conductor-cascade.md` — **not a lighter load**; see below |
 
 Each cascade file names the *concrete files* — **both halves** — for that build; the universal rules below apply to whichever you pick.

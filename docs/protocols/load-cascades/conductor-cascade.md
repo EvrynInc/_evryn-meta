@@ -2,7 +2,7 @@
 
 > **Truncation check:** the last line of this file should read `FULL FILE LOADED`. If you don't see it, reload or read in sections until you confirm the complete file.
 >
-> **How to use this file:** the cascade for **AC when it is *conducting* a build (directing DC/QC/lane-ACs) rather than hands-on building** — and cannot afford the whole runtime resident in its own context. It is one option in `_evryn-meta/CLAUDE.md`'s cascade router. It applies to **any** build: the per-build full cascade (`full-product-cascade.md`, `full-team-runtime-cascade.md`, …) defines *what the scout loads*; this file defines *how the conductor stays light while still being competent.*
+> **How to use this file:** the cascade for **AC when it is *conducting* a build (directing DC/QC/lane-ACs) rather than hands-on building** — and cannot afford the whole runtime resident in its own context. It is one option in `_evryn-meta/CLAUDE.md`'s cascade router. It applies to **any** build: the per-build full cascade (`product-full-cascade.md`, `team-runtime-full-cascade.md`, …) defines *what the scout loads*; this file defines *how the conductor stays light while still being competent.*
 >
 > **Owner: AC.** Edits need Justin's approval (propose first).
 >
