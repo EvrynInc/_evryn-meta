@@ -16,7 +16,7 @@
 
 **The sequence:**
 
-1. **Load the build's Full Startup Context Cascade (the per-build file in this directory) only *without* the runtime.**
+1. **Load the appropriate Full Startup Context Cascade (the per-build file in this directory) only *without* the runtime.**
 2. **Read the map of the work YOURSELF** — your active handoff + your active lane briefs (when applicable), in full. These define the work in front of you; they're small, and you cannot conduct or gate from a subagent's summary of a source-of-truth doc (the "be wary of subagents reading load-bearing docs" rule — read these yourself). This is also what lets the scout's read be *work-oriented* rather than a generic tour.
 3. **Spin the Runtime Scout — it IS the orchestration protocol's *reporter* AC-subagent** (`docs/protocols/ac-orchestration-protocol.md` → "Spinning an AC subagent": *a meta-level AC needing a map of a domain it can't afford to load itself*). Don't grep just for this section or you'll miss the supporting info — you must read the whole protocol to understand it. **Spin the subagent strictly per that protocol** — the AC-variant tagged brief, the load-gate, the model pin, and verifying its two-part receipts on return are all the protocol's job; do NOT restate that machinery here. This section adds only what's specific to *this* use — the two fixed choices, the load, and the return format:
    - **Tier = FULL · model = Opus.** The scout makes claims about runtime behavior, so the protocol's tier rule forces the **Full Startup Context Cascade** with the **entire** runtime (**both halves**); Opus is the identity-bearing-AC default.
