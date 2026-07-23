@@ -53,6 +53,8 @@ For any session where you'll do or direct build-level work on **any** Evryn buil
 | **Dashboard** (`_evryn-meta/dashboard`) | `docs/protocols/load-cascades/dashboard-full-cascade.md` |
 | **Conducting** a build (directing DC/QC/lane-ACs, not hands-on) | `docs/protocols/load-cascades/conductor-cascade.md` — **not a lighter load**; see below |
 
+Each of these cascades can be called by inserting the name into the cascade, for instance "Load the Full Evryn Product Startup Context Cascade", or "load the full team runtime cascade". 
+
 Each cascade file names the *concrete files* — **both halves, in load order** — for that build. The universal principles below are the *why*; each has a corresponding **step in the cascade** (the *what*), so a cascade is followable on its own.
 
 - **Every agentic system has two halves — code AND identity — and both are load steps.** An identity instruction (`identity/*.md`; for the team runtime, the agent definitions + memory + team manual + composed skills) programs an agent's behavior as surely as a line of code, so a `src/`-only load is a **half load you can't detect**. 🔴 The **enumeration trap**: `find src -name "*.ts"` can't return an identity file, so enumerate the identity half *separately*, every time. *(Full teaching + the `record_pass` example live once, in `product-full-cascade.md`.)*
