@@ -74,6 +74,6 @@
 
 ---
 
-*Older history: this repo's archive `docs/historical/changelog-historical/` — **June 2026 is split to meta-only**; **Feb–May 2026 are still unified cross-repo** (not yet split per-repo — earlier months, lower priority). July lives in the live per-repo changelogs. **If something you expect isn't here, check the other repos' changelogs** — a change may have been mis-filed in the moment.*
+*Older history: this repo's archive `docs/historical/changelog-historical/` — **April, May, June 2026 are split to per-repo** (those files are now **meta-only**; the product / website / team slices live in their own repos' archives and in the `helm` collection doc `evryn-team-workspace/shared/projects/helm/2026.07.23-acr-historical-team-ships.md`); **Feb–March 2026 are still unified cross-repo** (not yet split — earlier months, lower priority). July lives in the live per-repo changelogs. **If something you expect isn't here, check the other repos' changelogs** — a change may have been mis-filed in the moment or routed to another repo in the split.*
 
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
