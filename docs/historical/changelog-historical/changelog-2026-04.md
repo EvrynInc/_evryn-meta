@@ -1,6 +1,6 @@
-# Changelog — _evryn-meta (April 2026 Archive)
+# Changelog Archive — _evryn-meta, April 2026
 
-**Archived from CHANGELOG.md.** Monthly archives live in `docs/historical/changelog-historical/`.
+> **Post-hoc archive note:** this per-repo April archive was built **2026-07-23 by splitting the former unified cross-repo April changelog, months after the fact** — it may be slightly inaccurate or incomplete. If you're hunting for something that should be here and it isn't, **check the other repos' changelogs** (product build → `evryn-backend`; website → `evryn-website`; team-workspace/legal history → the `helm` collection doc `shared/projects/helm/2026.07.23-acr-historical-team-ships.md`).
 
 ---
 
@@ -11,27 +11,18 @@
 - **Hub updated.** New "Evryn's Ethos" sub-section under "What Evryn Is" — ownership frame + tight cultivation/avoidance hits + spoke pointer. Trust & Fit "behavioral filtering" bullet rewritten as "Access flows from ethos and compatibility." Reference paths updated to renamed spoke. Commit `56732d4`.
 - **Trust & Safety spoke rewritten.** "Behavioral Filtering" section renamed and rewritten as "Filtering from Evryn's Ethos." Mechanics preserved; framing changed from objective behavior-filter to applied character. Frontmatter updated to point at vision-and-ethos. Commit `56732d4`.
 - **Long-term-vision and user-experience spokes** — vision references updated to vision-and-ethos. Commit `56732d4`.
-- **Agent definitions** (Lucas, Mira, Marlowe, Dominic, Soren) — auto-load references updated. Commit `c927d78` (evryn-team-workspace).
-- **Identity-stack treatment deferred to v0.3.** Justin and Mira agreed Evryn for v0.2 (gatekeeper email triage and connection brokering through Mark's inbox) doesn't exercise the dimensions the values architecture most directly affects. EVR-102 created (Backlog, R: mira, A: justin, C: soren+nathan) carrying the deferred work. v0.3 working doc (`evryn-team-workspace/shared/projects/product/v0.3/identity-files.md`) gained a "Values architecture → core.md (and identity stack)" stub at the top.
-- **Research report.** `evryn-team-workspace/shared/projects/product/research/2026.04.30-evryn-ethical-framework-exploration.md` — full landscape exploration that produced ADR-032. Six traditions tested side-by-side, consent analysis, justice-as-directive failure modes, Buddhist precept structure decision, layered synthesis. ADR captures conclusions; report captures how-we-got-there. Breadcrumb in ADR-032. Commit `0ba9023` (breadcrumb), `e0ae566` (report).
 - **Auto-memory rule landed in CLAUDE.md.** "Do not use the Claude Code auto-memory system" — Justin caught Mira writing to it earlier in session. The auto-memory system doesn't understand agent identities and creates unattributed noise on every agent's load.
-- **Identity writing bible** (`evryn-backend/docs/identity-writing-bible.md`) — Writer and Reviewer load lists updated to point at vision-and-ethos. Commit `a4dd62c` (evryn-backend).
-- **Pre-go-live cleanup doc** (`evryn-team-workspace/shared/projects/product/v0.2/2026.04.21-pre-go-live-identity-cleanup.md`) — load list reference updated. Commit `901fd29`.
 
 ---
 
 ## 2026-04-29 evening (Cross-team — v0.2 evening bundle deploy + ADR-031 round-trip + #dev-alerts security cleanup)
 
-- **v0.2 evening bundle live on Railway** (deploy `ba37ee54` SUCCESS at 18:43 PT). Bundle: DC's `slack.ts` disconnect-event monitor (`55a6177`, replaces 2-hour silence-heartbeat that was producing overnight cry-wolf alerts), DC's `rescope_messages` MCP tool (`1e5e1d9`, ADR-031 runtime, gated on `threadScopeContext`, audit-trail recording in `src/db/messages.ts`), AC's ARCHITECTURE.md peer-register expansion (`62cbea3`), Mira's `operator.md` ADR-031 pass (`98f31fa` merged via `eebd399`). Post-deploy log clean: Supabase + Slack Socket Mode connected, disconnect-monitor attached, polling resumed.
-- **ADR-031 flipped to Accepted (AC).** Status update from "Proposed" to reflect that downstream artifacts (ARCHITECTURE.md, BUILD doc, Mira pass, runtime tool) all treat it as accepted. Commit `afceac5`.
 - **Identity-file-review protocol exercised end-to-end for the first time.** Mira authored on `mira/operator-md-late-scope-2026-04-29` branch; AC reviewed against the 7-item checklist (all confirmed); AC merged via `--no-ff` (`eebd399`); branch deleted post-merge. Companion-ship discipline observed: AC's mailbox to DC asked for `rescope_messages` to ride DC's slack.ts trip so identity layer + runtime tool would land atomically; DC shipped both same trip; Mira's pass merged against a runtime that already had the tool registered.
 - **Identity-file-review protocol hardened (AC review pass).** Four additions to DC's draft: (a) new "Preconditions" section naming Railway deploy-config dependency explicitly so the branch-only safety property can't silently break if anyone enables PR-preview deploys later; (b) author responsibility #7 — don't merge mid-test, coordinate before the merge not after; (c) #8 — companion-ship coordination across repos when the identity-file references runtime tools / sibling docs / ADRs (atomic landing under one Railway redeploy); (d) #3 refined — AC-routing language clarified (prefer the coordinating AC or a fresh AC; don't grab one mid-other-work). Commit `70bafbf` (evryn-team-workspace).
 - **`#dev-alerts` security cleanup.** Evryn removed from the channel; agent-team-side "Dev Team" Slack app gained bot-token scopes (`channels:read`, `groups:read`, `channels:history`, `groups:history`); `SLACK_DEV_BOT_TOKEN` added to `evryn-dev-workspace/.env`; AC + DC `CLAUDE.md` SESSION STARTUP rewritten to use the agent-team token (commits `ad2953c` in `_evryn-meta`, `6f29c22` in `evryn-dev-workspace`). The Evryn-bot-reading-agent-channel conflation Justin flagged is closed.
 - **AGENT_PATTERNS clarification (AC).** LEARNING 55 stub now distinguishes built-in Claude Code tools (need both `tools[]` AND `allowedTools[]`) from MCP tools (auto-exposed when their server registers them; `allowedTools[]` only with `mcp__<server>__<tool>` prefix). DC caught the misreading on AC's mailbox to him during the rescope_messages trip — pattern was being read as "all tools need both lists" rather than "built-in tools need both lists." Commit `82e555c`.
 - **Outgoing-AC handoff doc fix + Mira brief reference.** Self-contradiction in the 2026-04-29 deploy-and-absorption handoff doc fixed (handoff said current-state lagged but the same commit refreshed it). Commit `afceac5`.
-- **Mailbox round-trip (DC ↔ AC, Author commits before handoff discipline).** AC asked DC to ship `rescope_messages` (`8fc7ee0`); DC shipped + replied with `tools[]`-vs-MCP correction + N+1-to-RPC follow-up flag (`4025103`); AC absorbed + cleared (`cd8ebfc`). All three writes committed on master before handoff per the new discipline.
 - **Bash-on-Windows backtick gotcha** landed in `AGENT_PATTERNS.md` SDK Integration & Tool Wiring as a sibling to "Validate Transport Before Blaming the Renderer" (same root family — bash-on-Windows mangling non-trivial payloads). Webhook payload via Node fetch in a bash heredoc silently corrupted backtick-wrapped strings (shell command-substitution evaluated before Node saw the JS template literal); webhook returned 200 with empty content where code references should have been. Pattern: file-based payloads via `fs.readFileSync` instead of inline-via-bash for non-trivial JSON. Justin's routing call: AGENT_PATTERNS direct, not LEARNINGS Unpromoted (didn't need the holding tank).
-- **SPRINT-MARK-LIVE.md row table audited (AC).** 7 rows flipped DEFERRED→DONE after empirical runtime verification: model tier (`opus-4-7` confirmed at `classify.ts:458`); profile_jsonb scaffold (full `_meta` template at `db/users.ts:71-76` + `cross_user_notes` column + RPCs); `seen_by_subject` grep (zero matches in `src/`); ADR-027 runtime changes (zero `gatekeeper_criteria` matches); conversation history loading (`getRecentMessages` in 4 entry points); follow-up cron content (`content_raw` + `draft_body` loaded); Railway deploy (live). Row 107 (Justin Go/no-go) reframed from `DEFERRED→6` to `PRE-MARK-LIVE GATE | PENDING` — sprint-numbering doesn't apply post-MVP-build; gate stays as the discrete decision point with the 4 preconditions spelled out (integration test, adversarial test, emergency-alerts wiring, pre-go-live STEP 0). Commit `60dcf6a`.
 - **Session-docs sweep (AC).** All 9 active session docs in `_evryn-meta/docs/sessions/` had flowed up to persistent homes; moved to `historical/`. Reference path updates landed in `CHANGELOG.md`, `LEARNINGS.md`, `decisions/031-late-scope-recovery.md` (Mira-brief reference dropped per CLAUDE.md doc discipline — "persistent docs never reference session docs"; ADR captures the decision substance, the brief was operational handoff and is now consumed), `evryn-backend/docs/SPRINT-MARK-LIVE.md`, and `evryn-team-workspace/shared/current-state/current-state.md`. Three commits — `fa89e64` (`_evryn-meta`), `499660d` (`evryn-backend`), `6178821` (`evryn-team-workspace`).
 - **Commit-discipline rule landed (AC).** Edits in `_evryn-meta` and `evryn-team-workspace` are now auto-allowed (`Edit` + `Write` paths added to `.claude/settings.json`); the trade is "never commit without Justin's explicit go-ahead" — pause for diff review in source control after each logical chunk. Justin runs several agent instances at once and was burning approval cycles on per-edit prompts. Co-discipline beat in `ac-dc-protocol.md`: AC↔DC mailbox traffic stays commit-freely (Justin doesn't read those), but AC sends Justin a short summary so he tracks the shape. Commits `4dbab51` (`_evryn-meta`: CLAUDE.md + ac-dc-protocol.md + settings.json) and `8c2f441` (`evryn-team-workspace`: CLAUDE.md + claude-code-ops.md + settings.json). Auto-edit takes effect on next session restart.
 
@@ -39,139 +30,88 @@
 
 ## 2026-04-29 (Cross-team — v0.2 deploy + ADR-030/031 absorption + identity-file-review protocol)
 
-- **v0.2 deployed and verified end-to-end (DC).** Six tasks from the 2026-04-28 mailbox plus AC's pre-deploy `notify_slack` permission rewrite. Migration applied with backups before/after. `messages.scope_user_id` + `idx_messages_scope` + Operator's `_meta.discipline_notice` all verified. Smoke-test green across loop fix, permissive prompts, getRecipient removal, UTF-8 cleanliness, ADR-030 thread scope, em-dash through both Slack paths. Commits: `6316126` (deploy bundle), `e4d0cec` (`tools[]` + `allowedTools[]` dual-list fix — WebFetch silently failed when listed only in allowedTools), `ccb3048` (Slack `say()` `thread_ts` orphan fix — responses were orphaning out of parent threads, breaking ADR-030 scope inheritance in Slack UI), `4d8b214` (em-dash sanitizers removed from `notifyDev` + `notifySlack`; root cause was Windows-curl transport, not Slack rendering).
-- **EVR-60 closed (schema-reference re-pull, AC).** `messages.scope_user_id` documented per ADR-030 with index; `emailmgr_queue` marked ARCHIVED with note that explicit DROP is slated for a future migration trip. Commit `72d7388`.
-- **ADR-031 written (AC).** Late-scope recovery as the third ADR-030 recovery pattern (alongside mid-thread bleed and wrong-scope). Cross-thread orphaned-content recovery via dedicated `rescope_messages` MCP tool (or `set_thread_scope` extension) + identity-layer beat reframing scope determination as ongoing rather than one-shot. Motivating example empirical from 2026-04-29 smoke-test.
-- **Mira brief queued (AC) for ADR-031 operator.md pass.** Brief at `_evryn-meta/docs/sessions/historical/2026.04/2026-04-29-mira-brief-operator-md-late-scope.md` — reframe scope determination as ongoing + add late-scope recovery as third named pattern. Justin passing brief to Mira.
 - **Identity-file-review protocol shipped (DC).** Branch + PR + AC-as-default-reviewer + 7-item explicit checklist + `#dev-alerts` merge ping. Motivated by the 2026-04-29 real-Mark-identifying-info leak in `operator.md` that multiple reviewers missed. AC startup gains a `#dev-alerts` peek (last 12-24h via `conversations.history`) so push-less agents can see production events. Commits: `0cf20fc` (evryn-team-workspace) + `4416091` (_evryn-meta) + companion ships in evryn-dev-workspace + evryn-backend CHANGELOG. AC sign-off given today.
-- **ARCHITECTURE.md substantially revised (AC) for ADR-030 + ADR-031.** Five sections updated with "(Updated 2026-04-29)" callouts: Operator Track (replaced "single-shot by design" framing with thread-scoped semantics; verify-and-lock beat documented; three recovery patterns named), System Actors (durable principle stated explicitly — system actors are FK anchors and senders, never *implicit* subjects of user-scoped operations — alongside the deliberate-exception framing for Operator's profile in Slack-Operator pathway), v0.3 Operator Interface (delivered early via thread scope; "custom build" branch dropped), Meta-Operator (delivered via NULL-scoped threads; cross-thread continuity via `getRecentMetaMessages`), Identity Composition (rewrote pseudocode to show three pathway branches; updated caching block).
 - **AGENT_PATTERNS additions (AC).** New "SDK Integration & Tool Wiring" section: Built-in Tools Need Dual Listing, Library Defaults Don't Enforce Architectural Invariants, Validate Transport Before Blaming the Renderer. Memory & Context section gained Stub-Shaped Records Need Explicit Legibility Signals.
 - **LEARNINGS items 55-58 added (DC) and promoted to stubs (AC).** 55: dual-list `tools[]` + `allowedTools[]`. 56: validate transport before blaming renderer. 57: library defaults don't enforce architectural invariants. 58: stub-shaped records need explicit legibility signals. Plus retroactive stubbing of items 46-50 (Strip Instructions, Anchor-Then-Expand, Inside Details, Hold Research with Humility, No Tiering).
-- **Multi-party orchestration discovery note (AC).** `evryn-team-workspace/shared/projects/product/research/v03-design/2026.04.29 07-multi-party-orchestration.md` — Evryn drafting outbound to third parties is structurally supported by existing primitives (submit_draft + approval gate); multi-party introductions come essentially free in v0.3 web matching. Breadcrumbed in BUILD doc v0.3 Staging table as proposal #07.
 - **CLAUDE.md updates (DC).** Added Railway CLI section (commit `d197d7b`) — `railway whoami`, `status`, `logs --deployment`, `logs --build`, `deployment list --json`; status.railway.com for incidents. Corrected em-dash advice (commit `9f73a1d`) — was wrong-rooted as Slack rendering issue; actually a Windows-curl transport artifact. Added `#dev-alerts` peek to AC startup (commit `4416091`).
-- **BUILD doc + sprint catch-up (AC).** Phase 0 + Phase 1 status table caught up to reality (0c → DONE; 1a-1d → DONE with code anchors); Phase 0e flagged as PARTIAL with explicit Mark-live-blocker call-out for missing `#emergency-alerts` wiring. ADR-027 alignment across BUILD doc prose (lines 86-87, 116, 132, 149, 274, 276, 458, 491). Adversarial test gatekeeper_criteria reference fixed at line 15 with note about deeper Rachel→Mark drift requiring full doc refresh before adversarial test runs. Sprint backlog adds: emergency-alerts wiring (Mark-live blocker), EVRYN_USER_ID centralization deferral documented, adversarial test full real-Mark refresh, deep text-encoding audit (low priority), late-scope recovery, name-search semantics + stub-record legibility.
 - **Lucas handoff absorbed.** Items #2, #3, #4, plus Item #1 schema-reference re-pull. Lucas free to archive `2026.04.29-ac-handoff-post-soren-verification.md`.
+
+---
 
 ## 2026-04-28 (AC — vetting pass + ADR-030 + permission-over-compulsion principle + Mira/DC pre-handoff)
 
-- **Fresh-AC vetting pass on the 2026-04-27 lock work.** Verified LEARNINGS 53 against runtime walk, ADR-029 reasoning, AGENT_PATTERNS additions, all 18 fixtures, real-Mark profile claims (anchor-fetched augustisland.com + evaswild.com, plus targeted web search). All major profile claims confirmed (4-time Sundance veteran, Daniel Housberg award Oct 2021, NCIS producer credit with Mark Harmon, Eva's Wild = "save" reversed, F/V Ava Jane); minor unverifiable Mat Cerf attributions stripped (Yaya Films, "produces The Turn," Letters from Bristol blog series).
-- **DC mailbox accuracy fixes.** Wrong commit hash propagated in 4 places (Mira's web-research work was commits `3771ca8` + `416cd44`, not just `416cd44`); fixture 15 answer-key entry harmonized with metadata header; DC mailbox Task 3 prompt scope tightened (point at `processDirect` specifically; clarify other `runEvrynQuery` paths don't need the change).
-- **ADR-030 written** (`docs/decisions/030-slack-threads-as-operator-scope.md`) — Slack threads as Operator user-isolation scope + Operator's profile as working-knowledge in Operator pathways. Two coupled moves: (a) `messages.scope_user_id` column + thread-scope determination/inheritance/backfill in `handleGeneralMessage`; (b) Operator's `profile_jsonb` loaded in `handleGeneralMessage` only (NOT in `processForward`/`processDirect`/crons) with `_meta.discipline_notice` for "100% public-safe content only" discipline. Cross-user-bleed recovery patterns (mid-thread bleed + wrong-scope) codified with redaction agency. Resolves "Slack is single-shot by design" friction without violating user isolation. Iterated through several rounds — initial draft over-loaded Operator's profile in EVERY pathway; corrected to Slack-Operator pathway only after Justin caught the over-reach.
-- **Permission-over-compulsion principle landed** in `evryn-backend/docs/ARCHITECTURE.md` Pipeline Design (section adjacent to "One code path, not two") and `evryn-backend/docs/BUILD-EVRYN-MVP.md` Critical Principles. Captures the architectural lesson from the 2026-04-27 loop bug: compulsion belongs only at safety boundaries (and there, prefer structural enforcement); everywhere else, give Evryn judgment + tools.
-- **Mira shipped `core.md` addition** (commit `a4d7d2e`) — three new beats in "What You Can Draw On": (a) drafting-is-default-for-inbound-not-the-rule, (b) when escalating give the Operator enough to respond from Slack alone, (c) runtime-isn't-infallible failsafe. Unblocks DC's Task 3 (permissive `processDirect` prompt).
-- **Mira brief written** at `_evryn-meta/docs/sessions/historical/2026.04/2026-04-28-mira-brief-operator-md-adr030.md` — five additions to `operator.md` (thread-scope awareness, public-safe routing discipline, mid-thread bleed recovery, wrong-scope recovery, NULL-scoped meta territory) + one open structural call (one-file-two-modes vs. separate `meta-operator.md`). Awaiting hand-off.
-- **DC mailbox grew from 4 to 6 tasks.** Added Task 5 (UTF-8 cleanliness across all outbound paths — fixes mojibake in email subjects, Slack-vs-email subject mismatch, ASCII-safe approval-reference separator) and Task 6 (ADR-030 implementation). Task 6 deploy waits on Mira's `operator.md` ship; Tasks 1-5 deployable as soon as built. Justin's deploy pattern: build all six locally, deploy together once Mira ships, re-run integration test against the iterative-Slack architecture.
 - **Sweep protocol updated** — `evryn-team-workspace/shared/protocols/sweep-protocol.md` section 10 (Schema & Backup Health) gained an Operator-profile public-safe spot-check step. ADR-030 v0.2 audit pathway; v0.3+ becomes Reflection's job (instructed via `_meta.discipline_notice`).
 - **LEARNINGS item 53 clarified** — distinguished "implicit" subject-ification (barred — the loop-bug pattern) from "deliberate" subject-ification with explicit pathway-gating (designed exception, e.g., ADR-030's Operator pathway). Title now reads "...Never *Implicit* Subjects."
 - **Session doc** at `_evryn-meta/docs/sessions/historical/2026.04/2026-04-28-vetting-pass-and-adr-030.md` — full handoff for fresh AC arriving cold.
-- **Pre-handoff state confirmed:** evryn@evryn.ai inbox cleared (Justin); Railway env still as expected; Mira and DC ready to spin in parallel. No blockers on the AC side.
 - **Fresh-AC handoff (evening).** Walked the full load list, verified DC's six-task build against the runtime (root cause + two fix layers for the loop bug clean; ADR-030 implementation isolation correct — only `handleGeneralMessage` loads Operator's profile; UTF-8 fixes single-source-of-truth; `getRecipient` redirect deleted entirely). Verified Mira's `operator.md` ADR-030 ship (commits `7721972` + `0fd4181`, one-file-two-modes structure). Wrote DC deploy go-signal mailbox at `evryn-backend/docs/ac-to-dc.md` with one pre-deploy fix (`notify_slack` tool description: compulsion → permission, from DC's audit candidates). Em-dash sanitizer cleanup at `notify/slack.ts:79-83` + `notify/dev.ts:16-20` folded into the same DC trip via the smoke-test (sprint backlog updated to reflect). Mailbox tightly scoped to one job; Justin spins DC in the morning.
+
+---
 
 ## 2026-04-27 (AC — integration test pivot + loop bug + research-aware Evryn)
 
-- **Pivot to real-Mark identity** for v0.2 integration testing. Mark Titus (Seattle filmmaker, Eva's Wild founder, Pebble Mine documentary trilogy). `systemtest@evryn.ai` stays as placeholder email until pre-go-live cleanup. Real-Mark identity unlocks the wow-moment test of Evryn researching someone before reaching out.
 - **WebSearch enabled in `_evryn-meta/.claude/settings.json`** — added to permissions allow list so AC subagents can use it.
-- **Two web research subagents run on real Mark Titus** — WebFetch alone got 5/10 richness in 27 calls; WebSearch+WebFetch got 9/10 in 8 calls. Decision: enable both for Evryn (DC mailbox Task 1).
-- **Test fixture profile + script + 7 fixture emails rewritten for real Mark.** Fictional film titles ("The Last Run," "Copper River") replaced with real ones (*The Wild*, *The Turn*); "Cordova" / "Southeast Alaska" framing replaced with "Bristol Bay" / Seattle; "Aronov" → "Titus"; chef references aligned to real Eva's Wild partners.
-- **Mira shipped research-aware identity edits** (commits 3771ca8 + 416cd44 in evryn-backend) — light WebFetch+WebSearch capability statement in core.md, full anchor-then-expand "Look Them Up" research pattern in onboarding.md, pointer paragraph in operator.md, plus a "Listen to what they want held" discretion beat (Nathan-influenced).
-- **Loop bug discovered.** When Justin signed in to evryn@evryn.ai, Google sent a security alert; Evryn's drafts were polled back as inbound `direct_message` items, looping ~14 cycles. **Evryn diagnosed the runtime root cause herself in real time** and broke the loop at the data layer via `supabase_upsert`. Rich audit trail in emailmgr_items metadata.
-- **DB plastic-wrap state restored** after the loop — 3 system actors + Mark, 0 emailmgr_items, 0 messages.
-- **Pre-go-live cleanup step added** to BOTH `evryn-backend/docs/SPRINT-MARK-LIVE.md` AND `evryn-backend/docs/operator-guide.md` Go-Live Checklist — kill test-Mark UUID + create fresh real-Mark record + clear evryn@/systemtest@/review@ inboxes; Justin must visually verify squeaky-clean DB AND Gmail before wiring real Mark's email.
-- **Sprint tracker updated** with Day 6 pivot row + breadcrumb on the deferred Identity/runtime dedup review row (today's loop bug surfaced exactly the kind of seam that review would have caught) + Backlog section with surfaced items (`createUser` MCP tool, dedup review reactivation, WebSocket heartbeat false-positive on restart).
-- **DC mailbox bundle queued** at `evryn-backend/docs/ac-to-dc.md` — 4 tasks: add WebFetch+WebSearch to Evryn's `allowedTools`, fix the inbound-polling loop bug, give Evryn a no-draft Slack-escalation exit on system-noise senders, remove the `getRecipient()` redirect. (An originally-floated fifth task — "skip history loading when sender is a system actor" — was reconsidered and dropped during fresh-AC review; principle captured in LEARNINGS item 53 instead.) **Original AC instance self-flagged as muddy at session end; fresh AC vetted the bundle and finalized it.**
-- **ADR-029 written and reviewed** (`docs/decisions/029-remove-getrecipient-redirect.md`) — captures the decision to remove the `getRecipient()` redirect. Initial draft by original AC, framing reviewed and finalized by fresh AC.
 - **Session doc** at `_evryn-meta/docs/sessions/historical/2026.04/2026-04-27-integration-test-pivot-and-loop-bug.md` — full handoff to fresh AC.
-- **Railway env verified via GraphQL** — `SEND_ENABLED=true`, `NODE_ENV=development`, `POLL_INTERVAL_MS=10000`. Drafts ARE sending; getRecipient redirects them to systemtest@.
+
+---
 
 ## 2026-04-27 (AC — Hub vulnerability test + framing additions)
 
 - **"How We Hold the Hub and Spokes" added to roadmap.md** — Distinguishes Principles (commitments that don't bend to data) from Predictions (numbers held with conviction but tested from day one). Sets the right reading lens; most quantitative claims are experiments being tracked.
 - **Bulkhead architecture added to technical-vision.md** — Meta-principle above zero-trust and information firewalling. Every system assumes breach and bounds it. Even walls on land are bulkheads — register signal for the crew.
 
-## 2026-04-24 (AC — Deploy session support + integration test prep)
-
-- **Evryn deployed to Railway** — DC deployed Day 6 build. AC supported with deploy config (SEND_ENABLED bug catch, Railway plan research, env var guidance). Service paused for weekend; integration test Monday.
-- **Railway Hobby plan decision** — Researched Hobby vs Pro. Hobby sufficient through v0.3. Scaling breadcrumb added to BUILD doc with upgrade triggers.
-- **Mark's real email verified absent** — `mark@evaswild.com` and `mark@augustisland.com` confirmed absent from all repos and Supabase. Two historical references (completed task spec, changelog entry noting the fix) are record-only.
-- **DC mailbox absorbed** — SDK version coupling constraint (critical: SDK + Claude Code binary must match exactly), Docker deployment constraints, Railway CLI vs API gap, Slack scope fix, operator record email change.
-- **Operator guide updated by DC** — Deploy section, setup-credentials linked, Mark protection layers documented.
-- **Orphaned task file dated** — `dc2-synthetic-fixtures.md` renamed with `2026-03-02-` prefix.
-
-## 2026-04-23 (AC — Integration test prep + billing guardrails)
-
-- **Integration test protocol updated** for ADR-027, Operator redesign, Day 6 new-system checkpoints. Rachel character replaced with existing Mark test profile for reproducibility.
-- **Scripted onboarding conversation built** (`evryn-backend/tests/fixtures/integration-test-script.md`) — Slack intro + 7 response blocks covering all identity module topics (core.md, onboarding.md, gatekeeper-onboarding.md). Known inputs for known expected outputs.
-- **Test gatekeeper profile updated** — ADR-027 template (empty story, pending_notes array) + known-good pending_notes for triage isolation test. Old gatekeeper_criteria JSON removed.
-- **Billing error loud alert** added to `runEvrynQuery` — detects credit/billing errors and sends distinct `#dev-alerts` message ("BILLING: Evryn is OFFLINE"). v0.3 spend tracking stub in BUILD doc.
-- **Polling interval env-configurable** — `POLL_INTERVAL_MS` env var (default 30s, testing 10s, production 5min). Documented in operator guide + test pre-flight.
+---
 
 ## 2026-04-22 (AC — DC Day 6 spec review + deploy prep)
 
-- **DC Day 6 spec reviewed and approved** — Soren wrote, AC reviewed for build-level precision. 10 corrections (2 critical: missing pending_notes loading in buildPersonContext, NULL safety in append_cross_user_note SQL). All corrections applied. Two post-review additions approved (1E message_body column, 2F stripReplyChain, 3C proactive outreach cron).
 - **current-state.md** — Full rewrite to reflect weeks of team progress.
+
+---
 
 ## 2026-04-05 (AC0 — Orchestration packout, sprint tracker finalization)
 
-- **Sprint tracker finalized** — Added 3 deferred DC tasks (seen_by_subject grep, Railway deploy, confidence_audit in scaffold). Added AC0 Orchestration State section with sequencing and blocking dependencies.
-- **ARCHITECTURE.md** — Added `authorized_by` audit trail to notes schema for `shareable_with_user` flip tracking.
-- **Scaffold spec renamed** — `ac0-note-runtime-scaffold` → `dc-spec-profile-jsonb-scaffold`. Added status table, `confidence_audit: null` to template. Now a live DC spec, not an inter-AC note.
-- **`follow_ups` rename completed** — All 3 files updated (ARCHITECTURE.md, sprint tracker, scaffold spec). Rename note moved to `historical/`.
 - **current-state.md** — Added AC3 section. Updated AC0, AC1, AC2, DC sections to reflect close-out state.
+
+---
 
 ## 2026-04-05 (AC2 — Weekend thinking close-out, trust rewrite)
 
 - **Weekend thinking fully ingested** — All 6 docs from 2026-03-23 absorbed into persistent files, moved to `docs/sessions/historical/`.
-- **ARCHITECTURE.md updates** — confidence_audit in profile_jsonb + Reflection Module, Insight Routing Pipeline clarification (reflection vs self-reflection), investigative matching breadcrumb, installment plans breadcrumb.
-- **ADR-026: Investigative matching** — Trust-bounded constraint flexibility. Evryn can widen searches when she suspects stated constraints are softer than they appear, but brings it with respect and humility.
 - **Hub trust rewrite** — "You're always in control" replaced with "No dark patterns" (full toolkit, aligned intent framing). Behavioral filtering rewritten with matching vs platform access distinction. "Evryn is a witness, not a mirror" added. Design philosophy reformatted to bullets.
 - **Trust-and-safety spoke** — "You're always in control" header replaced with "Evryn is here *for you*".
 - **Business-model spoke** — Installment plans subsection (v0.4 target), competitive pricing context, unit economics at rest.
 - **EVR-77** — FYI to Soren re: doc 06 (claude.ai user memory structure) for agent memory design reference.
 
+---
+
 ## 2026-04-03 (AC + Nathan — Fenwick finalization, website legal pages, Nathan onboarding)
 
-- **Fenwick 10(a) resolved** — removing PII prohibition entirely, shifting responsibility to Initiating User. Updated docs expected Tuesday April 7.
-- **Nathan loaded for legal capture** — finalization session notes written (`evryn-team-workspace/shared/projects/legal/terms-and-privacy/2026.04.03-v02-finalization-notes.md`). Fenwick correspondence log created. File moves: meeting prep to legal/terms-and-privacy/, wireframes to product/. References fixed across 5 files.
 - **Broken links fixed** — 4 persistent docs updated after legal folder reorganization (gtm-and-growth, gatekeeper-approach, technical-vision, openclaw research).
 - **BizOps spoke updated** — Legal section reflects finalized v0.2 docs with archive pointers.
 
-## 2026-04-03 (AC — Team workspace wrap-up)
-
-- **Skills vs protocols resolved** — no `.claude/skills/` wrappers needed for now. `shared/protocols/` is the approach — protocols work everywhere, skills may not be respected by Cowork. Can revisit later.
-- **Team workspace to-do list cleared** — all items from the March 27 build session either completed or handed off.
+---
 
 ## 2026-04-03 (AC + DC — Research migration, project structure, DC agent definition)
 
-- **Research moved from _evryn-meta to evryn-team-workspace** — 26 files reorganized into `shared/projects/product/research/`, `growth/research/`, `ops/research/`. DC executed the migration; AC verified. All active references updated across 4 repos.
-- **Project folder structure** — Five department folders created: `helm/`, `product/`, `ops/`, `legal/`, `growth/`. Documented in team CLAUDE.md.
 - **Demarcation rule established** — _evryn-meta = source of truth + AC ops. Team workspace = active work, research, drafts. Written into both CLAUDE.md files.
-- **Legal working docs moved** to `evryn-team-workspace/shared/projects/legal/terms-and-privacy/`. Finals stay in `_evryn-meta/docs/legal/`.
 - **AC protocols folder** — Moved lock, ac-dc, sweep, align protocols to `docs/protocols/`. References updated.
 - **developer.md agent definition** — Verbatim copy of DC CLAUDE.md in `_evryn-meta/.claude/agents/`. Adaptation for subagent/teammate use pending.
 - **DC CLAUDE.md updated** — Added evryn-team-workspace, fixed stale SDK references.
 - **Hub + spokes updated** — Stale team references fixed (Hub, bizops, technical-vision, gtm-and-growth).
 - **.gitignore fixed** — Was blocking all of `.claude/`; now only blocks `settings.local.json`.
-- **Agent integration tests** — All 4 passed (Lucas, Nathan, Mira, Soren). One gap found and fixed: project subfolder structure wasn't documented.
 - **AC #lock protocol** — Added team current-state appendage step (#10).
+
+---
 
 ## 2026-04-01/02 (AC — Team workspace memory/protocol overhaul)
 
-- **Agent memory redesigned as narrative GPS** — Memory files stripped to Story + Recent Notes. First person, no instructions in the file. Writing guidance moved to #lock protocol; consolidation guidance to new #consolidate protocol. ADR-023.
-- **"Compaction" renamed to "consolidation"** everywhere — the process synthesizes understanding, not just compresses.
-- **#standup protocol created** — Team consolidation ritual. Standard (daily course alignment) and deep (weekly with subagent reflection). Current-state is append-only between standups; only Lucas rebuilds during synthesis. ADR-024.
-- **Task authority protocol** — Only Justin's tasks are commands; everything else is a request. Added to CLAUDE.md. ADR-025.
-- **Linear labels remapped** — alex→soren, taylor→emma, dana→mira, jordan→marlowe. EVR-55 created for backlog cleanup.
-- **#lock reinforcement** added to all 8 agent definitions ("lock frequently, or the next you starts with a gap").
 - **settings.json created** for evryn-team-workspace — broad Bash allow, deny list for destructive ops.
-- **Claude Code Operations section** added to team CLAUDE.md — session startup, write preferences, timestamp discipline.
-- **Research files date-prefixed** — All 26 files in `_evryn-meta/docs/research/` renamed with `YYYY.MM.DD` prefix.
-- **Snapshot naming convention updated** — Dots + timezone offset (`2026.04.01T19.03-07.00.md`) across all repos.
+
+---
 
 ## 2026-04-02/03 (AC — Fenwick legal finalization + website legal pages)
 
-- **Fenwick v0.2 finals reviewed** — ToS and Privacy Notice. All 16 items from our review addressed. Profiling section partially fixed (removed "no decisions about individuals," kept "don't tell Initiating Users who to reach out to" — defensible, flagged for Phase 2 revision). "Customer Email Data" renamed to "User Data" throughout. Safety identifier language simplified (implementation detail struck, pseudonymized identifier retained).
-- **10(a) carveout question sent to Fenwick** — Proposed broadening PII exception from enumerated fields to functional test ("information to the extent necessary to utilize the Services") + adding "knowingly" scienter requirement. Awaiting response.
-- **evryn-website: ToS and Privacy Notice pages built** — `/terms` and `/privacy` routes. Old `/privacy-policy` redirects via 301. Formatting matched to Fenwick PDF (bold defined terms, underlined sub-headings). Homepage footer updated: Terms | Privacy | Contact with bot-resistant email link. Old privacy policy archived to `archive/legal/`.
-- **Legal folder reorganized** — All Terms/Privacy materials moved to `docs/legal/Terms-and-Privacy/`. Broken links fixed in 4 persistent docs (gtm-and-growth, gatekeeper-approach, technical-vision, openclaw research).
 - **BizOps spoke updated** — Legal section reflects finalized v0.2 docs with archive pointers.
-- **Fenwick Phase 2 meeting prep finalized** — Consolidated to 7 questions + 3 corrections. Cut redundant items, tightened scope. Wireframes + user journey doc sent as companion materials.
+
+---
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
