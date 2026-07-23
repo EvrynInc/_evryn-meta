@@ -53,7 +53,7 @@ For any session where you'll do or direct build-level work on **any** Evryn buil
 | **Dashboard** (`_evryn-meta/dashboard`) | `docs/protocols/load-cascades/dashboard-full-cascade.md` |
 | **Conducting** a build (directing DC/QC/lane-ACs, not hands-on) | `docs/protocols/load-cascades/conductor-cascade.md` — **not a lighter load**; see below |
 
-Each of these cascades can be called by inserting the name into the cascade, for instance "Load the Full Evryn Product Startup Context Cascade", or "load the full team runtime cascade". 
+Each of these cascades can be called by inserting the name into the cascade, for instance "Load the Full Evryn Product Startup Context Cascade", or "load the team runtime full cascade". 
 
 Each cascade file names the *concrete files* — **both halves, in load order** — for that build. The universal principles below are the *why*; each has a corresponding **step in the cascade** (the *what*), so a cascade is followable on its own.
 
