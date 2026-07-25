@@ -1,8 +1,8 @@
 # ADR-039: Gatekeeper Multi-Inbox Identity (Forward-From ≠ Reply-To)
 
 **Date:** 2026-06-10
-**Status:** Accepted (design) — **build parked** until the Phase-6 findings stabilize; then build *ahead* of Mark's real forwarding (not wait-and-see).
-**Related:** ADR-036 (original-sender reification), ARCHITECTURE.md (User Model — Identity Resolution v0.2/v0.3)
+**Status:** ✅ **BUILT + SHIPPED via [ADR-046](046-gatekeeper-address-resolution.md)** (2026-07-24 update — was "Accepted (design), build parked until Phase-6 findings stabilize"). This ADR framed the problem (forward-from ≠ reply-to; many inbound lanes → one gatekeeper + a designated outbound address); **ADR-046 is the built solution** — the `gatekeeper_inbound_addresses` registry + `resolveGatekeeperByInboundAddress` + `users.outbound_address` + Evryn's `register_gatekeeper_address` self-registration tool, shipped `v0.2.2`.
+**Related:** [ADR-046](046-gatekeeper-address-resolution.md) (the built solution), ADR-036 (original-sender reification), ARCHITECTURE.md (User Model — Identity Resolution v0.2/v0.3)
 
 ## Context
 

@@ -3,6 +3,8 @@
 **Date:** 2026-03-18 (revised 2026-03-19)
 **Status:** Accepted (revised — original proposed renaming gold→match; revision keeps gold, clarifies the lifecycle, adds status lifecycle design)
 
+> **Amendments since (noted 2026-07-24):** the status lifecycle below was later extended by **[ADR-049](049-daily-clustering-pipeline.md)** (Clustering) with a **`queued`** status — a forward captured and awaiting its twice-daily batch drain, distinct from `new` (the halt-recovery park state). And **[ADR-051](051-runtime-bookkeeping-structured-verdict.md)** (③ Runtime Bookkeeping, shipped `v0.2.8`) canonicalized `triage_result` for **all three** verdicts (gold/edge/pass), making the `triage_result` × terminal-`status` prediction-accuracy audit described here a direct two-field query. The two-field model itself is unchanged.
+
 ## Context
 
 The triage pipeline classifies forwarded emails as `gold / pass / edge` in the `emailmgr_items.triage_result` field. "Gold" was coined informally during early triage design — it meant "this person is worth the gatekeeper's time."

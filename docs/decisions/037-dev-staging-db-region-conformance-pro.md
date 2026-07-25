@@ -1,6 +1,8 @@
 # ADR-037: Dev/Staging DB + Oregon/us-west-2 Region Conformance + Supabase Pro + Backup Model
 
-**Status:** Accepted — 2026-06-04. Executed on the DB side (prod migrated, dev seeded); production cutover pending (AC0's coordinated deploy).
+**Status:** Accepted — 2026-06-04. Executed on the DB side (prod migrated, dev seeded); production cutover DONE 2026-07-03 (the old East project was deleted after the Oregon cutover proved out).
+
+> **Superseded in part by [ADR-045](045-staging-dedicated-database.md) (2026-07-03; noted 2026-07-24):** this ADR provisioned a SINGLE `Evryn Product — Dev` project used for both dev work AND staging rehearsal. ADR-045 later **split staging into its own dedicated 4th Supabase project** — the staging *runtime* (`EVRYN_ENV=staging`) points at that separate project, while the dev project here stays **admin-tooling / dev-first only** (never the staging runtime's DB). So where this doc says "dev/staging = one project," read: **dev = this project; staging = the separate ADR-045 project.**
 
 **Deciders:** Justin + AC1 (the "dev-DB exploratory committee," chartered by AC0's brief `docs/sessions/2026-06-03-dev-db-committee-brief-for-ac1.md`).
 
