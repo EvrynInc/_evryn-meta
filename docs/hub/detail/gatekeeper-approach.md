@@ -1,5 +1,7 @@
 # Gatekeeper Approach
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+>
 > **How to use this file:** How-to guide for gatekeeper partnerships — who we're targeting, how we reach them, and how we make it as easy as possible for them. This is the operational playbook; the strategic *why* lives in `docs/hub/gtm-and-growth.md` (Top-Down: Gatekeeper Partnerships). Build-level detail lives in `evryn-backend/docs/BUILD-EVRYN-MVP.md`.
 >
 > **End-to-end flow:** For the complete gatekeeper lifecycle — Phase I calibration through Phase II outreach, data handling, and legal posture — see `gatekeeper-flow.md`.
@@ -215,3 +217,5 @@ Evryn's default delivery is a **twice-daily clustered digest** — one batch aro
 **CAN-SPAM (cast-off outreach, v0.3):** Different situation — Evryn is initiating contact with people who didn't reach out to her. CAN-SPAM requires opt-out mechanism, not prior opt-in, for email. Other channels (SMS, etc.) need legal guidance. This is scoped in the GTM spoke, legal questionnaire, and `gatekeeper-flow.md`.
 
 ---
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
