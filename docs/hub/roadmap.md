@@ -110,9 +110,9 @@ Safety is structural, not bolted on. Full depth: `docs/hub/trust-and-safety.md`.
 
 ## Current Strategy
 
-**Build stages:** v0.1 (Custom GPT PoC) done → **v0.2 "Gatekeeper's Inbox"** (code built, identity files and testing to complete, go-live blocked on Fenwick finals expected April 7) → **v0.3 "The Broker"** (web app + matching + payments + cast-off outreach, target first revenue early May) → **v0.4 "Scale"** (second gatekeeper, publisher module, target June/July).
+**Build stages:** v0.1 (Custom GPT PoC) done → **v0.2 "Gatekeeper's Inbox"** (built, hardened, and **deployed live on Railway** — currently `v0.2.9`, running dormant pre-gatekeeper; go-live is now gated on a gatekeeper actually forwarding inbound, *not* on code or legal) → **v0.3 "The Broker"** (web app + matching + payments + cast-off outreach — not yet started) → **v0.4 "Scale"** (second gatekeeper, publisher module). *Target dates are deliberately omitted here — they've slipped repeatedly; the live schedule lives in the current-state snapshot (`evryn-team-workspace/shared/current-state/`), not the Hub.*
 
-- **v0.2 "Gatekeeper's Inbox":** Evryn surfaces connections from a gatekeeper's inbox. Gatekeeper forwards emails → Evryn identifies who's worth their time (gold/pass/edge case) → drafts notification → Justin approves via email → Evryn delivers. Pilot gatekeeper: Mark (Seattle). These are connections being brokered, not emails being sorted — tracked as such from day one.
+- **v0.2 "Gatekeeper's Inbox":** Evryn surfaces connections from a gatekeeper's inbox. Gatekeeper forwards emails → Evryn identifies who's worth their time (gold/pass/edge case) → drafts notification → Justin approves via email → Evryn delivers. Pilot gatekeeper: Mark (Seattle) — though as of mid-July 2026 Mark has gone radio-silent and has not begun forwarding (not written off, but unconfirmed), and a second gatekeeper (Lacey Leavitt, via Megan Griffiths) is in a live warm conversation and could onboard first. The single-gatekeeper dependency is a known risk being actively reshaped. These are connections being brokered, not emails being sorted — tracked as such from day one.
 - **AI founding team active** via Claude Code and Cowork from `evryn-team-workspace` (ADR-021); their **autonomous runtime is now underway** (ADR-050, `evryn-team-runtime` — Claude Agent SDK mains + a firewalled cheap-worker tier). Autonomy switches on post-Meta-Meeting; Cowork/Code remains the operating surface until then. The old SDK build (`evryn-team-agents`) stays frozen as history.
 - **Website** live at evryn.ai.
 - **Runway:** See the latest team current-state snapshot (`evryn-team-workspace/shared/current-state/`) for current bank balance and runway status. Full burn profile and month-by-month projection in [business-model spoke](docs/hub/business-model.md).
@@ -175,6 +175,7 @@ The vision: a world where the *default* would be that people can be trusted and 
 | `evryn-ops` | OC's home. Operations, monitoring, runbooks | Active |
 | `evryn-quality` | QC's home. Code review, testing, quality gates | Active |
 | `evryn-langgraph-archive` | LangGraph-era code archive | Sealed |
+| `evryn-prelaunch-landing` | Prelaunch landing page | Inactive |
 
 ## Additional References
 

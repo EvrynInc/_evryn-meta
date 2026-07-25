@@ -20,10 +20,10 @@ The Master Plan's GTM was written assuming a traditional startup with a human te
 
 **Bottom line:** The strategic direction below is correct — film as ignition point, wave strategy, whisper cascade, quality over quantity. What's evolved is the *urgency and scale assumptions* and the *aperture*. Evryn can afford to grow more deliberately, prove the model at small scale, and let traction speak for itself. And critically: **film is where you point the hose; everything else is where you let the rain fall.** Evryn's cross-domain model means she should actively welcome and serve anyone who shows up, from any domain, from day one. The effort is concentrated (film, Seattle, gatekeepers); the aperture is wide open (anyone who arrives gets served). See "Concentrate Effort, Open Aperture" below and `evryn-team-workspace/shared/projects/growth/research/2026.03.17 seattle-launch-strategy-v1.md` for the full demand landscape.
 
-**Build phases, target dates, and GTM alignment:**
-- **v0.2 "Gatekeeper's Inbox"** (code built, go-live blocked on identity files, testing, Fenwick terms and privacy finals — all expected by April 7) — Mark live, triage running, user records accumulating. GTM is one gatekeeper proving the model.
-- **v0.3 "The Broker"** (target: first revenue early May) — Web app + matching + payments + cast-off outreach. GTM shifts: cast-offs become the acquisition channel (~200 new users/day from Mark alone), first revenue flows, whisper cascade begins organically. **SIFF (Seattle International Film Festival, mid-May to early June) is a real target for presence.**
-- **v0.4 "Scale"** (target: June/July, after v0.3 stabilizes) — Second gatekeeper, begins to test the publisher module (replacing Justin's manual approval). GTM widens: wave strategy activates across multiple gatekeeper channels, proactive outreach. Union contract negotiation window (May-July 2026) overlaps — film professionals are anxious, trusted connections matter most.
+**Build phases and GTM alignment:**
+- **v0.2 "Gatekeeper's Inbox"** (deployed live — `v0.2.9` — and running dormant, waiting on a gatekeeper). The build is done; go-live is gated not on code or legal but on a gatekeeper actually forwarding their inbound. Pilot gatekeeper Mark has gone quiet since early June (not written off, not forwarding); Lacey Leavitt — an established Seattle producer reached through Megan Griffiths — is in a live warm conversation and could onboard first. GTM here is one gatekeeper proving the model. Once forwarding starts, triage runs and user records accumulate.
+- **v0.3 "The Broker"** (not started) — Web app + matching + payments + cast-off outreach. GTM shifts: cast-offs become the acquisition channel (~200 new users/day from an active gatekeeper), first revenue flows, whisper cascade begins organically. **The live presence vector is NWFF's "Local Sightings" fall showcase** — Megan is pitching NWFF's education director on a panel or two (concepts: how filmmakers thrive in / take back power in the AI world, and finding the needle-in-the-haystack connections everyone needs). The panel format lets Justin show up as a *contributor*, not a promoter — the un-spammy way in. *(SIFF, mid-May to early June, passed without a v0.3 or a presence — the earlier plan to target it is superseded.)*
+- **v0.4 "Scale"** (after v0.3 stabilizes) — Second gatekeeper, begins to test the publisher module (replacing Justin's manual approval). GTM widens: wave strategy activates across multiple gatekeeper channels, proactive outreach. The mid-2026 union contract negotiation window overlaps — film professionals are anxious, trusted connections matter most.
 
 ---
 
@@ -250,7 +250,7 @@ Two patterns that scale across every phase:
 
 Codified go/no-go criteria that must be met before each phase goes live. The principle: the experience of meeting Evryn never gets compromised by premature launch.
 
-**v0.2 go/no-go** (defined in `evryn-backend/docs/SPRINT-MARK-LIVE.md`):
+**v0.2 go/no-go** (defined in `evryn-backend/docs/SPRINT-V0.2-HARDENING.md`):
 - Email polling stable for 24+ hours
 - Forward detection and triage producing reasonable classifications
 - Approval flow working end-to-end

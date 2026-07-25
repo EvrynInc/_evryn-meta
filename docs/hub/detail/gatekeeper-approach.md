@@ -194,7 +194,7 @@ After Justin makes the introduction, **Evryn is the main face of the relationshi
 
 ### Delivery
 
-Evryn sends gold and edge-case notifications as they come — real-time, one per match. If a gatekeeper requests batching (daily or weekly digest), Evryn can accommodate, but the default is immediate delivery. Simpler for us, more immediate for them.
+Evryn's default delivery is a **twice-daily clustered digest** — one batch around 10am and one around 4:30pm PT — turned on at onboarding (ADR-049). Clustering matches how gatekeepers actually process their inbound and keeps notifications from fragmenting their day. The exception: when a gatekeeper hand-forwards a specific email with a personal note, that reaches Evryn in real time and gets handled right away — the personal note signals it matters *now*. A gatekeeper who prefers everything in real time can still be accommodated. (Making real-time an opt-in premium tier has been floated as a *possibility* — it is not a decided policy.)
 
 ---
 

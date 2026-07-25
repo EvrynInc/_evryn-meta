@@ -19,12 +19,12 @@
 │   │  EVRYN WEBSITE  │                         │    SUPABASE     │       │
 │   │  (evryn.ai)     │                         │    DATABASE     │       │
 │   │                 │                         │                 │       │
-│   │  • Landing page │                         │  Two projects:  │       │
-│   │  • Waitlist     │                         │  Agent dashboard│       │
-│   │                 │                         │  + Evryn product│       │
-│   │  Repo: evryn-   │                         │                 │       │
-│   │  website        │                         │                 │       │
-│   │                 │                         │                 │       │
+│   │  • Landing page │                         │  4 projects,    │       │
+│   │  • Waitlist     │                         │  all Oregon     │       │
+│   │                 │                         │  us-west-2:     │       │
+│   │  Repo: evryn-   │                         │  prod, dev,     │       │
+│   │  website        │                         │  staging,       │       │
+│   │                 │                         │  Evryn Team     │       │
 │   │  Tech: Next.js  │                         │                 │       │
 │   │  Host: Vercel   │                         └────────┬────────┘       │
 │   └─────────────────┘                                  │                │
@@ -64,7 +64,7 @@
 
 **Where we are now:** v0.2 "Gatekeeper's Inbox" — email-based, single agent, single gatekeeper. Everything below is the architecture Evryn is growing into. Current build details: `evryn-backend/docs/ARCHITECTURE.md`. Build phases: `evryn-backend/docs/BUILD-EVRYN-MVP.md`.
 
-> **Database topology (updated 2026-06-04 — ADR-037):** the diagram's "two projects" is now **three** — product DBs `Evryn Product` (prod) + `Evryn Product — Dev` (dev/staging mirror), both in **Oregon (us-west-2)** to co-locate with the Railway backend, plus the Agents dashboard DB (us-east-1). Detail: `evryn-backend/docs/ARCHITECTURE.md` (Separate Supabase Projects).
+> **Database topology (updated 2026-07-24):** the diagram's original "two projects" is now **four live Supabase projects, all in Oregon (us-west-2)** to co-locate with the Railway backend: **prod** (`Evryn Product — West Coast`), **dev** (seeded mirror), **staging** (`Evryn Product — Staging`) — a *separate* project since **ADR-045**, no longer a shared dev/staging mirror — and the **Evryn Team** DB (team-runtime). The old **Agents dashboard DB** (us-east-1) was **decommissioned 2026-07-11**, and the old us-east product project was deleted 2026-07-03 — no Evryn data lives outside Oregon anymore. Detail: `evryn-backend/docs/ARCHITECTURE.md` (Separate Supabase Projects).
 
 ### Member Interface (Future)
 

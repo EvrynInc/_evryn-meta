@@ -41,7 +41,7 @@
 | Tool | Purpose | Status | Notes |
 |------|---------|--------|-------|
 | **Rho** | Banking — startup-focused, no-fee digital checking | Active | |
-| **QuickBooks Online** | Bookkeeping and financial records | Planned | Tax season priority — expect active within ~1 month |
+| **QuickBooks Online** | Bookkeeping and financial records | Set up | Account created during 2026 tax prep; historical data partly entered by Justin. Emma takes over bookkeeping — gated on a post-Mark session with Justin to hand off what's there. |
 | **Finmark** (now part of BILL) | Forecasting, runway, scenario analysis | Future | Want this when agents are running, budget permitting |
 | **Gusto** | Payroll — employee and contractor pay | Future | No employees yet. Integrates with QuickBooks |
 | **Deel** | International hiring — EOR and contractor payments | Future | No international hires yet |
@@ -77,7 +77,7 @@
 | **Namecheap** | Domain registrar | Active | | evryn.ai, .app, .foundation, .net, .online, .org secured. Domain broker pursuing evryn.com. |
 | **Vercel** | Marketing site hosting | Active | ~$22/mo | Next.js 15. Production: evryn.ai. Preview: evryn-website.vercel.app. |
 | **Cloudflare** | Turnstile captcha | Active | Free | Waitlist spam protection |
-| **Google Analytics** | Website traffic analytics | Planned | Free | Marketing site only — never inside the product experience. Setup imminent. |
+| **Vercel Analytics** | Website traffic analytics (cookieless) | Active | — | Privacy-preserving, cookieless. Live on evryn.ai alongside HubSpot (CRM/marketing analytics). **Google Analytics was removed from evryn.ai** in favor of this cookieless approach — and never ran inside the product experience. |
 | **X** | Social media presence | Active | ~$9/mo | Marketing and brand visibility |
 
 ---
@@ -88,7 +88,7 @@
 |------|---------|--------|-------|
 | **Anthropic (Claude API)** | AI for all agents and product | Active | Sonnet default, Opus for nuance, Haiku for routine. API billing is usage-based and separate from Claude Code subscription. |
 | **Claude Max** | Claude Code + claude.ai | Active | $100/mo. Justin's primary development tool — building everything with Claude Code. |
-| **Supabase** | PostgreSQL database + serverless backend | Active | TWO separate projects: (1) Agent dashboard project (evryn-team-agents), dashboard at evryn-dashboard.vercel.app; (2) Evryn product project (evryn-backend — needs rename from "n8n Prototype"). RLS on all tables. |
+| **Supabase** | PostgreSQL database + serverless backend | Active | Supabase Pro. Live databases: **Evryn Product (West Coast)** — production (Oregon/us-west-2); **Evryn Product — Dev** — development + migration testing; **Staging** — its own isolated project (ADR-045), a structure-copy of prod with zero real data for pre-Mark release rehearsals; and the **Evryn Team** database. RLS on all tables. *(The old Agent-dashboard project — evryn-team-agents / evryn-dashboard.vercel.app — was backed up and decommissioned 2026-07-11.)* |
 | **Google Cloud** | Gmail API + Pub/Sub | Active | Gmail API live polling for evryn@evryn.ai. Pub/Sub scaffolded but not yet wired. |
 | **GitHub** | Code repositories | Active | ~$9/mo. EvrynInc organization. |
 
@@ -109,7 +109,7 @@
 | Tool | Purpose | Status | Notes |
 |------|---------|--------|-------|
 | **Linear** | Backlog and task tracking | Active | Free tier. EVR workspace. Replaced ClickUp. |
-| **Slack** | Team communication | Planned | ~$4.38/seat/mo (Justin only). Agents use bot tokens (free, no seat required). |
+| **Slack** | Team communication + operator/product alerting | Active | ~$4.38/seat/mo (Justin only); agents use bot tokens (free, no seat required). Live channels: `#team-alerts` (founding-team → Justin pings), `#emergency-alerts` (Evryn silent-death / runaway-cost alerts, M1), the operator approval channel (locked to Justin's verified Slack ID), a separate staging Slack, and Lucas's autonomous-runtime presence. |
 | **Notion** | Ideation/notes, historical vault | Active | Light use — some docs still linked. Historical content from early planning. |
 | **Google Drive** | Document storage (Docs & Sheets) | Active | Via Google Workspace |
 

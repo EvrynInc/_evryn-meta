@@ -223,7 +223,13 @@ Evryn uses a trust-filtered market model:
 - **AI agents** (Anthropic API costs for Lucas + team): ~$800/mo steady state; up to ~$3,500/mo during build sprints
 - **Evryn product** (Anthropic API costs to serve ~500 new users/month): ~$1,450/mo once live
 
-### Burn Profile
+> **[QUARANTINED — March 2026 projection tables. Superseded, never realized. Do not plan against them.]**
+>
+> The three tables in this section — **Burn Profile**, **Revenue Model**, and **Cash Runway Projection** — are a March 2026 model that did not play out. They are preserved as clearly-labeled history, not current truth. As of the latest current-state snapshot the actual bank balance is **~$3,996.10** and Evryn has earned **zero revenue to date** — v0.3 "The Broker" (the first revenue-generating build) has not launched. The tables assume a late-April v0.3 launch, ~5% cast-off conversion, ~$19,200 of July revenue, and a positive August cash position through the Fenwick bill; none of that occurred. The Burn Profile's "Runway from $6,125" base is a March starting balance, not today's.
+>
+> **Where the live truth lives:** the current-state snapshot (`evryn-team-workspace/shared/current-state/`) is the source of truth for cash position and burn. A rebuilt financial model — reconciling real burn, the changed infrastructure (see [BizOps spoke](bizops-and-tooling.md)), the revised Fenwick settlement (current-state), and actual cost-per-match data from the live v0.2 runtime — is Emma's work, gated on her post-Mark session with Justin. Until it lands, treat everything below as historical reference only.
+
+### Burn Profile — SUPERSEDED (March 2026 model)
 
 What it costs depending on what's running:
 
@@ -236,7 +242,7 @@ What it costs depending on what's running:
 | Full steady state (agents + product at scale) | ~$3,000 | ~2 months |
 | Full sprint (agents sprint + product) | ~$3,975 | ~1.5 months |
 
-### Revenue Model (Conservative Estimate)
+### Revenue Model (Conservative Estimate) — SUPERSEDED (March 2026 model)
 
 *Revenue = Active Users × Matches/User × $8/match. Assumptions: 5% cast-off→paying-user conversion (~10 new paying users/day from Mark), 60% monthly retention, 2nd gatekeeper (via Megan) starting June at ~150 cast-offs/day. Matches/user ramps with network density — at 100 users matching is near-zero (below the ~150 testing threshold), at 300 it's sparse ("early magic" requires domain homogeneity), approaching steady-state 6.0 only above 800+.*
 
@@ -251,9 +257,9 @@ What it costs depending on what's running:
 
 *These are model outputs, not predictions. Revenue depends heavily on conversion rate and retention — at 2% conversion instead of 5%, August revenue drops to ~$14K. Update with actuals as they arrive.*
 
-### Cash Runway Projection
+### Cash Runway Projection — SUPERSEDED (March 2026 model)
 
-*Projection as of March 2026. Will go stale — update monthly or when plans change.*
+*Projection as of March 2026. Never realized — see quarantine note above.*
 
 | Month | Phase | Burn | One-Time | Capital In | Revenue | Cash (end) |
 |-------|-------|------|----------|-----------|---------|-----------|
@@ -266,7 +272,7 @@ What it costs depending on what's running:
 
 **Reading this table:** July and August run at full sprint burn ($4,225) because v0.4 requires agents running full bore. At conservative revenue estimates, the Fenwick bill in August is manageable — cash stays positive throughout. However, this depends on v0.3 launching on time (late April) and achieving ~5% cast-off conversion. If revenue underperforms by 50%, August cash drops to ~$3K — survivable but very tight. If v0.3 launches a month late, the entire revenue curve shifts right and August becomes a crisis.
 
-**Aspiration: agents earlier.** The table above conservatively ramps agents starting in June, but the goal is to get them running as soon as build capacity allows — ideally May or even late April. The agents' ROI is exceptional (they multiply Justin's output across GTM, ops, and product without adding human headcount), so earlier activation is pure upside. The cash can support it: even at full sprint burn ($4,225) starting in May instead of a gradual ramp, cash stays positive through August. The constraint isn't money — it's build bandwidth. If the SDK build lands ahead of schedule, expect this table to shift left.
+**Aspiration: agents earlier.** The table above conservatively ramps agents starting in June, but the goal is to get them running as soon as build capacity allows — ideally May or even late April. The agents' ROI is exceptional (they multiply Justin's output across GTM, ops, and product without adding human headcount), so earlier activation is pure upside. The cash can support it: even at full sprint burn ($4,225) starting in May instead of a gradual ramp, cash stays positive through August. The constraint isn't money — it's build bandwidth. The team-agent vehicle is now the ADR-050 autonomous runtime (`evryn-team-runtime` — Claude Agent SDK mains plus a firewalled cheap-worker tier), which switches on after the Meta-Meeting per the EVR-103/104 sequencing; the earlier SDK build (`evryn-team-agents`) is frozen.
 
 **Capital timing:**
 - **$5K founder injection (May):** Provides cushion during the low-revenue early months. Without it, cash drops to ~$2,775 in May before revenue ramps.
