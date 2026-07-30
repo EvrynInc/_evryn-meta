@@ -1,5 +1,7 @@
 # ADR-049: Daily-Clustering Pipeline (forwards queue + twice-daily batch)
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Status:** Accepted (Justin, 2026-07-07) — build in progress (SPRINT-V0.2-HARDENING Step 58, "Clustering", cost lane ②).
 **Date:** 2026-07-07.
 **Owners:** AC2 (cost lane) + Justin. Build spec: `_evryn-meta/docs/sessions/historical/2026.07/2026.07.07-ac2-clustering-build-spec.md` (archived — shipped `v0.2.7`).

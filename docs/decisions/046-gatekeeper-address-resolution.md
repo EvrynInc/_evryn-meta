@@ -1,5 +1,7 @@
 # ADR-046 — Gatekeeper-address resolution + self-registration
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Status:** Accepted (design Justin-balloted pre-subagent; built round-2, QC-GO ×2 on `r2/lane-a-ingest-resilience` [Step 61] + `r2/lane-a-register-tool` [register tool]; **not yet merged/deployed** — rides AC0 convergence)
 **Date:** 2026-06-25 (recorded by AC0 from the round-2 builds; ADR owed-but-unwritten was flagged in both the Lane A + ACc handoffs)
 **Authors:** AC1a (Step 61 build) + ACc (register tool) + AC0 (recording); design balloted by Justin

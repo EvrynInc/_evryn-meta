@@ -1,5 +1,7 @@
 # ADR-001: LangGraph → Claude Agent SDK with Single-Agent Architecture
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Date:** 2026-02-06
 **Status:** Accepted
 **Absorbed from:** Session decisions 1, 2, 3, 11 (2026-02-06)
@@ -28,3 +30,5 @@ Additionally, the LangGraph dependency added complexity, opacity, and debugging 
 - Build spec created at `evryn-team-agents/docs/BUILD-LUCAS-SDK.md`
 - Team profiles need Justin's review before becoming subagent files — profiles were built ~1 year ago and Evryn has evolved significantly
 - Jordan needs a complete rebuild (too conventional for trust-based network model)
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

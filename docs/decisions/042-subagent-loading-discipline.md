@@ -1,5 +1,7 @@
 # ADR-042 — Subagent Loading Discipline: Precise-Load, Grep-the-Cascade, Team-Subagent Provision
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Status:** Accepted (2026-06-19)
 **Context date:** 2026-06-18 → 2026-06-19
 **Supersedes (in part):** the 2026-06-06 "binary rule loads the base cascade reliably" confidence in `ac-orchestration-protocol.md`

@@ -1,5 +1,7 @@
 # ADR-003: Archive Means Remove from Repo
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Date:** 2026-02-06
 **Status:** Accepted
 **Absorbed from:** Session decision 10 (2026-02-06)
@@ -17,3 +19,5 @@ Archive = REMOVE from the repository. Don't just move to an archive folder. Just
 - Archive removal plan at `_evryn-meta/docs/archive-removal-plan.md` specifies what gets removed
 - Critical pre-flight: DC's CLAUDE.md must be migrated to a new home repo before overwriting with Lucas's CLAUDE.md
 - Any future archival should follow this same principle — remove, don't relocate within the repo
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

@@ -1,5 +1,7 @@
 # ADR-045 — Staging runtime gets its own dedicated Supabase project
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Status:** Accepted (Justin ratified 2026-06-24)
 **Date:** 2026-06-24
 **Authors:** AC4a (staging lane) + Soren (CTO, architectural recommendation)

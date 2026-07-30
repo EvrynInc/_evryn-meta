@@ -1,5 +1,7 @@
 # ADR-005: Public Output Style for External Communications
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Date:** 2026-02-06
 **Status:** Accepted (implementation in Phase 2)
 **Absorbed from:** Session decision 26 (2026-02-06)
@@ -29,3 +31,5 @@ The information boundary dimension of this ADR is being implemented in v0.2 thro
 - **`identity/internal-reference/`** — procedures that guide her behavior but are never surfaced (canary procedure, crisis protocols, trust arc scripts, etc.)
 
 This structural separation — enforced by directory, not instruction — is the v0.2 implementation of the "what can be shared externally" boundary this ADR called for. The full `public.md` tone guide remains deferred, but the information boundary is architecturally enforced from day one. See [ADR-015](015-situation-activity-module-matrix.md) (bright security line between public-knowledge and internal-reference).
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

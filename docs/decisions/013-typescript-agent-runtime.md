@@ -1,5 +1,7 @@
 # ADR-013: TypeScript for Agent Runtime
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Status:** Accepted
 **Date:** 2026-03-02
 **Participants:** Justin + AC
@@ -45,3 +47,5 @@ The question: should both be the same language?
 
 - Session doc: `docs/historical/2026-02-24-mvp-build-work-s1-4.md` (Session 3 Decision 5, Session 4 Decision 8)
 - SDK overview: platform.claude.com/docs/en/agent-sdk/overview
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

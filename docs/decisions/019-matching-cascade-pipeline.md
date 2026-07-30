@@ -1,5 +1,7 @@
 # ADR-019: Matching Cascade Pipeline
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Status:** Accepted (partially superseded by [ADR-027](027-profile-architecture-simplification.md) on cadence — weekly batch → event-based trigger. Pipeline mechanics below survive intact.)
 **Date:** 2026-03-24
 **Deciders:** Justin, AC2
@@ -155,3 +157,5 @@ Weekly or daily full re-match of all users against all intents.
 - **Structured pre-filter changes and embedding updates are distinct triggers within the re-matching logic.** A location change that doesn't affect the embedding still triggers pool re-evaluation via the structured diff path.
 - **Threshold tuning is a v0.3+ empirical task.** The sensitivity dial's exact breakpoints need real matching data to calibrate. Start conservative (re-evaluate more) and tighten as data accumulates.
 - **Model tier selection is a separate decision.** See [ADR-020](020-model-tier-selection.md) for the full reasoning. Summary: Opus for everything in v0.2; v0.3+ needs dedicated analysis before assuming any operation can tolerate a lighter model.
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

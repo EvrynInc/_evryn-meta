@@ -1,5 +1,7 @@
 # ADR-009: Four-Persona Dev Pipeline (AC/DC/QC/OC)
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Date:** 2026-02-23
 **Status:** Accepted
 
@@ -59,3 +61,5 @@ When Lucas/Alex comes back online, these personas can become subagent perspectiv
 - Mailbox protocol docs need to account for four-way communication
 - Hub repos table and bizops-and-tooling spoke need updating when repos are created (SYSTEM_OVERVIEW.md retired 2026-02-24, content absorbed into spokes)
 - Hub spoke on dev pipeline may be warranted once the full pipeline is running
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

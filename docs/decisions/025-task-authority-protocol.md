@@ -1,5 +1,7 @@
 # ADR-025: Task Authority Protocol
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Date:** 2026-04-01
 **Status:** Accepted
 **Decision makers:** Justin + AC
@@ -34,3 +36,5 @@ When creating a Linear ticket for another team member, always note who is creati
 - Linear continues with label-based agent tracking (no paid seats yet)
 - Labels remapped to current team: alex→soren, taylor→emma, dana→mira, jordan→marlowe
 - EVR-55 created for Lucas to clean up stale LangGraph-era backlog
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

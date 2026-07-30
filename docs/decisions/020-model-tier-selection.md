@@ -1,5 +1,7 @@
 # ADR-020: Model Tier Selection
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Status:** Accepted (v0.2); analysis required before v0.3
 **Date:** 2026-03-24
 **Deciders:** Justin, AC2
@@ -79,3 +81,5 @@ Start from "what's the cheapest we can run?" and upgrade only where quality visi
 - The **asymmetric safety** is what makes a cheaper tier acceptable on this one operation where ADR-020's quality concern otherwise applies: the screen can only `ignore`, `pass`, or `escalate` — it never makes a positive (gold/edge) call and never a bad-actor call — and the runtime **fails safe to escalate** on any error/timeout/ambiguity. A false-escalate costs one Opus query; a **false-filter** (a wrongly-`ignore`d *or* wrongly-`pass`ed lead Opus would have called gold/edge) is the un-backstoppable error the shadow trial exists to drive to zero.
 
 **Consequence / scope of the precedent:** this is a *narrow, validated* carve-out, not a re-opening of "tier everything." The next tiering candidates (if any) still owe ADR-020's full analysis. The broader v0.3 model-tier analysis ADR-020 §"v0.3+" requires is unchanged and still owed; this amendment resolves the obvious-pass case only.
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

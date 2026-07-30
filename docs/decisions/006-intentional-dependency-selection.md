@@ -1,5 +1,7 @@
 # ADR-006: Intentional Dependency Selection
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Date:** 2025-01-22 (revised 2026-01-27)
 **Status:** Accepted (living principle)
 **Absorbed from:** Old DECISIONS.md, Decision 003
@@ -28,3 +30,5 @@ The principle was revised after adopting LangGraph (which was later dropped enti
 - Future dependency choices should reference this principle
 - This is a thinking tool, not a policy gate — it prevents both framework-chasing and NIH syndrome
 - **Both AC and DC CLAUDE.md files should reference this principle.** It applies at architecture level (AC choosing frameworks) and build level (DC choosing libraries).
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

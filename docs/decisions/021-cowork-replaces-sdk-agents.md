@@ -1,5 +1,7 @@
 # ADR-021: Cowork Replaces SDK Agent Build (For Now)
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Date:** 2026-03-27
 **Status:** Accepted
 **Decision maker:** Justin
@@ -35,3 +37,5 @@ The Supabase project that backed the SDK-era agent build (project name "Evryn-Ag
 
 Rationale: schema is preserved in git at `evryn-team-agents/sql/schema.sql`; any future SDK-build resume would re-provision a fresh project anyway; Cowork is the active path. Per Supabase: data remains downloadable from the dashboard even after permanent freeze — what is lost is the ability to restore the project as a live Postgres instance. The "frozen as insurance" language above still holds for the codebase; the database itself is now archived.
 - Hub repo table needs updating to include `evryn-team-workspace`
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

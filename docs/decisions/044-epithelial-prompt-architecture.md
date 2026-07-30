@@ -1,5 +1,7 @@
 # ADR-044 — Epithelial prompt architecture: curated story in the system prompt, churning inputs in the user message
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 > **PROVISIONAL ADR NUMBER (044).** Minted by AC3a (Lane C / cost) on 2026-06-23 off a then-highest of ADR-042. Several round-2 lanes are authoring ADRs in parallel; if another lane also took 044, **AC0 renumbers one at convergence** (the filenames differ after the number, so git keeps both — only the number needs fixing).
 
 > **How to use this file:** An Architecture Decision Record. It captures *why* we will move Evryn's per-user `pending_notes` out of the `systemPrompt` and into the first user message while keeping her curated `story` in the `systemPrompt`, and *why* that is both a cache lever and a security improvement. It is a **design decision whose build is deferred to a fast-follow** (see Status). Read it before touching prompt composition (`composeSystemPrompt` / `buildPersonContext` in `evryn-backend/src/triage/classify.ts`) or scoping the Step-57 runtime-bookkeeping refactor.

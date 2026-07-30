@@ -1,5 +1,7 @@
 # ADR-024: Current-State Append-Only with Standup Synthesis
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Date:** 2026-04-01
 **Status:** Accepted (protocol untested — expect iteration)
 **Decision makers:** Justin + AC
@@ -45,3 +47,5 @@ Between standups, any team member can append to current-state during #lock — s
 - Lucas's agent definition updated with #standup pointer
 - Current-state snapshot naming updated to dots + timezone (`2026.04.01T19.03-07.00.md`)
 - Deep dive reports stored in `.claude/agent-memory/<name>/deep-dives/`
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

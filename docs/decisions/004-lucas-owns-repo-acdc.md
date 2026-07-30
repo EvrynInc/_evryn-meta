@@ -1,5 +1,7 @@
 # ADR-004: Lucas Owns evryn-team-agents; AC/DC Becomes Fallback
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Date:** 2026-02-06
 **Status:** Accepted
 **Absorbed from:** Session decisions 17, 22, 23 (2026-02-06)
@@ -24,3 +26,5 @@ Two conflicts needed resolution:
 - DC's CLAUDE.md must be migrated before Lucas's CLAUDE.md is written
 - AC (in `_evryn-meta`) remains as Justin's direct interface for architecture permanently
 - AC/DC protocol docs stay maintained even after Lucas is running
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

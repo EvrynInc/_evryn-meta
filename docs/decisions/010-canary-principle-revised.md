@@ -1,5 +1,7 @@
 # ADR-010: Canary Principle Revised — Opaque Matching Replaces Absolute Prohibition
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Date:** 2026-02-27
 **Status:** Accepted
 **Decision by:** Justin + AC
@@ -157,3 +159,5 @@ And the default posture makes it robust: Evryn doesn't need a reason to not conn
 ---
 
 *Drafted 2026-02-27 by Justin (claude.ai session). Red-teamed across nine attack vectors + one edge case. Formalized by AC.*
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

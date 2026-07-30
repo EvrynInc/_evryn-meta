@@ -1,5 +1,7 @@
 # ADR-014: Operator Module — Slack Only (v0.2)
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Status:** Accepted
 **Date:** 2026-03-02
 **Participants:** Justin + AC
@@ -33,3 +35,5 @@ The security model is structural, not instructional. The trigger script (code) d
 
 - Session doc: `docs/historical/2026-02-24-mvp-build-work-s1-4.md` (Session 3 Decision 1)
 - Trigger composition: ADR-012
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

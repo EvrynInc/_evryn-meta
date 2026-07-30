@@ -1,5 +1,7 @@
 # ADR-026: Investigative Matching — Trust-Bounded Constraint Flexibility
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Status:** Accepted
 **Date:** 2026-04-05
 **Deciders:** Justin, AC2
@@ -49,3 +51,5 @@ Investigative matching does not create information leakage risk because non-matc
 - The balance between advocating and respecting autonomy needs to be in Evryn's identity docs when investigative matching ships. It's a behavioral principle, not just a pipeline rule — Evryn needs to internalize it the way she internalizes the Canary Principle.
 - The "stumble across" pathway means the matching pipeline can't be purely user-initiated. Evryn needs the ability to proactively surface candidates she encounters through other searches — this has implications for how match candidates are cached and flagged across users.
 - Target: v0.3 matching launch or later. Not needed for v0.2.
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

@@ -1,5 +1,7 @@
 # ADR-002: Multilingual Framework Is Sacred Text
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Date:** 2026-02-06
 **Status:** Accepted
 **Absorbed from:** Session decision 8 (2026-02-06)
@@ -17,3 +19,5 @@ The multilingual framework MUST be preserved verbatim. It cannot be rewritten, p
 - Any instance that encounters this file must treat it as read-only
 - Future decomposition of Lucas's system instructions must route this file intact — no compression
 - This is one of very few artifacts in the system with a "do not touch" mandate
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

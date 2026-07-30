@@ -1,5 +1,7 @@
 # ADR-011: Pacific Northwest Ignition, LA Expansion
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Date:** 2026-02-28
 **Status:** Accepted
 **Decision by:** Justin + AC
@@ -51,3 +53,5 @@ Meanwhile, nothing about the LA opportunity has disappeared — it's still the d
 - The gatekeeper model
 - LA as the primary expansion target
 - The long-term vision of cross-domain, cross-geography growth
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

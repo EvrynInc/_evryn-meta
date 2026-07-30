@@ -1,5 +1,7 @@
 # ADR-016: Curated Memory Over Brute-Force History
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Status:** Accepted
 **Date:** 2026-03-02
 **Participants:** Justin + AC
@@ -47,3 +49,5 @@ Each `query()` call gets: Core Memory (always) + Working Memory (current thread)
 - Session doc: `docs/historical/2026-02-24-mvp-build-work-s1-4.md` (Session 3 Decision 6)
 - Memory research: `evryn-team-workspace/shared/projects/product/research/2026.01.30 memory-systems.md` (4-tier design)
 - Infrastructure approach: SDK handles compaction as safety net; we handle composition
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

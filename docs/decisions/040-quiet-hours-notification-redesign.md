@@ -1,5 +1,7 @@
 # ADR-040: Quiet-Hours Notification Redesign — Immediate-Post + DND, Retire the Replay Queue
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Date:** 2026-06-11
 **Status:** Accepted — built + QC-verified GO (evryn-backend `dc/quiet-hours-redesign`, commit `91cc963`). Code deploy + the `notify_queue` table-drop migration are **pending** (Justin-gated; no-rush per 2026-06-11 — daytime testing is unaffected by the old behavior, see Context). The deployed SHA gets stamped here on deploy.
 **Related:** BUILD item 9f (the spec); **supersedes** Wave 3 Item 6 (quiet-hours ping suppression, 2026-05-29) and the 2026-06-01 "ADDITIONAL FIX" (enqueue-instead-of-silent-drop); ADR-037 (dev-first migrations — the table-drop method); informs M1 (the `#emergency-alerts` silent-death detector — simplified by this).

@@ -1,5 +1,7 @@
 # ADR-017: Situation Is Per-Context, Not Per-Person
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Status:** Accepted
 **Date:** 2026-03-05
 **Participants:** Justin + AC
@@ -129,3 +131,5 @@ Data model impact: `profile_jsonb.roles` (structured, multi-role) instead of a s
 - ADR-014: Operator Module — Slack Only (operator channel restriction)
 - ARCHITECTURE.md file tree and Identity Composition section (canonical reference)
 - Session doc: `docs/sessions/historical/2026.03/2026-03-04-identity-writing-s2.md` (archived — decisions captured in this ADR)
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

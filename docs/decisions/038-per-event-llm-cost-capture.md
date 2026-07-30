@@ -1,5 +1,7 @@
 # ADR-038: Per-Event LLM Cost/Token Capture
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Date:** 2026-06-10
 **Status:** Accepted — built + deployed (evryn-backend `23f9858`, prod migration applied 2026-06-10)
 **Related:** ADR-007 (Budget-Based Limits — the inherited principle), ADR-020 (model-tier selection), ADR-037 (dev-first migrations)

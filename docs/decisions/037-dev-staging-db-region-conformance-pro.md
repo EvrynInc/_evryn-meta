@@ -1,5 +1,7 @@
 # ADR-037: Dev/Staging DB + Oregon/us-west-2 Region Conformance + Supabase Pro + Backup Model
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Status:** Accepted — 2026-06-04. Executed on the DB side (prod migrated, dev seeded); production cutover DONE 2026-07-03 (the old East project was deleted after the Oregon cutover proved out).
 
 > **Superseded in part by [ADR-045](045-staging-dedicated-database.md) (2026-07-03; noted 2026-07-24):** this ADR provisioned a SINGLE `Evryn Product — Dev` project used for both dev work AND staging rehearsal. ADR-045 later **split staging into its own dedicated 4th Supabase project** — the staging *runtime* (`EVRYN_ENV=staging`) points at that separate project, while the dev project here stays **admin-tooling / dev-first only** (never the staging runtime's DB). So where this doc says "dev/staging = one project," read: **dev = this project; staging = the separate ADR-045 project.**
@@ -48,3 +50,5 @@ The Free plan also caps an org at **2 active projects** (prod + the Agents dashb
 - **Supabase branching for dev:** rejected — a branch is its own billed instance (no savings for a persistent staging DB) and forces a GitHub/migrations workflow we don't use.
 - **Local Docker Supabase:** rejected as *the* staging surface — local-only (Railway/QC can't reach it); fine as a supplemental dev tool.
 - **PITR add-on ($100/mo):** not warranted at current scale; daily backups suffice.
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

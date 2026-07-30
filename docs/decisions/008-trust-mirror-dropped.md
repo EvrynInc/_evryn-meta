@@ -1,5 +1,7 @@
 # ADR-008: Trust Mirror Feature Dropped (Canary Principle)
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Date:** 2026-02-19
 **Status:** Superseded by [ADR-010](010-canary-principle-revised.md)
 **Decision by:** Justin + AC
@@ -50,3 +52,5 @@ If a user wants to know whether someone is the best mutual match for them, that'
 - **Anonymized Trust Mirror** ("Would you connect someone like me to someone like them?") — Still creates inference pathways. Too easy to narrow down.
 - **General relationship advice** ("What makes a strong partnership?") — This is fine and Evryn will do it naturally. It's just not Trust Mirror.
 - **Standard matching as the answer** — If you want Evryn's opinion on whether someone is right for you, both of you engage with Evryn independently. This is the correct path.
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

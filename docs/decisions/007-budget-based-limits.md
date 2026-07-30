@@ -1,5 +1,7 @@
 # ADR-007: Budget-Based Limits, Not Activity Limits
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Date:** 2025-01-22
 **Status:** Accepted (living principle)
 **Absorbed from:** Old DECISIONS.md, Decision 006
@@ -29,3 +31,5 @@ Money is the constraint, so make money the limit. Use tiered thresholds (alert, 
 - Specific dollar thresholds are configurable and will be tuned during testing
 - This principle applies to both the single-agent (Lucas) architecture and any future multi-agent patterns
 - "Measure what matters, not proxies that get gamed"
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

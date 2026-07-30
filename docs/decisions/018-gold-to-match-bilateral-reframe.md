@@ -1,5 +1,7 @@
 # ADR-018: Triage as Bilateral Matching (Gold ≠ Match)
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Date:** 2026-03-18 (revised 2026-03-19)
 **Status:** Accepted (revised — original proposed renaming gold→match; revision keeps gold, clarifies the lifecycle, adds status lifecycle design)
 
@@ -121,3 +123,5 @@ Two lifecycle refinements land with the runtime-bookkeeping rewrite ([ADR-051](0
 1. **`triage_result` is now canonically written for all three verdicts (gold / edge / pass), not just pass.** Decision #1 above kept `gold` as an immutable classification value, but at v0.2 only `pass` (via the deterministic `record_pass`) actually wrote `triage_result` — gold/edge left it null and lived in `metadata.draft.classification`. ADR-051 has the runtime write `triage_result` for gold/edge at `submit_draft` time, so the prediction-vs-outcome audit (Decision #6) becomes a direct two-field query for every verdict. **`triage_result` stays immutable** — it's still "what Evryn thought at triage time," now recorded uniformly.
 
 2. **`sender_type` (is-there-a-person) and `status` (item disposition) may legitimately diverge.** The status lifecycle (Decision #7) treated `ignore`/`bad_actor` as `sender_type`-driven straight-to-terminal transitions. ADR-051 adds the `handled_by_gatekeeper` verdict — a *real person* (`sender_type=lead`) whose *item* the gatekeeper asked to close (`status=ignored`), e.g. Mark forwarding *"I already took care of this — ignore it."* The two axes carry different meaning and are allowed to disagree; `ignored` on the status axis no longer implies "not a person." (Wave-off from the clustering note-turn is the same shape — status-only `ignored`, person preserved as a lead.)
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

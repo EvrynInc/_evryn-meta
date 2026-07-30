@@ -1,5 +1,7 @@
 # ADR-043 — Lean Reflection in v0.2: runtime-orchestrated curator-consolidation
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 > **PROVISIONAL ADR NUMBER (043).** Minted by AC3a (Lane C / cost) on 2026-06-23; a Glob at QC time confirmed no `043*.md` existed. Several round-2 lanes author ADRs in parallel — if a collision surfaces, **AC0 renumbers at convergence** (filenames differ after the number, so git keeps both). ADR-044 forward-references this ADR as "lean Reflection."
 
 > **How to use this file:** An Architecture Decision Record. It captures *why* the Reflection Module's **consolidation half** was pulled forward from v0.3 to v0.2 as a deliberately-LEAN scope, and the shape it was built in. Read it before touching `src/reflection/`, the `consolidate_profile` RPC, `loadReflectionPrefix`, or `identity/activities/reflection.md`. It extends **ADR-027** (which designed the Reflection Module as v0.3) and pairs with **ADR-044** (the prompt-restructure that this enables).

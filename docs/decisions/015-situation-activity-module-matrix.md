@@ -1,5 +1,7 @@
 # ADR-015: Situation × Activity Module Matrix
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Status:** Accepted (revised 2026-03-05 — both situations and activities on-demand)
 **Date:** 2026-03-02
 **Participants:** Justin + AC
@@ -39,3 +41,5 @@ Trigger composition: `Core.md + person context from Supabase`. Both situation an
 - Identity Writing S2: `docs/sessions/historical/2026.03/2026-03-04-identity-writing-s2.md` (archived — decisions captured in this ADR and ADR-017)
 - Trigger composition: ADR-012
 - Per-context situations and operator security: ADR-017
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

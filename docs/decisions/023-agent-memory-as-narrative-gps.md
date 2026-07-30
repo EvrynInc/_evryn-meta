@@ -1,5 +1,7 @@
 # ADR-023: Agent Memory as Narrative GPS
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Date:** 2026-04-01
 **Status:** Accepted
 **Decision makers:** Justin + AC
@@ -47,3 +49,5 @@ We studied Claude.ai's user memory structure (a narrative profile organized by t
 - New #consolidate protocol created (`shared/protocols/consolidation-protocol.md`)
 - CLAUDE.md memory sections stripped down to orientation + protocol references
 - ARCHITECTURE.md memory section rewritten to reflect new model
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

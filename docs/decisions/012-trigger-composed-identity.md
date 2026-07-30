@@ -1,5 +1,7 @@
 # ADR-012: Trigger-Composed Identity (Option A)
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Status:** Accepted (revised 2026-03-05 — simplified trigger, on-demand modules)
 **Date:** 2026-03-02
 **Participants:** Justin + AC
@@ -143,3 +145,5 @@ Full SDK feature usage:
 - **Use:** `query()`, hooks, MCP servers, subagents
 - **Don't use:** `settingSources`, Skills framework, presets, SDK sessions for user-facing interaction continuity (relationship continuity lives in Supabase, not SDK session persistence — each `query()` call is a discrete task)
 - **Adopt as design principles:** Skills best practices for conciseness, progressive disclosure, degrees of freedom, one-level-deep references
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED

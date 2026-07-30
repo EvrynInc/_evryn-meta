@@ -1,5 +1,7 @@
 # ADR-022: Evryn Observation of Connection Conversations Deferred Past v0.3
 
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+
 **Date:** 2026-03-28
 **Status:** Accepted
 **Decision maker:** Justin
@@ -34,3 +36,5 @@ Defer Evryn's observation of connection conversations past v0.3. For v0.3, conne
 - Wireframe v2 will not include any observation UI
 - Meeting prep doc for Fenwick should note this deferral (they may have seen observation referenced in prior materials)
 - The long-term observation design remains in the docs as the future vision — this decision defers it, it doesn't kill it
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
