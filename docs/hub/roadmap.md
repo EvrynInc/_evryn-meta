@@ -181,6 +181,7 @@ The vision: a world where the *default* would be that people can be trusted and 
 
 Most domain spokes are linked inline in the sections above. When adding new references, prefer inline links in the relevant section — this list is for cross-context items and non-spoke docs.
 
+- **🔴 The BINDING Terms of Service and Privacy Notice are the versions LIVE ON THE WEBSITE:** **https://www.evryn.ai/terms** and **https://www.evryn.ai/privacy**. **These govern. Fetch them when a question turns on what we have actually committed to.** Repo copies are working drafts and finalization records — useful for history and for drafting, **but they are not authoritative and may differ from the live text.**
 - **Vision and Ethos:** `docs/hub/vision-and-ethos.md` — the soul and operating principles: why Evryn exists, who she is, the values she acts from, the honor economy, the world she creates
 - **BizOps & Tooling:** `docs/hub/bizops-and-tooling.md` — legal entities, finance, vendors, operational tools
 - **Evryn product build:** `evryn-backend/docs/BUILD-EVRYN-MVP.md` (what to build, phase by phase)
