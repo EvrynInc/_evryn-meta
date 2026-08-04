@@ -19,12 +19,17 @@ Before relying on any repo (especially after switching machines): `git fetch`, t
 
 ```bash
 cd /path/to/Evryn/Code
-for d in _evryn-meta evryn-backend evryn-dev-workspace evryn-quality evryn-ops \
-         evryn-team-workspace evryn-team-agents evryn-website \
-         evryn-langgraph-archive evryn-prelaunch-landing; do
-  [ -d "$d" ] && echo "$d -> $(git -C "$d" branch --show-current)"
+# Enumerate EVERY git repo/worktree present — DYNAMIC, never a hardcoded list.
+# Why: a hardcoded list (a) just duplicates docs/repo-inventory.md and (b) silently omits a repo the moment one is added
+# `.git` is a directory in a normal repo and a FILE
+# in a linked worktree, so `-e` catches both (worktrees get surfaced too).
+for d in */; do d=${d%/}; [ -e "$d/.git" ] || continue
+  echo "$d -> $(git -C "$d" branch --show-current)"
 done
-# Expected: all 'main' EXCEPT evryn-team-agents -> master (frozen).
+# Cross-check the result against docs/repo-inventory.md (the canonical repo list +
+# each repo's canonical branch). Expected: all 'main' EXCEPT evryn-team-agents ->
+# master (frozen); worktrees show whatever branch they hold. A repo NOT in the
+# inventory, or a branch that isn't its canonical one, gets surfaced to Justin.
 ```
 
 **Why this matters:** the 2026-06-17 lobotomy was half a machine-state failure — `evryn-quality` sat on a stale forked `master` while the good manual was on `main`, invisible because "push/pull" only moves committed work on the *current* branch. A branch check at startup makes that class of failure detectable instead of invisible (ADR-042 / AC6 §7).
@@ -409,8 +414,15 @@ All operational learnings go directly to the appropriate repo files (proposed, w
 - **Full per-agent worktree rollout** across all agents is post-Mark Lucas territory (Linear EVR-110); ad-hoc per-loop worktree setup (the pattern above) is fair game any time.
 - **`origin/<branch>..<branch>` CANNOT see a branch that has no remote at all — a never-pushed branch is INVISIBLE to it, and to `git status`/`git fetch` on `main`.** When you batten down "push everything," the usual "am I ahead of origin?" check silently misses any local branch that was never pushed even once (a subagent's build branch, another agent's scratch branch). **On a shared machine that is exactly where a crash loses real work.** To find machine-only branches, enumerate every local branch and check each for a remote:
   ```bash
-  for d in <repos>; do git -C "$d" for-each-ref --format='%(refname:short)' refs/heads | while read b; do
-    git -C "$d" rev-parse --verify -q "origin/$b" >/dev/null || echo "$d: $b — NEVER PUSHED"; done; done
+  cd /path/to/Evryn/Code   # DYNAMIC repo enumeration — never a hardcoded/<repos> list (same reason as the sync-check above).
+  for d in */; do d=${d%/}; [ -e "$d/.git" ] || continue        # every repo AND worktree ('.git' = dir or file)
+    git -C "$d" for-each-ref --format='%(refname:short)' refs/heads | while read b; do
+      if git -C "$d" rev-parse --verify -q "origin/$b" >/dev/null; then
+        a=$(git -C "$d" rev-list --count "origin/$b..$b" 2>/dev/null || echo 0)   # also catch a pushed branch with NEW local commits
+        [ "$a" != 0 ] && echo "$d: $b — $a AHEAD of origin/$b"
+      else echo "$d: $b — NEVER PUSHED (no remote)"; fi
+    done
+  done
   ```
   *(2026-07-16: a "push everything" batten-down that checked `origin/main..main` per repo still left **six** never-pushed branches across two sessions — one with 7 commits of ACf1 memory work that existed only on that machine. The current-branch check is not enough; enumerate all branches.)*
 
