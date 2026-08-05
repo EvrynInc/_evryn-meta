@@ -575,4 +575,30 @@ When a DC/QC subagent works in a dedicated worktree, **verify the shared/canonic
 
 ---
 
+## Gating Other Agents' Work
+
+### A Clean Merge Is Not A Finished Lane
+
+**The failure, stated plainly:** a conductor merged a lane's branch into `main` because the merge was mechanically clean — zero conflicts, `merge-tree` verified, typecheck green afterward. **The lane was still working.** Two more commits landed on that branch minutes later, one of which was a *correction to four wrong claims in the docs the merge had just shipped* — including a paraphrased alert string an operator would search for and never find, and a troubleshooting row describing a symptom that cannot occur. Cost: other agents' time re-doing the merge, a set-down written against a state that was already wrong, and a stretch where `main` carried documentation that actively misled.
+
+**Why "no conflicts" felt like sufficient evidence, and isn't.** A conflict check answers *"do these two sets of file edits collide?"* It cannot answer *"is this branch finished?"* — those are different questions with no relationship between them. A lane that is 70% done and a lane that is 100% done produce **identical** conflict output. So the check that felt like diligence was, for the actual decision being made, **no evidence at all** — a close relative of the "green that's indistinguishable from didn't-run" pattern above, except here the check ran fine and simply answered a question nobody asked.
+
+**The aggravating factor — and the reason this belongs in a patterns file:** the conductor **had not read the runtime.** Under a scout/conductor split (where one agent holds the codebase and the conductor holds the map), the conductor's *only* signal about lane readiness is what the lane says. **A lane's own "done" is therefore not a nicety to check — it is the entire evidence base.** The thinner your own context, the more load-bearing the other agent's word becomes, and the *less* entitled you are to substitute a mechanical proxy for it.
+
+**⇒ The rule: NEVER merge a branch an agent is still committing to. Confirmation of completion comes from the lane, not from git.** A branch tip is a snapshot of a moving thing; asking costs one message.
+
+### A Question Attached To An Approval Is Still A Question
+
+Same incident, the authorization half. The conductor proposed a merge; the reply was **"Sure. Do you want each of them to do their own merges…? Who first?"** The conductor read the *"Sure"* as clearance and executed in the same turn — while the rest of the message was an open question about the mechanics of the very thing being authorized.
+
+**The tell:** an approval that *arrives with a question attached to it* is a signal the approver is still deciding **how**, even if they've settled **whether**. Executing on the "whether" while the "how" is live is how an agent ends up doing the right thing the wrong way. **Answer the question; wait; then act.** Assent does not extend past the sentence it's in, and authorizations do not stack.
+
+### The Set-Down You're Reading May Already Be Stale
+
+A corollary that nearly caused a second incident the next morning. The lane's set-down document said its work was **NOT merged** and named specific commits as unmerged. Both statements were true when written and false within the hour — the lane finished the merge afterward, and the commits landed via a *rebase*, so they arrived under **different SHAs than the set-down named.** A conductor checking those exact SHAs found them "not on `main`" and briefly concluded real work had been lost.
+
+**Two durable moves:** (1) **verify by property, not by identifier** — the same set-down usefully specified two exact strings to grep in a shipped doc, and *those* settled it instantly when the SHAs could not; (2) treat any handoff as **"true as of its timestamp,"** and re-verify anything load-bearing against the live tree before acting. **When you write a set-down, give the reader a property to check, not just a commit to look up** — identifiers don't survive a rebase; behaviors do.
+
+---
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
