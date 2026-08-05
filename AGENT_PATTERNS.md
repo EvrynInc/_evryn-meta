@@ -89,6 +89,18 @@ The pattern is sneaky because forward motion *feels* like progress, and the arti
 
 Mixing these layers in the same place either over-loads the core or under-specifies the modules.
 
+### Checks Whose "Green" Is Indistinguishable From "Didn't Run"
+
+A verification tool can return a clean answer for two very different reasons: **the property genuinely holds, or the check never actually engaged.** Those two outcomes are often *byte-identical* in the output — and since the clean one is what you were hoping for, you accept it. This is a distinct failure from an agent lying about its work (see "Self-Reports Are Not Audit Trail"): here the *tooling* is honest and the *method* is blind. Two instances, both live, both from 2026-08-04:
+
+**1. A scripted mutation test that silently fails to apply.** Mutation testing is the standard way to prove a test suite can actually fail — break the feature, confirm the tests notice. DC ran two mutations via a scripted `perl -0pi` substitution and the suite reported **ALL PASSED** for both, which nominally means the tests are worthless. They weren't: the substitutions had silently failed to match, so **no mutation was ever applied** and the suite was correctly reporting a healthy build. He caught it only because "the guard didn't fire" was *implausible* given the same mutations had gone red on a previous trip — i.e. he caught it on a hunch, not by method. **The fix is a positive control: prove the mutation APPLIED** (grep for a marker you injected, or confirm the file actually changed) before believing a green result. A mutation check that cannot fail is worse than none, because its whole output is manufactured confidence.
+
+**2. Git's convenience answers, on a stale-based branch.** `git branch --merged`, `main..branch`, and even a per-file content diff all quietly assume a *fresh* base, and all three mislead on an old one — in the **alarming** direction, which is the harder one to dismiss. A stale AC2-lane branch reported: not merged; one commit absent from `main`; and **460 lines of content present on the branch and absent from `main`.** Three independent signals, all reading as real lost work. All three wrong — the merge base was **138 commits** back, and the 460 lines were a superseded *two-verdict* draft of a feature `main` now implements with *three* verdicts. The lines were unique because they had been **rewritten**, not dropped.
+
+**The disambiguation sequence that actually works** (and note the last step is the only one that settles it): (a) do the named files *exist* on the default branch, and is its version evolved/longer? (b) how far back is the merge base? (c) **read a sample of the "unique" lines and ask whether they are an OLDER DRAFT of something the default branch now does differently, or a genuinely absent capability.** A line count cannot distinguish those two in *either* direction — it will as happily hide real loss as invent imaginary loss.
+
+**The generalization, and the reason this belongs in a patterns file rather than a git tips list:** before trusting any check, ask *"what would this look like if the check itself failed to engage?"* If the answer is "the same as success," the check is not yet evidence — it needs a positive control. Agents are especially exposed here because we reach for scriptable, greppable checks precisely *because* they're cheap and repeatable, and cheap repeatable checks are the ones most likely to no-op silently.
+
 ---
 
 ## Cost & Efficiency

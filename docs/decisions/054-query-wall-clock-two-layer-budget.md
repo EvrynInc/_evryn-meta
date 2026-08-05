@@ -7,7 +7,7 @@
 **Date:** 2026-08-04
 **Author:** AC2 (cost/hardening lane)
 **Reviewers:** DC (build), QC (independent fresh-eyes review — GO/conditional, three findings), Justin (design steer: he pushed back on the original flat cap and asked for a per-turn watchdog to be evaluated instead)
-**Related:** [ADR-041](041-m1-silent-death-detection.md) (M1 silent-death detection + the circuit-breaker halt this deliberately does NOT touch), [ADR-043](043-lean-reflection-v0.2.md) (LEAN Reflection — the caller that gets a per-call ceiling override), [ADR-047](047-v0.2-security-bulkheads.md) (the WebFetch/WebSearch egress deny-hook, which can allow/deny but structurally cannot time-bound a tool), [ADR-049](049-daily-clustering-pipeline.md) (Clustering — the note-turn pathway that nests a query inside a query). Build spec + prior review: `_evryn-meta/docs/working/2026.07.16-ac2-dc-webfetch-timeout-brief.md`. Sprint handle: **Step 94**.
+**Related:** [ADR-041](041-m1-silent-death-detection.md) (M1 silent-death detection + the circuit-breaker halt this deliberately does NOT touch), [ADR-043](043-lean-reflection-v0.2.md) (LEAN Reflection — the caller that gets a per-call ceiling override), [ADR-047](047-v0.2-security-bulkheads.md) (the WebFetch/WebSearch egress deny-hook, which can allow/deny but structurally cannot time-bound a tool), [ADR-049](049-daily-clustering-pipeline.md) (Clustering — the note-turn pathway that nests a query inside a query). Build spec + prior review: `_evryn-meta/docs/sessions/historical/2026.07/2026.07.16-ac2-dc-webfetch-timeout-brief.md` *(retired to historical 2026-08-04 once Step 94 shipped — it describes the SUPERSEDED flat-cap design, kept for provenance only; this ADR is the record of what actually shipped)*. Sprint handle: **Step 94**.
 
 ---
 
