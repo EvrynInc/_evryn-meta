@@ -14,6 +14,13 @@
 
 ---
 
+## 2026-08-04 (ACf1 — orchestration protocol: AC hand-builds the explicit load list FROM a maintained per-build cascade; + DC/QC manual notes)
+
+- **`docs/protocols/ac-orchestration-protocol.md` "When the target is a SEPARATE codebase" — corrected (`7226d2e`; Justin's catch).** The maintained per-build cascade (`docs/protocols/load-cascades/<build>-full-cascade.md`) is AC's **SOURCE** for assembling the load; it does NOT replace the explicit list. AC reads the cascade, resolves it to the concrete files (live-enumerating BOTH halves at spin time), and hands the subagent the **EXPLICIT, per-file, line-spanned enumeration** — NEVER *"execute the cascade in full,"* which hands load-discovery back to the subagent and reliably UNDER-loads it. *(Codified after a DC pointed at the team-runtime cascade under-specified its own load — team-runtime memory item-(c) spin.)* — [ACf1 · Justin]
+- **DC + QC manuals** (`evryn-dev-workspace/CLAUDE.md` `32de2fb` · `evryn-quality/CLAUDE.md` `b6c91ca`) got matching light notes: for a NON-product build target, your AC hands you the explicit `#cascade-override` list (assembled from that build's cascade) — load exactly and fully what's named; for an agentic target it covers both halves. *(Those two repos have no CHANGELOG — recorded here as the cross-repo change's home.)* — [ACf1]
+
+**Operator-relevant:** process/protocol docs only — no runtime code, nothing deployed. Evryn prod remains `v0.2.9`.
+
 ## 2026-08-04 (AC2 — ADR-054 written: the two-layer wall-clock budget on `runEvrynQuery`, SPRINT Step 94)
 
 - **New [ADR-054](docs/decisions/054-query-wall-clock-two-layer-budget.md)** (`8f9a684`) — the decision record for the hung-call guard merged to `evryn-backend` `main` today (code detail in that repo's CHANGELOG). Records **why the shape changed**: a flat whole-query cap cannot tell "stuck" from "working hard," so it cut off legitimately long work and silently contradicted `reflection.md`'s *"never a hard cap"* while **ratcheting** on the Reflection path. Replaced by a **silence watchdog** (primary) + a generous **absolute ceiling** (backstop, per-call overridable). — [AC2]
