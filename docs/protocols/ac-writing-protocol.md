@@ -70,6 +70,19 @@ When writing any instruction, ask: does it have all three? If not, it will decay
 
 **Every document gets a "how to use this" header** explaining what belongs in it, what doesn't, and how to write it. (For *where new content goes*, the header points at the routing table in CLAUDE.md — it doesn't re-litigate it.)
 
+**🔴 Backticks in a shell commit message are COMMAND SUBSTITUTION — they will silently execute and blank your text.** *(Cost AC0 a mangled commit, 2026-08-05.)* We write in markdown, so `` `like this` `` is reflexive — but in `git commit -m "…"` under bash, a backticked span is **run as a command** and replaced by its output. Writing ``git commit -m "…a passing `npm run typecheck` is not evidence…"`` actually *ran* `npm run typecheck`, and the commit landed with that clause **deleted**. It fails silently: the commit succeeds, and you only notice if you read the message back.
+- **The fix — use a heredoc for any commit message containing backticks:**
+  ```bash
+  git commit -F - <<'MSG'
+  Subject line here
+  
+  Body with `backticked` identifiers, $variables, and "quotes" — all literal.
+  MSG
+  ```
+  The quoted `<<'MSG'` delimiter is what disables *all* substitution. Unquoted `<<MSG` does not.
+- **Same trap, same fix, for `$`** (variable expansion) and `!` (history expansion in interactive shells). **Any commit message quoting code — which is most of ours — should use the heredoc by default**, not as a special case.
+- **Verify after writing one:** `git log -1 --format=%B` and confirm the text you meant is actually there. A commit message is a durable record other agents read; a silently truncated one misleads exactly as a truncated doc does.
+
 **File naming.** Documents with a temporal quality — session docs, briefs, anything tied to a point in time — start the filename with the date: `YYYY.MM.DD-name.md` (sortable, immediately clear when it was created). Living documents that evolve continuously (a spoke, a build doc) skip the date prefix and carry an internal "last updated" line instead. Archive copies get a full timestamp name; the live file keeps its stable name.
 
 ---
