@@ -38,6 +38,8 @@
 
 **The payoff.** The AC-under-AC model doubles as the context-budget strategy — the lane/scout carries the territory; the conductor stays light enough to last the whole build. When you feel the runtime pulling into your own context, ask whether a subagent should hold it instead.
 
+**Payoff, part 2**: Once your subagent is fully loaded, when your job starts to shift and you need new context, you can resume your scout and ask him what runtime you need to read personally, to continue *competently*. **Take advantage of this. Remember, you're often flying a little blind - being able to carefully alleviate just enough of that blindness at just the right moment is priceless.**
+
 ## ⚑ Flag rule
 
 If **anything** looks off as you load — a doc contradicts `current-state`, the runtime contradicts a doc, the active build/sprint you find here disagrees with `current-state`, any doc recommendation is stale, a link is broken, an identity file instructs a tool the code no longer exposes — **surface it to Justin. Never silently resolve it.** The divergence is often exactly the thing that was about to bite.
