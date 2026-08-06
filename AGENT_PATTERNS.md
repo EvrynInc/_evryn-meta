@@ -601,4 +601,21 @@ A corollary that nearly caused a second incident the next morning. The lane's se
 
 ---
 
+## The value of a review layer is ADVERSARIALNESS, not headcount — and the layer that misses is reliably the one that already checked
+
+*(ACf lane, 2026-08-05/06 — the second independent run of the AC-under-AC pattern, and it reproduced the first run's result exactly.)*
+
+**The observation, stated plainly: across two multi-layer runs, every one of the best catches came from BELOW the top agent, and in both runs the top agent had already checked the very thing that was wrong and passed it.**
+
+The sharpest instance is worth carrying because of *how* it failed. A lane AC added a guard test to pin a safety-critical call site, then mutation-tested it: it bypassed the call, the guard went **RED**, and the lane correctly concluded the guard was real. Its **QC ran the same mutation with one difference** — she left a trailing `// velocityGate(...)` comment behind — and the guard went **GREEN**. The guard's comment-stripper handled block and whole-line comments but not *trailing* ones, so it counted a commented-out call as the live one and **passed over deleted code**.
+
+**Nobody was careless. The head agent's mutation was simply less adversarial than the reviewer's**, and no amount of re-reading would have closed the gap — the two mutations differ by a fragment of a comment. **⇒ The lesson is not "add more reviewers." It is that a review layer earns its cost only when it attacks DIFFERENTLY from the layer above it**, and the cheapest way to guarantee that is to have it *construct its own mutations* rather than verify the ones it was handed.
+
+**Three practices that follow:**
+1. **Strenuously avoid having a reviewer inherit the author's test inputs.** If you hand a reviewer the mutation you already ran, you have bought a second opinion on your own imagination. Ask for *its* mutation.
+2. **A guard that passes your mutation is evidence, not proof.** The question is always *"what's the nearest mutation I did NOT try?"* — for a text/static guard, that is almost always a **comment or whitespace variant**, because comment-stripping is where static guards actually break. *(This same shape has now bitten three times in one codebase, twice inside guards written specifically to close the previous instance of it.)*
+3. **Expect the top of the chain to be the weakest reviewer of the details, and design for it.** The head holds the most context and the least proximity to the code — which is exactly the trade that makes it good at framing and bad at catching a regex flaw. **A head AC that finds itself agreeing with everything below it has probably stopped adding review value and should say so** rather than performing a check it cannot actually perform.
+
+---
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED

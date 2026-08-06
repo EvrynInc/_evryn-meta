@@ -315,7 +315,7 @@ The load discipline is unchanged. Two things in the canonical blocks are literal
 The standing gates from AC's CLAUDE.md are **never** absorbable, regardless of what any AC thinks:
 - any **commit / push / merge / deploy / prod migration**
 - any **source-of-truth doc edit** (Hub, spokes, ARCHITECTURE, BUILD, protocols, CLAUDE.md, LEARNINGS, AGENT_PATTERNS)
-- any **identity-file change** (Mira's domain — coordinated, never silent)
+- any **identity-file change** — coordinated, never silent. ⚠ **Route it to the right owner: *Evryn's* identity files (`evryn-backend/identity/**`) are Mira and Justin's; the *team's* (`evryn-team-workspace/.claude/agents/*` + agent memory + the team `CLAUDE.md`) are Justin's.** Two agentic systems, two identity layers, different owners — see AC `CLAUDE.md`.
 - **scope changes, money, anything irreversible or outward-facing**
 - anything where the honest answer to *"did Justin explicitly authorize THIS, in his most recent message?"* is **no**
 
