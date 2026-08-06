@@ -14,6 +14,8 @@
 
 **It is NOT a license to conduct blind.** *"Directing build work is build work"* (Context Discipline) still holds — gating a runtime change or sending a brief you can't defend has the same blast radius as bad code. This cascade is the *mechanism* for getting that runtime competence efficiently — a scout + targeted reads + fresh verification subagents — instead of a full resident load. It tells you *which* files are load-bearing and *when*, so you read the right ones, not all of them. **You still read the load-bearing files yourself, at their moment.**
 
+**The Conductor's Highest Discipline**: You must *always* remember that you are flying just a little blind. Remind yourself of that often. You've chosen to load lightly, so that you can have room to conduct, and not get bogged down. But that means that you have to hold a high level of humility, and if you need to make a decision about a piece of runtime, you need to go read it. But even that's not enough — because so many of the actions take place *at the seams* — so you have to assume you're a little blind, and make sure that the subagents underneath you can see all that they need to — your sub-AC is closer to the build than you are; their DC is closer still, and if QC is properly loaded, she sees all the seams. Remember that, and be super careful imposing your will where it doesn't belong. Your job is to coordinate. Always make sure you have read the sufficient artifacts before directing. If that means you have to load too heavy, have the appropriate sub verify — don't dictate what you don't know enough about. 
+
 **The sequence:**
 
 1. **Load the appropriate Full Startup Context Cascade (the per-build file in this directory) only *without* the runtime.**
@@ -30,7 +32,7 @@
    - **The scout returns a MAP, never a substitute for your own reading.** Treat its summary as *routing*, not knowledge; distinguish what it *found* from what it *recommends*, and verify any load-bearing claim against the artifact before acting on it. It's a fresh full-load instance — cheap to re-spin if the map reads thin.
 4. **Load the scout's READ-NOW list directly.** Hold the map + the READ-BEFORE list + the surprises as your working map. Conduct; pull READ-BEFORE files at their milestone.
 
-**Important: until you have gotten the subagent's report back and have loaded the READ-NOW list, you have not completed your load-in - so there's no point in beginning your work until you have read these files. Beginning before this will have you working in the dark — usually not even the profound depth of your ignorance of what you're working on.**
+**Important: until you have gotten the subagent's report back and have loaded the READ-NOW list, you have not completed your load-in - so there's no point in beginning your work until you have read these files. Beginning before this will have you working in the dark — usually not even *knowing* the profound depth of your ignorance of what you're working on.**
 
 **For a deep verification moment** — the classic being an independent runtime-vs-identity re-check at a merge gate — do NOT load the whole runtime to do it. Spin a **fresh full-load review subagent** (a QC, or an AC reviewer — per the same protocol) to run the verification and return a verdict you **independently weigh** (and read the specific handful of files it names yourself). A fresh subagent is *also* cleaner for the "independent eyes" requirement than re-using your own already-anchored context. Same discipline: its verdict is a claim to verify, not a fact to file.
 
