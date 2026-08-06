@@ -51,7 +51,8 @@ When Justin says `#lock` or it's time for a checkpoint:
 19. **Settings.local.json cleanup** — Check for `.claude/settings.local.json` in the current repo. This file silently accumulates one-off command approvals at runtime. Delete it if it exists — permissions belong in `.claude/settings.json` (in git), not in local overrides. If it contains secrets (API keys, UUIDs that were auto-saved), flag to Justin before deleting.
 
     **Worktree hygiene.** For each repo you (or the agents you drove) touched, run `git -C <repo> worktree list`. **Reap stale worktrees** — any whose branch is fully merged into the default branch and whose tree is clean: `git worktree remove <path>` + `git branch -d <branch>` (the lowercase `-d` self-guards, refusing an unmerged branch — if it refuses, the branch has unmerged work; stop and surface it). Leave only the canonical tree + any standing per-agent worktree. The *per-loop* reap (remove right after a merge) lives in `_evryn-meta/CLAUDE.md` (Worktree & Branch Discipline); this #lock step is the periodic safety-net for leftovers that slipped through.
-19a. **🔴 SUBAGENT CLOSE-OUT — if you are an orchestrator `#lock`ing before your own re-spin, this is a HARD GATE. Do it BEFORE the fragment sweep, while you still have room to act.** *(Added 2026-08-06 at Justin's direction.)*
+20. **Fragment sweep — a *careful, thorough* pass, not a "quick" one.** The temptation at the end of a long session is to skim this as a formality — **resist that.** The category-based steps above catch what you *remember* happened; this pass exists to catch what you *forgot you forgot*, and you only catch that by actually re-reading the whole conversation, beat by beat, with attention. A rushed fragment sweep is the same as no fragment sweep — the fragments it's meant to catch are exactly the ones a skim misses. **Budget real time for it.** Scroll back through the full conversation and look for: intentions that got derailed, decisions that only live in chat, action items acknowledged but never recorded, things Justin asked for that got handled conversationally but never persisted. Resolve or route anything you find.
+21. **🔴 SUBAGENT CLOSE-OUT — if you are an orchestrator `#lock`ing before your own re-spin, this is a HARD GATE. Do it AFTER the fragment sweep — that sweep routinely surfaces the very thing an agent still needs to record.** *(Added 2026-08-06 at Justin's direction.)*
 
     **The fact that makes this urgent: subagent resume is SESSION-BOUND.** Every agent you spawned becomes **permanently unreachable** the moment your session ends. **A returned report is NOT persistence** — it lives in your transcript, which dies with you. **Only a committed file survives.** So anything that only *that agent* can do must happen now, or it falls to an instance with none of its context — or doesn't happen at all.
 
@@ -66,17 +67,14 @@ When Justin says `#lock` or it's time for a checkpoint:
 
     **⚠️ The mirror of that:** an agent **someone else** spawned is unreachable to *you* the moment *their* session ends. **Route anything you need from it through its orchestrator, not directly** — and don't put it on your own owed-list.
 
-    **PEERS ARE NOT YOURS.** Another orchestrator running their own command structure (a parallel head AC on a different build) is a **peer**. **Exchange cross-domain findings freely — that channel catches real things neither of you would find alone — but do not task them, sequence them, gate their merges, or carry their owed items in your list.** Spending your context on a domain you have not loaded duplicates or contradicts someone who has.
-
     **Record the ledger in your handoff, not just in chat** — including, for each agent, what a fresh instance should check if the close-out *didn't* land (e.g. *"if that worktree still exists, the reap failed; here's how to finish it"*). **A close-out you can't verify after the fact is a close-out you have to trust.**
 
-20. **Fragment sweep — a *careful, thorough* pass, not a "quick" one.** The temptation at the end of a long session is to skim this as a formality — **resist that.** The category-based steps above catch what you *remember* happened; this pass exists to catch what you *forgot you forgot*, and you only catch that by actually re-reading the whole conversation, beat by beat, with attention. A rushed fragment sweep is the same as no fragment sweep — the fragments it's meant to catch are exactly the ones a skim misses. **Budget real time for it.** Scroll back through the full conversation and look for: intentions that got derailed, decisions that only live in chat, action items acknowledged but never recorded, things Justin asked for that got handled conversationally but never persisted. Resolve or route anything you find.
-21. **Pause for Justin — hard stop. Do not commit yet.** Wait for Justin's clear and present explicit command to "push" or "commit" before this specific commit or push.
+22. **Pause for Justin — hard stop. Do not commit yet.** Wait for Justin's clear and present explicit command to "push" or "commit" before this specific commit or push.
 
     **The test:** *"Did Justin's **most recent message** contain a specific **command** to commit or push?"* If no, summarize what's ready and pause. Workflow instructions ("ping me when you're done," "do the lock," "finish this up," "handle it") describe the work, not the commits — they do not authorize commits. Each commit needs its own affirmative opt-in in the immediately preceding turn; prior authorizations do not stack.
 
     Failure to do this has been shown in the past to **break** important things.
-22. **Commit and push** — Get everything to remote immediately.
+23. **Commit and push** — Get everything to remote immediately.
 
 ---
 
