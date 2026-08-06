@@ -336,6 +336,22 @@ The sub-AC lacks context the head has: cross-lane collisions, sequencing, deploy
 
 **The invariant behind all of it: the absorption itself must be visible.** Justin cannot audit what he was never shown. A head AC's failure mode is not answering too many questions — it's answering them *invisibly*.
 
+### ⏰ The ladder has a CLOCK — front-load the blocking into the day so the night runs unattended
+
+*(Justin's framing, via ACU, 2026-07-16/17; folded here 2026-08-05 after a live run.)*
+
+**The goal, in Justin's words: _"In the day, Justin clears every blocker; overnight, everything just runs and runs."_** That is a *rhythm*, not a feature — and it is the scheduling half of the ladder above. The ladder says *how* a question reaches him; this says *when*, and the two together are what make an unattended night possible.
+
+**The honest ceiling — name it rather than designing around a wish.** The real bottleneck is **mid-build questions, not startup ones.** A lane rarely knows at 4pm every decision it will need by 2am. **So the value of any "clear blockers by day, run at night" scheme is bounded by how many of the night's questions can be ANTICIPATED and pre-cleared** versus how many are genuinely blocking and only surface mid-flight. **Design for *reducing* mid-flight blocks, not for eliminating them** — a scheme that assumes they vanish will strand a lane at 2am and lose the whole night.
+
+**The concrete mechanic:** a head AC spins its lanes in the **late afternoon**; they work until they hit questions; the head **answers everything it competently can** and batches the genuine-Justin calls into **one cleaned, recommend-first ballot**; Justin clears the batch before he steps away; the lanes then run overnight against a **much larger pre-cleared decision surface.** That is the ladder's three buckets with a clock attached — nothing new to build, and the head's absorb-vs-surface discipline is what makes it safe.
+
+**Two things a head AC must do to make the night actually work:**
+- **Tell every lane explicitly that Justin is away, and that it should BATCH rather than block** — *"put genuine-Justin questions in a single recommend-first list in your report; keep advancing everything not blocked."* Without that line a lane treats a blocking question as a stop, and you lose the hours.
+- **Prefer the structural fix over the anticipatory one.** You cannot pre-clear what you cannot foresee — but you *can* make a stranded lane cheap: a current work brief means a dead lane costs a **re-load, not a memory** (see "The work brief"). **Making the fall survivable beats predicting the cliff.**
+
+**⚠️ What this does NOT license:** it is a *scheduling* discipline, never a loosening of the ladder's 🔒 hard floor. Merges, deploys, pushes, source-of-truth edits and identity changes do **not** become absorbable because Justin is asleep — an overnight run does the work that is already cleared and **stops at every gate**, leaving them batched for morning. *(Live 2026-08-05: two lanes spun ~7pm ran to completion unattended, each returning a GO plus a batched question list, with every gate held. The pattern works; the gates are what make it safe rather than reckless.)*
+
 ---
 
 ## The work brief — a sub-AC's communication surface, and the thing that makes re-spins free
