@@ -111,6 +111,7 @@ AC drives DC (build) and QC (review) as **subagents** — protocol `docs/protoco
 
 ## Recent #lock / handoff pointers
 
+- **2026-08-06 (ACf — team-runtime lane; the LIVE ACf handoff) — `docs/working/2026.08.06-acf-acf-handoff.md`.** A fresh standalone replacing `2026.07.21-acf-acf-handoff.md`, which had accreted appendages since July and is **retired to `docs/sessions/historical/2026.08/`** — ⚠️ **any older reference to that July path is stale; this is the live one.**
 - 2026-07-22 night (AC0-26 — ③ DEPLOYED `v0.2.8` + all-repo push batten-down + current-state product-half update [uncommitted] + AC2-brief-bloat recommendation) — `docs/working/2026.07.22-ac0-ac0-handoff.md`
 - 2026-07-20 (AC0-23 → AC0-24 — the split: AC0-23 finishes the ③ merge gate, AC0-24 runs the AC3-under-AC0 experiment + is the merge-takeover fallback) — `docs/working/2026.07.20-ac0-ac0-handoff.md`
 - 2026-07-16 night (AC0 — Gate-A co-sign + Step-78 Half A merge + ACU radar) — `docs/working/2026.07.16-ac0-ac0-handoff.md`
