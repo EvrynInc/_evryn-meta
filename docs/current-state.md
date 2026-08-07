@@ -121,7 +121,7 @@ AC drives DC (build) and QC (review) as **subagents** — protocol `docs/protoco
 - 2026-07-10 (AC0 — Clustering DEPLOYED `v0.2.7` ships-off + `declining.md` live)
 - 2026-06-29 (AC0 — round-2 v0.2-hardening DEPLOYED `v0.2.2`)
 
-*Last #sweep: 2026-04-04 (Lucas) · Last #align: 2026-04-04 (Lucas) — both >7 days, overdue.*
+*Last #sweep: **2026-07-24** (Lucas — the combined sweep+align pass; read-pass run 2026-07-16, reconciled with Justin and merged to `main` in both repos 2026-07-24). Last #align: **2026-07-24**, but only the **build-weighted partial** — the **full ratifying #align is deliberately sequenced to run as part of / after the Meta-Meeting**, which has not yet happened. **Neither is overdue.*** *(Corrected 2026-08-06 by AC0-31 — this line had read "2026-04-04, both overdue" since April and was wrong by ~4 months; the 7/24 pass was the first since 4/04. Sources: `evryn-team-workspace/.claude/agent-memory/lucas/MEMORY.md` 2026-07-24 lock entry · `evryn-team-workspace/shared/projects/helm/2026.06.29-meta-meeting-runway.md` for the after-the-meeting align sequencing.)*
 
 ---
 
