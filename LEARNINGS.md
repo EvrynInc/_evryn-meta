@@ -137,4 +137,10 @@
 
 ---
 
+**An Aging Number in a Doc Is the Likeliest Thing in It to Be False — the Age Is Doing the Work of Making It Feel Verified.** 2026-08-06/07 (AC0-31). Our docs said `#sweep` and `#align` were *"~4 months overdue."* **They were not overdue at all** — the last sweep ran 2026-07-24, thirteen days earlier, and the full `#align` is *deliberately* sequenced after the Meta-Meeting. **The claim had ridden through at least four handoffs, escalating each time — "~26 days" → "~62 days" → "~3 months" → "~4 months" — while nobody re-checked it.** A cheap read-only subagent settled it in two minutes. **Why it generalizes:** a number that grows more alarming with each retelling *feels* like accumulating evidence, when it is actually accumulating unverified inheritance — the growth is arithmetic on a stale premise, not new information. **⇒ When a handoff hands you an aging figure, treat it as the document's weakest claim, not its most urgent one.**
+
+**The same failure, same week, in a form I did not catch until a subagent corrected me: a claim inside a DOCUMENT is an unverified claim.** 2026-08-07. A staging runbook stated a database table *"is NOT yet on staging."* A scout read that sentence and reported it; **I relayed it to Justin as verified.** It was false — the table shipped one day *before* the seed was taken. **Neither of us opened the artifact the claim was about.** ⚠️ **The specific trap:** I had verified two *other* findings at source that same hour and simply did not apply the same standard to this one — **because it arrived inside a document rather than a subagent report, and documents feel settled.** The load-junk rule (an incomplete load makes a subagent's output junk) has an exact twin here: **a doc's claim about an artifact is not evidence about that artifact.** *Promote to:* CLAUDE.md's verify-before-claiming rule, which currently contemplates code and runtime behavior but not *inherited doc claims*. #sweep to evaluate.
+
+---
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED

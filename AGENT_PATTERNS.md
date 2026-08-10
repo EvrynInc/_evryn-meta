@@ -618,4 +618,28 @@ The sharpest instance is worth carrying because of *how* it failed. A lane AC ad
 
 ---
 
+## Consider Removing the Ability to Make the Wrong Choice, Rather Than Instructing Against It
+
+*(2026-08-06, Justin's design. The concrete instance — two-trip subagent loading — is canonical in `docs/protocols/ac-orchestration-protocol.md`; this entry is the transferable shape, not a second copy of the mechanism.)*
+
+**The situation, which recurs constantly:** an agent keeps making a specific wrong judgment. The reflex is to instruct harder — more emphasis, more capitals, a longer explanation of the consequence, an admonition it must read before proceeding. **We had escalated exactly that way for months** on subagent load compliance, ending in an all-caps plea that was, by volume, the largest block in the protocol.
+
+**It did not work, and the diagnosis explains why no amount of additional instruction would have.** Asked *why* it kept skipping files it was told to load, a subagent gave a mechanical answer rather than an attitudinal one: *"I triage the load list against the task as I read it… each item gets implicitly scored against 'will this feed one of the answers I've been asked for?' … I never registered a moment of choosing to drop it."* **⇒ There was no moment of deciding to disobey for an instruction to intervene in.** The judgment was made while planning, below the level the instruction could reach.
+
+**The fix was to remove the INPUT the wrong judgment requires.** Split the spin into two trips and tell the agent **nothing about the work** during the load. It cannot score files against a task it has not been told. **The failure becomes not-performable rather than forbidden.**
+
+**The generalizable questions, in the order worth asking:**
+
+1. **What input does the wrong judgment REQUIRE?** Not *"why does it do this"* — *"what does it need in context to be able to do this at all?"* If you can withhold that input at the moment of risk, you're done.
+2. **Can the moment be split?** Most of these failures happen because two things arrive together that don't have to. Loading and tasking. Building and reviewing. Measuring and deciding. **Separating them in time often removes the failure entirely**, and the separation is usually cheaper than the enforcement it replaces.
+3. **What does the structural version let you DELETE?** This is the tell that you got it right. If the instruction still has to stand alongside the new structure, you have added a mechanism rather than replaced one. Two-trip loading let us delete the pleas, the threats, the re-spin framing and a whole block — **because they had no remaining job.**
+
+⚠️ **Two costs to price in, because both are real:**
+- **A structural fix usually moves the burden rather than eliminating it.** Here, the subagent can no longer drop a file — but it can no longer *notice one the spinner left out* either, for the identical reason. **Name where the burden moved, in the doc, at the time** — a silently relocated burden is worse than the original failure, because nobody is watching the new location.
+- **It may cost something real to run.** Two-trip loading requires resuming the agent, which replays its whole transcript. **That was worth naming as a known price rather than designing around.**
+
+**And the enabling condition, which is why this wasn't possible sooner:** the fix depended on `SendMessage`-resume existing. When subagents were one-shot, load and task *had* to arrive together — **so the entire instructional apparatus was compensating for a constraint that had quietly been lifted.** ⇒ **When a capability lands, re-examine the workarounds built for its absence.** They rarely announce that they are obsolete; they just keep working, badly.
+
+---
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
