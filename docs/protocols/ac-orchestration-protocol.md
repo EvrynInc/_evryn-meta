@@ -88,7 +88,7 @@ This shape has been proven through *a lot* of testing. Honor all six parts — t
    >
    > **Justin's standing rule, 2026-08-06 — verbatim, because the phrasing is the teaching:**
    >
-   > > *"If a subagent doesn't load what they're supposed to, treat their outputs as basically **junk** — make them go back and load, because if they're missing essential context, it **fundamentally damages their judgement** — it's not like it lightly damages it — it **fundamentally** damages it, **invisibly**."*
+   > > *"If a subagent doesn't load what they're supposed to, treat their outputs as basically **junk** — make them go back and load, because if they're missing essential context, it **fundamentally damages their judgment** — it's not like it lightly damages it — it **fundamentally** damages it, **invisibly**."*
    >
    > **The load-bearing word is *invisibly*, and everything below follows from it:**
    >
@@ -252,7 +252,7 @@ The `<identity>`/`<mandatory_load>`/`<task>`/`<questions_first>`/`<receipts>` bl
 
 *(2026-06-22: AC condensed these blocks for a Workflow audit and replaced the "never proceed half-loaded" gate with a "set load_complete=false and proceed" escape hatch. 5 of 8 reviewers used the hatch to skip a load-bearing build doc + truncate ARCHITECTURE — a massive token-burning compromised pass. The wording AS WRITTEN would have prevented it. AC's job is to USE it, not improve it.)*
 
-🔴 **The discipline the load gate used to demand of the subagent now falls entirely on YOU, the spinning agent — and two-trip loading RAISES that stake rather than lowering it.** The subagent can no longer drop a file, because it cannot tell which one to drop. **But it also can no longer notice a file you left out**, for exactly the same reason: it doesn't know what the work needs. **Your list is now the whole load, with no second line of defence behind it.**
+🔴 **The discipline the load gate used to demand of the subagent now falls entirely on YOU, the spinning agent — and two-trip loading RAISES that stake rather than lowering it.** The subagent can no longer drop a file, because it cannot tell which one to drop. **But it also can no longer notice a file you left out**, for exactly the same reason: it doesn't know what the work needs. **Your list is now the whole load, with no second line of defense behind it.**
 
 So when you shave a block to "save tokens," drop a standing file from a list because it "looks irrelevant," or assemble a thinner cascade than the agent's own manual demands, **that omission is now simply invisible — to it and to you.** Under the old model a well-behaved subagent might have flagged the gap; under this one there is nobody left to catch it. The blast radius is every subagent you spin and everything they ship.
 
