@@ -21,7 +21,7 @@
 - **Incorporation:** via Clerky ($800 one-time). Still used for some corporate filings; Fenwick handles most legal work now.
 - **Trademark:** filed via LegalZoom
 - **Age requirement:** 18+ for launch. May consider serving younger users in the future with parent-administered accounts, once there's team and revenue to handle the compliance requirements.
-- **Terms of Service & Privacy Notice:** v0.2 finalized with Fenwick (April 2026). Live at [evryn.ai/terms](https://evryn.ai/terms) and [evryn.ai/privacy](https://evryn.ai/privacy). Finals in `docs/legal/Terms-and-Privacy/`. Drafts and working docs in `evryn-team-workspace/shared/projects/legal/terms-and-privacy/`. Posted versions archived in `evryn-website/archive/legal/`. Phase 2 (v0.3) legal work in progress.
+- **Terms of Service & Privacy Notice:** v0.2 finalized with Fenwick (April 2026). Live at [evryn.ai/terms](https://evryn.ai/terms) and [evryn.ai/privacy](https://evryn.ai/privacy). **The binding text is the posted text, and you read it from `evryn-website/app/terms/page.tsx` and `evryn-website/app/privacy/page.tsx`** — those files are the deployed artifact, so don't WebFetch the pages, and don't treat the Fenwick deliverables in the team workspace as authoritative (they are drafts and differ from what was posted). Every superseded posted version, and the window it was live: `evryn-website/archive/legal/README.md`. Drafts and working docs: `evryn-team-workspace/shared/projects/legal/terms-and-privacy/`. Phase 2 (v0.3) legal work in progress. *(Pointer corrected 2026-08-10 by Nathan — this line said "Finals in `docs/legal/Terms-and-Privacy/`", a directory that no longer exists.)*
 
 ---
 

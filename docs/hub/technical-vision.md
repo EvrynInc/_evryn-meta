@@ -258,7 +258,7 @@ The commitments we can make structurally:
 - Clear terms and consent mechanisms
 - Appointed DPO function
 
-*v0.2 Terms of Service and Privacy Notice finalized with Fenwick (April 2026). Finals in `docs/legal/Terms-and-Privacy/`. Drafts and working docs in `evryn-team-workspace/shared/projects/legal/terms-and-privacy/`. Phase 2 (v0.3) legal work in progress.*
+*v0.2 Terms of Service and Privacy Notice finalized with Fenwick (April 2026). The binding text is the posted text — read `evryn-website/app/terms/page.tsx` and `evryn-website/app/privacy/page.tsx`, which are the deployed artifact; posted-version history is in `evryn-website/archive/legal/README.md`. Drafts and working docs in `evryn-team-workspace/shared/projects/legal/terms-and-privacy/`. Phase 2 (v0.3) legal work in progress. (Pointer corrected 2026-08-10 by Nathan — this line said "Finals in `docs/legal/Terms-and-Privacy/`", a directory that no longer exists.)*
 
 ---
 

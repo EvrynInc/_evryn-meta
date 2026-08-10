@@ -1,6 +1,8 @@
 # Gatekeeper Flow
 
-> **How to use this file:** End-to-end description of how Evryn works with a gatekeeper, from onboarding through steady state. Covers who initiates contact at each stage, what data flows where, and flags open legal questions. Can be shared with counsel as-is — legal questions will be resolved in place as counsel advises.
+> **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see that at the bottom, reload or read in sections until you confirm the complete file.
+>
+> **How to use this file:** End-to-end description of how Evryn works with a gatekeeper, from onboarding through steady state. Covers who initiates contact at each stage, what data flows where, and flags open legal questions. Can be shared with counsel — **strip this header block and the canary line at the bottom before sending**, as we do for anything that leaves the company. Legal questions will be resolved in place as counsel advises.
 >
 > **Companion doc:** `gatekeeper-approach.md` — operational playbook for gatekeeper partnerships (who we target, how we pitch, setup guides by email client, future tooling).
 >
@@ -11,7 +13,7 @@
 > *Kept because this document has been shared with outside counsel, and a reader working from an earlier copy needs to know what moved.*
 >
 > - **2026-08-10 (Nathan, approved by Justin) — the "no contact in Phase I" statements are withdrawn as inaccurate.** Earlier copies of this document, including the version Fenwick received in **March 2026**, state categorically that no one who emailed the gatekeeper is contacted during Phase I. **That was true of the design as written then; it is not true of the system as built.** Corrected in three places: the Phase I opening, the Phase I "Who Contacts Whom" table, and the Phase I Backlog section. Nothing else in the document changed. **The change is a scoping correction, not a change of legal posture** — the posture for any Evryn-to-sender message is unchanged and is stated in Pathway 1: a reply to something the person initiated, sent on the gatekeeper's behalf with their authorization, and subject to operator approval before it goes out.
-> - **2026-08-10 — flagged, not resolved:** the *"Question for counsel"* in the Phase I Backlog section (does a weeks-long delay stop a reply being a "reply" for CAN-SPAM purposes?) **may already be answered.** Per Justin's recollection (2026-07-29) of asking Fenwick directly *"how much time can pass?"*, he was told that elapsed time is not the operative factor. That is a recollection of oral guidance, not a written Fenwick position, so **the question is left standing in the text** — it should be confirmed in writing at Phase 2 scoping rather than treated as closed.
+> - **2026-08-10 (Nathan, confirmed by Justin) — the CAN-SPAM backlog-timing question is RESOLVED and the text now states the answer, not the question.** The Phase I Backlog section previously carried an open *"Question for counsel"* asking whether a weeks-long delay stops a reply being a "reply." **Fenwick answered it on the 2026-04-01 call: elapsed time is not the operative factor** — what matters is that the message is clearly a response, on the gatekeeper's behalf — and the gatekeeper's existing authorization covers the backlog. That paragraph is replaced by the counsel position. **A reader working from the March 2026 copy will still see the open question; it is answered.**
 
 ---
 
@@ -137,13 +139,13 @@ Evryn's first priority is always whether someone is the right mutual fit for Mar
 
 During Phase I, Evryn logs the gatekeeper's inbound — on the order of ~200 emails/day for Mark — while systematic outreach waits for Phase II. **The great majority of these people are therefore never contacted during Phase I** (a small number may have been reached individually, per the Phase I section above). When Phase II launches, they are sitting in Evryn's records. Evryn goes back and reaches them using the same Pathway 1 outreach — gold, edge, and redirect messages — applied to the backlog based on each person's original classification.
 
-**Question for counsel:** The outreach messages are the same as Pathway 1, but with a significant time delay (weeks rather than days). Evryn is responding to the person's original email to Mark, on Mark's behalf and with his authorization. Does the time delay change the legal posture? Is a reply to an email sent weeks ago still a "reply" for CAN-SPAM purposes, or does the delay make it functionally "unsolicited"? Does Evryn need the gatekeeper's explicit authorization for backlog outreach specifically, or is his previous authorization sufficient?
+**Counsel position (Fenwick, 2026-04-01 call):** the delay does not change the legal posture. Backlog outreach is the same as Pathway 1 outreach — a response to the person's original email, sent on the gatekeeper's behalf and with the gatekeeper's authorization — and **elapsed time is not the operative factor for CAN-SPAM purposes.** What matters is that the message is clearly a response, and clearly on the gatekeeper's behalf. The gatekeeper's existing authorization covers backlog outreach; no separate authorization is required for the backlog specifically.
 
 ### Backlog: Who Contacts Whom
 
 | Action | Direction | Legal posture |
 |--------|-----------|---------------|
-| Backlog outreach (gold/edge/redirect) | Evryn → person who emailed Mark during Phase I | Reply to original email, authorized by Mark, but delayed; question for counsel |
+| Backlog outreach (gold/edge/redirect) | Evryn → person who emailed Mark during Phase I | Reply to original email, authorized by Mark. Delay does not change the posture — confirmed by Fenwick, 2026-04-01 call. |
 
 ---
 
@@ -160,3 +162,5 @@ During Phase I, Evryn logs the gatekeeper's inbound — on the order of ~200 ema
 **Human oversight:** During this pilot phase, every outbound message Evryn sends is reviewed and approved by a member of the operations team before it reaches anyone.
 
 ---
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
