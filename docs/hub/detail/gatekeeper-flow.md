@@ -5,6 +5,13 @@
 > **Companion doc:** `gatekeeper-approach.md` — operational playbook for gatekeeper partnerships (who we target, how we pitch, setup guides by email client, future tooling).
 >
 > **Pilot gatekeeper:** Mark Titus (August Island Pictures / Eva's Wild, Seattle). Film producer receiving ~200 emails/day from people seeking his attention — pitches, collaboration requests, referrals, cold outreach.
+>
+> ### Change log
+>
+> *Kept because this document has been shared with outside counsel, and a reader working from an earlier copy needs to know what moved.*
+>
+> - **2026-08-10 (Nathan, approved by Justin) — the "no contact in Phase I" statements are withdrawn as inaccurate.** Earlier copies of this document, including the version Fenwick received in **March 2026**, state categorically that no one who emailed the gatekeeper is contacted during Phase I. **That was true of the design as written then; it is not true of the system as built.** Corrected in three places: the Phase I opening, the Phase I "Who Contacts Whom" table, and the Phase I Backlog section. Nothing else in the document changed. **The change is a scoping correction, not a change of legal posture** — the posture for any Evryn-to-sender message is unchanged and is stated in Pathway 1: a reply to something the person initiated, sent on the gatekeeper's behalf with their authorization, and subject to operator approval before it goes out.
+> - **2026-08-10 — flagged, not resolved:** the *"Question for counsel"* in the Phase I Backlog section (does a weeks-long delay stop a reply being a "reply" for CAN-SPAM purposes?) **may already be answered.** Per Justin's recollection (2026-07-29) of asking Fenwick directly *"how much time can pass?"*, he was told that elapsed time is not the operative factor. That is a recollection of oral guidance, not a written Fenwick position, so **the question is left standing in the text** — it should be confirmed in writing at Phase 2 scoping rather than treated as closed.
 
 ---
 
@@ -16,7 +23,7 @@ A gatekeeper is someone who receives far more inbound contact than they can pers
 
 ## Phase I: Calibration (v0.2)
 
-Mark forwards his inbound to Evryn. Evryn evaluates and notifies Mark about the people worth his time. No one who emailed Mark is contacted during this phase — it's pure calibration between Evryn and Mark.
+Mark forwards his inbound to Evryn. Evryn evaluates and notifies Mark about the people worth his time. The center of gravity in this phase is calibration between Evryn and Mark — **but this is not a phase in which Evryn is silent toward the people who wrote in.** Systematic outreach to a gatekeeper's inbound (the gold / edge / redirect engine described under Pathway 1) is a Phase II capability and is not built yet. What v0.2 *does* support, and has exercised end-to-end in testing, is **contacting an individual sender where the gatekeeper's situation calls for it** — and, because a contacted person can write back, **Evryn also handles replies from them**, including someone asking why the gatekeeper passed on them. Every outbound message is reviewed and approved by a member of the operations team before it is sent.
 
 ### Step 1: Onboarding the Gatekeeper
 
@@ -56,8 +63,10 @@ During Phase I, Mark continues to sort his inbound as he normally would — noth
 | Action | Direction | Legal posture |
 |--------|-----------|---------------|
 | Gatekeeper notification (gold/edge) | Evryn → Mark | Internal to the gatekeeper relationship; Mark authorized this |
+| Individual outreach to a sender, case by case | Evryn → person who emailed Mark | Reply to something the person initiated, on Mark's behalf and with his authorization — the same posture as Pathway 1, at individual rather than systematic scale. Operator-approved before sending. |
+| Reply to a contacted person who writes back | Evryn → person who emailed Mark | Continuation of a conversation that person is already in. Where they ask why the gatekeeper passed, Evryn's disclosure floor governs what she may say — she may own the decision as her own call, and never attributes it to the gatekeeper or discloses an assessment of them. |
 
-No contact is made with anyone who emailed Mark during this phase. Evryn logs all inbound for future use.
+**Evryn logs all inbound for future use.** Systematic outreach across the inbound — the gold / edge / redirect engine — does not begin until Phase II.
 
 ---
 
@@ -126,7 +135,7 @@ Evryn's first priority is always whether someone is the right mutual fit for Mar
 
 ## Phase I Backlog (at v0.3 Launch)
 
-During Phase I, Evryn logged ~200 emails/day but didn't contact anyone, because she was still calibrating. When Phase II launches, these people are sitting in Evryn's records, never contacted. Evryn goes back and reaches them using the same Pathway 1 outreach — gold, edge, and redirect messages — applied to the backlog based on each person's original classification.
+During Phase I, Evryn logs the gatekeeper's inbound — on the order of ~200 emails/day for Mark — while systematic outreach waits for Phase II. **The great majority of these people are therefore never contacted during Phase I** (a small number may have been reached individually, per the Phase I section above). When Phase II launches, they are sitting in Evryn's records. Evryn goes back and reaches them using the same Pathway 1 outreach — gold, edge, and redirect messages — applied to the backlog based on each person's original classification.
 
 **Question for counsel:** The outreach messages are the same as Pathway 1, but with a significant time delay (weeks rather than days). Evryn is responding to the person's original email to Mark, on Mark's behalf and with his authorization. Does the time delay change the legal posture? Is a reply to an email sent weeks ago still a "reply" for CAN-SPAM purposes, or does the delay make it functionally "unsolicited"? Does Evryn need the gatekeeper's explicit authorization for backlog outreach specifically, or is his previous authorization sufficient?
 
