@@ -259,14 +259,14 @@
     /* Per-subsystem health lights (Step 78 Half B). A separate class from
        .status-dot (which is position:absolute for the agent-card corner and can't
        be reused inline). Wraps on narrow screens (phone-first).
-       COLOUR LANGUAGE (de-overloaded 2026-07-20):
+       COLOR LANGUAGE (de-overloaded 2026-07-20):
          active   GREEN            = healthy
          halted   RED              = an actual fault (genuine poll wedge, M1 HALTED, db/slack down)
          consequence ORANGE RING   = an EXPECTED downstream consequence, not an independent
                                       alarm (ONLY the poll light during an M1 halt) — hollow so
                                       it reads as "not an alarm" from SHAPE as well as hue
          warn     AMBER (filled)   = a standing warning (ONLY errors_24h > 0)
-         idle     GREY (dimmed)    = no data */
+         idle     GRAY (dimmed)    = no data */
     .health-lights { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
     .health-light {
       display: flex;
