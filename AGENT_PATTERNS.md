@@ -644,4 +644,32 @@ The sharpest instance is worth carrying because of *how* it failed. A lane AC ad
 
 ---
 
+## A FLAKY guard is worse than a MISSING one — and a "clean" run in a shared repo is not evidence
+
+*(Both learned the same night, 2026-08-10/11, on the team-runtime memory lane. They are two halves of one problem: **a test suite can be wrong about itself.**)*
+
+### Half one — the flaky guard
+
+**A missing guard is a known gap. A flaky one actively trains you to ignore the signal it exists to send.**
+
+**The specimen:** the test that kept intermittently failing was not an arbitrary one. It was the guard ensuring that a **parked or failed memory-write records NO completion** — i.e. the only thing standing between the system and **dropping a conversation's digest on the strength of a memory nobody ever wrote.** It was failing for a reason with nothing whatsoever to do with that invariant.
+
+🔴 **And the natural, reasonable, experienced response to an intermittent red is to re-run it until it goes green. Which is exactly how a real failure gets waved through.** Worse, it trains you fastest on the guards you re-run most — **which are the guards protecting whatever keeps breaking.**
+
+**⇒ Treat an intermittently-failing guard as a P1 on the guard itself, not as noise to route around.** Either make it deterministic or delete it, but do not leave it flapping: a guard nobody believes is strictly worse than no guard, because its *name* still tells the next reader the case is covered.
+
+**This is the sibling of the rule we already had — *a test that cannot fail is worse than no test*.** Same family, opposite mechanism: **one lies green forever; the other cries wolf until nobody listens. Both end with a real defect shipping past a suite everyone trusted.**
+
+### Half two — your own verification discipline can be the cause
+
+**The flake's actual cause was us.** A compile-guard helper wrote a temp file to a **fixed path inside the working tree** and deleted it in a `finally`, which made the whole suite **non-reentrant** — two concurrent runs in one worktree delete each other's file mid-compile. **A reviewer verifying a branch while its author is testing is sufficient to trigger it.** With several agents each dutifully re-running the suite to check each other's work, **we were manufacturing the exact condition that broke it. The more carefully we verified, the more it broke.**
+
+🔴 **The sharper half: a CLEAN control run proved nothing.** At the measured ~20% failure rate, **three clean runs happen about half the time by chance** — so a three-run control could not distinguish the competing hypotheses *at all*, and was being cited as if it had. **In a repo several agents share, *"I ran it three times and it was fine"* is not evidence unless you also know what else was running.**
+
+**Two durable rules fall out:**
+1. **Test infrastructure that writes to a fixed path inside the working tree is shared-mutable-state**, in exactly the same family as a shared branch — and it deserves the same treatment (unique paths, or committed fixtures that are never written at all). ⚠️ **Tellingly, the production code already had this right** (`memory-writer.ts` used a per-write `randomUUID()` temp name). **The runtime knew the idiom; only the tests didn't** — so when hunting this class, *look at the tests, not the src.*
+2. **To establish flakiness, run the shape that actually breaks it.** Five *serial* runs proved nothing here, because serial runs never overlap. **Two staggered-concurrent runs found it immediately.** Ask what condition would expose the defect and reproduce *that*, rather than repeating the cheap check more times.
+
+---
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
