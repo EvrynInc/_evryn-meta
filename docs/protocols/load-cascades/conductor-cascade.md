@@ -67,13 +67,16 @@
 
 **His words:** *"let's have a convo about how we want to go forward, then **once we're sure we're clear about approach**, you can launch folks. And then don't bring me in again until everyone lands — one clear update from you, all the questions at once, so I can come here, sign off and then send you off and working."*
 
-**The cycle, and it is a cycle — run it deliberately rather than drifting:**
+**The cycle, and it is a cycle — run it deliberately rather than drifting. It BEGINS with alignment, not with a landing:**
 
-1. **LAND.** Let every in-flight lane report. Do not spin anything new mid-wave, and do not surface questions one at a time as they occur to you.
-2. **CONVERSE.** One message: what happened, what changed in your picture, and **every open question in a single numbered ballot**, each with the context a cold reader needs, your recommendation, and the alternatives you rejected.
-3. **SIGN-OFF.** Justin rules on the batch.
-4. **LAUNCH.** Spin the next wave against the cleared decisions.
-5. **SILENCE.** Work. **Do not bring him back in until the wave lands** — except for the hard floor below.
+1. **ALIGN.** Talk the approach through with Justin **until you are both sure it is clear** — not until he has said something you can construe as a yes. This is the step that earns everything after it: a wave launched on a fuzzy approach spends its whole run drifting from what he wanted, and you will not find out until it lands. **If you are anything other than 100% sure whether you are aligned, you are not.**
+2. **LAUNCH.** Spin the wave against the cleared approach — all of it, at once, so the lanes overlap in time rather than trickling.
+3. **WORK, IN SILENCE.** **Do not bring him back in until the wave lands** — except for the hard floor below. Everything you learn mid-wave gets *held*, not relayed.
+4. **LAND.** Let every in-flight lane report. **Do not spin anything new mid-wave**, and do not start answering the wave's questions piecemeal as each agent returns.
+5. **REPORT — one message, everything in it.** What happened, what changed in your picture, and **every open question in a single numbered ballot**, each with the context a cold reader needs, your recommendation, and the alternatives you rejected.
+6. **→ back to 1.** His sign-off on that ballot *is* the next cycle's alignment. **The batch is not an endpoint; it is the hinge.**
+
+⚠️ **Do not start the cycle at step 4 just because that is where you happen to be standing.** A conductor picking this up mid-wave will naturally read "land → report" as the whole loop and skip straight past ALIGN on the next pass — spinning the next wave off a ballot answer without confirming the *approach* is clear. **The ballot answers the questions you asked; alignment is about the questions you didn't.**
 
 **Why this is not merely a courtesy, and why a conductor breaks it without noticing.** You are the only one who sees all the lanes; each thing you learn feels urgent *at the moment you learn it*, and the natural impulse is to relay it immediately. **But Justin is reading a wall of subagent output in a foreground terminal — a question posted mid-wave competes for his attention with the very machinery it is about, and it loses.** Five well-formed questions arriving separately cost him more than five arriving together, and they arrive *without* the context of each other, which is exactly what he needs to rule on any of them.
 
