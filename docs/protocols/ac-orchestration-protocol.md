@@ -400,7 +400,16 @@ The load discipline is unchanged. Two things in the canonical blocks are literal
 
 **1. 🔒 THE HARD FLOOR — always reaches Justin. No head-AC judgment, ever, no exceptions.**
 The standing gates from AC's CLAUDE.md are **never** absorbable, regardless of what any AC thinks:
-- any **commit / push / merge / deploy / prod migration**
+- any **push, deploy, or prod migration** — absolute, no carve-out, ever
+- any **commit or merge**, with exactly one standing exception, below
+
+  > **⚖️ THE ONE CARVE-OUT, and it resolves what used to be a self-contradiction in this document** *(resolved 2026-08-10; flagged by ACf on 2026-08-06 and by `_evryn-meta/CLAUDE.md` before that)*. This floor previously read *"any commit / push / merge / deploy / prod migration,"* which **directly contradicted the merge/ship rubric below**, where Justin's standing authorization of 2026-06-02 has the top-level AC merge build-level code *without waiting*. Both were being read as operative, so every AC had to guess.
+  >
+  > **The resolution, and the reasoning so it is not re-litigated: a general list does not silently revoke a specific, dated, conditioned grant. The specific governs.** The rubric's grant is narrow and its conditions are all load-bearing — **DC, QC and AC all agree · the change is build-level code Justin cannot meaningfully evaluate · it is NOT a source-of-truth doc · it is not a push, deploy, or migration.** Miss any one of those and you are back on the floor.
+  >
+  > **What the floor was actually protecting, and still does:** a **sub-AC** may never commit outside its own branch, never merge, and never push — and a **head AC may not grant it any of those on Justin's behalf.** The carve-out belongs to the **top-level AC exercising its own standing authorization**, which is not "absorbing a question" at all. **If you are a sub-AC reading this: the carve-out is not addressed to you.**
+  >
+  > ⚠️ **This does NOT loosen `CLAUDE.md`'s commit discipline for anything else.** Docs, protocols, briefs beyond mailbox-class traffic, and every commit that is not build-level code still require Justin's explicit go-ahead *in his most recent message*, and prior authorizations still do not stack.
 - any **source-of-truth doc edit** (Hub, spokes, ARCHITECTURE, BUILD, protocols, CLAUDE.md, LEARNINGS, AGENT_PATTERNS)
 - any **identity-file change** — coordinated, never silent. ⚠ **Route it to the right owner: *Evryn's* identity files (`evryn-backend/identity/**`) are Mira and Justin's; the *team's* (`evryn-team-workspace/.claude/agents/*` + agent memory + the team `CLAUDE.md`) are Justin's.** Two agentic systems, two identity layers, different owners — see AC `CLAUDE.md`.
 - **scope changes, money, anything irreversible or outward-facing**
