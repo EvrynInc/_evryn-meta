@@ -172,6 +172,21 @@ Before, we had pleading, all-caps, threats, things like *"we already spun you on
 - **Do not leak the task into trip 1.** A file list annotated *"…because you'll need it for the extraction"* re-creates the thing this removes. Annotate what a file **is**, never what it is **for**, until trip 2.
 - **Trip 2 costs a full transcript replay** — resume re-sends everything the agent loaded. That is the price of the guarantee, it is known, and it is worth it. Budget for it; don't design around avoiding it.
 
+### 🔴 THE LANE BRIEF IS TRIP-2 READING, NEVER TRIP 1 — this resolves a collision between two of our own rules
+
+*(Added 2026-08-10 with Justin's approval, after the collision was hit live on the first night of running lanes under two-trip loading. **Every AC that spins a lane AC will hit it on its first spin,** so it is written down rather than left to be re-resolved — possibly the other way — by whoever gets there next.)*
+
+**The collision, stated plainly:**
+
+- **Two-trip loading says** the load trip must tell the agent *nothing* about the work. That is the entire guarantee: relevance is not computable, so it cannot be mis-computed.
+- **The work-brief rule says** a lane's committed brief (`_evryn-meta/docs/working/…`) goes in the agent's `<mandatory_load>` list, like every other file it must read.
+
+**Those cannot both hold, and it is not a close call: the lane brief IS the task.** Put it in trip 1 and the agent reads it first, learns in full detail exactly what it is about to do, and can then quietly triage everything else on the list against it — which is precisely the failure two-trip loading exists to make impossible. **The filename alone gives it away** (`…-ac0-aca-atlas-refactor-brief.md` announces the lane, its owner and its subject before a single line is read), so this cannot be patched by careful annotation the way an ordinary file can.
+
+**⇒ THE RESOLUTION: name the lane brief in `<task>`, at the top, as the first thing the agent must read on the work trip.** Trip 2 explicitly permits loading beyond the original list, so this is already sanctioned — it costs exactly one extra read and it preserves the guarantee intact. Word it as an instruction with its line span and canary check, the same as any `<mandatory_load>` entry: *"Read `<path>` (full — N lines; confirm the bottom canary) first — it is your marching orders and it supersedes this message where they conflict."*
+
+**The same reasoning extends to anything else that would function as the task**: a handoff written *to* that lane, a build spec, a prior report about its work. **The test is not "is this a doc?" — it is "could the agent reconstruct the task from this?"** If yes, it is trip-2 reading, no matter how load-bearing it is. **Load-bearing is exactly why it must not go in trip 1.**
+
 ---
 
 ## The exact words — paste this verbatim (fill the brackets)
