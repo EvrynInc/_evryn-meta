@@ -2,7 +2,7 @@
 
 > **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see it, reload or read in sections until you confirm the complete file.
 >
-> **How to use this file:** How-to guide for how AC orchestrates **every** subagent it spins — **DC** (build), **QC** (review), **OC** (ops), **team agents** (Soren, Mira, …), and **other ACs** (reporters, and lane ACs running under a head AC). Read it when you're about to spin *anything*. This is the **primary** pathway and **supersedes** the note-passing model in `ac-dc-protocol.md` (now the fallback — see bottom).
+> **How to use this file:** How-to guide for how AC orchestrates **every** subagent it spins — **DC** (build), **QC** (review), **OC** (ops), **team agents** (Soren, Mira, …), and **other ACs** (reporters, and lane ACs running under a head AC). Read it when you're about to spin *anything*. This is the **only** pathway; the note-passing model it superseded is RETIRED to `docs/historical/ac-dc-protocol.md` (2026-08-12).
 >
 > **The brief skeleton is ONE shape with codified per-target variants.** Learn the skeleton in "The exact words," then apply exactly one variant: **DC/QC/OC** (the skeleton as written) · **team agent** (4 substitutions) · **AC** (2 substitutions). **Inventing a variant is barred** — see the HARD RULE.
 >
