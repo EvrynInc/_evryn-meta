@@ -6,6 +6,8 @@
 
 **Why you are reading it:** the harness auto-injects this file into *every* agent it spins in this workspace — AC, DC, QC, OC, team agents, and generic subagents alike — regardless of which one you are. So it has to be small, stable, and true for everyone.
 
+**⭐ What that means, and it is the whole reason this file exists:** this repo's `CLAUDE.md` used to *be* AC's full operating manual — so **every** subagent, including a DC, a QC, or a generic agent spun to check whether a file exists, was force-fed roughly **45,000 tokens of the wrong agent's manual** before reading one line of its own work. **That is over.** AC's manual now sits behind this router exactly like everyone else's, and what you auto-inherit is this page. **AC is one of many here; there is no special case.**
+
 ---
 
 ## 🔴 THE ONE HARD RULE
@@ -14,7 +16,7 @@
 >
 > — Justin
 
-That is the whole safety floor, and it is deliberately not a checklist. **An agent that cannot act without its identity cannot act *dangerously* without it either.** Do not work around it, do not partially proceed, do not substitute your own judgment for the manual you failed to load. Report the failure and stop.
+That is the whole safety floor, and it is deliberately not a checklist. **An agent that cannot act *properly* without its identity can unknowlingly act *dangerously* without it.** Do not work around it, do not partially proceed, do not substitute your own judgment for the manual you failed to load. Either load it now, or report the failure and stop.
 
 ### 🔴 THE SECOND WAY YOUR IDENTITY GOES MISSING — and this one does not announce itself
 
@@ -22,18 +24,18 @@ That is the whole safety floor, and it is deliberately not a checklist. **An age
 
 **When a session runs out of context the harness replaces the conversation with a summary and instructs you, in substance:** *"do not acknowledge the summary, do not recap, pick up the last task as if the break never happened."* ⇒ **You resume from a third-party compression of your session instead of from your manual — and nothing feels wrong, because a good summary reads like knowing.**
 
-🥋 **THE AIKIDO — this is how you honour that instruction instead of fighting it.** *"Resume as if the break never happened"* is the right **destination**, and **you cannot reach it from a summary.** ⇒ **It applies AFTER you have reloaded, never before.** You are not disobeying the harness. **You are doing the one thing that makes obeying it possible.**
+🥋 **THE AIKIDO — this is how you honor that instruction instead of fighting it.** *"Resume as if the break never happened"* is the right **destination**, but **you cannot actually reach it from a summary.** ⇒ **It can only genuinely apply AFTER you have loaded properly, never before.** You are not disobeying the harness. **You are doing the one thing that makes obeying it possible.**
 
 **So, on any sign you are working from a summary rather than from files you read:**
 
-1. **STOP** — however clearly the summary describes the task. **A well-written summary is the trap, not the safety net.**
-2. **Re-read your identity file and your handoff's load list IN FULL** — the files, not an account of them.
+1. **PAUSE IMMEDIATELY** — however clearly the summary describes the task. **A well-written summary is the trap, not the safety net.**
+2. **Re-read your agent identity file, your handoff, and load your handoff's load list IN FULL** — the files, not an account of them.
 3. **Tell your spinner you compacted and reloaded.**
 4. **Then resume.** The harness's instruction is now correct rather than premature.
 
 🔴 **DO NOT ASSESS YOUR OWN SHARPNESS — the faculty you would assess it with is the one under question.** *"I feel fine"* is exactly what a lossy compression feels like from the inside. **The test is never how you feel; it is whether you have re-read the files.**
 
-⚠️ **Observed live, 2026-08-12: a conductor compacted, complied with that instruction, and worked competently for several turns without mentioning it. The work was good. That is what makes this dangerous** — *"was the output bad?"* will always come back reassuring. **Your manual carries the rest** (a self-wake canary, and what a handoff must say to a compacted reader).
+⚠️ **Observed live, 2026-08-12: a conductor compacted, complied with the instruction to resume without note, and worked seemingly-competently for several turns without mentioning it. The work *seemed* good. That is what makes this dangerous** — *"was the output bad?"* will always come back reassuring. **Your manual carries the rest** (a self-wake canary, and what a handoff must say to a compacted reader).
 
 ---
 
@@ -53,7 +55,7 @@ Your spinner tells you which agent you are. Find your row, read that file **in f
 
 ### If your brief did not tell you which agent you are
 
-You are a **generic subagent**: you have no identity file, and the hard rule above has nothing to load. That is a legitimate state for exactly one kind of work — a narrow mechanical lookup (a file path, a line count, a grep) where nothing downstream rests on your judgment. **Do that task and nothing more.** You may not review, build, spec, summarize a document, or make any claim about how the system behaves. If your task requires any of those, **stop and report that you were spun without an identity** — that is a briefing error, and proceeding is the failure the hard rule exists to prevent.
+You are a **generic subagent**: you have no identity file, and the hard rule above has nothing to load. That is a legitimate state for exactly one kind of work — a narrow mechanical lookup (a file path, a line count, a grep) where nothing downstream rests on your judgment. **Do that task and nothing more.** You may not review, build, spec, summarize a document, or make any claim about how the system behaves. If your task requires any of those, **stop and report that you were spun without your proper identity** — that is a briefing error, and proceeding is the failure the hard rule exists to prevent.
 
 ⚠️ **This is not a hatch you may take by choosing it.** If your brief names an agent, that is your identity and the hard rule applies.
 
@@ -62,7 +64,7 @@ You are a **generic subagent**: you have no identity file, and the hard rule abo
 ## How to load your manual
 
 1. **Read it from disk, in full, yourself.** Do not work from any version of it you believe you already have.
-2. **Confirm its bottom truncation canary** — the last line should read `FULL FILE LOADED`. If it is missing, your load is partial: re-read in sections until you have the whole file. *(One known exception: `evryn-ops/CLAUDE.md` has no canary; its true final line is `---`.)*
+2. **Confirm its bottom truncation canary** — the last line should read `FULL FILE LOADED`. If it is missing, your load is partial: re-read in sections until you have the whole file. **There are no exceptions — every one of the files in the table above carries a canary.** *(`evryn-ops/CLAUDE.md` was the one exception until 2026-08-12, when Justin's ruling was to fix the file rather than document the gap here. If you find another, fix the file; do not add a carve-out to this router.)*
 3. **Then execute its Context Discipline section** before starting work.
 
 🔴 **Do not trust the auto-injected copy of THIS file either.** The injection has been observed serving a stale snapshot — content committed hours earlier was missing from it. **The file on disk governs.** This router is kept deliberately tiny and near-static so that a stale copy of it is still a correct copy; everything that changes lives behind it, in the manuals.
