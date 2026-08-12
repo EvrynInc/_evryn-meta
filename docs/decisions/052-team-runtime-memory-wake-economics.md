@@ -46,4 +46,61 @@ Adopt the memory + wake-economics architecture in the design-of-record. The load
 - **Cost/risk:** full-thread-load costs more per *real* wake on a long thread (accepted — Justin: never silently forget a meeting's start); membership gaps mean an un-invited agent is a little behind until invited (accepted — same tradeoff human teams make; @mention is the real-time escalation); Phase 2's consolidation autonomy is guarded by archive-before-overwrite + the Lane-A/B split. Full risk table: design doc §10.
 - **Divergence from today:** enumerated in design doc §3.7. `ARCHITECTURE.md` + `BUILD-PHASE-1.md` carry a breadcrumb to the design-of-record and describe the current built state until the phases merge.
 
+---
+
+## Amendment — 2026-08-12: the session question re-examined, and CONFIRMED on new reasoning
+
+> **This is a dated re-examination, not a reversal. Decision 1 stands.** It is recorded here because Justin re-opened the question, accepted the recommendation to keep the decision, and asked that the reasoning be preserved at full resolution *"if we come back later and want to poke at this question again."* **The original decision's stated basis has weakened; a stronger basis replaced it — and a reader re-opening this question later needs the NEW argument, because refuting the old one is now easy and would not touch the decision.**
+>
+> **Full analysis, with `file:line` evidence:** `_evryn-meta/docs/working/2026.08.12-acfsq-acf-session-question.md` (lane `ACfsq`). **This section carries the decision-grade reasoning; the SDK forensics stay there.**
+
+**What was re-opened.** Decision 1 says the thread IS the session — *"deliberately reinventing sessions without the un-steerable SDK compaction we reject."* Justin challenged the premise: *"You've got the whole thread… but that's kind of it. You don't have access to your thinking during that turn."* His counter was that compaction only fires when a context grows large, and that the membership model (decision 2) plus 7-day age-out (decision 5) exist to keep rooms small — so under tight membership most threads should never compact at all, making the objection largely moot.
+
+**The counter was correct, and it did not save sessions.**
+
+### 1. The original objection is genuinely weaker than when this ADR was written
+
+Against the pinned SDK (`@anthropic-ai/claude-agent-sdk@0.3.207`), compaction is **not** the opaque, un-steerable event decision 1 assumes. It is **observable** — it emits a boundary message, carrying its trigger and its before/after token counts, on the same stream the runtime already consumes. It is **interceptable** — a pre-compaction hook exists. And it is plausibly **disableable** outright. ⇒ **Justin's own proposed mitigation is available in a strictly better form than he proposed it:** he suggested a standing order telling agents to announce when they compact; the runtime can simply *detect* it, deterministically, with no instruction for an agent to forget. **Recorded plainly because it cuts against the decision this amendment confirms.**
+
+### 2. 🔴 The argument that actually decides it — and it is NOT in the original decision
+
+**A session freezes the trunk, and the trunk is the whole design.**
+
+The runtime re-reads identity, `MEMORY.md`, team current-state and `runtime-ops.md` **fresh on every wake**. That is not an implementation detail; it is the mechanism decisions 5 and 6 rest on. The design-of-record states it directly: what an agent learns in room A reaches room B *"because both wakes are the same mind loading the same memory."*
+
+**A per-(agent, thread) session freezes each room's copy of that base at session-creation time.** A note written in room A would no longer reach a live session in room B. **The trunk stops being a trunk and becomes N drifting branches** — which is precisely the *"disembodied versions"* fork that decision 6's per-agent serialization exists to eliminate, re-entering as **staleness** rather than **concurrency**.
+
+**And the dilemma is unavoidable, which is what makes this decisive rather than merely a cost:**
+
+- **Re-send the full composed base on every resumed turn** to keep memory fresh → you pay the ~63K-token base **plus** the entire accumulated transcript, every turn, with no equivalent of the 7-day age-out that bounds a thread. **Defeats the purpose.**
+- **Don't** → the session is permanently stale in identity and memory, and gets staler. **Defeats the memory model.**
+
+There is no third position, and **it holds regardless of how any remaining SDK unknown resolves.**
+
+### 3. Persistence: established, and it disqualifies the default configuration outright
+
+The gating question was whether an SDK session survives a restart, since ARCHITECTURE cardinal invariant 4 puts everything durable in Postgres. **Answered from the SDK's typings, two-branched, because the branch is a configuration choice:**
+
+- **Default:** sessions persist to disk under `CLAUDE_CONFIG_DIR` — and this runtime points that at a **temp directory**. It would persist to exactly the place designed to be discarded. **Disqualifying on its own.**
+- **With the SDK's pluggable external session store:** durable in Postgres, in principle. But that surface is `@alpha`, it is a **mirror rather than a primary** (local disk remains the durability guarantee), and **after three failed writes it drops the batch.** A store with a documented drop path is not invariant 4.
+
+### 4. What replaces sessions — three tiers, in order
+
+1. **Sharpen the scratchpad instruction from *status* to *work-done*.** ⚠️ **Correcting a claim that circulated during this review: an instruction already exists** — both `runtime-ops.md` and the `scratchpad_write` tool description already tell agents to keep working state. **The gap is narrower: every phrasing is scoped to *where I am* and *what I am waiting on*, never to *what I already checked and found nothing in*** — which is the loss Justin actually named. A clause on an existing bullet, not a new beat.
+2. **A deterministic work record built from the `PostToolUse` hook that already fires.** The hook already delivers each tool call and its result; today's handler discards both and logs one line. Capturing a compact per-(agent, thread) record and composing it back hits the pain **deterministically** — not dependent on an agent remembering — while staying in Postgres, enumerable in the wake manifest, and steerable. **Commissioned as a design pass after the Phase-1 fast-follow, not before it.**
+3. **A bounded session trial only if 1 and 2 prove insufficient**, and only on a durably-backed store — never on the default configuration.
+
+### 5. Two findings from Justin's follow-up questions, both of which STRENGTHEN this decision
+
+- **On what happens without compaction when a wake outgrows the window:** it does **not** crash. A context overflow surfaces as a result message the runtime already inspects, and the existing error path **parks the wake with a durable record and a Slack alert.** ⚠️ **But the runtime discards the SDK's specific `terminal_reason`, so the operator is told a generic error rather than "the prompt outgrew the context window."** That is a real, small gap in shipped code, independent of this decision. **A separate and sharper question is open: whether auto-compaction can already fire *inside* a single long wake today. If it can, the objection in decision 1 is not protecting us for exactly the case that matters, and we would be taking uncontrolled compaction unobserved** — because the runtime discards every stream message that is not a final result. **UNKNOWN from the typings; cheap to measure; worth measuring regardless of this decision.**
+- **On where the model's reasoning lives:** the reasoning travels in the assistant-message stream as thinking content, **and the runtime already receives it and throws it away.** ⇒ **The work record in tier 2 is not limited to what was *done*; what was *concluded* is reachable too, without a session.** That moves the cheap path materially closer to session parity — though capturing it raw would be wrong on both volume and data-governance grounds (ADR-050's two-tier rule), so the right shape is a bounded distillation. **This is the strongest single reason the decision below is comfortable rather than merely defensible.**
+
+### 6. One adjacent risk this review surfaced in shipped code
+
+**The scratchpad is overwrite-only, with no version history and no archive** — one `content` column, replaced wholesale on every write. **The memory path has archive-before-overwrite (`memory_versions`); the scratchpad path has nothing.** Snapshot semantics were chosen deliberately, to stop an append-log bloating every wake — **but that rationale weighed bloat, never self-inflicted loss.** ⚠️ **Tier 1 above makes this worse before it makes it better, by asking agents to accumulate more value in exactly that store.** Raised by Justin (*"I've seen agents clobber themselves way too many times"*); **filed as its own item, not folded into this decision.**
+
+### The amended decision
+
+**Decision 1 STANDS: no SDK sessions. The reasoning changes from *"compaction is un-steerable"* to *"a session freezes the trunk, and the trunk is the design."*** Anyone re-opening this question should attack §2 above — refuting the compaction objection alone no longer moves it.
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
