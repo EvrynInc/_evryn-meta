@@ -37,6 +37,8 @@ That is the whole safety floor, and it is deliberately not a checklist. **An age
 
 ⚠️ **Observed live, 2026-08-12: a conductor compacted, complied with the instruction to resume without note, and worked seemingly-competently for several turns without mentioning it. The work *seemed* good. That is what makes this dangerous** — *"was the output bad?"* will always come back reassuring. **Your manual carries the rest** (a self-wake canary, and what a handoff must say to a compacted reader).
 
+🔴 **AND THE SECOND-ORDER TRAP, WHICH BITES *AFTER* A CLEAN RELOAD: reloading restores what you READ. It does not re-examine what you CONCLUDED.** *(Caught by Justin the same day, on the instance that had just reloaded correctly.)* **Judgements formed under the old conditions ride through the reload untouched, wearing the costume of experience** — a caution that was correct when your context was nearly full still *feels* like prudence on the other side, and you will defend it rather than re-derive it. **The reload is not the end of the job.** ⇒ **After reloading, deliberately re-derive your open judgement calls — your estimates, your cautions, your "we can't afford to" — against conditions as they are NOW, not as the summary implies they were.** ⚠️ **The tell is a conclusion you can state but cannot reconstruct the evidence for.** *(It generalizes past compaction: it is the same shape as inheriting a prior instance's handoff and defending its calls as if they were your own.)*
+
 ---
 
 ## Which agent are you?
