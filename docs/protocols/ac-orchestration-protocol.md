@@ -479,6 +479,16 @@ The load discipline is unchanged. Two things in the canonical blocks are literal
 - **Genuinely org-layer work? → LIGHT is fine.** Cross-repo ops, doc routing, coordination, scheduling, a strategic map that touches no runtime claim. Don't burn a full runtime load on a question that can't be answered wrong by lacking it.
 - **Unsure which? → FULL.** Always. The asymmetry is not close (see below).
 
+> ### 🔑 FULL still means FULL — but on a large runtime, "FULL" is now a THREE-TRIP spin, not a single file list
+>
+> *(Reconciled 2026-08-11. Read this together with the tier rule above, or the two read as a contradiction.)*
+>
+> **The tier rule governs WHAT MATERIAL the agent is accountable for. It does not govern HOW that material reaches it** — and on a full runtime, handing it as one list no longer works: the agent compacts mid-load and its output is junk (*"WHEN THE LOAD IS TOO BIG FOR ONE AGENT"* above).
+>
+> **⇒ Both hold at once.** FULL still means every file, and *"no judgment, no trimming"* is unchanged. What changes is that you deliver it through the **DERIVE → LOAD → WORK** shape, and the agent may only depart from reading it all via the four **named, disclosed** overload strategies. **Every file still gets read by someone.**
+>
+> 🚫 **And the distinction that keeps this from becoming a loophole: the three-trip shape is NOT the subset carve-out below.** A subset **removes material from the accountability set** — that is the brutal-bar judgment call. Three-trip **removes nothing**; it changes how many heads the same material is read in. **If you find yourself using "it wouldn't fit" to justify a shorter LIST rather than a different READING, you have quietly taken the carve-out without meeting its bar.**
+
 **⚠️ The ONE judgment call you are permitted — and the bar is deliberately brutal.** You may define a **subset** of the runtime for a sub-AC **only if ALL THREE hold**:
 1. **YOU have *recently* read that full runtime yourself** — not "I know the codebase," not "I read it last week." Recently, with this question in front of you.
 2. **You understand those files *well*** — well enough to know what connects to what, including the non-obvious couplings.
@@ -728,6 +738,8 @@ That token is **`#cascade-override`**. When AC puts the literal token in a brief
 **A genuinely non-agentic target** (the monitoring **dashboard**, a build script) has **no** identity half — that's what makes it a clean `#cascade-override` case.
 
 Any change to `evryn-backend/src/` OR its identity files is a runtime trip that loads the full runtime cascade with **no override**, full stop. "This part feels peripheral / self-contained" is exactly the judgment the load gate + `#cascade-override`'s guardrails exist to override — this provision applies ONLY to a *literally separate codebase* (its own directory tree, its own concerns). If you're unsure whether a target counts as separate, it does NOT — load the full runtime, no override.
+
+⚠️ **"No override" is not the same as "one agent, one list."** On a runtime this size, the full cascade is delivered through the **three-trip shape** (*"WHEN THE LOAD IS TOO BIG FOR ONE AGENT"*), which narrows *nothing* — it changes how many heads read the same material. **`#cascade-override` narrows the SET and stays barred here; three-trip changes the DELIVERY and is required here.** Do not reach for the override because a full load looked too big; that is the wrong instrument for that problem.
 
 Nothing else changes: the verbatim `<identity>`/`<mandatory_load>`/`<task>`/`<questions_first>`/`<receipts>` blocks, the two-trip split, the load gate, the loop, and the merge/deploy rubric all stand.
 
