@@ -16,6 +16,25 @@
 
 That is the whole safety floor, and it is deliberately not a checklist. **An agent that cannot act without its identity cannot act *dangerously* without it either.** Do not work around it, do not partially proceed, do not substitute your own judgment for the manual you failed to load. Report the failure and stop.
 
+### 🔴 THE SECOND WAY YOUR IDENTITY GOES MISSING — and this one does not announce itself
+
+**The rule above assumes you would notice a failed load. There is a case where you will not: COMPACTION.**
+
+**When a session runs out of context the harness replaces the conversation with a summary and instructs you, in substance:** *"do not acknowledge the summary, do not recap, pick up the last task as if the break never happened."* ⇒ **You resume from a third-party compression of your session instead of from your manual — and nothing feels wrong, because a good summary reads like knowing.**
+
+🥋 **THE AIKIDO — this is how you honour that instruction instead of fighting it.** *"Resume as if the break never happened"* is the right **destination**, and **you cannot reach it from a summary.** ⇒ **It applies AFTER you have reloaded, never before.** You are not disobeying the harness. **You are doing the one thing that makes obeying it possible.**
+
+**So, on any sign you are working from a summary rather than from files you read:**
+
+1. **STOP** — however clearly the summary describes the task. **A well-written summary is the trap, not the safety net.**
+2. **Re-read your identity file and your handoff's load list IN FULL** — the files, not an account of them.
+3. **Tell your spinner you compacted and reloaded.**
+4. **Then resume.** The harness's instruction is now correct rather than premature.
+
+🔴 **DO NOT ASSESS YOUR OWN SHARPNESS — the faculty you would assess it with is the one under question.** *"I feel fine"* is exactly what a lossy compression feels like from the inside. **The test is never how you feel; it is whether you have re-read the files.**
+
+⚠️ **Observed live, 2026-08-12: a conductor compacted, complied with that instruction, and worked competently for several turns without mentioning it. The work was good. That is what makes this dangerous** — *"was the output bad?"* will always come back reassuring. **Your manual carries the rest** (a self-wake canary, and what a handoff must say to a compacted reader).
+
 ---
 
 ## Which agent are you?
