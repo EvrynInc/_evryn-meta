@@ -172,6 +172,93 @@ Before, we had pleading, all-caps, threats, things like *"we already spun you on
 - **Do not leak the task into trip 1.** A file list annotated *"…because you'll need it for the extraction"* re-creates the thing this removes. Annotate what a file **is**, never what it is **for**, until trip 2.
 - **Trip 2 costs a full transcript replay** — resume re-sends everything the agent loaded. That is the price of the guarantee, it is known, and it is worth it. Budget for it; don't design around avoiding it.
 
+---
+
+## 🔴 WHEN THE LOAD IS TOO BIG FOR ONE AGENT — the THREE-trip spin (added 2026-08-11, Justin's design)
+
+> **Read this before you spin anything against a large runtime.** Two-trip loading above is still the shape; this adds one trip **in front of it** for the case where the load itself no longer fits.
+
+### The fact that forces it
+
+**A full-runtime load no longer reliably fits in one agent.** Three independent confirmations: on **2026-08-10** three agents attempted it and **two compacted during the load**; the **Code Atlas** records that every one of its seven authors needed a scoped load *"because a full-runtime load no longer fits one agent"*; and on **2026-08-11** a full-load product scout compacted at ~85%, having never opened `classify.ts`, `process.ts`, `slack.ts` **or any of the 11 identity files**.
+
+**The measured reason is not the code — it is OUR OWN PROSE DOCS.** Off the Read tool's own token counts: `_evryn-meta/CLAUDE.md` ≈ **144 tokens/line**, this protocol ≈ **166**, `SPRINT-V0.2-HARDENING.md` ≈ **163**, `evryn-backend/CHANGELOG.md` ≈ **180**. TypeScript runs ~30–45. ⇒ On that scout's load the **documents were ~800K tokens and the runtime they existed to help it read was ~700K.**
+
+### 🔑 WHEN THIS APPLIES — it is NOT every spin
+
+**The trigger is the SIZE of the load, not the identity of the agent.** Use three trips **when the load would include a full runtime (either half) or anything comparable in scale.** Otherwise two trips is correct and complete.
+
+| Spin | Shape | Why |
+|---|---|---|
+| **A DC building a scoped change in a handful of files** | **TWO** | You know the files. There is no load problem to solve, and a derive trip would surrender the relevance guarantee for nothing. |
+| **A QC whose standing cascade names the full runtime set** | **THREE** | Her cascade is precisely the thing that no longer fits. |
+| **A runtime scout, or a lane AC that must read broadly** | **THREE** | The canonical case. |
+| **A generic subagent** (a path lookup, a line count) | Neither — see the generic-subagent exception. | |
+
+**Unsure? One question: *could I hand this agent an explicit list right now, and is that list small enough to load?*** Yes → two trips. No → three.
+
+### The shape
+
+| Trip | Carries | The agent's ENTIRE output | Who gates |
+|---|---|---|---|
+| **1 — DERIVE** | `<identity>` · the **map artifact** (for `evryn-backend`: `docs/atlas/` + `docs/dependency-map.md`) · **the task, with a loud DO-NOT-START** · `<output>` · `<receipts>` | a **load proposal** + receipts | **AC reviews, adds what is missing, approves** |
+| **2 — LOAD** | the approved list, verbatim, in the normal `<mandatory_load>` block | receipts only | **AC verifies receipts** |
+| **3 — WORK** | `<task>` · `<questions_first>` · `<isolation>` | the work | — |
+
+**Four things make this work, each answering a real objection:**
+
+1. **The task must be in trip 1** — an agent cannot propose a sensible load without knowing what it is for. ⚠️ **This does surrender two-trip's guarantee that relevance is not computable.** What replaces it is that **you review the derived list before approving it** — a stronger control, because you see the reasoning and not only the receipts. 🔑 **Make the review real: write down YOUR OWN expected list BEFORE reading theirs, then diff, both directions.** What they missed is a gap in the derivation; what they added that you had not thought of is the dividend.
+2. **The derivation must be a LOOKUP, not an investigation** — otherwise the agent burns real tokens deciding what to read, which defeats the purpose. That is what the map artifact is for: an index with a routing table and per-section file lists turns an open judgment into a lookup. ⚠️ **If a derivation comes back expensive anyway, that is a finding about the MAP, not the agent** — the index is failing its one job. Report it.
+3. **Racing ahead is self-defeating, not merely forbidden** — in trip 1 the agent **does not have the runtime**, so anything it produces is visibly empty. That structural fact does more work than any instruction.
+4. **The extra trip is nearly free, and this is the part that gets misjudged.** Resume replays the whole transcript, so a trip costs whatever is *already* loaded — and this one is inserted **before** the runtime is in context. Two-trip pays **one** heavy replay; three-trip pays **one heavy plus one light**. Roughly 2%, not 50%.
+
+### 🔴 The overload protocol — four named strategies, one forbidden move
+
+**This is the half that keeps a scoped load honest, and it exists because we know the default.** Justin: *"we know how they're going to solve it — by not reading things they need to. That's always their default."*
+
+**The default is: read every file on the approved list, in full.** An agent may depart from that **only** via one of these four, and **must name which one it used, per file:**
+
+1. **Fan out sub-readers** — one per subsystem, each holding its slice in full; the parent reconciles. **Keep them alive as a bench** so a cross-seam question goes to both sides.
+2. **Run it instead of reading it** — execute the suite, regenerate the dependency map, fire a probe. Sometimes the way to understand something is to run it.
+3. **Read a bounded slice — but only one the MAP itself justifies**, with the citation. A slice with a map citation behind it is a decision; a slice without one is a guess.
+4. **Hard stop** — *"I cannot do this in one head; here is the split I need."*
+
+🚫 **THE FORBIDDEN MOVE, named so it has nowhere to hide: *"I pre-judged this file unlikely to matter."*** Never legitimate. The per-file disclosure exists to make it impossible to do quietly.
+
+⚠️ **Honest limitation — say it when you use a fan-out:** a fan-out is **weaker at the seams** than one agent holding everything, and the seams are where plenty of behavior lives. **We accept it because the alternative is not a stronger agent; it is an agent that compacts.**
+
+### ⚖️ This does NOT loosen the anti-under-loading rule. It replaces "drop files" with "restructure the work."
+
+**Part 2 above says the agent's full standing cascade is mandatory and your judgment is additive-only — that still holds.** The carve-out it already contains (*"unless including a standing file would literally break the run"*) **is exactly this case: an agent that compacts mid-load has had its run broken, and its output is junk.**
+
+🔴 **But the sanctioned response is NOT to shorten the list.** Keep the whole list and change **how it gets read** — the four strategies above. **Every file still gets read by someone; what changes is by whom, and in how many heads.** 
+
+### The `<output>` block — paste VERBATIM on trip 1 of a three-trip spin
+
+**It sits alongside `<receipts>` in the trip-1 brief, and it is part of the verbatim set** — the HARD RULE applies to it exactly as to every other block.
+
+```
+<output>
+🔴 YOU ARE BEING *SHOWN* THE TASK, BUT YOU MAY NOT START IT. This first trip produces ONE thing.
+
+You were told the task because you cannot propose a sensible load without knowing what it is for. That is the *only* reason it is here. You are *NOT* authorized to begin.
+
+Your entire output this trip is a LOAD PROPOSAL: the files you need in order to do that task, each with its full path and line span, and one clause per file on why it is on the list. Then your receipts for what you read to build it.
+
+How to build it — this is a LOOKUP, not an investigation. Read the map artifact's index, follow its routing table to the sections covering your task, and take the files each of those sections names. That is your proposal. If you cannot derive a file's relevance from the map, say so and name what you would need.
+
+You MAY open up to FIVE files beyond the map, and only to resolve a genuine ambiguity the map left — never to study them, and never to begin. Every one you open goes in your proposal by name, with one line on what you were checking and what you found. Needing a sixth means the map has failed you; say that instead of reading further.
+
+Do not analyze, investigate, plan an approach, or write any part of the answer. The material is deliberately not in your context yet, so anything you produced now would be blind guesswork in a confident voice.
+
+If you produce anything other than the proposal, this trip is discarded and you are resumed and asked again — as many times as it takes. Your spinner will review the proposal, add anything you missed, and only then will send you the approved list to actually load.
+</output>
+```
+
+**Why the five-file allowance exists, since it looks like a hole.** A map can be thin or wrong about a subsystem, and an agent that cannot check is forced to propose from a document it has reason to doubt. **The bound plus mandatory disclosure is what stops it becoming exploration:** there is no incentive to "peek" when a peek is just a disclosed read, and a hard count makes drift into the work structurally impossible rather than merely discouraged. *(Justin raised exactly this — "could we allow the scout to read the files it thinks it needs, or does that invite shenanigans?" — and this is the answer: yes, bounded and disclosed.)*
+
+---
+
 ### 🔴 THE LANE BRIEF IS TRIP-2 READING, NEVER TRIP 1 — this resolves a collision between two of our own rules
 
 *(Added 2026-08-10 with Justin's approval, after the collision was hit live on the first night of running lanes under two-trip loading. **Every AC that spins a lane AC will hit it on its first spin,** so it is written down rather than left to be re-resolved — possibly the other way — by whoever gets there next.)*
