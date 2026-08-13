@@ -912,4 +912,72 @@ The sharpest instance is worth carrying because of *how* it failed. A lane AC ad
 
 ---
 
+## Unpromoted — from the 2026-08-11/12 team-runtime overnight round (ACf-13)
+
+*A night whose stated subject was a memory build and whose actual subject turned out to be **whether our verification instruments work.** Filed together because they compound; `#sweep` should distribute them separately.*
+
+#### 🔴 A guard must be proven in BOTH directions — it fires on bad input AND stays silent on good input
+
+**We have a well-developed discipline for the first half** — *"watch it fail against deliberately-broken real code"* is in DC's, QC's and AC's manuals — **and essentially none for the second.**
+
+**In one night FOUR measuring instruments produced false results, and every one was caught by a CONTROL rather than by care:**
+1. A merge-gate script **reported RED on known-good code** — `node --test` prints `ℹ pass 442`, that leading glyph is multi-byte, a `^.` pattern matched nothing, and an empty count defaulted to failure.
+2. A builder's applied-proof grep **matched a comment that quoted the mutated string** — so it would have recorded *"mutation applied, tests still green"* over untouched code, i.e. reported brand-new security guards as decorative.
+3. A reviewer's mutation harness **spawned a Windows shell shim `execFileSync` cannot exec.** Every call threw, was caught, and was recorded as **RED**. **All 24 mutations "passed."** Caught only because a control mutation changing **one comment word** also reported RED.
+4. **CRLF silently voided hand-typed multi-line find-strings** — on two separate agents, the same night.
+
+🔑 **THE ASYMMETRY THAT MAKES THIS HARD TO SEE: a false-RED is the SAFE direction, which is exactly why it survives review.** It never causes an incident. It just quietly destroys trust in the instrument, and people work around it.
+
+**⇒ A mutation harness needs a known-GOOD control as much as a known-BAD one, and the good-direction control is the one nobody runs.** *Promote to:* `evryn-quality/CLAUDE.md` (Patterns This Role Watches For) **and** `evryn-dev-workspace/CLAUDE.md` — both currently mandate only the bad-direction half.
+
+#### "Decorative" and "real but BLIND" are DIFFERENT failure classes, and collapsing them costs you
+
+- **Decorative:** asserts nothing that could fail. *(Three emergency-alert tests injected a fake sender and never asserted it was used — switching the sender off entirely left them green.)*
+- **Real but BLIND:** genuinely works, **over the wrong scope.** *(A NUL-byte scanner correctly caught NUL bytes — in the three directories someone remembered to list, while its own anti-vacuity test iterated **that same list** and so could not detect its own gap.)*
+
+**The second is nastier: everything about it looks healthy from the inside, and only its SCOPE tells you which one you have.** ⚠️ **And blindness recurs across redesigns** — rebuilt as an *exclusion* list, excluding the entire `src/` tree **still** left its tests green, because **an anti-vacuity floor calibrated to a TOTAL cannot detect the removal of a SUBSET.** *Promote to:* `evryn-quality/CLAUDE.md`.
+
+#### The failure class reproduces INSIDE its own cure — check the fix for the disease
+
+**Two instances, one night.** A test header that **deletes** a false blanket claim, spends three lines explaining that *"a file-level assertion about every test in the file is exactly the shape that rots"* — **and makes a new one three lines later** (*"each guard below carries its own `RED:` line"*; only 4 of 17 did). And a lane whose **headline finding was an assertion with no failing input** shipped **a brand-new assertion with no failing input**, its fixture using dates six years apart so any cutoff satisfied it.
+
+**⇒ When you fix an instance of a class, re-read your fix AS an instance of that class.** The pull toward the tidy version survives being explicitly warned against one paragraph earlier. *Promote to:* `ac-writing-protocol.md`.
+
+#### 🔴 The auto-injected `CLAUDE.md` is a SNAPSHOT FROM SESSION START and does not track later edits
+
+**Three independent confirmations in one night**, plus a fourth instance on a different file (an ADR that changed under a running subagent). **Every subagent inherits its SPINNER's snapshot** — so a conductor and its whole agent tree can operate from a stale manual while each believes it auto-loaded correctly.
+
+**The only reason it was caught: the `<identity>` block's *"do not assume that auto-load was complete — read it in full yourself."*** That clause is currently justified on **truncation** grounds; **staleness is a second, independent, stronger reason for it.** *Promote to:* `ac-orchestration-protocol.md` (the AC-variant identity block's rationale).
+
+#### `#cascade-override` costs you the OMISSION-CATCHER, not just the reconcile
+
+A DC whose brief carried **no** override token ran its cascade reconcile, noticed its brief named **no identity file**, cited its own manual (*"that is an omission by whoever briefed you, not a decision"*), and **loaded the identity half unprompted** — closing a gap its conductor had knowingly left.
+
+⇒ **The reconcile is the one part of the loading protocol that can catch the SPINNER's mistake, and the override disables it.** That cost is stated nowhere today. *Promote to:* `ac-orchestration-protocol.md` (`#cascade-override` guardrails).
+
+#### A lane AC's account of what it has NOT received is unreliable — verify by artifact
+
+**When a lane AC is stopped, its child's completion report can land on the GRANDPARENT instead**, and the lane never sees it. **Observed twice.** One lane reported *"no completed independent review exists for any of this"* while its conductor was **holding that reviewer's full GO.**
+
+**⇒ Verify by ARTIFACT** — the commit, the diff, your own suite run — **rather than chasing the missing narrative.** One lane reached this itself, explicitly judging a ~500K-token transcript replay a bad trade to recover a report it could confirm from the code. *Promote to:* `ac-orchestration-protocol.md` (Nested subagents).
+
+#### `git merge-base --is-ancestor X main` cannot distinguish "merged" from "never started"
+
+It returns **TRUE in both cases** — X merged, or X empty. **Two agents hit this independently in one night**, both nearly recording a lane as *merged* when the honest answer was *hasn't begun*. **Use `git rev-list --count main..branch` and read the number.** *Promote to:* `_evryn-meta/CLAUDE.md` (Worktree & Branch Discipline).
+
+#### `git commit -- <path>` silently NO-OPS on an untracked file — and a chained command still prints success
+
+The commit fails with *"pathspec did not match any files"* — **but in an `&&` chain the following `git push` still runs and prints a success line carrying somebody else's commit SHA.** `git add` first. **And never let a success message from a LATER command in a chain stand in for the one you actually cared about.** *Promote to:* `ac-writing-protocol.md` — it already carries the backtick/heredoc commit trap; same family.
+
+#### Provision agent worktrees with a real `npm ci` — never a junction
+
+**Eight worktrees in one night, `node_modules` 146 → 146, zero incidents.** This repo had previously lost its canonical `node_modules` **three times** to junction-then-reap. **`npm ci` costs about a minute and removes the hazard rather than steering around it** — and the before/after count check around every removal is what makes a slip *visible* instead of requiring you to remember. *Promote to:* already in `_evryn-meta/CLAUDE.md`; **this is confirming evidence at scale, not a new rule.**
+
+#### Two smaller ones from the same round
+
+- **Appending to a file whose last line is a truncation canary means inserting BEFORE it.** Appending past it orphans the canary mid-document — telling the next reader their load truncated at the previous entry and that yours does not exist. **The tail is not the end.** *(Committed live, minutes after reading the protocol that mandates canaries.)*
+- 🔴 **A *"designed but not built"* claim is the most perishable sentence in an architecture doc, because NOTHING FAILS when it goes stale.** One such line asserted two features were unbuilt; one had merged the day before. **Third instance in that repo of a doc asserting a runtime state that does not exist.** ⇒ **When you ship a thing a doc calls unbuilt, the doc edit rides the SHIP, not the checkpoint.** *Promote to:* `lock-protocol.md` step 5c — it already says *"built ≠ merged ≠ deployed"* but does not name the not-yet-built claim as the perishable one.
+
+---
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
