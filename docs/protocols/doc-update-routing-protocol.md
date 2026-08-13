@@ -57,7 +57,7 @@ Every durable surface a system change can invalidate, **grouped by who may chang
 | `evryn-backend/docs/ARCHITECTURE.md` | System design + status (intent) | **Soren = owner of record; AC = co-owner, holds edit rights** | AC edits with **Justin's explicit per-edit authorization**; keep Soren informed of substantive structural changes (coordinate via Justin/AC0). |
 | `evryn-backend/docs/BUILD-EVRYN-MVP.md` (·v0.3·FUTURE) | Phase scope + build order + phase badges | Soren owner-of-record; AC co-owner | Same gate as ARCHITECTURE. v0.2 content → MVP; v0.3 mechanics → BUILD-EVRYN-v0.3; v0.4+ → BUILD-FUTURE. |
 | `_evryn-meta/docs/current-state.md` | The cross-project snapshot | AC (or Soren), at `#lock` | Refreshed at `#lock` by whoever's active; propose outside `#lock`. Keep under ~50 lines — detail belongs in the repo's own state/build doc. |
-| `_evryn-meta/LEARNINGS.md` · `AGENT_PATTERNS.md` | Cross-project patterns / agent-building learnings | AC | Source-of-truth → propose to Justin before editing. |
+| `_evryn-meta/LEARNINGS.md` | Cross-project patterns **and agent-building learnings** — ⚠️ **`AGENT_PATTERNS.md` was COLLAPSED into this file on 2026-08-12** (Justin's ruling) and survives only as a pointer. **Do not route new learnings there.** | AC | Source-of-truth → propose to Justin before editing. |
 | `_evryn-meta/docs/protocols/*` (incl. **this file**) | Process + craft rules | AC | Source-of-truth → propose to Justin before editing. |
 | `_evryn-meta/CLAUDE.md` · runtime `CLAUDE.md`s (`evryn-backend`, `evryn-team-agents`) | AC's operating manual / runtime-agent manuals | AC | Source-of-truth → propose to Justin before editing. |
 
