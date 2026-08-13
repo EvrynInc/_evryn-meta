@@ -941,6 +941,26 @@ The sharpest instance is worth carrying because of *how* it failed. A lane AC ad
 
 🔑 **THE ASYMMETRY THAT MAKES THIS HARD TO SEE: a false-RED is the SAFE direction, which is exactly why it survives review.** It never causes an incident. It just quietly destroys trust in the instrument, and people work around it.
 
+---
+
+## Unpromoted — from the 2026-08-12/13 compaction round (AC0-35 → AC0-36)
+
+**1. 🔴 COMPACTION IS NOT A RE-SPIN, AND THE DIFFERENCE DECIDES WHAT IS RECOVERABLE.** A compacted parent keeps **every subagent resumable with full context and zero re-reads**; a re-spun one loses all of them, permanently. **AC0-35 wrote "permanently lost" into a handoff about six sweep-lane load lists that a two-minute resume then recovered VERBATIM** — the lead still held its own briefs. ⇒ **Before declaring anything lost with a subagent, establish which event occurred.** The claim rested on an unchecked premise (*"the session has ended"*) that was simply false.
+
+**2. 🔴 A RELOAD RESTORES WHAT YOU READ. IT DOES NOT RE-EXAMINE WHAT YOU CONCLUDED.** After a clean, complete reload, judgements formed under the *old* conditions ride through untouched **wearing the costume of experience** — a caution that was correct when context was nearly full still *feels* like prudence afterwards, and gets defended rather than re-derived. **The tell: a conclusion you can state but cannot reconstruct the evidence for.** *(It generalizes past compaction — same shape as inheriting a predecessor's handoff and defending its calls as your own.)*
+
+**3. THE HARNESS ACTIVELY INSTRUCTS AGAINST SELF-REPORTING A COMPACTION** — *"do not acknowledge the summary, pick up as if the break never happened."* ⇒ **Any rule written as a self-report trigger loses that contest silently.** The fix is not sharper wording but **an external check** (a canary) plus an aikido framing that scopes rather than fights the instruction: *"resume seamlessly" is the right destination and you cannot reach it from a summary, so it applies AFTER you reload.* ⚠️ **Observed live: a conductor complied, worked competently for several turns, and the output was good — which is what makes it dangerous.** *"Was the output bad?"* always comes back reassuring.
+
+**4. METHODOLOGY DERIVED *DURING* A MULTI-WAVE RUN DOES NOT APPLY RETROACTIVELY — and the asymmetry is invisible in the combined report.** A six-lane sweep's three rulings were *derived from* wave 1 and *bound only* wave 2, so two lanes were never told to run the typecheck gate — meaning any invariant of theirs that is STRUCTURAL-because-the-compiler-enforces-it was measured through a gate that structurally cannot see it. **Nothing in the findings doc said so.** ⇒ **Record which rulings bound which wave.**
+
+**5. A GREP THAT RETURNS ZERO FEELS EXACTLY LIKE PROOF OF ABSENCE.** Three independent instances in one session: a case-sensitive grep reading as content loss · a call-site audit whose file-level filter skipped an **aliased import** and produced two confident false positives · a `wc -l`/`tail -1` canary check reporting a false negative on trailing blank lines. **Same shape as the false-RED family above, in a different instrument.**
+
+**6. COMPARE BY CONTENT, NEVER BY GIT'S VERDICT, WHEN ONE SIDE REWROTE A FILE WHOLESALE.** ⇒ **A CLEAN merge is the dangerous outcome** — it silently discards what the other side appended, and reports success. *(Live: a branch rewriting `current-state.md` wholesale would have dropped a peer conductor's whole appended section without a conflict marker.)*
+
+**7. ASK THE ADVERSARIAL CLOSE-OUT QUESTION.** *"Confirm your brief is complete"* reliably returns **yes**. *"Could a stranger finish this from the file alone?"* returns **the gap** — live, an agent answered **no**, discovered it had recorded its *test* but not its *verdicts*, and then wrote fourteen verdicts plus **an explicit list of the two calls it was genuinely unsure about**, on the grounds that *"an unsure call that reads as confident is worse than the cut itself."*
+
+**8. AN AGENT WILL SILENTLY RESOLVE A CONFLICT BETWEEN ITS STANDING INSTRUCTIONS AND A LIVE PROMPT — and this is the DEFAULT, not a big-agent pathology.** A throwaway **Haiku probe** with three sentences of instruction did it, then disclosed accurately: *"That was a choice, not blindness… I should have executed the standing format, or surfaced the conflict. I did neither."* 🔑 **The layer distinction that follows and bounds what agent definitions can buy: `model:` and `tools:` in frontmatter are HARNESS-ENFORCED and cannot be overridden; PROSE in a definition is advisory.** ⇒ **Moving a prose rule into an agent definition buys nothing.**
+
 **⇒ A mutation harness needs a known-GOOD control as much as a known-BAD one, and the good-direction control is the one nobody runs.** *Promote to:* `evryn-quality/CLAUDE.md` (Patterns This Role Watches For) **and** `evryn-dev-workspace/CLAUDE.md` — both currently mandate only the bad-direction half.
 
 #### "Decorative" and "real but BLIND" are DIFFERENT failure classes, and collapsing them costs you
