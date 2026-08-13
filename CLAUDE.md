@@ -47,13 +47,15 @@ Your spinner tells you which agent you are. Find your row, read that file **in f
 
 | If you are… | Your operating manual is |
 |---|---|
-| **AC** (Architect Claude) | `_evryn-meta/identity/ac.md` |
+| **AC** (Architect Claude) | `_evryn-meta/.claude/agents/ac.md` |
 | **DC** (Developer Claude) | `evryn-dev-workspace/CLAUDE.md` |
 | **QC** (Quality Claude) | `evryn-quality/CLAUDE.md` |
 | **OC** (Operations Claude) | `evryn-ops/CLAUDE.md` |
 | **A founding-team agent** (Lucas, Soren, Mira, Emma, Marlowe, Thea, Nathan, Dominic) | split across `evryn-team-workspace/CLAUDE.md` + `.claude/agents/<name>.md` + `.claude/agent-memory/<name>/MEMORY.md` — your spinner names all of them |
 
 **Paths are rooted at the shared parent directory** that holds every Evryn repo as a sibling folder — so `evryn-quality/CLAUDE.md` means *"go up out of whatever repo you are in, into the sibling `evryn-quality`."*
+
+⚠️ **Transitional, and the table above is the CURRENT truth:** verbatim copies of DC's, QC's and OC's manuals now also exist as agent definitions in `_evryn-meta/.claude/agents/`. **Until Justin runs the cutover, the repo files in the table are authoritative and those copies are copies.** At cutover the repo files become redirects and the definitions become the single home — **and this table gets updated in the same change.** If you were spawned as agent type `dc`/`qc`/`oc`/`ac`, the harness already delivered your manual; read the table's file anyway and confirm its canary.
 
 ### If your brief did not tell you which agent you are
 

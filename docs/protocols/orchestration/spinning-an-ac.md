@@ -31,7 +31,9 @@ Sometimes the right subagent is **another AC**. Two shapes:
 
 The load discipline is unchanged. Two things in the canonical blocks are literally *false* for an AC and must be substituted.
 
-**Why AC is a special case:** a spawned subagent **auto-inherits AC's CLAUDE.md**. For a DC/QC/OC/team spin that auto-load is the **wrong** manual, and `<identity>`'s whole job is to redirect off it. For an **AC** spin, it is the **right** manual, already present — which inverts the block's purpose: pasting *"that is NOT yours, and you are not AC"* would actively mis-identify the agent. And AC's cascade is **tiered** (Light / Full), so no section named plain "Startup Context Cascade" exists for the opener to anchor on.
+**Why AC is a special case:** a spawned subagent auto-inherits `_evryn-meta/CLAUDE.md`, which is now a **tiny router**, not anyone's manual. For a DC/QC/OC/team spin that router is *not their manual and does not contain it*, so `<identity>` must name theirs. For an **AC** spin the router points at AC's own manual, so pasting *"that is NOT yours, and you are not AC"* would actively mis-identify the agent. **What is true for BOTH: the router contains no manual, so every spin — AC included — must have its manual named explicitly in `<mandatory_load>` and must read it from disk.** And AC's cascade is **tiered** (Light / Full), so no section named plain "Startup Context Cascade" exists for the opener to anchor on.
+
+⚠️ **The frozen `<identity>` text immediately below still describes the auto-loaded file as AC's operating manual. That sentence is FALSE post-split and is deliberately left unchanged** — it sits inside the HARD RULE's frozen set, so only Justin may re-word it. Do not "fix" it; a re-wording is on his ballot.
 
 **The exact words for an AC subagent — paste the SAME skeleton from "The exact words" above, verbatim, ACROSS BOTH TRIPS, with ONLY the two substitutions below.** The entire body of `<mandatory_load>`, plus `<task>`, `<questions_first>`, and `<receipts>`, is **identical** — do not re-type it. These two substitutions are the **codified, Justin-approved** AC variant: applying them is NOT a HARD-RULE violation (that rule bars AC *inventing* changes — these are pre-approved). Apply only these two; change nothing else without asking Justin to approve a change explicitly.
 
@@ -73,7 +75,7 @@ The load discipline is unchanged. Two things in the canonical blocks are literal
 
 ### 🔴 Recursive propagation — an AC you spawn WILL spawn others, and it inherits NOTHING about how
 
-**This is the highest-consequence failure mode in the whole AC-under-AC model.** An AC subagent will spin its own DC/QC — and **nothing tells it to use this protocol.** It has AC's CLAUDE.md (which *points* here), but a spinning AC that improvises a brief re-creates the exact lobotomy this protocol exists to prevent — one level down, where you cannot see it. **The blast radius is everything that sub-AC ships, and you will not know.**
+**This is the highest-consequence failure mode in the whole AC-under-AC model.** An AC subagent will spin its own DC/QC — and **nothing tells it to use this protocol.** What it auto-inherits is the router, which points at AC's manual, which points here — **two hops, neither of them forced** — and a spinning AC that improvises a brief re-creates the exact lobotomy this protocol exists to prevent, one level down, where you cannot see it. **The blast radius is everything that sub-AC ships, and you will not know.**
 
 **So EVERY AC-subagent brief MUST, without exception:**
 - **Put `_evryn-meta/docs/protocols/ac-orchestration-protocol.md` (full — read to the canary) on its `<mandatory_load>` list.** Not "it's pointed at from CLAUDE.md" — **named explicitly, with its line span**, like every other load-bearing file. Unnamed = unread.

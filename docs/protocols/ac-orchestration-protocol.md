@@ -40,7 +40,7 @@
 
 > 🔴 **If you are an AC who will spin other ACs, `spinning-an-ac.md` is NOT optional** — it carries recursive propagation (*your* sub-ACs inherit nothing about how to spin), the escalation ladder (how a sub-AC's question reaches Justin), and the work brief. **"Nested subagents" stayed HERE in the core**, because it governs every nesting — including a DC that spawns its own helper — not just AC-under-AC.
 >
-> **The teaching layer** — superseded pathways and the incident narratives behind these rules — is `docs/protocols/orchestration/orchestration-rationale.md`. A conductor reads it once; a DC spin never needs it. **Where a rule's story is what makes the rule stick, the story stayed here, compressed.**
+> **On the war stories, so nobody re-adds them:** every rule here states its **consequence** — *"do X, because if you don't, Y breaks"* — because a consequence is what makes an instruction stick. What it does **not** carry is the *provenance*: who hit it, which lane, what date, what it cost. **That was deliberately deleted rather than relocated** (Justin, 2026-08-12: *"if compliance is what it's for, then putting it in its own sidecar completely misses the point, because literally no one is going to read that sidecar"*). **Git history holds every deleted passage losslessly** — `git log -p` this file — and unlike a sidecar it cannot go stale or invite additions. ⇒ **Add consequences freely; do not re-introduce narrative, and do not create a rationale doc to hold it.**
 
 ---
 
@@ -64,7 +64,7 @@ When an AC begins a major new piece of work, it first orients Justin on its plan
 
 **This is an AC-level discipline — subagents do NOT describe-then-pause to Justin.** AC vets the plan with Justin, then spins DC/QC/team subagents the way AC sees fit. That is the entire point of having an AC running the show: Justin aligns with the *conductor*, not with every player. A subagent's job is to execute its brief and return its result to AC — it never routes its own plan to Justin for sign-off.
 
-*(Origin: Justin, 2026-06-19 — round 1's "post your plan and proceed without waiting" let lanes race ahead, so it was reversed. Refined 2026-06-22 to generalize across all ACs and to fix the subagent boundary.)*
+*(This reversed an earlier "post your plan and proceed without waiting" rule, which let lanes race ahead.)*
 
 ---
 
@@ -82,7 +82,7 @@ This shape has been proven through *a lot* of testing. Honor all six parts — t
    >
    > **⇒ The accident that used to cover a briefing gap is gone.** If your `<mandatory_load>` list omits the agent's own manual, **nothing else supplies it** — the agent holds a routing table and no methodology, and (per the router's one hard rule) is not authorized to do anything at all. **The rule above already required listing it. It is now the difference between a competent agent and a halted one.**
    >
-   > **This applies to EVERY target, not just sub-ACs** — DC, QC, OC, team agents and ACs alike. The paths are: **AC** → `_evryn-meta/identity/ac.md` · **DC** → `evryn-dev-workspace/CLAUDE.md` · **QC** → `evryn-quality/CLAUDE.md` · **OC** → `evryn-ops/CLAUDE.md` · **team agent** → its three-file split (see the team sub-doc).
+   > **This applies to EVERY target, not just sub-ACs** — DC, QC, OC, team agents and ACs alike. The paths are: **AC** → `_evryn-meta/.claude/agents/ac.md` · **DC** → `evryn-dev-workspace/CLAUDE.md` · **QC** → `evryn-quality/CLAUDE.md` · **OC** → `evryn-ops/CLAUDE.md` · **team agent** → its three-file split (see the team sub-doc). ⚠️ **DC/QC/OC verbatim copies also exist at `_evryn-meta/.claude/agents/`; until Justin's cutover the repo paths above are the authoritative ones to name.**
    >
    > ⚠️ **And the staleness note that makes the router safe to rely on:** the auto-injected copy has been observed serving a **stale snapshot** (content committed hours earlier was missing from it, confirmed independently by two agents on 2026-08-11). This is why the router is kept tiny and near-static — a stale copy of a near-static pointer is still a correct pointer — and why every manual is **read from disk with its canary confirmed** rather than trusted from the injection. **Do not design a brief that depends on the injection carrying current content.**
 
@@ -98,7 +98,7 @@ This shape has been proven through *a lot* of testing. Honor all six parts — t
    >
    > **⇒ THE FIX: one clause of WHY, inline, on any file whose relevance the agent cannot derive from the task statement.** Not a paragraph — a clause. *"`operator-guide.md` (full — 446 lines) — **this is the sheet Justin reads during a deploy, under time pressure, and he is not an engineer.**"*
    >
-   > **Proven on its first use.** That exact clause is the difference between the trip where the file was skipped and the trip where it was read — **and reading it surfaced a near-miss:** the guide's only deploy command was a bare `railway up`, which deploys **PRODUCTION**, with no staging path anywhere in the file, at the exact moment a staging-first deploy plan had just been approved. **Two prior full-runtime trips had produced confident reports without it.** The scout's own assessment of why the clause worked is worth keeping: *"not because it made me more compliant, but because it **supplied the relevance I could not compute**, so the triage that dropped it twice had nothing to drop it on."*
+   > **Proven on its first use:** the same file was skipped on two prior trips and read on the trip that carried the clause — and reading it caught the operator guide telling Justin to deploy straight to **PRODUCTION**, days after a staging-first plan had been approved. **The clause works because it supplies relevance the agent cannot compute, so the triage that dropped the file twice has nothing left to drop it on.**
    >
    > ⚠️ **Do NOT respond to this failure by SHORTENING the list.** That is the intuitive fix and it is the wrong one — it costs you exactly the case that catches things (a file whose value only you can see), which is the case that just paid off. **Keep the full list; annotate the non-obvious entries.**
 
@@ -112,7 +112,7 @@ This shape has been proven through *a lot* of testing. Honor all six parts — t
    >
    > **Add the corollary, because it cuts the other way and is the half people forget:** *"where this brief is SILENT, do not read that as 'the spinner checked and there was nothing there.' Assume instead that they could not see it."*
    >
-   > **⭐ PROVEN, repeatedly and in one night (2026-08-10/11).** Across two lanes briefed this way, **six corrections came back up** — including a flat factual error in the brief (*"there is no alert"* — there was), a proposed fix that would have created a module cycle, a mis-scoped call-site table that would have shipped a half fix, a rebase claim that was simply false, and a **specification that would have silently broken a working `/pause` → `/resume` path**. **The spinner caught none of them.** One lane AC named the mechanism exactly: it checked *because it had been told the brief's author hadn't looked.*
+   > **⭐ PROVEN: across two lanes briefed this way, six corrections came back up in one night** — including a flat factual error in the brief and a **specification that would have silently broken a working `/pause` → `/resume` path. The spinner caught none of them.** A lane AC named the mechanism exactly: it checked *because it had been told the brief's author hadn't looked.*
    >
    > **Why this is not humility theatre:** it converts a subagent from an executor into **a reviewer of its own instructions** — which is the cheapest review layer available, since it costs one sentence and happens before any work is built on a wrong premise. ⚠️ **And it is the load-bearing companion to the conductor cascade:** that cascade is what makes a light load *safe*, and this disclosure is *why* — the runtime competence lives one layer down, and this is the sentence that lets it flow back up. **A conductor who loads light and does NOT disclose it has taken the cascade's benefit without paying its price.**
 
@@ -162,7 +162,7 @@ This shape has been proven through *a lot* of testing. Honor all six parts — t
 
    **And when a receipt says something was "verified," check what tool did the verifying.** A `Grep` is not a `Read`: it returns the lines matching terms *the agent already chose*, so it can confirm a string is present but cannot establish what a file says or that it loaded. A receipt reporting a search as *"verified against the artifact of record"* has laundered a confirmation-shaped search into a full read — **treat any conclusion resting on it as UNVERIFIED**, exactly as you would a short span or a missing canary. *(This is the receipts-side companion to the writing-side rule that grepping can be actively misleading — see the `<mandatory_load>` plea.)*
 
-   *(Both codified 2026-08-03 from a live run. A fully-loaded team subagent's receipts declared 15 reads against **16 observed calls**. The gap was a `Read` that errored on a token cap, returned nothing, and was silently retried at a smaller limit; the same receipt also described a four-term `Grep` of an **unlisted** file as verifying the artifact of record. Nothing in that run was actually wrong — no mandatory file was short-loaded and the paged file had no gap — but **neither defect was visible from the receipt alone**, and both surfaced only because Justin was watching the tool-stream. Asked to reconcile, the subagent named it herself: *"a receipt that smooths its own edges is the same failure applied to my own tooling instead of my copy."* The lesson isn't that this run was bad; it's that a **clean-looking receipt is exactly what a smoothed one looks like.**)*
+   *(Both codified 2026-08-03 from a run whose receipts declared 15 reads against **16 observed calls** — a `Read` that errored on a token cap and was silently retried at a smaller limit, plus a `Grep` of an unlisted file described as verifying the artifact of record. **Nothing in that run was actually wrong, which is the whole lesson: a clean-looking receipt is exactly what a smoothed one looks like.** Neither defect was visible from the receipt alone.)*
 
    **⇒ THE TECHNIQUE THAT ACTUALLY OBSERVES A CHILD'S CALLS — parse its transcript (added 2026-08-04; a sub-AC invented this and it is better than what this protocol previously asked for).** The `Agent` tool returns a subagent's final text plus an **aggregate** `tool_uses` count — **even in foreground.** So "cross-check the receipts against the observed read-stream" is, from the spinner's seat, **count-only**: you can catch a gross mismatch and nothing finer. **The stronger move: read the child's task transcript directly and count `tool_use` blocks by tool.** That yields the real per-tool breakdown (how many `Read`, how many `Grep`, how many errored) *independent of the child's narration*, and it is the difference between trusting a summary and observing behavior. **Two things make it worth the effort:** (a) the **errored-call count** is the number that matters — a receipt that declares 15 calls against 18 observed is *loose*, but a receipt that declares zero failures against one observed error is *hiding something*; and (b) it is the only way to catch a `Grep` reported as a `Read`. ⚠️ **Do NOT `Read` the transcript file into your own context** — it is the full JSONL conversation and will overflow you; parse it with a script and print only the counts. **When you cannot do this** (you don't hold the child's task file), say so in your attestation in exactly those words — *"I could not observe the call-stream, so the count is unreconciled"* — rather than letting a file-list check read as a full one.
 
@@ -172,7 +172,7 @@ This shape has been proven through *a lot* of testing. Honor all six parts — t
 
 **Every subagent spin must explicitly pin its model — never rely on inheritance.** An unpinned spawn inherits the parent session's model, which is invisible in the brief and changes with whatever the parent happens to be running (a Fable-hosted AC's unpinned spawns burn the shared subscription limits at roughly 2× Opus, for no chosen reason). Choose deliberately between Haiku, Sonnet, Opus, and Fable (when available), and **err on the side of the subagent having *slightly* more capability than the task strictly needs** — a few extra tokens for a smarter subagent is usually a good trade, within reason. But hold the counter-tension: smarter can also mean too smart for its own good — a heavyweight model on a rote mechanical task can second-guess plain instructions. Calibration points: identity-bearing spins (DC/QC/team agents/ACs) default to **Opus**, the proven tier for those roles; light mechanical work (a file lookup, a formatting pass, a faithful read-and-summarize) suits **Haiku/Sonnet**; reserve **Fable** for work that genuinely needs the deepest reasoning and is worth the limit burn. *(Justin's standing rule, 2026-07-13.)*
 
-**Pinning is RECURSIVE — and this is where it silently breaks.** An unpinned spawn inherits its *parent's* model, so in a nested hierarchy an unpinned spin **inherits down the whole chain**: a Fable head AC that forgets to pin AC2, whose own DC spins are also unpinned, silently runs a Fable DC and a Fable QC at ~2× Opus — a fleet-wide burn nobody chose and nobody can see from the top. **So every AC-subagent brief must instruct its AC to pin every spin *it* makes** (the verbatim clause is in `docs/protocols/orchestration/spinning-an-ac.md` → recursive propagation). *(Added 2026-07-16 with the AC-under-AC model.)*
+**Pinning is RECURSIVE — and this is where it silently breaks.** An unpinned spawn inherits its *parent's* model, so in a nested hierarchy an unpinned spin **inherits down the whole chain**: a Fable head AC that forgets to pin AC2, whose own DC spins are also unpinned, silently runs a Fable DC and a Fable QC at ~2× Opus — a fleet-wide burn nobody chose and nobody can see from the top. **So every AC-subagent brief must instruct its AC to pin every spin *it* makes** (the verbatim clause is in `docs/protocols/orchestration/spinning-an-ac.md` → recursive propagation).
 
 ---
 
@@ -192,11 +192,9 @@ In our previous version of this, subagents had to be *heavily* cajoled into foll
 
 **⇒ That triage requires a task to triage against. Remove the task from the load trip and the failure has nothing to operate on.** The agent cannot judge a file irrelevant to work it has not been told about. This is a **structural invariant, not an instruction** — it isn't that the agent is told not to weigh relevance; it is that relevance is *not computable* from what it holds.
 
-### What this lets us DELETE — and it is most of the old machinery
+### What still does work, now that the triage is impossible
 
-Before, we had pleading, all-caps, threats, things like *"we already spun you once and you failed"* framing, a full *"STOP SKIMPING"* rant: **all of it existed to talk an agent out of a triage it was structurally able to perform.** It is no longer able to perform it. **Keep the mechanics; drop the begging** — a rule that cannot be violated does not need to be shouted.
-
-**What stays, because it does different work:**
+**A rule that cannot be violated does not need to be shouted**, so the cajoling this protocol used to carry is gone. What remains does different work:
 - **The precise-load discipline is now MORE load-bearing, not less** (parts 1–2). The agent has *zero* ability to discover a file it needs, because it doesn't know what it's for. **Your list is the entire load.** An omission is no longer partly recoverable by a subagent noticing — it is simply absent.
 - **Receipts stop being a backstop and become the first deliverable.** Trip 1's only output is receipts, so verifying them is not a formality you might skip at the end of a long report — it is the gate between the two trips.
 - **The cascade-reconcile clause stays** — a standing file the agent's own manual names, missing from your list, is still an omission it should catch and load.
@@ -224,7 +222,9 @@ Before, we had pleading, all-caps, threats, things like *"we already spun you on
 
 **A full-runtime load no longer reliably fits in one agent.** Three independent confirmations: on **2026-08-10** three agents attempted it and **two compacted during the load**; the **Code Atlas** records that every one of its seven authors needed a scoped load *"because a full-runtime load no longer fits one agent"*; and on **2026-08-11** a full-load product scout compacted at ~85%, having never opened `classify.ts`, `process.ts`, `slack.ts` **or any of the 11 identity files**.
 
-**The measured reason is not the code — it is OUR OWN PROSE DOCS.** Off the Read tool's own token counts: `_evryn-meta/CLAUDE.md` ≈ **144 tokens/line**, this protocol ≈ **166**, `SPRINT-V0.2-HARDENING.md` ≈ **163**, `evryn-backend/CHANGELOG.md` ≈ **180**. TypeScript runs ~30–45. ⇒ On that scout's load the **documents were ~800K tokens and the runtime they existed to help it read was ~700K.**
+⚠️ **What is NOT established is WHY — and this section previously asserted it confidently and wrongly, so the correction is worth more than the claim was.** It stated that our prose docs dominate the load, citing `_evryn-meta/CLAUDE.md` at ~144 tokens/line and this protocol at ~166. **Measured whole-file, those two run 74.2 and 62.4** — overstated by 1.9× and 2.7×. **The mechanism: both rates were derived from dense *slices*, and our prose is wildly uneven** (one manual's pattern-list section runs ~174 tok/line against 71.8 for the whole file), so a slice-derived rate systematically overstates.
+
+⇒ **The three-trip design is NOT in question — it rests on the three compactions above, not on that arithmetic.** What the bad numbers did affect is the *diagnosis*: at the true rates the doc half is roughly half what was claimed, which may make the **runtime** the dominant cost instead. **So do not use a tokens-per-line figure to decide what to scope down.** **Measure the whole file:** `Read` it with **no `offset` and no `limit`** and take the count from the over-cap notice. ⚠️ **A `Read` carrying an explicit `limit` reports the count of the SLICE, not the file** — that is exactly how the wrong numbers were born. For a file under the cap, derive from bytes at ≈2.88 bytes/token and **label it derived.**
 
 ### 🔑 WHEN THIS APPLIES — it is NOT every spin
 
@@ -303,7 +303,7 @@ If you produce anything other than the proposal, this trip is discarded and you 
 
 ### 🔴 THE LANE BRIEF IS TRIP-2 READING, NEVER TRIP 1 — this resolves a collision between two of our own rules
 
-*(Added 2026-08-10 with Justin's approval, after the collision was hit live on the first night of running lanes under two-trip loading. **Every AC that spins a lane AC will hit it on its first spin,** so it is written down rather than left to be re-resolved — possibly the other way — by whoever gets there next.)*
+*(**Every AC that spins a lane AC hits this on its first spin,** so it is settled here rather than left to be re-resolved — possibly the other way — by whoever gets there next.)*
 
 **The collision, stated plainly:**
 
@@ -464,7 +464,7 @@ So when you shave a block to "save tokens," drop a standing file from a list bec
 
 The brief shape above is built around DC/QC *code* work. When AC spins **any** subagent that will **write or edit a prose document** — an analysis report, a doc draft, a brief, an ADR, a research file — also name **`_evryn-meta/docs/protocols/ac-writing-protocol.md`** as required reading in the brief, in the same "read and faithfully follow, in full" register.
 
-**Why the brief AND the auto-loaded pointer:** a separate protocol file does **not** auto-load into a subagent (only AC's CLAUDE.md auto-injects — verified 2026-06-13). AC's CLAUDE.md carries a hard-pointer *to* the writing protocol, and a subagent *does* follow that pointer to read it when it's about to write (also verified 2026-06-13, by experiment) — but naming the file in the brief is the belt-and-suspenders that makes the load certain on a writing trip.
+🔴 **Naming it is now the ONLY mechanism — this used to be belt-and-suspenders and it is not any more.** A separate protocol file does not auto-load into a subagent; only `_evryn-meta/CLAUDE.md` auto-injects. **Before 2026-08-11 that file was AC's full manual, which carried a hard-pointer to the writing protocol** — and a subagent about to write *did* follow that pointer (verified by experiment, 2026-06-13). **That file is now the router, and the router carries no such pointer.** ⇒ **If you do not name the writing protocol in the brief, nothing else will, and the subagent will write source-of-truth prose without it.**
 
 This **rarely** applies to DC and QC, because they're usually writing or reviewing *code*, not prose docs. But it's about the **file type, not the agent** — so if a given DC/QC trip does include writing or editing a prose doc, name the writing protocol for them too. It's not a hard exclusion; it just rarely lands on them.
 
@@ -496,7 +496,7 @@ That token is **`#cascade-override`**. When AC puts the literal token in a brief
 - **The subagent's own CLAUDE.md in full + its "Context Discipline" section** — always, unchanged; since `#cascade-override` means "load only the list," the CLAUDE.md must BE on the list (it's what makes DC be DC / QC be QC).
 - **The target's standing set:** the code being changed + the code it directly touches, in full; the **data/schema contract** it depends on (for the dashboard cost view: `evryn-backend/src/db/llm-usage.ts` for the `llm_usage` columns + the model-name constants, plus the aggregate-only / PII-firewalled posture in `dashboard/api/product.ts`); and the higher-altitude doc that frames the target (the ARCHITECTURE **Data Model** row for the table). Grep-and-read the target tree exactly as part 2 prescribes; annotate every file with its line span; the full-load gate applies to this list.
 
-**The maintained per-build cascade is AC's SOURCE for assembling the explicit list — it does NOT replace the explicit list (Justin, 2026-07-23).** Since the 2026-07 load-cascade refactor, maintained per-build cascades exist at `docs/protocols/load-cascades/<build>-full-cascade.md` (team-runtime, dashboard, website), and for an **agentic** target the cascade already enumerates **both halves** (code AND identity layer, in order, with a live-enumerate step for a growing tree). Use it — but use it the way parts 1–2 demand: **AC reads the cascade, resolves it to the concrete files (live-enumerating the code/identity halves AT SPIN TIME), and hands the subagent the EXPLICIT, per-file list with line spans.** ⚠️ **Do NOT just tell the subagent *"execute the cascade in full"* and let it discover its own load** — that hands load-discovery back to the subagent, which is *exactly* the dramatic under-load the precise-load rule exists to prevent (a subagent told to "go load it all" uses its own judgment and skips what it wrongly judges irrelevant, then builds confidently wrong). The cascade replaces AC's need to *remember/maintain* what to load; it does **not** replace AC's duty to *enumerate it explicitly* for the subagent. So the override still carries: the literal `#cascade-override` token + one-line reason (still required — see the next paragraph) + the subagent's own CLAUDE.md + **the cascade expanded into an explicit line-spanned file list (every `src/` file, every migration, every identity file)** + the trip-specific files (build spec, ADRs). *(Codified after Justin flagged that a DC pointed at the cascade rather than the enumerated list risks under-loading itself — team-runtime item-(c) spin, 2026-07-23.)*
+**The maintained per-build cascade is AC's SOURCE for assembling the explicit list — it does NOT replace the explicit list (Justin, 2026-07-23).** Since the 2026-07 load-cascade refactor, maintained per-build cascades exist at `docs/protocols/load-cascades/<build>-full-cascade.md` (team-runtime, dashboard, website), and for an **agentic** target the cascade already enumerates **both halves** (code AND identity layer, in order, with a live-enumerate step for a growing tree). Use it — but use it the way parts 1–2 demand: **AC reads the cascade, resolves it to the concrete files (live-enumerating the code/identity halves AT SPIN TIME), and hands the subagent the EXPLICIT, per-file list with line spans.** ⚠️ **Do NOT just tell the subagent *"execute the cascade in full"* and let it discover its own load** — that hands load-discovery back to the subagent, which is *exactly* the dramatic under-load the precise-load rule exists to prevent (a subagent told to "go load it all" uses its own judgment and skips what it wrongly judges irrelevant, then builds confidently wrong). The cascade replaces AC's need to *remember/maintain* what to load; it does **not** replace AC's duty to *enumerate it explicitly* for the subagent. So the override still carries: the literal `#cascade-override` token + one-line reason (still required — see the next paragraph) + the subagent's own CLAUDE.md + **the cascade expanded into an explicit line-spanned file list (every `src/` file, every migration, every identity file)** + the trip-specific files (build spec, ADRs).
 
 **Why the token is *required* (not optional) here:** without it, the `<mandatory_load>` **reconcile step** makes the subagent re-pull every standing file its own cascade names — i.e. the Hub + the Evryn `ARCHITECTURE`/`BUILD` — which defeats the whole swap. `#cascade-override` is the *only* sanctioned way to skip that reconcile, so a genuine different-target trip must use it. This **broadens** `#cascade-override`'s legit cases (it was framed only as narrowing *within* the runtime); it is the SAME token, same required reason + receipts-acknowledgment, same "near-never" caution — not a new mechanism.
 
@@ -519,7 +519,7 @@ Any change to `evryn-backend/src/` OR its identity files is a runtime trip that 
 
 Nothing else changes: the verbatim `<identity>`/`<mandatory_load>`/`<task>`/`<questions_first>`/`<receipts>` blocks, the two-trip split, the load gate, the loop, and the merge/deploy rubric all stand.
 
-*(Added 2026-07-10 by AC3 with Justin's explicit authorization, for the dashboard cost-view build — the first non-runtime DC/QC trip. Authorized scope: accuracy for a non-runtime target ONLY; the process discipline is untouched.)*
+⚠️ **The authorized scope of this whole section is accuracy for a NON-RUNTIME target only. The process discipline above is untouched by it** — do not read this section as loosening anything else.
 
 ---
 
@@ -535,8 +535,8 @@ Nothing else changes: the verbatim `<identity>`/`<mandatory_load>`/`<task>`/`<qu
 
 **Subagent resume works in AC's setup, and it retains the subagent's full prior context.** This reverses the 2026-06-17 finding (still echoed in AC `CLAUDE.md` before this) that "no continuation tool is available … every subagent is unavoidably fresh." The mechanism: a **deferred `SendMessage` tool** (surface it with ToolSearch) now exists, and every Agent-tool spawn returns an `agentId` in its result. `SendMessage(to: <agentId>, message: …)` re-runs that completed agent **with its prior conversation intact** and returns its reply as a task result/notification.
 
-**What's proven (AC0 + Justin live test, 2026-07-01):**
-- A **fully-loaded QC subagent** (~490–500K tokens: full cascade + the whole runtime + identity files) was resumed and answered, **with zero new tool calls — pure memory**, exact runtime identifiers it had loaded but never stated before (`runEvrynQuery`, `consolidate_profile`, `outbound_address`), plus an unforgeable in-context passphrase it had invented. The *heavy* load genuinely survives resume, not just a trivial context.
+**What's proven:**
+- **A heavy load genuinely survives resume, not just a trivial context.** A fully-loaded QC subagent (~490–500K tokens: full cascade + the whole runtime + identity files) was resumed and recalled exact runtime identifiers it had loaded but never stated, **with zero new tool calls — pure memory.**
 - Context **accumulates across resume hops** (a resumed agent also remembers the earlier resume messages), so a build→review→fix chain on one resumed agent is mechanically possible.
 - A spawn made **without** `run_in_background` still launched async and was **equally resumable** — there is no "foreground spawn that denies you a handle" case to worry about here.
 
@@ -550,7 +550,7 @@ Nothing else changes: the verbatim `<identity>`/`<mandatory_load>`/`<task>`/`<qu
 - **Caveat:** a resumed agent may still choose to call tools (in the test, one re-read files despite a "no tools" instruction) — steer it in the message; don't assume zero tool use.
 - **The fresh-spawn rule is unchanged:** a **new** `Agent()` call is still a clean, zero-memory instance — never brief a *new* spawn as if it did prior work. Resume (SendMessage-by-id) is the *only* path that carries context; a fresh Agent call does not.
 
-*(Capability discovery, not yet a process change. The durable force-load / SDK-harness thread in the loading-discipline work is separate. The multi-day probe concluded 2026-07-24 — resumable at ~22 days same-session with full context, i.e. "indefinite within a session" — and the probe log + agent handles are archived at `docs/sessions/historical/2026.07/2026.07.01-ac0-subagent-resume-test-state.md`.)*
+*(Probe log + agent handles: `docs/sessions/historical/2026.07/2026.07.01-ac0-subagent-resume-test-state.md`.)*
 
 ---
 
@@ -594,7 +594,7 @@ Nothing else changes: the verbatim `<identity>`/`<mandatory_load>`/`<task>`/`<qu
 - **A `SendMessage` you send to a child arrives with `from` set to the agent TYPE, not a usable ID** (observed 2026-08-04: a DC receiving a fix-trip message saw `from=general-purpose`). **This does NOT affect the child's normal return path — its final output still comes back to you automatically, exactly as always.** What it means is narrower: a child **cannot originate a mid-run `SendMessage` back to you**, because it has no address to send to (`general-purpose` is a type, not a target). A well-behaved child will notice that and decline to guess — which is the role-vs-literal rule working as designed. **⇒ The only thing to avoid: a design that needs the child to *call back mid-run*** (a progress ping, a mid-flight question routed to you by the child). Give it `<questions_first>` instead — it stops and returns its questions as its output — or resume it yourself when you want more.
 - **Don't rely on a model to generate its own entropy.** In the 2026-07-16 test, three independent children asked for unforgeable passphrases *all* chose "obsidian," and two each chose "marmoset" and "quokka" — model word-choice clusters hard. If you need an unforgeable token for a verification test, **supply it externally.**
 
-*(2026-07-16: ACU ran a three-generation experiment — background-child, foreground-control, and ID-injection paths — after Justin asked whether ACs could supervise sub-ACs. All three delivered to the parent; none leaked. The prior entry's framing had been quietly shaping fan-out design around a limitation that did not exist.)*
+*(All three delivery paths were tested head-to-head in one 2026-07-16 experiment; every one returned to the parent and none leaked. **The framing this replaced had been quietly shaping fan-out design around a limitation that did not exist.**)*
 
 ---
 
@@ -677,9 +677,9 @@ The worktree rule says *cut off current `main`*, and is silent on the far common
 
 ---
 
-> ### ⇢ The mailbox fallback is in the rationale doc
+> ### ⇢ On the mailbox model
 >
-> The hand-relayed mailbox model — the pathway this protocol replaced on 2026-06-02, still correct for a *persistent* DC/QC instance Justin spins directly — is in `docs/protocols/orchestration/orchestration-rationale.md`. **It is the fallback, not the default.**
+> The hand-relayed mailbox model this protocol replaced on 2026-06-02 was **RETIRED** on 2026-08-12 — the separate protocol now lives at `docs/historical/ac-dc-protocol.md`. **Mailbox FILES still exist as a channel** (`<repo>/docs/ac-to-dc.md` etc.), and their mechanics — one message at a time, reader clears after absorbing, never overwrite an unread message, and **commits to them are pre-authorized** — live in AC's manual, not here.
 
 ---
 
