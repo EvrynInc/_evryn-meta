@@ -1,7 +1,7 @@
 ---
 name: acm-probe
 description: Throwaway harness probe for ACm's agent-type registration test. Not a real agent. Delete after use.
-model: haiku
+model: opus
 ---
 
 # acm-probe — a disposable harness probe
