@@ -52,7 +52,7 @@ Adopt the memory + wake-economics architecture in the design-of-record. The load
 
 > **This is a dated re-examination, not a reversal. Decision 1 stands.** It is recorded here because Justin re-opened the question, accepted the recommendation to keep the decision, and asked that the reasoning be preserved at full resolution *"if we come back later and want to poke at this question again."* **The original decision's stated basis has weakened; a stronger basis replaced it — and a reader re-opening this question later needs the NEW argument, because refuting the old one is now easy and would not touch the decision.**
 >
-> **Full analysis, with `file:line` evidence:** `_evryn-meta/docs/research/2026.08.12-acfsq-team-runtime-sdk-sessions.md` (lane `ACfsq`). **This section carries the decision-grade reasoning; the SDK forensics stay there.**
+> **Full analysis, with `file:line` evidence:** `evryn-team-runtime/docs/research/2026.08.12-acfsq-team-runtime-sdk-sessions.md` (lane `ACfsq`). **This section carries the decision-grade reasoning; the SDK forensics stay there.**
 
 **What was re-opened.** Decision 1 says the thread IS the session — *"deliberately reinventing sessions without the un-steerable SDK compaction we reject."* Justin challenged the premise: *"You've got the whole thread… but that's kind of it. You don't have access to your thinking during that turn."* His counter was that compaction only fires when a context grows large, and that the membership model (decision 2) plus 7-day age-out (decision 5) exist to keep rooms small — so under tight membership most threads should never compact at all, making the objection largely moot.
 
