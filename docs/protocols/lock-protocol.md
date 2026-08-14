@@ -100,3 +100,7 @@ When Justin says `#lock` or it's time for a checkpoint:
 
 - **`docs/agent-notes-archive/alex-notes.md`** (in `evryn-team-agents`) — For now, update with anything relevant to Alex's working context. This content will be integrated into the new agent structure during SDK migration.
 - **`evryn-team-agents/docs/DECISIONS.md`** — Old monolithic file from LangGraph era. Being replaced by ADR format (`docs/decisions/NNN-title.md`). New decisions go in ADRs or session docs until the old file is reviewed for still-living decisions and archived.
+
+---
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
