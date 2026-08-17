@@ -1011,6 +1011,32 @@ The commit fails with *"pathspec did not match any files"* — **but in an `&&` 
 - **Appending to a file whose last line is a truncation canary means inserting BEFORE it.** Appending past it orphans the canary mid-document — telling the next reader their load truncated at the previous entry and that yours does not exist. **The tail is not the end.** *(Committed live, minutes after reading the protocol that mandates canaries.)*
 - 🔴 **A *"designed but not built"* claim is the most perishable sentence in an architecture doc, because NOTHING FAILS when it goes stale.** One such line asserted two features were unbuilt; one had merged the day before. **Third instance in that repo of a doc asserting a runtime state that does not exist.** ⇒ **When you ship a thing a doc calls unbuilt, the doc edit rides the SHIP, not the checkpoint.** *Promote to:* `lock-protocol.md` step 5c — it already says *"built ≠ merged ≠ deployed"* but does not name the not-yet-built claim as the perishable one.
 
+## Unpromoted — from the 2026-08-17 session (AC0-37c)
+
+*Captured at `#lock`, un-numbered per this file's own rule; promotion belongs to `#sweep` with fresh eyes.*
+
+#### 🔴 Order a load by DEPENDENCY, not by importance — the same list, re-sequenced, cost ~100,000 fewer tokens
+
+**Strip the specifics and the rule is: when a set of documents must be read, later ones are usually DIFFS against earlier ones — so reading them out of dependency order forces you to build a picture the later documents exist to correct, and then pay again to unbuild it.** The measured saving on one session was roughly **100,000 tokens on an identical, untrimmed list.**
+
+**The failure mode is specific and worth naming, because it is committed by careful people:** load lists get ordered by **perceived importance** (the protocol, the status snapshot, the urgent tracker) rather than by **dependency** — so the framing documents land last, when they can no longer frame anything. ⇒ **A cheap test any repo can apply: if your load list opens with a protocol or a status document, it is mis-ordered.**
+
+**Two corollaries that survive the abstraction:** ① **honor each document's own declared prerequisites** — a doc that says *"you must read X first"* is instructing you, not expressing a preference; ② **load a procedural document at the beat that needs it, not in the foundation** — a protocol read before you know what you will do with it does not stick, and read at the moment of use it is fully actionable.
+
+*(Evidence: `_evryn-meta/CHANGELOG.md`, 2026-08-17 evening. Justin's cross-session measurement; the re-ordered list and the reasoning live in that session's marching-orders doc.)*
+
+#### 🔴 A grep FALSE POSITIVE caused by correct documentation — and the absurd result, not the plausible one, is what exposes it
+
+**The general rule: a search can establish that a string is PRESENT; it can never establish what a document SAYS.** The sharp case is the inverse of the usual one. Checking whether a reference doc covered a set of tables, a substring search reported every one as documented. **It was false for three — and those three appeared exactly once each, inside the doc's own banner warning that they were missing.** ⇒ **The string was present precisely because the document was announcing the absence of the content.**
+
+🔑 **The transferable half is how it got caught: the same unsound check ALSO returned three results that were obviously wrong in kind (functions where tables were expected). The absurd output is what discredited the method — the plausible output would have stood.** ⇒ **When a check returns exactly what you hoped, that is the moment to re-run it a different way; and when a check returns one obviously-wrong result alongside plausible ones, distrust the whole run, not just that row.**
+
+**The sound version cost one line more:** search for a *structural marker* (a section heading) rather than a bare name. **Had the false pass stood, it would have "disproven" a correct tracker item** — which is the expensive direction, because it retires a real warning.
+
+#### Build safety on a check whose failure you can SEE, not on a prevention step whose failure is silent
+
+**Generalized from a destructive-cleanup hazard that had fired three times.** The instinct is to prevent the bad state; the problem is that the prevention step can fail *silently* — a guard that never executes reads exactly like a guard that executed and found nothing. ⇒ **Where the damage is cheap and fully detectable, prefer measure → act → re-measure → repair over any amount of pre-checking.** Applied here: count the fragile resource before and after each destructive step, one step at a time so a change names its own culprit, and repair on a delta. **The corollary that makes it work: do the destructive steps individually rather than in a batch**, because a batch tells you only *that* something broke.
+
 ---
 
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
