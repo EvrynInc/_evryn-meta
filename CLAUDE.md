@@ -497,15 +497,34 @@ All operational learnings go directly to the appropriate repo files (proposed, w
   ```bash
   cd /path/to/Evryn/Code   # DYNAMIC repo enumeration — never a hardcoded/<repos> list (same reason as the sync-check above).
   for d in */; do d=${d%/}; [ -e "$d/.git" ] || continue        # every repo AND worktree ('.git' = dir or file)
+    cur=$(git -C "$d" rev-parse --abbrev-ref HEAD)   # the canonical branch — the repo-sync check above already asserted this.
     git -C "$d" for-each-ref --format='%(refname:short)' refs/heads | while read b; do
-      if git -C "$d" rev-parse --verify -q "origin/$b" >/dev/null; then
-        a=$(git -C "$d" rev-list --count "origin/$b..$b" 2>/dev/null || echo 0)   # also catch a pushed branch with NEW local commits
-        [ "$a" != 0 ] && echo "$d: $b — $a AHEAD of origin/$b"
-      else echo "$d: $b — NEVER PUSHED (no remote)"; fi
+      [ "$b" = "$cur" ] && continue
+      # Q2 — THE BATTEN-DOWN QUESTION: would losing this machine lose this work?
+      # Reachability from ANY remote-tracking ref. Deliberately NOT `origin/HEAD` and NOT a
+      # hardcoded 'main': origin/HEAD is a LOCAL cached symref that goes STALE (2026-08-18 it
+      # still said origin/master on evryn-backend + evryn-quality, whose real default is main —
+      # which made an earlier version of this very script cry wolf on a healthy branch).
+      lost=$(git -C "$d" rev-list --count "$b" --not --remotes 2>/dev/null || echo 0)
+      [ "$lost" = 0 ] && continue                    # every commit is on a remote → only the REF is local → nothing to lose.
+      # Not reachable — but was it REDONE rather than lost? A rebase/redo lands under a NEW SHA.
+      # `git cherry` compares by patch-id: '+' = genuinely not upstream, '-' = same patch, new SHA.
+      novel=$(git -C "$d" cherry "$cur" "$b" 2>/dev/null | grep -c '^+')
+      if [ "$novel" != 0 ]; then
+        echo "🔴 $d: $b — $lost commit(s) on no remote, $novel NOT upstream even by patch-id — INVESTIGATE"
+      else
+        echo "⚠️  $d: $b — $lost commit(s) on no remote, but ALL match $cur by patch-id — rebased/redone, work is safe"
+      fi
     done
   done
   ```
+  **A 🔴 is a prompt to investigate, NOT a confirmed loss** — patch-id can't see a from-scratch redo either, so finish the job with the content checks in the bullet below before you report anything to Justin as at-risk.
   *(2026-07-16: a "push everything" batten-down that checked `origin/main..main` per repo still left **six** never-pushed branches across two sessions — one with 7 commits of ACf1 memory work that existed only on that machine. The current-branch check is not enough; enumerate all branches.)*
+- 🔴 **The two questions are DIFFERENT, and mixing them up produces a CONFIDENT FALSE ALARM — the expensive direction.** The script above asks both on purpose, because the obvious one is the wrong one:
+  - **`origin/$b..$b` → *"is this branch pushed?"*** — hygiene only. **A fully-merged branch reads as "6 ahead" FOREVER**, because it is ahead of **its own remote tracking ref**, which nobody updates after a merge and nobody ever will. **The number is real; the alarm it raises is not.**
+  - **`<default-branch>..$b` → *"would losing this machine lose this work?"*** — **the ONLY question that matters before a machine switch.** Zero means every commit is reachable from the default branch and the local ref is the only machine-only thing, and losing a ref loses nothing.
+  - ⚠️ **A non-zero count still is not proof of lost work — check whether it was REDONE rather than merged.** Work that was rebuilt on a fresh branch (a rebase, or a from-scratch redo) lands under **different SHAs and often different names**, so the old branch reads as "N commits not on main" while every capability is present. **`git cherry -v <base> <branch>` compares by patch-id** (a `-` means already upstream) — but a redo defeats patch-id too, so the decisive checks are **content-level**: does each file exist on the default branch, and does each added function exist there **by capability, not by name**? *(2026-08-18: four `evryn-backend` branches read as 14 commits "not on main." All four were the **lobotomized round-1 lanes**, rebuilt days later as the `r2/` branches and landed in five `converge:` commits. ~50 symbols scanned as "ABSENT" — every one was a **rename** (`tripCircuitBreaker`→`tripBreaker`, `spend-monitor.ts`→`detectors.ts`). One round-1 guard was not merely superseded but **defective** — a send-bypass assertion placed where it could never fire — so restoring it would have been a regression, not a recovery.)*
+  - **⇒ Before reporting ANY branch as at-risk, run the content check and say which question you answered.** A loud, careful, well-evidenced warning that turns out wrong spends exactly the credibility a real warning needs — and this one has now been raised falsely twice.
 
 ---
 
