@@ -1,4 +1,29 @@
 #!/usr/bin/env node
+// 🔴 THIS IS DELIBERATELY A SECOND IMPLEMENTATION. Do not consolidate it away.
+//
+// evryn-team-runtime/tests/source-no-nul-bytes.test.ts implements the same rule.
+// ACf-13 proposed (2026-08-17) that his test should CALL this script instead, so
+// that there is one home. AC0-37c declined, and the reasoning lives HERE rather
+// than in that note, because the note will be retired and this file will not:
+//
+//   A cross-repo call would have to degrade to a SKIP when _evryn-meta is absent
+//   (ACf's own caveat). A skipping guard reports the same green as a passing one
+//   -- which is exactly the silent-vacuity failure his test already had once, when
+//   a hand-maintained inclusion list reported full coverage over three directories.
+//   Independence beats DRY here specifically, because the failure class under
+//   guard IS "an instrument silently stops working and reports success."
+//
+// What SHOULD be shared is the SPEC, not the code, so a divergence is visible by
+// reading. The spec both implementations honour:
+//   - enumerate via git ls-files, with NO pathspec and NO exclusion list
+//   - exclude real binaries BY EXTENSION (a .docx is a ZIP archive and is
+//     legitimately full of control bytes; a check that cries wolf gets ignored,
+//     which is worse than no check)
+//   - CONSTRUCT the character searched for, never contain one
+//   - fail on any C0 control except tab / LF / CR, plus a leading UTF-8 BOM
+//
+// If anyone re-proposes consolidation, that is the argument to answer.
+
 /**
  * scan-control-chars.js — find stray control characters in tracked text files.
  *
