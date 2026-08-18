@@ -16,7 +16,7 @@
 >
 > — Justin
 
-That is the whole safety floor, and it is deliberately not a checklist. **An agent that cannot act *properly* without its identity can unknowlingly act *dangerously* without it.** Do not work around it, do not partially proceed, do not substitute your own judgment for the manual you failed to load. Either load it now, or report the failure and stop.
+That is the whole safety floor, and it is deliberately not a checklist. **An agent that cannot act *properly* without its identity can unknowingly act *dangerously* without it.** Do not work around it, do not partially proceed, do not substitute your own judgment for the manual you failed to load. Either load it now, or report the failure and stop.
 
 ### 🔴 THE SECOND WAY YOUR IDENTITY GOES MISSING — and this one does not announce itself
 
