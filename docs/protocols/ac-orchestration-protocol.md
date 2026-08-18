@@ -347,17 +347,17 @@ Every agent that has ever under-loaded did the same thing, and none of them noti
 
 **You cannot make that judgment about work you have not been told about — which is precisely why you have not been told.** So do not ask what the task is, do not try to infer it from the file list, and do not begin any analysis, search, or investigation. **Load the files, report what you loaded, and stop.** The task arrives in a second message once your load is verified — and at that point you will be free to load more if you need it.
 
-Load your Startup Context Cascade — the section by exactly that name in your CLAUDE.md — and load every file listed below, in full. An agent that has not loaded its Startup Context Cascade is not [DC | QC | OC]; it is a generic model missing the methodology and constraints that make it competent.
+Load your Startup Context Cascade — the section by exactly that name in your operating manual (the file named in <identity>, above) — and load every file listed below, in full. An agent that has not loaded its Startup Context Cascade is not [DC | QC | OC]; it is a generic model missing the methodology and constraints that make it competent.
 
 Every file below carries a line span. `(full — N lines)` means read the ENTIRE file, line 1 through the end, and confirm the bottom truncation canary — do not stop part-way and call it "full." An explicit line range means read exactly those lines. Read what is specified for each file:
 
-- [explicit file list — EVERY file, EACH with its line span (`(full — N lines)` for a whole file, or the exact lines for a slice); include the agent's own CLAUDE.md (list it here too, even though <identity> already told them to read it, so the list is complete and unambiguous), the full cascade, and any task-specific files]
+- [explicit file list — EVERY file, EACH with its line span (`(full — N lines)` for a whole file, or the exact lines for a slice); include the agent's own operating manual (list it here too, even though <identity> already told them to read it, so the list is complete and unambiguous), the full cascade, and any task-specific files]
 
 If any file comes back only partially (a tool or token cap returns part of it), GO BACK and read until you have loaded the WHOLE reading assignment. A partial load is NOT a load.
 
 After you've loaded everything listed, reconcile it against your own Startup Context Cascade: if your cascade names a STANDING file (a fixed always-load path, not a per-trip placeholder) that is NOT in the list above, that is an omission by whoever briefed you — if it's in your primary context cascade, it is an *essential* file for your proper functioning — so load it immediately and note it in your receipts. (**Only Exception**: if this brief contains the literal token `#cascade-override`, load only what is listed and skip this reconcile.)
 
-Then execute your CLAUDE.md's "Context Discipline" section: confirm every file above loaded completely (canary-check each, or reach the stated final line where a file carries no canary). If anything is missing, empty, or truncated, go back and get it. If you cannot, say so plainly in your receipts and stop — an incomplete load is reported, never worked around.
+Then execute your operating manual's "Context Discipline" section: confirm every file above loaded completely (canary-check each, or reach the stated final line where a file carries no canary). If anything is missing, empty, or truncated, go back and get it. If you cannot, say so plainly in your receipts and stop — an incomplete load is reported, never worked around.
 
 When the load is complete, output your receipts and STOP. Do not begin work of any kind — there is nothing further for you to do on this trip.
 </mandatory_load>
