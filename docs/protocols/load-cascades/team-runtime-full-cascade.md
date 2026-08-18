@@ -55,6 +55,9 @@ Judgment here is only ever about what to **add on top** of must-load. When in do
 - **Harness-architectural "why is it shaped this way"** → design v2: `evryn-team-workspace/shared/projects/ops/team-runtime/2026.07.10-acf-justin-team-runtime-design-v2.md`.
 - **Harness module-contract questions / the original harness build-record** → `evryn-team-runtime/docs/BUILD-PHASE-1.md`.
 - **Per-agent voice / spoke work** → the `_evryn-meta/docs/hub/*` spokes the agent's `config/agents.ts` entry names (Lucas → `vision-and-ethos.md`). The Hub itself (layer 2) is already in the Light cascade.
+- 🔴 **RE-OPENING A SETTLED QUESTION, or hitting one this repo has already studied → `evryn-team-runtime/docs/research/`.** *(Added 2026-08-17. **This directory existed for four days with nothing in the loading path naming it** — which is exactly the failure it was created to prevent: research nobody can find is research nobody has.)*
+  - **`2026.08.12-acfsq-team-runtime-sdk-sessions.md`** — why the agents have **no SDK session** and what we are building instead. **Read it before proposing sessions, a per-wake transcript, or anything that touches what an agent carries between wakes.** It is cited by **ADR-052's amendment** and **SPRINT Step 65**, and its §11/§13 are the origin of **ADR-055**. ⚠️ **Its §13.4 was superseded by ADR-055 — the "pointers, never payloads" conclusion is wrong; read the ADR alongside it.**
+  - **`2026.08.11-acfc3t-team-runtime-test-coverage-map.md`** — a full read of all 56 test files: what is *executed* versus merely *asserted in source*. **The evidence base under SPRINT Steps 26, 43, 45, 51 and 73.** ⚠️ **Step 73 carries an open obligation to SAMPLE it — one lane already corrected three of its claims and nobody checked the rest.** Treat a specific claim as a lead until verified.
 
 ## ⚑ Flag rule
 
