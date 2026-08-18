@@ -44,6 +44,8 @@ done
 # inventory, or a branch that isn't its canonical one, gets surfaced to Justin.
 ```
 
+⚠️ **ON A MACHINE SWITCH, this check is only half the job — it proves each repo is *synced*, NOT that the work you were doing is *reachable*.** Run the **arrival check** too (*Worktree & Branch Discipline* → the third question): a `fetch`/`pull` brings every branch down as data but materializes **none** of them, so an in-flight lane sits on the disk with no local branch and no working tree while every sync check reports clean. **Report what isn't materialized; don't materialize it yourself.**
+
 **Why this matters:** the 2026-06-17 lobotomy was half a machine-state failure — `evryn-quality` sat on a stale forked `master` while the good manual was on `main`, invisible because "push/pull" only moves committed work on the *current* branch. A branch check at startup makes that class of failure detectable instead of invisible (ADR-042 / AC6 §7).
 
 **Load-bearing-file rule:** when a source-of-truth / identity file is edited (CLAUDE.md, protocols, identity, the inventory), it isn't "done" until the commit is confirmed on GitHub's canonical branch — author-then-verify (the 2026-06-06 QC standardization was authored but its landing on the shared chain was never verified — exactly how the fork went unnoticed).
@@ -277,7 +279,7 @@ You are the architect, not just the implementer. Justin brings vision; you bring
 - **Challenge inefficiencies** — if a design wastes tokens or adds unnecessary complexity, say so and propose alternatives
 - **Propose optimizations proactively** — don't wait to be asked
 - **Think in systems** — every feature affects the whole. Consider token budgets, failure modes, maintenance burden, extensibility
-- **Prefer simple over clever** — but know the difference between simple and naive
+- **Prefer simple over clever** — where "simple" means **the next reader can verify it**, not fewer lines and not more familiar. **Complexity is allowed to the degree to which you can name the failure it prevents.**
 - **Be intentional about dependencies** — evaluate every framework/library on its merits, don't reach by default or avoid by principle (see `docs/decisions/006-intentional-dependency-selection.md`)
 - **Document trade-offs** — when there are multiple valid approaches, lay them out so Justin can make informed decisions
 - **Measure what matters, not proxies that get gamed** — when designing limits, metrics, or tracking, target the actual thing you care about (cost, trust, quality), not a convenient stand-in
@@ -532,15 +534,45 @@ done
   ```bash
   cd /path/to/Evryn/Code   # DYNAMIC repo enumeration — never a hardcoded/<repos> list (same reason as the sync-check above).
   for d in */; do d=${d%/}; [ -e "$d/.git" ] || continue        # every repo AND worktree ('.git' = dir or file)
+    cur=$(git -C "$d" rev-parse --abbrev-ref HEAD)   # the canonical branch — the repo-sync check above already asserted this.
     git -C "$d" for-each-ref --format='%(refname:short)' refs/heads | while read b; do
-      if git -C "$d" rev-parse --verify -q "origin/$b" >/dev/null; then
-        a=$(git -C "$d" rev-list --count "origin/$b..$b" 2>/dev/null || echo 0)   # also catch a pushed branch with NEW local commits
-        [ "$a" != 0 ] && echo "$d: $b — $a AHEAD of origin/$b"
-      else echo "$d: $b — NEVER PUSHED (no remote)"; fi
+      [ "$b" = "$cur" ] && continue
+      # Q2 — THE BATTEN-DOWN QUESTION: would losing this machine lose this work?
+      # Reachability from ANY remote-tracking ref. Deliberately NOT `origin/HEAD` and NOT a
+      # hardcoded 'main': origin/HEAD is a LOCAL cached symref that goes STALE (2026-08-18 it
+      # still said origin/master on evryn-backend + evryn-quality, whose real default is main —
+      # which made an earlier version of this very script cry wolf on a healthy branch).
+      lost=$(git -C "$d" rev-list --count "$b" --not --remotes 2>/dev/null || echo 0)
+      [ "$lost" = 0 ] && continue                    # every commit is on a remote → only the REF is local → nothing to lose.
+      # Not reachable — but was it REDONE rather than lost? A rebase/redo lands under a NEW SHA.
+      # `git cherry` compares by patch-id: '+' = genuinely not upstream, '-' = same patch, new SHA.
+      novel=$(git -C "$d" cherry "$cur" "$b" 2>/dev/null | grep -c '^+')
+      if [ "$novel" != 0 ]; then
+        echo "🔴 $d: $b — $lost commit(s) on no remote, $novel NOT upstream even by patch-id — INVESTIGATE"
+      else
+        echo "⚠️  $d: $b — $lost commit(s) on no remote, but ALL match $cur by patch-id — rebased/redone, work is safe"
+      fi
     done
   done
   ```
+  **A 🔴 is a prompt to investigate, NOT a confirmed loss** — patch-id can't see a from-scratch redo either, so finish the job with the content checks in the bullet below before you report anything to Justin as at-risk.
   *(2026-07-16: a "push everything" batten-down that checked `origin/main..main` per repo still left **six** never-pushed branches across two sessions — one with 7 commits of ACf1 memory work that existed only on that machine. The current-branch check is not enough; enumerate all branches.)*
+- 🔴 **The two questions are DIFFERENT, and mixing them up produces a CONFIDENT FALSE ALARM — the expensive direction.** The script above asks both on purpose, because the obvious one is the wrong one:
+  - **`origin/$b..$b` → *"is this branch pushed?"*** — hygiene only. **A fully-merged branch reads as "6 ahead" FOREVER**, because it is ahead of **its own remote tracking ref**, which nobody updates after a merge and nobody ever will. **The number is real; the alarm it raises is not.**
+  - **`<default-branch>..$b` → *"would losing this machine lose this work?"*** — **the ONLY question that matters before a machine switch.** Zero means every commit is reachable from the default branch and the local ref is the only machine-only thing, and losing a ref loses nothing.
+  - ⚠️ **A non-zero count still is not proof of lost work — check whether it was REDONE rather than merged.** Work that was rebuilt on a fresh branch (a rebase, or a from-scratch redo) lands under **different SHAs and often different names**, so the old branch reads as "N commits not on main" while every capability is present. **`git cherry -v <base> <branch>` compares by patch-id** (a `-` means already upstream) — but a redo defeats patch-id too, so the decisive checks are **content-level**: does each file exist on the default branch, and does each added function exist there **by capability, not by name**? *(2026-08-18: four `evryn-backend` branches read as 14 commits "not on main." All four were the **lobotomized round-1 lanes**, rebuilt days later as the `r2/` branches and landed in five `converge:` commits. ~50 symbols scanned as "ABSENT" — every one was a **rename** (`tripCircuitBreaker`→`tripBreaker`, `spend-monitor.ts`→`detectors.ts`). One round-1 guard was not merely superseded but **defective** — a send-bypass assertion placed where it could never fire — so restoring it would have been a regression, not a recovery.)*
+  - **⇒ Before reporting ANY branch as at-risk, run the content check and say which question you answered.** A loud, careful, well-evidenced warning that turns out wrong spends exactly the credibility a real warning needs — and this one has now been raised falsely twice.
+- 🔴 **THERE IS A THIRD QUESTION, AND IT POINTS THE OTHER WAY: *"is everything I was working on actually HERE?"*** The two above are **departure** questions — *is anything trapped on this machine?* On **arrival** (a machine switch, a fresh clone, "pull everything") the question inverts, and the departure checks answer it with a confident, useless *"all clean."* **`git fetch` brings every branch down as a remote-tracking ref; `git pull` fast-forwards ONLY the branch you are standing on.** ⇒ **Work-in-flight on any other branch is on the disk but is NOT materialized** — no local branch, no working tree, nothing to open — and **every departure check reports green, because nothing is missing.** Enumerate what has no local presence:
+  ```bash
+  cd /path/to/Evryn/Code   # DYNAMIC enumeration — same reason as the checks above.
+  for d in */; do d=${d%/}; [ -e "$d/.git" ] || continue
+    git -C "$d" for-each-ref --format='%(refname:short)' refs/remotes/origin \
+      | sed 's|^origin/||' | grep -v '^HEAD$' | while read b; do
+        git -C "$d" rev-parse --verify -q "refs/heads/$b" >/dev/null || echo "$d: $b — on origin, NOT materialized here"
+      done
+  done
+  ```
+  **Report the list to Justin rather than acting on it** — some remote-only branches are *deliberately* kept that way (a merged branch whose remote tip preserves pre-rebase SHAs that committed docs cite), and **materializing a lane is the owning agent's call, not yours: it decides its own worktree layout.** ⇒ **"Synced" and "everything I was working on is here" are DIFFERENT CLAIMS — never let the first stand in for the second.** *(2026-08-18: asked to "pull all repos, worktrees, branches, everything" after a machine switch, AC pulled correctly — `acm/loading-architecture` **did** come down at 12:00:56 — then ran only the departure checks and reported "zero stranded work." True, and it read as "everything's here." **Seventeen remote branches across the estate had no local presence, including the Lane A branch that was the critical path.** The pull was right; the check answered the opposite question.)*
 
 ---
 
