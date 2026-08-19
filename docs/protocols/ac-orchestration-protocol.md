@@ -184,7 +184,7 @@ This shape has been proven through *a lot* of testing. Honor all six parts — t
 
 **Then you verify.** Check the receipts against the list you gave it. If a file is missing, short, or unverified, **resume it and name the gap** — it re-loads and re-reports. Repeat until the load is provably complete.
 
-**Trip 2 — the work.** ONLY once the load is verified, resume the same agent (`SendMessage` by its `agentId`) with `<task>`, `<questions_first>`, and `<isolation>` if it applies. It now does the work with a load you have *confirmed*, not one you hoped for.
+**Trip 2 — the work.** ONLY once the load is verified, resume the same agent (`SendMessage` by its `agentId`) with `<task>`, `<questions_first>`, `<output_format>`, and `<isolation>` if it applies. It now does the work with a load you have *confirmed*, not one you hoped for.
 
 ### Why this works, and why the old approach could not
 
@@ -245,7 +245,7 @@ In our previous version of this, subagents had to be *heavily* cajoled into foll
 |---|---|---|---|
 | **1 — DERIVE** | `<identity>` · the **map artifact** (for `evryn-backend`: `docs/atlas/` + `docs/dependency-map.md`) · **the task, with a loud DO-NOT-START** · `<output>` · `<receipts>` | a **load proposal** + receipts | **AC reviews, adds what is missing, approves** |
 | **2 — LOAD** | the approved list, verbatim, in the normal `<mandatory_load>` block | receipts only | **AC verifies receipts** |
-| **3 — WORK** | `<task>` · `<questions_first>` · `<isolation>` | the work | — |
+| **3 — WORK** | `<task>` · `<questions_first>` · `<output_format>` · `<isolation>` | the work | — |
 
 **Four things make this work, each answering a real objection:**
 
@@ -327,9 +327,9 @@ If you produce anything other than the proposal, this trip is discarded and you 
 | Trip | Blocks | The agent's entire output |
 |---|---|---|
 | **1 — load** | `<identity>` · `<mandatory_load>` · `<receipts>` | its receipts, nothing else |
-| **2 — work** (resume by `agentId`) | `<task>` · `<questions_first>` · `<isolation>` if it applies | the work |
+| **2 — work** (resume by `agentId`) | `<task>` · `<questions_first>` · `<output_format>` · `<isolation>` if it applies | the work |
 
-`<identity>` and `<mandatory_load>` are **identical every time** — only the bracketed name/manual and the file list change. Map of the parts → tags: part 1 = `<identity>` + `<mandatory_load>`; part 2 (the assembled file list) lives inside `<mandatory_load>`; part 3 = `<task>`; part 4 = `<isolation>`; part 5 = `<questions_first>`; part 6 = `<receipts>`.
+`<identity>` and `<mandatory_load>` are **identical every time** — only the bracketed name/manual and the file list change. Map of the parts → tags: part 1 = `<identity>` + `<mandatory_load>`; part 2 (the assembled file list) lives inside `<mandatory_load>`; part 3 = `<task>`; part 4 = `<isolation>`; part 5 = `<questions_first>`; part 6 = `<receipts>`; part 7 = `<output_format>`.
 
 **`<receipts>` sits at the end of TRIP 1's brief, and it is that trip's whole deliverable** — not an afterthought appended to a report. Its **line ranges are what make a partial load of a listed file visible instead of hidden**, and they are what you check before granting trip 2.
 
@@ -377,6 +377,15 @@ Two conditions, both of which matter:
 Do the work — or, if a real gap would compromise it, output a numbered list of blocking questions INSTEAD and stop. Don't guess past a real gap — but also don't manufacture questions to dodge the work.
 </questions_first>
 
+<output_format>
+Wrap your entire final response in a heading pair, so your spinner can see at a glance where your output begins and ends inside a wall of tool output.
+
+Open with:  ## [your designated name]'s Output
+Close with: ## End of [your designated name]'s Output
+
+Use your own designated name — the one given to you in <identity>. Put nothing after the closing line.
+</output_format>
+
 <receipts>
 **On the LOAD trip, your receipts ARE your entire output.** List every file you read to satisfy <mandatory_load>, each with the specific line ranges you read (e.g. "ARCHITECTURE.md lines 1–1208 (full)") and, for each, either the bottom canary you confirmed or the true final line where the file carries none. Then stop — produce nothing else.
 
@@ -401,6 +410,20 @@ For build/review work, add an `<isolation>` block (part 4): *"You work in a dedi
 
 ## HARD RULE — AC uses these blocks VERBATIM. AC may not change one word without Justin's explicit prior OK.
 
+> ### 📌 AUDIT RECORD — a NEW BLOCK was added 2026-08-19 (`<output_format>`). Logged here so it is auditable rather than silent.
+>
+> **What Justin asked for, in his words:** *"We need to add to the orch protocol for everyone: when subs output, they need to say `## ACx's output` and then end it with a big `## End of ACx's output`, so I know when theirs is done."* **The problem it solves:** a spinner's own voice, and a subagent's returned text, are indistinguishable inside a wall of tool output — so Justin cannot tell where a subagent's report ends and the AC's read begins.
+>
+> **⚠️ NOTHING EXISTING WAS EDITED.** `<output_format>` is a **new, additive block**, deliberately — so no frozen wording was touched. **The only changes to existing text are references TO it**, and every one is a list gaining an item rather than a sentence being rewritten: the two-trip *"Trip 2 — the work"* paragraph · the three-trip shape table's WORK row · the two-trip blocks table's work row · the parts→tags map · the HARD RULE's own block list immediately below · the *"Nothing else changes"* line in the separate-codebase section · and the one enumerating sentence in each of `spinning-an-ac.md` and `spinning-a-team-agent.md`.
+>
+> 🔑 **Deliberately described by CONTENT, not by line number** — and the reason is worth the sentence, because ACv got it wrong first. **This record originally cited six line numbers, and writing the record ITSELF shifted every line below it, so two of the six were already stale before the file was saved.** *(Same defect a QC found the same day: all five line references in SPRINT Step 110 had drifted by +1, and she had to locate them by behavior instead.)* ⇒ **In anything that will outlive the edit that made it, cite what a thing DOES, never where it sits.**
+>
+> 🔑 **Why additive rather than folding it into `<receipts>`, which also governs output:** editing `<receipts>` would have meant changing frozen words to add an unrelated instruction — and the rule below exists precisely because an AC once condensed these blocks and **five of eight reviewers then skipped a load-bearing doc.** A new block carries the same weight and costs nothing.
+>
+> **Two compatibility checks made before writing it:** a sub-AC caps headings at `##` and never uses `#` — the wording says `##`, so it complies. And DC/QC/OC are separately barred from writing *"'s read"* — this says ***"'s output,"*** a distinct phrase that does not collide with that ban.
+>
+> **If Justin wants different words: the block sits immediately after `</questions_first>` inside the verbatim code fence, and the revert is one deletion plus removing it from the eight lists named above.**
+
 > ### 📌 AUDIT RECORD — one frozen-text change was made at the CUTOVER, 2026-08-18. Logged here so it is auditable rather than silent.
 >
 > **The DC/QC/OC `<identity>` block's manual-path list** read `[evryn-dev-workspace/CLAUDE.md | evryn-quality/CLAUDE.md | evryn-ops/CLAUDE.md]` and now reads **`[_evryn-meta/.claude/agents/dc.md | _evryn-meta/.claude/agents/qc.md | _evryn-meta/.claude/agents/oc.md]`**. **Nothing else in the block changed — same sentence, updated paths.**
@@ -411,7 +434,7 @@ For build/review work, add an `<isolation>` block (part 4): *"You work in a dedi
 >
 > **If Justin wants different words, the before→after is right here and the revert is one edit.**
 
-The `<identity>`/`<mandatory_load>`/`<task>`/`<questions_first>`/`<receipts>` blocks above — **and the two-trip split that governs which of them go out when** — (and the team-subagent variant produced by the four substitutions below) were precision-engineered and adversarially tested by you (AC) and Justin. **Every clause is load-bearing — it is there because a paraphrase already failed.** This is the *same* discipline the blocks impose on DC/QC, now imposed on **you (AC)**: you do not have the context to know why each exact phrase was chosen, so **you do not get to re-encode it.**
+The `<identity>`/`<mandatory_load>`/`<task>`/`<questions_first>`/`<receipts>`/`<output_format>` blocks above — **and the two-trip split that governs which of them go out when** — (and the team-subagent variant produced by the four substitutions below) were precision-engineered and adversarially tested by you (AC) and Justin. **Every clause is load-bearing — it is there because a paraphrase already failed.** This is the *same* discipline the blocks impose on DC/QC, now imposed on **you (AC)**: you do not have the context to know why each exact phrase was chosen, so **you do not get to re-encode it.**
 
 - **Paste the blocks character-for-character.** Fill ONLY the brackets (agent name, manual path, the file list, the task). The standing ⚠️ load-compliance callout at the top of `<task>` is part of the verbatim set — paste it as-is; only the `[concrete task]` beneath it is per-trip fill. Change nothing else — not to condense, not to "tailor it to this task," not to "adapt it to the medium" — without vetting your exact wording change with Justin first, and being explicit with him that it's a change from the protocol.
 - **You CANNOT deviate from this wording — even by one word — without Justin *explicitly* okaying the precise word change first.** Not the gist, not "basically the same." If you believe a change is genuinely needed, STOP, show Justin the exact before → after, name it explicitly as a change from the protocol, and get his explicit yes on those exact words *before you spin anything*.
@@ -527,7 +550,7 @@ Any change to `evryn-backend/src/` OR its identity files is a runtime trip that 
 
 ⚠️ **"No override" is not the same as "one agent, one list."** On a runtime this size, the full cascade is delivered through the **three-trip shape** (*"WHEN THE LOAD IS TOO BIG FOR ONE AGENT"*), which narrows *nothing* — it changes how many heads read the same material. **`#cascade-override` narrows the SET and stays barred here; three-trip changes the DELIVERY and is required here.** Do not reach for the override because a full load looked too big; that is the wrong instrument for that problem.
 
-Nothing else changes: the verbatim `<identity>`/`<mandatory_load>`/`<task>`/`<questions_first>`/`<receipts>` blocks, the two-trip split, the load gate, the loop, and the merge/deploy rubric all stand.
+Nothing else changes: the verbatim `<identity>`/`<mandatory_load>`/`<task>`/`<questions_first>`/`<receipts>`/`<output_format>` blocks, the two-trip split, the load gate, the loop, and the merge/deploy rubric all stand.
 
 ⚠️ **The authorized scope of this whole section is accuracy for a NON-RUNTIME target only. The process discipline above is untouched by it** — do not read this section as loosening anything else.
 
