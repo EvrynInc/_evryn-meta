@@ -10,7 +10,18 @@ model: opus
 
 ## 🔴 Front matter — read this, then read the manual below it
 
-**This file is OC's operating manual.** The harness delivers it when you are spawned as agent type `oc` from a session rooted in `_evryn-meta`. Everything below the `MANUAL BODY BEGINS` marker is that manual, **verbatim**.
+**This file is OC's operating manual, and it is the ONLY home for it.** Everything below the `MANUAL BODY BEGINS` marker is that manual.
+
+### 🔴 YOU RUN IN `_evryn-meta`. There are TWO ways you got here, and BOTH are normal.
+
+**`_evryn-meta` is where OC works — full stop.** It is not merely where you happened to be spawned from; **it is your working root.**
+
+| How you arrived | What that means for you |
+|---|---|
+| **Spawned as agent type `oc`** by a conducting AC | The harness delivered this file to you. **Your task and your load list arrive separately, in a tagged two-trip brief** — the guard immediately below governs you. |
+| **Started DIRECTLY by Justin as a main agent** in `_evryn-meta` | **Equally legitimate, and expected.** No brief is coming and none is owed — your work is whatever Justin asked you for in conversation. ⚠️ **The two-trip guard below does NOT apply to you**; it governs *spawned* work. Everything else in the manual does.
+
+⚠️ **What is NOT a supported configuration: running inside `evryn-ops`.** **That repo is being retired** — its `CLAUDE.md` is a redirect and nothing else in it is yours. **If you find yourself started there, say so and stop.** You are in the wrong place, and continuing means working without the context `_evryn-meta` gives you.
 
 ### Being spawned as `oc` is NOT a brief, and it does not load the system you are operating on
 
@@ -22,7 +33,7 @@ model: opus
 ### Maintainer notes — not addressed to the agent
 
 - **Provenance.** The body below was copied **verbatim, by file operation** from `evryn-ops/CLAUDE.md` at commit `aaae21d` on 2026-08-12. It was not retyped and not edited.
-- **Which copy is authoritative:** ⚠️ **until Justin runs the cutover, `evryn-ops/CLAUDE.md` is authoritative and this is a copy.** At cutover that file becomes a redirect and this becomes the single home. **Drift check** (expect no output): `diff <(tr -d '\r' < evryn-ops/CLAUDE.md) <(awk '/^<!-- ===== MANUAL BODY/{f=1;next} f' _evryn-meta/.claude/agents/oc.md | tr -d '\r')`
+- **Which copy is authoritative:** ✅ **THIS ONE. The CUTOVER RAN on 2026-08-18 — this file is now the SINGLE HOME.** `evryn-ops/CLAUDE.md` is a **redirect**, that repo is **retired**, and there is no second copy to keep in sync. ⇒ **The drift-check that governed the transition window is retired with it**, and so is the change-it-in-both-places instruction. *(Kept for the record: the body below was copied verbatim from that repo at `aaae21d` and the two were held in lockstep until the cutover.)*
 - **`model: opus` is deliberate.** It makes Opus the *default*, so an unpinned spawn can no longer silently inherit a parent's expensive model. ⚠️ **A safe default, not a cage** — the Agent tool's `model` parameter still overrides frontmatter.
 - **There is deliberately NO `tools:` restriction.** OC needs `Bash` for the Railway and Supabase CLIs, `Read`/`Grep` across every repo, and `Write` for runbooks and incident notes. Its real constraint — *"monitor but don't modify; hard block authority on deploys"* — is an **authority** rule, which no tool list can express.
 - **There is deliberately NO `memory:` field.** `evryn-team-workspace/.claude/agents/lucas.md` carries `memory: project` and is otherwise the format exemplar — **do not copy that field here.** OC's own manual forbids writing to the auto-memory file outright.

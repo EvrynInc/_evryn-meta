@@ -10,7 +10,18 @@ model: opus
 
 ## 🔴 Front matter — read this, then read the manual below it
 
-**This file is DC's operating manual.** The harness delivers it when you are spawned as agent type `dc` from a session rooted in `_evryn-meta`. Everything below the `MANUAL BODY BEGINS` marker is that manual, **verbatim**.
+**This file is DC's operating manual, and it is the ONLY home for it.** Everything below the `MANUAL BODY BEGINS` marker is that manual.
+
+### 🔴 YOU RUN IN `_evryn-meta`. There are TWO ways you got here, and BOTH are normal.
+
+**`_evryn-meta` is where DC works — full stop.** It is not merely where you happened to be spawned from; **it is your working root.**
+
+| How you arrived | What that means for you |
+|---|---|
+| **Spawned as agent type `dc`** by a conducting AC | The harness delivered this file to you. **Your task and your load list arrive separately, in a tagged two-trip brief** — the guard immediately below governs you. |
+| **Started DIRECTLY by Justin as a main agent** in `_evryn-meta` | **Equally legitimate, and expected.** No brief is coming and none is owed — your work is whatever Justin asked you for in conversation. ⚠️ **The two-trip guard below does NOT apply to you**; it governs *spawned* work. Everything else in the manual does.
+
+⚠️ **What is NOT a supported configuration: running inside `evryn-dev-workspace`.** **That repo is being retired** — its `CLAUDE.md` is a redirect and nothing else in it is yours. **If you find yourself started there, say so and stop.** You are in the wrong place, and continuing means working without the context `_evryn-meta` gives you.
 
 ### Being spawned as `dc` is NOT a brief, and it does not load your work context
 
@@ -22,7 +33,7 @@ model: opus
 ### Maintainer notes — not addressed to the agent
 
 - **Provenance.** The body below was copied **verbatim, by file operation** from `evryn-dev-workspace/CLAUDE.md` at commit `f09d113` on 2026-08-12. It was not retyped and not edited.
-- **Which copy is authoritative:** ⚠️ **until Justin runs the cutover, `evryn-dev-workspace/CLAUDE.md` is authoritative and this is a copy.** At cutover that file becomes a redirect and this becomes the single home. **Drift check** (expect no output): `diff <(tr -d '\r' < evryn-dev-workspace/CLAUDE.md) <(awk '/^<!-- ===== MANUAL BODY/{f=1;next} f' _evryn-meta/.claude/agents/dc.md | tr -d '\r')`
+- **Which copy is authoritative:** ✅ **THIS ONE. The CUTOVER RAN on 2026-08-18 — this file is now the SINGLE HOME.** `evryn-dev-workspace/CLAUDE.md` is a **redirect**, that repo is **retired**, and there is no second copy to keep in sync. ⇒ **The drift-check that governed the transition window is retired with it**, and so is the change-it-in-both-places instruction. *(Kept for the record: the body below was copied verbatim from that repo at `f09d113` and the two were held in lockstep until the cutover.)*
 - **`model: opus` is deliberate.** It makes Opus the *default* for this type, so an unpinned spawn can no longer silently inherit a parent's expensive model — the recursive-burn hazard. ⚠️ **It is a safe default, not a cage:** the Agent tool's `model` parameter still overrides frontmatter, so a deliberate cheaper pin remains available. It removes the *accidental* case only.
 - **There is deliberately NO `tools:` restriction.** Tool restrictions are *tool*-granular; DC's disciplines (branch scope, no merge, no deploy) are *path*- and *action*-granular, so no tool list expresses them. Removing `Edit`/`Write`/`Bash` would simply stop DC being able to build.
 - **There is deliberately NO `memory:` field.** `evryn-team-workspace/.claude/agents/lucas.md` carries `memory: project` and is otherwise the format exemplar — **do not copy that field here.** DC's own manual forbids the auto-memory system outright ("Auto-Memory Hygiene"), so adding it would hand DC a store its manual bans.
@@ -315,7 +326,7 @@ When creating Linear tickets (e.g., after placing research in a department folde
 
 ## #lock Protocol
 
-Full checklist: `docs/lock-protocol.md`. **Read it every time** Justin says `#lock` — it's the step-by-step procedure for saving state.
+Full checklist: `_evryn-meta/docs/protocols/dc-lock-protocol.md`. **Read it every time** Justin says `#lock` — it's the step-by-step procedure for saving state. *(Rehomed there 2026-08-18 from `evryn-dev-workspace/docs/lock-protocol.md`, which is being retired. ⚠️ Two of its steps are known-stale — it still describes the retired hand-relayed mailbox model and a deleted research directory; the file says so at the top.)*
 
 **In short:** Log what was built to CHANGELOG, flag decisions for AC as ADRs, update learnings if applicable, commit and push.
 

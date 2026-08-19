@@ -48,19 +48,25 @@ That is the whole safety floor, and it is deliberately not a checklist. **An age
 
 ## Which agent are you?
 
-Your spinner tells you which agent you are. Find your row, read that file **in full**, and follow it faithfully before anything else.
+**Either your spinner told you, or Justin told you directly — both happen, and both are normal.** Find your row, read that file **in full**, confirm its bottom canary, and follow it faithfully before anything else.
 
 | If you are… | Your operating manual is |
 |---|---|
 | **AC** (Architect Claude) | `_evryn-meta/.claude/agents/ac.md` |
-| **DC** (Developer Claude) | `evryn-dev-workspace/CLAUDE.md` |
-| **QC** (Quality Claude) | `evryn-quality/CLAUDE.md` |
-| **OC** (Operations Claude) | `evryn-ops/CLAUDE.md` |
+| **DC** (Developer Claude) | `_evryn-meta/.claude/agents/dc.md` |
+| **QC** (Quality Claude) | `_evryn-meta/.claude/agents/qc.md` |
+| **OC** (Operations Claude) | `_evryn-meta/.claude/agents/oc.md` |
 | **A founding-team agent** (Lucas, Soren, Mira, Emma, Marlowe, Thea, Nathan, Dominic) | split across `evryn-team-workspace/CLAUDE.md` + `.claude/agents/<name>.md` + `.claude/agent-memory/<name>/MEMORY.md` — your spinner names all of them |
 
-**Paths are rooted at the shared parent directory** that holds every Evryn repo as a sibling folder — so `evryn-quality/CLAUDE.md` means *"go up out of whatever repo you are in, into the sibling `evryn-quality`."*
+**Paths are rooted at the shared parent directory** that holds every Evryn repo as a sibling folder — so `evryn-team-workspace/CLAUDE.md` means *"go up out of whatever repo you are in, into the sibling `evryn-team-workspace`."*
 
-⚠️ **Transitional, and the table above is the CURRENT truth:** verbatim copies of DC's, QC's and OC's manuals now also exist as agent definitions in `_evryn-meta/.claude/agents/`. **Until Justin runs the cutover, the repo files in the table are authoritative and those copies are copies.** At cutover the repo files become redirects and the definitions become the single home — **and this table gets updated in the same change.** If you were spawned as agent type `dc`/`qc`/`oc`/`ac`, the harness already delivered your manual; read the table's file anyway and confirm its canary.
+### 🔴 THIS FILE SERVES A MAIN AGENT AND A SUBAGENT IDENTICALLY. Neither is the special case.
+
+**Nothing above depends on how you were started.** AC, DC, QC and OC each run **in `_evryn-meta`** — whether spawned as an agent type by a conducting AC, or started directly by Justin as a main agent. **The table is the same table either way, and so is the hard rule.**
+
+**The one thing that DOES differ, so you are not confused by it:** a **spawned** agent receives its task and load list in a tagged two-trip brief; a **main** agent does not, and none is owed — its work is whatever Justin asked for in conversation. **If you are spawned and were handed a task with no load list, that is a briefing error: say so and stop.** *(Your own manual carries this in full; that is where the detail belongs.)*
+
+✅ **CUTOVER COMPLETE (2026-08-18): these agent definitions are the SINGLE HOME for all four manuals.** `evryn-dev-workspace`, `evryn-quality` and `evryn-ops` are **retired**; their `CLAUDE.md` files are redirects and **nothing in those repos is any agent's context.** ⇒ **There is no longer a second copy to keep in sync, and the change-it-in-both-places instruction that governed the transition is retired with it.** ⚠️ **If you were spawned as `ac`/`dc`/`qc`/`oc`, the harness already delivered your manual — read the table's file anyway and confirm its canary**, because the injection has been observed serving a stale snapshot.
 
 ### If your brief did not tell you which agent you are
 
