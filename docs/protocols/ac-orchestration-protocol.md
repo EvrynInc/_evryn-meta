@@ -6,7 +6,7 @@
 
 **Read this before you read anything else, because it governs whether the rest of the file is enough. It is not.**
 
-**This file carries what is true for EVERY spin.** It does not carry what is true for **yours**. The part that tells you how to actually brief *your* target — the substitutions, the variant, the things that differ — is in a **sub-doc**, and it is not optional, not supplementary, and not a deep-dive for when you have time.
+**This file carries what is true for EVERY spin.** It does not carry what is true for **yours**. The part that tells you how to actually brief *your* target — the substitutions, the variant, the things that differ — is in a **sub-doc**, and it is not optional, not supplementary — it's **fully necessary**.
 
 > ## The bar, stated so it cannot be negotiated with:
 >
@@ -14,20 +14,20 @@
 
 🔴 **THE EXACT RATIONALISATION THIS EXISTS TO KILL — Justin named it, so it is written down verbatim:**
 
-> *"I can totally see spinners being like 'oh yeah, well… I figured I understood from the protocol.' **No asshole, you don't!**"*
+> *"I can totally see spinners being like 'oh yeah, well… I figured I understood from the protocol.' **No, *seriously*, you don't!**"*
 
-**If you catch yourself thinking any of these, you are mid-failure:** *"I've got the gist"* · *"I've spun a DC before"* · *"the skeleton is right here, I can see it"* · *"the sub-doc is probably just detail"* · *"I read the protocol."* **Every one of those is the feeling of holding a table of contents and mistaking it for the building.** The sub-doc is where the thing that would have caught you lives — that is *why* it was moved there, and it is exactly the file you cannot tell you need.
+**If you catch yourself thinking any of these, you are mid-failure:** *"I've got the gist"* · *"I've spun a DC before"* · *"the skeleton is right here, I can see it"* · *"the sub-doc is probably just detail"* · *"I basically read the protocol."* **Every one of those is the feeling of holding a table of contents and mistaking it for the building.** The sub-doc is where the thing that would have caught you lives — that is *why* it was moved there, and it is exactly the file you cannot tell you need.
 
-**Why this is the same failure the HARD RULE already guards, in a new place:** an AC once condensed the verbatim blocks because it believed it understood what they were for. **Five of eight reviewers then skipped a load-bearing doc.** Understanding-in-advance is precisely the judgement this protocol removes everywhere else; it does not get reinstated at the front door.
+**Why this is the same failure the HARD RULE already guards, in a new place:** an AC once condensed the verbatim blocks because it believed it understood what they were for. **Five of eight reviewers then skipped a load-bearing doc, which caused us to break a critical system.** Understanding-in-advance is precisely the judgement this protocol removes everywhere else; it does not get reinstated at the front door.
 
 **⇒ Find your row in the table below and go read that file. Now, before you write a single line of brief.**
 
 ## The index — the core, then YOUR target's sub-doc. Both. Always.
 
-| You are spinning… | Also read |
+| You are spinning… | Must read |
 |---|---|
 | **DC** or **QC** (build / review) | `docs/protocols/orchestration/spinning-dc-qc.md` |
-| **another AC** (a lane AC, a reporter) | `docs/protocols/orchestration/spinning-an-ac.md` |
+| **another AC** (a lane AC, an architectural runtime scout) | `docs/protocols/orchestration/spinning-an-ac.md` |
 | **a founding-team agent** (Soren, Mira, …) | `docs/protocols/orchestration/spinning-a-team-agent.md` |
 | **OC** (ops) | **nothing further — this is a RULING, not your judgement.** OC takes the skeleton exactly as written, with no substitutions. |
 | **a generic subagent** (a path lookup) | **nothing further — also a RULING.** But read "The generic-subagent exception" below *first*, because deciding you are in this row is the most-abused call in this protocol. |
