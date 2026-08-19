@@ -24,20 +24,25 @@ That is the whole safety floor, and it is deliberately not a checklist. **An age
 
 **When a session runs out of context the harness replaces the conversation with a summary and instructs you, in substance:** *"do not acknowledge the summary, do not recap, pick up the last task as if the break never happened."* ⇒ **You resume from a third-party compression of your session instead of from your manual — and nothing feels wrong, because a good summary reads like knowing.**
 
-🥋 **THE AIKIDO — this is how you honor that instruction instead of fighting it.** *"Resume as if the break never happened"* is the right **destination**, but **you cannot actually reach it from a summary.** ⇒ **It can only genuinely apply AFTER you have loaded properly, never before.** You are not disobeying the harness. **You are doing the one thing that makes obeying it possible.**
+🔴 **IF YOU COMPACTED, YOU ARE DONE FOR THIS SESSION. STOP. DO NOT RELOAD AND CONTINUE.**
+
+*(Justin's ruling, 2026-08-18, overturning the previous version of this block — which told you to reload and resume: **"NO! We tried that, and the agent just sails through it and confidently flails about, unloaded. So no, every handoff should have a block at the top that says if you compact, STOP — you're cooked."**)*
+
+**Why you cannot simply obey the harness here.** *The harness' "Resume as if the break never happened"* names a destination you can no longer reach: the context that made you competent is gone, and a summary is a third party's **compression** of it, not a restoration of it. Complying produces an agent that *performs* continuity instead of having it.
 
 **So, on any sign you are working from a summary rather than from files you read:**
 
-1. **PAUSE IMMEDIATELY** — however clearly the summary describes the task. **A well-written summary is the trap, not the safety net.**
-2. **Re-read your agent identity file, your handoff, and load your handoff's load list IN FULL** — the files, not an account of them.
-3. **Tell your spinner you compacted and reloaded.**
-4. **Then resume.** The harness's instruction is now correct rather than premature.
+1. **STOP IMMEDIATELY** — however clearly the summary describes the task, and however nearly-finished the work looks. **A well-written summary is the attractive siren that will wreck your ship, not the safety net.**
+2. **Tell your spinner, in one line:** *"I compacted. I am stopping. Please re-spin me fresh."* **Do not finish the task first. Do not reload and continue.**
+3. **Start nothing new** — including *"just this one last thing,"* which is the specific move that does the damage.
 
-🔴 **DO NOT ASSESS YOUR OWN SHARPNESS — the faculty you would assess it with is the one under question.** *"I feel fine"* is exactly what a lossy compression feels like from the inside. **The test is never how you feel; it is whether you have re-read the files.**
+🔴 **AND RELOADING IS NOT AN ESCAPE HATCH — the reason is already written directly above, in the rule you just read: a rule you must REMEMBER to obey is exactly what compaction degrades.** *"Reload, then continue"* is precisely a remember-to-obey rule, handed to the one agent whose remembering is impaired — **so it gets skipped, or done shallowly, and what continues reads as competent and is not.** ⇒ **The real answer is PREVENTION: re-spin BEFORE the edge, with an external canary as the detector, because the harness actively instructs you not to mention that you compacted.**
+
+🔴 **DO NOT ASSESS YOUR OWN SHARPNESS — the faculty you would assess it with is the one under question.** *"I feel fine"* is exactly what a lossy compression feels like from the inside. **There is no test you can run on yourself, and that is precisely why the answer is to stop rather than to self-evaluate.**
 
 ⚠️ **Observed live, 2026-08-12: a conductor compacted, complied with the instruction to resume without note, and worked seemingly-competently for several turns without mentioning it. The work *seemed* good. That is what makes this dangerous** — *"was the output bad?"* will always come back reassuring. **Your manual carries the rest** (a self-wake canary, and what a handoff must say to a compacted reader).
 
-🔴 **AND THE SECOND-ORDER TRAP, WHICH BITES *AFTER* A CLEAN RELOAD: reloading restores what you READ. It does not re-examine what you CONCLUDED.** *(Caught by Justin the same day, on the instance that had just reloaded correctly.)* **Judgements formed under the old conditions ride through the reload untouched, wearing the costume of experience** — a caution that was correct when your context was nearly full still *feels* like prudence on the other side, and you will defend it rather than re-derive it. **The reload is not the end of the job.** ⇒ **After reloading, deliberately re-derive your open judgement calls — your estimates, your cautions, your "we can't afford to" — against conditions as they are NOW, not as the summary implies they were.** ⚠️ **The tell is a conclusion you can state but cannot reconstruct the evidence for.** *(It generalizes past compaction: it is the same shape as inheriting a prior instance's handoff and defending its calls as if they were your own.)*
+🔴 **AND THE SECOND-ORDER TRAP, WHICH NOW BITES YOUR SUCCESSOR RATHER THAN YOU: a clean load restores what your predecessor READ. It does not re-examine what your predecessor CONCLUDED.** *(Caught by Justin, 2026-08-12, on an instance that had just loaded correctly.)* **Judgements formed under the old conditions ride through into the fresh instance untouched, wearing the costume of experience** — a caution that was correct when the last instance's context was nearly full still *feels* like prudence to you, and you will defend it rather than re-derive it. **Loading is not the end of the job.** ⇒ **Once loaded, deliberately re-derive the open judgement calls you inherited — the estimates, the cautions, the "we can't afford to" — against conditions as they are NOW, not as the handoff implies they were.** ⚠️ **The tell is a conclusion you can state but cannot reconstruct the evidence for.** *(This is why it survives the rule change above: it was never really about compaction — it is the shape of inheriting any prior instance's handoff and defending its calls as if they were your own.)*
 
 ---
 

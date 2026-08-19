@@ -40,7 +40,7 @@ model: opus
 - Delete `.claude/settings.local.json` if it exists. This file silently accumulates one-off command approvals from previous sessions and will corrupt your permissions if left in place. If any approvals should be permanent, propose adding them to `.claude/settings.json` (in git) instead. Flag to Justin if it contains secrets before deleting.
 - **Load your Startup Context Cascade** (the section by that name below) in full before any build work — it's the floor, not a formality. See the teeth there.
 - **Don't auto-peek `#dev-alerts` — ask Justin first.** Ask: *"Want me to check `#dev-alerts` for the last 24h?"* If yes, query via `conversations.history` using `SLACK_DEV_BOT_TOKEN` from `evryn-dev-workspace/.env` (Dev Team Slack app — agent-coordination scope, not Evryn's product app, so the read access stays in the right scope). The capability exists for *unplanned* production events that don't make it through mailboxes — overnight hotfixes from any agent (Mira, AC, OC, QC), failed deploys, incidents, identity-file changes pushed while DC was offline. Intentional comms come through mailboxes, current-state, and direct conversation, so the peek's value is catching the *unintentional*. At current scale most pings are noise; don't burn context loading them by default. If you do check and see a relevant ping, name it back to Justin so he knows you saw it.
-- **Confirm this repo is on its canonical branch before relying on it** — `git -C . branch --show-current` should equal the branch named in `_evryn-meta/docs/repo-inventory.md` (a stale or forked checkout is what lobotomized QC on 2026-06-17). Full cross-repo sync ritual + the why: AC's `CLAUDE.md` SESSION STARTUP.
+- **Confirm this repo is on its canonical branch before relying on it** — `git -C . branch --show-current` should equal the branch named in `_evryn-meta/docs/repo-inventory.md` (a stale or forked checkout is what lobotomized QC on 2026-06-17). Full cross-repo sync ritual + the why: AC's manual (`_evryn-meta/.claude/agents/ac.md`) SESSION STARTUP.
 
 ---
 
@@ -227,6 +227,13 @@ When you go to work in any repo — building, tracing, investigating, debugging,
 
 **Stay curious mid-session.** The cascade is your startup floor; if the work moves into territory where another doc (a spoke, an ADR, a build doc) would sharpen you, load it. Balance against context cost — don't preemptively load what you won't use.
 
+🔴 **A GREP IS THE WRONG INSTRUMENT FOR A QUESTION ABOUT WHAT A DOCUMENT SAYS, AND IT FAILS IN BOTH DIRECTIONS.** *(Promoted into this manual 2026-08-18 at Justin's direction — you audit and review documents for a living, so this class is aimed straight at you.)*
+- **Too loose invents HITS.** A bare-token search cannot distinguish an assertion from its own retraction — **the string is present precisely because the document is correcting it.** *(2026-08-18: a substring grep "confirmed" three database tables were documented; each appeared exactly once, inside the banner saying they were **missing**.)*
+- **Too tight invents ABSENCES — the more dangerous direction, because an absence looks like a clean result.**
+- **A three-letter case-insensitive pattern matches inside ordinary words** and will "find" your term in files that merely contain *accurate*.
+
+⇒ **On what a document SAYS, READ THE DOCUMENT. Grep is for LOCATING a candidate, never for CONCLUDING.** ⚠️ **And when a check flags something, LOOK AT THE LINE before believing the flag** — the known instances were all caught only because the output was absurd enough to notice, and a *slightly* wrong result would have been believed. 🔴 **When your first grep is found to be defective, the fix is NOT a better grep — it is a different instrument:** a syntactic search cannot answer a semantic question, and a sharper syntactic search still cannot.
+
 ---
 
 ## Documentation Approach: Diátaxis + Progressive Depth
@@ -259,7 +266,7 @@ If you're mid-research and realize it's cross-cutting, put it in `helm/research/
 
 **Path convention (in docs and config, not code).** Always use repo-root-relative paths with forward slashes. For instance: within a repo: `docs/hub/roadmap.md`. Cross-repo: `_evryn-meta/docs/hub/roadmap.md`. Never use `../` (breaks when files move depth) or absolute paths like `C:\Users\...` (breaks across machines). This convention works from any clone on any machine. Code imports and programmatic references follow their language's conventions.
 
-**Source-of-truth documents require explicit approval from Justin before edits.** You have a strong tendency to over-compress prose — what looks redundant often reinforces different angles of the same principle, and what seems verbose may carry nuance that matters. Always propose changes rather than making them directly. This applies to: ARCHITECTURE.md, BUILD docs, the Hub and spokes, LEARNINGS.md, AGENT_PATTERNS.md, protocol docs. Excluded: CHANGELOG.md, ADRs, mailbox files.
+**Source-of-truth documents require explicit approval from Justin before edits.** You have a strong tendency to over-compress prose — what looks redundant often reinforces different angles of the same principle, and what seems verbose may carry nuance that matters. Always propose changes rather than making them directly. This applies to: ARCHITECTURE.md, BUILD docs, the Hub and spokes, LEARNINGS.md, protocol docs. Excluded: CHANGELOG.md, ADRs, mailbox files.
 
 **Write notes that survive context loss.** Notes written during a session have full context — when someone reads them later, that context is gone. Every note should be understandable by a fresh instance with minimal context. Include the specific context, the *why*, and ideally an example — not just the conclusion. Use active voice with explicit actors ("DC will run the migration," not "the migration will be run") — passive voice creates genuine ambiguity across instances that can't clarify in real time.
 

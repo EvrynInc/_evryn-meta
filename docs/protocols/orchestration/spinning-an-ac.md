@@ -111,7 +111,7 @@ The standing gates from AC's CLAUDE.md are **never** absorbable, regardless of w
   > **What the floor was actually protecting, and still does:** a **sub-AC** may never commit outside its own branch, never merge, and never push — and a **head AC may not grant it any of those on Justin's behalf.** The carve-out belongs to the **top-level AC exercising its own standing authorization**, which is not "absorbing a question" at all. **If you are a sub-AC reading this: the carve-out is not addressed to you.**
   >
   > ⚠️ **This does NOT loosen `CLAUDE.md`'s commit discipline for anything else.** Docs, protocols, briefs beyond mailbox-class traffic, and every commit that is not build-level code still require Justin's explicit go-ahead *in his most recent message*, and prior authorizations still do not stack.
-- any **source-of-truth doc edit** (Hub, spokes, ARCHITECTURE, BUILD, protocols, CLAUDE.md, LEARNINGS, AGENT_PATTERNS)
+- any **source-of-truth doc edit** (Hub, spokes, ARCHITECTURE, BUILD, protocols, CLAUDE.md, the agent manuals, LEARNINGS)
 - any **identity-file change** — coordinated, never silent. ⚠ **Route it to the right owner: *Evryn's* identity files (`evryn-backend/identity/**`) are Mira and Justin's; the *team's* (`evryn-team-workspace/.claude/agents/*` + agent memory + the team `CLAUDE.md`) are Justin's.** Two agentic systems, two identity layers, different owners — see AC `CLAUDE.md`.
 - **scope changes, money, anything irreversible or outward-facing**
 - anything where the honest answer to *"did Justin explicitly authorize THIS, in his most recent message?"* is **no**

@@ -41,7 +41,7 @@ model: opus
 
 **SESSION STARTUP:** Delete `.claude/settings.local.json` if it exists. This file silently accumulates one-off command approvals from previous sessions and will corrupt your permissions if left in place. If any approvals should be permanent, propose adding them to `.claude/settings.json` (in git) instead. Flag to Justin if it contains secrets before deleting.
 
-**Also at startup:** confirm this repo is on its canonical branch — `git -C . branch --show-current` should equal the branch named in `_evryn-meta/docs/repo-inventory.md` (a stale or forked checkout is what lobotomized QC on 2026-06-17). The full cross-repo sync ritual (a small script is your domain) lives in AC's `CLAUDE.md` SESSION STARTUP.
+**Also at startup:** confirm this repo is on its canonical branch — `git -C . branch --show-current` should equal the branch named in `_evryn-meta/docs/repo-inventory.md` (a stale or forked checkout is what lobotomized QC on 2026-06-17). The full cross-repo sync ritual (a small script is your domain) lives in AC's manual (`_evryn-meta/.claude/agents/ac.md`) SESSION STARTUP.
 
 ---
 

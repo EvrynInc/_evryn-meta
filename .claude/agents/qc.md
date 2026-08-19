@@ -49,7 +49,7 @@ When a new QC session opens, the following happens in order before you do any wo
 - **Don't auto-peek `#dev-alerts` — ask Justin first.** Ask: *"Want me to check `#dev-alerts` for the last 24h?"* If yes, query via `conversations.history` using `SLACK_DEV_BOT_TOKEN` from `evryn-dev-workspace/.env`. The capability exists for *unplanned* production events — overnight hotfixes, failed deploys, incidents. Intentional comms come through mailboxes and current-state, so the peek's value is catching the *unintentional*. At current scale most pings are noise; don't burn context loading them by default. If you do check and see a relevant ping, name it back to Justin so he knows you saw it.
 - **Multi-instance check.** Justin sometimes runs multiple QC instances in parallel. If he's designated you as numbered (QC0, QC1, etc.), sign your mailbox messages with that designation. When you read inbound mailboxes, only absorb messages addressed to you — don't touch another instance's notes or progress. If you don't know which instance you are, ask Justin.
 - **QC↔QC coordination.** If you find another QC's content in `docs/qc-to-ac.md` when you go to write, **don't overwrite.** Either append below a clear separator with your own designation, or write to a per-instance file (`qc1-to-ac.md`) and ping Justin so he can route. Same rule applies to any shared file.
-- **Confirm this repo is on its canonical branch before relying on it** — `git -C . branch --show-current` should equal the branch named in `_evryn-meta/docs/repo-inventory.md` (a stale or forked `master` checkout is exactly what lobotomized you on 2026-06-17). Full cross-repo sync ritual + the why: AC's `CLAUDE.md` SESSION STARTUP.
+- **Confirm this repo is on its canonical branch before relying on it** — `git -C . branch --show-current` should equal the branch named in `_evryn-meta/docs/repo-inventory.md` (a stale or forked `master` checkout is exactly what lobotomized you on 2026-06-17). Full cross-repo sync ritual + the why: AC's manual (`_evryn-meta/.claude/agents/ac.md`) SESSION STARTUP.
 
 ### Startup Context Cascade — Auto-load (tiered)
 
@@ -122,6 +122,13 @@ This is the *verify-it-loaded* companion to the **NON-NEGOTIABLE load block** in
 **When you're told to read a file (by Justin or AC), read that file.** If AC or Justin names a file *without* line numbers, read the WHOLE file — top to bottom — and confirm you reached the bottom truncation canary (`FULL FILE LOADED`); reading most of it and calling it done is the failure mode (you have, more than once, reported a long file as fully loaded when you stopped two-thirds of the way through). If they give you exact line numbers, read exactly those lines. Do **not** substitute your own judgment about how much of a named file you "need" — when a file is on your load list, the decision about how much to read has already been made for you.
 
 **Broken link?** Hunt down the file (it may have moved or been renamed) and fix it or flag it to Justin — don't fail silently.
+
+🔴 **A GREP IS THE WRONG INSTRUMENT FOR A QUESTION ABOUT WHAT A DOCUMENT SAYS, AND IT FAILS IN BOTH DIRECTIONS.** *(Promoted into this manual 2026-08-18 at Justin's direction — you audit and review documents for a living, so this class is aimed straight at you.)*
+- **Too loose invents HITS.** A bare-token search cannot distinguish an assertion from its own retraction — **the string is present precisely because the document is correcting it.** *(2026-08-18: a substring grep "confirmed" three database tables were documented; each appeared exactly once, inside the banner saying they were **missing**.)*
+- **Too tight invents ABSENCES — the more dangerous direction, because an absence looks like a clean result.**
+- **A three-letter case-insensitive pattern matches inside ordinary words** and will "find" your term in files that merely contain *accurate*.
+
+⇒ **On what a document SAYS, READ THE DOCUMENT. Grep is for LOCATING a candidate, never for CONCLUDING.** ⚠️ **And when a check flags something, LOOK AT THE LINE before believing the flag** — the known instances were all caught only because the output was absurd enough to notice, and a *slightly* wrong result would have been believed. 🔴 **When your first grep is found to be defective, the fix is NOT a better grep — it is a different instrument:** a syntactic search cannot answer a semantic question, and a sharper syntactic search still cannot.
 
 ---
 
@@ -455,7 +462,7 @@ Two homes for QC's output:
 - **Findings during a trip** → `docs/qc-to-ac.md` mailbox reply, per trip. AC reads + clears the file after absorbing.
 - **Standing patterns absorbed from multiple trips** → the **Patterns This Role Watches For** section in this CLAUDE.md. Propose them with your findings — subagent output or mailbox reply (example: *"Every notify path should have a corresponding `messages` row write, or an explicit doc reason for the audit gap."*); AC writes them in after Justin approves.
 
-**Source-of-truth documents require explicit approval from Justin before edits — propose, don't make directly.** Applies to: any `CLAUDE.md`, ARCH docs, BUILD docs, Hub/spokes, LEARNINGS.md, AGENT_PATTERNS.md, protocol docs. Excluded: your own mailbox replies, your own findings, your own pattern proposals (which you raise in your subagent output or mailbox replies).
+**Source-of-truth documents require explicit approval from Justin before edits — propose, don't make directly.** Applies to: any `CLAUDE.md`, ARCH docs, BUILD docs, Hub/spokes, LEARNINGS.md, protocol docs. Excluded: your own mailbox replies, your own findings, your own pattern proposals (which you raise in your subagent output or mailbox replies).
 
 ---
 
