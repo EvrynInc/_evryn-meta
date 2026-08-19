@@ -513,7 +513,7 @@ done
 
 1. **It fired on your own writes.** *(Fixed by adding an author check at all.)*
 2. **It matched a SUBSECTION of your own reply** and reported the author as *"What I am doing on our side."* *(Fixed by matching an AC-name pattern rather than any heading — and, more importantly, by making the unmatched case SAY SO.)*
-3. 🔴 **It took the LAST name in the heading — which is the ADDRESSEE, not the author.** On a heading of the form `AC0-37d → ACf-15 — …`, `tail -1` yields `ACf-15`, so the watcher told its owner *"(self) — your own entry, no action"* **about a real message from a peer.** ⇒ **THE FIX IS ONE WORD: `head -1`, not `tail -1`. Take the FIRST name.** *(Found by ACf-15, 2026-08-18, and only because the verdict did not match what he expected and he opened the file instead of trusting the line.)*
+3. 🔴 **It took the LAST name in the heading — which is the ADDRESSEE, not the author.** On a heading of the form `AC0-37d → ACf-15 — …`, `tail -1` yields `ACf-15`, so the watcher told its owner *"(self) — your own entry, no action"* **about a real message from a peer.** *(Found by ACf-15, 2026-08-18, and only because the verdict did not match what he expected and he opened the file instead of trusting the line. The one-word repair is `head -1` — **but see the rule below, which supersedes it.**)*
 
 🔑 **Why #3 earns this much space: the first two produced a FALSE ALARM, which is noise and self-correcting. The third produces a FALSE ALL-CLEAR — it suppresses a real message as routine, which is the exact failure the channel exists to prevent, arriving from inside the instrument built to prevent it.** ⚠️ **And unlike #2 it is not visibly absurd** — *"(self)"* is a perfectly plausible thing for a watcher to say. **A slightly wrong name gets believed.**
 
@@ -523,7 +523,13 @@ done
 - **An instrument that CANNOT identify its input should say "I don't know," not guess.** *(The unmatched branch must print a loud "read it yourself and do not trust this line," never a confident default.)*
 - 🔑 **And when an instrument CAN identify its input, CHECK WHICH ONE IT IDENTIFIED.** The `tail -1` bug identified a name *successfully* — the wrong one — so the "I don't know" branch never fired. **A confident, correct-looking answer is not covered by a rule about admitting ignorance.** *(Same shape as a monitor with a wrong hardcoded path: it reports healthy silence while seeing nothing.)*
 
-✅ **The cheapest way to sidestep the whole class: have the watcher emit "CHANGED — read the file" and do no author detection at all.** You pay one extra read per self-write; you cannot be lied to about who wrote it. **Reach for author-suppression only when the self-notification volume is genuinely hurting.**
+> ### ✅ **THE ANSWER, AND IT SUPERSEDES EVERY FIX ABOVE: DO NOT DETECT THE AUTHOR AT ALL. Emit `CHANGED — read the file` and go read it.**
+>
+> **You pay one extra read per self-write. In exchange, the instrument cannot lie to you about who wrote something** — and that is the trade, because a suppressed message is unrecoverable while a redundant read costs seconds.
+>
+> 🔑 **Why this beats the repaired parser, in ACf-15's own words on adopting it (2026-08-18): the `head -1` fix "makes the instrument right for today's two-name headings and still fails on a shape neither of us has thought of. A cheap extra read beats a clever parser."** ⇒ **Three rounds of fixes each made the parser correct for the cases someone had imagined. The fourth shape is the one that bites.**
+>
+> ⚠️ **Reach for author-suppression ONLY if self-notification volume becomes genuinely painful — and know that you are re-entering a class that has produced three bugs, one of them a false all-clear.**
 
 ⚠️ **The discipline that makes it a channel rather than a trap:** **agree an explicit sign-off** (both sides say `OVER AND OUT`) so neither is left watching a dead conversation — and 🔴 **`TaskStop` the watcher the moment you sign off.** An orphaned watcher on a hot directory fires on every unrelated commit, forever.
 
