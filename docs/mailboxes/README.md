@@ -14,7 +14,7 @@
 >
 > To reach someone, append to **their** file. Never write into your own to "send" something — nobody is watching it but you.
 
-**Your address is `docs/mailboxes/inbox-<your-name>.md`, lowercased, no date.** `AC0` → `inbox-ac0.md`. `ACf` → `inbox-acf.md`.
+**Your address is `docs/mailboxes/inbox-<your-name>.md`, lowercased, no date.** `ACT` → `inbox-act.md`. `ACv` → `inbox-acv.md`. ⚠️ **A rename does NOT re-point the file** — `ACP` kept `inbox-ac0.md` so every armed watcher survived. **Rename the agent, keep the path; note the mapping in the roster below.**
 
 **⇒ The address is DERIVABLE, which is the property that matters most.** You can reach a lane AC that was spun ten minutes ago and that you have never spoken to, **with no prior coordination and no setup** — you create their inbox by writing to it. That kills the *"a channel nobody is watching"* failure at its root.
 
@@ -43,7 +43,7 @@
 2. **Newest at the BOTTOM. Append; never edit or delete another instance's entry.** You cannot "replace" someone else's message — that is what makes a bus append-only by nature.
 3. **Entry format** — one header line, at most two of body:
    > `**[YYYY-MM-DDTHH:MM · FROM → TO]** what changed, in one sentence → **where it lives.**`
-4. **Mark an entry `✅ READ` when you have acted on it** — append the marker rather than deleting, so the sender can see it landed. **Drain acknowledged entries at each `#lock`.**
+4. **Mark an entry `✅ READ` when you have acted on it** — append the marker rather than deleting, so the sender can see it landed. **Drain acknowledged entries at each `#lock` — OR at ~40 lines, whichever comes first.** *(Ruled 2026-08-19 by ACP, on ACT's catch that `#lock` alone is not a trigger: we have not run one, and at four lanes plus two conductors an inbox bloats long before we do. **A drain rule that fires on a checkpoint nobody schedules is not a rule.**)* **Drain to `docs/mailboxes/archive/inbox-<name>-YYYY.MM.DD.md`** — date the archive, never the live file.
 5. **Sign off per topic** with an explicit `OVER AND OUT`, so neither side is left watching a settled thread. **The inbox itself never retires — it is infrastructure.**
 6. **No date in the filename, deliberately** — the path must never change, or every watcher armed on it needs re-pointing. **Date the ARCHIVE, not the live file.**
 
@@ -74,9 +74,11 @@
 
 | Inbox | Who |
 |---|---|
-| `inbox-ac0.md` | **AC0** — the product-lane conductor. Merges, cross-lane collisions, housekeeping. |
-| `inbox-acf.md` | **ACf** — owns the team runtime outright, including that repo's pushes. A **peer** of AC0, not a report. |
+| `inbox-ac0.md` | **ACP** (AC-Product, was AC0) — the product-lane conductor. Merges, cross-lane collisions, housekeeping. **Renamed 2026-08-19; the file keeps its path so armed watchers do not break.** |
+| `inbox-act.md` | **ACT** (AC-Team, was ACf) — owns the team runtime outright, including that repo's pushes. A **peer** of ACP, not a report. |
 | `inbox-acv.md` | **ACv** — the visual Map lane, reporting to Justin directly. |
+
+🔴 **LANE TRAFFIC DOES NOT COME HERE.** *(Ruled 2026-08-19 by ACP on ACT's proposal, and adopted as written.)* **A lane talks to its own conductor in its own lane doc; only what CROSSES lanes reaches an inbox.** Without that, twelve agents converge on one surface and it stops being skimmable at 3am — which is the single thing it has to be. ⚠️ **And Justin's caution, relayed by ACT and worth keeping verbatim: *"be careful using docs that aren't intended to be ongoing mailboxes AS mailboxes — they'll get long and bloaty."*** The pointers-only rule is what stops that; the drain trigger above is what stops it bloating anyway.
 
 **A name not listed here does not need adding — write to `inbox-<name>.md` and it exists.** Add a row here when a lane becomes standing rather than momentary.
 

@@ -1,8 +1,8 @@
-# Inbox — ACF
+# Inbox — ACT
 
 > **Truncation check:** the last line of this file should read `FULL FILE LOADED`. If you don't see it, reload or read in sections until you confirm the complete file.
 >
-> **Whose:** ACf — owns the team runtime outright. A PEER of AC0, not a report.
+> **Whose:** ACT (AC-Team, formerly ACf) — owns the team runtime outright. A PEER of ACP, not a report.
 >
 > 🔴 **THE PROTOCOL LIVES IN `docs/mailboxes/README.md`. Read it once; this file stays messages-only.**
 >
