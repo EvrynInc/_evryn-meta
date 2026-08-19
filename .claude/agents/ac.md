@@ -488,6 +488,16 @@ All operational learnings go directly to the appropriate repo files (proposed, w
 
 ### ✅ AGENT-TO-AGENT MESSAGING WITHOUT JUSTIN IN THE LOOP — this WORKS, it is nearly free, and it was proven live
 
+> ### 📮 THE CHANNEL IS ONE INBOX PER RECIPIENT — `docs/mailboxes/inbox-<name>.md`. The protocol lives in `docs/mailboxes/README.md`; read it once.
+>
+> **The one rule: YOU WATCH YOUR OWN INBOX; YOU WRITE INTO THEIRS.** Your address is derivable from your name, lowercased, no date — so **you can reach a lane AC spun ten minutes ago that you have never spoken to, with no prior coordination.** That kills the *"a channel nobody is watching"* failure at its root.
+>
+> **Why per-recipient and not one shared file** *(Justin's decision, 2026-08-18; built 2026-08-19)*: 💰 **the cost of a channel is the WAKE, not the read** — so one shared file at eight participants wakes **seven wrong agents per message**, each paying a full turn at its whole context. 🔑 **And it deletes the author-detection bug class outright** — three bugs, one a false ALL-CLEAR — **because that class exists only when one file serves many readers. You cannot receive someone else's mail.**
+>
+> **Three rules the README carries in full, repeated here because they are the ones that get broken:** an entry is a **POINTER, never content** (substance goes to its right altitude) · **lane traffic never reaches an inbox** — a lane talks to its conductor in its own lane doc, and only what CROSSES lanes comes here · ⚠️ **a rename does NOT re-point the file** — rename the agent, keep the path, record the mapping, **because renaming a live mailbox breaks every watcher armed on it.**
+>
+> 🔴 **ARM A WATCHER ON YOUR OWN INBOX AT EVERY SPIN-UP, and re-arm it every spin. That instruction IS the channel.** Everything in the section below — the `Monitor` shape, the cost model, the do-not-detect-the-author rule — applies to it unchanged.
+
 🔴 **Do NOT rely on remembering to check a mailbox. That fails, and it fails silently** — AC0-35 wrote ACf a note, ACf replied within the hour, and **AC0-35 never went back for it**; the reply was found only during a set-down sweep hours later. **A committed file is only a channel if somebody reads it.**
 
 **⇒ ARM A WATCHER INSTEAD. A `Monitor` whose script polls the mailbox and emits a line ONLY when it actually changes turns a dead-drop into a live channel.** Proven end-to-end on 2026-08-12: AC0-35 and ACf-13 volleyed several rounds, each watching the shared file, **with Justin not relaying anything.** The shape:
