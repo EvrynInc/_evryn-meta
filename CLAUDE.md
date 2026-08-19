@@ -2,7 +2,7 @@
 
 > **Truncation check:** the last line of this file should read `FULL FILE LOADED`. If you don't see it, this file loaded incomplete — re-read it before doing anything.
 
-**THIS FILE IS A ROUTER. IT IS NOT AN OPERATING MANUAL, AND IT IS NOT ENOUGH TO WORK FROM.** It exists to send you to your real manual and to do nothing else.
+**THIS FILE IS A ROUTER. IT IS NOT AN OPERATING MANUAL, AND IT IS NOT ENOUGH TO WORK FROM.** It exists to send you to your real manual, and to do nothing else — **with one deliberate exception, at the bottom: the Slack ping mechanic, which is identical for every agent and therefore belongs in exactly one place.**
 
 **Why you are reading it:** the harness auto-injects this file into *every* agent it spins in this workspace — AC, DC, QC, OC, team agents, and generic subagents alike — regardless of which one you are. So it has to be small, stable, and true for everyone.
 
@@ -83,6 +83,24 @@ You are a **generic subagent**: you have no identity file, and the hard rule abo
 3. **Then execute its Context Discipline section** before starting work.
 
 🔴 **Do not trust the auto-injected copy of THIS file either.** The injection has been observed serving a stale snapshot — content committed hours earlier was missing from it. **The file on disk governs.** This router is kept deliberately tiny and near-static so that a stale copy of it is still a correct copy; everything that changes lives behind it, in the manuals.
+
+---
+
+## Pinging Justin on Slack
+
+**Every agent pings the same way: run the committed script. Never hand-build the command.**
+
+```bash
+node _evryn-meta/scripts/ping.mjs "AC0: one-line message"        # -> #team-alerts
+node _evryn-meta/scripts/ping.mjs --dev "DC: one-line message"   # -> #dev-alerts
+```
+
+*(Path is rooted at the shared parent that holds every repo as a sibling; from inside `_evryn-meta` it is `node scripts/ping.mjs`. It runs from any working directory. On success it prints `pinged #channel`; on any failure it prints `PING FAILED: ...` and exits non-zero — it never fails silently.)*
+
+- **Sign every ping with your instance name** — `AC0:`, `ACv:`, `DC:`, `QC:`, `OC:`. Justin runs many agents at once; an unsigned ping is unattributable.
+- 🔴 **Never hand-roll an inline `fetch`/`curl` that reads a webhook out of a `.env` and POSTs it.** That command carries both halves of an exfiltration signature, so the permission classifier refuses it — **silently, from Justin's side**: you believe you pinged, and he hears nothing. Running a committed project script is an ordinary action and is not blocked. *(The full reasoning lives in the script's own header, where it costs nobody else a token.)*
+- 🔴 **Both channels reach Justin, and ONLY Justin. There is no agent-to-agent Slack delivery.** A ping addressed to "AC1" or "DC" does not reach that agent — it reaches Justin, who would have to relay it by hand. **To reach another agent, use a committed mailbox file.** This has bitten repeatedly.
+- **WHICH channel you use, and WHEN to ping at all, is your own manual's business.** It differs by agent and it is deliberately not in this file.
 
 ---
 

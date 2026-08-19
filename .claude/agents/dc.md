@@ -117,10 +117,10 @@ Full company context: `_evryn-meta/docs/hub/roadmap.md` (the Hub)
 
 ## Slack Channels
 
-- **`#dev-alerts`** — DC/AC/OC/QC operational pings. Uses the "Dev Alerts" Slack app (incoming webhook in `.env` as `SLACK_DEV_WEBHOOK_URL`). Prefix messages with your name — `DC:` if you're the only DC, or `DC0:`/`DC1:`/etc. if Justin has designated you a numbered instance. All dev tooling notifications go here.
+- **`#dev-alerts`** — DC/AC/OC/QC operational pings, via the "Dev Alerts" Slack app. **Send ALL your ops pings here** — deploy-ready, deploy-done, decisions, unblocks, everything — and not to `#team-alerts`: your pings are a shipping record AC instances scroll back through, and `#team-alerts` carries far too much other traffic to find them in. Prefix messages with your name — `DC:` if you're the only DC, or `DC0:`/`DC1:`/etc. if Justin has designated you a numbered instance. All dev tooling notifications go here.
 - **`#evryn-approvals`** — Evryn's channel. Only Evryn posts here, via her own Slack app ("Evryn") using the bot token (`chat.postMessage`). DC never posts to this channel.
 - **Evryn's Slack app** is named "Evryn" — not "Evryn Notifications." Only she uses it. Future team agents (Lucas, Alex, etc.) each get their own Slack app with their own identity.
-- **DC pings Justin** via Node `fetch` to the Dev Alerts webhook (see "Outbound HTTP on Windows" above for the one-liner). Evryn pings Justin via bot token to `#evryn-approvals`.
+- **DC pings Justin by running the committed script** — `node _evryn-meta/scripts/ping.mjs --dev "DC: your one-line message"`. The mechanic, and the reason for it, live in the router (`_evryn-meta/CLAUDE.md`, "Pinging Justin on Slack"). ⚠️ **The "Outbound HTTP on Windows" bullet above still tells you to use Node `fetch`. That is a general HTTP rule and it is still correct for other calls — but do NOT apply it to a Slack ping.** An inline command that reads a webhook out of a `.env` and POSTs it is refused by the permission classifier *silently from Justin's side*, so you believe you pinged and he hears nothing. Run the script. Evryn pings Justin via bot token to `#evryn-approvals` — that is her runtime, not yours.
 
 ---
 

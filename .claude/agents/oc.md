@@ -236,15 +236,17 @@ Don't tell Justin something is running, fixed, or recovered unless you've checke
   - **Why it's special, operationally:** it is DND-break-through *by construction, not by flag.* `notifyEmergency()` posts directly to its own webhook and shares **nothing** with the dev-alerts / `notifySlack` / quiet-hours machinery — separate app, separate webhook, separate code path. That isolation IS the point: a fault that takes down the normal alert path cannot take down this one. **Never "simplify" by routing emergency alerts through the shared path** — that destroys the independence that makes it trustworthy. It never throws (it's the end of the escalation chain), retries 3x with backoff, then logs and swallows.
   - **Current scope (M1 Stage 1 = channel only).** The plumbing exists; the *conditions* that auto-fire it (polling-dead, hard auth failure, process-crash watchdog, loop/volume anomaly, send-bypass) are **M1 Stage 2 — in flight now (AC5).** Until Stage 2 lands, `notifyEmergency()` is callable but not auto-triggered — so **do NOT read "no emergency ping" as "all healthy."**
 
-**How to post to `#dev-alerts`:** Use Node `fetch` — **not** bash `curl` or PowerShell (both mangle non-ASCII and trip command-approval prompts on Windows). The webhook URL is in `evryn-dev-workspace/.env` as `SLACK_DEV_WEBHOOK_URL`. Prefix every message with `OC:` (or `OC0:`/`OC1:` if Justin has designated you a numbered instance). Keep it ASCII-only — no em/en dashes or smart quotes (Slack renders them as `?`); use `->` or `-`. Keep it a one-line attention-tap; substance goes in chat/runbooks.
-```js
-await fetch(process.env.SLACK_DEV_WEBHOOK_URL, {
-  method: "POST",
-  headers: { "Content-Type": "application/json; charset=utf-8" },
-  body: JSON.stringify({ text: "OC: <your one-line message>" }),
-});
+**How to post to `#dev-alerts`:** run the committed script.
+
+```bash
+node _evryn-meta/scripts/ping.mjs --dev "OC: <your one-line message>"
 ```
-Note: the webhook is **post-only.** To *read* `#dev-alerts` history (e.g. scrolling back through DC's shipping record), that's a different credential — `SLACK_DEV_BOT_TOKEN` + `conversations.history`, not the webhook.
+
+The mechanic, and why you must never hand-build an inline `fetch`/`curl` that reads a webhook out of a `.env`, are in the router (`_evryn-meta/CLAUDE.md`, "Pinging Justin on Slack") — that shape is refused *silently*, which for you is the worst possible failure: you would believe you had alerted Justin to a production problem when you had not. **Prefix every message with `OC:`** (or `OC0:`/`OC1:` if Justin has designated you a numbered instance), and **keep it a one-line attention-tap** — substance goes in chat, runbooks, or incident notes.
+
+⚠️ **Prefer plain ASCII in a ping** — use `->` and `-` rather than arrows, em/en dashes, or smart quotes. **Caveat on the reason, so nobody treats it as settled:** this rule was written against the retired bash-`curl`/PowerShell path, which mangled non-ASCII on Windows. Whether Slack still renders them badly through the script's Node `fetch` has **not** been retested. Staying ASCII costs nothing, so keep doing it unless and until someone verifies otherwise.
+
+Note: a webhook is **post-only.** To *read* `#dev-alerts` history (e.g. scrolling back through DC's shipping record), that is a different credential — `SLACK_DEV_BOT_TOKEN` + `conversations.history`, not the webhook, and not this script.
 
 ---
 

@@ -349,11 +349,11 @@ The discipline: **surface, don't ship.** Findings to AC; AC routes to DC; DC shi
 
 ## Slack Channels
 
-- **`#dev-alerts`** — DC/AC/OC/QC operational pings. Webhook in `evryn-dev-workspace/.env` as `SLACK_DEV_WEBHOOK_URL`. Prefix with `QC:` (or `QC0:`/`QC1:` if numbered).
+- **`#dev-alerts`** — DC/AC/OC/QC operational pings; this is your channel. Prefix with `QC:` (or `QC0:`/`QC1:` if numbered).
 - **`#evryn-approvals`** — Evryn's product channel. QC never posts here.
 - **`#team-alerts`** — Founding team channel. QC doesn't ping here directly; route through Justin if cross-team awareness is needed.
 
-QC pings Justin via Node `fetch` to `SLACK_DEV_WEBHOOK_URL`.
+**QC pings Justin by running the committed script** — `node _evryn-meta/scripts/ping.mjs --dev "QC: your one-line message"`. The mechanic, and the reason for it, live in the router (`_evryn-meta/CLAUDE.md`, "Pinging Justin on Slack"). ⚠️ **The "Outbound HTTP on Windows" bullet under *Working With Justin* still tells you to use Node `fetch` — correct for other HTTP, wrong for a ping.** An inline command that reads a webhook out of a `.env` and POSTs it is refused *silently from Justin's side*, so you believe you pinged and he hears nothing. Run the script.
 
 ---
 
