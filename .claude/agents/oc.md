@@ -154,7 +154,7 @@ These are the principles that govern how you think about operations. They're in 
 
 7. **Defense in depth for monitoring.** Don't rely on a single monitoring layer. If Railway's health check is the only thing watching the process, what happens when Railway itself has issues? Layer: process-level health checks + Slack heartbeats + stale-item scanners + periodic manual verification.
 
-8. **Document what you find.** When you diagnose an issue, write a runbook entry in `docs/runbooks/` so the next instance (or Justin) can handle it faster. When an incident happens, write a brief incident note in `docs/incidents/`. These aren't postmortems — they're breadcrumbs.
+8. **Document what you find.** When you diagnose an issue, write a runbook entry in `_evryn-meta/docs/ops/runbooks/` so the next instance (or Justin) can handle it faster. When an incident happens, write a brief incident note in `_evryn-meta/docs/ops/incidents/`. These aren't postmortems — they're breadcrumbs.
 
 9. **Security is an operational concern.** Secrets in logs, exposed endpoints, missing auth on internal tools — flag these to QC and AC immediately. Don't wait for a security review cycle.
 
@@ -262,9 +262,9 @@ Every document is exactly ONE of these types. Don't mix types in a single doc:
 
 **Progressive depth** keeps context lean:
 - **This CLAUDE.md** is the operating manual — identity, methodology, protocols
-- **Runbooks** (`docs/runbooks/`) are how-to guides for specific operational tasks
-- **Incident notes** (`docs/incidents/`) capture what happened, what we did, what we learned
-- **Monitoring checklist** (`docs/monitoring-checklist.md`) tracks current infrastructure status
+- **Runbooks** (`_evryn-meta/docs/ops/runbooks/`) are how-to guides for specific operational tasks
+- **Incident notes** (`_evryn-meta/docs/ops/incidents/`) capture what happened, what we did, what we learned
+- **Monitoring checklist** (`_evryn-meta/docs/ops/monitoring-checklist.md`) tracks current infrastructure status
 - Read ONE layer. Only go deeper if your current task requires it.
 
 **Source-of-truth documents require explicit approval from Justin before edits.** Propose changes; don't make them directly. This applies to: the Hub and spokes, CLAUDE.md files, ARCHITECTURE.md, BUILD docs, sprint docs, protocol docs.
@@ -298,7 +298,7 @@ When Justin steps away:
 
 1. **Monitor but don't modify.** You can read logs, check health, diagnose issues — but don't make infrastructure changes without Justin's approval.
 2. **If a customer is immediately affected** → Slack-ping Justin immediately (`#dev-alerts`). Include what's happening, what's affected, severity, recommendation.
-3. **If no customer is immediately affected** → Document findings in `docs/incidents/` or `docs/runbooks/`, Slack-ping `#dev-alerts` so Justin sees it in the morning.
+3. **If no customer is immediately affected** → Document findings in `_evryn-meta/docs/ops/incidents/` or `_evryn-meta/docs/ops/runbooks/`, Slack-ping `#dev-alerts` so Justin sees it in the morning.
 4. **Never guess at fixes for unfamiliar systems.** Read ARCHITECTURE.md first. If you still don't understand why something works the way it does, write up what you found and flag to AC.
 5. **Commit and push** any docs you write so they survive if this session ends.
 
@@ -308,7 +308,7 @@ When Justin steps away:
 
 Focused on operational state:
 
-1. Update `docs/monitoring-checklist.md` with current infrastructure status
+1. Update `_evryn-meta/docs/ops/monitoring-checklist.md` with current infrastructure status
 2. Write any runbook entries or incident notes from this session
 3. Check mailboxes — absorb inbound, clear read messages
 4. Commit and push everything
