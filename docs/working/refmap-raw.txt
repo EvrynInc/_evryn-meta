@@ -1,3 +1,22 @@
+### NOTE ADDED 2026-08-19 by AC0-37g — READ THIS BEFORE USING ANY LINE BELOW.
+#
+# WHAT THIS FILE IS: a raw, POINT-IN-TIME scan artifact produced by the lane ACx while sweeping
+# docs/working/. It is a machine-generated reference map, not a maintained document. It was never
+# updated after the sweep, so paths below may name files that have since moved or been retired.
+#
+# TWO SPECIFIC CORRECTIONS, so nobody acts on a stale line:
+#   1. AGENT_PATTERNS.md NO LONGER EXISTS. It was collapsed into _evryn-meta/LEARNINGS.md on
+#      2026-08-12 and retired outright on 2026-08-19 (both Justin s rulings). The retired file is
+#      at _evryn-meta/docs/historical/AGENT_PATTERNS.md; its entries are in LEARNINGS.md s
+#      Unpromoted section under "Absorbed from AGENT_PATTERNS.md". Never route a learning there.
+#   2. docs/working/2026.08.19-act-act2-handoff.md was renamed to 2026.08.19-acf16-act16-handoff.md.
+#
+# It also tripped AC0-37f s own dangling-pointer test, because it is a scan of the folder it lives
+# in and therefore cites paths it does not own. Per AC0-37g s handoff (3.4), it should either move
+# out of docs/working/ or carry this banner. This banner is the interim answer; the move is open.
+#
+# The body below is DELIBERATELY UNEDITED — rewriting a point-in-time scan would falsify it.
+###
 _evryn-meta/.claude/agents/ac.md:2026.06.16-ac0-ac0-handoff.md
 _evryn-meta/.claude/agents/ac.md:2026.06.23-ac0-ac2-launch-specifications.md
 _evryn-meta/.claude/agents/ac.md:2026.08.04-ac0-aca-atlas-refactor-brief.md

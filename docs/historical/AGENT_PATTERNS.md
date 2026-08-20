@@ -1,10 +1,18 @@
-# Agent Building Patterns
+# Agent Building Patterns — RETIRED
 
 > **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see it, reload or read in sections until you confirm the complete file.
 
-> # 📍 THIS FILE'S CONTENT HAS MOVED TO [`LEARNINGS.md`](LEARNINGS.md).
+> # ⚫ RETIRED 2026-08-19. THIS IS A HISTORICAL RECORD, NOT A LIVE DOCUMENT.
 >
-> **Do not add new patterns here. Add them to `LEARNINGS.md` instead.**
+> **Justin's ruling, 2026-08-19: *"bite the bullet, make sure there are zero unfixed references, and retire it."*** Retired by AC0-37g on that date and moved to `docs/historical/`.
+>
+> **Where its content is now:** `_evryn-meta/LEARNINGS.md`, Unpromoted section, under *"Absorbed from `AGENT_PATTERNS.md`"* — with the original sixteen domain groupings intact. **That section is the only live home for this material.**
+>
+> ⚠️ **Nothing below this banner has been edited.** The body is preserved exactly as it stood as a redirect pointer, because rewriting a retired record falsifies it. **Two of its own claims are therefore frozen in a state that is no longer true, and are corrected here rather than in the text:**
+> - It says *"The file stays here, as this pointer, because roughly thirty live documents link to it."* **Every one of those references was repointed before this retirement** — that was the precondition Justin set, and it is what took the retirement from a decision to a completed act.
+> - Its "Where to put a new pattern now" section lists seven routing documents as *"now stale and being routed for correction."* **They have been corrected.** Two of the repos it names (`evryn-dev-workspace`, `evryn-quality`) were themselves retired at the 2026-08-18 cutover.
+>
+> 🔑 **One thing in the body below is worth reading even now, and it is the reason the collapse happened at all** — Justin's verbatim reasoning about why a *library* (file it once, decide the destination immediately) is the wrong shape and a *queue* (capture now, route at `#sweep` to however many homes it needs) is the right one.
 
 **What happened.** On 2026-08-11 this file was collapsed into `LEARNINGS.md` on Justin's ruling. All eighty-nine patterns now live there, in the **Unpromoted** section, under a subsection headed *"Absorbed from `AGENT_PATTERNS.md`"* — with their original sixteen domain groupings intact, so the library is still browsable by class of problem. **The file stays here, as this pointer, because roughly thirty live documents across five repositories link to it and those links must not dangle.**
 
