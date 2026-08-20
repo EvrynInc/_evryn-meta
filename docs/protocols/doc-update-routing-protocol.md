@@ -87,9 +87,23 @@ Find your change; hit every surface listed; route each per Part 1. The **Gotcha*
 | **5. A new / changed env var or operational knob** | operator-guide (how Justin flips it) · current-state Infrastructure / Railway-env line · ARCH or BUILD *(if it gates a subsystem)* · deploy-log *(if it must be set AT deploy or prod boot-fails)* | The **"deploy landmine"** pattern — e.g. `EVRYN_ENV` must be set before the next `railway up` or prod fails to boot (by design). If a knob has a deploy-time precondition, say so at the deploy-log home, not just in prose. |
 | **6. An architectural / strategic decision is made** | **ADR written AT decision time** · ARCH references it · BUILD / SPRINT *(if scope changes)* · the specific surfaces the decision touches | Decisions captured only in a session doc get lost under compaction. Write the ADR *before the session ends* — session docs capture the discussion; ADRs capture the decision. |
 | **7. Company / strategy truth changes** (Hub-level) | Hub + the spoke → **propose to Justin** · **company-context module (`evryn_knowledge`) refresh → route Justin/Lucas** · ARCH *(if technical direction changes)* | The public-safe `company-context` module is the downstream DB dependency that's invisible because it's a row, not a file — the Hub's own header calls out refreshing it. |
-| **8. A doc is moved / renamed** | **grep ALL repos** for references + repoint · leave a **redirect stub** if it's a load-bearing filename | Stale paths are silent bugs. Update every reference **in the same commit** as the move. |
+| **8. A doc is moved / renamed** | **grep ALL repos** for references + repoint · leave a **redirect stub** if it's a load-bearing filename · 🔴 **but EXCLUDE the records described in the Gotcha** | Stale paths are silent bugs. Update every reference **in the same commit** as the move. **⚠️ Two categories are excluded, and the second is easy to miss — see below.** |
 
 ---
+
+### 🔴 What a reference-repointing sweep must NOT touch — two exclusions, and the second cost us a document
+
+*(Added 2026-08-20 by AC0-37g. The first has always been practiced; the second was learned the hard way and had no home until now.)*
+
+**1 · Frozen records — long understood.** Changelogs, `docs/historical/**`, `docs/sessions/historical/**`, archived current-state. **A corrected path inside a record of what was true then is a falsification.** A changelog citing a path that later moved is not a broken link; it is an accurate statement about the past.
+
+**2 · 🔴 AN AUDIT OR REPORT THAT DESCRIBES THE VERY STATE THE SWEEP IS CHANGING.** ⚠️ **This is not intuitive, and it is not covered by rule 1, because such a document is usually live rather than frozen.**
+
+> **The live specimen:** a sweep retired eleven documents and repointed every referrer — **including the paths inside the audit document that had recommended those retirements.** ⇒ **That audit now lists each file at the home it was MOVED TO, while still saying it should be retired.** Nothing was lost — git holds the original — **but the document can no longer show the state it audited, which was its entire job.**
+
+🔑 **The principle, stated so it generalizes past audits: a document whose value is that it captured a BEFORE-state stops carrying that value the moment its paths are updated to the AFTER-state.** ⇒ **Before a repointing sweep, ask of each candidate: *is this file describing the thing I am changing?* If yes, exclude it and say in your commit that you did.** **The same reasoning that protects a changelog protects an audit; only the frozen-vs-live framing hid it.**
+
+⏳ **A THIRD exclusion is coming and is not yet in force:** Justin ruled on 2026-08-19 that **session-doc references will no longer be repointed at all** — findability becomes a rule (`docs/sessions/`, or `docs/sessions/historical/YYYY.MM/` by the doc's own date) rather than a maintenance task, *"because this always having to fix references to retire something is a fucking nightmare."* **Until `docs/working/` is actually retired into `docs/sessions/`, the old behaviour still applies.** **Whoever lands that consolidation should update this row.**
 
 ## Keeping this map current (self-maintenance)
 
