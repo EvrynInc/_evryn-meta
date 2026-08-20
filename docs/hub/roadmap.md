@@ -171,9 +171,9 @@ The vision: a world where the *default* would be that people can be trusted and 
 | `evryn-team-runtime` | Founding-team autonomous runtime (ADR-050) | Active — building |
 | `evryn-team-agents` | SDK-era agent build (frozen — ADR-021) | Frozen |
 | `evryn-website` | Marketing site (evryn.ai) | Live |
-| `evryn-dev-workspace` | DC's home. Identity & methodology | Active |
-| `evryn-ops` | OC's home. Operations, monitoring, runbooks | Active |
-| `evryn-quality` | QC's home. Code review, testing, quality gates | Active |
+| `evryn-dev-workspace` | *Was* DC's home — manual now at `_evryn-meta/.claude/agents/dc.md` | ⚫ Retired (ADR-057) |
+| `evryn-ops` | *Was* OC's home — manual now at `_evryn-meta/.claude/agents/oc.md`; runbooks moved to `_evryn-meta/docs/ops/` | ⚫ Retired (ADR-057) |
+| `evryn-quality` | *Was* QC's home — manual now at `_evryn-meta/.claude/agents/qc.md` | ⚫ Retired (ADR-057) |
 | `evryn-langgraph-archive` | LangGraph-era code archive | Sealed |
 | `evryn-prelaunch-landing` | Prelaunch landing page | Inactive |
 

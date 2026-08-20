@@ -18,15 +18,23 @@ Org: **`EvrynInc`**. All remotes are `https://github.com/EvrynInc/<repo>.git`.
 |------|------------------|--------|-----------|
 | `_evryn-meta` | `main` | **Active** | AC's home. Source-of-truth docs (Hub, spokes, ADRs, protocols, legal finals) + AC cross-repo ops (current-state, sessions). |
 | `evryn-backend` | `main` | **Active** | Evryn product backend (v0.2 "Gatekeeper's Inbox"). Live on Railway. |
-| `evryn-dev-workspace` | `main` | **Active** | DC's home — build identity & methodology. |
-| `evryn-quality` | `main` | **Active** | QC's home — review identity & methodology. *(The stale `master` fork was retired 2026-06-18; `main` is canonical — never spin QC off `master`.)* |
-| `evryn-ops` | `main` | **Active** | OC's home — operations, monitoring, deploy. Renamed `master → main` on GitHub 2026-06-19; fully active again (had been dormant 2026-03-20 → mid-2026). |
+| `evryn-dev-workspace` | `main` | ⚫ **RETIRED** (2026-08-18, ADR-057) | **Was DC's home.** Its `CLAUDE.md` is now a redirect stub. **DC's manual lives at `_evryn-meta/.claude/agents/dc.md`** — naming this repo's path in a subagent's load list hands it a stub instead of a manual. |
+| `evryn-quality` | `main` | ⚫ **RETIRED** (2026-08-18, ADR-057) | **Was QC's home.** `CLAUDE.md` is a redirect stub; **QC's manual is `_evryn-meta/.claude/agents/qc.md`.** *(Historical: a stale `master` fork was retired 2026-06-18 after it lobotomized a QC — that lesson is why this table exists.)* |
+| `evryn-ops` | `main` | ⚫ **RETIRED** (2026-08-18, ADR-057) | **Was OC's home.** `CLAUDE.md` is a redirect stub; **OC's manual is `_evryn-meta/.claude/agents/oc.md`.** Its three operational surfaces — runbooks, incidents, the monitoring checklist — were rehomed to `_evryn-meta/docs/ops/` on 2026-08-19. |
 | `evryn-team-workspace` | `main` | **Active** | The AI founding team (Lucas, Soren, Mira, Emma, Marlowe, Nathan, Thea, Dominic) — agent identities (`.claude/agents/`), memory (`.claude/agent-memory/`), shared projects. |
 | `evryn-team-runtime` | `main` | **Active** (ADR-050) | Founding-team autonomous runtime: the SDK-mains harness + worker dispatch. **Identity content NEVER lives here** — single home is `evryn-team-workspace`; this repo is harness code only. Created 2026-07-11. |
 | `evryn-team-agents` | `master` | **Frozen** (ADR-021) | SDK-era agent build. Insurance if Cowork/Code proves insufficient. *(Canonical branch is `master` — it predates the org-wide `main` convention and was never migrated because it's frozen.)* |
 | `evryn-website` | `main` | **Live** | Marketing site (evryn.ai). Next.js on Vercel. |
 | `evryn-langgraph-archive` | `main` | **Sealed** | LangGraph-era code archive. |
 | `evryn-prelaunch-landing` | `main` | **Inactive** | Prelaunch landing page — not currently active. |
+
+> ### ⚫ On the three RETIRED repos — what that does and does not mean *(recorded 2026-08-20 by AC0-37g; the retirement itself was 2026-08-18, ADR-057)*
+>
+> **They still exist on disk and on GitHub, and they are still expected by the session-start sync check** — a retired repo that vanished without a decision would be a worse surprise than one that sits there. **What changed is that nothing in them is any agent's context.** All four agent manuals now live in `_evryn-meta/.claude/agents/`, which is their single home.
+>
+> 🔴 **The one live trap: naming an old path in a subagent's `<mandatory_load>` list now hands it a redirect stub rather than a manual** — and per the router's hard rule, an agent without its manual is not authorized to do anything. **Check the path, not your memory.**
+>
+> **Archive-vs-delete is undecided and is Justin's call** — the three hold 16 tracked files between them, and each carries its own `.claude/settings.json` with its own permissions, which must be checked before any removal. **Decision due ~2026-09-18.**
 
 **One repo = one history = one default branch.** No repo should carry two unrelated roots (the `evryn-quality` fork was the lesson). If a `git merge-base A B` ever returns "no common ancestor" for two branches of the same repo, that's a fork — flag it.
 
