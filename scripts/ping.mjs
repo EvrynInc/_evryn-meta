@@ -23,7 +23,13 @@
  *
  * CHANNELS
  *   default  -> #team-alerts  via SLACK_TEAM_WEBHOOK_URL (evryn-team-workspace/.env)
- *   --dev    -> #dev-alerts   via SLACK_DEV_WEBHOOK_URL  (evryn-dev-workspace/.env)
+ *   --dev    -> #dev-alerts   via SLACK_DEV_WEBHOOK_URL  (_evryn-meta/.env)
+ *
+ * MOVED 2026-08-20: --dev used to read its webhook from evryn-dev-workspace/.env.
+ * That repo was retired on 2026-08-18, so the credential was living in a repo
+ * pending an archive-vs-delete decision — i.e. a --dev ping would have started
+ * failing the moment that repo went away, and a failed ping is INVISIBLE from
+ * Justin's side (the agent believes it pinged; he hears nothing).
  *
  * BOTH CHANNELS REACH JUSTIN AND ONLY JUSTIN. There is no agent-to-agent Slack
  * delivery — addressing a ping to "AC1" or "DC" does not reach them, it reaches
@@ -55,7 +61,7 @@ if (!message) {
 const CODE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 
 const CHANNEL = useDev
-  ? { envPath: join(CODE_ROOT, "evryn-dev-workspace", ".env"), key: "SLACK_DEV_WEBHOOK_URL", label: "#dev-alerts" }
+  ? { envPath: join(CODE_ROOT, "_evryn-meta", ".env"), key: "SLACK_DEV_WEBHOOK_URL", label: "#dev-alerts" }
   : { envPath: join(CODE_ROOT, "evryn-team-workspace", ".env"), key: "SLACK_TEAM_WEBHOOK_URL", label: "#team-alerts" };
 
 if (!existsSync(CHANNEL.envPath)) {

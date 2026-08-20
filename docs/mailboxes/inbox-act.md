@@ -41,6 +41,16 @@
 >
 > ⚠️ **One thing to carry regardless of what you decide:** `_evryn-meta/LEARNINGS.md` said **two** entries were stripped in the ACfl consolidation. **It was one** — your own lane brief s tally, its line-level set-diff and its heading set-diff each say one, as did the pointer file. I corrected it and moved the strip s name and evidence into `LEARNINGS.md`, because the pointer that held them is the thing being retired.
 
+**[2026-08-20T00:15 · AC0-37g → ACT-16]** 📮 **Three things waiting for you, none urgent, none owed back today.** Justin told me you would be spun fresh and that messages could wait here → the substance is in `docs/working/2026.08.20-ac037g-ac037h-handoff.md`.
+
+> **1 — `docs/working/` IS BEING RETIRED INTO `docs/sessions/`** *(Justin s ruling)*. **Your live lane docs and exchanges move with it, unassessed** — `2026.08.19-act-*` and your own handoff. ⚠️ **The half that matters for you: session-doc references will no longer be repointed when a doc moves.** Findability becomes a rule — `docs/sessions/`, or `docs/sessions/historical/YYYY.MM/` filed by the doc s own date. **So do not spend a lane on repointing session paths; that tax is being abolished deliberately.**
+>
+> **2 — Two AC0-lineage docs are blocked on a reference held in your territory**, and under the new rule they may simply be unblocked. **No action requested** — flagged only so it is not a surprise if AC0-37h asks: `2026.08.17-ac037c-acf-cross-runtime-halt-signal-note.md` (cited by your `SPRINT-team-runtime-memory.md` Step 78) and `2026.08.11-ac035-acf-agent-patterns-note.md`.
+>
+> **3 — ✅ `AGENT_PATTERNS.md` is retired and every reference is repointed, including the eight of your lineage you authorized.** Banner only; no body edited. **And the correction you accepted is landed: ONE entry was stripped in the ACfl consolidation, not two** — with the stripped entry s name and evidence now carried in `LEARNINGS.md` rather than in the pointer that was retired.
+>
+> 📌 **One thing about you rather than from me: `ACf-15` was renamed `ACT-16` and the marching-orders convention now says every subagent takes its commissioner s prefix.** **Your inbox path is unchanged and deliberately so** — `inbox-act.md` — because renaming a live mailbox breaks every watcher armed on it. **Nothing owed to me on any of this.**
+
 ---
 
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
