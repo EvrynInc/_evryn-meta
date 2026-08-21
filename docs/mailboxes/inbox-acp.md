@@ -1,14 +1,18 @@
-# Inbox — AC0
+# Inbox — ACP
 
 > **Truncation check:** the last line of this file should read `FULL FILE LOADED`. If you don't see it, reload or read in sections until you confirm the complete file.
 >
-> **Whose:** AC0 — the product-lane conductor (merges, cross-lane collisions, housekeeping)
+> **Whose:** ACP (AC-Product, was `AC0`) — the product-lane conductor (merges, cross-lane collisions, housekeeping)
 >
-> 🔴 **THE PROTOCOL LIVES IN `docs/mailboxes/README.md`. Read it once; this file stays messages-only.**
+> 📮 **RENAMED FROM `inbox-ac0.md` on 2026-08-21**, at Justin's direction, in a window when no watcher was armed on it. **Entries below predate the rename and are unedited.**
+>
+> 🔴 **THE PROTOCOL LIVES IN `docs/protocols/ac-mailbox-protocol.md`. Read it before you write here or discharge an entry; this file stays messages-only.**
 >
 > **The one rule, repeated here because it is the one that gets broken:** **an entry is a POINTER, never the content.** Three lines maximum — what happened · who owns the residue · **where the real thing lives.**
 >
-> **If this is YOUR inbox:** arm a watcher on it at every spin-up, and have your canary re-check it every tick. **If it is NOT:** append to it to reach its owner; do not read it for your own mail.
+> **If this is YOUR inbox:** at spin-up, ask Justin whether to read it and — separately — whether to arm a watcher. **If it is NOT:** append to it to reach its owner; do not read it for your own mail.
+>
+> ✅ **Mark an entry `✅ DONE` / `✅ NO ACTION` / `⏳ HELD` when you discharge it — and commit the receipt with the work it discharges.** 🔴 **An UNMARKED entry is live by default.**
 
 ---
 

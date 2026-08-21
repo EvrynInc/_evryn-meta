@@ -492,7 +492,9 @@ All operational learnings go directly to the appropriate repo files (proposed, w
 
 ### ✅ AGENT-TO-AGENT MESSAGING WITHOUT JUSTIN IN THE LOOP — this WORKS, it is nearly free, and it was proven live
 
-> ### 📮 THE CHANNEL IS ONE INBOX PER RECIPIENT — `docs/mailboxes/inbox-<name>.md`. The protocol lives in `docs/mailboxes/README.md`; read it once.
+> ### 📮 THE CHANNEL IS ONE INBOX PER RECIPIENT — `docs/mailboxes/inbox-<name>.md`.
+>
+> 🔴 **THE PROTOCOL IS `docs/protocols/ac-mailbox-protocol.md`, AND YOU READ IT AT THE MOMENT OF USE: before you write into someone's mailbox, or discharge an entry in your own.** **You do not need it loaded the rest of the time** — what follows here is the always-needed core.
 >
 > **The one rule: YOU WATCH YOUR OWN INBOX; YOU WRITE INTO THEIRS.** Your address is derivable from your name, lowercased, no date — so **you can reach a lane AC spun ten minutes ago that you have never spoken to, with no prior coordination.** That kills the *"a channel nobody is watching"* failure at its root.
 >
@@ -502,7 +504,7 @@ All operational learnings go directly to the appropriate repo files (proposed, w
 >
 > 🔴 **AT SPIN-UP, ASK JUSTIN TWO SEPARATE QUESTIONS — they are different acts with different costs:** ***"should I read my inbox?"*** **and** ***"should I arm a watcher on it?"***
 > - **READING is cheap, and it closes the one gap nothing else covers.** **A watcher's baseline is the moment you armed it, so a message that landed BEFORE you existed is invisible to it permanently and silently** — and a handover lands in exactly that gap. **If he says yes, read it top to bottom before you arm anything.**
-> - **ARMING decides whose traffic wakes you, which is why it is his call and not yours.** ⚠️ **Two instances of the same lineage share one inbox** *(both AC0-lineage instances read `inbox-ac0.md` on 2026-08-20)*, so an unasked-for watcher wakes you on a peer's mail all day. **Ask; do not assume.**
+> - **ARMING decides whose traffic wakes you, which is why it is his call and not yours.** ⚠️ **Two instances of one lineage share one inbox** *(two AC0-lineage instances shared theirs on 2026-08-20)*, so an unasked-for watcher wakes you on a peer's mail all day. **Ask; do not assume.**
 >
 > **Everything in the section below — the `Monitor` shape, the cost model, the do-not-detect-the-author rule — applies to a watcher unchanged.**
 
