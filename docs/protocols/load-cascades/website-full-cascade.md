@@ -2,7 +2,7 @@
 
 > **Truncation check:** the last line of this file should read `FULL FILE LOADED`. If you don't see it, reload or read in sections until you confirm the complete file.
 >
-> **How to use this file:** the **self-sufficient load list** for doing *or directing* build work on the **marketing website** (`evryn-website`, evryn.ai — Next.js on Vercel). Load the **Light Startup Context Cascade** (in `CLAUDE.md` — CLAUDE.md + `current-state.md` + the Hub) first, then execute this file. You should be able to do your full load from this file alone. **When Justin calls this cascade, load §1 in full** — don't trim it; if a step looks unneeded, flag it (⚑ below).
+> **How to use this file:** the **self-sufficient load list** for doing *or directing* build work on the **marketing website** (`evryn-website`, evryn.ai — Next.js on Vercel). Load the **Light Startup Context Cascade** (`_evryn-meta/.claude/agents/ac.md`) first, then execute this file. You should be able to do your full load from this file alone. **When Justin calls this cascade, load §1 in full** — don't trim it; if a step looks unneeded, flag it (⚑ below).
 >
 > **Owner: AC.** Edits need Justin's approval (propose first). This site is built by **DC**, whose manual is `_evryn-meta/.claude/agents/dc.md` — so in practice this cascade is what **AC loads to direct a DC website build**, and the file set AC hands DC. ⚠️ *(`evryn-website/CLAUDE.md` still redirects to "use DC from `evryn-dev-workspace`", a repo retired 2026-08-18. **Naming that path in a load list hands the subagent a stub instead of a manual.** The redirect itself is in another repo and was not edited here — flagged 2026-08-20.)*
 

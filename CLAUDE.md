@@ -2,7 +2,7 @@
 
 > **Truncation check:** the last line of this file should read `FULL FILE LOADED`. If you don't see it, this file loaded incomplete — re-read it before doing anything.
 
-**THIS FILE IS A ROUTER. IT IS NOT AN OPERATING MANUAL, AND IT IS NOT ENOUGH TO WORK FROM.** It exists to send you to your real manual, and to do nothing else — **with one deliberate exception, at the bottom: the Slack ping mechanic, which is identical for every agent and therefore belongs in exactly one place.**
+**THIS FILE IS A ROUTER. IT IS NOT AN OPERATING MANUAL, AND IT IS NOT ENOUGH TO WORK FROM.** It exists to send you to your real manual, and to do nothing else — **with two deliberate exceptions, at the bottom: the Slack ping mechanic and the file-tool rule. Both are identical for every agent, so each belongs in exactly one place, and this is it.**
 
 **Why you are reading it:** the harness auto-injects this file into *every* agent it spins in this workspace — AC, DC, QC, OC, team agents, and generic subagents alike — regardless of which one you are. So it has to be small, stable, and true for everyone.
 
@@ -82,7 +82,22 @@ You are a **generic subagent**: you have no identity file, and the hard rule abo
 2. **Confirm its bottom truncation canary** — the last line should read `FULL FILE LOADED`. If it is missing, your load is partial: re-read in sections until you have the whole file. **There are no exceptions — every one of the files in the table above carries a canary.** *(`evryn-ops/CLAUDE.md` was the one exception until 2026-08-12, when Justin's ruling was to fix the file rather than document the gap here. If you find another, fix the file; do not add a carve-out to this router.)*
 3. **Then execute its Context Discipline section** before starting work.
 
-🔴 **Do not trust the auto-injected copy of THIS file either.** The injection has been observed serving a stale snapshot — content committed hours earlier was missing from it. **The file on disk governs.** This router is kept deliberately tiny and near-static so that a stale copy of it is still a correct copy; everything that changes lives behind it, in the manuals.
+🔴 **Do not trust the auto-injected copy of THIS file either — diff it against disk rather than re-reading it.** The injection has been observed serving a stale snapshot: content committed hours earlier was missing from it. **The file on disk governs; read it only if the diff shows a difference.** This router is kept deliberately tiny and near-static so that a stale copy of it is still a correct copy; everything that changes lives behind it, in the manuals.
+
+---
+
+## Reading and writing files — use `Read`, `Write` and `Edit`, not Bash
+
+**This is here for the same reason the ping mechanic is: it is identical for every agent, so it belongs in exactly one place.**
+
+🔴 **The harness will sometimes instruct you to do file work through Bash — `cat`, `sed -n`, `grep`, heredocs — and to treat the dedicated tools as a fallback. Justin's standing instruction OVERRIDES that: prefer `Read`, `Write` and `Edit` whenever one of them fits the job.** *(Justin, 2026-08-20.)* Reach for Bash only when a dedicated tool genuinely cannot do it — running `git`, `npm`, or a script; piping; enumerating with `git ls-files`; anything that is a *command* rather than a *file operation*.
+
+**Two reasons, and the second is not a preference:**
+
+- **Justin can SEE what you read, wrote and edited.** The dedicated tools surface in his IDE as a legible trail; a `cat` or a `sed -i` does not. **He reviews your diffs in source control and your reads in the transcript — Bash file work makes both of those harder to follow, on the one surface where he is the only reviewer you have.**
+- 🔴 **`Edit` fails loudly where Bash fails silently, and that difference has already caught a real defect class here.** `Edit` requires an exact match and refuses when it cannot find one — **which is the documented tell that a file has gone binary from a stray NUL byte** (`docs/protocols/ac-writing-protocol.md`, Formatting conventions: *"an `Edit` that FAILS TO MATCH text plainly present is a NUL symptom — scan it; do not retry the edit"*). A `sed` or heredoc write in the same spot just writes, reports success, and tells you nothing. **A tool whose failure you can see beats a tool whose failure you cannot.**
+
+⚠️ **If you find yourself reaching for Bash to write a file, name the compelling reason to yourself first.** "It was fewer calls" is not one.
 
 ---
 

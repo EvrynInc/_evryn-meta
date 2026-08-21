@@ -2,7 +2,7 @@
 
 > **Truncation check:** the last line of this file should read `FULL FILE LOADED`. If you don't see it, reload or read in sections until you confirm the complete file.
 >
-> **How to use this file:** the **self-sufficient load list** for doing *or directing* build-level work on **`evryn-team-runtime`** — the founding team's autonomous runtime (ADR-050). Load the **Light Startup Context Cascade** (in `CLAUDE.md` — CLAUDE.md + `current-state.md` + the Hub) first, then execute this file **top to bottom, in order.** You should be able to do your entire full load from this file alone.
+> **How to use this file:** the **self-sufficient load list** for doing *or directing* build-level work on **`evryn-team-runtime`** — the founding team's autonomous runtime (ADR-050). Load the **Light Startup Context Cascade** (`_evryn-meta/.claude/agents/ac.md`) first, then execute this file **top to bottom, in order.** You should be able to do your entire full load from this file alone.
 >
 > **When Justin calls this cascade, load every step IN FULL — the must-load set (§ "The load") is non-negotiable.** He invokes it only when the work needs the heavy load; there is nothing for you to trim or defer. If a step looks unneeded, flag it (⚑ below); don't silently drop it.
 >

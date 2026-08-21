@@ -2,7 +2,7 @@
 
 > **Truncation check:** the last line of this file should read `FULL FILE LOADED`. If you don't see it, reload or read in sections until you confirm the complete file.
 >
-> **How to use this file:** the **self-sufficient load list + contract register** for doing *or directing* build work on the **monitoring dashboard** (`_evryn-meta/dashboard`, deployed at `evryn-dashboard.vercel.app`). Load the **Light Startup Context Cascade** (in `CLAUDE.md` — CLAUDE.md + `current-state.md` + the Hub) first, then execute this file. You should be able to do your full load from this file alone. **When Justin calls this cascade, load §1–§2 in full** (+ the §3 contract sources your task touches) — don't trim; if a step looks unneeded, flag it (⚑ below).
+> **How to use this file:** the **self-sufficient load list + contract register** for doing *or directing* build work on the **monitoring dashboard** (`_evryn-meta/dashboard`, deployed at `evryn-dashboard.vercel.app`). Load the **Light Startup Context Cascade** (`_evryn-meta/.claude/agents/ac.md`) first, then execute this file. You should be able to do your full load from this file alone. **When Justin calls this cascade, load §1–§2 in full** (+ the §3 contract sources your task touches) — don't trim; if a step looks unneeded, flag it (⚑ below).
 >
 > **Owner: AC.** Edits need Justin's approval (propose first). Keep the CONTRACT REGISTER (§3) in lockstep with the runtimes — when a runtime renames a column, changes a status enum, alters `/health`, changes the team-runtime control semantics, or a new migration seeds a capability the dashboard renders, update the matching entry here and bump the reconcile date, or a stale register silently misleads a dashboard build.
 
