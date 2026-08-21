@@ -68,6 +68,18 @@ When an AC begins a major new piece of work, it first orients Justin on its plan
 
 ---
 
+## 🔴 SUBAGENT OR STANDALONE INSTANCE — decide this BEFORE you spin
+
+> **A LANE AC THAT WILL SPAWN ITS OWN DC OR QC SHOULD BE A STANDALONE INSTANCE, REACHED THROUGH A WATCHED DOC. Everything else can be a subagent.** *(Justin's ruling, 2026-08-18.)*
+
+**The test is one question: will this agent need to spawn agents of its own?** **Yes → standalone instance. No → subagent, and it is materially less work.**
+
+- 🔴 **THE MAIN REASON IS CONTEXT POLLUTION, AND IT IS NOT THE OBVIOUS ONE: a grandchild's output lands in YOUR context, and it adds up fast.** **A DC's build chatter and a QC's full review are precisely what a conductor does not need** — they are the lane's business, not yours. ⇒ **A standalone lane ABSORBS its whole subtree and passes up only what crosses lanes**, which is the difference between a conductor that can still see the wave and one that has been buried by it.
+- **The second reason, which bites at close-out:** an agent your subagent spawned is **invisible and unreachable to you** — only its own spawner can dispose of it, and subagent resume dies with the session. **A standalone instance on a watched doc keeps that grandchild reachable, in writing, after your session ends.**
+- ⚠️ **Do not read this as "standalone is safer, so default to it."** **A standalone costs a real spin-up load and a channel to maintain.** **For a lane with nothing underneath it, a subagent is the right tool and the cheaper one.**
+
+---
+
 ## Spinning a DC, QC, or OC subagent — the brief shape
 
 > **"Startup Context Cascade" — the standardized term.** Each of DC, QC, and OC has a section by *exactly* that name in its CLAUDE.md (DC: `_evryn-meta/.claude/agents/dc.md`, "Startup Context Cascade — How to Orient in a New Repo"; QC: `_evryn-meta/.claude/agents/qc.md`, "Startup Context Cascade — Auto-load (tiered)"; OC: `_evryn-meta/.claude/agents/oc.md`, "Startup Context Cascade — How OC Orients"), listing precisely what it must load at startup. That uniform name is the anchor this whole protocol turns on: AC triggers it with the **verbatim words** in "The exact words" below, and the subagent has an unambiguous referent to load — no guessing what "your cascade" means. (AC's own startup cascade lives in `_evryn-meta/.claude/agents/ac.md` under its own tier names — Light / Full. ⚠️ **Not the router** — grepping `CLAUDE.md` for those anchors returns nothing and produces a false stale-manual alarm.)
@@ -604,7 +616,13 @@ Nothing else changes: the verbatim `<identity>`/`<mandatory_load>`/`<task>`/`<qu
 
 ### ⇒ FOREGROUND IS THE DEFAULT — because background is INVISIBLE TO JUSTIN (his call, 2026-07-16)
 
-**The fact that decides this:** *"Background agents don't render **at all** on my screen — whereas foreground agents render **everything**."* (Justin, 2026-07-16.) **A background spin makes the entire chain invisible to him.** He cannot see that DC actually ran, that AC2 actually checked, that anything landed — he gets only your word for it. And he explicitly wants the audit: *"I kind of like being able to audit everything — I just need to know when I'm looking at DC's stuff vs AC2 vs AC0."*
+> ⚠️ **CORRECTED 2026-08-21 — THE FACT THIS SECTION RESTED ON HAS CHANGED, AND IT MAY CHANGE BACK. Read the date before you rely on it.**
+>
+> **Anthropic's documentation says background agents are NOT supposed to render on Justin's screen, and there was a period when that held.** 🔴 **It does not hold now: as of 2026-08-21 background agents dump everything onto his screen, exactly as foreground ones do** *(his own observation)*. ⇒ **Foreground vs. background currently makes NO difference to what he sees.**
+>
+> 🔴 **So the foreground default no longer rests on visibility.** **If you are choosing a spin mode today, choose it on other grounds** — and **re-verify this line rather than inheriting it**, because it has already flipped once.
+
+**What has NOT changed is what he wants from the output.** He explicitly wants the audit: *"I kind of like being able to audit everything — I just need to know when I'm looking at DC's stuff vs AC2 vs AC0."* **He needs to see that DC actually ran, that AC2 actually checked, that anything landed — rather than having only your word for it.**
 
 **That is exactly what the naming rules buy, and why they are not cosmetic.** With `#` reserved for the top-level AC, sub-ACs at `## AC2's read`, and DC/QC barred from `'s read` entirely, a wall of foreground output becomes **scannable**: Justin skims to the single `#` for the answer, and every layer beneath it is *there*, attributed, if he wants to check it. **Without those rules foreground is an unreadable wall; with them it's an audit trail.** So the naming discipline and the foreground default are one decision, not two.
 

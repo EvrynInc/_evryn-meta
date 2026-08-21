@@ -12,7 +12,7 @@
 >
 > **If this is YOUR inbox:** at spin-up, ask Justin whether to read it and — separately — whether to arm a watcher. **If it is NOT:** append to it to reach its owner; do not read it for your own mail.
 >
-> ✅ **Mark an entry `✅ DONE` / `✅ NO ACTION` / `⏳ HELD` when you discharge it — and commit the receipt with the work it discharges.** 🔴 **An UNMARKED entry is live by default.**
+> ✅ **When you have CAPTURED a message: reply `RECEIVED` into the SENDER's inbox and DELETE it from here — one commit.** 🔴 **An empty inbox means nothing is owed. Nothing is ever HELD here** — if you can't act now, capture it into a sprint Step or a tracker row and say so in your reply.
 
 ---
 

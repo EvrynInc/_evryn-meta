@@ -57,14 +57,20 @@ done
 
 ## 3 · The loop, end to end
 
-**Four acts. Two agents. No relaying.**
+**Two agents. No relaying.**
 
 | # | Who | Does what |
 |---|---|---|
-| **1** | **Sender** | Appends a **pointer** entry to the recipient's inbox, **timestamped**, then **commits.** ⇒ one wake lands. |
-| **2** | **Recipient** | Wakes, reads, **acts.** |
-| **3** | **Recipient** | Writes a **RECEIVED** line into the **SENDER's** inbox, **clears the original from its own**, and **commits both with the work.** ⇒ one wake lands back. |
-| **4** | **Sender** | Wakes, sees it landed and what happened, **deletes the RECEIVED line**, commits the deletion immediately. |
+| **1** | **Sender** | Writes the message **at its natural length**, timestamped, then **commits.** ⇒ one wake lands. |
+| **2** | **Recipient** | Wakes, reads, **CAPTURES it into its own workflow**, writes a **RECEIVED** line into the **SENDER's** inbox, and **deletes the original from its own — ALL IN ONE COMMIT.** ⇒ one wake lands back. |
+| **3** | **Recipient** | **ACTS. Separately, on its own schedule.** Optionally sends a `COMPLETE` later. |
+| **4** | **Sender** | Wakes, sees it landed, **deletes the RECEIVED line and commits — immediately.** |
+
+> ### 🔴 RECEIPT AND CAPTURE ARE ONE ATOMIC ACT. ACTING IS NOT PART OF IT.
+>
+> *(Justin's ruling, 2026-08-21.)* **Acting on a message can be a large piece of work.** ⚠️ **If the receipt waits on the acting, the sender sits in silence for however long that takes — and silence is exactly what this channel exists to stop.** ⇒ **Confirm receipt the moment you have the message safely in your own workflow, not when the work is finished.**
+>
+> ⭐ **The one shortcut, and it is a real one: if ACTING would take less time than CAPTURING, just act — then send `RECEIVED` and `COMPLETE` as a single line.** **Do not ceremonially capture something you could have finished.**
 
 > ### 🔑 THE RECEIPT GOES IN THE SENDER'S INBOX. That is the whole fix.
 >
@@ -72,7 +78,7 @@ done
 
 **Why step 4 exists:** an undeleted RECEIVED line **wakes and puzzles instance after instance**, each of which has no memory of sending anything. **You MUST IMMEDIATELY clear your own receipts.**
 
-⚠️ **Step 4 costs you ONE self-wake** — you are committing a change to a file you watch. **Do it at set-down**, batched with whatever else you are committing, when you are about to stop anyway.
+⚠️ **It costs you ONE self-wake** — you are committing a change to a file you watch. **Pay it and move on. Do not defer it to set-down**, because a receipt you meant to clear later is a receipt that more than likely gets forgotten, and creates a cascade of confusion for later instances.
 
 ✅ **Nothing here can loop.** You write into *theirs* and watch *yours*, so a receipt cannot bounce.
 
@@ -80,9 +86,14 @@ done
 
 ## 4 · Entry rules
 
-1. 🔴 **AN ENTRY IS A POINTER, NEVER THE CONTENT.** Three lines maximum: **what happened · who owns the residue · where the real thing lives.** Substance goes to its right altitude — a Step, an ADR, a brief, a manual, a changelog entry — and the inbox says where.
-   > **Why this is not tidiness:** a channel that carries content becomes a document nobody can skim, and it is *"one home per item"* applied to correspondence — **content in a mailbox is a second copy that starts drifting from the doc that owns it immediately.** ⭐ **It is also what makes a split conversation free:** a thread across two files costs nothing when the substance was never in the mailbox.
-2. 🔴 **EVERY ENTRY CARRIES A TIMESTAMP.** **Format:** `**[YYYY-MM-DDTHH:MM · FROM → TO]** what changed, in one sentence → **where it lives.**` **Without it, git history cannot be aligned to a conversation** — which is exactly what the orphan case in §5 depends on.
+1. ⭐ **WRITE THE MESSAGE AT ITS NATURAL LENGTH. A message may be a few sentences or many pages long, and that is now a FEATURE.** *(Justin's ruling, 2026-08-21.)*
+   > **Entries used to be capped at three lines and pointers only. That rule existed for exactly one reason: entries PILED UP, so one long message made the file unskimmable for everyone who came after.** ⇒ 🔑 **With immediate clearing there is no "after." The file is empty again the moment the message is captured, so the constraint that justified pointers is gone** — and **the two objections that used to ride with it go with it: nothing drifts** *(the mailbox copy is deleted, so there is no second copy to drift)*, **and a long message costs the same single wake as a short one** *(the wake is the cost, not the read)*.
+   >
+   > 🔴 **This makes the channel far more useful than it was: you can hand a peer a real piece of work — an analysis, a full finding, a draft — instead of a breadcrumb pointing at one.**
+   >
+   > ⚠️ **The condition it rests on is absolute: a long message is only safe because it is CAPTURED before it is deleted.** **Delete an uncaptured message and it is in git history but effectively gone — nobody knows to look.** **See §5.**
+   > **If it makes more sense to persist the thinking into a doc, and just *point* to it here, do that**.
+2. 🔴 **EVERY ENTRY CARRIES A TIMESTAMPED HEADER LINE.** **`**[YYYY-MM-DDTHH:MM · FROM → TO]** the point of the message, in one sentence.`** **Then the body, at whatever length the message actually needs.** ⚠️ **The header is not decoration: without a timestamp, git history cannot be aligned to a conversation** — which is exactly what the orphan case in §5 depends on. **The one-sentence opener earns its keep too — it is what a recipient reads first at 3am to decide whether the next three pages are urgent.**
 3. **Newest at the BOTTOM. Append; never edit or delete another instance's entry** *(clearing a discharged entry from your OWN inbox is not editing theirs — see §3)*.
 4. **Sign off per topic** with an explicit `OVER AND OUT`.
 5. **No date in the filename, ever.** **Date the ARCHIVE, never the live file.**
@@ -96,13 +107,29 @@ done
 >
 > **That is the entire state model. There is nothing else to remember.**
 
-**When you have acted on an entry, delete it** — reply first, per §3. **The content is not lost: the sender committed it, so it is in git history permanently.** *(This is why "commit before you hand off" is non-negotiable — it is what makes clearing safe.)*
+**When you have CAPTURED an entry, delete it** — reply first, per §3. **The content is not lost: the sender committed it, so it is in git history permanently.** *(This is why "commit before you hand off" is non-negotiable — it is what makes clearing safe.)*
 
-**The one marker worth keeping — for a message you have read but genuinely cannot finish yet:**
+### 🔴 WHAT "CAPTURED" MEANS, because the whole design rests on it
 
-> `⏳ HELD [<ts>] · <instance> — <why> — until <testable condition>`
+> **Captured means the content now lives where the WORK lives — not where the mail lands.** **A Step in a sprint · a line in your own handoff or todo · an ADR · an edit to the doc it belongs in · your working notes.**
+>
+> 🔑 **The test is one question: *would a later instance of ME find this without the mailbox?*** **Yes → captured, delete it. No → you have not captured it yet, and deleting it now loses it.**
 
-⚠️ **A `HELD` with no testable condition is the same failure as a held document with no retirement condition:** the next reader inherits the caution without the reasoning and has no way to test whether it still applies.
+### 🔴 NOTHING IS EVER "HELD" IN AN INBOX. Bounce it back instead.
+
+*(Justin's ruling, 2026-08-21.)* **If you cannot act on a message now, you do not park it in your inbox and leave it there.**
+
+> ⚠️ **Why: an inbox is watched by ONE agent, and that agent may not spin up for a week — while a dozen other instances come and go past the thing sitting in it.** **Something marooned in an inbox is invisible to everyone who could have done it.**
+
+⇒ **Capture it into a PROPER home — a sprint Step, a tracker row, a brief — and say so in your reply:** *"Received. I can't take this now; I've put it in as SPRINT Step N,"* or *"Received, but this belongs in your lane — here's why."* **The inbox holds nothing. Holding happens where work is tracked.**
+
+### 🔴 IMPORTANT: YOU DO NOT WORK FOR ANOTHER AC
+
+*(Justin's ruling, 2026-08-21.)* **Receiving a request is not being assigned one.** **A peer AC is a PEER — it does not set your priorities, and a message in your inbox is an input to your judgment, not an instruction.**
+
+**You may slot it into your day, modify it, defer it with a reason, or decline it outright.** ⚠️ **What you may not do is silently absorb it** — that spends your lane's time on someone else's plan without anyone deciding to. **Whatever you choose, say which in your reply**, so they can re-route rather than wait.
+
+📌 **The exception that proves it: your own conductor, or Justin, IS authority.** **A peer conductor running its own lanes is not.** **But with *everyone* — authorities included — communication is key. If you aren't going to do something, or if you're going to do something but you have reservations — communicate that — everyone else needs to be able to rely on you.**
 
 **Drain acknowledged traffic at `#lock` OR at ~40 lines, whichever comes first**, to `docs/mailboxes/archive/inbox-<name>-YYYY.MM.DD.md`. *(A drain rule that fires only on a checkpoint nobody schedules is not a rule.)* ⚠️ **Justin's caution, verbatim: *"be careful using docs that aren't intended to be ongoing mailboxes AS mailboxes — they'll get long and bloaty."***
 
