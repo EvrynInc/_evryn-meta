@@ -381,7 +381,19 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
 
 **One home per item; everything else is a pointer (the elevation discipline).** Ideally, each item lives in exactly ONE doc — at its right altitude — and the same item never drifts into two docs with diverging status (the failure mode this kills). Keep each doc at its altitude (e.g. a BUILD doc holds v0.3 *scope + architecture*, not a granular bug-list; an active sprint doc holds the live work, not a duplicated current-state header). When content belongs at a lower altitude, *move* it there and leave a pointer — don't duplicate it. **Pointers must thread a needle:** descriptive enough to orient a reader *and* pull them to go read the real doc if they're working in that area, but never so complete they substitute for the read (a pointer that satisfies just recreates the duplication). "One home" is what lets a doc be trusted — you never have to wonder which copy is current.
 
-**Source-of-truth documents require explicit approval from Justin before edits.** Always propose changes rather than making them directly. This applies to: ARCHITECTURE.md, BUILD docs, the Hub and spokes, LEARNINGS.md, protocol docs. Excluded: CHANGELOG.md, ADRs, mailbox files. **Edit rights vs. authorization are distinct** — for ARCHITECTURE.md and the BUILD doc, AC *holds* edit rights (they are not off-limits to AC; see the ownership note in the SESSION STARTUP cascade); what this rule requires is Justin's explicit authorization *before* AC edits them.
+**Source-of-truth documents require Justin's explicit authorization before you edit them.** This applies to: ARCHITECTURE.md, BUILD docs, the Hub and spokes, LEARNINGS.md, protocol docs. Excluded: CHANGELOG.md, ADRs, mailbox files. **Edit rights vs. authorization are distinct** — for ARCHITECTURE.md and the BUILD doc, AC *holds* edit rights (they are not off-limits to AC; see the ownership note in the SESSION STARTUP cascade); what this rule requires is Justin's explicit authorization *before* AC edits them.
+
+> ### ⭐ ONCE THE CHANGE IS AUTHORIZED, MAKE THE EDIT AND LEAVE IT UNCOMMITTED — do NOT pitch the wording in chat
+>
+> *(Justin, 2026-08-21: **"if you feel decent about the wording, 'just make the edit and let me vet in SCM before you commit' is much better."**)*
+>
+> 🔑 **Authorization and wording-review are two different gates, and only the first one lives in chat.** Getting his yes on *whether* to change something is a conversation. Getting his read on *how you worded it* is **a diff** — and reviewing prose in source control is genuinely easier for him, because the diff shows the change **in its real surroundings** instead of an excerpt he has to mentally place back into a document he has not got open.
+>
+> ⇒ **So the default, whenever you feel decent about the wording: make the edit, leave it UNCOMMITTED, and tell him in one line that it is there.** That is exactly what *"leave it in SCM"* means.
+>
+> ⚠️ **The one case that still belongs in chat is when the SHAPE is unsettled** — you do not yet know what the rule should *say*, the change restructures a doc, or two defensible readings would produce materially different text. **Align first, then edit** *(the "align fully before editing a complex doc" bullet above is this same rule aimed at complexity rather than at medium).*
+>
+> ⭐ **THE TEST, and it is one question: is my uncertainty about the WORDS, or about the DECISION?** **Words → edit it and let him vet the diff. Decision → take it to chat.** ⚠️ **Pitching finished prose in chat is the common failure, not the safe one** — it costs him a read *and* a diff review, and it delays a change he had already said yes to.
 
 **Where new context goes** (routing table):
 - Project state changes → `docs/current-state.md`
