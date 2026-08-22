@@ -6,6 +6,24 @@
 **Date:** 2026-03-02
 **Participants:** Justin + AC
 
+---
+
+> ## ⏳ UPDATE NOTE — 2026-08-22 (`AC0-37h3b`, at Justin's direction). **Additive only. Nothing in the decision text below has been altered.**
+>
+> **The decision below stands and is still the destination. The RUNTIME has deviated from it since 2026-05-29, and that deviation is un-amended.**
+>
+> **What changed in the runtime (Wave 3, 2026-05-29):** the trigger now **force-loads 9 of the 11 `identity/` files** into the byte-identical cached common prefix on **every query** — everything except `situations/operator.md` and `activities/reflection.md`. **Selective on-demand loading via `read_identity_module` proved empirically fragile: Evryn skipped modules unless explicitly prompted.**
+>
+> ⇒ **So the passages below describing modules as pulled "on demand" — including the Simplified Trigger diagram, the "available modules" paragraph, and the Skills addendum's *"we're already doing it"* — describe the DESIGNED shape rather than today's behaviour.**
+>
+> 🔑 **This ADR is NOT stale, and that distinction matters.** An ADR records what was decided; **a runtime that has drifted from a recorded decision is an un-amended deviation, not a wrong ADR.** ⚠️ **Do not "correct" the decision text to describe force-loading** — that would falsify the record of what was actually decided, and the on-demand shape is expected back **within about a month of 2026-08-22** (Justin's estimate).
+>
+> **A related, deliberate consequence:** `identity/core.md` still instructs Evryn to *pull* eight modules she is already holding. **Justin ruled on 2026-08-11 that this must NOT be fixed** — *"no point stripping all that out, only to lay it all back in again in a month."*
+>
+> **Where the operative description lives:** `evryn-backend/docs/ARCHITECTURE.md` → Agent Architecture → **Identity Composition**. **The amendment to this ADR rides the restructure, tracked as Step 53** in `evryn-backend/docs/SPRINT-v0.2-optionals.md`; **the two owed identity items are Step 120.**
+
+---
+
 ## Context
 
 Evryn has fundamentally different operational modes (user-facing, operator-facing, triage, conversation, onboarding). Loading all modes in a single prompt every query creates security risk (operator instructions visible during user queries) and token waste (triage doesn't need onboarding scripts).
