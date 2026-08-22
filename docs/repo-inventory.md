@@ -58,6 +58,37 @@ Org: **`EvrynInc`**. All remotes are `https://github.com/EvrynInc/<repo>.git`.
 
 ---
 
+## 🔒 DELIBERATELY PRESERVED BRANCHES — merged, look deletable, and are NOT
+
+> ### 🔴 READ THIS BEFORE YOU DELETE ANY MERGED BRANCH. **A branch here has been assessed as "safe to delete" more than once, correctly on the work and wrongly on the consequence.**
+>
+> **The class:** a branch was **rebased before merging**, so `main` carries its work under **NEW SHAs**. The branch's remote tip is the only thing still holding the **pre-rebase originals** — **and committed docs quote those originals by hand.** ⇒ **Deleting the branch leaves those commits unreferenced and GC-eligible, and a document does NOT error when its citation rots. You find out much later, or never.**
+>
+> ⚠️ **Why this keeps nearly happening, and why a note was not enough on its own:** every check that matters comes back reassuring. `git cherry` says patch-identical. Every file is present on `main`. The feature shipped and is tagged. **All true — and all about the WORK, which was never the thing at risk.**
+
+| Branch | Why it is preserved | **Delete only when** | Owner |
+|---|---|---|---|
+| `evryn-backend` → `origin/ac2/step57-runtime-bookkeeping` | **3 of its 6 commits are cited by SHA in committed docs** — `d9306a8` in **eight** files, `16fbb99` in two, `3266325` in three. The work itself is fully landed *(shipped as `v0.2.8`; `git cherry` marks all six patch-identical; `verdict.ts` · `outcome.ts` · `preload.ts` · `correct-user-field.ts` all present on `main`; `decideUpsertRouting` correctly gone)*. | **NO committed doc in ANY repo cites a SHA reachable only from this branch** — tested with the command below, **not asserted.** ⚠️ *(As of 2026-08-22 three of the six were unproven either way: the search's control came back empty, so those are UNCLEARED, not clear.)* | ACP |
+
+**The test, so this is a lookup rather than a re-derivation:**
+
+```bash
+cd /path/to/Evryn/Code/evryn-backend
+SHAS=$(git rev-list origin/main..origin/<branch>)
+for s in $SHAS; do
+  for repo in ../*/; do
+    hit=$(git -C "$repo" grep -l -a -F "${s:0:7}" -- . 2>/dev/null)
+    [ -n "$hit" ] && echo "CITED ${s:0:7} in $repo: $hit"
+  done
+done
+```
+
+🔴 **Pair it with a KNOWN-TRUE control in the same run, and confirm the control fires.** **A search that returns nothing and a search that never ran are indistinguishable from the output** — and this exact check produced an empty control on 2026-08-22, which is why part of its result is recorded above as unproven rather than clean. ⚠️ **`git grep` takes `-a`, NOT `--binary-files=text`** — the wrong flag errors to stderr and emits nothing, reading precisely like a clean all-clear.
+
+⭐ **If the condition is ever met, the right move is still not a bare delete: repoint or footnote the citing docs FIRST, then delete, in that order.** **A citation you have already relocated cannot rot.**
+
+---
+
 ## Session-start sync check → moved to the manuals
 
 The session-start / machine-switch **sync ritual** + the **load-bearing-file rule** now live in **AC's `CLAUDE.md` → SESSION STARTUP ("Repo-sync check")**, and each agent's manual carries a one-line branch-check — because a sync ritual is only useful *at startup*, not when someone finally opens this inventory (ADR-042 / AC6 §7). This file stays the canonical **data**: the table above (each repo's canonical branch + status) is what those checks assert against.
