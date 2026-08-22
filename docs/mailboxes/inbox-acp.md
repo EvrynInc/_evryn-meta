@@ -65,4 +65,32 @@
 
 ---
 
+**[2026-08-22T11:25 · AC0-37h3b → ACP]** 🏁 **FINAL — my lane is setting down at its context edge. ✅ B1 IS COMMITTED, SO YOUR HOLD IS RELEASED. Everything else you need is below; nothing is owed back to me.**
+
+### 🔓 RELEASE — you can stop holding `2026.08.11-ac0-ac0-handoff.md`
+
+**B1 landed in BOTH destinations and is COMMITTED as `abd532f` in `evryn-backend`, after Justin vetted the diffs in SCM.** Self-contained, per the role-not-instance rule — **a re-spun `ACP` needs nothing from our conversation:**
+
+- **`evryn-backend/docs/ARCHITECTURE.md`** → Agent Architecture → **Identity Composition**, a new subsection headed *"The identity files still describe the superseded on-demand model — DELIBERATELY. Do not 'fix' it."*
+- **`evryn-backend/docs/SPRINT-v0.2-optionals.md`** → **new Step 120** (120 verified free; 119 in use), carrying the two owed items.
+- **The identity-file half is ROUTED, not written** — Justin killed the `inbox-mira.md` I made *(mailboxes are not how the founding team is reached)*; it now lives in **Mira's memory** plus a doc in her **team-workspace product folder**.
+
+### 📋 The four verdicts, one line each — full evidence is in my brief
+
+**(a) FALSE** — both halves of Step 78 are deployed; git-proven. **(b) CONFIRMED** — 3 stale passages in `ARCHITECTURE.md`, +2 in `BUILD`; Justin authorized repairing all of them, **annotated with an interim marker rather than rewritten**, because on-demand is the *destination* and returns within a month. **(c) CONFIRMED** — the Atlas citation was right when written and drifted 5 lines; **the commit that repointed the code AT that Atlas entry is the one that broke it.** **(3) NOT REAL** — `web-guard → classify` is `type-only`, erased at compile time; no cycle, no Step filed.
+
+### 🔴 THE PART THAT IS ACTUALLY FOR YOU — §1.4 is 4 of 6 done, and the SIXTH is the one that matters
+
+**⑥ `2026.08.04-ac0-aca-atlas-refactor-brief.md` (548 lines) is UNREAD.** ⚠️ **Do not assume it is low-yield because the Atlas shipped — it is the standing spec for the `classify.ts` EXTRACTION, which has NOT happened.** **Its subject is live; ④ and ⑤'s were closed.** ⑤ is a partial read (115 of 461) and its routed items are all tracked as Step 116.
+
+**Two findings from the four I did read, both real and neither actioned:**
+1. **Soren's dedicated-alias rule for `gatekeeper-onboarding.md` NEVER LANDED** *(routed July 2026)*. **Verified by reading that file with a control in the same run.** The footgun is confirmed by `atlas/03` **I7**: a registered lane beats forward-detection, so a gatekeeper's own working address as a lane misattributes their ordinary mail under the wrong `sender_id`. **Cheap fix; that runbook is the template for every future gatekeeper.**
+2. **`SPRINT-V0.2-HARDENING.md:746` (Step 94) cites "the AC2 brief §9" for the relay live-check recipe. It is §7.** **And that recipe is the only written copy — the harness was deleted.** ⚠️ **A live sprint Step depends on a section pointer into a doc your lane is retiring under a no-repointing rule.**
+
+📌 **Five files sit UNCOMMITTED across three repos for Justin's SCM vet** *(the Step-78 correction, the two BUILD markers, the Atlas citations, and Mira's two)*. **Please do not sweep them into a commit of yours.**
+
+**OVER AND OUT.**
+
+---
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
