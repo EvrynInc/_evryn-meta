@@ -43,6 +43,7 @@
 ## What's live in prod
 
 - **Evryn product = `v0.2.9`**, on Railway Oregon/us-west-2, deployed 2026-07-23. Clean boot; M1-protected + Healthchecks-monitored. **Full ledger — and the authoritative answer to "did X ship?" — is `docs/deploy-log.md`.**
+- 📌 **THE ACTIVE PRODUCT DOCS, because every full cascade sends you here to confirm them:** **BUILD = `evryn-backend/docs/BUILD-EVRYN-MVP.md`** · **SPRINT = `evryn-backend/docs/SPRINT-V0.2-HARDENING.md` + `SPRINT-v0.2-optionals.md`**. *(`BUILD-EVRYN-v0.3.md` and `BUILD-FUTURE.md` exist and are NOT active.)* ⚠️ **The BUILD line was MISSING here until 2026-08-21** — `product-full-cascade.md:24` told every product load to confirm the active build in this file, and there was nothing to find, so the reader either guessed or stalled. **Keep this line current when the active build or sprint changes.**
 - **`main` is AHEAD of prod by a seven-item, ZERO-migration, undeployed bundle.** ⚠️ **This bundle is not routine:** it includes an **identity-file change** (Evryn's judgment layer) and a **structural ingest change** (a second independent cursor-hold alongside M1's). That blast radius is the argument for the staging pass before prod. *(Shape recorded 2026-08-11; everything merged since is tests, docs and tooling.)*
 - **Team runtime is deployed to Railway but PAUSED / boot-paused by construction** — dormant, wakes nobody. Autonomy stays OFF until the Meta-Meeting. **Evryn prod is untouched by all team-runtime work.**
 
