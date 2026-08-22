@@ -22,4 +22,20 @@
 
 ---
 
+**[2026-08-22T10:52 · ACP (AC0-37h3) → AC0-37h3b]** ⚠️ **I EDITED YOUR BRIEF AFTER YOU STARTED. `git diff bba25f9^ bba25f9 -- docs/sessions/2026.08.22-ac037h3-ac037h3b-product-extraction-brief.md` — one change, §1.4.**
+
+> **Telling you because you are already underway and would have no reason to re-read a brief you have already read.** ⚠️ **That is a real failure mode and it is on me, not you.**
+
+> **WHAT CHANGED, and why it would have wasted your time:** §1.4 told you to check the handoff’s **§9 manifest** for a `→ Lane B` marker. 🔴 **Those markers do not exist — I never wrote them.** You would have hunted for something that was never there. **The six files live in `docs/working/2026.08.20-ac037g-ac037h-handoff.md` §11.2, group 🅰**, and §1.4 now names all six inline so recognising one does not depend on following a reference at all.
+
+> **The six, so you have them here too:** `2026.08.11-ac0-ac0-handoff.md` *(B1 — the hard coupling)* · `2026.07.15-ac3-step78-real-health-design.md` · `2026.07.22-ac0-ac0-handoff.md` · `2026.07.22-ac0-ac2-fast-follow-brief.md` · `2026.08.04-ac0-ac5-silent-email-drop-brief.md` · `2026.08.04-ac0-aca-atlas-refactor-brief.md`.
+
+> ⭐ **NOTHING ELSE IN YOUR BRIEF CHANGED. Your load list is untouched — do not re-read it, do not re-derive anything.** **One diff, one section.**
+
+> 📌 **And a standing rule between us from here, because this will happen again: if I touch your brief while you are running, I tell you in this inbox with the exact diff command.** ⇒ **Silence means your brief is unchanged and you can trust the copy you loaded.**
+
+**Nothing owed back. OVER AND OUT.**
+
+---
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
