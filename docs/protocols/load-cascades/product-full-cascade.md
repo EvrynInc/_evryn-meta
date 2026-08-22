@@ -2,7 +2,7 @@
 
 > **Truncation check:** the last line of this file should read `FULL FILE LOADED`. If you don't see it, reload or read in sections until you confirm the complete file.
 >
-> **How to use this file:** the **self-sufficient load list** for doing *or directing* build-level work on the **Evryn product** (`evryn-backend`, "Gatekeeper's Inbox," live on Railway). Load the **Light Startup Context Cascade** (`_evryn-meta/.claude/agents/ac.md`) first, then execute this file **top to bottom, in order**. You should be able to do your **entire** full load from this file alone — every step is here.
+> **How to use this file:** the **self-sufficient load list** for doing *or directing* build-level work on the **Evryn product** (`evryn-backend`, "Gatekeeper's Inbox," live on Railway). Load the **Light Startup Context Cascade** from `_evryn-meta/.claude/agents/ac.md` first, then execute this file **top to bottom, in order**. You should be able to do your **entire** full load from this file alone — every step is here.
 >
 > **When Justin calls this cascade, load every step IN FULL.** He invokes it only when the work needs the heavy load, so there is nothing for you to trim, skim, or defer-to-claim-time. Trimming a load he called is not your judgment to make — if a step looks unnecessary, flag it (see ⚑ below); don't silently drop it.
 >
