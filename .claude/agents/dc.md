@@ -268,7 +268,7 @@ Every document is exactly ONE of these types. Don't mix types in a single doc:
 - **Growth** (market research, launch strategy, community) → `evryn-team-workspace/shared/projects/growth/research/`
 - **Operations** (infrastructure, tooling, cost analysis) → `evryn-team-workspace/shared/projects/ops/research/`
 - **Legal** (regulatory analysis, compliance research) → `evryn-team-workspace/shared/projects/legal/research/`
-- **Build methodology** (how to approach classes of problems, tooling decisions) → `evryn-dev-workspace/docs/research/`
+- **Build methodology** (how to approach classes of problems, tooling decisions) → `evryn-team-workspace/shared/projects/product/research/` *(the product department currently contains engineering)*
 - **Repo-specific build research** (implementation-level, consumed during that build) → `[repo]/docs/build-research/`
 
 If you're mid-research and realize it's cross-cutting, put it in `helm/research/`. When in doubt, default there. When placing research into a department folder, create a Linear ticket for the department owner so they know it's there.

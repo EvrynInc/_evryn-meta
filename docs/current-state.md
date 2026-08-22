@@ -123,6 +123,10 @@ Team-agent build was paused to focus on the Evryn product MVP (v0.2 "Gatekeeper'
 > 3. 🔴 **An entry more than 7 days old is OVERDUE BY DEFINITION.** The dates are the staleness signal, and they work whether or not anyone remembers to drain — **a bulletin carrying an old entry is telling you the drain has not run.** That is the point: this fails *loudly* rather than accumulating quietly, which is exactly what the body did for eleven entries.
 > 4. **Keep entries short and route-shaped** — what changed, who owns the residue. Substance goes in the owning doc; this is the pointer that gets it read.
 
+**[2026-08-21 · AC0-37i]** 🖥️ **THE ARCHIVED REPOS ARE MOVING OUT OF `Code/` INTO `Code/z.archive/` — and the DESKTOP will need conforming by hand.**
+> **Justin's decision, 2026-08-21:** archive-vs-delete on the three retired repos is settled as **archive**, and archived repos stop sitting among the active ones. **The five: `evryn-dev-workspace` · `evryn-quality` · `evryn-ops` · `evryn-prelaunch-landing` · `evryn-team-agents`.** Full reasoning + the effect on the session-start sync check: `docs/repo-inventory.md`.
+> ⏳ **Executed on the LAPTOP only** *(see the inventory's status line — it may still read NOT YET EXECUTED)*. 🔴 **Next instance working on the DESKTOP: conform that machine to the same layout, then delete this entry.** ⚠️ **Until both machines match, the session-start sync check returns a different repo list depending on which machine you are on** — and the check has no way to tell you that, so it reads as a real discrepancy rather than a machine difference.
+
 **[DRAINED 2026-08-19 · AC0-37f]** AC0-37e's cutover-correction entry is removed: its substance is now folded into the *In flight — Product* body above, which no longer says the cutover is owed. **That entry existed because the body was actively misrouting ACs at a retired repo path; it is not.**
 
 **[2026-08-18 · AC0-37e]** 💰 **A GO-LIVE GATE NOBODY IS CARRYING — Emma's burn analysis, stranded in a July handoff and recovered by a `docs/working/` audit tonight.**

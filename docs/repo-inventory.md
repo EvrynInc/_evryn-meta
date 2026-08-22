@@ -34,7 +34,19 @@ Org: **`EvrynInc`**. All remotes are `https://github.com/EvrynInc/<repo>.git`.
 >
 > 🔴 **The one live trap: naming an old path in a subagent's `<mandatory_load>` list now hands it a redirect stub rather than a manual** — and per the router's hard rule, an agent without its manual is not authorized to do anything. **Check the path, not your memory.**
 >
-> **Archive-vs-delete is undecided and is Justin's call** — the three hold 16 tracked files between them, and each carries its own `.claude/settings.json` with its own permissions, which must be checked before any removal. **Decision due ~2026-09-18.**
+> ✅ **ARCHIVE-VS-DELETE IS DECIDED: ARCHIVE, NOT DELETE** *(Justin, 2026-08-21, ahead of the ~2026-09-18 due date)*. **Nothing of value remains in the three.** They hold **16 tracked files** (4 + 6 + 6) and — the half that actually needed checking — **ZERO untracked or gitignored ones.** ⚠️ **That was verified against the DISK, not against `git ls-files`, because a gitignored credential is invisible to the index and that exact class has already bitten this estate once.** Each `.claude/settings.json` holds only a generic tool allow-list, nothing unique; `evryn-ops`'s three real documents were rehomed to `_evryn-meta/docs/ops/` on 2026-08-19.
+>
+> ### 📁 THE ARRANGEMENT JUSTIN APPROVED — and its execution is PENDING, so read the status line before relying on it
+>
+> **The design:** archived repos move out of `Code/` and into **`Code/z.archive/`**, so they stop sitting among the active repos. *(His reason, and it is the whole point: he trips over them daily.)* **Named for the move: `evryn-dev-workspace` · `evryn-quality` · `evryn-ops` · `evryn-prelaunch-landing` · `evryn-team-agents`.**
+>
+> ⏳ **STATUS: NOT YET EXECUTED as of 2026-08-21. The five are still siblings in `Code/`.** **Owner: whoever performs the move updates this block and the table above in the SAME change** — a canonical repo list that describes a layout the disk does not have is worse than one that is merely out of date, because every session-start sync check reads this file and would be measuring against fiction.
+>
+> ⭐ **What the move does to the session-start sync check, once it happens — this is the point, not a side effect.** That check enumerates **top-level** directories in `Code/` that contain a `.git`. A repo under `z.archive/` is one level deeper, so **it is no longer enumerated at all.** ⇒ **After the move, an archived repo's absence from the check is CORRECT rather than a finding** — which supersedes this block's earlier reasoning that a retired repo should stay visible to the check precisely so it could not vanish unnoticed.
+>
+> ⚠️ **And the trap the move ADDS, on top of the one below: today an agent that follows an old path lands on a redirect stub that tells it where to go. After the move that path does not resolve at all** — it gets "file not found," which is a clearer signal but a less helpful one.
+>
+> 🖥️ **MACHINE-SPECIFIC: the move will be made on the laptop first. The desktop must be conformed separately** — see the bulletin entry in `docs/current-state.md`.
 
 **One repo = one history = one default branch.** No repo should carry two unrelated roots (the `evryn-quality` fork was the lesson). If a `git merge-base A B` ever returns "no common ancestor" for two branches of the same repo, that's a fork — flag it.
 

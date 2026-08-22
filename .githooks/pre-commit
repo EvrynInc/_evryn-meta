@@ -1,0 +1,62 @@
+#!/bin/sh
+# Pre-commit: refuse a commit if this repo contains a stray control character.
+#
+# WHY THIS IS A HOOK AND NOT AN INSTRUCTION
+# -----------------------------------------
+# A NUL byte makes a file BINARY to grep and to git diff, so every text search
+# silently skips it AND REPORTS SUCCESS. Prevention-by-instruction has failed
+# nine times here, twice by authors who were mid-sentence about the hazard.
+# A scan is the mechanism; the instruction is a courtesy.
+#
+# INSTALL (once per repo, per machine -- hooks are NOT version-controlled,
+# only this directory is, which is the whole reason for core.hooksPath):
+#
+#   git config core.hooksPath .githooks
+#
+# Verify it took:  git config --get core.hooksPath   ->  .githooks
+#
+# SCOPE -- deliberate, and the tradeoff is stated rather than hidden.
+# This scans EVERY tracked file in the repo, not only the staged ones. That
+# means someone else's stray byte can block your commit. Accepted, because:
+#   - the whole-estate scan is ~0.17s per repo, so scoping buys nothing
+#   - it keeps the repo clean rather than only keeping your commit clean
+#   - a staged-files-only mode is a second code path that can silently
+#     under-scan, which is the exact failure class this guard exists for
+# If it ever blocks you on a file you did not touch, that is the guard working:
+# fix it or route it, do not narrow the scan.
+#
+# BYPASS is `git commit --no-verify`. It exists; use it only when you have
+# looked at the finding and know what it is.
+
+set -e
+
+REPO_ROOT=$(git rev-parse --show-toplevel)
+SCANNER="$REPO_ROOT/../_evryn-meta/scripts/scan-control-chars.js"
+
+# Fail LOUD on a missing scanner. A guard that silently does nothing when its
+# tool is absent is worse than no guard -- it reports the same clean exit as a
+# passing scan, which is the silent-success shape this whole check is about.
+if [ ! -f "$SCANNER" ]; then
+  echo "pre-commit: CANNOT FIND THE CONTROL-CHARACTER SCANNER" >&2
+  echo "  looked for: $SCANNER" >&2
+  echo "  This guard did NOT run. Fix the path or commit with --no-verify" >&2
+  echo "  knowing the check was skipped." >&2
+  exit 1
+fi
+
+if ! node "$SCANNER" "$REPO_ROOT"; then
+  echo "" >&2
+  echo "pre-commit: BLOCKED -- stray control character(s) found above." >&2
+  echo "" >&2
+  echo "  If an author meant to WRITE an escape sequence as text and it became" >&2
+  echo "  the real character, repair it with:" >&2
+  echo "      node $REPO_ROOT/../_evryn-meta/scripts/repair-control-chars.js <file>" >&2
+  echo "  then re-run the SCANNER independently -- a tool reporting its own" >&2
+  echo "  success is not a check." >&2
+  echo "" >&2
+  echo "  If it is something else (a soft line break exported as a control byte," >&2
+  echo "  for instance), the repair tool is the WRONG fix -- it would insert the" >&2
+  echo "  literal escape text into your prose. Look at the byte before repairing." >&2
+  echo "" >&2
+  exit 1
+fi
