@@ -161,21 +161,9 @@ The vision: a world where the *default* would be that people can be trusted and 
 
 ## Repositories
 
-> **Canonical repo list** — expected remote, canonical branch, live sync status — is `docs/repo-inventory.md`. The table below is a purpose-orientation snapshot; if it and the inventory ever disagree on status, the inventory is almost always the definitive edition, and this version should be updated.
+> **The repo list lives in ONE home: `docs/repo-inventory.md`.** Every repo, what it is, its expected remote, its canonical branch, its status, and — for the archived ones — where on disk it now sits. **Read it there.**
 
-| Repo | Purpose | Status |
-|------|---------|--------|
-| `_evryn-meta` | AC's home. Hub, cross-repo docs | Active |
-| `evryn-backend` | Evryn product agent (Gatekeeper's Inbox) | Active — building |
-| `evryn-team-workspace` | Cowork team workspace — agent identities, coordination | Active |
-| `evryn-team-runtime` | Founding-team autonomous runtime (ADR-050) | Active — building |
-| `evryn-team-agents` | SDK-era agent build (frozen — ADR-021) | Frozen |
-| `evryn-website` | Marketing site (evryn.ai) | Live |
-| `evryn-dev-workspace` | *Was* DC's home — manual now at `_evryn-meta/.claude/agents/dc.md` | ⚫ Retired (ADR-057) |
-| `evryn-ops` | *Was* OC's home — manual now at `_evryn-meta/.claude/agents/oc.md`; runbooks moved to `_evryn-meta/docs/ops/` | ⚫ Retired (ADR-057) |
-| `evryn-quality` | *Was* QC's home — manual now at `_evryn-meta/.claude/agents/qc.md` | ⚫ Retired (ADR-057) |
-| `evryn-langgraph-archive` | LangGraph-era code archive | Sealed |
-| `evryn-prelaunch-landing` | Prelaunch landing page | Inactive |
+🔴 **This section deliberately carries NO table, and please do not helpfully re-add one.** *(Justin's call, 2026-08-21.)* **A second list is a second thing to conform.**
 
 ## Additional References
 
