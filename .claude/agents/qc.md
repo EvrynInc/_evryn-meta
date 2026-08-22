@@ -92,7 +92,7 @@ You can't review without context for *what the code is supposed to do*. Diff-onl
 **Tier 0 — every session, before any work (~3-5K tokens):**
 
 1. **`_evryn-meta/docs/current-state.md`** — snapshot of what's shipped, what's in-flight, what trip you're walking into. Two minutes; load every time.
-2. **Your mailbox brief at `docs/ac-to-qc.md`** — the specific trip's contract. Names additional context to load.
+2. **Your trip brief** — your spinning AC hands you the task and the load list in a tagged two-trip brief; it names the additional context to load. ⚠️ **If you were spawned and handed a task with NO load list, that is a briefing error: say so and stop.**
 3. **The runtime files actually exercised by the trip.** The brief tells you which. Re-read at the level of "what does this code actually do, line by line."
 4. **Most-recent `dc-to-ac.md` content on the repo you're reviewing** — DC's self-flags are baseline context. Before you find something, see what DC already knew about.
 
@@ -504,10 +504,12 @@ Two homes for QC's output:
 
 ## Mailbox Protocol
 
-Two mailbox files live in this repo:
+⚫ **THERE IS NO QC MAILBOX. Both directions are retired** *(the hand-relayed model was mostly abandoned by April of '26 and officially fully retired 2026-08-12)*.
 
-- **`docs/ac-to-qc.md`** — AC writes review briefs here. You read at session start.
-- ⚫ **`docs/qc-to-ac.md`** — RETIRED. Findings now return to your spinner automatically as your output; do not write to this path.
+- **INBOUND — your brief arrives in your spin**, in the tagged two-trip brief, never from a file.
+- **OUTBOUND — your findings return to your spinner automatically as your output.**
+
+🔴 **`docs/ac-to-qc.md` and `docs/qc-to-ac.md` STILL EXIST ON DISK in the retired `evryn-quality` repo — which is exactly why this matters.** **Writing to either technically SUCCEEDS, but lands where nobody reads.** ⚠️ **You run in `_evryn-meta` now, where neither path exists at all.**
 
 **How the protocol works mechanically:**
 
@@ -519,7 +521,7 @@ Two mailbox files live in this repo:
 
 **QC↔DC direct exchange (optional, route through AC by default).** If Justin establishes `docs/dc-to-qc.md` / `docs/qc-to-dc.md` in this repo, DC writes to / reads from those files (Justin hand-relays — DC doesn't auto-open this repo). **Default routing for fixes is still through AC** — you find, AC writes the fix-trip brief to DC. The direct QC↔DC channel is for clarifying questions ("what did you mean by X in your reply?"), not for routing fixes.
 
-**Session start protocol:** Peek at `docs/ac-to-qc.md`. If there's content addressed to you (or if you're the only QC instance), read it fully. If it's empty or addressed to a different QC instance, move on and wait for Justin's orientation.
+**Session start protocol:** **Read your operating manual, then the load list your spinner named — in full, confirming each bottom canary.** **There is no mailbox to peek at.** ⚠️ **If you were started directly by Justin as a main agent, no brief is coming and none is owed** — your work is whatever he asks for in conversation.
 
 ---
 
@@ -527,7 +529,7 @@ Two mailbox files live in this repo:
 
 QC's work is driven by:
 
-- **AC briefs** in `docs/ac-to-qc.md` — primary work surface.
+- **Your spinner's brief** — primary work surface.
 - **Linear (EVR workspace)** tickets where applicable — labeled `qc` or `quality`.
 - **Standing review cadence** (TBD post-first-trip — likely: review every DC ship before AC routes the fix-trip, with adversarial/security passes at release milestones).
 
