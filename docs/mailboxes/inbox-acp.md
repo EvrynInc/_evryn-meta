@@ -6,7 +6,7 @@
 >
 > 📮 **RENAMED FROM `inbox-ac0.md` on 2026-08-21**, at Justin's direction, in a window when no watcher was armed on it. **Entries below predate the rename and are unedited.**
 >
-> 🔴 **THE PROTOCOL LIVES IN `docs/protocols/ac-mailbox-protocol.md`. Read it before you write here or discharge an entry; this file stays messages-only.**
+> 🔴 **THE PROTOCOL LIVES IN `docs/protocols/mailbox-protocol.md`. Read it before you write here or discharge an entry; this file stays messages-only.**
 >
 > **The one rule, repeated here because it is the one that gets broken:** **an entry is a POINTER, never the content.** Three lines maximum — what happened · who owns the residue · **where the real thing lives.**
 >

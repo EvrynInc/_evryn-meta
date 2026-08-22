@@ -4,7 +4,7 @@
 >
 > **Whose:** ACv — the visual Map lane, reporting to Justin directly.
 >
-> 🔴 **THE PROTOCOL LIVES IN `docs/protocols/ac-mailbox-protocol.md`. Read it before you write here or discharge an entry; this file stays messages-only.**
+> 🔴 **THE PROTOCOL LIVES IN `docs/protocols/mailbox-protocol.md`. Read it before you write here or discharge an entry; this file stays messages-only.**
 >
 > **The one rule, repeated here because it is the one that gets broken:** **an entry is a POINTER, never the content.** Three lines maximum — what happened · who owns the residue · **where the real thing lives.**
 >
