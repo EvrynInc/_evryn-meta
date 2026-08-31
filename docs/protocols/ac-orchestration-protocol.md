@@ -50,6 +50,30 @@ AC is the **conductor.** The primary way AC engages DC (Developer Claude) and QC
 
 This replaced the hand-relayed mailbox model on 2026-06-02. **Why:** it is dramatically faster (a DC build or QC review runs in 1–3 minutes), and it removes Justin as the relay between AC↔DC↔QC. Justin's role shifts from *operator-of-every-handoff* to *referee + final authority on what ships and deploys.* Justin can't evaluate code; AC and QC are the quality gate, and AC translates outcomes into Justin's language.
 
+---
+
+## 🔴 A FIRST PASS IS A DRAFT — send it back when a second pass would be better. You own that, not the subagent.
+
+> **Justin's standing rule, 2026-08-31, in his words:** *"Don't be afraid to resume subagents if they skimped on something, or you have follow-ups for them. I want a well-processed output. **You are in charge of making sure that happens.**"*
+
+**The default to kill is the one that feels like efficiency: reading a competent-looking report, deciding it is good enough, and relaying it up.** A subagent stops when it has satisfied its brief — not when it has exhausted the question. **Those are different stopping points, and only you can see the gap**, because you hold the question and it only ever held the brief.
+
+**⇒ Before you relay ANY substantive subagent output, read the full artifact — not just its summary — and ask what a second pass would add.** If the answer is "something that would change a decision," send it back. **A resume costs one message.**
+
+**Why this is a rule now and was not before: the economics inverted.** Under the old model a follow-up meant re-spinning from zero and re-paying the entire context load, so "good enough" was often genuinely the right call. **`SendMessage`-resume ended that** — the agent still holds its full load and its own report, so a second pass is nearly free and starts from everything the first one learned.
+
+**Where to look, in order of yield:**
+1. 🔑 **The agent's own named gaps.** A good subagent ends with *"what I could not establish."* **That list is not a disclaimer — it is your work list**, written by the one party who knows exactly where the holes are. Ask which of them would change a conclusion, and send it back for those.
+2. **Scope it assumed rather than chose.** A researcher told to survey a landscape will survey the one it knows. Ask what it *didn't* look at and whether the omission could reverse its finding.
+3. **A headline resting on secondary sourcing.** If the load-bearing claim came through a summary, a press account, or a paraphrase, ask for the primary.
+4. **Anything that flatters the thesis you gave it.** The most comfortable finding is the one to re-test hardest.
+
+⭐ **PROVEN, and the numbers are the argument.** On 2026-08-31 a team agent ran four fully-loaded research subagents and sent **every one** back a second time. **Three returned corrections to their own headline findings**, and the corrections were the session's most valuable output: a *"only 4% of people use AI for companionship"* reassurance became **31%** once the survey question was framed the way people actually behave; a competitor's raise, reported as **$18M** by every press outlet, turned out to be **$15M from three investors** in the primary SEC filing — which materially changed the read of that company's cap table; and a null finding *("nobody is building this")* survived only after its own author noticed **his report already contained a counter-example he had held and not seen.** **None of the four first passes was bad. All four were incomplete, and none of them looked it.**
+
+⚠️ **This is NOT the load-gate re-run, and do not collapse them.** *"An incomplete load makes the whole run junk — discard and re-run"* governs an agent that **did not read what it was given**; the output is unsalvageable and you start over. **This rule governs an agent that read everything and still stopped short of the question**; the output is good and gets *extended*, in place, by the same agent. **Different diagnosis, different remedy, and confusing them is expensive in both directions** — discarding good work, or extending compromised work.
+
+⚠️ **The counter-tension, so this does not become infinite:** a second pass earns its cost when it can **change a decision**. Sending an agent back to polish, to re-summarize, or to confirm what it already said is waste and it degrades the signal for the pass that matters. **Name what you want and why, every time — a resume with a vague ask gets a vague answer.**
+
 **Pronoun convention (ease of reference):** QC is referred to as *she*; DC and AC as *he*. Purely to disambiguate the three in fast multi-agent coordination — *"she flagged it to him"* reads far cleaner than juggling names or three identical pronouns.
 
 ---
