@@ -324,13 +324,15 @@ No single competitor covers Evryn's ground, but many cover pieces of it. Evryn's
 
 ### Closest Threats
 
-**Overtone** — HIGH WATCH. Hinge CEO Justin McLeod stepped down (Dec 2025) to build an AI + voice dating service, backed by Match Group's pre-seed financing. Not yet launched. The most credible new entrant — the industry's smartest operator betting that the swipe model is broken. *Evryn's edge:* Cross-domain. Not owned by Match Group (whose ad-driven DNA conflicts with trust-first). Evryn's trust graph doesn't exist in Overtone's model. Evryn is user-owned; Overtone is VC-backed.
+**Overtone** — HIGH WATCH. Hinge CEO Justin McLeod stepped down (Dec 2025) to build an AI + voice dating service. **Corrected 2026-08-31 against the primary SEC Form D (this entry previously said "pre-seed financing" and understated it): $15M raised from exactly THREE investors — a seed round, not pre-seed.** ⇒ **Match Group is roughly a third of a three-investor cap table, with its CEO on a four-person board** (McLeod, Rascoff, Chapman, Perel — no security, privacy or infrastructure person on it). Still not launched; "select markets later in 2026," and still only a waitlist, so nobody outside knows its retention or match quality. 🔑 **The filing STRENGTHENS our position rather than weakening it: our stated edge here is the structural-incentive argument, and it is now provable from a federal filing rather than inferred.** The most credible new entrant — the industry's smartest operator betting that the swipe model is broken. *Evryn's edge:* Cross-domain. Not owned by Match Group (whose ad-driven DNA conflicts with trust-first). Evryn's trust graph doesn't exist in Overtone's model. Evryn is user-owned; Overtone is VC-backed.
 
 **Amata** — Closest UX competitor. AI matchmaker for dating — no profiles, no swiping. AI avatar learns about you through questions, then surfaces matches and plans dates. $20/match. NYC-focused, $6M funding. *Evryn's edge:* Dating-only. Flat pricing. Thin trust model — vets at signup but doesn't build behavioral trust over time. Evryn is cross-domain, trust compounds, and pricing is trust-based.
 
 **Osmos** — Most interesting professional competitor. One curated professional match per week, double opt-in, targeting senior executives. 3,000+ C-level execs (Google, Apple, Revolut). Validates the "curated introduction" model. *Evryn's edge:* Professional-only, different user segment. No trust that compounds. Transactional matching vs. narrative judgment.
 
 ### Key Competitive Insights
+
+6. ⚠️ **"A relationship, not an app" (messaging theme #5) needs re-wording — flagged 2026-08-31, pending Justin.** Mira's agent definition was restated the same day, Justin-approved, to *"Evryn's product is a relationship that exists in order to **end in someone else's arms**"* — because 2026 research indicts a *disclosed AI relationship held as an end in itself* (relieves loneliness measured immediately; worsens it over twelve months). **The substance of theme #5 is unchanged — the relationship is real and must be excellent — but read literally it now sells the configuration the evidence says harms people, and it contradicts the identity stack.** The theme must carry that the relationship is a **vehicle**.
 
 1. **The market is moving toward Evryn's model.** AI matchmaking (Amata), voice-based connection (Overtone), curated introductions (Osmos), and anti-swipe sentiment are all growing. The risk isn't that no one wants what Evryn offers — it's that better-funded competitors may converge on pieces of it.
 2. **No one is building what Evryn is building.** Every competitor is single-domain. No one has a compounding trust graph. No one does trust-based pricing. No one is building a relationship broker — they're building smarter matching engines.
@@ -342,9 +344,13 @@ Full competitive research: `evryn-team-workspace/shared/projects/growth/research
 
 > *Pitch note: The original Master Plan has extensive competitive analysis prose (lines 770-848) — the "casino model" framing, the structural moat argument, the LTV analysis. Excellent for investor pitches and capital partner conversations.*
 
-### Infrastructure Licensing (Long Game)
+### Infrastructure Licensing (Long Game) — one precedent, at a scale we do not have
 
 If Evryn works, competitors may try to neutralize her. The architecture is designed to optionally license Evryn's matchmaking layer — letting aligned platforms embed her logic. "LinkedIn — now with Evryn intros." Strategic judo: turn competition into distribution. Full depth: [long-term-vision spoke](long-term-vision.md) (Infrastructure Licensing).
+
+> 🔴 **REALITY CHECK, added 2026-08-31** *(research: `evryn-team-workspace/shared/projects/helm/research/2026.08.31-dominic-trust-substrate-landscape.md`)*. A landscape sweep found **zero instances in three decades of a reputation or trust layer being successfully licensed to third parties in the West.** The **single working precedent anywhere is WeChat Pay Score** (launched 2020-06-03) — a genuinely embedded third-party trust layer, with merchants setting their own thresholds against it across 1,995+ service scenarios. ⚠️ **Its precondition is roughly 935 million payment users.**
+>
+> ⇒ **The mechanism is real; the scale requirement is not ours, and may never be.** Keep this as a long-horizon architectural **option** — near-free to preserve, expensive to retrofit. **Do not count it as an available strategic move, and do not put it in a pitch as though the path were demonstrated.** A strategic option we cannot exercise is worse than none, because it gets counted.
 
 ---
 
@@ -363,7 +369,7 @@ Three gatekeeper types by inbox situation: dedicated inbox (auto-forward, zero d
 
 **Phase alignment:**
 - **v0.2:** Mark proves the model. One gatekeeper, fully hands-on.
-- **v0.3:** Cast-off outreach activates. Mark's ~200 daily cast-offs become Evryn users via the web app. Justin begins warm outreach to gatekeeper #2 (likely via Megan's connections). **Target SIFF (mid-May to early June) for presence** — both Mark and Megan are connected there.
+- **v0.3:** Cast-off outreach activates. Mark's ~200 daily cast-offs become Evryn users via the web app. Justin begins warm outreach to the next gatekeeper. ⚠️ **(This line previously said "Target SIFF for presence" — superseded 2026-08-31; SIFF passed without a v0.3. The live presence vector is NWFF's Local Sightings.)** **And the sequencing above it is itself outdated: Lacey Leavitt is met, in, and likely gatekeeper #1 rather than #2 — see `evryn-team-workspace/shared/projects/growth/growth-campaigns.md`.**
 - **v0.4:** Second gatekeeper live. Publisher module begins testing. Gatekeeper onboarding becomes semi-automated (Evryn runs the onboarding conversation, Justin handles setup).
 
 ### Active User Acquisition (v0.3+)
@@ -397,7 +403,7 @@ PR is timed to validate momentum, not create it — "pour fuel on a fire that's 
 
 ### Community & Event Presence
 
-**SIFF (mid-May to early June) is the inaugural event target.** Both Mark and Megan are connected to SIFF; v0.3 should be in early operation by then. Other major film festivals (Sundance, SXSW) are either seasonally past or conflict with build sprints — SIFF is the right first public-facing moment. Future festival strategy expands from there.
+⚠️ **SUPERSEDED 2026-08-31 — SIFF passed (mid-May to early June) without a v0.3 or a presence; the inaugural event target is now NWFF's Local Sightings fall showcase (see Build phases, above). This paragraph is kept for its reasoning about how to choose a first public moment.** The original text read:** SIFF (mid-May to early June) is the inaugural event target.** Both Mark and Megan are connected to SIFF; v0.3 should be in early operation by then. Other major film festivals (Sundance, SXSW) are either seasonally past or conflict with build sprints — SIFF is the right first public-facing moment. Future festival strategy expands from there.
 
 **Industry communities:** NoFilmSchool, gear forums, film school networks, and targeted forum engagement (Reddit, Facebook groups, Discord, X). This is Marlowe's domain — channels should be identified and warmed before formal outreach begins.
 
