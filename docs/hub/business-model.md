@@ -10,7 +10,13 @@
 
 ## Core Principle
 
-Evryn monetizes transformation, not attention. **She only gets paid when she helps you actually move forward.** No ads. No paywalls. No subscriptions.
+Evryn monetizes transformation, not attention. **She only gets paid when she helps you actually move forward.** No ads. No paywalls.
+
+> ⚠️ **"No subscriptions" — UNDER ACTIVE RECONSIDERATION as of 2026-08-31. Not overturned; not settled either.** Justin approved a **working hypothesis** (explicitly not a ratified decision) that pricing may become **a small recurring membership plus a per-connection fee paid *after* the connection.** Full context: `evryn-team-workspace/shared/projects/helm/2026.08.31-paradigm-and-pricing.md`.
+>
+> **The principle above is what has to survive, and the proposed design is built to preserve it:** dues would be priced so that **a member who receives zero connections in a year leaves us roughly break-even** — so Evryn still only *profits* when a connection works. **If a proposed price cannot meet that test, the design is wrong, not the principle.**
+>
+> 🔴 **And the open question underneath it is unresolved and load-bearing** — see the ⚠️ note on *"Unit economics at rest"* in **Why This Model Wins** below. **Do not treat the membership as decided, and do not price it, until that resolves.**
 
 ---
 
@@ -51,6 +57,12 @@ Installment plans let Evryn offer auto-billing payment schedules for connections
 ## Free vs. Paid Connection Framework
 
 Not every connection generates direct revenue. The principle: **don't charge for connections that didn't require Evryn's matching intelligence. Charge when Evryn's intelligence creates value the user couldn't have found on their own.**
+
+> ⚠️ **THIS TABLE WAS BUILT IN A NO-DUES WORLD — flagged 2026-08-31, not yet revised.** The *principle* above is sound and should survive any pricing change. **But every row's meaning shifts if a membership exists**, because *"free"* to a dues-paying member is **included**, not free. **The whole table needs re-reading against the membership design — not just the one row that already conflicts.**
+>
+> 🔴 **The row that already conflicts with a call Justin made:** *"Person Evryn recruits (e.g., a plumber) — first connection: **Free.** They didn't ask for this."* **Justin, 2026-08-31: people Evryn seeks out pay the connection fee *and* the dues — but only when a connection actually lands.** ⇒ **That preserves the row's underlying fairness logic** — someone who never asked to be found is charged nothing until they receive something — **while changing what happens at the moment value arrives.** The row's *wording* is now wrong; its *reasoning* is intact.
+>
+> **Left unrevised deliberately: the membership is a working hypothesis, not a decision, and rewriting a pricing table around an undecided structure would be worse than the flag.** Revise when the structure settles.
 
 | Scenario | Charge? | Why |
 |----------|---------|-----|
@@ -130,6 +142,16 @@ Evryn earns across multiple verticals (romantic, creative, logistical, professio
 Legacy apps extract until users leave. Evryn earns because users stay. Trust is more monetizable than addiction — if you can earn it.
 
 **Competitive pricing context:** Professional matchmaking services charge $5K-$500K. Executive placement firms take 25-35% of first-year salary. Dating apps charge $20-60/month with no guarantee of outcomes. Evryn's trust-based pricing sits in the middle of a massive spread — capturing the quality of human matchmaking at a fraction of the cost, while charging for outcomes rather than access. The competitive landscape details live in the financial model spreadsheet; the strategic point is that trust-based pricing isn't competing with dating app subscriptions — it's competing with the entire spectrum of human connection brokerage, most of which is dramatically more expensive and less accountable.
+
+> ### ⚠️ OPEN QUESTION, raised 2026-08-31 — the line below may describe a user Evryn is **not working for**, and we have never priced the one she **is**
+>
+> **The tension, stated plainly because it is unresolved.** This section says an idle user costs **near-zero**. But the Hub and the [user-experience spoke](user-experience.md) describe Evryn as **active** — she thinks about you in the background, checks in, refines her understanding of you against a growing network; the UX spoke says outright that anticipation mode *"isn't a passive phase."* **Those are different products, and the difference is exactly the number a membership's *"dues = cost of presence"* would rest on.**
+>
+> **Justin's read (2026-08-31), which points at the resolution without completing it:** *our understanding has changed over time — if we are to give good service, Evryn needs to be thinking about people, and that is expensive.* ⇒ **The likely answer is that "near-zero at rest" is true of a genuinely dormant record and NOT of an active member — in which case this line needs scoping rather than deleting.** **That has not been established.**
+>
+> ✅ **One input arrived the same day and it cuts in the helpful direction** *(Soren, after correcting his own first answer)*: background thinking **is** cacheable — Evryn's identity prefix is force-loaded and identical on every query. **The real constraint is temporal locality** (a rarely-touched user's segment goes cold because it *expires*, not because it changed), **which is addressable by scheduling — batching background work so the shared prefix is written once and read many times.** ⇒ **Cost of presence is therefore partly *engineerable before it is priced*.** ⚠️ **Unverified: the actual cache TTL configuration and breakpoint count were reasoned about, not read from `src/`.**
+>
+> 🔴 **Status: OPEN. Owner: Emma. Justin's instruction — she brings it to the Meta-Meeting; it is not to be settled in passing.** The measurement path does **not** wait on live traffic: **Emma and Mira build test characters and run simulated conversations through the real scenarios** (onboarding, a connection, anticipation-mode check-ins) for preliminary per-scenario numbers, refined continuously, with the same harness re-run against v0.3 when those scenarios exist. ⚠️ **Do not price dues off this section as written.**
 
 **Unit economics at rest:** A user who sits idle in Evryn's system costs near-zero — storage plus the occasional vector query triggered by someone else's search (cost model: `evryn-team-workspace/shared/projects/product/research/2026.06.11 evryn-cost-analysis.md` — read its 2026-07-28 correction banner first; it supersedes the March 2026 figures this line originally cited). The matching architecture is event-driven, not scheduled: costs scale with meaningful change, not with database size. A user can sit idle for months and become profitable the moment one good match surfaces. This fundamentally changes the breakeven math compared to subscription models where every idle user is pure loss.
 
