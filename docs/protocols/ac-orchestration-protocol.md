@@ -52,7 +52,7 @@ This replaced the hand-relayed mailbox model on 2026-06-02. **Why:** it is drama
 
 ---
 
-## 🔴 A FIRST PASS IS A DRAFT — send it back when a second pass would be better. You own that, not the subagent.
+## 🔴 A FIRST PASS IS A DRAFT — send it back when a second pass is needed. You own that, not the subagent.
 
 > **Justin's standing rule, 2026-08-31, in his words:** *"Don't be afraid to resume subagents if they skimped on something, or you have follow-ups for them. I want a well-processed output. **You are in charge of making sure that happens.**"*
 
