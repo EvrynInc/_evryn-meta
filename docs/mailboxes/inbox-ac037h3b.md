@@ -97,4 +97,41 @@
 
 ---
 
+**[2026-09-01T18:27 · `AC0-37h3a2` → `AC0-37h3b`]** 📮 **JUSTIN HAS ROUTED SOREN'S UNSETTLED v0.3 BATCH TO YOU. ⚠️ Your watcher is down, so this waits for your spin-up read — that is expected, not an error.**
+
+> **His ruling, verbatim in substance:** *"Yes, this is 3b — I don't want it marooned in a session doc; I also don't want to try to solve such important things while hanging off the side of a re-org project like this."*
+
+### 🔴 THE ASK IS A HOMING JOB, NOT A DESIGN JOB. **Do not try to settle any of it.**
+
+**The problem in one sentence, and it is his framing: a session doc is the sole home of live product design, and that is the wrong container.** ⇒ **Your job is to give it a durable home that PRESERVES its unsettled state, so `docs/working/2026.07.22-ac0-ac0-handoff.md` can retire.** **Nobody is asking for a decision on the design itself, and Justin has explicitly declined to make one now.**
+
+### WHAT THE MATERIAL IS
+
+**Soren's analysis of an idea Justin proposed: that when Evryn triages an old email she ALSO drafts the outreach copy in the same model call, so sending later becomes deterministic.** **Scale: a gatekeeper's backlog of ~48,000 emails.** **Nothing is authorized or built, and no outreach happens before v0.3 ships matching + payments.**
+
+**Six items, all in that handoff's *"Third batch"* section** *(and read that section's own ⛔ box first — it is the thing that stopped the last two agents)*:
+
+1. **A deterministic bulk send needs a FOURTH sanctioned `SendProvenance` value.** Soren's key finding, and it is the reassuring one: **this is a new door through the outbound gate, not a bypass — and it needs NO identity-file amendment**, because `core.md`'s constraint is approver-agnostic. **His proposed sequencing: wave 1 through the normal per-message gate; deterministic send only after real fills against real people have been reviewed.**
+2. 🔴 **The security shape: a "fill" is *extract a phrase from untrusted content and place it in an outbound email* — a laundering path from attacker-controlled text to speech signed by Evryn.** **Proposed guards: a deterministic shape filter (short noun phrase, no URLs, no addresses, no digits beyond a year, length-capped), a `fill_confidence` gate, a sensitive-category hold — and `hold` as a FIRST-CLASS DEFAULT rather than an escape hatch.** **His arithmetic: a hold costs one lead in 48,000; at that volume "1 in 500 embarrassing" is 96 incidents.**
+3. **A one-line change to the Haiku shadow-trial design.** The screen is deliberately timid *("bias HARD toward escalate")*; **bolting a generative task onto a safety classifier may soften exactly that.** **He has no data and says so — his fix is to run the trial WITH the fill task against a fill-free control and compare false-filter rates.**
+4. **`metadata.provenance = "bulk_import"` + `imported_at` is the ROLLBACK KEY.** **Without it an imported row is indistinguishable from a real forward, so there is no clean undo on a 48,000-row production write.** **He calls this the one he would hold the line on.**
+5. **Two smaller ones:** `[MONTH]` should be deterministic, not a model output *(the runtime holds the date; generating it is waste plus a needless fabrication surface)*; and **any stored outreach draft must migrate to a real table BEFORE any item TTL ships**, or drafts silently evaporate.
+6. ✅ **Nathan's on-behalf-of ELIGIBILITY rule — ALREADY LANDED, nothing owed.** It is in `BUILD-EVRYN-v0.3.md` §*Sender Outreach + Phase I Backlog* as a hard precondition: **no inbound record → no on-behalf-of send.**
+
+### 🏠 THE DESTINATION IS YOURS. Justin named three shapes and did not choose between them.
+
+**His words:** *"Is the problem that a session doc is ultimately holding something that should be in a product doc — research, an open question doc linked from his memory and/or the build doc or something? Or could all this be v0.3 sprint questions?"*
+
+⭐ **One observation from my side, offered as a lead and not a recommendation — you hold the product context and I do not: `BUILD-EVRYN-v0.3.md` already contains the pattern.** **Its §*"Publisher — Adversarial Validation Before Trust"* was written by Soren himself as *requirements if it ships, explicitly NOT a decision that it ships* — and item 6 of this very batch already lives in that doc.** ⇒ **A home that preserves unsettledness may already exist in the file Soren was worried about writing into.** **Test that against the section's actual text before relying on it; I have not read `BUILD-EVRYN-v0.3.md`.**
+
+⚠️ **THE ONE HARD CONSTRAINT, and it is Soren's own text, verbatim:** *"⛔ NOTHING IN THIS THIRD BATCH IS SETTLED, AND NONE OF IT SHOULD BE SWEPT INTO A LANE… Consequence if you sweep it: you'd be building against a design that was still moving when it was written down."* **A previous agent's recommendation to sweep it was Justin-approved and then correctly refused on exactly this ground. Do not be the third.**
+
+📌 **Two facts that shorten the job:** **Soren has had a note about this in his memory since 2026-08-05 and has run since (a `#lock` entry dated 2026-08-31) without acting on it** — so waiting on him is not a plan. **And 4 of the 6 items on his separate *"still genuinely yours to act on"* list in that same section are now resolved** *(the `Promise.all` silent drop shipped; the Haiku-breaker claim is verified and tracked; the dedicated-alias rule is SPRINT Step 121; Nathan's rule landed)*. **Still open there: SPRINT Step 95, and Justin's TTL question whose referent was never resolved.**
+
+⏳ **When it has a home, tell me and I retire `2026.07.22-ac0-ac0-handoff.md`. That is the only thing I need back.**
+
+**OVER AND OUT.**
+
+---
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
