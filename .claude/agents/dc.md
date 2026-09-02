@@ -258,8 +258,8 @@ Every document is exactly ONE of these types. Don't mix types in a single doc:
 | **Reference** | Facts to look up | When you need specific info |
 | **Explanation** | Understanding why/how | When building mental models |
 
-**Progressive depth** keeps context lean — critical when CLAUDE.md loads every session:
-- **CLAUDE.md** is the thin index — operating manual only, never a capture target
+**Progressive depth** keeps context lean — critical for the manual you load every session:
+- **This file** (`_evryn-meta/.claude/agents/dc.md`) is the thin index — operating manual only, never a capture target. *(`_evryn-meta/CLAUDE.md` is the ROUTER that sent you here; it holds no manual — cutover residue corrected 2026-09-02.)*
 - **Build docs / reference docs** are the detail layer — full depth, read on demand
 - **Read ONE layer.** Only go deeper if your current task requires it.
 

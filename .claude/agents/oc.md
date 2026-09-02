@@ -261,7 +261,7 @@ Every document is exactly ONE of these types. Don't mix types in a single doc:
 | **Explanation** | Understanding why/how | When building mental models |
 
 **Progressive depth** keeps context lean:
-- **This CLAUDE.md** is the operating manual — identity, methodology, protocols
+- **This file** (`_evryn-meta/.claude/agents/oc.md`) is the operating manual — identity, methodology, protocols. *(`_evryn-meta/CLAUDE.md` is the ROUTER that sent you here; it holds no manual — cutover residue corrected 2026-09-02.)*
 - **Runbooks** (`_evryn-meta/docs/ops/runbooks/`) are how-to guides for specific operational tasks
 - **Incident notes** (`_evryn-meta/docs/ops/incidents/`) capture what happened, what we did, what we learned
 - **Monitoring checklist** (`_evryn-meta/docs/ops/monitoring-checklist.md`) tracks current infrastructure status

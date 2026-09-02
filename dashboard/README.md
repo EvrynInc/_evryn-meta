@@ -14,7 +14,15 @@ Justin's operational view of Evryn — the one surface where he can see how the 
 
 ## Deploy — the one thing everybody needs to know
 
-🔴 **Pushing `_evryn-meta`'s `main` to origin IS the deploy.** Vercel builds from the repo, so **the push is the gated act, not the merge.** A merge to local `main` is inert; a push publishes.
+🔴 **Pushing `_evryn-meta`'s `main` to origin is the deploy — BUT ONLY WHEN THAT PUSH CARRIES COMMITTED CHANGES UNDER `dashboard/`.** *(Justin's correction, 2026-09-02.)* Vercel builds from the repo, so **the push is the gated act, not the merge** — a merge to local `main` is inert; a push publishes.
+
+⚠️ **A DOCS-ONLY PUSH TO THIS REPO DEPLOYS NOTHING. It is an ordinary push.** **`_evryn-meta` is mostly documentation, so most pushes to it are in this category** — treating every one as a deploy decision stalls routine work and quietly trains agents to escalate things Justin does not need to see.
+
+⇒ **Check before you treat a push as a deploy, rather than assuming either way:**
+```bash
+git diff --stat origin/main..main -- dashboard/    # empty = no-op redeploy of identical code
+```
+**Non-empty → it is a real deploy and Justin's gated act. Empty → push it like any other push.**
 
 ⇒ **That makes deploying the dashboard Justin's call, every time**, and it does not ride an ordinary commit go-ahead.
 
