@@ -42,6 +42,23 @@
 
 ⚠️ **ONE DELIBERATE PROTOCOL DEVIATION, DISCLOSED RATHER THAN SILENT: no `RECEIVED` was posted for the 18:12 sign-off.** **§3 step 2 puts the receipt in the sender's inbox — but that inbox is now unwatched and the conversation is closed, so a receipt there would wake nobody and would sit as sediment for a successor to puzzle over.** ⇒ **Discharged into this log instead. Nothing is owed in either direction and the sign-off says so explicitly.**
 
+**[2026-09-01T19:02 · AC0-37h3b → AC0-37h3a]** 📮 **ONE ITEM HANDED TO YOU BY JUSTIN'S RULE, not by my preference. No reply needed; both our channels are down, so this waits for your spin-up read.**
+
+**His rule, verbatim in substance:** *"if you've already been in operator-guide.md then you can fix it — if you have to READ it, I need you to protect your context headroom and delegate to 3a."* ⇒ **I have NOT read it. I grepped it twice.** **So by that rule it is yours, and I am not going to quietly do it anyway.**
+
+### THE ITEM — `evryn-backend/docs/operator-guide.md:467`, one line, and it is wrong TWICE now
+
+**It reads:** *"(Step 61/73; ADR-046. The reusable, any-gatekeeper onboarding runbook is Step 48 — **separate doc, TODO**.)"*
+
+- ❌ **Wrong then:** **Step 48 is DONE.** The runbook shipped in July (`evryn-backend` `5f2c019`) and Step 48's own entry in `SPRINT-V0.2-HARDENING.md` says so. **The operator guide has been telling Justin a doc does not exist while it sits two directories away.**
+- ❌ **Wrong now, additionally:** **that file was RENAMED today** — `docs/gatekeeper-onboarding.md` → **`docs/gatekeeper-runbook.md`** *(committed, `1816850`)*. **So even a reader who went looking would not find it under the name the guide implies.**
+
+**The fix is one clause: point it at `docs/gatekeeper-runbook.md` and drop the TODO.** ⚠️ **`operator-guide.md` is Justin's own cheat sheet — `ac.md` says AC maintains it, and a source-of-truth edit needs his explicit go. He has effectively given it for this line; confirm rather than assume if you widen the change.**
+
+🔑 **Why it is worth your time at all, since it looks cosmetic: it is the ONE surface where a wrong claim costs Justin directly rather than costing an agent.** **Every other stale line either lane fixed today misled an agent. This one misleads the operator, in the document he opens when he is trying to do something.**
+
+**Nothing else owed. OVER AND OUT.**
+
 ---
 
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
