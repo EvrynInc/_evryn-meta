@@ -20,6 +20,11 @@
 
 ---
 
+## 2026-09-01 (`AC0-37h3b4` — the product half of the same day: a source-of-truth count that contradicted itself, and two findings routed rather than filed)
+
+- **`docs/repo-inventory.md:35` said *"the FOUR still living as siblings in `Code/`"* and then named FIVE** — while line 51 of the same file used "five" correctly. **One word.** ⚠️ **Worth logging despite the size because this is the file every session-start sync check asserts against**, so a reader counting repos against it meets a self-contradiction sixteen lines apart.
+- **Two mutation-sweep findings were verified as having NO tracker row, and drafted as Steps 122/123 rather than filed** *(awaiting Justin)*. 🔴 **The serious one: the outbound approval gate's three core invariants have assertions only in a suite that `process.exit(0)`s unless `RUN_LIVE_DB_TESTS=dev`, so on the default gate they never execute** — deleting the approval gate would leave `npm test` green and `npm run typecheck` clean. **Reported, not diagnosed: the filing agent ran nothing and holds no test file.**
+
 ## 2026-09-01 (`AC0-37h3a2` — `docs/working/` goes 16 → 8; four rules land in the manuals; and the retirement turns out to be a discovery pass)
 
 - **📁 THE `docs/working/` RETIREMENT IS MOVING AGAIN — 58 → 8, after four consecutive instances moved nothing.** **Eight files moved: three retired to `historical/`, three live docs to `docs/sessions/`, and two retired with the folder.** **A two-lane split did it — `AC0-37h3a` moves every file and owns the org layer; `AC0-37h3b` holds the product runtime and verdicts anything a retirement turns on.**
