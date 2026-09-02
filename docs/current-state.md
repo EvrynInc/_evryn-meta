@@ -56,6 +56,16 @@
 > ⚠️ **This does NOT extend to source-of-truth docs** — protocols, manuals, ADRs, ARCHITECTURE, the Hub, sprint docs. **Those still get their references fixed when they move**, because they are cited as authority rather than as history.
 >
 > 📌 **ARCHIVING SOMETHING YOURSELF? Two rules, in `lock-protocol.md` step 10: never change the filename, and file it under the DOC'S OWN date — never the month you happen to be archiving in.** *(Twelve docs were misfiled the second way before it was written down.)*
+>
+> ### 🔴 ACT AND ACv — THE SAME PASS IS STILL OWED ON YOUR OWN DOCS. This half is not done.
+>
+> **The folder merge is finished. The DISCOVERY pass is not.** **34 session docs — 29 ACT-lineage, 5 ACv — were moved without being read, each carrying a banner saying `RETIRE UPON: [lineage] has evaluated it`.** 🔴 **Nobody outside those lineages may retire them, judge them, or read them for a verdict** *(Justin's ruling: another lineage's in-flight work is not yours to cull)*.
+>
+> ⚠️ **Do not treat this as filing. The ACP pass found that NINE of its last sixteen docs carried an explicit *"still owed"* section, and several were the ONLY home of live work** — a security item, a silent mail-loss defect, and a design decomposition that had no tracker entry anywhere. ⇒ **Budget it as discovery, and expect to find things.**
+>
+> ⏸️ **NOT OVERDUE, and nobody needs to chase it:** those lineages were paused while Justin was away, and he expects them running again within the week. **Both inboxes already carry the request. Do not send another.**
+>
+> **Derive the live list any time: `git grep -n "HELD-SESSION-DOC"`.**
 
 ---
 
@@ -137,7 +147,7 @@
   > **Unknown and must be settled first:** whether Justin still gets prompts on this machine (**only he can see them** — the runbook's Trap 2, which produced three wrong conclusions last time); what those 13 user-level rules are; whether the repo file duplicates or conflicts with them.
   > 🔴 **A trust-flag fix was applied and then DELIBERATELY REVERTED on 2026-08-17**, so the machine sits in its original state and any future pass starts from a clean baseline (pre-change backup: `~/.claude.json.bak-pre-trust-fix-20260817`). **This needs an unhurried examination on the desktop — not a five-minute fix wedged into the end of a session.**
 - **Railway: AUTO-DEPLOY OFF by design** (manual `railway up`, branch-agnostic). `ANTHROPIC_API_KEY` is the dedicated **Evryn-Production** workspace key (ADR-053; **agents NEVER touch the value**). `PROACTIVE_CHECK_HOUR_PT=10`, `AFFIRM_HOUR_PT=7`, `POLL_INTERVAL_MS=10000` (deliberately slow pre-gatekeeper). Healthchecks.io heartbeat + daily-affirmation LIVE.
-- **Supabase: PRO**, Oregon/us-west-2. Four projects: **prod** · **dev** (seeded mirror) · **staging** (home of the Gate-B live-fire, `SEND_ENABLED=false`) · **"Evryn Team"** (team-runtime). Backups: Pro daily auto-backups (the real restore mechanism) + periodic `pg_dump` (an archival reading aid, **not** a restore). 🔴 **The newest archival dump is `2026-07-10` — ~7.7 weeks against `#lock` step 17's one-week bar.** ⚠️ **A fresh one is authorized by Justin but BLOCKED: the permission classifier refuses any command that reads the connection string from `.env` and hands it to `pg_dump`** (secret-read + outbound-tool = an exfiltration signature). **Unblocking it is Justin's call — a committed script, a permission rule, or he runs it himself.** 📌 **Read the dump's date from its FILENAME, never its mtime** — a bulk touch on 2026-07-19 makes the mtime lie, and two docs already disagreed because of it (`evryn-backend/backups/README.md` carries the one-line check).
+- **Supabase: PRO**, Oregon/us-west-2. Four projects: **prod** · **dev** (seeded mirror) · **staging** (home of the Gate-B live-fire, `SEND_ENABLED=false`) · **"Evryn Team"** (team-runtime). Backups: Pro daily auto-backups (the real restore mechanism) + periodic `pg_dump` (an archival reading aid, **not** a restore). ✅ **Newest archival dump `2026-09-02`, taken via `_evryn-meta/scripts/pg-dump.mjs` — run that script, never a hand-built command.** **Method, hazards and machine notes: `evryn-backend/backups/README.md`.**
 - **Slack:** `#evryn-approvals` (posts immediately) · `#emergency-alerts` (M1 Stage-2 detectors LIVE; **money-runaway is protected structurally by the circuit-breaker halt, not by a human-wake** — alerts do not pierce phone DND).
 
 ## Strategic pivot & how AC works now

@@ -57,7 +57,26 @@
 
 ⚠️ **Do not skim it because it feels like a repeat.** **The fragments this catches are exactly the ones the first sweep missed.**
 
-### 3 · 🔴 A top-to-bottom fresh-eyes re-read of BOTH briefs — incoming AND outgoing
+### 3 · 🔴 SUBAGENT CLOSE-OUT — a HARD GATE. *(Moved here from `lock-protocol.md` step 21 on 2026-09-02, because it was always scoped to a re-spin.)*
+
+**Do it AFTER the fragment sweep — that sweep routinely surfaces the very thing an agent still needs to record. And do it BEFORE the re-reads, because what it finds goes into the handoff those passes then check.**
+
+**The fact that makes this urgent: subagent resume is SESSION-BOUND.** Every agent you spawned becomes **permanently unreachable** the moment your session ends. **A returned report is NOT persistence** — it lives in your transcript, which dies with you. **Only a committed file survives.** So anything that only *that agent* can do must happen now, or it falls to an instance with none of its context — or does not happen at all.
+
+**ENUMERATE — do not work from memory.** Write out **every** agent you spawned this session, by `agentId`, with what it was for. **The rule is worthless without the list, and *"I think that's all of them"* is how one gets stranded.** **Then for each, answer explicitly:**
+
+- **a. Artifacts.** Does it own a **worktree, a branch, a sandbox, or an uncommitted file**? 🔴 **Resume it and have it reap its own** — it knows what is safe to remove and you do not. **Read its set-down FULLY before any reap; never batch the read with the act.** Use `git branch -d` (lowercase) — **a refusal on divergence is a SIGNAL, not an obstacle; surface it, never `-D` past it.**
+- **b. Persistence.** Is its brief **re-spin-complete** — *could a completely fresh instance pick up everything that still matters from that file alone?* If not, **resume it and have it set down**, naming specifically what is missing. ⚠️ **The durable engineering content is usually the part that exists only in its report** — corrections, measurements, near-misses.
+- **c. Retirement.** If its lane is genuinely finished, its brief is a **retirement candidate** — per `lock-protocol.md` step 10. **Do not retire it in the same breath as reading it.**
+- **d. Nothing owed.** Confirm it has no open question waiting on you, and no `NEEDS-JUSTIN` you never surfaced.
+
+**⚠️ THE NESTING TRAP — this is the one that actually bites.** A subagent your subagent spawned (your DC's sandbox, your lane-AC's QC) is **invisible and unreachable to you**. **Only its own spawner can dispose of it.** So when you resume a lane AC to close out, **tell it to close out ITS children too** — and assume **no second round-trip**, because it may not get one.
+
+**⚠️ The mirror of that:** an agent **someone else** spawned is unreachable to *you* the moment *their* session ends. **Route anything you need from it through its orchestrator, not directly** — and do not put it on your own owed-list.
+
+**Record the ledger in your handoff, not just in chat** — including, for each agent, what a fresh instance should check if the close-out *did not* land (e.g. *"if that worktree still exists, the reap failed; here is how to finish it"*). **A close-out you cannot verify after the fact is a close-out you have to trust.**
+
+### 4 · 🔴 A top-to-bottom fresh-eyes re-read of BOTH briefs — incoming AND outgoing
 
 *(Justin: **"You're going to be tempted to do it from memory, but that's the trap — re-read both."**)*
 
@@ -65,15 +84,41 @@
 
 🔴 **SPECIAL ATTENTION TO THE LOAD LIST. Copy it VERBATIM from the incoming brief unless you have a compelling reason to change it — and if you change it, SURFACE THAT LOUDLY.** **A silently-altered load list hands your successor a different set of eyes than the one that was proven to work, and nothing about the change will be visible to them.**
 
-### 4 · One more fresh-eyes pass of the OUTGOING handoff alone
+### 5 · One more fresh-eyes pass of the OUTGOING handoff alone
 
 **Hunting errors, omissions, staleness and clarity.** **The test is one question:**
 
 > ***Could a brand-new instance, holding none of your current context, understand this fully?***
 
-### 5 · Retire the old brief — or say plainly why it must stay
+### 6 · Retire the old brief — or say plainly why it must stay
 
 **Per `lock-protocol.md` step 10.** **If it stays, it carries a `HELD-SESSION-DOC` banner with a testable condition and a lineage owner. If it goes, it is archived under its OWN date and its filename does not change.**
+
+---
+
+# 🏁 IS THE LANE ENDING? A different packout, and it has its own checks.
+
+*(Justin's design, 2026-09-02.)*
+
+**Everything above assumes a SUCCESSOR.** ⚠️ **Sometimes there is not one — the work is finished, and the lane itself is being wound up.** **That is a different close, and doing it as an ordinary packout leaves live infrastructure pointing at an agent who no longer exists.**
+
+## 🔑 THE TEST, and it is the elegant part: A LANE IS ENDING WHEN YOU HAVE NO HANDOFF TO WRITE.
+
+**Not "a short handoff." NONE.** ⇒ **Run steps 1–4 above exactly as written, and then ask what is actually left in the outgoing brief.** **If everything resolved — every owed item discharged to a durable home, every question answered, every file dispositioned — there is nothing for a successor to pick up, and that absence IS the signal.**
+
+⚠️ **Run this as a TEST, not as a declaration.** **If you find yourself writing *"the next instance should…"* even once, the lane is NOT ending — you have a successor and you owe them a real brief.** 🔴 **Do not talk yourself into a wind-up because the work feels done. The brief writes itself either way; let it tell you which case you are in.**
+
+## THEN, THE LANE-ENDING CHECKS — each one is a thing that outlives you if nobody kills it
+
+1. 📮 **RETIRE THE DEDICATED MAILBOX.** *(`mailbox-protocol.md` §6: a lane does not get a standing mailbox, and one given for a specific reason is reaped at close-out.)* **Archive the file, remove its row from the roster, and tell every peer who was writing to it.** 🔴 **An unreaped lane mailbox is the exact failure this whole channel design exists to prevent: an address that looks live, accepts mail, and is watched by nobody.** ⚠️ **Confirm it is EMPTY before archiving — an empty inbox means nothing is owed, so a non-empty one is telling you the lane is not finished.**
+2. 🌳 **REAP WORKTREES AND BRANCHES.** `git worktree list` in every repo you touched. **Use `git branch -d` (lowercase) — a refusal is a signal that something is unmerged, not an obstacle to force past.** ⚠️ **Check `node_modules` counts around any reap** *(`ac.md`, Worktree & Branch Discipline)*.
+3. 🔒 **CHECK WHETHER ANYTHING IS HELD ON A CONDITION ONLY YOU COULD SATISFY.** `git grep -n "HELD-SESSION-DOC"`. ⚠️ **A banner reading *"RETIRE UPON: [your lane] has evaluated it"* becomes permanently unsatisfiable the moment your lane ends** — and it will sit there looking merely patient. ⇒ **Either satisfy it now, or re-point the owner to a lineage that still exists.**
+4. 📣 **TELL YOUR PEERS THE LANE IS CLOSING, in their inboxes, before you go.** **Name what they should do with anything they were about to send you.** **A peer writing into a dead lane's mailbox gets no error and no reply.**
+5. 📋 **REMOVE THE LANE FROM ANYWHERE IT IS LISTED AS ACTIVE** — `current-state.md`, a conductor's brief, a roster. **A lane listed as running is a lane someone will route work to.**
+6. 🗂️ **RETIRE THE BRIEF OUTRIGHT — do not supersede it.** **Supersede means "a successor reads the new one." There is no successor.** **Archive it under its own date, name unchanged.**
+7. ✅ **STATE THE WIND-UP EXPLICITLY IN YOUR FINAL REPORT AND IN THE CHANGELOG**, so it is a recorded decision rather than an inference someone draws later from silence.
+
+⭐ **THE ONE-LINE VERSION OF ALL SEVEN: everything that could still ROUTE WORK TO YOU has to be switched off.** **A mailbox, a banner condition, a roster entry and a brief are all addresses — and an address that outlives its agent does not fail loudly. It swallows.**
 
 ---
 

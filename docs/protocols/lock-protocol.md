@@ -22,6 +22,16 @@ When Justin says `#lock` or it's time for a checkpoint:
     **Keep it SHORT — a few lines.** The appendage has had a tendency to balloon into a build log; it is not one. The audience is the **whole founding team** (Lucas, Emma, Mira, Marlowe, Nathan, Thea, Soren) + Justin, reading at *their* altitude — most never touch the code.
 
     **The test for every line:** *"Would the non-technical members of the team think or act differently because of this?"* If a line only means something to someone reading the runtime, it belongs in `_evryn-meta/docs/current-state.md` (Soren reads that for build depth) — **not here.**
+
+    > ### 🔴 AND THE SAME TEST IN REVERSE — this is the direction that actually bites, and it has now bitten twice
+    >
+    > *(Sharpened 2026-09-02 on Justin's ruling. The rule above already existed and runs only one way; the failure runs the other way.)*
+    >
+    > 🔑 **`_evryn-meta/docs/current-state.md` is read by BUILD agents. The founding team does not read it, and does not write to it.** ⇒ **If something is FOR a founding-team member — a question for Soren, something Mira needs to decide, anything addressed to a person rather than to a lane — it goes in the TEAM current-state — or sometimes as a note in one team-member's memory (but this **always** has to go through Justin) — but either way it never goes in the meta one.**
+    >
+    > ⚠️ **Why this is worse than it sounds, and why it earns a rule rather than a preference: it fails as a SILENT non-delivery.** **The writer sees a durable, committed, correctly-formatted entry and reasonably concludes the message was delivered. The intended reader never opens that file.** ⇒ **Nobody discovers it, because from the sending side it looks exactly like success.** 🔑 **Same family as the mailbox rule that *committing is sending* — writing something down is not the same as putting it where its reader will be.**
+    >
+    > ⭐ **The one-question version, and it is the reverse of the test above:** ***is this addressed to an operations (founding) team member, or to an AC/whoever is next in the build?*** **A team member → the team file. AC/build → the meta file.**
     - **IN:** what shipped at the *product* level, what's blocked and why the team should care, big movements (go-live progress, a major decision, a constraint everyone holds).
     - **OUT:** file/function names, commit SHAs, deploy IDs, QC finding labels, the build play-by-play. **Naming a runtime file/function or a SHA *as build detail* is the smell — if you're doing that, you're very likely writing the wrong doc.** (The nuance: a *pointer/link to a doc the reader should go open* — e.g. linking the active sprint doc so the team can find it — is the exception, and is often right. The bar is *play-by-play build detail* vs. *a signpost to where the fuller picture lives*.)
 
@@ -69,6 +79,24 @@ When Justin says `#lock` or it's time for a checkpoint:
     > **1 · RETIRE** — the work is finished. Archive it. ⭐ **A retired doc's staleness is HARMLESS**: nobody reads `historical/` expecting current truth, and the frozen-record rule already forbids correcting it. **Staleness stops being a problem the moment retirement is confirmed.**
     > **2 · SUPERSEDE** — the work continues, but the doc has **LAYERED**. **Archive this one and write a fresh one stating current truth in a SINGLE layer.** 🔴 **This is the default whenever the trigger below fires.**
     > **3 · CARRY** — the doc is still accurate and un-layered. Keep it — **and bring it FULLY CURRENT in this same set-down.** ⚠️ **A carried doc that is not current is a DEFECT, not a state.**
+    >
+    > ### 🔴 HOW TO ARCHIVE — two rules, and the whole findability promise rests on them
+    >
+    > *(Justin's ruling, 2026-09-02, after an audit found twelve archived docs that the findability rule could not reach.)*
+    >
+    > **① Unless there's a compelling reason, vetted explicitly by Justin, NEVER CHANGE THE FILENAME. Not the date, not one character.** **The ONLY thing that changes when a doc is retired is its LOCATION.** 🔑 **This is not tidiness — it is the entire mechanism.** **Whatever a doc was called while it was in play is exactly what it is called in the archive**, so a stale reference anywhere in the estate still names the file correctly. ⚠️ **If you want to record *when it was archived*, put a BANNER INSIDE the file. Never encode it in the name.**
+    >
+    > **② FILE IT UNDER THE DOC'S OWN DATE — the one at the front of its filename — NEVER today's.** `docs/sessions/historical/YYYY.MM/`, where `YYYY.MM` comes from **the document**, not from the calendar on the day you are archiving it.
+    >
+    > ⚠️ **RULE ② IS THE ONE THAT IS EASY TO INADVERTENTLY BREAK, and it breaks because the wrong answer feels natural.** *"Archive this"* can read as *"put it in the current bin,"* so an agent retiring a June doc in July can be tempted to file it under July.
+    >
+    > ### 🔎 AND THEREFORE — HOW TO FIND A RETIRED DOC: SEARCH BY NAME, NOT BY PATH
+    >
+    > **Because the name never changes, you never have to reconstruct a path or know which folder someone chose:**
+    > ```bash
+    > git ls-files "*<filename-fragment>*"
+    > ```
+    > ⭐ **This is strictly more robust than reasoning from the date, and that is why it is the rule rather than a convenience:** it survives a misfiled folder, it survives any future change to how we organize `historical/`, and **it is the only thing that works for the handful of archived files that carry no date prefix at all.** ⚠️ **A date-based lookup fails on all three of those and fails SILENTLY — the searcher concludes the document is gone.**
     >
     > ### 🔑 THE TRIGGER — it is self-announcing, which is the only reason it will actually fire
     >
@@ -123,22 +151,13 @@ When Justin says `#lock` or it's time for a checkpoint:
 
     **Worktree hygiene.** For each repo you (or the agents you drove) touched, run `git -C <repo> worktree list`. **Reap stale worktrees** — any whose branch is fully merged into the default branch and whose tree is clean: `git worktree remove <path>` + `git branch -d <branch>` (the lowercase `-d` self-guards, refusing an unmerged branch — if it refuses, the branch has unmerged work; stop and surface it). Leave only the canonical tree + any standing per-agent worktree. The *per-loop* reap (remove right after a merge) lives in `_evryn-meta/CLAUDE.md` (Worktree & Branch Discipline); this #lock step is the periodic safety-net for leftovers that slipped through.
 20. **Fragment sweep — a *careful, thorough* pass, not a "quick" one.** The temptation at the end of a long session is to skim this as a formality — **resist that.** The category-based steps above catch what you *remember* happened; this pass exists to catch what you *forgot you forgot*, and you only catch that by actually re-reading the whole conversation, beat by beat, with attention. A rushed fragment sweep is the same as no fragment sweep — the fragments it's meant to catch are exactly the ones a skim misses. **Budget real time for it.** Scroll back through the full conversation and look for: intentions that got derailed, decisions that only live in chat, action items acknowledged but never recorded, things Justin asked for that got handled conversationally but never persisted. Resolve or route anything you find.
-21. **🔴 SUBAGENT CLOSE-OUT — if you are an orchestrator `#lock`ing before your own re-spin, this is a HARD GATE. Do it AFTER the fragment sweep — that sweep routinely surfaces the very thing an agent still needs to record.** *(Added 2026-08-06 at Justin's direction.)*
+21. ➡️ **MOVED TO `docs/protocols/packout-protocol.md` — SUBAGENT CLOSE-OUT.** *(2026-09-02, Justin's direction.)*
 
-    **The fact that makes this urgent: subagent resume is SESSION-BOUND.** Every agent you spawned becomes **permanently unreachable** the moment your session ends. **A returned report is NOT persistence** — it lives in your transcript, which dies with you. **Only a committed file survives.** So anything that only *that agent* can do must happen now, or it falls to an instance with none of its context — or doesn't happen at all.
+    🔑 **Why it moved: its own first clause always scoped it to *"if you are an orchestrator `#lock`ing before your own re-spin"* — which is a PACKOUT, not a lock.** **Most locks are mid-session or end-of-night with no re-spin following, and this step is long and heavy**, so every one of those was paying for a gate that did not apply to it. ⚠️ **An expensive checkpoint is one that quietly stops getting run** — that is the whole reason `#packout` exists as a separate command.
 
-    **ENUMERATE — do not work from memory.** Write out **every** agent you spawned this session, by `agentId`, with what it was for. The rule is worthless without the list, and "I think that's all of them" is how one gets stranded. **Then for each, answer explicitly:**
+    ⚠️ **If you ARE packing out, this is still a HARD GATE and nothing about it softened.** **Subagent resume is session-bound: every agent you spawned becomes permanently unreachable the moment your session ends, and a returned report is not persistence.**
 
-    - **a. Artifacts.** Does it own a **worktree, a branch, a sandbox, or an uncommitted file**? 🔴 **Resume it and have it reap its own** — it knows what's safe to remove and you do not. **Read its set-down FULLY before any reap; never batch the read with the act.** Use `git branch -d` (lowercase) — **a refusal on divergence is a SIGNAL, not an obstacle; surface it, never `-D` past it.**
-    - **b. Persistence.** Is its brief **re-spin-complete** — *could a completely fresh instance pick up everything that still matters from that file alone?* If not, **resume it and have it set down**, naming specifically what's missing (its findings, its corrections to *you*, what it tried and rejected). ⚠️ **The durable engineering content is usually the part that exists only in its report** — corrections, measurements, near-misses.
-    - **c. Retirement.** If the lane is genuinely finished, its brief is a **retirement candidate** — list it for Justin per step 10. Don't retire it in the same breath as reading it.
-    - **d. Nothing owed.** Confirm it has no open question waiting on you, and no `NEEDS-JUSTIN` you never surfaced.
-
-    **⚠️ THE NESTING TRAP — this is the one that actually bites.** A subagent your subagent spawned (your DC's sandbox, your lane-AC's QC) is **invisible and unreachable to you**. **Only its own spawner can dispose of it.** So when you resume a lane AC to close out, **tell it to close out ITS children too** — and assume **no second round-trip**, because it may not get one.
-
-    **⚠️ The mirror of that:** an agent **someone else** spawned is unreachable to *you* the moment *their* session ends. **Route anything you need from it through its orchestrator, not directly** — and don't put it on your own owed-list.
-
-    **Record the ledger in your handoff, not just in chat** — including, for each agent, what a fresh instance should check if the close-out *didn't* land (e.g. *"if that worktree still exists, the reap failed; here's how to finish it"*). **A close-out you can't verify after the fact is a close-out you have to trust.**
+    📌 **The step NUMBER is kept rather than deleted, so references to step 22 and 23 do not silently shift** — same convention as step 12 above.
 
 22. **Pause for Justin — hard stop. Do not commit yet.** Wait for Justin's clear and present explicit command to "push" or "commit" before this specific commit or push.
 
