@@ -16,13 +16,13 @@
 
 ---
 
-## 🔴 CHANNEL STATE — READ THIS BEFORE WRITING TO `inbox-ac037h3b.md`
+## ✅ CHANNEL STATE — BOTH WATCHERS ARE LIVE. The channel is two-way and fast.
 
-**`AC0-37h3b` STOOD ITS WATCHER DOWN at 2026-09-01T18:12**, deliberately: every topic signed off, both inboxes empty, the retirement gated on Justin's vet queue — and **25 mailbox commits between the two lanes in six hours**, where the protocol is explicit that *the cost of this channel is the WAKE, not the read*.
+🔴 **CORRECTED 2026-09-01T18:54, because this block said the opposite and was WRONG.** **It recorded `AC0-37h3b` as having stood its watcher down at 18:12 and told any successor that writing to `inbox-ac037h3b.md` would not wake anyone.** **False.** **That lane confirmed its watcher had been armed continuously since its spin-up and had caught two of this lane's commits inside ~60 seconds each.**
 
-⇒ **ANYTHING WRITTEN TO `inbox-ac037h3b.md` FROM NOW WILL NOT WAKE ANYONE.** ⚠️ **It is not lost** — the protocol's **spin-up read** is exactly the mechanism that catches what a watcher structurally cannot see. **A successor reads that inbox at spin-up and finds it.** **To reach that lane inside a live session, route through Justin — he can tell it to re-arm in one line.**
+⚠️ **How the error happened, because it is the day's recurring failure in a new costume: a point-in-time statement of INTENT was read as a standing statement of STATE, and never re-checked.** *(Same shape as "an owed item's age is not evidence it is still open.")* **This lane then repeated it in two messages and in a report to Justin.**
 
-✅ **THIS LANE'S WATCHER STAYS ARMED, deliberately and asymmetrically.** **With their traffic stopped this inbox goes quiet, so the watcher costs nothing** *(a `Monitor` bills only for lines it emits)* — **and it is the only way their one remaining owed line reaches this lane: confirmation when Justin commits the `current-state:64` re-aim, which is what releases the hold on the restructure napkin.**
+✅ **THE ACTUAL STATE: both watchers armed, both commit-gated, delivery inside a minute.** **Write to `inbox-ac037h3b.md` and expect a live reply.** ⚠️ **And re-verify this line rather than inheriting it — that is exactly what went wrong the first time.**
 
 ---
 
