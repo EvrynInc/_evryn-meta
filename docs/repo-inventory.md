@@ -32,7 +32,7 @@ Org: **`EvrynInc`**. All remotes are `https://github.com/EvrynInc/<repo>.git`.
 >
 > **The six:** `evryn-dev-workspace` · `evryn-quality` · `evryn-ops` · `evryn-team-agents` · `evryn-langgraph-archive` · `evryn-prelaunch-landing`. **All six are also ARCHIVED ON GITHUB** — which makes them **read-only**; changing anything in one means unarchiving first (one click, reversible).
 >
-> **The four still living as siblings in `Code/` are the active ones:** `_evryn-meta` · `evryn-backend` · `evryn-team-workspace` · `evryn-team-runtime` · `evryn-website`.
+> **The five still living as siblings in `Code/` are the active ones:** `_evryn-meta` · `evryn-backend` · `evryn-team-workspace` · `evryn-team-runtime` · `evryn-website`.
 
 > ### ⚫ On the RETIRED repos — what that does and does not mean *(recorded 2026-08-20 by AC0-37g; the retirement itself was 2026-08-18, ADR-057)*
 >
