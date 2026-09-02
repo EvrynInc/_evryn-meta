@@ -416,6 +416,18 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
 
 **One home per item; everything else is a pointer (the elevation discipline).** Ideally, each item lives in exactly ONE doc — at its right altitude — and the same item never drifts into two docs with diverging status (the failure mode this kills). Keep each doc at its altitude (e.g. a BUILD doc holds v0.3 *scope + architecture*, not a granular bug-list; an active sprint doc holds the live work, not a duplicated current-state header). When content belongs at a lower altitude, *move* it there and leave a pointer — don't duplicate it. **Pointers must thread a needle:** descriptive enough to orient a reader *and* pull them to go read the real doc if they're working in that area, but never so complete they substitute for the read (a pointer that satisfies just recreates the duplication). "One home" is what lets a doc be trusted — you never have to wonder which copy is current.
 
+> ### 🔴 THE ONE CASE WHERE CONSOLIDATION IS A PERMISSIONS CHANGE WEARING A TIDY-UP COSTUME
+>
+> *(Justin's ruling, 2026-09-01. **This lives in AC's manual and nowhere else, deliberately: AC is the only agent that would ever perform this consolidation** — DC, QC and OC do not edit manuals, and AC maintains all four.)*
+>
+> **The four agent manuals — `ac.md`, `dc.md`, `qc.md`, `oc.md` — carry a lot of overlapping discipline, and merging the shared parts into a common floor is a tempting and mostly-correct instinct.** **The rule that makes it safe:**
+>
+> ⭐ **A rule belongs in a common floor IF AND ONLY IF it is true for EVERY agent with NO exception. The floor states the STRICTEST form, and it NAMES which single manual holds any carve-out.**
+>
+> 🔴 **The hazard, stated concretely because the abstract version does not land: AC's build-level-code commit carve-out must NEVER reach DC or QC.** **Merge "the commit discipline" into one shared file and you have handed three agents an authorization Justin granted to exactly one** — silently, inside a refactor.
+>
+> ⚠️ **And the reason it would survive review: the diff looks like pure deduplication.** **Nothing in it reads *"DC may now commit without asking."* It reads *"removed a duplicated paragraph."*** ⇒ **Before merging ANY rule into a shared file, ask which agent the rule is FALSE for. If the answer is "none, as far as I know," you have not checked — go and read the other three.**
+
 **Source-of-truth documents require Justin's explicit authorization before you edit them.** This applies to: ARCHITECTURE.md, BUILD docs, the Hub and spokes, LEARNINGS.md, protocol docs. Excluded: CHANGELOG.md, ADRs, mailbox files. **Edit rights vs. authorization are distinct** — for ARCHITECTURE.md and the BUILD doc, AC *holds* edit rights (they are not off-limits to AC; see the ownership note in the SESSION STARTUP cascade); what this rule requires is Justin's explicit authorization *before* AC edits them.
 
 > ### ⭐ ONCE THE CHANGE IS AUTHORIZED, MAKE THE EDIT AND LEAVE IT UNCOMMITTED — do NOT pitch the wording in chat

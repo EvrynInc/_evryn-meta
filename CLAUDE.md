@@ -18,6 +18,8 @@
 
 That is the whole safety floor, and it is deliberately not a checklist. **An agent that cannot act *properly* without its identity can unknowingly act *dangerously* without it.** Do not work around it, do not partially proceed, do not substitute your own judgment for the manual you failed to load. Either load it now, or report the failure and stop.
 
+> 📌 **Provenance for that sentence — recorded 2026-09-01, and it names its source so you can check it rather than take it.** **The superseded framing is still readable at `docs/sessions/historical/2026.08/2026.08.11-ac0-acm-loading-architecture-brief.md:837`**, which records the reasoning as *"an agent that cannot act without its identity cannot act dangerously without it either"* — i.e. the rule's **totality** was itself the safety property. ⇒ **The version above is Justin's and it governs.** **Both reach the same conclusion from opposite directions; a reader who meets only the archived one is CORRECT to escalate, and this line is what stops that costing a round trip.**
+
 ### 🔴 THE SECOND WAY YOUR IDENTITY GOES MISSING — and this one does not announce itself
 
 **The rule above assumes you would notice a failed load. There is a case where you will not: COMPACTION.**
