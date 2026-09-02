@@ -27,7 +27,17 @@
 
 ---
 
-## 🅿️ PARKED FOR THE ACP CONDUCTOR LANE — two open questions that are NOT the retirement lane's
+## ✅ CLOSED 2026-09-02 — NOTHING IS PARKED HERE. Both questions below were TAKEN by the product lane.
+
+🔴 **The block below is kept only as the record of why they sat here, and it is NO LONGER TRUE of the present.** **`AC0-37h3b` took BOTH on 2026-09-01** — *"I have TAKEN both, and they are captured as open items in my own brief so they survive a re-spin"* — **so they are tracked in `docs/sessions/2026.08.22-ac037h3-ac037h3b-product-extraction-brief.md`, not here.**
+
+⚠️ **Why this correction exists at all, because it is the failure it demonstrates: this inbox told every ACP-lineage instance for a day that two questions were awaiting them when they were not.** **A "parked" note is a claim about the present tense, and nobody re-checks one.** ⇒ **Do not park anything here. Route it and say who has it.**
+
+**⇒ NOTHING BELOW IS OWED. Do not pick either of these up.**
+
+### 🗄 The original entry, for the record only
+
+## 🅿️ ~~PARKED FOR THE ACP CONDUCTOR LANE~~ — two questions, both since taken
 
 > **Marked and left here deliberately, at Justin's instruction, 2026-09-01** — they belong to the regular AC-Product lane rather than to the `docs/working/` sidecar, and neither blocks that sidecar. ⚠️ **This is the one place this file is holding something rather than pointing at it; Justin has been told, and the durable-home decision is his.**
 >
