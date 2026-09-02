@@ -128,6 +128,25 @@
 
 📌 **Two facts that shorten the job:** **Soren has had a note about this in his memory since 2026-08-05 and has run since (a `#lock` entry dated 2026-08-31) without acting on it** — so waiting on him is not a plan. **And 4 of the 6 items on his separate *"still genuinely yours to act on"* list in that same section are now resolved** *(the `Promise.all` silent drop shipped; the Haiku-breaker claim is verified and tracked; the dedicated-alias rule is SPRINT Step 121; Nathan's rule landed)*. **Still open there: SPRINT Step 95, and Justin's TTL question whose referent was never resolved.**
 
+### 🔴 CORRECTION TO MY OWN MESSAGE — GO TO THE SOURCE. Everything above is a CONDENSATION and you must not re-home from it.
+
+*(Justin caught this immediately: **"did you point 3b to the high-resolution sources that you were drawing from, or did you condense it? Because if he's going to re-home, he needs high-res."** He is right, and my summary above is exactly the failure this whole job keeps finding — a second-hand account standing in for the artifact.)*
+
+🔴 **READ THE SOURCE IN FULL. It is short — `_evryn-meta/docs/working/2026.07.22-ac0-ac0-handoff.md`, 251 lines total, and the material you need is a contiguous 109-line block:**
+
+| Span | What it is | Why you need it verbatim |
+|---|---|---|
+| **`:162–188`** | **The Third batch itself** — Soren's six items, in his own words | ⛔ **`:164–168` is the framing box that stopped the last two agents.** **Its exact wording is the constraint you are working under, and my paraphrase of it is not.** |
+| **`:190–223`** | **Soren's own pointer section** — *"this section now POINTS; here is exactly what changed and what is left for you"* | 🔑 **This is the half my summary damages most.** It is a table of what he ALREADY persisted and under which gate, plus *"What I deliberately did NOT persist, and why"* — **which is the actual map of what still needs a home.** **You cannot re-home this batch without it.** |
+| **`:115–161`** | **First and second batches** *(same Soren subagent, earlier rounds)* | **The third batch references both, and `:170` carries the design context — Justin's proposal, the cost model, the constrained-generation clarification — without which items 1–3 do not parse.** |
+| **`:225–251`** | **Marlowe's priority signal** | **Not part of the batch. Named so you know what the tail is and can skip it deliberately rather than wondering.** |
+
+⚠️ **Two specific places my condensation is known to be lossy, so you do not inherit my compression:**
+- **Item 1's reasoning about `core.md` being APPROVER-AGNOSTIC** is a careful argument with a quoted identity line in it. **I flattened it to a conclusion.** **The argument is what makes it safe to say no identity amendment is needed — read it.**
+- **`:207–211` (*"What I deliberately did NOT persist, and why"*)** names **outreach economics**, **Publisher-as-approver as a decision**, **the whole bulk-import project**, and **anything in the identity files** as things he refused to write down, each with a reason. 🔑 **That list is arguably MORE load-bearing for a re-homing job than the six items are** — it tells you what must NOT become settled-looking in whatever home you choose. **I did not carry it above at all.**
+
+⭐ **And a second source you will want that is not in that file: `evryn-team-workspace/.claude/agent-memory/soren/MEMORY.md` carries a blockquote from the housekeeping agent that nearly swept this** — clearly marked *"Not written by Soren"* — **which states the needed decision in his own terms and is the record of why the sweep was refused.** **It is the cleanest one-paragraph statement of the problem that exists anywhere.**
+
 ⏳ **When it has a home, tell me and I retire `2026.07.22-ac0-ac0-handoff.md`. That is the only thing I need back.**
 
 **OVER AND OUT.**
