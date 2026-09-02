@@ -27,13 +27,13 @@
 
 ---
 
-## ✅ CLOSED 2026-09-02 — NOTHING IS PARKED HERE. Both questions below were TAKEN by the product lane.
+## ⚠️ NOT PARKED HERE ANY MORE — but TAKEN is not DONE, and nobody has confirmed these were answered.
 
-🔴 **The block below is kept only as the record of why they sat here, and it is NO LONGER TRUE of the present.** **`AC0-37h3b` took BOTH on 2026-09-01** — *"I have TAKEN both, and they are captured as open items in my own brief so they survive a re-spin"* — **so they are tracked in `docs/sessions/2026.08.22-ac037h3-ac037h3b-product-extraction-brief.md`, not here.**
+**`AC0-37h3b` took BOTH on 2026-09-01** — *"I have TAKEN both, and they are captured as open items in my own brief so they survive a re-spin"* — **so they are tracked in `docs/sessions/2026.08.22-ac037h3-ac037h3b-product-extraction-brief.md`, not here.**
 
-⚠️ **Why this correction exists at all, because it is the failure it demonstrates: this inbox told every ACP-lineage instance for a day that two questions were awaiting them when they were not.** **A "parked" note is a claim about the present tense, and nobody re-checks one.** ⇒ **Do not park anything here. Route it and say who has it.**
+🔴 **DO NOT READ THAT AS CLOSED.** *(Justin, 2026-09-02: **"I need you to make 100% sure that's true. We intentionally parked those — did they actually get done though?"**)* **This block briefly said "CLOSED — nothing owed." That was an over-claim: what is established is that another lane ACCEPTED them, not that either was ANSWERED.** ⇒ **VERIFY AT SOURCE before treating either as settled.** ⚠️ **The second one is the dangerous half — it asks what is UNSHIPPED, so a wrong "nothing remains" retires a doc that still holds live work.** **The verification is item ① of `docs/sessions/2026.09.02-ac037h3a2-ac037h3a3-handoff.md` §1.5.**
 
-**⇒ NOTHING BELOW IS OWED. Do not pick either of these up.**
+⚠️ **And the failure this whole block demonstrates: a "parked" note is a claim about the PRESENT TENSE, and nobody re-checks one.** ⇒ **Do not park anything here. Route it, and say who has it.**
 
 ### 🗄 The original entry, for the record only
 

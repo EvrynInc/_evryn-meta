@@ -39,7 +39,7 @@
 
 ⇒ **Nothing here is blocked on analysis. Do not re-open a disposition; check whether its destination has COMMITTED.**
 
-⚠️ **AND ONE THING THAT IS JUSTIN'S, NOT THIS LANE'S: `_evryn-meta` is ~50 commits ahead of origin on a single machine, and the `ACh` queue's own note records that pushing that repo IS the Vercel dashboard deploy.** **A deploy decision, surfaced to him, not to be performed here.**
+⚠️ **A CLAIM THIS LANE REPEATED AND JUSTIN CORRECTED — do not inherit it.** **The `ACh` queue's note said flatly that *"pushing `_evryn-meta` IS the Vercel dashboard deploy."*** 🔴 **That is only true when the push carries COMMITTED CHANGES UNDER `dashboard/`.** *(Justin, 2026-09-02.)* ⇒ **A docs-only push to this repo deploys nothing.** **Check whether the commits you are pushing touch `dashboard/`; if they do not, it is an ordinary push and not a deploy decision.**
 
 ---
 
