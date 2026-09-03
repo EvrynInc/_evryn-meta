@@ -113,10 +113,10 @@
 1. 📮 **RETIRE THE DEDICATED MAILBOX.** *(`mailbox-protocol.md` §6: a lane does not get a standing mailbox, and one given for a specific reason is reaped at close-out.)* **Archive the file, remove its row from the roster, and tell every peer who was writing to it.** 🔴 **An unreaped lane mailbox is the exact failure this whole channel design exists to prevent: an address that looks live, accepts mail, and is watched by nobody.** ⚠️ **Confirm it is EMPTY before archiving — an empty inbox means nothing is owed, so a non-empty one is telling you the lane is not finished.**
 2. 🌳 **REAP WORKTREES AND BRANCHES.** `git worktree list` in every repo you touched. **Use `git branch -d` (lowercase) — a refusal is a signal that something is unmerged, not an obstacle to force past.** ⚠️ **Check `node_modules` counts around any reap** *(`ac.md`, Worktree & Branch Discipline)*.
 3. 🔒 **CHECK WHETHER ANYTHING IS HELD ON A CONDITION ONLY YOU COULD SATISFY.** `git grep -n "HELD-SESSION-DOC"`. ⚠️ **A banner reading *"RETIRE UPON: [your lane] has evaluated it"* becomes permanently unsatisfiable the moment your lane ends** — and it will sit there looking merely patient. ⇒ **Either satisfy it now, or re-point the owner to a lineage that still exists.**
-4. 📣 **TELL YOUR PEERS THE LANE IS CLOSING, in their inboxes, before you go.** **Name what they should do with anything they were about to send you.** **A peer writing into a dead lane's mailbox gets no error and no reply.**
-5. 📋 **REMOVE THE LANE FROM ANYWHERE IT IS LISTED AS ACTIVE** — `current-state.md`, a conductor's brief, a roster. **A lane listed as running is a lane someone will route work to.**
+4. 📣 **TELL YOUR ACTIVE PEERS THE LANE IS CLOSING, in their inboxes, before you go.** **Name what they should do with anything they were about to send you.** **A peer writing into a dead lane's mailbox gets no error and no reply.**
+5. 📋 **UPDATE THE LANE'S STATUS ANYWHERE IT IS LISTED AS ACTIVE** — `current-state.md`, a conductor's brief, a roster. **A lane listed as running is a lane someone will route work to.**
 6. 🗂️ **RETIRE THE BRIEF OUTRIGHT — do not supersede it.** **Supersede means "a successor reads the new one." There is no successor.** **Archive it under its own date, name unchanged.**
-7. 🏁 **BANNER THE BRIEF `LANE-CLOSED`, AND SAY SO IN THE CHANGELOG.** *(Justin's design, 2026-09-02.)*
+7. 🏁 **BANNER THE BRIEF `LANE-CLOSED`, AND SAY SO IN THE CHANGELOG AND CURRENT-STATE.** *(Justin's design, 2026-09-02.)*
 
 > ### 🏁 THE LANE-CLOSED BANNER — one line, at the top of the retired brief
 > ```

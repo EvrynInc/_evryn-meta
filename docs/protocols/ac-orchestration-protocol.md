@@ -649,7 +649,7 @@ Nothing else changes: the verbatim `<identity>`/`<mandatory_load>`/`<task>`/`<qu
 >
 > ⇒ **BACKGROUND by default. FOREGROUND when your very next action genuinely depends on the child's result and nothing else could usefully happen while it runs.** ⭐ **This also aligns the estate with the harness's own guidance, which had been saying the same thing while our protocol said the opposite.**
 >
-> ⚠️ **RE-VERIFY THE VISIBILITY FACT RATHER THAN INHERITING IT — it has already flipped once, and this ruling rests on it.** **If background ever goes invisible again, the reasoning above changes and so should this default.** **Owner: AC0.**
+> ⚠️ **RE-VERIFY THE VISIBILITY FACT RATHER THAN INHERITING IT — it has already flipped once, and this ruling rests on it.** **If background ever goes invisible again, the reasoning above changes and so should this default.**
 
 **What has NOT changed is what he wants from the output.** He explicitly wants the audit: *"I kind of like being able to audit everything — I just need to know when I'm looking at DC's stuff vs AC2 vs AC0."* **He needs to see that DC actually ran, that AC2 actually checked, that anything landed — rather than having only your word for it.**
 

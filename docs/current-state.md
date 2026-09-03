@@ -85,7 +85,7 @@
 - **`main` is AHEAD of prod by a seven-item, ZERO-migration, undeployed bundle.** ⚠️ **This bundle is not routine:** it includes an **identity-file change** (Evryn's judgment layer) and a **structural ingest change** (a second independent cursor-hold alongside M1's). That blast radius is the argument for the staging pass before prod. *(Shape recorded 2026-08-11; everything merged since is tests, docs and tooling.)*
 - **Team runtime is deployed to Railway but PAUSED / boot-paused by construction** — dormant, wakes nobody. Autonomy stays OFF until the Meta-Meeting. **Evryn prod is untouched by all team-runtime work.**
 
-## In flight — Product
+## In flight — Product (ACP's lanes)
 
 > ### ⭐ CURRENT POSTURE (Justin's call, 2026-08-06): **THE BUILD IS STOPPED TO REFACTOR.**
 >
@@ -117,7 +117,7 @@
 - ✅ **`docs/working/` IS RETIRED — 58 files → 0, completed 2026-09-02 by `AC0-37h3a3` + `AC0-37h3b5`.** **The live rule is in the banner at the top of this file; the full journey is in `CHANGELOG.md`, 2026-09-02.** 🔑 **The one finding worth keeping in the snapshot, because it changes how the next such sweep is scoped: these were not leftovers.** **Nine of the last sixteen carried an explicit *"still owed"* section, and several were the sole home of live work** — a prompt-injection security item whose tracker entry pointed back at the doc, a silent mail-loss defect no sprint Step named, and the only copy of the `classify.ts` seam decomposition *(now `SPRINT` Step 124)*. ⇒ **A retirement pass is a DISCOVERY pass, not a filing pass. Budget it that way.**
 - **`evryn-backend` is down to ONE clean worktree** (2026-08-17) — the nine mutation-sweep trees were reaped after verifying their content was on `main`. **`npm test` then returned 65 suites / 1,925 assertions / 0 failed** — ⭐ **a known-good baseline banked immediately before the Lane A merge; re-running it after is a cheap regression check, since that merge should not move a single assertion.**
 
-## In flight — Team runtime (ACf's lanes)
+## In flight — Team Runtime (ACT's lanes)
 
 - **⭐ ADR-052 Phase 1 is COMPLETE** — all five memory items merged, plus a fix for a total wake outage at ~370 rooms. **Nothing is deployed and the runtime still wakes nobody.**
 - **A Phase-1 fast-follow runs BEFORE Phase 2** (Justin's call): consolidation built on a dormancy mechanism that can silently stop, or spend in a loop, is built on sand. **The top open item is an unguarded cadence gate** — delete it and all tests still pass, and it is the only thing standing between a model-stage failure and a ~64K-token wake every fifteen seconds.
@@ -135,7 +135,7 @@
 
 ## Active instances
 
-**Do not enumerate lanes here — `git worktree list` in each repo is the answer, and it is never stale.** Standing structure: **AC0** conducts the product (merges, collisions, housekeeping); **ACf** owns the team runtime outright, including that repo's pushes; the two coordinate as **peers**, not as report-and-manager. **ACU** owns the week's Fable allocation and Phase-2 sequencing. Lane ACs are spun and reaped per wave; each carries a committed brief in `docs/sessions/`, which is the durable record — **a returned subagent report is not persistence, and subagent resume does not survive a session.**
+**Do not enumerate lanes here — `git worktree list` in each repo is the answer, and it is never stale.** Standing structure: **ACP (previously AC0)** conducts the product (merges, collisions, housekeeping); **ACT (previously ACf)** owns the team runtime outright, including that repo's pushes; the two coordinate as **peers**, not as report-and-manager. **ACv** is creating a visual representation of the codebase. Lane ACs are spun and reaped per wave; each carries a committed brief in `docs/sessions/`, which is the durable record — **a returned subagent report is not persistence, and subagent resume does not survive a session.**
 
 ## Infrastructure
 
@@ -162,8 +162,8 @@ Team-agent build was paused to focus on the Evryn product MVP (v0.2 "Gatekeeper'
 
 > **This section exists because appending is legitimate and the body is not the place for it** (see the diagnosis at the top). **Rules, all three load-bearing:**
 > 1. **Every entry starts `**[YYYY-MM-DD · instance]**`.** No date, no entry.
-> 2. **Drained at every `#lock`.** 🔴 **THE ONLY QUESTION IS: *DOES THIS NEED TO STAY?*** *(Justin, 2026-09-02.)* **If it is stale, or its substance is already persisted somewhere durable — DELETE IT.** **If deleting it would lose live, in-flight information, keep it.** ⇒ **Anything still true gets folded into the body above first, then the entry is deleted.**
->    - 🔴 **DELETE MEANS DELETE. Do NOT leave a `[DRAINED]` tombstone behind.** *(Justin, 2026-09-02: **"do we want to have endless drained notes? Doesn't that defeat the purpose?"**)* **Tombstones were a habit that grew up against this rule, and five of them had accumulated — turning a queue into a second dumping ground, which is the exact failure this section was built to end.**
+> 2. **Drained at every `#lock`.** 🔴 **THE ONLY QUESTION IS: *DOES THIS NEED TO STAY?*** *(Justin, 2026-09-02.)* **If it is stale and its substance is already persisted somewhere durable — DELETE IT.** **If it's stale but *hasn't* properly been persisted, persist it properly.** **If deleting it would lose live, in-flight information, keep it.** ⇒ **Anything still true gets folded into the body above first, then the entry is deleted.**
+>    - 🔴 **DELETE MEANS DELETE. Do NOT leave a `[DRAINED]` tombstone behind.** *(Justin, 2026-09-02: **"do we want to have endless drained notes? Doesn't that defeat the purpose?"**)* **Tombstones were a habit that grew up against this rule, and several had accumulated — turning a queue into a second dumping ground, which is the exact failure this section was built to end.**
 >    - ⭐ **The journey belongs in `CHANGELOG.md`, which every AC already reads on load, and the full text is in git history regardless.** ⇒ **Memorialize in the changelog FIRST, then delete — never point at an entry that does not exist yet.**
 > 3. 🔴 **An entry more than 7 days old is OVERDUE BY DEFINITION.** The dates are the staleness signal, and they work whether or not anyone remembers to drain — **a bulletin carrying an old entry is telling you the drain has not run.** That is the point: this fails *loudly* rather than accumulating quietly, which is exactly what the body did for eleven entries.
 > 4. **Keep entries short and route-shaped** — what changed, who owns the residue. Substance goes in the owning doc; this is the pointer that gets it read.
