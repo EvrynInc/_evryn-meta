@@ -206,7 +206,19 @@ An append-only brief grows until re-reading it costs more than it saves — and 
 
 Justin has standardized three instructions for running a Lane AC across its life: **load-in** (spin or resume), **handoff** (set-down), and **consolidation** (when the brief bloats). Every word has earned its place through use — **paste them verbatim** unless there's a compelling reason to change, and clear any change with Justin first.
 
-**Who is "me"?** These are written in Justin's voice for when *he* spins/resumes an AC in a live interactive session, so "me" = Justin. **When a HEAD AC spins a SUB-AC, "me" = the head AC** — the sub describes-then-pauses and clears contradictions with its *parent*, never with Justin directly (per the escalation ladder). Substitute the recipient; everything else stands.
+### 🔴 WHO "ME" IS — state it plainly, because it decides where every lane's plan and every contradiction lands
+
+**The top-level AC describes-then-pauses to JUSTIN. Every sub describes-then-pauses to ITS CONDUCTING AC — and that includes a conductor AC's sub running as its own standalone instance.** 
+
+⚠️ **A standalone lane does NOT become top-level by virtue of running in its own session.** Justin may be the one who types its spin command — that is a convenience, not a reporting line. **Its conductor is still the AC that wrote its brief**, and that is who it reports its plan to, clears contradictions with, and routes questions through. 🔑 **Justin's reason is throughput: *"if you [the conductor] need to get clear on something from me to move forward, I want that coming from YOU — I don't want to have to try to work with each of [the lane ACs]."***
+
+**What a lane owes its conductor before it starts working — both halves, and the second one is newer:**
+1. **Its load** — what it read, and **what it has deliberately deferred to a later trigger, with the trigger named.** *(Receipts prove what was read; only this surfaces what a lane has quietly decided to skip later.)*
+2. **Its plan** — in its own words. 🔑 **The point is the DIFF: if the lane's understanding of the work differs from its conductor's, the conductor has to learn that BEFORE the lane builds, not after.** (Remember that the plan is often in a separate step — it's often a waste of time for *any* agent to articulate its plan before its load list is verified. Too many tokens have been burned by an inappropriately-loaded agent racing forward on a bunch of thinking for a plan it doesn't yet understand, because it lacks *essential* context.)
+
+⭐ **And the authority runs both ways, which is the part that makes this work rather than merely tidy.** **The lane is closer to its own material than its conductor is** — it will have read runtime the conductor never opened. ⇒ **A conductor's brief is a LEAD, not a fact.** **When a lane's read of the system contradicts the brief, it says so and the two of them settle it before the lane proceeds** — the conductor does not simply overrule it, and the lane does not simply comply.
+
+*(These instructions are written in Justin's voice for when he spins an AC in a live interactive session. Substitute the recipient per the rule above; everything else stands.)*
 
 **How these relate to the tagged brief:** the tagged brief ("The exact words") is the *load-gate machinery* — the two-trip split, the `<mandatory_load>` discipline, and the receipts that gate the task — non-negotiable for any fresh subagent spin. These three are the *lane-operation framing* layered on top. For a **subagent** spin, deliver the load-in's spirit *through* the tagged brief (its `<task>` carries the describe-then-pause + worktree-diff instructions); for an **interactive** Justin-spin, the load-in is pasted directly.
 
