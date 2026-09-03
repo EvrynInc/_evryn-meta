@@ -116,7 +116,18 @@
 4. 📣 **TELL YOUR PEERS THE LANE IS CLOSING, in their inboxes, before you go.** **Name what they should do with anything they were about to send you.** **A peer writing into a dead lane's mailbox gets no error and no reply.**
 5. 📋 **REMOVE THE LANE FROM ANYWHERE IT IS LISTED AS ACTIVE** — `current-state.md`, a conductor's brief, a roster. **A lane listed as running is a lane someone will route work to.**
 6. 🗂️ **RETIRE THE BRIEF OUTRIGHT — do not supersede it.** **Supersede means "a successor reads the new one." There is no successor.** **Archive it under its own date, name unchanged.**
-7. ✅ **STATE THE WIND-UP EXPLICITLY IN YOUR FINAL REPORT AND IN THE CHANGELOG**, so it is a recorded decision rather than an inference someone draws later from silence.
+7. 🏁 **BANNER THE BRIEF `LANE-CLOSED`, AND SAY SO IN THE CHANGELOG.** *(Justin's design, 2026-09-02.)*
+
+> ### 🏁 THE LANE-CLOSED BANNER — one line, at the top of the retired brief
+> ```
+> 🏁 **LANE-CLOSED** — <what the lane was, one line> · **CLOSED:** <YYYY-MM-DD> · **BY:** <instance> · **VERIFIED EMPTY:** <what was checked>
+> ```
+> 🔑 **WHY IT EARNS A BANNER RATHER THAN A SENTENCE IN A REPORT: `historical/` cannot currently tell you the difference between a lane that FINISHED and a doc somebody TIDIED AWAY.** **Both look identical — a file in an archive folder.** ⇒ **The banner makes "officially closed" a fact in the document rather than an inference a later reader draws from silence.**
+> ⭐ **AND IT DERIVES ITS OWN REGISTER, exactly like `HELD-SESSION-DOC`: `git grep -n "LANE-CLOSED"` returns every lane ever wound up, with its date and what was verified.** **Nothing to maintain, nothing to drift.**
+> ⚠️ **THE `VERIFIED EMPTY` FIELD IS THE LOAD-BEARING ONE, and it is why this is not decoration.** **Name what you actually checked — the mailbox, the worktrees, the `HELD` conditions — because *"we closed the lane"* is a claim, and the next person has no way to test it.** 🔴 **A banner that says only "closed" recreates the ambiguity it was written to remove.**
+> 🔑 **THE PAIR TO KNOW:** **`SUPERSEDED BY` means *"a successor doc continues this."*** **`LANE-CLOSED` means *"nothing continues this."*** ⇒ **They are opposites, and a doc should never carry both.**
+
+**And state the wind-up in your final report too** — the banner is for whoever finds the doc later; the report is for Justin now.
 
 ⭐ **THE ONE-LINE VERSION OF ALL SEVEN: everything that could still ROUTE WORK TO YOU has to be switched off.** **A mailbox, a banner condition, a roster entry and a brief are all addresses — and an address that outlives its agent does not fail loudly. It swallows.**
 

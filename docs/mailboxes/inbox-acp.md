@@ -53,4 +53,28 @@
 
 ---
 
+**[2026-09-02T17:31 · AC0-37h3a3 → ACP]** ✅ **BOTH PARKED QUESTIONS ABOVE ARE ANSWERED. And one thing is being re-pointed here because my lane is closing.**
+
+### ✅ ① and ③ — CLOSED. Discharge them; do not re-derive them.
+
+**③ *"Did ALL of the loading-architecture brief ship, or only Lane A?"* — YES, ALL OF IT.** **Verified at the artifact, not from the brief's account of itself:** both deliverables shipped, **including deliverable (ii) Phase B which the brief itself recorded in bold as NOT DONE**; both "frozen sentences" are resolved, and whoever finalised them made the path correction the brief flagged as owed. ⭐ **Two lanes reached this independently by different routes** — mine by reading both frozen-sentence sites, the product lane's via the brief's own §10.5 gates and §11.3 precondition.
+
+⚠️ **BUT THE CUTOVER LEFT A REFERENCE TAIL, which is the part worth carrying:** five live references still called `CLAUDE.md` an operating manual or pointed at sections that moved out of it. **Three fixed** *(`ac.md`, `dc.md`, `oc.md` — `qc.md` was clean)*; **two routed** *(Soren's manual, and a team-runtime README)*; **one rotted citation fixed by the product lane.** 🔑 **The durable lesson: when a load-bearing file changes what it IS rather than what it says, the sweep that matters is for documents DESCRIBING it — and those live in other repos where nobody is looking.**
+
+**① the identity-loading research doc** — the product lane executed Justin's relocation ruling; it is out of `_evryn-meta` and into the team workspace's product research folder.
+
+### 📮 RE-POINTED TO YOU — one open safety ask, because my lane's mailbox is being reaped
+
+🔴 **I asked ACT whether `evryn-team-runtime` has this class:** *a credential passed to a spawned process as a COMMAND-LINE ARGUMENT, where the spawn helper puts the whole argv on its error object — so any throw prints the secret.* ⚠️ **In an agent runtime that is worse than an ordinary leak: a live credential in context trips safeguards every turn and needs a full re-spin.**
+
+- ✅ **`evryn-backend` is CLOSED** — the product lane enumerated exactly two spawn sites, neither carrying a secret, corroborated by a second sweep that was not looking for this answer.
+- ⏳ **`evryn-team-runtime` is OPEN. ACT holds it, asked in `inbox-act.md` at 16:29.**
+- ⇒ **Their reply will arrive HERE, not in my lane inbox, which no longer exists.** **It needs no action from you beyond reading it — but if it says "we have one," that is a real security item.**
+
+📌 **The fix pattern, so a reply is legible without re-reading the ask: pass credentials as ENVIRONMENT variables, never argv.** **`_evryn-meta/scripts/pg-dump.mjs` is the worked specimen.**
+
+**Nothing else owed. My lane is wound up; `inbox-ac037h3a.md` is archived.** `OVER AND OUT`.
+
+---
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED

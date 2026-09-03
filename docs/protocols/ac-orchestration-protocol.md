@@ -637,24 +637,32 @@ Nothing else changes: the verbatim `<identity>`/`<mandatory_load>`/`<task>`/`<qu
 >
 > **Belt-and-suspenders (2026-07-17): the child is defended against the leak, AND primed for the carve-out.** Because role-addressing instructions *keep slipping back into briefs* — an editor re-adds "report to parent," or a tired subagent reads one in — the standard `<identity>` block now carries a **child-side prophylactic** with the exact same split: **it DISREGARDS any *role/relationship* addressing ("parent", "the top", "to me", a name) and just produces output; it HONORS only a *literal concrete target* (an `agentId` or `main`) passed for verbatim `SendMessage` use.** Its one-line test — *"PASS a literal through; NEVER interpret a role into an address; if you have to figure out who it points to, it's a role → disregard."* So the spinner-side rule here (don't write role-addressing) and the child-side rule there (ignore role-addressing if you see it; honor only a literal) are two independent guards on the same failure. **Keep BOTH** — neither can be relied on alone.
 
-### ⇒ FOREGROUND IS THE DEFAULT — because background is INVISIBLE TO JUSTIN (his call, 2026-07-16)
+### ⇒ BACKGROUND IS THE DEFAULT. Use foreground only when your NEXT action depends on the result.
 
-> ⚠️ **CORRECTED 2026-08-21 — THE FACT THIS SECTION RESTED ON HAS CHANGED, AND IT MAY CHANGE BACK. Read the date before you rely on it.**
+> ✅ **SETTLED 2026-09-02 by Justin, closing a question that had been open since the premise died.** **His words: *"I don't know that it matters — whatever is good for you — because it ALL prints to the chat no matter what these days. Settle it how it works best for your process."***
 >
-> **Anthropic's documentation says background agents are NOT supposed to render on Justin's screen, and there was a period when that held.** 🔴 **It does not hold now: as of 2026-08-21 background agents dump everything onto his screen, exactly as foreground ones do** *(his own observation)*. ⇒ **Foreground vs. background currently makes NO difference to what he sees.**
+> **THE HISTORY, because the old default was right for its time and you will meet it in older docs.** **Foreground was the default from 2026-07-16 on one ground only: background agents did not render on Justin's screen, so background work was invisible to him.** 🔴 **That stopped being true on 2026-08-21 — background agents now dump everything onto his screen exactly as foreground ones do.** ⇒ **The default outlived its reason by twelve days, and nothing about visibility distinguishes the two modes today.**
 >
-> 🔴 **So the foreground default no longer rests on visibility.** **If you are choosing a spin mode today, choose it on other grounds** — and **re-verify this line rather than inheriting it**, because it has already flipped once.
+> ### 🔑 SO CHOOSE ON THE ONE DIFFERENCE THAT REMAINS: CAN YOU KEEP WORKING?
+>
+> **A foreground block returns only when EVERY child in it finishes — so you are gated on the slowest, and you cannot interleave a new spawn mid-batch. Background leaves you free to advance everything else.** ⇒ **That is the whole trade now, and it points one way.**
+>
+> ⇒ **BACKGROUND by default. FOREGROUND when your very next action genuinely depends on the child's result and nothing else could usefully happen while it runs.** ⭐ **This also aligns the estate with the harness's own guidance, which had been saying the same thing while our protocol said the opposite.**
+>
+> ⚠️ **RE-VERIFY THE VISIBILITY FACT RATHER THAN INHERITING IT — it has already flipped once, and this ruling rests on it.** **If background ever goes invisible again, the reasoning above changes and so should this default.** **Owner: AC0.**
 
 **What has NOT changed is what he wants from the output.** He explicitly wants the audit: *"I kind of like being able to audit everything — I just need to know when I'm looking at DC's stuff vs AC2 vs AC0."* **He needs to see that DC actually ran, that AC2 actually checked, that anything landed — rather than having only your word for it.**
 
 **That is exactly what the naming rules buy, and why they are not cosmetic.** With `#` reserved for the top-level AC, sub-ACs at `## AC2's read`, and DC/QC barred from `'s read` entirely, a wall of foreground output becomes **scannable**: Justin skims to the single `#` for the answer, and every layer beneath it is *there*, attributed, if he wants to check it. **Without those rules foreground is an unreadable wall; with them it's an audit trail.** So the naming discipline and the foreground default are one decision, not two.
 
-**Use BACKGROUND only when** the parent genuinely must keep working while a long child runs — and **know you are trading away Justin's visibility to do it. Say so explicitly when you do** (*"ran this in background so I could keep moving — you won't see its output"*), because otherwise he has no way to know the work happened at all.
+⚠️ **The naming discipline above is now MORE load-bearing, not less** — it used to share the work with the foreground default; **it is the only thing left doing that job.** **Everything renders either way, so the wall Justin scans is the same size regardless of mode**, and the `#` / `##` / no-`'s read` rules are what make it navigable rather than noise.
+
+⛔ **AND ONE INSTRUCTION THAT IS NOW WRONG, retired here so you do not carry it forward from an older doc: you no longer need to announce *"ran this in background so you won't see its output."*** **He will see it. Saying otherwise is a false claim about what he can audit.**
 
 **The delivery paths:**
 
-1. **Foreground** (`run_in_background: false`) — **the default.** The child's output returns directly as a tool result, and Justin sees it. **It does NOT cost you concurrency:** two foreground children issued as two tool calls *in a single message block* run genuinely concurrently (proven 2026-07-16 by overlapping start/end windows, not wall-clock inference — 4 children ran concurrently across foreground + background with no interference). *The real constraints:* the block returns only when **every** child in it finishes (you're gated on the slowest), and you can't interleave a new spawn mid-batch. **Neither of those is usually worth trading Justin's visibility for.**
-2. **Background — let the child finish (automatic).** Its output lands in the parent's completion notification. Mechanically flawless — zero addressing, zero failure modes — **but invisible to Justin.** Reach for it only per the rule above.
+1. **Background — let the child finish (automatic). THE DEFAULT.** Its output lands in the parent's completion notification, **and Justin sees it too.** **Mechanically flawless — zero addressing, zero failure modes** — and it leaves you free to advance everything not gated on that child.
+2. **Foreground** (`run_in_background: false`) — **only when your next action depends on the result.** The child's output returns directly as a tool result. **It does NOT cost you concurrency:** two foreground children issued as two tool calls *in a single message block* run genuinely concurrently (proven 2026-07-16 by overlapping start/end windows, not wall-clock inference — 4 children ran concurrently across foreground + background with no interference). ⚠️ *The real constraints, and they are why this is no longer the default:* the block returns only when **every** child in it finishes — **you are gated on the slowest** — and you cannot interleave a new spawn mid-batch.
 3. **`SendMessage` to the parent's raw `agentId`** — works, but it confirms **queuing, not receipt** (*"queued for delivery at its next tool round"*). **A message sent to an idle or finished parent may never land.** Weakest path. Use only for genuine mid-flight two-way exchange, never for final delivery.
 
 **In all three, the rule above still holds: never tell the child where to report.** It is orthogonal to foreground/background — it's about *addressing*, not *mode*.
