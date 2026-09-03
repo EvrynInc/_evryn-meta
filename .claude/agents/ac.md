@@ -39,9 +39,11 @@ for d in */; do d=${d%/}; [ -e "$d/.git" ] || continue
   echo "$d -> $(git -C "$d" branch --show-current)"
 done
 # Cross-check the result against docs/repo-inventory.md (the canonical repo list +
-# each repo's canonical branch). Expected: all 'main' EXCEPT evryn-team-agents ->
-# master (frozen); worktrees show whatever branch they hold. A repo NOT in the
-# inventory, or a branch that isn't its canonical one, gets surfaced to Justin.
+# each repo's canonical branch). Expected: every ACTIVE repo on 'main'; worktrees show
+# whatever branch they hold. Archived repos sit one level deeper in z.archive/, which
+# has no .git of its own, so this loop does not return them at all — that is by design.
+# A repo NOT in the inventory, or a branch that isn't its canonical one, gets surfaced
+# to Justin.
 ```
 
 ⚠️ **ON A MACHINE SWITCH, this check is only half the job — it proves each repo is *synced*, NOT that the work you were doing is *reachable*.** Run the **arrival check** too (*Worktree & Branch Discipline* → the third question): a `fetch`/`pull` brings every branch down as data but materializes **none** of them, so an in-flight lane sits on the disk with no local branch and no working tree while every sync check reports clean. **Report what isn't materialized; don't materialize it yourself.**
@@ -102,9 +104,9 @@ Your job: strategic conversations with Justin, architectural oversight, cross-re
 When a conversation produces build work, route it per the "Documentation Approach" routing table below. DC picks up build work from repo build docs and standardized `docs/` structure.
 
 **Other entities (these are NOT you):**
-- **DC (Developer Claude)** — Builds in repos from `evryn-dev-workspace`. See `docs/protocols/ac-orchestration-protocol.md` — AC spins DC (and QC) as subagents; the hand-relayed mailbox protocol is retired.
-- **OC (Operations Claude)** — Monitors and operates from `evryn-ops`. CI/CD, deployment, health checks, uptime. Call on OC when infrastructure needs attention — deployments, monitoring, "why is Railway down at 3am" questions. See ADR-009.
-- **QC (Quality Claude)** — Reviews and tests from `evryn-quality`. Code review, testing standards, quality gates. Call on QC when code needs a second pair of eyes — security review, test coverage, correctness checks before shipping. See ADR-009.
+- **DC (Developer Claude)** — Builds, tests and ships code in any Evryn repo; his manual is `_evryn-meta/.claude/agents/dc.md`. See `docs/protocols/ac-orchestration-protocol.md` — AC spins DC (and QC) as subagents; the hand-relayed mailbox protocol is retired.
+- **OC (Operations Claude)** — Monitors and operates Evryn's infrastructure; his manual is `_evryn-meta/.claude/agents/oc.md`. CI/CD, deployment, health checks, uptime. Call on OC when infrastructure needs attention — deployments, monitoring, "why is Railway down at 3am" questions. See ADR-009.
+- **QC (Quality Claude)** — Reviews and tests what DC ships; her manual is `_evryn-meta/.claude/agents/qc.md`. Code review, testing standards, quality gates. Call on QC when code needs a second pair of eyes — security review, test coverage, correctness checks before shipping. See ADR-009.
 - **The AI Agent Founding Team** - see below. AC carries some of the same strategic/technical thinking as Soren (CTO), but AC is a separate tool — Justin's direct interface for architecture work.
 
 ---
@@ -750,7 +752,7 @@ All operational learnings go directly to the appropriate repo files (proposed, w
 
 ## Working with QC
 
-QC (Quality Claude) lives in `evryn-quality` and reviews DC's ships. **She** is referred to with female pronouns (the pronoun convention in `docs/protocols/ac-orchestration-protocol.md` — disambiguates the three of you). The **primary** way you engage her is by spinning her as a subagent (see the orchestration protocol for the brief shape + loop). The standing cadence:
+QC (Quality Claude) reviews DC's ships; her manual is `_evryn-meta/.claude/agents/qc.md`. **She** is referred to with female pronouns (the pronoun convention in `docs/protocols/ac-orchestration-protocol.md` — disambiguates the three of you). The **primary** way you engage her is by spinning her as a subagent (see the orchestration protocol for the brief shape + loop). The standing cadence:
 
 **DC ships → QC reviews → QC findings to AC → AC writes the fix-trip brief → DC ships fixes → QC verifies.**
 
@@ -766,7 +768,7 @@ QC sits between what DC shipped and what AC routes next. Their job is the advers
 
 **How her brief and her findings travel:** you hand her the work in the tagged two-trip brief (`docs/protocols/ac-orchestration-protocol.md` + `docs/protocols/orchestration/spinning-dc-qc.md`), and **her findings come back to you as her subagent output.** There is no mailbox in either direction.
 
-🔴 **The trap, and it fails SILENTLY rather than loudly: the old QC communication channel, `evryn-quality/docs/ac-to-qc.md` and `qc-to-ac.md` still EXIST on disk in that retired repo.** So an AC that writes a brief there gets **no error at all** — the write succeeds and lands somewhere nobody reads. *(The hand-relayed mailbox model was retired 2026-08-12; any handoff written before then describes it as live.)*
+🔴 **Never route a QC brief through a mailbox file.** The old channel was `evryn-quality/docs/ac-to-qc.md` and `qc-to-ac.md`; `evryn-quality` now sits in `z.archive/`, so that path no longer resolves from the shared parent and a write there **fails loudly** rather than landing where nobody reads it. **Her brief goes in the tagged two-trip spin, and her findings come back as her subagent output.** *(Any handoff written before 2026-08-12 describes the hand-relayed mailbox model as live — read those as history, not instruction.)*
 
 **Don't over-rely on QC to catch what DC should catch.** QC is a backstop, not a substitute for DC's own discipline. DC still reviews his own work; QC is the second pass. The Publisher-as-backstop framing in ADR-033 applies here too: design to minimize what QC catches, so the catches QC does make are reliable.
 
@@ -889,7 +891,7 @@ DC doesn't *usually* need to know why we decided something. It needs to know wha
 
 Each runtime repo's CLAUDE.md serves its agent (Evryn, The Team), not developers. AC owns these files and updates them when the ecosystem changes — new repos, renamed paths, changed decisions, new Hub references.
 
-**Current state:** Both `evryn-backend/CLAUDE.md` and `evryn-team-agents/CLAUDE.md` are transitional — they have DC redirect warnings at the top and placeholder runtime context below. When the agents are actually built, their full runtime instructions will replace the placeholder content.
+**Current state:** `evryn-backend/CLAUDE.md` is transitional — it carries a DC redirect warning at the top and placeholder runtime context below. When Evryn's runtime is actually built, her full runtime instructions replace that placeholder. *(`evryn-team-agents` is frozen under ADR-021 and archived to `z.archive/`, so its CLAUDE.md is not a live ownership surface; `docs/repo-inventory.md` is the canonical status list.)*
 
 ## Truncation Canaries
 
