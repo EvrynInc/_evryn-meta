@@ -106,13 +106,13 @@ You are a **generic subagent**: you have no identity file, and the hard rule abo
 **Every agent pings the same way: run the committed script. Never hand-build the command.**
 
 ```bash
-node _evryn-meta/scripts/ping.mjs "AC0: one-line message"        # -> #team-alerts
+node _evryn-meta/scripts/ping.mjs "ACP: one-line message"        # -> #team-alerts
 node _evryn-meta/scripts/ping.mjs --dev "DC: one-line message"   # -> #dev-alerts
 ```
 
 *(Path is rooted at the shared parent that holds every repo as a sibling; from inside `_evryn-meta` it is `node scripts/ping.mjs`. It runs from any working directory. On success it prints `pinged #channel`; on any failure it prints `PING FAILED: ...` and exits non-zero — it never fails silently.)*
 
-- **Sign every ping with your instance name** — `AC0:`, `ACv:`, `DC:`, `QC:`, `OC:`. Justin runs many agents at once; an unsigned ping is unattributable.
+- **Sign every ping with your instance name** — `ACP:`, `ACT:`, `DC:`, `QC:`, `OC:`. Justin runs many agents at once; an unsigned ping is unattributable.
 - 🔴 **Never hand-roll an inline `fetch`/`curl` that reads a webhook out of a `.env` and POSTs it.** That command carries both halves of an exfiltration signature, so the permission classifier refuses it — **silently, from Justin's side**: you believe you pinged, and he hears nothing. Running a committed project script is an ordinary action and is not blocked. *(The full reasoning lives in the script's own header, where it costs nobody else a token.)*
 - 🔴 **Both channels reach Justin, and ONLY Justin. There is no agent-to-agent Slack delivery.** A ping addressed to "AC1" or "DC" does not reach that agent — it reaches Justin, who would have to relay it by hand. **To reach another agent, use a committed mailbox file.** This has bitten repeatedly.
 - **WHICH channel you use, and WHEN to ping at all, is your own manual's business.** It differs by agent and it is deliberately not in this file.
