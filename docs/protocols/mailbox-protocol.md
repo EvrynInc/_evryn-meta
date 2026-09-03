@@ -162,7 +162,23 @@ done
 
 - **A top-level, standing agent should normally be watching.** *(Justin, 2026-08-21: arming should be a standard part of start-up, "unless there's some reason not to.")* **You are reachable by anyone, with no coordination, only while a watcher is up.**
 - ⚠️ **ARMING IS STILL HIS CALL, because it decides whose traffic wakes you.** **Two instances of one lineage share an inbox**, so an unasked-for watcher wakes you on a peer's mail all day.
-- 🔴 **A LANE DOES NOT GET A STANDING MAILBOX.** **A lane talks to its conductor in its lane doc** (§4 rule 6). **If a lane is given one for a specific reason, it is reaped at close-out with the lane's worktree and branch** — see `lock-protocol.md`'s subagent close-out. **An unreaped lane mailbox is a channel nobody watches, which is the failure this whole design exists to prevent.**
+- 🔴 **A LANE DOES NOT GET A STANDING MAILBOX.** **A lane talks to its conductor in its lane doc** (§4 rule 6). **If a lane is given one for a specific reason, it is reaped at close-out with the lane's worktree and branch** — see `packout-protocol.md`'s lane-ending checks. **An unreaped lane mailbox is a channel nobody watches, which is the failure this whole design exists to prevent.**
+
+> ### 🗑️ REAPING A LANE MAILBOX MEANS **DELETING** IT — NOT ARCHIVING IT
+>
+> *(Justin's ruling, 2026-09-02: **"if they are empty, I don't want to keep a bunch of empty mailboxes in a folder."**)*
+>
+> **① CONFIRM IT IS EMPTY.** **No live entries, nothing owed in either direction.** 🔴 **A non-empty mailbox is telling you the lane is not finished — stop and discharge first.**
+> **② THEN `git rm` IT.** **Do not move it to `archive/`.**
+>
+> 🔑 **Why deleting is safe, and it is the same reason clearing an entry is safe: the full history is in git, permanently.** **`git log --all -p -- docs/mailboxes/inbox-<name>.md` returns every message the address ever carried.** ⇒ **An archived EMPTY mailbox preserves nothing that git does not already hold; it only adds a file that looks like an address.**
+> ⚠️ **And that resemblance is the actual cost: a folder of dead mailboxes is a folder of things that look reachable.** **The whole point of a derivable address is that writing to `inbox-<name>.md` reaches someone — so every dead file in that shape erodes the one property the channel depends on.**
+>
+> ### ⚠️ WHICH ADDRESSES ARE PERMANENT, AND WHICH ARE LANES
+> **`inbox-acp.md` and `inbox-act.md` are PERMANENT** — top-level conductor addresses that outlive every instance and lane beneath them. **They are drained and archived per the rule above; they are never deleted.**
+> **Everything else is lane-shaped by default and gets deleted when its lane ends.** ⚠️ **`inbox-acv.md` is the ambiguous one: it reads like a top-level address but is closer to a lane of its own.** *(Justin, 2026-09-02: "that's really kind of a lane of its own, not a permanent top-level like p and t.")* ⇒ **Its disposition is Justin's call when that lane closes — do not delete it on your own read.**
+>
+> 📌 **The `archive/` folder is still correct for DRAINING A LIVE mailbox** *(§5 — moving discharged traffic out of a busy inbox that stays in service)*. **Deletion is only for a mailbox whose OWNER no longer exists.**
 
 **Two watcher facts that bite:**
 
