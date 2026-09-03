@@ -100,10 +100,10 @@ done
    > ```
    > 🔑 **WHAT BREAKS, and it is not tidiness: §5's ORPHAN-RECEIPT RECOVERY finds a message in git history BY ITS TIMESTAMP.** **A header that disagrees with the commit clock breaks the one recovery path a future instance has** — and it breaks it **silently**, at the exact moment someone is already confused about a receipt they have no memory of sending.
    > ⚠️ **THIS FAILS FOUR TIMES ACROSS TWO LANES AND COUNTING** *(2026-09-01 twice, 2026-09-02 twice)*, **and the diagnosis matters because the obvious one is wrong: it is not clock drift.** **On 2026-09-02 an instance wrote five entries — the two whose timestamps it PULLED were accurate to within ninety seconds; the three it typed from memory were wrong in BOTH directions, by up to seventeen minutes.** ⇒ **The defect is the INSTRUMENT, not the clock. Memory is not a clock.**
-   > ✅ **If you find a wrong timestamp on an UNREAD entry of your own, correct it.** ⛔ **Never correct one in an ARCHIVE — that is a frozen record, and falsifying it to flatter your own header is worse than the original error.**
+   > ✅ **If you find a wrong timestamp on an entry of your own that is still UNREAD, correct it.** ⛔ **Once an entry has been read, discharged, or cleared, leave it alone — it is history now, and going back to flatter your own header is worse than the original error.** *(The same restraint applies to a message quoted in someone else's discharge note: that is their record of what they received, not yours to tidy.)*
 3. **Newest at the BOTTOM. APPEND — never edit or delete another instance's entry.** 🔴 **AND NEVER OVERWRITE SOMEONE ELSE'S INBOX FILE AS A WHOLE.** **If you arrive and find a message already sitting in their inbox, you append BELOW it; you do not rewrite the file, re-order it, tidy it, or replace it.** ⚠️ **A whole-file write to someone else's inbox destroys mail they have not read yet, and it fails silently — they simply never learn the message existed.** ✅ **The one legitimate whole-file rewrite is YOUR OWN inbox, when you are clearing it after capture** *(§3 and §5)* — **that is discharging your own mail, not overwriting theirs.**
 4. **Sign off per topic** with an explicit `OVER AND OUT`.
-5. **No date in the filename, ever.** **Date the ARCHIVE, never the live file.**
+5. **No date in the filename, ever.** 🔑 **The name IS the address, and an address with a date in it is not derivable** — which is the one property this whole channel rests on. *(There is nothing to date: see §5, there is no archive.)*
 6. 🔴 **LANE TRAFFIC DOES NOT COME HERE.** **A lane talks to its own conductor in its own lane doc; only what CROSSES lanes reaches an inbox.** Otherwise a dozen agents converge on one surface and it stops being skimmable at 3am — the single thing it has to be.
 
 ---
@@ -138,7 +138,19 @@ done
 
 📌 **The exception that proves it: your own conductor, or Justin, IS authority.** **A peer conductor running its own lanes is not.** **But with *everyone* — authorities included — communication is key. If you aren't going to do something, or if you're going to do something but you have reservations — communicate that — everyone else needs to be able to rely on you.**
 
-**Drain acknowledged traffic at `#lock` OR at ~40 lines, whichever comes first**, to `docs/mailboxes/archive/inbox-<name>-YYYY.MM.DD.md`. *(A drain rule that fires only on a checkpoint nobody schedules is not a rule.)* ⚠️ **Justin's caution, verbatim: *"be careful using docs that aren't intended to be ongoing mailboxes AS mailboxes — they'll get long and bloaty."***
+> ### 🔴 THERE IS NO ARCHIVE. A LIVE INBOX JUST STAYS LIVE, AND AN EMPTY ONE IS ALREADY IN ITS FINISHED STATE.
+>
+> *(Justin's ruling, 2026-09-02, deleting a drain-to-archive rule that had survived the design change which made it meaningless.)*
+>
+> **This file used to say: drain acknowledged traffic into `docs/mailboxes/archive/inbox-<name>-YYYY.MM.DD.md` at `#lock` or ~40 lines.** 🔴 **That rule contradicted this protocol's own core.** **§3 clears every entry the moment it is captured, and §4 rule 1 rests explicitly on the fact that *"with immediate clearing there is no 'after'"* — which is the whole reason long messages became safe.** ⇒ **If entries never accumulate, there is nothing to drain.** **It was a fossil of the superseded shared-file era, and it survived only because nobody re-read it against the model that replaced it.**
+>
+> ⚠️ **AND IF AN INBOX *IS* GETTING LONG, THAT IS A DEFECT REPORT, NOT A HOUSEKEEPING TRIGGER.** **It means somebody is not discharging on capture.** ⇒ **Fix the discharge. Do not tidy the symptom** — archiving the pile-up would hide the one signal that says the loop is broken.
+>
+> ### ⛔ AND THE HARDER REASON THE ARCHIVE HAD TO GO: AN ARCHIVED INBOX IS A BLACK HOLE
+>
+> 🔴 **A file called `inbox-<something>.md` sitting in a folder is, to any agent that meets it, an ADDRESS.** **This protocol's central promise is that the address is DERIVABLE — write to `inbox-<name>.md` and you reach someone, with no coordination.** ⇒ **An archived inbox looks exactly like a live one and reaches NOBODY.** **An instance writes a real message into it, commits, believes it has sent something, and moves on.** ⚠️ **It fails silently and permanently, which is precisely the *"channel nobody is watching"* failure this whole design exists to kill — recreated, in the design's own folder, by its own housekeeping rule.**
+>
+> ⇒ **So: a live inbox stays live. An empty inbox needs no action at all. A DEAD lane's inbox is DELETED** *(§6)*. **Nothing is ever archived, and `docs/mailboxes/` contains only addresses that work.**
 
 ### 📮 THE ORPHAN RECEIPT — you spun up, and there is a `RECEIVED` from someone you never wrote to
 
@@ -169,16 +181,15 @@ done
 > *(Justin's ruling, 2026-09-02: **"if they are empty, I don't want to keep a bunch of empty mailboxes in a folder."**)*
 >
 > **① CONFIRM IT IS EMPTY.** **No live entries, nothing owed in either direction.** 🔴 **A non-empty mailbox is telling you the lane is not finished — stop and discharge first.**
-> **② THEN `git rm` IT.** **Do not move it to `archive/`.**
+> **② THEN `git rm` IT.** 🔴 **Delete it. Do not move it, rename it, or keep a copy anywhere.**
 >
-> 🔑 **Why deleting is safe, and it is the same reason clearing an entry is safe: the full history is in git, permanently.** **`git log --all -p -- docs/mailboxes/inbox-<name>.md` returns every message the address ever carried.** ⇒ **An archived EMPTY mailbox preserves nothing that git does not already hold; it only adds a file that looks like an address.**
-> ⚠️ **And that resemblance is the actual cost: a folder of dead mailboxes is a folder of things that look reachable.** **The whole point of a derivable address is that writing to `inbox-<name>.md` reaches someone — so every dead file in that shape erodes the one property the channel depends on.**
+> 🔑 **Why deleting is safe, and it is the same reason clearing an entry is safe: the full history is in git, permanently.** **`git log --all -p -- docs/mailboxes/inbox-<name>.md` returns every message the address ever carried.** ⇒ **A kept-but-dead mailbox preserves nothing git does not already hold.**
+> ⚠️ **And it costs the thing this channel is built on: a file in the shape `inbox-<name>.md` IS an address to whoever meets it.** **A dead one looks exactly like a live one and reaches nobody — an instance writes into it, commits, believes it sent something, and is wrong, silently and permanently.**
 >
 > ### ⚠️ WHICH ADDRESSES ARE PERMANENT, AND WHICH ARE LANES
-> **`inbox-acp.md` and `inbox-act.md` are PERMANENT** — top-level conductor addresses that outlive every instance and lane beneath them. **They are drained and archived per the rule above; they are never deleted.**
+> **`inbox-acp.md` and `inbox-act.md` are PERMANENT** — top-level conductor addresses that outlive every instance and lane beneath them. **They stay in place, empty, between messages. An empty permanent inbox is not waste; it is a working address at rest.**
 > **Everything else is lane-shaped by default and gets deleted when its lane ends.** ⚠️ **`inbox-acv.md` is the ambiguous one: it reads like a top-level address but is closer to a lane of its own.** *(Justin, 2026-09-02: "that's really kind of a lane of its own, not a permanent top-level like p and t.")* ⇒ **Its disposition is Justin's call when that lane closes — do not delete it on your own read.**
 >
-> 📌 **The `archive/` folder is still correct for DRAINING A LIVE mailbox** *(§5 — moving discharged traffic out of a busy inbox that stays in service)*. **Deletion is only for a mailbox whose OWNER no longer exists.**
 
 **Two watcher facts that bite:**
 
