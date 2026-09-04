@@ -30,11 +30,36 @@
  *   node scripts/pg-dump.mjs                 # prod   (default)
  *   node scripts/pg-dump.mjs --dev
  *   node scripts/pg-dump.mjs --staging
+ *   node scripts/pg-dump.mjs --schema-only   # DDL only, ZERO data rows
  *   node scripts/pg-dump.mjs --check         # verify prerequisites, dump NOTHING
  *
- * OUTPUT
- *   evryn-backend/backups/full-public-YYYY-MM-DD.sql   (date from the system clock)
+ *   The flags compose: `--dev --schema-only`, `--staging --schema-only --check`, etc.
+ *   An UNRECOGNISED flag is a hard error, never a silent no-op — a typo'd
+ *   `--schema-onlyy` must not quietly hand you a full dump carrying production rows.
+ *
+ * OUTPUT  (date from the system clock)
+ *   evryn-backend/backups/full-public-YYYY-MM-DD.sql     schema + data
+ *   evryn-backend/backups/schema-public-YYYY-MM-DD.sql   DDL only  (--schema-only)
  *   `--dev` / `--staging` get a matching suffix so environments can never be confused.
+ *
+ * 🔴 THE LEADING WORD IS THE CONTENTS, AND IT IS LOAD-BEARING — `full-` vs `schema-`.
+ * It is the only thing separating a file that carries production rows from one that
+ * does not, and git treats the two differently: `backups/full-public-*.sql` is
+ * GITIGNORED because it is PII; `backups/schema-public-*.sql` is NOT ignored and is
+ * committed on purpose (see the tracked `backups/schema-public-2026-06-03.sql`, and
+ * the enumeration + warning in `evryn-backend/.gitignore`).
+ * ⇒ A "schema" dump that silently contained data would drop production rows into a
+ * path nothing ignores. So this script does not trust pg_dump's exit code: it VERIFIES
+ * the artifact's contents against the name it just gave it, and DELETES the file if
+ * the two disagree. The naming is deliberately the EXISTING convention in that
+ * directory rather than a new one — .gitignore's own warning is that an enumeration
+ * misses "the next naming convention someone invents."
+ *
+ * WHY --schema-only EXISTS: staging is reset from a prod-SHAPE, ZERO-PII seed
+ * (`evryn-backend/docs/staging-runbook.md`, Runbook C — "never seed staging with prod
+ * DATA"). Producing that seed needs a schema dump; before this flag there was no
+ * sanctioned way to take one, because the hand-built alternative is the very command
+ * the permission classifier refuses (see WHY THIS FILE EXISTS, above).
  *
  * ⚠️ THESE DUMPS ARE AN ARCHIVAL READING AID, NOT THE RESTORE MECHANISM. Supabase Pro
  * daily automated backups are the real restore path. See the backups README.
@@ -45,13 +70,14 @@
  *   winget install PostgreSQL.PostgreSQL.17 --source winget
  */
 
-import { readFileSync, existsSync, mkdirSync, statSync } from "node:fs";
+import { readFileSync, existsSync, mkdirSync, statSync, unlinkSync } from "node:fs";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 const args = process.argv.slice(2);
 const checkOnly = args.includes("--check");
+const schemaOnly = args.includes("--schema-only");
 
 const TARGET = args.includes("--dev")
   ? { key: "SUPABASE_DB_URL_DEV", label: "dev", suffix: "-dev" }
@@ -72,6 +98,25 @@ const fail = (msg) => {
   console.error(`DUMP FAILED: ${msg}`);
   process.exit(1);
 };
+
+// --- validate the arguments -----------------------------------------------------
+// A silently-ignored flag is the one failure this script cannot afford. `--schema-onlyy`
+// would otherwise fall through to a FULL dump — production rows — while the operator
+// believed they had asked for DDL only, and the resulting file would be correctly named
+// `full-public-*` but was never wanted. Unknown flags are fatal, not ignored.
+const KNOWN_FLAGS = ["--check", "--dev", "--staging", "--schema-only"];
+const unknownFlags = args.filter((a) => !KNOWN_FLAGS.includes(a));
+if (unknownFlags.length) {
+  fail(
+    `unrecognised argument(s): ${unknownFlags.join(" ")}\n` +
+      `Valid flags: ${KNOWN_FLAGS.join("  ")}   (no target flag = prod)`,
+  );
+}
+// Two target flags at once is an environment confusion, and keeping environments
+// un-confusable is half this script's job. Refuse rather than silently pick one.
+if (args.includes("--dev") && args.includes("--staging")) {
+  fail("--dev and --staging are mutually exclusive — pass exactly one, or neither for prod");
+}
 
 // --- locate pg_dump -------------------------------------------------------------
 // Not on the git-bash PATH on Justin's machines, so probe the known install
@@ -132,10 +177,15 @@ const childEnv = {
 // Date comes from the system clock, never from a caller. A hand-typed date is how
 // this estate ended up with archive files whose names disagree with reality.
 const stamp = new Date().toISOString().slice(0, 10);
-const outPath = join(BACKUP_DIR, `full-public-${stamp}${TARGET.suffix}.sql`);
+// The LEADING word names the contents — `full-` = schema + data, `schema-` = DDL only.
+// Not cosmetic: git ignores one family and tracks the other (see the OUTPUT note in the
+// header). `schema-public-*` is the convention already in that directory, not a new one.
+const KIND = schemaOnly ? "schema" : "full";
+const outPath = join(BACKUP_DIR, `${KIND}-public-${stamp}${TARGET.suffix}.sql`);
 
 console.log(`  tool:   ${PG_DUMP} (${(ver.stdout || "").trim()})`);
 console.log(`  target: ${TARGET.label}  [${TARGET.key} present, value not printed]`);
+console.log(`  mode:   ${schemaOnly ? "SCHEMA ONLY — DDL, zero data rows" : "full — schema + data"}`);
 console.log(`  host:   ${conn.hostname}`);
 console.log(`  out:    ${outPath}`);
 
@@ -146,11 +196,16 @@ if (checkOnly) {
 
 if (!existsSync(BACKUP_DIR)) mkdirSync(BACKUP_DIR, { recursive: true });
 
-const run = spawnSync(
-  PG_DUMP,
-  ["--schema=public", "--no-owner", "--no-privileges", "-f", outPath],
-  { env: childEnv, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 },
-);
+// Still no secret in argv, by construction — these are flags and an output path only.
+const dumpArgs = ["--schema=public", "--no-owner", "--no-privileges"];
+if (schemaOnly) dumpArgs.push("--schema-only");
+dumpArgs.push("-f", outPath);
+
+const run = spawnSync(PG_DUMP, dumpArgs, {
+  env: childEnv,
+  encoding: "utf8",
+  maxBuffer: 64 * 1024 * 1024,
+});
 
 if (run.error) {
   // run.error carries argv — but argv holds no secret, by construction. Still print
@@ -173,5 +228,37 @@ const body = readFileSync(outPath, "utf8");
 const tables = (body.match(/^CREATE TABLE /gm) || []).length;
 const copies = (body.match(/^COPY /gm) || []).length;
 
+// --- the artifact must match the name we just gave it ----------------------------
+// pg_dump exits 0 whether or not a flag we passed did what we expected, so the exit
+// code cannot tell us the dump is the KIND we named it. Assert against the contents.
+if (tables === 0) {
+  fail(`no CREATE TABLE statements in the output — treat as a failed dump`);
+}
+if (schemaOnly && copies > 0) {
+  // --schema-only did not take effect, and this file now carries data rows under a name
+  // that promises none. Remove it: `schema-public-*.sql` is deliberately NOT gitignored,
+  // so leaving production rows there puts them one `git add` away from a commit — which
+  // is exactly how three full dumps got committed before 2026-08-17.
+  let removed = true;
+  try {
+    unlinkSync(outPath);
+  } catch {
+    removed = false;
+  }
+  fail(
+    `--schema-only produced ${copies} COPY blocks — the flag did not take effect.\n` +
+      (removed
+        ? `The artifact was DELETED (${outPath}) — that name is not gitignored and the file held data rows.`
+        : `⚠️ COULD NOT DELETE ${outPath}. It holds data rows under a name nothing ignores — DELETE IT BY HAND before any git add.`),
+  );
+}
+if (!schemaOnly && copies === 0) {
+  fail(`a full dump produced 0 COPY blocks — the data is missing; treat as a failed dump`);
+}
+
 console.log(`  OK: ${bytes.toLocaleString()} bytes · ${tables} CREATE TABLE · ${copies} COPY blocks`);
-console.log(`  Reminder: these dumps are gitignored and are an archival reading aid, not a restore.`);
+console.log(
+  schemaOnly
+    ? `  Reminder: DDL only, zero data rows. Unlike full-public-*, this name is NOT gitignored — by design.`
+    : `  Reminder: these dumps are gitignored and are an archival reading aid, not a restore.`,
+);
