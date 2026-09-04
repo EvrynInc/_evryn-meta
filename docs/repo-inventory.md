@@ -42,7 +42,7 @@ Org: **`EvrynInc`**. All remotes are `https://github.com/EvrynInc/<repo>.git`.
 >
 > ✅ **ARCHIVE-VS-DELETE IS DECIDED: ARCHIVE, NOT DELETE** *(Justin, 2026-08-21, ahead of the ~2026-09-18 due date)*. **Nothing of value remains in the three.** They hold **16 tracked files** (4 + 6 + 6) and — the half that actually needed checking — **ZERO untracked or gitignored ones.** ⚠️ **That was verified against the DISK, not against `git ls-files`, because a gitignored credential is invisible to the index and that exact class has already bitten this estate once.** Each `.claude/settings.json` holds only a generic tool allow-list, nothing unique; `evryn-ops`'s three real documents were rehomed to `_evryn-meta/docs/ops/` on 2026-08-19.
 >
-> ### ✅ THE MOVE IS DONE — executed 2026-08-21 by AC0-37i, on the LAPTOP
+> ### ✅ THE MOVE IS DONE ON BOTH MACHINES — laptop 2026-08-21 (AC0-37i), desktop 2026-09-04 (AC, quick-task)
 >
 > **The design:** archived repos live in **`Code/z.archive/`** rather than among the active ones. *(Justin's reason, and it is the whole point: he trips over them daily.)* **Six moved**, and each was verified to still function as a git repo from its new home.
 >
@@ -52,7 +52,7 @@ Org: **`EvrynInc`**. All remotes are `https://github.com/EvrynInc/<repo>.git`.
 >
 > ⚠️ **The trap the move ADDS: an old path no longer lands on a redirect stub — it does not resolve at all.** Before, an agent following `evryn-quality/CLAUDE.md` got a stub telling it where to go; now it gets "file not found." **Clearer, but less helpful** — so the fix is still to check the path rather than trust memory.
 >
-> 🖥️ **MACHINE-SPECIFIC: the move will be made on the laptop first. The desktop must be conformed separately** — see the bulletin entry in `docs/current-state.md`.
+> 🖥️ **THE MACHINE SPLIT IS CLOSED — nothing is outstanding on either machine, and the sync check now returns the same five repos on both.** *(The desktop was conformed 2026-09-04: six repos moved, all clean/canonical/zero-unpushed/no-worktrees beforehand and each verified still functional afterwards; pre-commit hooks re-armed to 5-of-5. The bulletin entry that tracked this was drained the same day.)*
 
 **One repo = one history = one default branch.** No repo should carry two unrelated roots (the `evryn-quality` fork was the lesson). If a `git merge-base A B` ever returns "no common ancestor" for two branches of the same repo, that's a fork — flag it.
 
