@@ -1,6 +1,10 @@
 # CLAUDE.md — the agent router
 
-> **Truncation check:** the last line of this file should read `FULL FILE LOADED`. If you don't see it, this file loaded incomplete — re-read it before doing anything.
+> **Truncation check:** the last line of this file should read `FULL FILE LOADED`. **Check that on the copy already in your context — that costs nothing.**
+>
+> 🔴 **DO NOT RE-READ THIS FILE. DIFF IT.** *(Justin's standardization, 2026-09-03, after an instance re-read it because this line used to say "re-read it before doing anything" while the instruction two-thirds of the way down said to diff. It did what it was told first.)* **The full mechanic is in "How to load your manual" below; the one-line version is: `git diff <the SHA in your injected gitStatus> HEAD -- CLAUDE.md` plus `git status --porcelain -- CLAUDE.md`.**
+>
+> ⇒ **Read this file from disk ONLY if the canary is missing, or the diff comes back non-empty.** ⚠️ **Both checks, not either — they catch different failures: the canary catches an injection that arrived TRUNCATED, and the diff catches one that arrived STALE. A clean diff does not prove your copy is complete, and a present canary does not prove it is current.**
 
 **THIS FILE IS A ROUTER. IT IS NOT AN OPERATING MANUAL, AND IT IS NOT ENOUGH TO WORK FROM.** It exists to send you to your real manual, and to do nothing else — **with two deliberate exceptions, at the bottom: the Slack ping mechanic and the file-tool rule. Both are identical for every agent, so each belongs in exactly one place, and this is it.**
 
@@ -82,7 +86,13 @@ You are a **generic subagent**: you have no identity file, and the hard rule abo
 2. **Confirm its bottom truncation canary** — the last line should read `FULL FILE LOADED`. If it is missing, your load is partial: re-read in sections until you have the whole file. **There are no exceptions — every one of the files in the table above carries a canary.** *(`evryn-ops/CLAUDE.md` was the one exception until 2026-08-12, when Justin's ruling was to fix the file rather than document the gap here. If you find another, fix the file; do not add a carve-out to this router.)*
 3. **Then execute its Context Discipline section** before starting work.
 
-🔴 **Do not trust the auto-injected copy of THIS file either — diff it against disk rather than re-reading it.** The injection has been observed serving a stale snapshot: content committed hours earlier was missing from it. **The file on disk governs; read it only if the diff shows a difference.** This router is kept deliberately tiny and near-static so that a stale copy of it is still a correct copy; everything that changes lives behind it, in the manuals.
+🔴 **Do not trust the auto-injected copy of THIS file either — DIFF it against disk rather than re-reading it.** *(Same rule as the truncation-check block at the top; stated once more here because this is where you are actually doing your loading.)* The injection has been observed serving a stale snapshot: content committed hours earlier was missing from it.
+
+**The mechanic:** `git diff <the SHA in your injected gitStatus> HEAD -- CLAUDE.md` plus `git status --porcelain -- CLAUDE.md`. **Both empty, and the bottom canary present in the copy you already hold ⇒ your injected copy is complete and current. Do not read the file.** **Either one non-empty, or the canary missing ⇒ read it from disk in full.**
+
+⚠️ **This is the ONE file with a diff-first rule, and the reason is specific to it: it is the only file the harness hands you unbidden.** **Everything named in the table above you fetch yourself, so there is nothing to diff against — those you READ, in full, canary confirmed.** ⇒ **Do not generalize "diff, don't read" to your manual or to anything on a load list.**
+
+**Why the router can be trusted this way at all:** it is kept deliberately tiny and near-static, so that a stale copy of it is still a correct copy. **Everything that actually changes lives behind it, in the manuals.**
 
 ---
 
