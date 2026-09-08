@@ -51,7 +51,7 @@
 
 ⚠️ **She is NOT on the company card.** The August 2026 statement that this spoke's other figures were trued up against excludes her entirely. ⇒ **Anyone following the header's instruction to "add the rows against an actual card statement" will miss her — add this row separately, or the floor comes out short by the whole amount.**
 
-⚠️ **One input here is measured and one is ASSUMED, and a future reader needs to know which is which.** The **$150/hr is confirmed.** The **billing UNIT is not:** the ~$225/mo figure assumes that one meeting bills as one hour. **If a meeting bills at 1.5 hours — an hour plus prep and follow-up, which is ordinary for advisory work — she is ~$337.50/mo instead.** ⇒ **Treat ~$225/mo as the low end of a band rather than a point.** **It resolves for free on her next invoice**, because she bills in arrears — nobody needs to ask her. *(The consequence for burn and runway is material, and lives in the current-state snapshot, which owns those figures; this spoke deliberately carries none.)*
+⚠️ **This is all based on the assumption that meetings are one hour, which they almost overwhelmingly have been**. 
 
 ---
 
