@@ -27,7 +27,8 @@
 | You are spinning… | Must read |
 |---|---|
 | **DC** or **QC** (build / review) | `docs/protocols/orchestration/spinning-dc-qc.md` |
-| **another AC** (a lane AC, an architectural runtime scout) | `docs/protocols/orchestration/spinning-an-ac.md` |
+| **another AC** (a lane AC that owns a slice and will conduct its own DC/QC) | `docs/protocols/orchestration/spinning-an-ac.md` |
+| **a SCOUT** (read-only: map a runtime, return a targeted read-list) | `docs/protocols/orchestration/spinning-a-scout.md` |
 | **a founding-team agent** (Soren, Mira, …) | `docs/protocols/orchestration/spinning-a-team-agent.md` |
 | **OC** (ops) | **nothing further — this is a RULING, not your judgement.** OC uses the blocks in the core exactly as written, including its `<identity>`. |
 | **a generic subagent** (a path lookup) | **nothing further — also a RULING.** But read "The generic-subagent exception" below *first*, because deciding you are in this row is the most-abused call in this protocol. |
