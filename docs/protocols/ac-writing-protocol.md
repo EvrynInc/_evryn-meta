@@ -22,6 +22,81 @@ When writing any instruction, ask: does it have all three? If not, it will decay
 
 ---
 
+## Writing a rule the current models will actually follow
+
+*(Justin's direction, 2026-09-08.)* **The problem this solves:** these manuals accrete. `ac.md` reached ~208,000 characters — about 74,000 tokens — and gained 3,300 more during the five days we spent discussing trimming it. **Nothing in it is careless; it grows because every rule in it was earned.** ⇒ **So the question is not what to cut. It is what SHAPE a rule takes, and when prose is the wrong instrument entirely.**
+
+### The four parts of a rule
+
+| Part | Job | Written for |
+|---|---|---|
+| **Rule** | What to do. Present tense, imperative, one sentence. | The agent, at the moment of action |
+| **Mechanism** | Why the obvious move fails. | The agent — **this is the part that generalizes** |
+| **Consequence** | What breaks when it is missed. | The agent |
+| **Provenance** | Dated, parenthetical, short. | **A later auditor** |
+
+🔑 **The mechanism must never be cut — and it is NOT the story of how we learned it.** A rule without its mechanism can only be applied to the cases someone thought to enumerate; a rule *with* it can be applied to the case nobody wrote down. **That is what "keep the why" means.**
+
+⚖️ **Provenance does a different job, for a different reader, and it steers nothing.** Its entire function is to make the rule **falsifiable** — so a later reader can prove it dead. That is worth *some* tokens, and it is why these manuals carry dates at all. **What it is not is a narrative.** ⇒ **The size test: if the provenance runs longer than the mechanism, you wrote a war story. Cut it back to a dated clause.**
+
+### Persuade. Emphasis is what you reach for when you have not.
+
+*(Justin's reframe, 2026-09-08.)* **Emphasis works by CONTRAST, so it saturates.** At 64 red markers in one file, red carries almost no information — everything is shouting, so nothing is. **Persuasion works by COMPREHENSION, so it does not saturate.** A hundred well-argued rules each still argue. ⇒ **There is no emphasis budget to ration. There is a better instrument to use.**
+
+🔑 **THE TEST, the moment you reach for a marker: is the ARGUMENT doing the work here, or am I shouting because I have not made it?**
+- **The passage already persuades** → the marker is decoration. It is not the thing that made the rule land. Is it even needed? If it is, keep it. If not, lose it.
+- **The passage does not persuade** → the marker is standing in for an argument you owe. ⇒ **Write (or strengthen) the argument.** ⚠️ **That usually makes the passage LONGER, and that's okay — *if it's earning its place at the table*: a rule that keeps being missed is far more often under-argued than under-emphasised.**
+
+⭐ **What actually persuades a model — and the best writing in these manuals already does all five:** *(current to model 5 models (Opus 5, etc.) 2026.09.08)
+1. **A mechanism that surprises.** *"A command that failed to EXECUTE prints exactly like a clean result."* The reader can feel the trap; nobody has to tell them to care.
+2. **The consequence in the reader's own currency.** *"You ship someone else's work under your message"* — not *"attribution issues may result."*
+3. **The TELL, so the failure is recognisable in the moment it happens.** *"An `Edit` that fails to match text plainly present is a NUL symptom."*
+4. **The reader's counter-move, anticipated and answered.** *"You will want to write a better grep — the fix is a different instrument, not a sharper pattern."* **Meeting the objection is what separates persuading from asserting, and it is the half most often missing.**
+5. **Honesty about cost and limits.** *"The entire cost is one extra commit per merge."* *"This is wrong HERE for a specific reason, not a universal one."* **Conceding what is true buys belief in everything around it.**
+
+🔴 **BE VERY CAREFUL STRIPPING STRIDENCY FROM A RULE THAT IS WORKING.** A loud rule carrying no dates is usually one that kept failing *before anyone was recording dates* — **the volume is the fossil record**, and dating incidents is a recent practice here, so **the oldest and most battle-tested rules carry the fewest.** ⇒ **Never read absent provenance as "this happened once."** **Ask instead whether the passage carries its argument: if it does, leave it alone; if it does not, add the argument** — and only then ask whether the volume is still doing anything.
+
+### Then ask who pays for a miss
+
+**The question is not *"will anyone notice?"* — noticing and absorbing the cost are different things.**
+
+| Who catches the miss | What it costs | What the rule needs |
+|---|---|---|
+| **Nobody** | It compounds silently, and the agent's own confidence is untouched | The fullest treatment: mechanism, tell, and consequence |
+| **Justin** | **The scarcest resource in the estate** — one person across many parallel lanes | **Full persuasive weight. A rule he has to re-teach is not a cheap rule.** |
+| **The agent itself** | A retry | A clear rule and its mechanism. Nothing further |
+
+⚠️ *(This corrects an earlier draft of this section, which treated "visible" as "cheap." Ballot placement and reply structure are highly visible — Justin notices at once — and they are among the most expensive things to get wrong, precisely because he is the one who pays for every miss.)*
+
+### And ask whether prose is the instrument at all
+
+| | |
+|---|---|
+| **A machine can check it** | **Build the guard** (hook, script, tool restriction). Prose shrinks to one line naming it. |
+| **No machine can check it** | **Prose is what you have — so make it persuasive**, by the five above. |
+
+🔑 **A rule you must REMEMBER to obey is the weakest thing you can build, and the proof is these manuals themselves: most rules here exist BECAUSE they were violated by an agent that had already read them.** ⇒ **Adding volume to a rule that was read and skipped is doing more of the thing that already failed.** *(`scripts/scan-control-chars.js` was built in 2026-08 only after prevention-by-instruction had failed nine times, twice by authors mid-sentence about the hazard. The hook has held since.)*
+
+⇒ **A rule you are tempted to state TWICE likely doesn't need repeating — it needs a guard.** State it once, and file the second copy as a hook candidate.
+
+### Two conversions
+
+- **A prohibition with no live provenance becomes a positive statement of what to do.** Describing success beats enumerating failure, and forbidding a mistake the model was not going to make can anchor it toward that mistake. **Prohibitions covering demonstrated failures stay** — the test is whether it still happens, not whether it sounds forbidding.
+- **Keep an example only where the OUTPUT SHAPE is the lesson** — how to talk to Justin, how to render a ballot, what a handoff looks like. **Cut examples that merely illustrate judgment:** a concrete example is the strongest signal in a prompt, so the model matches its length, tone and structure — and an example of judgment freezes one instance of it into every later case.
+
+### A worked example
+
+*(The three-dot-diff rule in `ac.md` — 2,523 characters before.)*
+
+> 🔴 **Read a branch's diff with three dots: `git diff main...branch`.**
+> Two dots compares the two *tips*, so anything `main` gained that your branch lacks renders as a deletion **by your branch** — and `main` moves constantly in a hot repo, so the diff grows more alarming the longer the branch lives. Three dots compares against the merge base: what the branch actually changed.
+> Get it wrong and a reviewer either rejects a clean branch, or "fixes" the phantom deletion and genuinely reverts someone's work.
+> *(4 incidents: 2026-08-04 ×2, 2026-08-11 ×2. Note `git log main..branch -- <file>` genuinely wants two dots — it lists commits, not trees.)*
+
+**~900 characters, and every load-bearing part is kept:** both halves of the mechanism, both consequences, dated provenance, and the one exception an agent actually needs. **What went: the flourish, the retelling, and a cross-reference that existed only because the rule is stated twice in the file.** ⚠️ **And note where the rubric sends this one next — the failure is silent AND machine-checkable, so its honest end-state is a `PreToolUse` guard plus a one-line pointer.**
+
+---
+
 ## Core rules
 
 **Write for a fresh instance.** When writing anything that will be read later, imagine waking up as a completely new instance with very limited context — none of this conversation, none of your current working picture. Will what you've written make sense? Include enough specific context that a cold reader understands what you mean without reconstructing your reasoning. Use explicit actors and concrete references — not "we decided to defer it" but "Justin and AC deferred the migration because the v0.2 deadline was more urgent." When helpful, include the *why* and ideally an example — not just the conclusion. **The sharpest version of this trap: you've just absorbed subagent reports the reader has never seen** — any reference that leans on them (a worker labeled "W1," a scout's shorthand, "the ladder") is invisible scaffolding to everyone but you. Re-ground every borrowed term in place. (Justin caught a batch of these in the 2026-07-10 design docs — even reading *in the flow*, the shorthands didn't parse.)
