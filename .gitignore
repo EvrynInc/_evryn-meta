@@ -143,3 +143,7 @@ nul
 
 # Claude Code — only ignore the local settings file (accumulates runtime junk)
 .claude/settings.local.json
+
+# compaction alarm artifacts (ACm, 2026-09-08)
+.claude/compaction-log.txt
+.claude/compacted/

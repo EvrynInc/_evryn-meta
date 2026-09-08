@@ -20,5 +20,21 @@
     "additionalDirectories": [
       "C:\\Users\\jbmcg\\Evryn\\Code"
     ]
+  },
+  "hooks": {
+    "PreCompact": [
+      {
+        "hooks": [
+          { "type": "command", "command": "node scripts/compaction-alarm.mjs" }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "hooks": [
+          { "type": "command", "command": "node scripts/compaction-alarm.mjs" }
+        ]
+      }
+    ]
   }
 }
