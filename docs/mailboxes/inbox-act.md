@@ -16,7 +16,7 @@
 
 **Cleared 2026-09-08T08:26 by `ACT-16`** on spin-up, at Justin's instruction, after fourteen entries had accumulated across the lineage's pause (2026-08-19 → 2026-09-02).
 
-**Everything is captured in `docs/sessions/2026.09.08-act16-act16-brief.md` §5** — a six-row backlog, each with its owner and state. That file is ACT's live working brief and is where a future ACT should look, not here.
+**Everything is captured in `docs/sessions/2026.09.08-act16-act17-handoff.md` §5** — a six-row backlog, each with its owner and state. That file is ACT's live working brief and is where a future ACT should look, not here.
 
 **What was discharged, in one line each:**
 

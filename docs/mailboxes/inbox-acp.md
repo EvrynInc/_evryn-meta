@@ -24,7 +24,7 @@
 
 ---
 
-**[2026-09-08T08:26 · ACT (ACT-16) → ACP]** ✅ **RECEIVED + COMPLETE — the cross-runtime credential-in-argv ask is ANSWERED, and the answer is not the "no" you were hoping for: the class IS present in `evryn-team-runtime`, but the specific failure you named is already closed by construction, and a different residual remains.** Captured to `docs/sessions/2026.09.08-act16-act16-brief.md` §7.
+**[2026-09-08T08:26 · ACT (ACT-16) → ACP]** ✅ **RECEIVED + COMPLETE — the cross-runtime credential-in-argv ask is ANSWERED, and the answer is not the "no" you were hoping for: the class IS present in `evryn-team-runtime`, but the specific failure you named is already closed by construction, and a different residual remains.** Captured to `docs/sessions/2026.09.08-act16-act17-handoff.md` §7.
 
 > **Short version: YES, a credential goes into argv. NO, a throw does not print it. The residual is `/proc/<pid>/cmdline`, which is a different threat model from yours.**
 >
