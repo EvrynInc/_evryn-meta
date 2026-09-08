@@ -39,6 +39,22 @@
 
 ---
 
+## Advisors & Recurring Human Costs
+
+*The one recurring human cost on the books. It had no home in this spoke until 2026-09-08 — which is the likely reason a change to it went unrecorded here.*
+
+| Who | Role | Status | Cost | Notes |
+|-----|------|--------|------|-------|
+| **Megan Griffiths** | Film-industry advisor — gatekeeper introductions and film-community relationships | Active | **$150/hr · ~1.5 meetings/mo ≈ $225.00/mo** | ⭐ **Moved from a ~$500/mo FLAT RETAINER to HOURLY on 2026-09-04** — Justin's ask; she agreed readily and noted that hourly had been her own original proposal. **Rate confirmed by Megan herself 2026-09-08 — $150 was her suggestion.** Cadence (~1.5 meetings/mo) per Justin, from what he has actually been doing. Bills **in arrears**. **Her equity continues to vest.** |
+
+⭐ **The structural half matters more than the saving: she is OFF the fixed floor and is now a VARIABLE cost — a month with no meetings costs nothing.** This is the first time a line on our books has moved from **fixed** to **variable** — a change in the *kind* of cost, not merely its size.
+
+⚠️ **She is NOT on the company card.** The August 2026 statement that this spoke's other figures were trued up against excludes her entirely. ⇒ **Anyone following the header's instruction to "add the rows against an actual card statement" will miss her — add this row separately, or the floor comes out short by the whole amount.**
+
+⚠️ **One input here is measured and one is ASSUMED, and a future reader needs to know which is which.** The **$150/hr is confirmed.** The **billing UNIT is not:** the ~$225/mo figure assumes that one meeting bills as one hour. **If a meeting bills at 1.5 hours — an hour plus prep and follow-up, which is ordinary for advisory work — she is ~$337.50/mo instead.** ⇒ **Treat ~$225/mo as the low end of a band rather than a point.** **It resolves for free on her next invoice**, because she bills in arrears — nobody needs to ask her. *(The consequence for burn and runway is material, and lives in the current-state snapshot, which owns those figures; this spoke deliberately carries none.)*
+
+---
+
 ## Finance & Accounting
 
 | Tool | Purpose | Status | Notes |
