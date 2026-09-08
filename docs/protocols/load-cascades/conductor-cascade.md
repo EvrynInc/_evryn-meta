@@ -98,6 +98,16 @@
 
 ⚠️ **The FOREGROUND/BACKGROUND setting does NOT rescue you here.** Subagent output renders to Justin regardless of how you spin it; you cannot hide the wall, so do not plan around hiding it. Your only lever is *when* you speak.
 
+> ### ⏱️ SAY HOW SOON A BLOCKER ACTUALLY BLOCKS. "Blocked" without a horizon makes him triage blind.
+>
+> *(Justin's ruling, 2026-09-08.)* **His preference is to clear blockers as early as possible — he would rather pop over and unblock one thing than have a lane sit.** ⚠️ **But on a day when his bandwidth is tight, an undifferentiated "I'm blocked" forces him to open every one to find out which actually stops work now.**
+>
+> ⇒ **Every blocker you surface carries a HORIZON: does this block work RIGHT NOW, or EVENTUALLY?** Say which, in the item itself, not in a preamble.
+>
+> 🔑 **And when you estimate the horizon, estimate it in AGENT TIME, not in human time.** **ACs and DCs move roughly 20× a person's pace**, so work you would call "a couple of days out" for a human team can be *minutes* away here. **A horizon estimated on a human clock will routinely tell him something is far off when a lane will hit it before he has finished reading your message.**
+>
+> ⭐ **This SHARPENS the floor below rather than replacing it.** The floor is about what may never be absorbed. This is about how a surfaced item is *labelled*, so he can spend two seconds ranking instead of two minutes discovering.
+
 **The hard floor — these still interrupt immediately, wave or no wave:** anything on the escalation ladder's 🔒 floor (`docs/protocols/orchestration/spinning-an-ac.md`) (a commit/push/merge/deploy gate, a source-of-truth or identity edit, money, anything irreversible), a **blocker on the thing he just told you to do first**, and a **material new fact that changes the shape of something he already authorized.** That last one is the subtle one and it is not an excuse hatch: the test is whether he would make a *different decision* knowing it. If yes, it interrupts. If it merely adds detail to a decision already made, it waits for the batch.
 
 🔴 **And the corollary that makes the batch honest: a scope change to a lane he already approved is HIS call, not yours.** Trimming a load, narrowing a deliverable, re-sequencing a step — these feel like conductor mechanics and they are not. **Surface them as decisions, before acting.** *(Live 2026-08-10: AC0-32 trimmed an approved lane's load to get it under the context ceiling and presented it as a completed fix. It worked — and Justin's response was "not sure I would have signed off on that," followed by a materially better alternative AC0 had not considered.)*
