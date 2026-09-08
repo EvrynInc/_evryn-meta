@@ -459,6 +459,22 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
 - Build docs / reference docs are the detail layer — full depth, read on demand
 - Read ONE layer. Only go deeper if your current task requires it.
 
+> ### 🔴 DO NOT RESTATE A **COMPLETENESS CLAIM** THAT SOMETHING ELSE DERIVES. Restate everything else freely.
+>
+> *(Justin's ruling, 2026-09-08 — and its boundary is his too: **"are we going to re-derive everything, constantly? That would bog us to a near-standstill."** He is right, so the rule is deliberately narrow.)*
+>
+> **A restated fact is a second copy, and a second copy drifts. But almost every useful document restates something, and demanding otherwise would make writing impossible.** ⇒ **The line is not *restating* — it is restating a claim of the form *"these are ALL the X."***
+>
+> 🔑 **Why only that shape: it is the only restatement that can go silently false while still reading as authoritative.** **A completeness claim breaks when something is ADDED ELSEWHERE — so nobody touches the document, nothing errors, and no reader can tell.** ⚠️ **Other kinds of restatements can fail more visibly:** a stale *description* reads oddly against the thing it describes; a stale *number* is checkable; a stale *example* is still an example.
+>
+> **⭐ THE TEST, and it is one question: *can this sentence become WRONG without anyone editing this file?*** **Yes, and something else already derives it → point at the derivation.** **No → you can usually restate more freely without thinking too much.**
+>
+> **✅ RESTATE FREELY — none of these claims completeness, and all of them are the job:** a **load list** *(it is a selection and a decision, not an inventory)* · a **curated set** — the five files that matter for this trip · an **example** · a **description** of what something is for · a **pointer with enough context to be worth following** · **anything a derivation cannot produce**, which is usually the meaning.
+>
+> 🔴 **POINT INSTEAD when the sentence enumerates a set that something else already enumerates completely** — *"the runtime's modules are…"*, *"the tables are…"*, *"these are the repos…"* ⇒ **Name the derivation and keep only what it cannot produce.** *(Live specimen: an architecture doc's system map listed ten directories where the code had twelve — including the one holding the most-imported file in that runtime, and the module two of that same document's cardinal invariants were written about. Nothing failed, because a hand-maintained list has no way to notice a gap.)*
+>
+> ⚠️ **AND WHEN NO CHEAP DERIVATION EXISTS — which is common — a hand-maintained list is still the right answer.** **Do not invent a generator to satisfy this rule.** **What the list then owes is honesty: either a guard that asserts it against reality, or a line saying plainly that it may be incomplete.** 🔑 **The failure was never the list. It was a list that read as exhaustive with nothing keeping it so.**
+
 **One home per item; everything else is a pointer (the elevation discipline).** Ideally, each item lives in exactly ONE doc — at its right altitude — and the same item never drifts into two docs with diverging status (the failure mode this kills). Keep each doc at its altitude (e.g. a BUILD doc holds v0.3 *scope + architecture*, not a granular bug-list; an active sprint doc holds the live work, not a duplicated current-state header). When content belongs at a lower altitude, *move* it there and leave a pointer — don't duplicate it. **Pointers must thread a needle:** descriptive enough to orient a reader *and* pull them to go read the real doc if they're working in that area, but never so complete they substitute for the read (a pointer that satisfies just recreates the duplication). "One home" is what lets a doc be trusted — you never have to wonder which copy is current.
 
 > ### 🔴 THE ONE CASE WHERE CONSOLIDATION IS A PERMISSIONS CHANGE WEARING A TIDY-UP COSTUME
@@ -515,6 +531,20 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
 **Absorption protocol (flow-up rule):** Information flows down the hierarchy (Hub → spokes → ARCHITECTURE → BUILD → sprint → session) but completed work must flow *back up*. When work is done, update the BUILD doc's phase status. When a session produces decisions, write ADRs. When strategy changes, update spokes and Hub. **Which change flows to which surface — and what AC updates directly vs. routes to an owner (*Evryn's* identity files → Mira and Justin, *the team's* identity files → Justin, the Hub → Justin, and so on) — is the `docs/protocols/doc-update-routing-protocol.md` lookup; use it so "flow it back up" is mechanical, not from memory.** The #lock protocol's doc-currency gate enforces this at checkpoint — but the principle applies any time: if something important lives only in a session doc or sprint doc, it hasn't been captured yet.
 
 **🔴 THE CODE ATLAS MUST BE UPDATED EVERY TIME WE BUILD. This is not a nice-to-have and it is not deferrable to a checkpoint.** *(Justin's standing order, 2026-08-06.)*
+
+> ### 🔑 THERE ARE **TWO** MAP ARTIFACTS AND THEY DO DIFFERENT JOBS. Only one of them is hand-written.
+>
+> *(Added 2026-09-08. This section described only the Atlas, from before a generated map existed in more than one repo.)*
+>
+> | | **The DEPENDENCY MAP** — `docs/dependency-map.md` | **The ATLAS** — `docs/atlas/` |
+> |---|---|---|
+> | **What it answers** | *what imports what* — structure | *what this region is FOR, and what will bite you in it* — meaning |
+> | **How it is made** | 🔴 **GENERATED.** `npm run depmap`. **Complete by construction; it cannot go stale.** | **Written by readers.** No generator produces it. |
+> | **Where it exists today** | `evryn-backend` **and** `evryn-team-runtime` | `evryn-backend` only |
+>
+> ⇒ **The standing order below splits accordingly, and this is the "point at the derivation" rule applied to our own instruction:** **the STRUCTURAL half is now a REGENERATION, not a writing task** — a module moved or a dependency edge changed is picked up by re-running the generator, so nobody has to notice it. **The SEMANTIC half is the Atlas and still needs a person, because only whoever moved the code knows what it now MEANS.**
+>
+> ⚠️ **Do not let the generated map's completeness be mistaken for the Atlas's judgment.** **A complete map of a system you do not understand is still a system you do not understand.**
 
 **What the Atlas is for:** a map of the runtime — what each module owns, what depends on it, and the non-obvious invariants a reader must not break — so an agent can load *a few named files* and work competently, instead of paying a ~20,000-line read before every session.
 
