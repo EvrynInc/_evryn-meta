@@ -10,7 +10,7 @@
 
 ---
 
-**Why this exists.** The full cascade loads the entire runtime (`src/**/*.ts` + the identity half), which can completely use up your context. This cascade keeps the runtime in a *subagent's* context and leaves you a map + a targeted read-list.
+**Why this exists.** The full cascade loads the entire runtime (every file under `src` + the identity half), which can completely use up your context. This cascade keeps the runtime in a *subagent's* context and leaves you a map + a targeted read-list.
 
 **It is NOT a license to conduct blind.** *"Directing build work is build work"* (Context Discipline) still holds — gating a runtime change or sending a brief you can't defend has the same blast radius as bad code. This cascade is the *mechanism* for getting that runtime competence efficiently — a scout + targeted reads + fresh verification subagents — instead of a full resident load. It tells you *which* files are load-bearing and *when*, so you read the right ones, not all of them. **You still read the load-bearing files yourself, at their moment.**
 
