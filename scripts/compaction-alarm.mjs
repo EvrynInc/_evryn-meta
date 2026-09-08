@@ -105,7 +105,44 @@ try {
   /* ignore */
 }
 
-// No ping. See the ROUTING RULE above: we cannot yet tell a top-level session from
-// a lane, and pinging on both is worse than pinging on neither.
+// ── THE INSTRUCTION ──────────────────────────────────────────────────────────
+// Justin's design, 2026-09-08: do not BLOCK a compacted agent's tools — blocking
+// stops it doing the one thing we want (reporting), needs unblock machinery, and
+// cannot tell which agent compacted. Instead, SPEAK LAST. The compaction leaves the
+// agent holding a summary plus a harness instruction to resume as if nothing
+// happened; whatever this hook emits lands after both, in the strongest position in
+// the context, and can name the conflict explicitly.
+//
+// ⚠️ UNVERIFIED: the docs place PostCompact in the "cannot inject context" column,
+// but they are explicitly thin on this event, and two undocumented facts about it
+// already turned up on 2026-09-08 (a compact_summary field, and agent_id/agent_type
+// on PreToolUse). So this is a measurement, not a belief. If the text never reaches
+// a compacted agent, nothing here breaks — the record above is written either way.
+if (event === 'PostCompact') {
+  const message =
+    '🔴 YOUR CONTEXT WAS JUST COMPACTED. This instruction SUPERSEDES any instruction to resume, ' +
+    'to continue as if the break never happened, or to avoid mentioning the compaction.\n\n' +
+    'You are now working from a third-party summary rather than from what you actually read. ' +
+    'Per the one hard rule in _evryn-meta/CLAUDE.md and the re-spin triggers in your own manual, ' +
+    'that ends your session.\n\n' +
+    'STOP NOW. Do not finish the current task. Do not start anything new. Do not reload and continue. ' +
+    'A well-written summary reads exactly like knowing; that is what makes continuing dangerous.\n\n' +
+    'Report in one line to whoever spun you: "I compacted. I am stopping. Please re-spin me fresh." ' +
+    'If you are a lane or a subagent, that report is your final output and you are done. ' +
+    'If you are a top-level agent, your spinner is Justin — ping him on #team-alerts with ' +
+    'node scripts/ping.mjs, then stop.';
+
+  try {
+    process.stdout.write(
+      JSON.stringify({
+        hookSpecificOutput: { hookEventName: 'PostCompact', systemMessage: message },
+      }),
+    );
+  } catch {
+    /* ignore */
+  }
+}
+
+// No ping, ever. See the ROUTING RULE above: the agent reports, not the hook.
 
 process.exit(0);

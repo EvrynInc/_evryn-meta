@@ -530,7 +530,7 @@ Every document is exactly ONE of these types (Diátaxis framework). Don't mix ty
 
 **Absorption protocol (flow-up rule):** Information flows down the hierarchy (Hub → spokes → ARCHITECTURE → BUILD → sprint → session) but completed work must flow *back up*. When work is done, update the BUILD doc's phase status. When a session produces decisions, write ADRs. When strategy changes, update spokes and Hub. **Which change flows to which surface — and what AC updates directly vs. routes to an owner (*Evryn's* identity files → Mira and Justin, *the team's* identity files → Justin, the Hub → Justin, and so on) — is the `docs/protocols/doc-update-routing-protocol.md` lookup; use it so "flow it back up" is mechanical, not from memory.** The #lock protocol's doc-currency gate enforces this at checkpoint — but the principle applies any time: if something important lives only in a session doc or sprint doc, it hasn't been captured yet.
 
-**🔴 THE CODE ATLAS MUST BE UPDATED EVERY TIME WE BUILD. This is not a nice-to-have and it is not deferrable to a checkpoint.** *(Justin's standing order, 2026-08-06.)*
+**🔴 THE CODE ATLAS MUST BE UPDATED EVERY TIME WE BUILD. This is not a nice-to-have and it is not deferrable to a checkpoint.** *(Justin's standing order, 2026-08-06.)* The product repo and team runtime repo each have Atlases and Dependency Maps for their respective codebases. The paths below are relative to each repo.
 
 > ### 🔑 THERE ARE **TWO** MAP ARTIFACTS AND THEY DO DIFFERENT JOBS. Only one of them is hand-written.
 >
