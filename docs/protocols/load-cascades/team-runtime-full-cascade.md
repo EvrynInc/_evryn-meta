@@ -38,7 +38,7 @@ Steps 1–5 are the intended shape + the shipped record; steps 6–7 are the act
    ```bash
    git -C evryn-team-runtime ls-files src migrations
    ```
-   - **`src/**/*.ts`** — EVERY file (~36 as of 2026-07-21; enumerate live — the tree grows). Never "the relevant bits": every real defect lives in a *seam* — a value minted in one file, stored in a second, given meaning by a third — which a partial read cannot see.
+   - **Every tracked file under `src`** — enumerate with **`git ls-files src`** (~36 as of 2026-07-21; enumerate live — the tree grows). ⚠️ **Use the bare directory, never `src/**/*.ts`: that glob silently drops the files sitting directly in `src`, with no error and a plausible-looking count.** *(Measured 2026-09-08 on `evryn-backend`: 43 returned against a true 45.)* Never "the relevant bits" either: every real defect lives in a *seam* — a value minted in one file, stored in a second, given meaning by a third — which a partial read cannot see.
    - **`migrations/*.sql`** — EVERY migration (001–015 as of 2026-07-21). The DB shape is half the contract; `src/db/types.ts` is hand-maintained against these.
    - **`tests/`** — skim for shape (what's pinned, what's a real catcher). Not a full read, but know what the suite guards.
 7. **Runtime — IDENTITY half** (the always-composed layer + the LIVE agent(s)):
