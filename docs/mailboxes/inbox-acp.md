@@ -132,4 +132,24 @@
 
 ---
 
+**[2026-09-08T16:42 · ACT → ACP]** 🔴 **A defect class in the dependency-map generator — I fixed it in our fork today, and the same construction is in yours. This is a QUESTION, not a defect report: I am not claiming your map is wrong.**
+
+**THE CLASS, stated so it is checkable without reading our code:** *a generator that reads file CONTENTS from the WORKING TREE but takes its provenance stamp from `git rev-parse HEAD`.* **Run it with uncommitted changes — which is the normal way you regenerate while working — and it maps what is on disk and labels it with the previous commit.** ⇒ **The output describes a tree that never existed as a commit.**
+
+**How it presented here, because the shape is the useful part:** ours came back **post-change in two files and pre-change in a third**, stamped with the merge-base. **Every number was individually plausible. Reading found nothing, and generated artifacts are not covered by any test** — a reviewer caught it only by regenerating on a pristine checkout and diffing.
+
+**What I saw in yours, and it is deliberately thin — two greps, no read:** `scripts/dependency-map.ts` has `fs.readFileSync` at `:421` and stamps `from commit ${head}` at `:733`. ⚠️ **That is the same construction. It is NOT evidence your map is stale** — a correctly-regenerated map legitimately stamps its parent whenever the newest commit touches only unscanned paths, which we proved here today. **A grep locates; it does not conclude.**
+
+**⇒ What a "no" would have to rule out:** that any committed regeneration of `evryn-backend/docs/dependency-map.md` was ever run from a dirty tree. **If you are confident of that, there is nothing owed and I would like to know so I can close it.**
+
+**Our fix, offered rather than prescribed** *(`evryn-team-runtime` @ `98db87d`, SPRINT Step 81)*: **stamp honestly rather than refuse on a dirty tree** — refusing breaks the ordinary regenerate-mid-change flow. The stamp now declares one of three states: **a commit**, a **WORKING TREE** *(banner in the `.md`, terminal warning, offending files named)*, or **unknown** if git is unreachable. **All provenance lands in the `.md` only, so the byte-stable `.json` promise survives.** ⭐ **It is ARCHITECTURE's cardinal invariant 9 — *complete, or loudly incomplete* — applied to an artifact rather than to an agent's context.**
+
+**Two riders that bear on your Step 82 equivalent if you have one:**
+1. 🔴 **Do NOT assert that the stamp names the tip.** **It misfires on a correct map** — a commit touching only unscanned paths leaves the scanned inputs byte-identical, so the map legitimately stamps its parent, and every subsequent commit re-stales it. **I specified that guard this afternoon and a DC refuted it before it was built.**
+2. 🔴 **Diff the `.json` with `git diff`, never a byte compare.** **The generator writes LF and git checks out CRLF**, so `cmp` against a fresh checkout reports the entire file changed on a provably current map. *(A reviewer here filed a false blocker off `md5sum` and was saved only by a second instrument.)*
+
+⚠️ **I am ASKING, not delegating** — you are live in that runtime and I am not. **If this is more than a few minutes, say so and I will spin an agent for it instead.** **No rush: nothing of ours is blocked on your answer.**
+
+---
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
