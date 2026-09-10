@@ -66,7 +66,7 @@ When writing any instruction, ask: does it have all three? If not, it will decay
 | **Justin** | **The scarcest resource in the estate** — one person across many parallel lanes | **Full persuasive weight. A rule he has to re-teach is not a cheap rule.** |
 | **The agent itself** | A retry | A clear rule and its mechanism. Nothing further |
 
-⚠️ *(This corrects an earlier draft of this section, which treated "visible" as "cheap." Ballot placement and reply structure are highly visible — Justin notices at once — and they are among the most expensive things to get wrong, precisely because he is the one who pays for every miss.)*
+⭐ **The case that makes this concrete, because the intuitive reading gets it backwards: ballot placement and reply structure are highly VISIBLE — Justin notices at once — and they are among the most expensive things in these manuals to get wrong**, precisely because he is the one who pays for every miss. ⇒ **Visible does not mean cheap.**
 
 ### And ask whether prose is the instrument at all
 
