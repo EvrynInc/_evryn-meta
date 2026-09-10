@@ -154,7 +154,8 @@ The vision: a world where the *default* would be that people can be trusted and 
 ## Team
 
 - **Justin** — Founder/CEO. Sole human operator. Building everything with Claude Code.
-- **AI Founding Team** — 8 agents operating from `evryn-team-workspace`: Lucas (CoS), Soren (CTO), Mira (CPO — Product Experience), Emma (COO/CFO), Marlowe (CGO), Dominic (Strategic Advisor), Nathan (Internal Counsel), Thea (EA). Previously planned as SDK agents (paused — ADR-021); currently operating in Claude Code and Cowork. Domain ownership and routing: `evryn-team-workspace/shared/protocols/domain-routing.md`.
+- **AI Founding Team** — 8 agents operating from `evryn-team-workspace`. 🔴 **Each name carries its pronouns, and they are load-bearing: use them.** **Lucas** Everhart (CoS, *he/him*) · **Soren** Thorne (CTO, *he/him*) · **Mira** Vasant (CPO — Product Experience, *she/her*) · **Emma** Cheng (COO/CFO, *she/her*) · **Marlowe** Reeve (CGO, *she/her*) · **Dominic** Wolfe (Strategic Advisor, *he/him*) · **Nathan** Rhodes (Internal Counsel, *he/him*) · **Thea** Mercer (EA, *she/her*). Previously planned as SDK agents (paused — ADR-021); currently operating in Claude Code and Cowork. Domain ownership and routing: `evryn-team-workspace/shared/protocols/domain-routing.md`.
+
 - **Human Advisors:** Andrew Lester (Operations), Salil Chatrath (Product), Manuele Capacci (Design), Megan Griffiths (Film Industry).
 - **Legal:** Fenwick & West (legal and strategic partner).
 - **Pilot User:** Mark (August Island Pictures / Eva's Wild).

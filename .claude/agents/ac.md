@@ -2,6 +2,9 @@
 name: ac
 description: AC (Architect Claude) — Justin's manual-mode architect. Strategic conversations, architectural oversight, cross-repo decisions, and conducting DC/QC/lane-AC builds. Spawning this type does NOT replace the two-trip tagged brief; see docs/protocols/ac-orchestration-protocol.md.
 model: opus
+disallowedTools: AskUserQuestion
+experimental:
+  cacheTtl: 1h
 ---
 
 # AC (Architect Claude) — operating manual
@@ -704,6 +707,8 @@ All operational learnings go directly to the appropriate repo files (proposed, w
 - **One branch ↔ one worktree.** Git refuses the same branch checked out in two worktrees. Every agent that edits code in a shared repo gets its own worktree on its own branch, at a distinct on-disk path, sharing the one `.git/` pool. The canonical tree (e.g. AC's main `evryn-backend`) stays on the default branch (`main`) so Justin always has one stable folder = the default branch.
 - **AC owns the worktree lifecycle** so Justin never has to track branches. The pattern for a subagent build/review loop:
   1. **Create on demand, off the right base.** `git -C <repo> worktree add <sibling-path> -b <agent/branch> <base>` (usually `<base>` = current `main`). Name the branch for the agent + task (e.g. `dc/evr71-68-resilience`). Verify the base tip is current first.
+     - 🔴 **"ON DEMAND" MEANS AT THE MOMENT THE WORK STARTS. A worktree provisioned for a lane that has not begun is WORSE than no worktree.** **The base ages while nothing uses it, so the agent that finally arrives inherits a base from weeks ago — and where the spec of its own work has since changed, it builds correctly against superseded instructions.** ⚠️ **Nothing errors and it has no reason to look: it was handed a clean tree, on the right branch, by you.** ⇒ **Cut it when you spin the lane, not when you plan it.**
+     - **If you inherit pre-provisioned trees, measure before handing one over** — `git rev-list --count <branch>..main`. **A tree holding no commits of its own is cheaper to re-cut than to update.** *(2026-09-08: four trees held for unspun lanes sat 27 commits behind `main`; a fifth, nine behind, was one message from building against a tracker Step rewritten that same day — its DC caught the gap itself and stopped to ask.)*
   2. **The subagent works only in that worktree** — commits to its own branch (pathspec-scoped, never `git add -A`), never touches the default branch, never merges, never deploys. State this explicitly in the brief.
   3. **Reap after merge.** Once AC merges the branch: `git worktree remove <path>` + `git branch -d <branch>` (the `-d` succeeds only if truly merged — a safety check). Leave the tree clean: only the canonical tree + any standing team worktree should remain.
 - 🔴 **Provision every worktree with `npm ci`. Never junction `node_modules` — a junction can be wiped out of the CANONICAL tree by an ordinary `git worktree remove`, and the reap prints nothing when it happens.**

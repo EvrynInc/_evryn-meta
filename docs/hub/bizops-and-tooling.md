@@ -39,6 +39,22 @@
 
 ---
 
+## Advisors & Recurring Human Costs
+
+*The one recurring human cost on the books. It had no home in this spoke until 2026-09-08 — which is the likely reason a change to it went unrecorded here.*
+
+| Who | Role | Status | Cost | Notes |
+|-----|------|--------|------|-------|
+| **Megan Griffiths** | Film-industry advisor — gatekeeper introductions and film-community relationships | Active | **$150/hr · ~1.5 meetings/mo ≈ $225.00/mo** | ⭐ **Moved from a ~$500/mo FLAT RETAINER to HOURLY on 2026-09-04** — Justin's ask; she agreed readily and noted that hourly had been her own original proposal. **Rate confirmed by Megan herself 2026-09-08 — $150 was her suggestion.** Cadence (~1.5 meetings/mo) per Justin, from what he has actually been doing. Bills **in arrears**. **Her equity continues to vest.** |
+
+⭐ **The structural half matters more than the saving: she is OFF the fixed floor and is now a VARIABLE cost — a month with no meetings costs nothing.** This is the first time a line on our books has moved from **fixed** to **variable** — a change in the *kind* of cost, not merely its size.
+
+⚠️ **She is NOT on the company card.** The August 2026 statement that this spoke's other figures were trued up against excludes her entirely. ⇒ **Anyone following the header's instruction to "add the rows against an actual card statement" will miss her — add this row separately, or the floor comes out short by the whole amount.**
+
+⚠️ **This is all based on the assumption that meetings are one hour, which they almost overwhelmingly have been**. 
+
+---
+
 ## Finance & Accounting
 
 | Tool | Purpose | Status | Notes |

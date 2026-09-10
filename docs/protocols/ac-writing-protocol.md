@@ -50,7 +50,7 @@ When writing any instruction, ask: does it have all three? If not, it will decay
 ⭐ **What actually persuades a model — and the best writing in these manuals already does all five:** *(current to model 5 models (Opus 5, etc.) 2026.09.08)
 1. **A mechanism that surprises.** *"A command that failed to EXECUTE prints exactly like a clean result."* The reader can feel the trap; nobody has to tell them to care.
 2. **The consequence in the reader's own currency.** *"You ship someone else's work under your message"* — not *"attribution issues may result."*
-3. **The TELL, so the failure is recognisable in the moment it happens.** *"An `Edit` that fails to match text plainly present is a NUL symptom."*
+3. **The TELL, so the failure is recognizable in the moment it happens.** *"An `Edit` that fails to match text plainly present is a NUL symptom."*
 4. **The reader's counter-move, anticipated and answered.** *"You will want to write a better grep — the fix is a different instrument, not a sharper pattern."* **Meeting the objection is what separates persuading from asserting, and it is the half most often missing.**
 5. **Honesty about cost and limits.** *"The entire cost is one extra commit per merge."* *"This is wrong HERE for a specific reason, not a universal one."* **Conceding what is true buys belief in everything around it.**
 
@@ -163,6 +163,16 @@ When writing any instruction, ask: does it have all three? If not, it will decay
 **Cross-repo paths are rooted at the shared parent — write them so they're unambiguous.** Every Evryn repo is a **sibling folder under one shared parent directory** (e.g. `…/Code/_evryn-meta`, `…/Code/evryn-backend`). So a cross-repo path like `_evryn-meta/docs/hub/roadmap.md` resolves from that **parent** — from inside any repo it means *"go up out of this repo, into the sibling `_evryn-meta`,"* **not** a folder inside your current repo. Written this way a reader can **follow the reference without knowing the repo names** — the path is self-locating. This matters most in **agent files (CLAUDE.md, agent definitions)**, where an agent forms its map of where everything lives: a correct sibling-relative path is what lets it find another repo, so we don't lean on a memorized repo list to paper over ambiguous ones.
 
 **Pull timestamps from the system — never type them from memory.** Run `powershell -Command "Get-Date -Format 'yyyy-MM-ddTHH:mm:sszzz'"` before writing any timestamp. Use the full ISO timestamp for anything where chronological precision matters — current-state appendages, session docs, archive filenames, memory-style notes. A wrong timestamp can corrupt the chronological record the interlocking systems depend on.
+
+**🔴 Do not FORWARD line counts. Hand over the command that produces them.** *(Justin's ruling, 2026-09-08: "they're always stale when they get forwarded like this.")*
+
+Applies to anything a later reader will act on — a load list, a handoff, a brief, a cascade. **Give the paths and give `wc -l`; the reader derives the number at the moment they need it.** When a count genuinely has to appear — a subagent load list needs spans so a partial read is visible — **say it is a hypothesis, name the command, and tell the agent to flag a delta rather than reconcile it silently.**
+
+**Why forwarding fails, and it is not that counts drift — it is that forwarding LAUNDERS a stale number into a fact.** A count copied from one document to the next arrives with no provenance and no way to test it, so each reader inherits it as measured. **The record: `ac.md` has been forwarded as 749, then 911, and measured 940 in the same week; `current-state.md` as 220, then 212, then 217.**
+
+⚠️ **And know the one way `wc -l` lies, because it lies precisely where the count is used as a check: it counts NEWLINES.** A file whose last line has no trailing newline reports **one fewer line than it has** — and the line it omits is the **last** one, which is where terminators live: a truncation canary, a closing marker, a checksum. ⇒ **A read bounded by that number stops one line short, finds no canary, and reports a truncation that did not happen.** **Read past the count, or `tail -1`.** *(Live: a generated map reports 634 and its canary is line 635.)*
+
+**⇒ A count is fine for budgeting and useless for proving completeness. The bottom canary proves a full read; the number never did.**
 
 **Every file you create or fully rewrite gets a truncation canary.** Add a note near the top saying the last line should read `FULL FILE LOADED`, and the line `Truncation canary — DO NOT REMOVE: FULL FILE LOADED` at the bottom. This lets a reading instance self-diagnose an incomplete load. The cost is two lines; a silent truncation is invisible critical-information loss.
 
