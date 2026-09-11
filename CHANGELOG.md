@@ -20,6 +20,21 @@
 
 ---
 
+## 2026-09-11 (`ACT-20` — three manual rules from Justin's own corrections, and a lane spin that LOADS before it BRIEFS)
+
+- **`ac.md` gains three rules, each from a correction Justin made today:**
+  - 🔴 **The heartbeat stays armed while ANY PROCESS is being waited on — not just a subagent.** *(A reader subagent hung silently for six minutes while its conductor's heartbeat was paused, and Justin caught it before the conductor did.)* **A call that never returns emits no error and no completion notice, so the heartbeat is the only thing that will wake you to look.** ⚠️ **The pull to pause is strongest exactly there, because waiting FEELS like being done.**
+  - 🔴 **Never let one label mean two things in a ballot — sub-items get NUMBERS, answer options get LETTERS.** *(His catch, on a ballot whose sub-items were lettered (a)(b)(c) while its answer options were also (a)/(b): **"did you mean 'a' the ballot option, or 'a' the option-of-options?"**)* **Same failure as reusing a ballot number across messages: a label that can point at two things silently re-points his answer, and neither party can see it happen.**
+  - 🔴 **When you mean a REQUIREMENT, write it as one — a description cannot be violated, it can only turn out to be false.** *(**"your wording sounds descriptive — make it prescriptive, if that's what you mean… way too often you're writing things this way."**)* **The descriptive form is worse than a vague one because it reads as SETTLED** — a reader believes the property already holds and never asks who enforces it. ⭐ **Added to `evryn-team-workspace/CLAUDE.md`'s Writing discipline as well, at his instruction, because it binds every agent that writes.**
+- **`ac-orchestration-protocol.md`: the subagent-transcript path corrected.** It is `<project-folder>/<session-id>/subagents/agent-<agentId>.jsonl` — **NOT the `tasks/<agentId>.output` path the Agent tool hands back, which can read EMPTY.** It did, and ACT-18 recorded in its handoff that a finished subagent's transcript "can read as empty." The real transcript parsed fine.
+- ⭐ **A LANE'S LOAD LIST IS NOW A SEPARATE FILE FROM ITS BRIEF, so the spin loads before it briefs** *(Justin's ruling; first applied to `ACTj`)*. 🔑 **The brief IS the task** — so handing it over first restores exactly the relevance-triage two-trip loading exists to remove: an agent that knows its task while loading scores each file against it and quietly drops what looks irrelevant, never registering a moment of choosing. **The spin is the three-sentence shape in `being-an-admiral.md`.** *(Its first use returned seven corrections from the lane, so the shape is tested rather than argued.)*
+- **`current-state.md`: the two stale `2026-08-17` bulletin entries drained** — both already memorialized in the team-runtime changelog, and one still asserted that SPRINT Step 43 was CLOSED.
+- **`docs/mailboxes/inbox-lucas.md` created** to close the loop on a founding-team finding *(the finding itself is in the team-runtime changelog)*. ⚠️ **Justin's instruction afterwards: tell him BEFORE writing into another agent's channel — the derivable-address promise assumes somebody is watching, and nobody had verified that.**
+
+**Operator-relevant: nothing deployed; no runtime file in `_evryn-meta` touched.**
+
+---
+
 ## 2026-09-08 evening (`ACT-17` — 🔴 A PROTOCOL TABLE THAT CAUSED THE FAILURE IT WAS WRITTEN TO PREVENT, and two review patterns that only a constant-mutation finds)
 
 - 🔴 **`ac-orchestration-protocol.md`: THE IDENTITY-HALF TABLE NO LONGER CARRIES A LIST. It points at the code that assembles a prompt.** *(Justin-approved.)* **It said the team runtime's identity half is four things — *"the agent definitions + memory files + team manual + composed skills."* The composer opens about TWELVE, across three repos, spanning layers 1–8.**
