@@ -16,7 +16,7 @@ Org: **`EvrynInc`**. All remotes are `https://github.com/EvrynInc/<repo>.git`.
 
 | Repo | Canonical branch | Status | What it is |
 |------|------------------|--------|-----------|
-| `_evryn-meta` | `main` | **Active** | AC's home. Source-of-truth docs (Hub, spokes, ADRs, protocols, legal finals) + AC cross-repo ops (current-state, sessions). |
+| `_evryn-meta` | `main` | **Active** | AC's home. Source-of-truth docs (Hub, spokes, ADRs, protocols) + AC cross-repo ops (current-state, sessions). *Final legal documents are the pages posted in `evryn-website`; drafts and finalization records live in `evryn-team-workspace/shared/projects/legal/`.* |
 | `evryn-backend` | `main` | **Active** | Evryn product backend (v0.2 "Gatekeeper's Inbox"). Live on Railway. |
 | `evryn-dev-workspace` | `main` | ⚫ **RETIRED** (2026-08-18, ADR-057) | **Was DC's home.** Its `CLAUDE.md` is now a redirect stub. **DC's manual lives at `_evryn-meta/.claude/agents/dc.md`** — naming this repo's path in a subagent's load list hands it a stub instead of a manual. |
 | `evryn-quality` | `main` | ⚫ **RETIRED** (2026-08-18, ADR-057) | **Was QC's home.** `CLAUDE.md` is a redirect stub; **QC's manual is `_evryn-meta/.claude/agents/qc.md`.** *(Historical: a stale `master` fork was retired 2026-06-18 after it lobotomized a QC — that lesson is why this table exists.)* |

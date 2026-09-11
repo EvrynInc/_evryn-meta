@@ -16,7 +16,7 @@
 |---|---|---|
 | **What it is for** | **Persisting the SESSION.** | **Handing off the INSTANCE.** |
 | **When** | Mid-session. End of the night. Any checkpoint where you just want the work durable. **Often no re-spin follows.** | You are being re-spun, or you are done and a successor picks this lane up. |
-| **What runs** | `lock-protocol.md`, steps 1–23. | **The whole of `#lock` FIRST**, then the five steps below. |
+| **What runs** | Your own `#lock` protocol, in full. | **The whole of your `#lock` FIRST**, then the five steps below. |
 
 🔴 **WHY THEY ARE SPLIT RATHER THAN MERGED: most locks are not packouts.** *(Justin: "sometimes I lock mid-session, or when I need to close down for the night and just want things persisted — it's not always for a re-spin.")* **Bolting handoff-writing and two full re-read passes onto every checkpoint would make the cheap, frequent operation expensive** — and an expensive checkpoint is one that quietly stops getting run.
 
@@ -24,9 +24,16 @@
 
 ---
 
-## 🔴 STEP 0 — RUN THE FULL `#lock` FIRST. Before you write a line of your handoff.
+## 🔴 STEP 0 — RUN YOUR FULL `#lock` FIRST. Before you write a line of your handoff.
 
-**`docs/protocols/lock-protocol.md`, all of it.**
+**Run YOUR OWN `#lock` protocol in full — the one your operating manual names.** The locks differ by agent — different steps, different step numbers, different documents to persist — so running another agent's lock persists the wrong things and skips your own.
+
+| You are | Your `#lock` |
+|---|---|
+| **AC** | `_evryn-meta/docs/protocols/lock-protocol.md` |
+| **DC** | `_evryn-meta/docs/protocols/dc-lock-protocol.md` |
+| **QC · OC** | the `#lock` section of your own manual — `_evryn-meta/.claude/agents/qc.md` · `oc.md` |
+| **a founding-team agent** | `evryn-team-workspace/shared/protocols/lock-protocol.md` |
 
 **Two things this buys, and the second is the one people miss:**
 
@@ -49,11 +56,11 @@
 
 *(Justin's framing: "How stale is your brief? Do you need to just clean it up and add a new appendage, or is it mostly stale and the next instance would do well to have a clean new brief? Or is the 'stale' stuff good context, just needs cleaning so next-you has it without getting bogged down?")*
 
-🔴 **`lock-protocol.md` step 10's SUPERSEDE trigger decides this FOR you when it fires: the moment you write a correction that points at another section of the same document, that document needs superseding, not another correction.**
+🔴 **`_evryn-meta/docs/protocols/lock-protocol.md` step 10's SUPERSEDE trigger decides this FOR you when it fires: the moment you write a correction that points at another section of the same document, that document needs superseding, not another correction.**
 
 ### 2 · A careful fragment sweep of the conversation
 
-**Yes, `#lock` step 20 already ran one. This is a SECOND pass and it is deliberate.** 🔑 **Writing the handoff is itself a discovery act — it surfaces intentions, open loops and half-decisions that the lock's sweep could not have seen, because they only became visible while you were trying to explain the session to someone else.**
+**If your `#lock` ran a fragment sweep**, **this is an ADDITIONAL pass, and it is deliberate.** 🔑 **Writing the handoff is itself a discovery act — it surfaces intentions, open loops and half-decisions that the lock's sweep could not have seen, because they only became visible while you were trying to explain the session to someone else.**
 
 ⚠️ **Do not skim it because it feels like a repeat.** **The fragments this catches are exactly the ones the first sweep missed.**
 
@@ -67,7 +74,7 @@
 
 - **a. Artifacts.** Does it own a **worktree, a branch, a sandbox, or an uncommitted file**? 🔴 **Resume it and have it reap its own** — it knows what is safe to remove and you do not. **Read its set-down FULLY before any reap; never batch the read with the act.** Use `git branch -d` (lowercase) — **a refusal on divergence is a SIGNAL, not an obstacle; surface it, never `-D` past it.**
 - **b. Persistence.** Is its brief **re-spin-complete** — *could a completely fresh instance pick up everything that still matters from that file alone?* If not, **resume it and have it set down**, naming specifically what is missing. ⚠️ **The durable engineering content is usually the part that exists only in its report** — corrections, measurements, near-misses.
-- **c. Retirement.** If its lane is genuinely finished, its brief is a **retirement candidate** — per `lock-protocol.md` step 10. **Do not retire it in the same breath as reading it.**
+- **c. Retirement.** If its lane is genuinely finished, its brief is a **retirement candidate** — per `_evryn-meta/docs/protocols/lock-protocol.md`. **Do not retire it in the same breath as reading it.**
 - **d. Nothing owed.** Confirm it has no open question waiting on you, and no `NEEDS-JUSTIN` you never surfaced.
 
 **⚠️ THE NESTING TRAP — this is the one that actually bites.** A subagent your subagent spawned (your DC's sandbox, your lane-AC's QC) is **invisible and unreachable to you**. **Only its own spawner can dispose of it.** So when you resume a lane AC to close out, **tell it to close out ITS children too** — and assume **no second round-trip**, because it may not get one.
@@ -92,7 +99,7 @@
 
 ### 6 · Retire the old brief — or say plainly why it must stay
 
-**Per `lock-protocol.md` step 10.** **If it stays, it carries a `HELD-SESSION-DOC` banner with a testable condition and a lineage owner. If it goes, it is archived under its OWN date and its filename does not change.**
+**Per `_evryn-meta/docs/protocols/lock-protocol.md`retirement section.** **If it stays, it states its hold condition in its own first lines — for an AC, the `HELD-SESSION-DOC` banner, with a testable condition and a lineage owner. If it goes, it is archived under its OWN date and its filename does not change.**
 
 ---
 
@@ -110,16 +117,16 @@
 
 ## THEN, THE LANE-ENDING CHECKS — each one is a thing that outlives you if nobody kills it
 
-1. 🗑️ **DELETE THE DEDICATED MAILBOX — do not archive it.** *(Justin's ruling, 2026-09-02; full rule in `mailbox-protocol.md` §6.)* ⚠️ **Confirm it is EMPTY first — a non-empty inbox is telling you the lane is not finished, so discharge before you reap.** **Then `git rm` it, and tell every peer who was writing to it.**
+1. 🗑️ **IF YOU HAVE A DEDICATED MAILBOX, DELETE IT — do not archive it.** *(Justin's ruling, 2026-09-02; full rule in `mailbox-protocol.md` §6.)* ⚠️ **Confirm it is EMPTY first — a non-empty inbox is telling you the lane is not finished, so discharge before you reap.** **Then `git rm` it, and tell every peer who was writing to it.**
    - 🔑 **Deleting is safe for the same reason clearing an entry is safe: `git log --all -p` holds every message the address ever carried, permanently.** ⇒ **A kept-but-dead mailbox preserves nothing git does not already have.**
    - 🔴 **And it costs the thing the channel is built on: a file in the shape `inbox-<name>.md` IS an address to whoever meets it.** **A dead one looks exactly like a live one and reaches nobody — an instance writes into it, commits, believes it sent something, and is wrong, silently and permanently.** ⚠️ **`mailbox-protocol.md` §5 kills the whole archive concept for this reason; do not reintroduce it here.**
    - ⚠️ **`inbox-acp.md` and `inbox-act.md` are PERMANENT and are never deleted.** **`inbox-acv.md` is ambiguous and is Justin's call.**
 2. 🌳 **REAP WORKTREES AND BRANCHES.** `git worktree list` in every repo you touched. **Use `git branch -d` (lowercase) — a refusal is a signal that something is unmerged, not an obstacle to force past.** ⚠️ **Check `node_modules` counts around any reap** *(`ac.md`, Worktree & Branch Discipline)*.
-3. 🔒 **CHECK WHETHER ANYTHING IS HELD ON A CONDITION ONLY YOU COULD SATISFY.** `git grep -n "HELD-SESSION-DOC"`. ⚠️ **A banner reading *"RETIRE UPON: [your lane] has evaluated it"* becomes permanently unsatisfiable the moment your lane ends** — and it will sit there looking merely patient. ⇒ **Either satisfy it now, or re-point the owner to a lineage that still exists.**
-4. 📣 **TELL YOUR ACTIVE PEERS THE LANE IS CLOSING, in their inboxes, before you go.** **Name what they should do with anything they were about to send you.** **A peer writing into a dead lane's mailbox gets no error and no reply.**
+3. 🔒 **IF YOUR LINEAGE USES `HELD-SESSION-DOC` BANNERS, CHECK WHETHER ANYTHING IS HELD ON A CONDITION ONLY YOU COULD SATISFY.** `git grep -n "HELD-SESSION-DOC"`. ⚠️ **A banner reading *"RETIRE UPON: [your lane] has evaluated it"* becomes permanently unsatisfiable the moment your lane ends** — and it will sit there looking merely patient. ⇒ **Either satisfy it now, or re-point the owner to a lineage that still exists.**
+4. 📣 **TELL YOUR ACTIVE PEERS THE LANE IS CLOSING, in whatever channel they read — their inboxes, or, for an instance or subagent in a command structure, your log — before you go.** **Name what they should do with anything they were about to send you.** **A peer writing into a dead lane's mailbox gets no error and no reply.**
 5. 📋 **UPDATE THE LANE'S STATUS ANYWHERE IT IS LISTED AS ACTIVE** — `current-state.md`, a conductor's brief, a roster. **A lane listed as running is a lane someone will route work to.**
 6. 🗂️ **RETIRE THE BRIEF OUTRIGHT — do not supersede it.** **Supersede means "a successor reads the new one." There is no successor.** **Archive it under its own date, name unchanged.**
-7. 🏁 **BANNER THE BRIEF `LANE-CLOSED`, AND SAY SO IN THE CHANGELOG AND CURRENT-STATE.** *(Justin's design, 2026-09-02.)*
+7. 🏁 **BANNER THE BRIEF `LANE-CLOSED`, AND SAY SO IN THE CHANGELOG AND CURRENT-STATE.** *(Justin's design, 2026-09-02. A founding-team agent has no changelog — the evryn-team-workspace `current-state.md` is both.)*
 
 > ### 🏁 THE LANE-CLOSED BANNER — one line, at the top of the retired brief
 > ```
