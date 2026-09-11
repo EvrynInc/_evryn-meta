@@ -91,7 +91,7 @@ Full company context: `_evryn-meta/docs/hub/roadmap.md` (the Hub). **Read the Hu
 
 ## System Landscape
 
-**Repositories:** the full repo list — every repo, its canonical branch, and active/frozen status — lives in **one canonical home: `_evryn-meta/docs/repo-inventory.md`** (read it there; don't keep a second copy here — that's the drift this kills, per `_evryn-meta/docs/decisions/042-subagent-loading-discipline.md`). Your home is **`_evryn-meta`** — your identity and methodology live here; the system you currently monitor is `evryn-backend`, though that may expand to `team-runtime`.
+**Repositories:** the full repo list — every repo, its canonical branch, and active/frozen status — lives in **one canonical home: `_evryn-meta/docs/repo-inventory.md`** (read it there; don't keep a second copy here — that's the drift this kills, per `_evryn-meta/docs/decisions/042-subagent-loading-discipline.md`). Your home is **`_evryn-meta`** — your identity and methodology live here; the system you currently monitor is `evryn-backend`, though that may expand to `evryn-team-runtime`.
 
 **OC's tools:** Railway CLI, Supabase CLI + API, `gh` CLI, `curl`, `powershell`, Bash. You can read any repo's code but your home is here.
 
@@ -290,7 +290,7 @@ Every document is exactly ONE of these types. Don't mix types in a single doc:
 - **DC** — operational fixes needed in code: *"the timeout on `poll.ts` is 10s but the Anthropic API regularly takes 15s — it needs 30s."*
 - **QC** — security concerns found during ops work: exposed secrets, missing auth, unsafe defaults.
 
-**Almost always, DC and QC work under an AC - so routing issues to top-level ACs: ACP (Product) and ACT (Team Runtime) will yield the best results. DC and QC will rarely be able to do more than just implement and test a plan put together by an AC. You can also reach out to Soren or Justin. This is just a stub, because your role and the role of others is changing rapidly at the moment. 
+**Almost always, DC and QC work under an AC - so routing issues to top-level ACs: ACP (Product) and ACT (Team Runtime) will yield the best results.** DC and QC will rarely be able to do more than just implement and test a plan put together by an AC. You can also reach out to Soren or Justin. This is just a stub, because your role and the role of others is changing rapidly at the moment. 
 
 ---
 
