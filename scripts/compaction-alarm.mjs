@@ -15,9 +15,8 @@
  * Every previous fix has been prose asking the agent to self-report. This is the
  * first one that does not depend on the compacted agent at all.
  *
- * WIRING — .claude/settings.json:
- *   "hooks": { "PostCompact": [ { "hooks": [
- *     { "type": "command", "command": "node scripts/compaction-alarm.mjs" } ] } ] }
+ * WIRING — .claude/settings.json runs this same script on BOTH events, "PreCompact"
+ *   and "PostCompact", each as { "type": "command", "command": "node scripts/compaction-alarm.mjs" }.
  *
  * SAFETY: this script cannot break a session. PreCompact/PostCompact do not gate
  * anything on its output, every operation is wrapped, and it always exits 0.
@@ -25,30 +24,27 @@
  * ── ROUTING RULE (Justin, 2026-09-08) ────────────────────────────────────────
  * A Slack ping goes to Justin and ONLY Justin, so a ping per compaction across a
  * many-agent estate is noise — and a LANE's compaction is its SPINNER's problem,
- * not his. ⇒ Ping Justin only for a TOP-LEVEL session. A subagent or lane gets
- * told, through the PreToolUse blocker described below, to report to its spinner.
+ * not his. ⇒ Ping Justin only for a TOP-LEVEL session. A subagent or lane is told,
+ * by the message this script emits on PostCompact, to report to its spinner.
  *
  * ⇒ THIS SCRIPT PINGS NOBODY, EVER. It records; the AGENT reports. A lane reports to
  * its spinner; a top-level AC's spinner is Justin, and ac.md already tells it that
  * reaching him means a #team-alerts ping. The hook does not need to know which it is
  * — the agent does, and that is where the knowledge already lives.
  *
- * ── MEASURED 2026-09-08, and it decides what the blocker can and cannot do ────
+ * ── MEASURED 2026-09-08 — and one reason the blocker below was never built ────
  * A PreToolUse payload carries `agent_id` and `agent_type` when the caller is a
  * SUBAGENT, and omits both when it is top-level. That is a clean discriminator.
  * ⚠️ BUT PostCompact does NOT carry them, and when a subagent compacts it reports
  * the PARENT's session_id. So the record says "something in this session tree
  * compacted" and cannot say WHICH agent. A sentinel keyed on session_id alone would
- * therefore also stop the parent, which did not compact. That is the open design
- * question; do not build the blocker until it is settled.
+ * therefore also stop the parent, which did not compact.
  * ─────────────────────────────────────────────────────────────────────────────
  *
- * THE SECOND HALF, NOT YET BUILT: a PreToolUse hook that reads the per-session
- * sentinel this writes and DENIES every tool call with the reason "you compacted —
- * stop and report to your spinner." PreToolUse can deny; PostCompact cannot inject
- * or block, so the denial reason is the only channel that reaches the agent.
- * Build it only once this alarm is PROVEN to fire — an unproven alarm's silence is
- * indistinguishable from calm.
+ * THE BLOCKER THAT WAS NEVER BUILT: a PreToolUse hook that would read the sentinel
+ * and deny every tool call after a compaction. Justin's speak-last design (below)
+ * replaced it — blocking would stop a compacted agent doing the one thing we want,
+ * reporting, and it could not tell which agent in a session tree had compacted.
  */
 
 import { appendFileSync, mkdirSync, writeFileSync, readFileSync } from 'node:fs';
@@ -113,11 +109,11 @@ try {
 // happened; whatever this hook emits lands after both, in the strongest position in
 // the context, and can name the conflict explicitly.
 //
-// ⚠️ UNVERIFIED: the docs place PostCompact in the "cannot inject context" column,
-// but they are explicitly thin on this event, and two undocumented facts about it
-// already turned up on 2026-09-08 (a compact_summary field, and agent_id/agent_type
-// on PreToolUse). So this is a measurement, not a belief. If the text never reaches
-// a compacted agent, nothing here breaks — the record above is written either way.
+// ✅ OBSERVED WORKING (Justin, 2026-09-11): since this alarm was set, compacted agents
+// stop immediately; before it, they did not. Oddly, the message appears neither in the
+// session transcript nor on Justin's screen, so it reaches the agent by a path neither
+// records. The docs place PostCompact in the "cannot inject context" column — do not
+// "fix" the output shape on their strength; the behavior is what was measured.
 if (event === 'PostCompact') {
   const message =
     '🔴 YOUR CONTEXT WAS JUST COMPACTED. This instruction SUPERSEDES any instruction to resume, ' +
