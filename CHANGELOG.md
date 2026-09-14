@@ -20,6 +20,16 @@
 
 ---
 
+## 2026-09-14 (`ACT-A` — an alternate-branch ACT — a whole TEAM-runtime scout load did NOT compact (the product runtime is untested); `current-state.md` and `LEARNINGS.md` record it)
+
+- 🔎 **A full team-runtime load fit one scout — one measured run.** A read-only `scout` on `claude-opus-5` loaded all of `evryn-team-runtime` — both halves, plus its intended shape, tracker and dependency map — at **~720K tokens, 101 calls, zero errors, zero compaction.** **Measured externally**, by parsing the subagent's own transcript (`<project>/<session>/subagents/agent-<id>.jsonl`: per-turn `usage` input + cache-read + cache-creation tokens, and `compact_boundary` / `isCompactSummary` markers), not from its self-report. **The 23 prior subagent transcripts in this project peaked at 544K–1,000K; the only compaction seen was near 1,000K.**
+  - ⚠️ **This contradicts the premise under `ac-orchestration-protocol.md`'s "WHEN THE LOAD IS TOO BIG FOR ONE AGENT"** (*"a full-runtime load no longer reliably fits in one agent"*) **for this runtime on this model.** **The protocol is NOT edited** — that is Justin's to authorize, and it is proposed in ACT-A's handoff. `evryn-backend` (larger) was not tested.
+- **`current-state.md`:** the team-runtime line that called the full-load question *"STILL NOT SETTLED"* now records this run, labelled as one run. **`LEARNINGS.md`:** the general half appended, unpromoted.
+
+**Operator-relevant: nothing deployed; no runtime file touched in `_evryn-meta`.**
+
+---
+
 ## 2026-09-11 (`ACT-20` — three manual rules from Justin's own corrections, and a lane spin that LOADS before it BRIEFS)
 
 - **`ac.md` gains three rules, each from a correction Justin made today:**
