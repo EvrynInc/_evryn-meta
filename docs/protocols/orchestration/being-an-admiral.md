@@ -81,7 +81,7 @@ As of 2026-09-10, this is a brand-new feature, so watch as it evolves — it may
 ⇒ **Three habits, and they are the whole of it:**
 1. **Publish your address on every start** — `ListAgents`, first line — in one known place: **the Admiral in its own brief, each Captain in its log's header.** Re-publish after any restart. **Never cache a peer's address anywhere else.**
 2. **Before every signal, read the peer's published address and confirm it in `ListAgents`.** If it does not resolve, write to the log and let the watcher carry it.
-3. **Arm a watcher on every log you are party to** — a persistent `Monitor` that fires when the file changes. **The watcher is what makes the log the reliable channel: it is an address that survives a restart, which a signal can never be.** Re-arm after any restart; background tasks die with their session.
+3. **Arm a watcher on every log you are party to** — a persistent `Monitor` that fires when the file changes. ⚠️ **In some sessions a `Monitor` expires after 30 minutes whatever you ask for. Read what it says back when you arm it, and re-arm on its expiry notice** (`ac.md`, *"HOW TO ARM ONE"*). **The watcher is what makes the log the reliable channel: it is an address that survives a restart, which a signal can never be.** Re-arm after any restart; background tasks die with their session.
    ```
    f="<path to the log>"; p=$(md5sum "$f" | cut -c1-32); while true; do sleep 30; c=$(md5sum "$f" 2>/dev/null | cut -c1-32); if [ "$c" != "$p" ]; then echo "log changed: $f"; p=$c; fi; done
    ```
