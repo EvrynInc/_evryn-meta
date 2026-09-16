@@ -42,6 +42,8 @@
 
 ⭐ **THIS IS OBSERVED, NOT ASSERTED.** *(Recorded by `AC0-37h3b5`, 2026-09-02.)* **The lock that ran before the 2026-09-01 product-lane handoff is exactly why that lane's brief was thin enough to load cleanly the next morning.** **Its `CHANGELOG` and `current-state` entries carried what would otherwise have been pages of handoff.**
 
+**Having said that: if you are short on context, the most important thing you can do here is to get your handoff in good working order** - so if you are concerned you'll compact before you get that done, you can change the order so that your handoff is solid before you do a lock. Just read the lock protocol first, then think about what you need to do first, to make sure that if you compact, you haven't lost important information. **The #lock's fragment sweep and the fresh-eyes passes are the things that will be the hardest to re-create after you compact. If you capture those, the rest can fairly easily be re-derived.**
+
 ---
 
 ## THEN, IN THIS ORDER
@@ -142,6 +144,7 @@
 ⭐ **THE ONE-LINE VERSION OF ALL SEVEN: everything that could still ROUTE WORK TO YOU has to be switched off.** **A mailbox, a banner condition, a roster entry and a brief are all addresses — and an address that outlives its agent does not fail loudly. It swallows.**
 
 ---
+**Important:** when you pack out, there are situations where some of the steps don't *apply*. You don't need to be slavish about doing steps *if they're inappropriate*. But know this: every single step here was designed **entirely from past failures**, so if a step reads as overkill, I promise you it's not. It was put in there because it was *critical*. So treat it like an astronaut or a surgeon's checklist: **skip or skimp on even one step, and critical things break**. The most important thing is to do *all* recommended fresh-eyes passes. These are the most-skipped steps and they are honestly the most important part of this whole file. 
 
 ## ⚠️ THE FAILURE THIS PROCEDURE IS BUILT AGAINST
 
