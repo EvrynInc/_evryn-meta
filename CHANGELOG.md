@@ -20,6 +20,24 @@
 
 ---
 
+## 2026-09-16 (`ACT-A` — protocol rules from Justin's rulings: persist a subagent's output to a doc, retire those docs at `#lock`, one author per commit on a shared file, and `Monitor`'s 30-minute expiry)
+
+- **`ac-orchestration-protocol.md` — new section, "Persisting what a subagent returns."**
+  - Output that is long, or needed beyond the session, goes to a doc by default, **extracted verbatim by script** rather than retyped or summarized.
+  - Justin added the stronger form: *if you expect a subagent to have a long or durably important output, have it write to a doc instead of the chat.*
+  - 🔑 **Why:** a scout's load-trip report was never written down and is gone; its work-trip report survives only because it was extracted as it landed.
+- **`lock-protocol.md` step 10:** every doc persisted from a subagent's output gets retired or routed at the lock — **they are the easiest to forget, because you never wrote them yourself.**
+- **`being-an-admiral.md` — item 3:** when several agents edit the same uncommitted source-of-truth file, **each commits its own change separately**, so each can be reviewed and rolled back alone. The heading no longer counts its items.
+- **`ac.md` + `being-an-admiral.md` (`3d554c9`):** read what `Monitor` says when you arm it. **Some sessions ignore `persistent` and cap every monitor at 30 minutes**, so re-arm each instrument on its expiry notice. **An expired watcher looks exactly like a quiet channel.**
+- **`LEARNINGS.md`:**
+  - the 2026-09-14 headline no longer asserts a cause nobody checked;
+  - new entry — **a compacted agent's account of what it did around its own compaction is not evidence; check the transcript's timestamps.**
+- **`team-runtime-full-cascade.md`:** the research list gains Scout-F's whole-runtime capability inventory.
+
+**Operator-relevant: nothing deployed; no runtime code touched.**
+
+---
+
 ## 2026-09-14 (`ACT-A` — an alternate-branch ACT — a whole TEAM-runtime scout load did NOT compact (the product runtime is untested); `current-state.md` and `LEARNINGS.md` record it)
 
 - 🔎 **A full team-runtime load fit one scout — one measured run.** A read-only `scout` on `claude-opus-5` loaded all of `evryn-team-runtime` — both halves, plus its intended shape, tracker and dependency map — at **a 714K-token peak, 101 calls, zero errors, zero compaction.** **Measured externally**, by parsing the subagent's own transcript (`<project>/<session>/subagents/agent-<id>.jsonl`: per-turn `usage` input + cache-read + cache-creation tokens, and `compact_boundary` / `isCompactSummary` markers), not from its self-report *(the peak and the call count were parsed from its complete transcript after the load ended; its per-file spans and canaries were self-reported)*. **Of the 23 prior subagent transcripts in this project, the 15 with the highest peak context — all `claude-opus-5` — peaked at 544K–1,000K; the other 8 peaked at or below 544K, their models not displayed; exactly one of the 23 compacted, at a 1,000K peak.**
