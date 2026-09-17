@@ -76,12 +76,12 @@
 - 🔴 **After a restart, every local session came back under a new name AND a new ref, and nothing announced it.** A signal sent to the old address does not obviously fail.
 - ⚠️ **The ref in brackets belongs to the running PROCESS, not the name and not the conversation.** It holds while a session runs, **even through a rename** — a session went from `jbm-xps-15-9510-lively-quilt` to `Act-18 handoff load list` when it acquired a title, and kept `a2219f` — **and it changes when the process restarts.** *(The 2026-09-10 restart was Justin updating VS Code and the Claude Code extension, which restarted every session at once.)* **The conversation itself survives a restart, but nothing found so far can address a message to it** — which is why the log stays the only address that survives. **Within one session's life, trust the ref over the name.**
 
-As of 20206-09-10, this is a brand-new feature, so watch as it evolves — it may begin to work more reliably over time.
+As of 2026-09-10, this is a brand-new feature, so watch as it evolves — it may begin to work more reliably over time.
 
 ⇒ **Three habits, and they are the whole of it:**
 1. **Publish your address on every start** — `ListAgents`, first line — in one known place: **the Admiral in its own brief, each Captain in its log's header.** Re-publish after any restart. **Never cache a peer's address anywhere else.**
 2. **Before every signal, read the peer's published address and confirm it in `ListAgents`.** If it does not resolve, write to the log and let the watcher carry it.
-3. **Arm a watcher on every log you are party to** — a persistent `Monitor` that fires when the file changes. **The watcher is what makes the log the reliable channel: it is an address that survives a restart, which a signal can never be.** Re-arm after any restart; background tasks die with their session.
+3. **Arm a watcher on every log you are party to** — a persistent `Monitor` that fires when the file changes. ⚠️ **In some sessions a `Monitor` expires after 30 minutes whatever you ask for. Read what it says back when you arm it, and re-arm on its expiry notice** (`ac.md`, *"HOW TO ARM ONE"*). **The watcher is what makes the log the reliable channel: it is an address that survives a restart, which a signal can never be.** Re-arm after any restart; background tasks die with their session.
    ```
    f="<path to the log>"; p=$(md5sum "$f" | cut -c1-32); while true; do sleep 30; c=$(md5sum "$f" 2>/dev/null | cut -c1-32); if [ "$c" != "$p" ]; then echo "log changed: $f"; p=$c; fi; done
    ```
@@ -130,6 +130,14 @@ As of 20206-09-10, this is a brand-new feature, so watch as it evolves — it ma
 > *"I don't want to interact with them directly again until I'm closing their session — I want you to take them through their #lock at the end, and everything."* *(Justin, 2026-09-10.)*
 
 **This is the step that makes "Justin does not talk to Captains" hold all the way to the end.** The close runs: **the Captain runs its own `#lock` and records it in its log → you verify it against that lock protocol → Justin closes the session.** Its commits follow the commit rule under *The log and the signal*.
+
+### What bites at a Captain's commits and at its compaction
+
+**1. A go-ahead you relay is not Justin's go-ahead in the Captain's session.** The harness's permission check looks at who authorized an action *in the session taking it*, so *"Justin says commit"* arriving from you reads as a peer's instruction, not the user's — and it refuses. **Observed twice on 2026-09-10:** once on a Captain's commit that touched `CLAUDE.md`, and once on a Captain's commit of its own log, a file the brief-commit rule allows. ⇒ **Plan for it rather than discover it: when a Captain's commit needs Justin's go, ask him to type it in that Captain's session, or to tell you directly — then you make the commit from your own session.** ⚠️ **And never hand a refused action to another session to do instead** — a peer acting on a go its own user never gave is the same failure, moved. *(Justin, Ballot 34, 2026-09-10.)*
+
+**2. When a Captain compacts with a subagent's report still unread, copy the report — don't recall it.** The report exists, complete, in the subagent's transcript on disk; after compaction it exists nowhere reliable in the Captain's context. ⇒ **Have the compacted Captain do one mechanical task and stop:** extract the report **verbatim** from the on-disk transcript **by script**, hash-verify the copy, and write it to a file headed *"Verbatim and unedited. UNVERIFIED: the parent instance had compacted before reviewing it."* A mechanical copy doesn't depend on compacted memory; a recalled summary does. **This is Justin's one sanctioned exception to "if you compact, you stop"** — it is a file-to-file copy, not judgment. The fresh Captain then *reviews* that file instead of re-running the subagent. *(Justin's idea, 2026-09-10; used on Captain Nathan's fact-audit re-check.)*
+
+**3. When more than one agent edits the same uncommitted source-of-truth file, each commits its OWN change, separately — so each contribution can be reviewed and rolled back alone.** *(Justin, 2026-09-14: "I want each of you to commit your changes, so that if we need to roll back on or the other agent's work, we can see each contribution, instead of them all getting mushed together.")* ⚠️ **A by-path commit takes the file's WHOLE working-tree state**, so the second author commits only after the first author's change is already in `HEAD` — run `git diff <file>` first and confirm the whole diff is yours (`ac.md`, *Commit only your work*). **A commit that carries two agents' hunks cannot be reverted one contribution at a time.** *(This governs the SHAPE of the commits. Whether a source-of-truth commit may happen at all is still Justin's go.)*
 
 ---
 

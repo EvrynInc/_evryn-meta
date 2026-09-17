@@ -242,7 +242,7 @@ This shape has been proven through *a lot* of testing. Honor all six parts — t
 
    *(Both codified 2026-08-03 from a run whose receipts declared 15 reads against **16 observed calls** — a `Read` that errored on a token cap and was silently retried at a smaller limit, plus a `Grep` of an unlisted file described as verifying the artifact of record. **Nothing in that run was actually wrong, which is the whole lesson: a clean-looking receipt is exactly what a smoothed one looks like.** Neither defect was visible from the receipt alone.)*
 
-   **⇒ THE TECHNIQUE THAT ACTUALLY OBSERVES A CHILD'S CALLS — parse its transcript (added 2026-08-04; a sub-AC invented this and it is better than what this protocol previously asked for).** The `Agent` tool returns a subagent's final text plus an **aggregate** `tool_uses` count — **even in foreground.** So "cross-check the receipts against the observed read-stream" is, from the spinner's seat, **count-only**: you can catch a gross mismatch and nothing finer. **The stronger move: read the child's task transcript directly and count `tool_use` blocks by tool.** That yields the real per-tool breakdown (how many `Read`, how many `Grep`, how many errored) *independent of the child's narration*, and it is the difference between trusting a summary and observing behavior. **Two things make it worth the effort:** (a) the **errored-call count** is the number that matters — a receipt that declares 15 calls against 18 observed is *loose*, but a receipt that declares zero failures against one observed error is *hiding something*; and (b) it is the only way to catch a `Grep` reported as a `Read`. ⚠️ **Do NOT `Read` the transcript file into your own context** — it is the full JSONL conversation and will overflow you; parse it with a script and print only the counts. **When you cannot do this** (you don't hold the child's task file), say so in your attestation in exactly those words — *"I could not observe the call-stream, so the count is unreconciled"* — rather than letting a file-list check read as a full one.
+   **⇒ THE TECHNIQUE THAT ACTUALLY OBSERVES A CHILD'S CALLS — parse its transcript (added 2026-08-04; a sub-AC invented this and it is better than what this protocol previously asked for).** The `Agent` tool returns a subagent's final text plus an **aggregate** `tool_uses` count — **even in foreground.** So "cross-check the receipts against the observed read-stream" is, from the spinner's seat, **count-only**: you can catch a gross mismatch and nothing finer. **The stronger move: read the child's transcript directly and count `tool_use` blocks by tool.** ⚠️ **It is `<project-folder>/<session-id>/subagents/agent-<agentId>.jsonl` — NOT the `tasks/<agentId>.output` path the Agent tool hands back, which can read EMPTY.** *(2026-09-10: a conductor parsed the returned path, got zero lines, and wrote into its handoff that a finished subagent's transcript "can read as EMPTY." The real transcript parsed fine — 42 calls on one trip, 61 on the other.)* That yields the real per-tool breakdown (how many `Read`, how many `Grep`, how many errored) *independent of the child's narration*, and it is the difference between trusting a summary and observing behavior. **Two things make it worth the effort:** (a) the **errored-call count** is the number that matters — a receipt that declares 15 calls against 18 observed is *loose*, but a receipt that declares zero failures against one observed error is *hiding something*; and (b) it is the only way to catch a `Grep` reported as a `Read`. ⚠️ **Do NOT `Read` the transcript file into your own context** — it is the full JSONL conversation and will overflow you; parse it with a script and print only the counts. **When you cannot do this** (you don't hold the child's task file), say so in your attestation in exactly those words — *"I could not observe the call-stream, so the count is unreconciled"* — rather than letting a file-list check read as a full one.
 
 ---
 
@@ -655,6 +655,22 @@ Nothing else changes: the verbatim `<identity>`/`<mandatory_load>`/`<task>`/`<qu
 - **The fresh-spawn rule is unchanged:** a **new** `Agent()` call is still a clean, zero-memory instance — never brief a *new* spawn as if it did prior work. Resume (SendMessage-by-id) is the *only* path that carries context; a fresh Agent call does not.
 
 *(Probe log + agent handles: `docs/sessions/historical/2026.07/2026.07.01-ac0-subagent-resume-test-state.md`.)*
+
+---
+
+## Persisting what a subagent returns — a returned report is not persistence
+
+*(Justin's ruling, 2026-09-14; sharpened by him 2026-09-16.)*
+
+**The moment a subagent's output lands, decide where it lives:**
+- **Long, or needed beyond this session → a document, by default.** Write it **by script, verbatim, at full resolution, as it lands** — extract it from the subagent's own transcript (`<project-folder>/<session-id>/subagents/agent-<agentId>.jsonl`) rather than retyping or summarizing it. **File it like any other doc:** a real doc goes where it belongs (research lives in the repo it is about); a working artifact goes in `docs/sessions/`.
+- **Short, and used only within this session → your context is enough.**
+
+**If you expect a sub to have a long and/or durably important output, just have it write to a doc *instead* of the chat.**
+
+🔑 **Why: your context is not storage.** A compaction, a crash or a session end takes the output with it, and resume does not survive a session (above). Justin's framing: *"assume the compaction summary will be woefully inadequate."* *(Live, 2026-09-14: a scout's load-trip report — its receipts and two flags — was never written down and is gone; its work-trip report survives only because it was extracted by script as it landed.)*
+
+⇒ **Every doc you create this way needs a disposition at your next `#lock`** — route its substance to its home, then retire it, or hold it with a banner (`lock-protocol.md` step 10).
 
 ---
 

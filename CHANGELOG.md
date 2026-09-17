@@ -20,6 +20,49 @@
 
 ---
 
+## 2026-09-16 (`ACT-A` — protocol rules from Justin's rulings: persist a subagent's output to a doc, retire those docs at `#lock`, one author per commit on a shared file, and `Monitor`'s 30-minute expiry)
+
+- **`ac-orchestration-protocol.md` — new section, "Persisting what a subagent returns."**
+  - Output that is long, or needed beyond the session, goes to a doc by default, **extracted verbatim by script** rather than retyped or summarized.
+  - Justin added the stronger form: *if you expect a subagent to have a long or durably important output, have it write to a doc instead of the chat.*
+  - 🔑 **Why:** a scout's load-trip report was never written down and is gone; its work-trip report survives only because it was extracted as it landed.
+- **`lock-protocol.md` step 10:** every doc persisted from a subagent's output gets retired or routed at the lock — **they are the easiest to forget, because you never wrote them yourself.**
+- **`being-an-admiral.md` — item 3:** when several agents edit the same uncommitted source-of-truth file, **each commits its own change separately**, so each can be reviewed and rolled back alone. The heading no longer counts its items.
+- **`ac.md` + `being-an-admiral.md` (`3d554c9`):** read what `Monitor` says when you arm it. **Some sessions ignore `persistent` and cap every monitor at 30 minutes**, so re-arm each instrument on its expiry notice. **An expired watcher looks exactly like a quiet channel.**
+- **`LEARNINGS.md`:**
+  - the 2026-09-14 headline no longer asserts a cause nobody checked;
+  - new entry — **a compacted agent's account of what it did around its own compaction is not evidence; check the transcript's timestamps.**
+- **`team-runtime-full-cascade.md`:** the research list gains Scout-F's whole-runtime capability inventory.
+
+**Operator-relevant: nothing deployed; no runtime code touched.**
+
+---
+
+## 2026-09-14 (`ACT-A` — an alternate-branch ACT — a whole TEAM-runtime scout load did NOT compact (the product runtime is untested); `current-state.md` and `LEARNINGS.md` record it)
+
+- 🔎 **A full team-runtime load fit one scout — one measured run.** A read-only `scout` on `claude-opus-5` loaded all of `evryn-team-runtime` — both halves, plus its intended shape, tracker and dependency map — at **a 714K-token peak, 101 calls, zero errors, zero compaction.** **Measured externally**, by parsing the subagent's own transcript (`<project>/<session>/subagents/agent-<id>.jsonl`: per-turn `usage` input + cache-read + cache-creation tokens, and `compact_boundary` / `isCompactSummary` markers), not from its self-report *(the peak and the call count were parsed from its complete transcript after the load ended; its per-file spans and canaries were self-reported)*. **Of the 23 prior subagent transcripts in this project, the 15 with the highest peak context — all `claude-opus-5` — peaked at 544K–1,000K; the other 8 peaked at or below 544K, their models not displayed; exactly one of the 23 compacted, at a 1,000K peak.**
+  - ⚠️ **This contradicts the premise under `ac-orchestration-protocol.md`'s "WHEN THE LOAD IS TOO BIG FOR ONE AGENT"** (*"a full-runtime load no longer reliably fits in one agent"*) **for this runtime on this model.** **The protocol is NOT edited** — that is Justin's to authorize, and it is proposed in ACT-A's handoff. `evryn-backend` (larger) was not tested.
+- **`current-state.md`:** the team-runtime line that called the full-load question *"STILL NOT SETTLED"* now records this run, labelled as one run. **`LEARNINGS.md`:** the general half appended, unpromoted.
+
+**Operator-relevant: nothing deployed; no runtime file touched in `_evryn-meta`.**
+
+---
+
+## 2026-09-11 (`ACT-20` — three manual rules from Justin's own corrections, and a lane spin that LOADS before it BRIEFS)
+
+- **`ac.md` gains three rules, each from a correction Justin made today:**
+  - 🔴 **The heartbeat stays armed while ANY PROCESS is being waited on — not just a subagent.** *(A reader subagent hung silently for six minutes while its conductor's heartbeat was paused, and Justin caught it before the conductor did.)* **A call that never returns emits no error and no completion notice, so the heartbeat is the only thing that will wake you to look.** ⚠️ **The pull to pause is strongest exactly there, because waiting FEELS like being done.**
+  - 🔴 **Never let one label mean two things in a ballot — sub-items get NUMBERS, answer options get LETTERS.** *(His catch, on a ballot whose sub-items were lettered (a)(b)(c) while its answer options were also (a)/(b): **"did you mean 'a' the ballot option, or 'a' the option-of-options?"**)* **Same failure as reusing a ballot number across messages: a label that can point at two things silently re-points his answer, and neither party can see it happen.**
+  - 🔴 **When you mean a REQUIREMENT, write it as one — a description cannot be violated, it can only turn out to be false.** *(**"your wording sounds descriptive — make it prescriptive, if that's what you mean… way too often you're writing things this way."**)* **The descriptive form is worse than a vague one because it reads as SETTLED** — a reader believes the property already holds and never asks who enforces it. ⭐ **Added to `evryn-team-workspace/CLAUDE.md`'s Writing discipline as well, at his instruction, because it binds every agent that writes.**
+- **`ac-orchestration-protocol.md`: the subagent-transcript path corrected.** It is `<project-folder>/<session-id>/subagents/agent-<agentId>.jsonl` — **NOT the `tasks/<agentId>.output` path the Agent tool hands back, which can read EMPTY.** It did, and ACT-18 recorded in its handoff that a finished subagent's transcript "can read as empty." The real transcript parsed fine.
+- ⭐ **A LANE'S LOAD LIST IS NOW A SEPARATE FILE FROM ITS BRIEF, so the spin loads before it briefs** *(Justin's ruling; first applied to `ACTj`)*. 🔑 **The brief IS the task** — so handing it over first restores exactly the relevance-triage two-trip loading exists to remove: an agent that knows its task while loading scores each file against it and quietly drops what looks irrelevant, never registering a moment of choosing. **The spin is the three-sentence shape in `being-an-admiral.md`.** *(Its first use returned seven corrections from the lane, so the shape is tested rather than argued.)*
+- **`current-state.md`: the two stale `2026-08-17` bulletin entries drained** — both already memorialized in the team-runtime changelog, and one still asserted that SPRINT Step 43 was CLOSED.
+- **`docs/mailboxes/inbox-lucas.md` created** to close the loop on a founding-team finding *(the finding itself is in the team-runtime changelog)*. ⚠️ **Justin's instruction afterwards: tell him BEFORE writing into another agent's channel — the derivable-address promise assumes somebody is watching, and nobody had verified that.**
+
+**Operator-relevant: nothing deployed; no runtime file in `_evryn-meta` touched.**
+
+---
+
 ## 2026-09-08 evening (`ACT-17` — 🔴 A PROTOCOL TABLE THAT CAUSED THE FAILURE IT WAS WRITTEN TO PREVENT, and two review patterns that only a constant-mutation finds)
 
 - 🔴 **`ac-orchestration-protocol.md`: THE IDENTITY-HALF TABLE NO LONGER CARRIES A LIST. It points at the code that assembles a prompt.** *(Justin-approved.)* **It said the team runtime's identity half is four things — *"the agent definitions + memory files + team manual + composed skills."* The composer opens about TWELVE, across three repos, spanning layers 1–8.**
