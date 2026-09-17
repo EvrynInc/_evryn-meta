@@ -658,6 +658,22 @@ Nothing else changes: the verbatim `<identity>`/`<mandatory_load>`/`<task>`/`<qu
 
 ---
 
+## Persisting what a subagent returns — a returned report is not persistence
+
+*(Justin's ruling, 2026-09-14; sharpened by him 2026-09-16.)*
+
+**The moment a subagent's output lands, decide where it lives:**
+- **Long, or needed beyond this session → a document, by default.** Write it **by script, verbatim, at full resolution, as it lands** — extract it from the subagent's own transcript (`<project-folder>/<session-id>/subagents/agent-<agentId>.jsonl`) rather than retyping or summarizing it. **File it like any other doc:** a real doc goes where it belongs (research lives in the repo it is about); a working artifact goes in `docs/sessions/`.
+- **Short, and used only within this session → your context is enough.**
+
+**If you expect a sub to have a long and/or durably important output, just have it write to a doc *instead* of the chat.**
+
+🔑 **Why: your context is not storage.** A compaction, a crash or a session end takes the output with it, and resume does not survive a session (above). Justin's framing: *"assume the compaction summary will be woefully inadequate."* *(Live, 2026-09-14: a scout's load-trip report — its receipts and two flags — was never written down and is gone; its work-trip report survives only because it was extracted by script as it landed.)*
+
+⇒ **Every doc you create this way needs a disposition at your next `#lock`** — route its substance to its home, then retire it, or hold it with a banner (`lock-protocol.md` step 10).
+
+---
+
 ## Nested subagents — delivery to the PARENT is AUTOMATIC. The only way to break it is to instruct the child on where to deliver.
 
 **A subagent you spawn can spawn its own subagents, and its children's work comes back to IT — not to you.** This is the mechanism that makes a two-level AC hierarchy possible (ACP supervising AC2/AC3 etc.).
