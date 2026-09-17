@@ -18,7 +18,7 @@
 
 **What was discharged:** ACT-A's 2026-09-16 findings package on `evryn-team-runtime` — roughly thirty claims from a read-only scout (tracker statuses the code contradicts, `ARCHITECTURE.md` claims the code does not bear out, and seventeen findings with no Step). ⚠️ **It asked for no `RECEIVED` and watches no inbox**, so none was sent.
 
-🔴 **CAPTURED VERBATIM, NOT SUMMARISED, to `docs/sessions/2026.09.17-act21-actr-acta-scout-findings.md`** — extracted with `sed` rather than retyped. **Every claim in it is UNVERIFIED and none may change a tracker until its anchor is read at source.** **It is the first work package for the `ACTr` reconciliation lane.**
+🔴 **CAPTURED VERBATIM, NOT SUMMARISED, to `docs/sessions/2026.09.17-act21-act-r-scout-findings.md`** — extracted with `sed` rather than retyped. **Every claim in it is UNVERIFIED and none may change a tracker until its anchor is read at source.** **It is the first work package for the `ACT-R` reconciliation lane** *(`docs/sessions/2026.09.17-act21-act-r-reconciliation-brief.md`)*.
 
 ---
 
