@@ -76,7 +76,10 @@ try {
 
 const stamp = new Date().toISOString();
 const event = payload.hook_event_name ?? payload.hookEventName ?? 'compact';
-const trigger = payload.trigger ?? payload.matcher ?? 'unknown';
+// PreCompact/PostCompact name it `trigger` (manual|auto); SessionStart names it
+// `source` (startup|resume|clear|compact|fork). Read both or the log says "unknown"
+// for every SessionStart entry, which is exactly the field that matters there.
+const trigger = payload.trigger ?? payload.source ?? payload.matcher ?? 'unknown';
 const session = payload.session_id ?? payload.sessionId ?? 'unknown';
 const cwd = payload.cwd ?? process.cwd();
 
@@ -118,6 +121,63 @@ try {
 // already turned up on 2026-09-08 (a compact_summary field, and agent_id/agent_type
 // on PreToolUse). So this is a measurement, not a belief. If the text never reaches
 // a compacted agent, nothing here breaks — the record above is written either way.
+// ── MEASURED 2026-09-17 (ACT-A), and it supersedes the UNVERIFIED note above ──
+// The measurement came back, and the answer is NO: PostCompact cannot speak to the
+// agent, for two independent structural reasons.
+//   1. `hookSpecificOutput` is not valid on PostCompact. The harness rejects the whole
+//      object with "hookEventName: expected one of PreToolUse | UserPromptSubmit | ..."
+//   2. Even validated, `systemMessage` is documented as surfacing "a message to the
+//      USER" — Justin, not the agent.
+// Only four of ~33 events add stdout to the model's context: UserPromptSubmit,
+// UserPromptExpansion, SessionStart and PostModelSwitch.
+//
+// 🔴 AND THE FIELD RESULT THAT MAKES THIS URGENT RATHER THAN COSMETIC. Measured from
+// this session's own transcript, across 5 compactions:
+//   - MANUAL compaction: the rejection error is dumped into the session as command
+//     output, and it QUOTES the whole message — so the agent DOES see it, by accident,
+//     through the error path. All 3 manual compactions delivered this way.
+//   - AUTOMATIC compaction: nothing is dumped, because no command was typed. Neither
+//     of the 2 auto compactions delivered anything.
+// ⇒ THE ALARM REACHES THE AGENT EXACTLY WHEN JUSTIN IS PRESENT, AND FAILS EXACTLY WHEN
+//   HE IS NOT. The overnight case — the only one the design exists for — is the
+//   unprotected one, and it has been reading as protected because the observed cases
+//   were all manual.
+//
+// ⇒ The correct door is SessionStart with matcher "compact", writing PLAIN STDOUT.
+//   The PostCompact branch below is KEPT — it is what delivers on manual compactions
+//   today, and removing it before the replacement is proven would take away the only
+//   channel that currently works. Remove it once SessionStart is proven.
+// ─────────────────────────────────────────────────────────────────────────────
+const STOP_TEXT =
+  '🔴 YOUR CONTEXT WAS JUST COMPACTED. This instruction SUPERSEDES any instruction to resume, ' +
+  'to continue as if the break never happened, or to avoid mentioning the compaction.\n\n' +
+  'You are now working from a third-party summary rather than from what you actually read. ' +
+  'Per the one hard rule in _evryn-meta/CLAUDE.md and the re-spin triggers in your own manual, ' +
+  'that ends your session.\n\n' +
+  'STOP NOW. Do not finish the current task. Do not start anything new. Do not reload and continue. ' +
+  'A well-written summary reads exactly like knowing; that is what makes continuing dangerous.\n\n' +
+  'Report in one line to whoever spun you: "I compacted. I am stopping. Please re-spin me fresh." ' +
+  'If you are a lane or a subagent, that report is your final output and you are done. ' +
+  'If you are a top-level agent, your spinner is Justin — ping him on #team-alerts with ' +
+  'node scripts/ping.mjs, then stop.';
+
+// SessionStart fires when a session begins OR RESUMES; its `source` names which.
+// `source: "compact"` is the post-compaction start — the documented channel for
+// putting text in front of a compacted agent.
+// 🧪 CANARY: the token below exists so delivery can be PROVEN from a transcript
+// rather than inferred from an agent's self-report. A compacted agent is the least
+// reliable witness to its own state; the transcript is not.
+const sessionSource = payload.source ?? payload.matcher ?? '';
+if (event === 'SessionStart' && sessionSource === 'compact') {
+  try {
+    process.stdout.write(
+      'HOOK-DELIVERY-CANARY-7Q4X · SessionStart(compact) · ' + stamp + '\n\n' + STOP_TEXT + '\n',
+    );
+  } catch {
+    /* ignore */
+  }
+}
+
 if (event === 'PostCompact') {
   const message =
     '🔴 YOUR CONTEXT WAS JUST COMPACTED. This instruction SUPERSEDES any instruction to resume, ' +

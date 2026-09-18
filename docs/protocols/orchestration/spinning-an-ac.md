@@ -72,6 +72,34 @@ You are AC (Architect Claude), designated **[AC0 | AC2 | ACU | …]**. ⚠️ **
 
 **Say what you derived, and say it where it can be audited** — in your relay, and in the committed brief. **A load derived silently is indistinguishable from a load inherited by habit.**
 
+### ✅ THE CATCH-22 THE GATE CREATES — and how to spin a Captain into territory you have NOT read
+
+*(Justin's ruling, 2026-09-17, when the gate was put to him as a blocker.)*
+
+**Read strictly, the gate above is unsatisfiable at the top of a tree.** You cannot read everything a Captain will read in order to brief it — **that is most of the reason you are spinning it.** *(His words: "you can't load all that they'd load in order to spin them — that would defeat a lot of the purpose of spinning a subordinate.")*
+
+⇒ **So the gate does not bar the spin. It decides what you are allowed to CALL the thing you hand over.**
+
+| What you hold | What you hand down | What you must say |
+|---|---|---|
+| **You have read the territory** | A **load list** | Nothing extra — derive it exactly as the gate describes |
+| **You have NOT read it, but you know at a high level what the pieces are** | A **starting point** | 🔴 **Say plainly that it is a starting point rather than a derived list, and that the Captain takes it from there** |
+| **An inherited list from a predecessor who WAS loaded** | That list, **with its predecessor's reasons attached** | **Pass the MEANINGS, not just the paths** |
+
+🔑 **Why an list inherited from a *well-contextualized* predecessor is worth more than it looks — and the condition that makes it so.** A heavily-loaded predecessor who wrote down *why* each item is on the list left behind the one thing you cannot reconstruct: **its judgement about what the material MEANS.** ⇒ **Carry those reasons forward.** ⚠️ **A list stripped to filenames has lost precisely the part that survived its author's context — and it will read as authoritative anyway.**
+
+#### ⭐ The half that makes load lists get BETTER instead of staying wrong: the Captain keeps the note
+
+🔴 **A Captain spun against a starting point rather than a derived list MUST be told, in its `<task>`, to keep a running note of what it actually needed to load — and just as importantly what it *genuinely didn't* need to — written as it goes, into the brief.**
+
+(Make sure all agents are careful, though: it's easy to think that you don't need something **once you've loaded it** — because it's in your awareness and so it feels kind of invisible — so you have to be diligent about balancing this: "did I use anything of this file? Am I *sure* I don't need it?")
+
+**Why this is load-bearing rather than housekeeping:** a Captain **will** re-spin — that is its normal lifecycle, not a failure — and the agent best placed to write the next load list is **the one that just did the work.** ⇒ **Its note becomes the next instance's derived list.** **The precision you could not supply at spin-up gets supplied by the lane itself, one generation later.**
+
+⭐ **So an under-derived load list is a starting condition, not a permanent defect — provided somebody writes down what it should have been.** **Nobody above the lane is positioned to do that. Only the lane is.**
+
+⚠️ **It only works if the note lives in the BRIEF** (see "The work brief"). **A note that dies with the instance teaches nobody, and the next spin repeats the guess.**
+
 ---
 
 ### 🔴 Choosing the sub-AC's tier — Full or Light — and then listing the ACTUAL files
@@ -218,6 +246,24 @@ The sub-AC lacks context the head has: cross-lane collisions, sequencing, deploy
 **The structural answer instead: make falling off the cliff FREE.** If the brief holds the real state — decisions, open questions, what's done, what's next, what was tried and rejected — then **a re-spin costs a load, not a memory.** The head kills the exhausted sub-AC, spins a fresh one, points it at the same brief, and the lane continues. **Don't measure context; make re-spins lossless.** That inverts the problem from "how do I keep this agent alive" to "how do I make its death not matter."
 
 **⇒ So the brief must ALWAYS be current enough to re-spin from cold.** The test, at every append: *"if this instance died right now, could a fresh one pick up from this file alone?"* If no, the brief is behind — fix it before doing anything else. This is the same discipline as the Autonomous Work Protocol's handoff doc (AC `CLAUDE.md`), applied one level down.
+
+### 🔴 POST AS YOU GO, IN COMMITTED BATCHES — a conductor cannot rescue what a Captain never posted
+
+*(2026-09-16, after a live attempt to recover a Captain's work failed.)*
+
+**"Draft it in the scratchpad until it's finished" is safe only for text that can be re-derived.** Everything else — a ledger, a findings list, a verdict, a completion report — **goes into the brief in committed batches, as it is produced.**
+
+🔴 **Why the fallback you are picturing does not exist: copying another session's scratchpad into the repo was REFUSED by the permission classifier**, and correctly not routed around. ⇒ **There is no rescue path.** **A Captain that dies holding an unposted draft has destroyed it**, and its conductor discovers this by asking for something that no longer exists.
+
+⭐ **Observed working the very next round:** a Captain posted a `LEDGER DRAFT` early and staged its completion report *before* running its final fixes. **No compaction could have taken either.**
+
+### ⚠️ A BLOCKED CAPTAIN'S WATCHER BURNS ITS OWN CONTEXT — stand both instruments down before it waits
+
+**Every entry another party posts to a shared log wakes a watching agent and lands that entry in its context.** For a Captain that is **blocked and near its budget**, that is a pure tax on its scarcest resource — **it is paying full attention to a conversation it cannot act on.**
+
+⇒ **Once a Captain is blocked and close to its limit: have it stop BOTH its watcher and its heartbeat, and wake it with a `SendMessage` when its input actually lands.** *(All three Captains did this at ~800–880K on 2026-09-16, and all three finished standing.)*
+
+⚠️ **This is the one case that inverts the standing heartbeat rule in `ac.md`** (*waiting on a process is not a hold — keep it armed*). **The difference is who waits on whom: an agent watching its OWN subordinates keeps its instruments armed, because their silence is the thing it must notice. An agent that is itself blocked and nearly full has nothing to notice and cannot afford to look.**
 
 ### Consolidation — the brief WILL bloat, and that's a managed event
 

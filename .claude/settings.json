@@ -22,6 +22,14 @@
     ]
   },
   "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "compact",
+        "hooks": [
+          { "type": "command", "command": "node scripts/compaction-alarm.mjs" }
+        ]
+      }
+    ],
     "PreCompact": [
       {
         "hooks": [

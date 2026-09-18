@@ -240,6 +240,12 @@ This shape has been proven through *a lot* of testing. Honor all six parts — t
 
    **And when a receipt says something was "verified," check what tool did the verifying.** A `Grep` is not a `Read`: it returns the lines matching terms *the agent already chose*, so it can confirm a string is present but cannot establish what a file says or that it loaded. A receipt reporting a search as *"verified against the artifact of record"* has laundered a confirmation-shaped search into a full read — **treat any conclusion resting on it as UNVERIFIED**, exactly as you would a short span or a missing canary. *(This is the receipts-side companion to the writing-side rule that grepping can be actively misleading — see the `<mandatory_load>` plea.)*
 
+   🔴 **AND IF YOU AUTOMATE THIS CHECK, THE CHECKER FAILS IN BOTH DIRECTIONS — it has already produced a false negative about a canary.** *(2026-09-16, a home-made receipts verifier.)* **Two defects, and both are the kind that read as rigour:**
+   - **It searched for the canary string ANYWHERE in a read window.** ⚠️ **But many of our files QUOTE their own canary in the truncation-check header** — so a file whose *first* window was read scores a confirmed canary it never reached. ⇒ **Judge the LAST window only.**
+   - **It counted only `Read` calls, so it declared a canary unseen when the agent had confirmed it with `tail -2`.** ⇒ **Look for OTHER confirmations before you declare one absent.**
+
+   🔑 **The pattern worth carrying past this specific tool: a verifier that reports on a run is itself an instrument, and nothing verifies IT.** **Pair it with a known-good control — a file you are certain loaded, and one you are certain did not — and confirm it gets both right before you believe either.**
+
    *(Both codified 2026-08-03 from a run whose receipts declared 15 reads against **16 observed calls** — a `Read` that errored on a token cap and was silently retried at a smaller limit, plus a `Grep` of an unlisted file described as verifying the artifact of record. **Nothing in that run was actually wrong, which is the whole lesson: a clean-looking receipt is exactly what a smoothed one looks like.** Neither defect was visible from the receipt alone.)*
 
    **⇒ THE TECHNIQUE THAT ACTUALLY OBSERVES A CHILD'S CALLS — parse its transcript (added 2026-08-04; a sub-AC invented this and it is better than what this protocol previously asked for).** The `Agent` tool returns a subagent's final text plus an **aggregate** `tool_uses` count — **even in foreground.** So "cross-check the receipts against the observed read-stream" is, from the spinner's seat, **count-only**: you can catch a gross mismatch and nothing finer. **The stronger move: read the child's transcript directly and count `tool_use` blocks by tool.** ⚠️ **It is `<project-folder>/<session-id>/subagents/agent-<agentId>.jsonl` — NOT the `tasks/<agentId>.output` path the Agent tool hands back, which can read EMPTY.** *(2026-09-10: a conductor parsed the returned path, got zero lines, and wrote into its handoff that a finished subagent's transcript "can read as EMPTY." The real transcript parsed fine — 42 calls on one trip, 61 on the other.)* That yields the real per-tool breakdown (how many `Read`, how many `Grep`, how many errored) *independent of the child's narration*, and it is the difference between trusting a summary and observing behavior. **Two things make it worth the effort:** (a) the **errored-call count** is the number that matters — a receipt that declares 15 calls against 18 observed is *loose*, but a receipt that declares zero failures against one observed error is *hiding something*; and (b) it is the only way to catch a `Grep` reported as a `Read`. ⚠️ **Do NOT `Read` the transcript file into your own context** — it is the full JSONL conversation and will overflow you; parse it with a script and print only the counts. **When you cannot do this** (you don't hold the child's task file), say so in your attestation in exactly those words — *"I could not observe the call-stream, so the count is unreconciled"* — rather than letting a file-list check read as a full one.
@@ -304,6 +310,29 @@ In our previous version of this, subagents had to be *heavily* cajoled into foll
 
 ⇒ **The three-trip design is NOT in question — it rests on the three compactions above, not on that arithmetic.** What the bad numbers did affect is the *diagnosis*: at the true rates the doc half is roughly half what was claimed, which may make the **runtime** the dominant cost instead. **So do not use a tokens-per-line figure to decide what to scope down.** **Measure the whole file:** `Read` it with **no `offset` and no `limit`** and take the count from the over-cap notice. ⚠️ **A `Read` carrying an explicit `limit` reports the count of the SLICE, not the file** — that is exactly how the wrong numbers were born. For a file under the cap, derive from bytes at ≈2.88 bytes/token and **label it derived.**
 
+> ### 🔴 MEASURED 2026-09-17 — THE PREMISE ABOVE IS TRUE BUT MIS-DIAGNOSED, AND THE MIS-DIAGNOSIS SENDS YOU TO THE WRONG FIX
+>
+> *(Ballot ⓽, authorized 2026-09-16. **DRAFT — left uncommitted for Justin's SCM vet.**)*
+>
+> **The section above says a full-runtime load "no longer reliably fits in one agent." Four data points now say something narrower and more useful:**
+>
+> | When | The agent | What it read | Outcome |
+> |---|---|---|---|
+> | **2026-08-10** | Three agents **carrying a full cascade** | The product runtime | 🔴 **Two compacted during the load** |
+> | **2026-08-11** | A full-load product scout | The product runtime | 🔴 **Compacted at ~85%**, never reaching `classify.ts` or any identity file |
+> | **2026-09-14** | `Scout-F`, a `scout` with a brief and no cascade | **ALL of `evryn-team-runtime`** — 59 code and migration files, 12 identity files, the docs, the SPRINT, the dependency map | ✅ **714K peak, ZERO compaction** |
+> | **2026-09-17** | A generic instrument carrying essentially nothing | **ALL of `evryn-backend/src/`** — 45 files, ~13,900 lines | ✅ **No compaction, finished at 468K.** Then read ~23,000 lines MORE — the whole team runtime plus 20 test files — **and compacted only at ~36,900 lines across 125 files** |
+>
+> 🔑 **THE CORRECTED PREMISE: a full runtime fits comfortably in an agent that is carrying nothing else. What does not fit is a full runtime ON TOP OF A FULL CASCADE.** **Both agents that compacted were carrying one. Both that did not, were not.**
+>
+> ⚠️ **Why the difference matters rather than being a quibble: it changes which lever you reach for.** **"The runtime is too big" sends you to split the RUNTIME** — fan-outs, three trips, slices, all of which are weaker at the seams. **"The cascade plus the runtime is too big" also permits splitting the CASCADE** — which is what a scout already is, and why the scout pattern works.
+>
+> ⇒ **So before reaching for a three-trip spin, ask which half you can move.** **An agent that will only READ and REPORT usually does not need the full cascade; an agent that will BUILD does.** **The three-trip shape stays correct for the second case and is often unnecessary for the first.**
+>
+> ⚖️ **What this does NOT license, stated plainly because it is the obvious misreading: this is not permission to strip the cascade from a builder.** The tier rule is unchanged — **building or evaluating a build gets the full cascade, no trimming.** **What is newly available is the observation that a pure READER is a different animal, and has more room than this section assumed.**
+>
+> ⚠️ **Honest limits:** the 09-17 run was a **generic** subagent with no manual, which is the extreme end; a scout with a real brief sits between it and a full-cascade lane. **And two of the four points are single runs.** **This establishes the SHAPE — the cascade is the binding constraint — not a token budget you should plan a week against.**
+
 ### 🔑 WHEN THIS APPLIES — it is NOT every spin
 
 **The trigger is the SIZE of the load, not the identity of the agent.** Use three trips **when the load would include a full runtime (either half) or anything comparable in scale.** Otherwise two trips is correct and complete.
@@ -346,6 +375,22 @@ In our previous version of this, subagents had to be *heavily* cajoled into foll
 🚫 **THE FORBIDDEN MOVE, named so it has nowhere to hide: *"I pre-judged this file unlikely to matter."*** Never legitimate. The per-file disclosure exists to make it impossible to do quietly.
 
 ⚠️ **Honest limitation — say it when you use a fan-out:** a fan-out is **weaker at the seams** than one agent holding everything, and the seams are where plenty of behavior lives. **We accept it because the alternative is not a stronger agent; it is an agent that compacts.**
+
+### 🔴 AND SPLIT BY JOB, NOT ONLY BY VOLUME — ONE JOB PER HEAD
+
+*(Measured 2026-09-16, across two rounds of the same three-instance job run two different ways.)*
+
+**Every strategy above splits the MATERIAL. This one splits the WORK — and it is the split that gets forgotten, because a load list makes volume visible and says nothing about how many jobs you just handed someone.**
+
+**The evidence, and it is unusually clean because the same work ran twice:**
+- **Round 1 lost two of its three instances.** Both that compacted were carrying a **second heavy job** on top of a full ~400K load — one ran a transcript re-sweep *after* finishing its audit; the other held two transcript segments, both documents, and about forty small edits. ⭐ **The third, which only built the document and was stood down near its limit, never compacted.**
+- **Round 2 gave each head exactly one job and finished with all three standing** — two swept the transcript and posted findings only; the third read no transcript at all and applied every fix.
+
+🔑 **The mechanism, which is why volume-planning misses it: a second job does not add its own size to your estimate — it adds the size of everything that job TOUCHES, and it arrives when the head is already full.** **You budgeted the load; you did not budget the work the load was for.**
+
+⇒ **A closer who fixes the document must not also be a reader of the transcript.** **A reviewer who audits must not also re-sweep.**
+
+⭐ **So ask BOTH questions when you divide work, because a head can pass one and fail the other: *"can one head hold this material?"* and *"is this one job?"***
 
 ### ⚖️ This does NOT loosen the anti-under-loading rule. It replaces "drop files" with "restructure the work."
 
