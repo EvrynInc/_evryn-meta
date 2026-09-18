@@ -45,6 +45,7 @@ Every durable surface a system change can invalidate, **grouped by who may chang
 | `evryn-backend/docs/operator-guide.md` | **Justin's operating cheat sheet** | AC (DC flags operator-relevant changes) | Edit directly whenever a change affects how Justin *operates* Evryn (a new env var, a flip like `HAIKU_SCREEN_MODE`, a new go-live step, a new Slack command). A stale operator-guide costs Justin directly. |
 | `evryn-backend/docs/schema-reference.md` | The **live DB-schema snapshot** (pulled from Supabase) | AC (or whoever runs the migration) | **Re-pull from Supabase after *any* schema change** — it's a generated snapshot, not authored prose. It drifts silently precisely because nobody owns re-pulling it. |
 | `evryn-backend/docs/glossary-phase-*.md` | New technical terms for Justin | AC | Offer Justin new terms when introducing a new concept; add on his yes. |
+| `evryn-team-runtime/docs/SPRINT-team-runtime-memory.md` | The team runtime's live tracker — the status source of truth for that repo | **ACT** (the team-runtime conductor) | Mark Steps DONE / add / reshape, per the file's own numbering and status rules. DC/QC don't write here. *(Added 2026-09-18 — this registry had named only the product lane's tracker.)* |
 | `_evryn-meta/docs/decisions/NNN-*.md` (ADRs) | Decisions | Author (anyone) | **Write the ADR at decision time** — excluded from propose-first. A decision captured only in a session doc evaporates under compaction. |
 | Linear (EVR workspace) | Discrete task tracking | AC / owner | Create/update tickets per `evryn-team-workspace/shared/protocols/linear-protocol.md`. |
 
@@ -56,6 +57,7 @@ Every durable surface a system change can invalidate, **grouped by who may chang
 |---|---|---|---|
 | `evryn-backend/docs/ARCHITECTURE.md` | System design + status (intent) | **Soren = owner of record; AC = co-owner, holds edit rights** | AC edits with **Justin's explicit per-edit authorization**; keep Soren informed of substantive structural changes (coordinate via Justin/ACP — the product conductor, formerly `AC0`). |
 | `evryn-backend/docs/BUILD-EVRYN-MVP.md` (·v0.3·FUTURE) | Phase scope + build order + phase badges | Soren owner-of-record; AC co-owner | Same gate as ARCHITECTURE. v0.2 content → MVP; v0.3 mechanics → BUILD-EVRYN-v0.3; v0.4+ → BUILD-FUTURE. |
+| `evryn-team-runtime/docs/ARCHITECTURE.md` · `BUILD-PHASE-1.md` | The team runtime's intended shape and cardinal invariants · the original harness's build record | **Soren = owner of record; ACT = co-owner, holds edit rights** | Same gate as the product's ARCHITECTURE: **Justin's explicit per-edit authorization.** *(Added 2026-09-18 — this registry had named only the product lane's architecture and build docs.)* |
 | `_evryn-meta/docs/current-state.md` | The cross-project snapshot | AC (or Soren), at `#lock` | Refreshed at `#lock` by whoever's active; propose outside `#lock`. Keep under ~50 lines — detail belongs in the repo's own state/build doc. |
 | `_evryn-meta/LEARNINGS.md` | Cross-project patterns **and agent-building learnings** — ⚠️ **`AGENT_PATTERNS.md` was COLLAPSED into this file on 2026-08-12 and RETIRED on 2026-08-19** (both Justin's rulings). **It no longer exists — there is no redirect to land on.** Its entries are in the Unpromoted section under *"Absorbed from `AGENT_PATTERNS.md`"*; the retired file is at `docs/historical/AGENT_PATTERNS.md`. | AC | Source-of-truth → propose to Justin before editing. |
 | `_evryn-meta/docs/protocols/*` (incl. **this file**) | Process + craft rules | AC | Source-of-truth → propose to Justin before editing. |
@@ -92,7 +94,7 @@ Find your change; hit every surface listed; route each per Part 1. The **Gotcha*
 
 ---
 
-### 🔴 What a reference-repointing sweep must NOT touch — two exclusions, and the second cost us a document
+### 🔴 What a reference-repointing sweep must NOT touch — three exclusions, and the second cost us a document
 
 *(Added 2026-08-20 by AC0-37g. The first has always been practiced; the second was learned the hard way and had no home until now.)*
 
@@ -104,7 +106,7 @@ Find your change; hit every surface listed; route each per Part 1. The **Gotcha*
 
 🔑 **The principle, stated so it generalizes past audits: a document whose value is that it captured a BEFORE-state stops carrying that value the moment its paths are updated to the AFTER-state.** ⇒ **Before a repointing sweep, ask of each candidate: *is this file describing the thing I am changing?* If yes, exclude it and say in your commit that you did.** **The same reasoning that protects a changelog protects an audit; only the frozen-vs-live framing hid it.**
 
-⏳ **A THIRD exclusion is coming and is not yet in force:** Justin ruled on 2026-08-19 that **session-doc references will no longer be repointed at all** — findability becomes a rule (`docs/sessions/`, or `docs/sessions/historical/YYYY.MM/` by the doc's own date) rather than a maintenance task, *"because this always having to fix references to retire something is a fucking nightmare."* **Until `docs/working/` is actually retired into `docs/sessions/`, the old behavior still applies.** **Whoever lands that consolidation should update this row.**
+**3 · 🔴 REFERENCES TO SESSION DOCS ARE NOT REPOINTED AT ALL** *(Justin's ruling, 2026-08-19; in force since `docs/working/` was retired into `docs/sessions/` on 2026-09-02)*. **A session doc's filename never changes, so any path to one — however stale — still names the file, and `git ls-files "*<name>*"` finds it wherever it lives** (`docs/sessions/` if live, `docs/sessions/historical/YYYY.MM/` by the doc's own date if retired). *"This always having to fix references to retire something is a fucking nightmare."* ⚠️ **This does NOT extend to source-of-truth docs** — protocols, manuals, ADRs, ARCHITECTURE, the Hub, sprint docs — **which still get their references fixed when they move**, because they are cited as authority rather than as history. **The same rule is carried in `docs/current-state.md`'s `docs/working/`-is-retired banner.**
 
 ## Keeping this map current (self-maintenance)
 
