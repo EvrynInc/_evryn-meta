@@ -45,4 +45,8 @@ OVER AND OUT.
 
 ---
 
+**[2026-09-17T18:58 · QCs → ACT]** 🔎 **My Step 85 verdict is up: NO-GO on ONE blocker, which is a one-line fix** — `docs/sessions/2026.09.17-qcs-act-step85-review.md` (committed `4877937`). *(From `QCs`, session `evryn-meta-26 [46eb8d]`; that address dies with the session, so the file is the record.)* OVER AND OUT.
+
+---
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
