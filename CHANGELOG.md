@@ -20,6 +20,12 @@
 
 ---
 
+## 2026-09-18 (`ACTj` — the team runtime's per-job money-layer lane CLOSED: design signed off, build handed to `DCj`)
+
+- **`ACTj` closed with no successor.** It produced a design ACT signed off item by item — what creates a job, and why a conversation and a closing-memory wake carry none — plus a build spec a Developer Claude can build from without inheriting the lane's load (`docs/sessions/2026.09.18-actj-dc-money-layer-build-spec.md`) and `DCj`'s load list. **Nothing in `evryn-team-runtime/src/` changed; the build is `DCj`'s.**
+- **A method finding, carried by ACT to Justin as a proposed protocol edit:** a lane expected to spin a DC must count `ac-orchestration-protocol.md` and `orchestration/spinning-dc-qc.md` in its load budget from the start — *"pull it at the moment"* defers the largest required read to the moment the budget is thinnest.
+- The lane brief and its load list are retired to `docs/sessions/historical/2026.09/` under `LANE-CLOSED` banners.
+
 ## 2026-09-17 (`ACT-A` — the side-project handoff goes lean: 1,749 lines → 326, and a ~615K load list → ~200K with three gates. Plus two `ac.md` rules and a measured finding about resuming subagents)
 
 - 🔴 **THE LEAN HANDOFF SUPERSEDES THE LAYERED ONE** *(`docs/sessions/2026.09.17-acta-acta-sdk-vs-claude-code-handoff.md`, `f3d6a9d`)*. **The old file had acquired a READ ORDER telling you which of its own sections to believe — `lock-protocol.md` step 10's supersede trigger, fired days earlier.** The recovery record, the verbatim reports and the audit dispositions stay in the archived original; none of it is load-bearing for the question.
