@@ -40,6 +40,17 @@
 
 ---
 
+## 2026-09-17 (`ACT-21` — an unbannered session doc is UNEVALUATED, reports get a closing marker, and ACT's stale session docs get a lane of their own)
+
+- 🔴 **`lock-protocol.md` step 10: a session doc with NO banner is UNEVALUATED — it gets evaluated, never retired on the strength of the gap.** *(Justin's ruling.)* **The old rule read an ABSENCE as a DECISION:** four things produce a missing banner — deliberately not held, written before the convention existed, the author forgot, the author's session ended first — **and three of the four mean "nobody looked."** ⚠️ **The costs are asymmetric** — evaluating a disposable doc costs one read; retiring an unread one that was the sole home of a live finding loses it silently *(the product pass found nine of sixteen docs carrying owed work)*. ⭐ **It creates no hold: evaluation RESOLVES a doc.**
+- 🔴 **`ac.md`: close every report with `## End of Report`.** *(Justin's ruling.)* **He reads the report and skims everything outside it, so an unclosed report has no edge.** 🔑 **The failure it closes is BURIAL, not omission** — an uncommitted edit named twice in one report registered zero times.
+- 🆕 **`ACT-R`, the reconciliation lane, is briefed and running** — **41 ACT-lineage session docs, almost all bannered *"RETIRE UPON: ACT has evaluated it,"* which is a written statement that nobody has.** **It pulls every live finding into a durable home, then dispositions each doc.** **The Code Atlas for the team runtime is sequenced BEHIND it**, because an Atlas is written from the durable docs. ⚠️ **ACT-R is a CAPTAIN reporting to ACT, not an Admiral** — Justin: commanding sub-ACs does not make you one; reporting directly to him does.
+- ⚠️ **Two lessons for anyone writing a standalone lane brief, both paid for today:** **a standalone agent has NO PARENT**, so a brief written in the subagent return format delivers its output into the agent's own chat window, where no AC receives it — **route it to a committed file plus an inbox pointer** · **and require the lane to publish its session address and watch its own log** *(`being-an-admiral.md` already says both; two briefs omitted them and a Captain sat blocked for an hour)*.
+
+**Operator-relevant: nothing deployed; no runtime code touched.**
+
+---
+
 ## 2026-09-16 (`ACT-A` — protocol rules from Justin's rulings: persist a subagent's output to a doc, retire those docs at `#lock`, one author per commit on a shared file, and `Monitor`'s 30-minute expiry)
 
 - **`ac-orchestration-protocol.md` — new section, "Persisting what a subagent returns."**
