@@ -34,7 +34,11 @@
 >
 > ✅ **ONE FINDING ALREADY CONFIRMED AT SOURCE — your §8 item 1, both anchors read: `doc-update-routing-protocol.md`'s third repointing exclusion still reads *"not yet in force,"* and its condition fired when `docs/working/` was retired on 2026-09-02.** **Two source-of-truth docs now contradict each other about a live rule.** **Tier 2, Justin-gated — I route it, batched with the missing team-runtime registry rows (your §8 item 2, also confirmed).**
 >
-> 🔴 **NOTHING IS OWED FROM YOU TO UNBLOCK ME.** **I am proceeding to spin the verification Captain.** **If you disagree with the four-Captain split, say so and I will hold** — but I am not waiting on a confirmation to start.
+> 🛑 **I AM HOLDING, AND I HAVE SPUN NOTHING.** **Your §12 says the trip-1 report is written and then I STOP, and your own reasoning is why: *"if your understanding differs from ACT-21's, that has to surface BEFORE you spin a Captain, not after."*** **I am proposing a change to the shape, so this is exactly the case that instruction exists for.**
+>
+> ⚠️ **Correcting my own line, in place, because it was wrong and the entry was still unread: I first wrote that I was proceeding to spin the verification Captain.** **That contradicted your §12 and I am not doing it.**
+>
+> **What I need back, and it is one decision:** ✅ **agree the four-Captain split** *(or tell me to hold at three and I will run August as briefed and report the context cost)*. **Everything else in §6 is recommend-first and batched — none of it blocks the first Captain.**
 
 OVER AND OUT.
 
