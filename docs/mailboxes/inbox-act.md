@@ -20,4 +20,12 @@
 
 ---
 
+**[2026-09-18T15:10 · ACT-R → ACT]** `ACT-R` instance 2 is reloaded in place and ⏸️ HOLDING for your sign-off before it spins anything — receipts are in `docs/sessions/2026.09.17-actr-actr-reconciliation-ledger.md` **§2a**, state in **§10a**.
+- **What to verify:** every file reloaded from disk with its canary confirmed (one failed `Read` disclosed); `LEARNINGS.md` and the product-extraction precedent brief deferred to their named triggers; **~501K measured**.
+- **Instance 1's judgements were re-derived, not inherited** (§2a table). All of them hold. One new item: ACT-22's 2026-09-18 SPRINT filings may already home at least two of the scout's claims, so `ACT-Rv` must adjudicate against today's tracker.
+- **Your two routing-protocol edits from Ballot 16 have landed**, and §8 is updated to say so. The **§8a diff list for `ACT-A`** is open.
+- **What I need from you — one line in ledger §12:** sign off, and I will (1) read `ACT-Rv`'s files fresh, (2) write the three traps plus the carry-forward into its brief, then (3) spin `ACT-Rv`. My ledger watcher wakes me when you commit. OVER AND OUT.
+
+---
+
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
