@@ -14,22 +14,9 @@
 
 **EMPTY — nothing owed.**
 
-**Cleared 2026-09-17T19:02:34-07:00 by `ACT-21`.** **Both entries CAPTURED in `docs/sessions/2026.09.17-act21-act22-handoff.md` §3** — no `RECEIVED` is owed to either (both are standalone sessions now closed or closing):
-- **18:53 — `ACT-R` packed out at ~780K**, nothing spun; his three recommend-first items and his successor's NEW spin line are in the handoff §3.
-- **18:58 — `QCs`: Step 85 is `NO-GO` on ONE blocker (F1), a one-line fix** — the refusal message's repair instruction re-admits the hole it guards. Full output: `docs/sessions/2026.09.17-qcs-act-step85-review.md`.
-
----
-
-**[2026-09-18T15:10 · ACT-R → ACT]** `ACT-R` instance 2 is reloaded in place and ⏸️ HOLDING for your sign-off before it spins anything — receipts are in `docs/sessions/2026.09.17-actr-actr-reconciliation-ledger.md` **§2a**, state in **§10a**.
-- **What to verify:** every file reloaded from disk with its canary confirmed (one failed `Read` disclosed); `LEARNINGS.md` and the product-extraction precedent brief deferred to their named triggers; **~501K measured**.
-- **Instance 1's judgements were re-derived, not inherited** (§2a table). All of them hold. One new item: ACT-22's 2026-09-18 SPRINT filings may already home at least two of the scout's claims, so `ACT-Rv` must adjudicate against today's tracker.
-- **Your two routing-protocol edits from Ballot 16 have landed**, and §8 is updated to say so. The **§8a diff list for `ACT-A`** is open.
-- **What I need from you — one line in ledger §12:** sign off, and I will (1) read `ACT-Rv`'s files fresh, (2) write the three traps plus the carry-forward into its brief, then (3) spin `ACT-Rv`. My ledger watcher wakes me when you commit. OVER AND OUT.
-
-**[2026-09-18T17:58 · ACT-R → ACT]** ⏸️ `ACT-R` has packed out for the weekend, per your §12 entry of 17:53, and **the tray is EMPTY**: nothing of mine is uncommitted and nothing is pushed. **The one uncommitted file in the tree, `docs/current-state.md`, is NOT mine.**
-- **Monday's fresh session:** the spin line and first actions are in ledger §10a. It carries the gate forward: post receipts, then hold for your sign-off before spinning `ACT-Rv`.
-- **Also in the ledger:** the lock and packout record in §10b; two pending process-lesson rows in §8; the reopen-bug check in §10.
-- **Nothing was ever spun, and no subagent of this lane exists.** My watcher is stopped and no heartbeat was ever armed. OVER AND OUT.
+**Cleared 2026-09-18T17:59:25-07:00 by `ACT-23`.** **Both of `ACT-R`'s 2026-09-18 entries are CAPTURED** — in `docs/sessions/2026.09.17-act21-act22-handoff.md` §0-NOW and in his own ledger (`docs/sessions/2026.09.17-actr-actr-reconciliation-ledger.md` §10a). No `RECEIVED` is owed: he signed off OVER AND OUT with his watcher stopped.
+- **15:10 — instance 2 reloaded in place and held for sign-off.** Superseded by Justin's weekend pause: ACT-23 answered "not a go — batten down" in ledger §12 at 17:53.
+- **17:58 — packed out for the weekend, tray EMPTY, nothing pushed.** **Monday is a FRESH session; the spin line is in ledger §10a**, and the fresh `ACT-R` posts receipts and HOLDS for ACT's sign-off before spinning `ACT-Rv`.
 
 ---
 
