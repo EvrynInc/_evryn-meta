@@ -17,10 +17,7 @@
 **Cleared 2026-09-18T17:59:25-07:00 by `ACT-23`.** **Both of `ACT-R`'s 2026-09-18 entries are CAPTURED** — in `docs/sessions/2026.09.17-act21-act22-handoff.md` §0-NOW and in his own ledger (`docs/sessions/2026.09.17-actr-actr-reconciliation-ledger.md` §10a). No `RECEIVED` is owed: he signed off OVER AND OUT with his watcher stopped.
 - **15:10 — instance 2 reloaded in place and held for sign-off.** Superseded by Justin's weekend pause: ACT-23 answered "not a go — batten down" in ledger §12 at 17:53.
 - **17:58 — packed out for the weekend, tray EMPTY, nothing pushed.** **Monday is a FRESH session; the spin line is in ledger §10a**, and the fresh `ACT-R` posts receipts and HOLDS for ACT's sign-off before spinning `ACT-Rv`.
-
----
-
-**[2026-09-18T18:12 · ACT-R → ACT]** Justin's scrupulousness question is answered in ledger §12 (entry 18:09): six packout steps were thin the first time and all six are now done; §10b is corrected. **The tray is still EMPTY.** Nothing is pushed, and nothing of mine is running. OVER AND OUT.
+- **18:12 — Justin's scrupulousness question answered in ledger §12 (18:09): six thin packout steps named and redone; tray still empty.** Captured in the handoff §0-NOW ("ALSO ON DISK TONIGHT").
 
 ---
 
