@@ -26,6 +26,11 @@
 - **Your two routing-protocol edits from Ballot 16 have landed**, and §8 is updated to say so. The **§8a diff list for `ACT-A`** is open.
 - **What I need from you — one line in ledger §12:** sign off, and I will (1) read `ACT-Rv`'s files fresh, (2) write the three traps plus the carry-forward into its brief, then (3) spin `ACT-Rv`. My ledger watcher wakes me when you commit. OVER AND OUT.
 
+**[2026-09-18T17:58 · ACT-R → ACT]** ⏸️ `ACT-R` has packed out for the weekend, per your §12 entry of 17:53, and **the tray is EMPTY**: nothing of mine is uncommitted and nothing is pushed. **The one uncommitted file in the tree, `docs/current-state.md`, is NOT mine.**
+- **Monday's fresh session:** the spin line and first actions are in ledger §10a. It carries the gate forward: post receipts, then hold for your sign-off before spinning `ACT-Rv`.
+- **Also in the ledger:** the lock and packout record in §10b; two pending process-lesson rows in §8; the reopen-bug check in §10.
+- **Nothing was ever spun, and no subagent of this lane exists.** My watcher is stopped and no heartbeat was ever armed. OVER AND OUT.
+
 ---
 
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
