@@ -20,6 +20,18 @@
 
 ---
 
+## 2026-09-18 (`ACT-22` / `ACT-23` — DC and QC run only under an AC; QC gains four review patterns; the routing protocol stops repointing session docs and learns the team runtime's docs)
+
+- 🔴 **A DC or a QC is ALWAYS a subagent of an AC — never a standalone session running its own show.** *(Justin: "they wake, do their narrow job and output. That's it.")* ⇒ **The standalone money-layer DC (`DCj`) in the entry below was WITHDRAWN before it spun, and `ACTj`'s build spec is RETIRED** — Justin's 2026-09-18 money model superseded its design *(SPRINT Step 19)*. **The fleet-wide version of this rule, with the others in `docs/sessions/2026.09.18-act22-act-a-notes.md`, is `ACT-A`'s to home.**
+- **`qc.md` — four patterns promoted from `QCs`'s Step 85 review** *(Justin's Ballot ⑫)*. She is spun fresh every trip and cannot write her own manual, so a pattern she surfaces dies with her unless an AC promotes it.
+- **`ac-orchestration-protocol.md` — a standalone agent has no parent, so its output goes to a committed file plus an inbox pointer** *(Ballot ⑮, with Justin's tweaks)*. ⚠️ **Since DC and QC no longer run standalone, it now applies in practice only to standalone LANE ACs — its wording is not yet reconciled to say so; that is in the `ACT-A` notes (§5).**
+- **`doc-update-routing-protocol.md`** *(Ballot ⑯)*: **(1)** the exclusion "do not repoint references to session docs" is stated as IN FORCE — its condition *(retiring `docs/working/`)* fired on 2026-09-02 and nobody updated the row, so two source-of-truth docs contradicted each other; **(2)** the registry gains rows for the team runtime's SPRINT (Tier 1) and `ARCHITECTURE.md` / `BUILD-PHASE-1.md` (Tier 2) — it had been written only from the product lane's vantage. *(Both found by `ACT-R` at load.)*
+- **`current-state.md`** — the team-runtime lines corrected: SPRINT Step 43's real residue is the five lifecycle pieces *(both sweep gates were guarded 2026-08-12)*, three wake-dispatch sites rather than four, the money-layer redesign pending with builds paused, and the live-handoff pointer re-aimed.
+
+**Operator-relevant: nothing deployed; no runtime code touched.**
+
+---
+
 ## 2026-09-18 (`ACTj` — the team runtime's per-job money-layer lane CLOSED: design signed off, build handed to `DCj`)
 
 - **`ACTj` closed with no successor.** It produced a design ACT signed off item by item — what creates a job, and why a conversation and a closing-memory wake carry none — plus a build spec a Developer Claude can build from without inheriting the lane's load (`docs/sessions/2026.09.18-actj-dc-money-layer-build-spec.md`) and `DCj`'s load list. **Nothing in `evryn-team-runtime/src/` changed; the build is `DCj`'s.**
