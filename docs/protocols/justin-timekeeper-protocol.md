@@ -1,4 +1,4 @@
-# Hours Reconstruction Protocol
+# Justin Timekeeper Protocol
 
 > **Truncation check:** The last line of this file should read `FULL FILE LOADED`. If you don't see it, reload or read in sections until you confirm the complete file.
 >
@@ -138,7 +138,16 @@ if (/^Another Claude session sent a message/.test(s) || /^<cross-session-message
 > **How to mark a divergence:** create a parallel event with **` - REPLACEMENT`** appended to the title, and explain the conflict in the description. He decides which survives.
 > *(Justin's instruction, 2026-09-23.)*
 
-**Put a marker in every description you create** — a short dated tag such as `[ACcal-2026-09-23]`. It is the only way to find and remove the whole set later without touching his own entries. **A single event missing the marker is one he has to hunt by hand.**
+### 🔴 MARK EVERYTHING YOU CREATE, IN TWO PLACES — they do different jobs
+
+> **1 · `[CC]` at the END OF THE TITLE. On every event, no exceptions.** *(Justin's convention, 2026-09-23.)*
+> 🔑 **This one is for HIM, at a glance, months later.** **In his words: *"so if it's wrong I can be like 'oh, Claude just did that — that was wrong.'"*** ⇒ **He should never have to open an event, or run a search, to learn that an agent put it there.**
+> ⚠️ **`CC` deliberately, not your instance name.** **The agent that made it will be long gone and its naming scheme may have changed entirely** — so a tag naming *which* agent makes him search for a name he has no reason to remember. **The question he is actually asking is "did a human or a Claude do this?", and `[CC]` answers exactly that.**
+>
+> **2 · A dated instance tag in the DESCRIPTION** — `[ACcal-2026-09-23]` or whatever yours is.
+> **This one is for MACHINE cleanup:** it identifies one batch precisely, so an undo pass can remove exactly what one run created and nothing else.
+>
+> ⚠️ **AN OUT-OF-OFFICE EVENT CANNOT HAVE A DESCRIPTION, so the title tag is the ONLY mark it can carry.** **That is the strongest argument for the title convention and the reason it is not redundant with the body tag.**
 
 **Make the write idempotent.** Check for an event with the same title at the same start before creating it, so a re-run adds nothing.
 
@@ -155,7 +164,12 @@ if (/^Another Claude session sent a message/.test(s) || /^<cross-session-message
 
 ✅ **The fallback, if he would rather not touch the connector: Google Apps Script.** It runs as him inside his own account, so connector scopes are irrelevant to it. It sets colors, it can delete and modify, and it costs one paste and one click.
 
-📌 **One quirk that survives both paths: `eventType: OUT_OF_OFFICE` is rejected on creation** — the API returns a bare `Invalid argument`, and Apps Script's `CalendarApp` cannot set the type at all. **Create it as an ordinary event and let him flip the type in the UI.**
+📌 **An out-of-office event creates fine — but it CANNOT CARRY A DESCRIPTION.** *(Isolated by elimination, 2026-09-23.)* **The API refuses with a bare `Invalid argument` that names no field**, so the natural reading — *"it won't let me create an OOO event"* — is wrong, and acting on it sends you to a fallback you do not need.
+
+> **The trade this forces, on a day logged as out-of-office:** you can have **the type** (so it matches his other Sick Days and shows as away) **or the evidence** (why you concluded he was out), **not both.**
+> ⚠️ **And if you are marking a batch for later cleanup, no description means no marker — an undo pass cannot find that event.**
+> ⇒ **Ask him which he wants rather than choosing.** **Default to the ordinary event with the evidence**, since the whole point of a reconstruction is that a later reader can check it.
+> *(Apps Script's `CalendarApp` cannot set the type at all — a limit of that path, not of the API.)*
 
 ### Two things that make a bulk write survive contact
 
