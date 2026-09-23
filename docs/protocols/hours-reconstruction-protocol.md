@@ -151,9 +151,11 @@ if (/^Another Claude session sent a message/.test(s) || /^<cross-session-message
 
 ⚠️ **The tempting explanation — "a session gets its credential at startup, so spin a fresh one" — was tested and is FALSE.** It is worth naming because it is the obvious hypothesis, it sounds mechanical and correct, and acting on it costs a whole round trip through another agent.
 
-**What is NOT established:** what actually does refresh the grant. Candidates are a full disconnect-and-reconnect of the connector, or restarting the editor. **Nobody has verified either.** *(Owner: whoever next needs calendar writes should test one and record the result here.)*
+✅ **WHAT DOES FIX IT, TESTED THE SAME DAY: JUSTIN DISCONNECTS AND RECONNECTS THE GOOGLE CALENDAR CONNECTOR.** Write worked immediately afterwards **in the same session, with no re-spin** — and **read survived it**, which was the specific thing he was afraid of when he hesitated. ⇒ **Ask him to do that. It costs him about a minute and it is the real repair.**
 
-✅ **The path that does not depend on any of this: Google Apps Script.** It runs as Justin inside his own account, so the connector's scopes are irrelevant to it. It sets colors, it can delete and modify, and it costs him one paste and one click. **When writes are blocked, this is the answer — not a third attempt at the connector.**
+✅ **The fallback, if he would rather not touch the connector: Google Apps Script.** It runs as him inside his own account, so connector scopes are irrelevant to it. It sets colors, it can delete and modify, and it costs one paste and one click.
+
+📌 **One quirk that survives both paths: `eventType: OUT_OF_OFFICE` is rejected on creation** — the API returns a bare `Invalid argument`, and Apps Script's `CalendarApp` cannot set the type at all. **Create it as an ordinary event and let him flip the type in the UI.**
 
 ### Two things that make a bulk write survive contact
 
