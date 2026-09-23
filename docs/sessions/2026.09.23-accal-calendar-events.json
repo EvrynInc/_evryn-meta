@@ -1,0 +1,333 @@
+{
+  "calendarId": "justin@evryn.ai",
+  "timeZone": "America/Los_Angeles",
+  "marker": "[ACcal-2026-09-23]",
+  "count": 36,
+  "events": [
+    {
+      "date": "2026-09-01",
+      "start": "11:45",
+      "end": "12:00",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "Orienting",
+      "description": "Opener 12:01 was short (224ch); prior AI turn 18h earlier, so no overnight report to work through."
+    },
+    {
+      "date": "2026-09-01",
+      "start": "12:00",
+      "end": "13:00",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "ACP lane: retiring 37h3, sequencing successors",
+      "description": "12:56 - \"AC0-37h3 hit compaction and I had to retire him.\" Sorting which downstream instance carries the lane."
+    },
+    {
+      "date": "2026-09-01",
+      "start": "15:00",
+      "end": "19:30",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "ACP: #lock protocol, writing protocol, re-spin prep",
+      "description": "Session-doc currency rules, ballot-lettering conventions, gearing an instance down for re-spin at 78k tokens. The 135-min gap 12:56-15:11 lines up with the Cascade families meet-up already on the Personal calendar - deliberately not duplicated here."
+    },
+    {
+      "date": "2026-09-01",
+      "start": "22:00",
+      "end": "22:15",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "Overnight batten-down: commit and push all repos",
+      "description": "Returned at 22:01 after a 163-min break - \"I need to close up for the night, so I need you to commit and push everything so it is safe overnight.\""
+    },
+    {
+      "date": "2026-09-02",
+      "start": "11:30",
+      "end": "11:45",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "Orienting",
+      "description": "Opener 11:46 began \"Good morning!\" - a clean start-of-day marker."
+    },
+    {
+      "date": "2026-09-02",
+      "start": "11:45",
+      "end": "19:15",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "ACP: #lock, packout prep, protocol edits",
+      "description": "Full #lock protocol, handoff brief for the next instance, mailbox- and writing-protocol tweaks, LEARNINGS routing. Final commit 18:59; last typed message 19:08. One 71-min midday gap 13:30-14:41, unexplained by either calendar - most likely lunch."
+    },
+    {
+      "date": "2026-09-03",
+      "start": "12:40",
+      "end": "12:55",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "Orienting",
+      "description": "Opener 12:56 was a 2,467ch spin brief for ACP-38; prior AI turn 17.8h earlier."
+    },
+    {
+      "date": "2026-09-03",
+      "start": "12:55",
+      "end": "17:30",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "ACP-38: EliJ, protocol work, deploy prep",
+      "description": "Spun ACP-38 then ACP-39. THIS IS THE DAY EliJ WAS CREATED - 14:51: \"I want to create something called EliJ.\" Also Railway variable checks ahead of the staging deploy. Gave notice at 17:04 (\"in about 20 minutes, I need to step away\") and left at 17:29."
+    },
+    {
+      "date": "2026-09-03",
+      "start": "18:15",
+      "end": "21:30",
+      "colorId": "9",
+      "colorLabel": "Product Design/Build",
+      "summary": "Staging deploy + ACP-40 handoff",
+      "description": "Back at 18:18. 19:04 - \"Deploy is building - I can see it on evryn-staging.\" Then the ACP-39 to ACP-40 handoff and a final commit-and-push across all repos; last commit 21:21. Coloured Product Design/Build rather than Ops because this is a deploy of the product itself."
+    },
+    {
+      "date": "2026-09-04",
+      "start": "09:30",
+      "end": "09:45",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "Orienting",
+      "description": "First typed message 09:48 was short (404ch, \"git pull all repos\"), so little compose time ahead of it."
+    },
+    {
+      "date": "2026-09-04",
+      "start": "09:45",
+      "end": "11:00",
+      "colorId": "4",
+      "colorLabel": "Peri-meeting",
+      "summary": "Prep for Megan - pulling team input",
+      "description": "09:56 - \"I am meeting with Megan in a few minutes, what are my most important topics.\" Loaded Lucas and Marlowe for a 30-60 second scan each. Dark from 09:59."
+    },
+    {
+      "date": "2026-09-04",
+      "start": "11:00",
+      "end": "12:00",
+      "colorId": "11",
+      "colorLabel": "Meeting",
+      "summary": "Megan & Justin - REPLACEMENT",
+      "description": "Justin recalls the meeting was pushed. 11:52 - \"I pulled you guys up before my NEXT meeting with Megan.\" 12:02 - \"I had to go into the meeting... this is mostly what we talked about: NWFF education director quit suddenly.\" The original 10:00-11:00 block is left untouched; this is the parallel reading."
+    },
+    {
+      "date": "2026-09-04",
+      "start": "12:00",
+      "end": "12:30",
+      "colorId": "4",
+      "colorLabel": "Peri-meeting",
+      "summary": "Post-Megan - NWFF fallout",
+      "description": "At 12:02 he relayed what the meeting covered: \"this is mostly what we talked about: NWFF education director quit suddenly.\" Then dark until 14:35."
+    },
+    {
+      "date": "2026-09-04",
+      "start": "12:30",
+      "end": "14:30",
+      "colorId": "3",
+      "colorLabel": "Nurturing Productive Capacity",
+      "summary": "Break - thrashed after Megan",
+      "description": "Justin's own recall, 2026-09-23: \"I think I remember being fairly thrashed after the megan thing. It is possible that I just took a break.\" The 153-min hole 12:02-14:35 is real - the laptop shows ZERO Claude activity on 9/4, so he was not working on the other machine. Category is his call, not inferred from evidence."
+    },
+    {
+      "date": "2026-09-04",
+      "start": "14:30",
+      "end": "16:45",
+      "colorId": "6",
+      "colorLabel": "Ignite Demand",
+      "summary": "Mark and Lacey with Marlowe",
+      "description": "14:35 - Lacey ticket, Mark email notes, \"I think I am going to offer to take Mark to lunch.\" 15:19 - Marlowe on the corpus as a cold-start asset for v0.3."
+    },
+    {
+      "date": "2026-09-04",
+      "start": "16:45",
+      "end": "18:45",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "ACP-40 handoff + team consolidation",
+      "description": "17:14 spun ACP-40 against the 09-03 handoff. 18:25 Marlowe pronouns, EVR-97, standup protocol. Last typed 18:34; final commit 18:37."
+    },
+    {
+      "date": "2026-09-08",
+      "start": "13:20",
+      "end": "18:45",
+      "colorId": "10",
+      "colorLabel": "Protect the Helm",
+      "summary": "Lucas: #standup + team current-state",
+      "description": "SECOND LANE, missing from your log. While the laptop ran ACT team-runtime work, the desktop was simultaneously running Lucas on the #standup, team current-state and hub pronouns, 13:20-18:46. This also explains the 106-min hole in the laptop lane at 14:15-16:01: you returned saying \"I just came back from being in a BUNCH of other meetings\" - those were sessions, not people. You were on this machine, in this lane."
+    },
+    {
+      "date": "2026-09-09",
+      "start": "07:00",
+      "end": "19:00",
+      "colorId": null,
+      "colorLabel": "default (no colour)",
+      "summary": "Sick Day",
+      "description": "Per Justin's instruction (\"if it doesn't show up on the laptop, make it that\"). Zero Claude Code activity on BOTH machines and zero git commits in any repo. The laptop scan was control-verified in the same pass (5,803 entries found on 9/8 and 2,334 on 9/10), so this zero is a real absence rather than a failed query. Caveat: this proves no computer work. It cannot distinguish illness from any other reason for a day away.",
+      "eventType": "OUT_OF_OFFICE"
+    },
+    {
+      "date": "2026-09-10",
+      "start": "12:15",
+      "end": "12:30",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "Orienting",
+      "description": "Opener 12:27 was ten characters (\"Load Lucas\"); prior AI turn 41.6h earlier, so nothing to read back."
+    },
+    {
+      "date": "2026-09-10",
+      "start": "12:30",
+      "end": "19:15",
+      "colorId": "10",
+      "colorLabel": "Protect the Helm",
+      "summary": "Team consolidation round - Lucas & Nathan captains",
+      "description": "Consolidation briefs for Captain Lucas and Captain Nathan; discovery of the agent-to-agent comms channel (\"this comms channel is new - that simplifies things SO much\"). Signed off 18:58. Final commit 19:55."
+    },
+    {
+      "date": "2026-09-10",
+      "start": "14:00",
+      "end": "18:45",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "ACT-18: agent-manual rubric pass",
+      "description": "SECOND LANE. Laptop active 14:01-18:41 on the ACT-17 to ACT-18 handoff and the writing-rubric pass across all four agent manuals. This is what accounts for the desktop-side quiet at 14:41-15:40 and 15:43-17:38 - not absences."
+    },
+    {
+      "date": "2026-09-11",
+      "start": "08:45",
+      "end": "09:00",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "Orienting",
+      "description": "Laptop first typed message 09:03, which is also what accounts for commits starting 09:06."
+    },
+    {
+      "date": "2026-09-11",
+      "start": "09:00",
+      "end": "17:30",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "ACT-19/20: agent manuals, contradictions pass, packout",
+      "description": "Laptop lane. Read and tweaked the dc, oc and qc manuals; spun ACT-20; ran the packout. 16:34 - \"I have to close down for the weekend, but I want to make sure we can hit the ground running on Monday.\""
+    },
+    {
+      "date": "2026-09-11",
+      "start": "10:50",
+      "end": "17:00",
+      "colorId": "10",
+      "colorLabel": "Protect the Helm",
+      "summary": "Team consolidation - all six agents",
+      "description": "Desktop lane, and the second-heaviest day in the window at 933 commits. Sessions across Marlowe, Mira, Emma, Soren, Dominic and Thea. 11:25 - \"Lucas is up now, so I am stepping away.\" 15:51 - \"I am nearly at my Anthropic limit, so I need to pause everyone.\""
+    },
+    {
+      "date": "2026-09-14",
+      "start": "08:45",
+      "end": "09:00",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "Orienting",
+      "description": "Opener 09:04 was a 1,641ch spin brief for ACT-A; prior AI turn 64h earlier, so compose time only."
+    },
+    {
+      "date": "2026-09-14",
+      "start": "09:00",
+      "end": "14:00",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "ACT-A: team agent autonomy + runtime scout",
+      "description": "Spun ACT-A as an alt branch off the main ACT line, plus a runtime scout and three parallel subagents. Two logged absences: 11:25 \"I am stepping away now, I will be gone for about 20 minutes\" (back 12:04) and 12:17 \"They are launched. Stepping away\" (back 13:05). Final commit 13:54."
+    },
+    {
+      "date": "2026-09-15",
+      "start": "08:00",
+      "end": "08:15",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "Orienting",
+      "description": "Opener 08:17; prior AI turn 86.8h earlier (the previous Friday), so a genuine cold start."
+    },
+    {
+      "date": "2026-09-15",
+      "start": "08:15",
+      "end": "09:45",
+      "colorId": "10",
+      "colorLabel": "Protect the Helm",
+      "summary": "Marlowe: memory consolidation across machines",
+      "description": "Loaded Marlowe with her previous memory snapshot while the rest of the team sat mid-consolidation on the desktop. 09:14 - \"I am here for a second and then have to step away again.\""
+    },
+    {
+      "date": "2026-09-15",
+      "start": "12:15",
+      "end": "14:15",
+      "colorId": "10",
+      "colorLabel": "Protect the Helm",
+      "summary": "Marlowe: growth strategy - volume, introductions, capital",
+      "description": "After a 163-min gap. 12:27 - \"Where are we getting the VOLUME of people necessary to make these matches?\" Plus hand-built introductions and capital-strategy ownership. Closed 14:06. Colour set to Protect the Helm at Justin's direction, 2026-09-23."
+    },
+    {
+      "date": "2026-09-16",
+      "start": "09:30",
+      "end": "09:45",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "Orienting",
+      "description": "Opener 10:03 - \"it has been several days since we were working on this, so I need you to read me into the room cold.\""
+    },
+    {
+      "date": "2026-09-16",
+      "start": "09:45",
+      "end": "18:00",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "Team runtime consolidation + agent memory",
+      "description": "The heaviest day in the window: 1,014 commits and 53 typed messages. Resumed Marlowe in place, ran parallel subagents across all six agent workspaces, worked LEARNINGS.md and the compaction rules. One sustained 220-min stretch 12:06-15:45. Closed 17:45 - \"I need to go to dinner now.\""
+    },
+    {
+      "date": "2026-09-17",
+      "start": "11:00",
+      "end": "11:15",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "Orienting",
+      "description": "Standing 15-min startup block, placed ahead of the read-and-compose runway that follows it. Derived, not observed - see the 11:15-12:15 block for the reasoning behind this start time."
+    },
+    {
+      "date": "2026-09-17",
+      "start": "11:15",
+      "end": "12:15",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "Reading overnight reports + composing ballot answers",
+      "description": "DERIVED, NOT OBSERVED. First typed message 12:12 ran 7,580ch and answered roughly fifteen ballot items against reports left at 18:02 the previous evening - estimated 60 min of reading and composing before he typed. First commit 12:16 fits."
+    },
+    {
+      "date": "2026-09-17",
+      "start": "12:15",
+      "end": "19:30",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "AC manual + ACT-21 lane: protocols, Atlas, packout",
+      "description": "Both machines on the same kind of work. Desktop: ac.md edits, the legend/abbreviation rule, provenance-tag feedback, a full packout pass. Laptop: ACT-21, the 300-line index, lock-protocol, spinning ACT-R and QCs. Attended the virtual therapy appointment 14:00-15:00 - a 62-min desktop gap sits exactly there. Final commit 19:32."
+    },
+    {
+      "date": "2026-09-18",
+      "start": "10:15",
+      "end": "19:15",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "ACT-22/23: session-doc cleanup, compaction-bug hunt, re-spins",
+      "description": "Laptop lane, and the bulk of the day. Your own words at 15:18: \"I have been over on the laptop all day, working with ACT on getting the tracker solid - there are a BUNCH of old session docs, and so he is clearing them.\" Two deliberate in-place re-spins (ACT-22 at 09:04, ACT-23 at 15:41) and the Claude Code context-loss bug investigation at 17:22."
+    },
+    {
+      "date": "2026-09-18",
+      "start": "15:18",
+      "end": "18:30",
+      "colorId": "8",
+      "colorLabel": "Ops",
+      "summary": "ACP: handoff review + shutdown",
+      "description": "Desktop lane, evening. Handoff state, fragment sweep, and a final git pull before shutting down."
+    }
+  ]
+}
