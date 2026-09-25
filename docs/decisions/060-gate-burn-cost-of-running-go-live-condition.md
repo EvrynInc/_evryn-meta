@@ -10,7 +10,7 @@
 
 **Serving a gatekeeper costs money we have not measured.** The June cost analysis (`evryn-team-workspace/shared/projects/product/research/2026.06.11 evryn-cost-analysis.md`) modeled the ladder from ~$11,000/mo down to a ~$200/mo irreducible floor, but every figure in it is **modeled on n=4 hard captures**, and the 2× prefix correction applied to it in July is a **re-derivation, not a re-fit**. That document has carried a standing action since July: *"capture ~50 real items through the live pipeline and refit."* It was never done.
 
-**Emma's 2026-08-18 burn analysis made the consequence concrete, and it is a runway fact rather than a cost-tuning one.** Runway swings from roughly **five months dormant** to roughly **sixteen days in the worst transient corner**, depending on a cache-temperature number nobody has measured. Her conclusion, verbatim:
+**Emma's 2026-07-29 burn analysis made the consequence concrete, and it is a runway fact rather than a cost-tuning one.** Runway swings from roughly **five months dormant** to roughly **sixteen days in the worst transient corner**, depending on a cache-temperature number nobody has measured. Her conclusion, verbatim:
 
 > *"the go-live decision for a gatekeeper is a burn decision, not just a build decision — and nobody has been treating it as one."*
 

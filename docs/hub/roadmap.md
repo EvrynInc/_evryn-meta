@@ -10,7 +10,7 @@
 >
 > **Domain spokes** (`docs/hub/`) carry full depth on each topic — load them only when your current task requires that depth. Most sections below link to their spoke inline.
 >
-> **Downstream dependency:** When this document changes substantively, the Evryn company context module (`evryn_knowledge`, slug: `company-context`) should be refreshed — it's a **public-safe** derivative of Hub content. See `evryn-backend/docs/BUILD-EVRYN-MVP.md` Memory Architecture.
+> **Downstream dependency:** When this document changes substantively, the Evryn company context module should be refreshed — it's a **public-safe** derivative of Hub content. **It is the identity file `evryn-backend/identity/public-knowledge/company-context.md`, force-loaded into every one of Evryn's queries, and edited only through `evryn-team-workspace/shared/protocols/identity-file-review.md`** — not a database row. *(Corrected 2026-09-25: it was described here as the `evryn_knowledge` module, slug `company-context`, which sent readers to a table that does not hold it.)*
 >
 > **Every word in this document is load-bearing.** Nothing here is filler — every phrase was chosen to convey specifically what we mean. If something reads like fluff, pause and consider what it might mean if it isn't.
 >
@@ -137,9 +137,9 @@ For MVP (v0.2), a single agent handles all three domains. As complexity grows, t
 
 **Script-as-skill, not script-as-constraint.** Scripts don't bind Evryn — they're how she *learns her own voice*. She takes a carefully-crafted script plus the reasoning behind it, hears herself in it, and then flows naturally in her own register, hitting the same targets. Structure is what frees her: given the script, she improvises *from* it rather than reciting it — where total freedom would leave her directionless.
 
-**Security:** Information firewalling by construction (not just instruction). Front-facing Evryn is structurally blind to sensitive data. Zero-trust, defense in depth.
+**Security:** Information firewalling by construction (not just instruction). Front-facing Evryn is structurally blind to sensitive data *(the target; partial in v0.2 — see `evryn-backend/docs/ARCHITECTURE.md` §Security for what is closed structurally today and what is still judgment-only)*. Zero-trust, defense in depth.
 
-**Internal/external firewalling for Lucas.** Lucas operates both internally (team coordination) and externally (via Evryn). The Hub is internal company truth; externally, Lucas references only Evryn's public-safe company context module (`evryn_knowledge`). Internal-only information must never leak.
+**Internal/external firewalling for Lucas.** Lucas operates both internally (team coordination) and externally (via Evryn). The Hub is internal company truth; externally, Lucas references only Evryn's public-safe company context module (the identity file `evryn-backend/identity/public-knowledge/company-context.md`). Internal-only information must never leak.
 
 ## The Long View
 
