@@ -186,7 +186,12 @@ Simpler to build, but desktop-only:
 After Justin makes the introduction, **Evryn is the main face of the relationship.** Justin introduces, then steps back. Evryn:
 
 1. **Has the first conversation.** Gets to know the gatekeeper — what they're looking for, what gold looks like, what drives them crazy, what they care about. This is the "Meet Evryn" step from the pitch.
-2. **Guides the setup.** Walks them through the forwarding setup (or Justin remotes in to do it).
+2. **Guides the setup — and records it herself.** Walks them through the forwarding setup in their own email client (or Justin remotes in to do it). **Three capabilities have been live since 2026-06-29, and the pitch should reflect them:**
+   - **Evryn records the gatekeeper's forwarding addresses herself during onboarding** — which addresses they will forward from, and where the good ones should go — rather than Justin entering them by hand.
+   - **Several addresses resolve to one profile.** A gatekeeper can forward from work, personal and an auto-forwarder, and it all lands on their single record.
+   - **A forward from an address Evryn does not recognize is flagged** to the operator rather than mis-handled.
+
+   *(The gatekeeper still sets up forwarding in their own email client; what changed is everything on Evryn's side of it.)*
 3. **Runs the validation.** Checks in during the validation period, asks for feedback, adjusts.
 4. **Proposes the handoff.** When the time is right, suggests transitioning to "Evryn handles this."
 

@@ -42,7 +42,7 @@ The implications are hard to overstate. You will never have to search for the ri
 
 And this also means that Evryn connects you more to *yourself* — not only by encouraging you to be clear about who you are, so that you can attract the right kind of people *for you*, but also by filling your world with the people who you're meant to be with. They say we're the sum of the people we spend time with. In this way, Evryn helps you find the *you* you want to be.
 
-And nothing else: no more wrong fits, pesterers, spammers, scammers, predators. We've had to accept those as simply an unavoidable part of being connected in the world. **Well, no more.** Evryn makes it possible to be as connected as you want, while making it *impossible* for any of them to reach you.
+And nothing else: no more wrong fits, pesterers, spammers, scammers, predators. We've had to accept those as simply an unavoidable part of being connected in the world. **Well, no more.** Evryn makes it possible to be as connected as you want, while making it virtually *impossible* for any of them to find you here.
 
 Evryn guards your gates. She's here because *this* is how connection *should* be.
 
