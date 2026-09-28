@@ -158,7 +158,7 @@ The vision: a world where the *default* would be that people can be trusted and 
 
 - **Human Advisors:** Andrew Lester (Operations), Salil Chatrath (Product), Manuele Capacci (Design), Megan Griffiths (Film Industry).
 - **Legal:** Fenwick & West (legal and strategic partner).
-- **Pilot User:** Mark (August Island Pictures / Eva's Wild).
+- **Pilot gatekeepers:** Lacey Leavitt (likely the first to go live) and Mark (August Island Pictures / Eva's Wild; not yet forwarding).
 
 ## Repositories
 
