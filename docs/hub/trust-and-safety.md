@@ -30,7 +30,7 @@ Trust → Value → Payment → Memory → More Trust. Each cycle deepens the re
 
 ### Trust Signals
 
-Evryn observes: honesty, kindness and respect, reliability and follow-through, tone, ghosting patterns, good boundaries, signals of emotional presence. The assessment is multidimensional, context-specific, and dynamic — not a single score. Evryn might trust someone highly for professional connections but have reservations about romantic introductions, or vice versa.
+Evryn observes: honesty, kindness and respect, reliability and follow-through, tone, ghosting patterns, good boundaries, signals of emotional presence. The assessment is multidimensional, context-specific, and dynamic — not a single score. Signals carry across contexts only where they are relevant — a regulated design choice ([ADR-059](../decisions/059-decline-eu-users-temporarily.md)). Evryn might trust someone highly for professional connections but have reservations about romantic introductions, or vice versa.
 
 ### Identity Verification
 
@@ -184,13 +184,15 @@ Evryn is in the business of *discrimination* — "I believe this person would be
 
 In both cases, Evryn may act outside the normal privacy model — for example, flagging a conversation for human review that would otherwise be private. Framed as a safety commitment, not surveillance.
 
+California's companion-chatbot law (SB 243) requires this protocol to be documented, and Evryn's AI disclosure to be affirmative (v0.3 Terms checklist, T24). Justin's view is that Evryn is not a companion chatbot but the customer-service face of a connection business; until this is *definitively settled legally*, we comply as if the law applies, without conceding that it does.
+
 ### Human Oversight
 
 Dashboards will flag problematic chats in real-time. A dedicated Trust & Safety Team will handle escalations post-launch. An Ethics & Safety Board will review conversations, surface bias metrics, and propose improvements.
 
 ### Regulatory Alignment
 
-Built with forward compatibility for frameworks like the EU's Digital Services Act: a clear appeal path for bans or moderation decisions, aggregate transparency reporting on moderation activity as the platform matures, and alignment with emerging norms on digital due process and platform accountability.
+Built with forward compatibility for frameworks like the EU's Digital Services Act: a clear appeal path for bans or moderation decisions, aggregate transparency reporting on moderation activity as the platform matures, and alignment with emerging norms on digital due process and platform accountability. For now Evryn declines EU users; [ADR-059](../decisions/059-decline-eu-users-temporarily.md) sets out what opening the EU takes.
 
 ---
 

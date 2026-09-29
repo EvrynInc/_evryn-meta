@@ -78,7 +78,7 @@ Once Evryn's calibration is solid — typically after a few weeks of verifying t
 
 ### Pathway 1: Forwarding Continues
 
-Mark keeps forwarding his inbound. Evryn now replies to everyone on his behalf, with Mark's authorization. The approach differs by classification:
+Mark keeps forwarding his inbound. Evryn now replies to everyone on his behalf, with Mark's authorization. *(Added 2026.09.29: except senders in the EU, while we decline EU users — [ADR-059](../../decisions/059-decline-eu-users-temporarily.md).)* The approach differs by classification:
 
 **Gold** — clearly worth Mark's time. Evryn notifies Mark and reaches out to the person:
 
@@ -129,7 +129,7 @@ Some people may still email Mark directly during Pathway 2 (they have his email,
 
 ### Everyone Becomes an Evryn User
 
-Evryn's first priority is always whether someone is the right mutual fit for Mark — when they are, Evryn facilitates it. But Evryn also helps people find connections across all life domains, so someone who came through Mark's inbound might also find other opportunities, collaborators, or people that Evryn discovers for them. Everyone who reaches out to Mark gets taken care of, and Mark's reputation benefits from that.
+Evryn's first priority is always whether someone is the right mutual fit for Mark — when they are, Evryn facilitates it. But Evryn also helps people find connections across all life domains, so someone who came through Mark's inbound might also find other opportunities, collaborators, or people that Evryn discovers for them. Everyone who reaches out to Mark gets taken care of *(added 2026.09.29: outside the EU, for now)*, and Mark's reputation benefits from that.
 
 **For the agreement:** Evryn always evaluates everyone from a gatekeeper's channel for mutual best fit with that gatekeeper. However, the same person may reach out to more than one gatekeeper at the same time, so the gatekeeper should assume no ownership or exclusive rights over people who come through their inbound.
 
