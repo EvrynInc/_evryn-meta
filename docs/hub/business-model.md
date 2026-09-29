@@ -12,6 +12,8 @@
 
 Evryn monetizes transformation, not attention. **She only gets paid when she helps you actually move forward.** No ads. No paywalls.
 
+> 🔄 **Pricing is open again (Justin, 2026-09-25):** he is weighing pure per-connection pricing against an all-inclusive membership, and the dues-plus-per-connection hybrid below may not survive — his words: `evryn-team-workspace/shared/projects/helm/2026.06.29-meta-meeting-runway.md` → 2026-09-25. **Vocabulary: "membership," never "subscription"; "join," never "sign up."**
+>
 > ⚠️ **"No subscriptions" — UNDER ACTIVE RECONSIDERATION as of 2026-08-31. Not overturned; not settled either.** Justin approved a **working hypothesis** (explicitly not a ratified decision) that pricing may become **a small recurring membership plus a per-connection fee paid *after* the connection.** Full context: `evryn-team-workspace/shared/projects/helm/2026.08.31-paradigm-and-pricing.md`.
 >
 > **The principle above is what has to survive, and the proposed design is built to preserve it:** dues would be priced so that **a member who receives zero connections in a year leaves us roughly break-even** — so Evryn still only *profits* when a connection works. **If a proposed price cannot meet that test, the design is wrong, not the principle.**
@@ -252,7 +254,7 @@ Evryn uses a trust-filtered market model:
 >
 > This material did not play out. It is preserved as clearly-labeled history, not current truth. Evryn has earned **zero revenue to date** — v0.3 "The Broker" (the first revenue-generating build) has not launched. The tables assume a late-April v0.3 launch, ~5% cast-off conversion, ~$19,200 of July revenue, and a positive August cash position through the Fenwick bill; none of that occurred. The Burn Profile's "Runway from $6,125" base is a March starting balance, not today's. **This document deliberately does not restate the bank balance** — a figure copied into a spoke drifts from the document that owns it, which is exactly how this section rotted.
 >
-> **Where the live truth lives:** the current-state snapshot (`evryn-team-workspace/shared/current-state/`) is the source of truth for cash position and burn. A rebuilt financial model — reconciling real burn, the changed infrastructure (see [BizOps spoke](bizops-and-tooling.md)), the revised Fenwick settlement (current-state), and actual cost-per-match data from the live v0.2 runtime — is Emma's work, gated on her post-Mark session with Justin. Until it lands, treat everything below as historical reference only.
+> **Where the live truth lives:** the current-state snapshot (`evryn-team-workspace/shared/current-state/`) is the source of truth for cash position and burn. A rebuilt financial model — reconciling real burn, the changed infrastructure (see [BizOps spoke](bizops-and-tooling.md)), the revised Fenwick settlement (current-state), and actual cost-per-match data from the live v0.2 runtime — is Emma's work, starting with her QuickBooks takeover when Justin returns (2026-10-12). Until it lands, treat everything below as historical reference only.
 
 ### Burn Profile — SUPERSEDED (March 2026 model)
 
