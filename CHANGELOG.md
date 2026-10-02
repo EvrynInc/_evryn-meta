@@ -20,6 +20,12 @@
 
 ---
 
+## 2026-10-02 (`Lucas`, Trusted Partner Briefing lane: the GTM spoke's "film," the legal name "Evryn, Inc.," and a fastidiousness warning on the packout protocol)
+
+- **GTM spoke (`ebd95be`):** "film" is defined as shorthand for the whole motion picture industry (features, TV and streaming, commercials); "no one makes movies or TV alone"; the segment row is renamed "Motion Picture Creators & Crews." Marlowe's edits, with Justin's tweaks.
+- **Hub and spokes (`8d40e1e`): the legal name is "Evryn, Inc.", with the comma**, per Article I of the Delaware certificate of incorporation (Drive: "Evryn, Inc. Certificate of Incorporation.pdf"). Eleven "Evryn Inc." were fixed across the Hub, four spokes and the Foundation detail doc, plus two lines reading "Evryn is a Delaware PBC" that meant the entity. ⚠️ **Not fixed, and routed:** the live website still says "Evryn Inc." in its metadata (`evryn-website/app/layout.tsx`) and in the posted Privacy Notice's own title (`evryn-website/app/privacy/page.tsx` line 19). Posted legal text changes only through Nathan's process. The frozen Master Plan files in `docs/historical/` are left as they are.
+- **Packout protocol (`5e83f29`):** a loud "run every step, fastidiously" warning now opens the file, and it is repeated at the bottom "because previous warnings have been ignored." **The final report must name every skipped or deviated step with its reason.** *(Justin, 2026-10-02: he had been repeating this by hand before every packout.)*
+
 ## 2026-09-23 (`ACcal` — a protocol for reconstructing Justin's hours; the Google Calendar write trap; two rulings into `ac.md`)
 
 - **NEW: `docs/protocols/justin-timekeeper-protocol.md`** — how to reconstruct how Justin spent a past stretch of time, from git history plus Claude Code transcripts, when his calendar has gone spotty. Built from doing it for 2026-08-31 → 09-23 and from `ACb`'s commit-based hours method of 09-07. **It carries the traps rather than just the steps:** transcripts are per-machine, so a silent gap on one is routinely work on the other; a negative result needs a control in the same run; a keyword search finds strings rather than facts; and Justin's own logged blocks can overstate continuity. Also records his calendar conventions — the six colours he actually uses, the Personal/Family and Nurturing-Productive-Capacity exclusions, long blocks over quarter-hour slices, deliberately overlapping parallel lanes, and the `REPLACEMENT` convention for where evidence contradicts a block he logged.
