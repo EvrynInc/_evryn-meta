@@ -8,6 +8,20 @@
 
 ---
 
+> # 🔴🔴 RUN EVERY STEP, FASTIDIOUSLY. THE ONES THAT FEEL REDUNDANT ARE THE ONES THAT CATCH THINGS.
+>
+> **Every step in this file was written because skipping it broke something.** You will reach this protocol near the end of your context, holding a session you believe you remember well. That is exactly the state in which a second fragment sweep or a re-read of a brief you just wrote feels like a repeat, and it is exactly the state in which those steps catch what memory smoothed over.
+>
+> 🔑 **The fragment sweeps and the fresh-eyes passes are the most-skipped steps and the most important ones.** *(Measured, 2026-10-02: in a lane-closing packout, the step-4 fresh-eyes re-read found three errors in a closure section written minutes earlier, and the step-5 pass found three more. One was a ledger line crediting a subagent's edit to the wrong commit. None of the six was visible from memory. This has happened so many times, and the extra steps *always* catch 3-7 *new* things.)*
+>
+> **What is required, not merely encouraged:**
+> 1. **Do every step.** Some *genuinely* won't apply on this particular day: say so, with the check you ran.
+> 2. **Skimp on none.** A sweep done "from memory" or a re-read of the diff in place of the whole doc is a skipped step wearing a done step's clothes.
+> 3. **In your final report, name any step you skipped or deviated from, and the reason for each.** Justin expects a good reason for every one, and if you don't have a really good reason, he's just going to send you back to re-do it - wasting time and tokens, so **make sure** you do it right, the first time. **An unexplained gap reads as a skipped step, because that is what it usually is.**
+>
+
+---
+
 ## 🔑 `#lock` AND `#packout` ARE DIFFERENT COMMANDS. Know which one you were given.
 
 *(Justin's design, 2026-09-02.)*
@@ -144,7 +158,13 @@
 ⭐ **THE ONE-LINE VERSION OF ALL SEVEN: everything that could still ROUTE WORK TO YOU has to be switched off.** **A mailbox, a banner condition, a roster entry and a brief are all addresses — and an address that outlives its agent does not fail loudly. It swallows.**
 
 ---
-**Important:** when you pack out, there are situations where some of the steps don't *apply*. You don't need to be slavish about doing steps *if they're inappropriate*. But know this: every single step here was designed **entirely from past failures**, so if a step reads as overkill, I promise you it's not. It was put in there because it was *critical*. So treat it like an astronaut or a surgeon's checklist: **skip or skimp on even one step, and critical things break**. The most important thing is to do *all* recommended fresh-eyes passes. These are the most-skipped steps and they are honestly the most important part of this whole file. 
+> # 🔴🔴 REPEATED FROM THE TOP, BECAUSE PREVIOUS WARNINGS HAVE BEEN IGNORED: RUN EVERY STEP, FASTIDIOUSLY.
+>
+> **You may have read the opening warning and moved on. Agents did, repeatedly, which is why Justin had to say it by hand before every packout, and why it is said twice now.**
+>
+> **Some steps won't *apply* in your situation, and you don't need to be slavish about those.** But every step here was designed **entirely from past failures**. So if a step reads as overkill, it isn't: it is there because skipping or skimping on it has broken things *way too many times*. Treat this like an astronaut's or a surgeon's checklist: **skip or skimp on even one step, and critical things break.** **The fragment sweeps and the fresh-eyes passes matter most.** They are the most-skipped steps, and they are the most important part of this file.
+>
+> ⇒ **Before you send your final report, check it names every step you skipped or deviated from, with its reason. Justin won't accept missing things that don't have *bulletproof* explanations.**
 
 ## ⚠️ THE FAILURE THIS PROCEDURE IS BUILT AGAINST
 
