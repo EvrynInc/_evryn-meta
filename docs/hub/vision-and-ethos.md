@@ -180,7 +180,7 @@ Every early user should feel like a co-founder of a mission-driven community. Gr
 
 ***You're someone who helped make it real."***
 
-Evryn Inc. is a Delaware Public Benefit Corporation, legally mission-locked: *"to foster trusted human connection for our users by developing systems that create high-resonance connections, responsibly steward personal information and insights, and structurally protect emotional wellbeing, informed consent, and relational alignment and trust across every interaction."*
+Evryn, Inc. is a Delaware Public Benefit Corporation, legally mission-locked: *"to foster trusted human connection for our users by developing systems that create high-resonance connections, responsibly steward personal information and insights, and structurally protect emotional wellbeing, informed consent, and relational alignment and trust across every interaction."*
 
 The founding capital philosophy: *"We're trying really hard not to need outside money — help us make this into something that can't be corrupted."* This leaves the door open while making independence the mission. Users aren't leads. They're co-founders of a new future — a human system built on trust.
 
@@ -220,7 +220,7 @@ We're building a world where life feels more meaningful, belonging is effortless
 
 Evryn's long-term architecture is designed to make this vision structurally permanent — not dependent on any individual, company, or government.
 
-The planned two-entity structure — Evryn Inc. (Delaware PBC, revenue and product) and the Evryn Foundation (independent Swiss nonprofit, custodian of trust data) — ensures that even Evryn's creators cannot compromise the system's integrity. Trust data held by the Foundation is cryptographically sealed: no master key, no administrator override, no buried backdoor. If Inc. breaks its mission, the Trust Severance Protocol activates. The system is designed to protect users from every direction — even from within.
+The planned two-entity structure — Evryn, Inc. (Delaware PBC, revenue and product) and the Evryn Foundation (independent Swiss nonprofit, custodian of trust data) — ensures that even Evryn's creators cannot compromise the system's integrity. Trust data held by the Foundation is cryptographically sealed: no master key, no administrator override, no buried backdoor. If Inc. breaks its mission, the Trust Severance Protocol activates. The system is designed to protect users from every direction — even from within.
 
 Beyond the Foundation, Evryn aspires to a federation architecture — licensed community nodes that connect to Core, graceful degradation across system tiers (from cloud AI to peer-to-peer mesh to analog fallback), and eventually an open trust protocol that others can build with, but not build against. And if Evryn's trust layer proves itself, the architecture is designed to optionally become infrastructure — aligned platforms could embed Evryn's intelligence rather than compete with it. Strategic judo: turn competition into distribution, on our terms. These are long-horizon aspirations, not near-term plans — but they shape architectural choices today, because trust doesn't stop mattering when the servers go down.
 

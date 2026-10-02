@@ -58,7 +58,7 @@ Evryn is active, not passive. She starts conversations. She thinks about you in 
 
 **What Evryn is NOT:** Not a dating app ("a resonance layer for life"). Not a chatbot ("a relational intelligence with judgment"). Not another network ("a trust-based connection engine"). Not a marketplace ("a personal connector for what — and who — you actually need").
 
-**Entity:** Evryn Inc., Delaware Public Benefit Corporation. Mission-locked to "*foster trusted human connection for our users by developing systems that create high-resonance connections, responsibly steward personal information and insights, and structurally protect emotional wellbeing, informed consent, and relational alignment and trust across every interaction*".
+**Entity:** Evryn, Inc., Delaware Public Benefit Corporation. Mission-locked to "*foster trusted human connection for our users by developing systems that create high-resonance connections, responsibly steward personal information and insights, and structurally protect emotional wellbeing, informed consent, and relational alignment and trust across every interaction*".
 
 ## Why Now
 
@@ -148,7 +148,7 @@ Trust compounds. Evryn's ultimate leverage: owning the trust layer of human conn
 The vision: a world where the *default* would be that people can be trusted and relationships actually work — because there's a reliable trust broker. Mental health improves. Divorce drops. Job satisfaction rises. Money becomes less necessary as Evryn does an even better job at what money was always meant to do — vouch for your contributions and let you carry forward value.
 
 **Target state:**
-1. Trust data held by an independent Swiss foundation, structurally inaccessible even to Evryn Inc.
+1. Trust data held by an independent Swiss foundation, structurally inaccessible even to Evryn, Inc.
 2. Evryn's trust layer is designed to optionally become infrastructure — competitors could embed it rather than compete with it.
 
 ## Team

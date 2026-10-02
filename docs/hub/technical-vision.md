@@ -393,7 +393,7 @@ Full trust-imprint-on-deletion design: [trust-and-safety spoke](trust-and-safety
 
 The two-entity structure (see [Foundation Architecture](detail/evryn-foundation-architecture.md)) is the backbone of legal resilience:
 
-**If a government demands data from Evryn Inc.:** Inc. doesn't have it. Trust-sensitive data — behavioral memory, trust signals, conversation content — lives in the Foundation, not Inc. Inc. accesses the Trust Core only through narrow, consent-governed APIs that return actionable instructions, never raw data. Inc. can truthfully say: *"We don't hold that data. It's held by an independent Swiss nonprofit, outside our control."*
+**If a government demands data from Evryn, Inc.:** Inc. doesn't have it. Trust-sensitive data — behavioral memory, trust signals, conversation content — lives in the Foundation, not Inc. Inc. accesses the Trust Core only through narrow, consent-governed APIs that return actionable instructions, never raw data. Inc. can truthfully say: *"We don't hold that data. It's held by an independent Swiss nonprofit, outside our control."*
 
 **If a government demands data from the Foundation:** The Foundation holds encrypted data with keys it doesn't control. User vaults are encrypted with user-held keys. Working intelligence is encrypted within hardware-protected infrastructure. The Foundation can truthfully say: *"The data exists, but it is encrypted with keys we do not hold. We cannot produce what we cannot read."*
 

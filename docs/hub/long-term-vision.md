@@ -30,7 +30,7 @@ The vision: a world where the default is that relationships are high quality and
 
 ## Jurisdictional Trust Architecture
 
-The two-entity structure — Evryn Inc. (Delaware PBC, revenue and product) and the Evryn Foundation (Switzerland, nonprofit custodian of trust data) — is the backbone of data sovereignty and legal resilience. The Foundation holds the Privacy-Sovereign Trust Core; Inc. accesses it through narrow, consent-governed APIs. Neither entity can unilaterally compromise the other. If Inc. breaks its mission, the Trust Severance Protocol activates. Cryptographic architecture ensures that even a full breach yields nothing readable.
+The two-entity structure — Evryn, Inc. (Delaware PBC, revenue and product) and the Evryn Foundation (Switzerland, nonprofit custodian of trust data) — is the backbone of data sovereignty and legal resilience. The Foundation holds the Privacy-Sovereign Trust Core; Inc. accesses it through narrow, consent-governed APIs. Neither entity can unilaterally compromise the other. If Inc. breaks its mission, the Trust Severance Protocol activates. Cryptographic architecture ensures that even a full breach yields nothing readable.
 
 **Full depth:** [Foundation Architecture](detail/evryn-foundation-architecture.md) — two-entity relationship, data firewall, cryptographic layers (E2E + HSM + threshold recovery), trustee governance, Trust Severance Protocol, warrant canary, honest trust surface.
 
@@ -111,7 +111,7 @@ Risk: Evryn becomes another engagement-optimized platform. Structurally impossib
 Evryn has specific safeguards to gently move users off reliance on her and into real relationships. She's the catalyst, not the replacement.
 
 ### Brand/Mission Drift
-Evryn is a Delaware PBC, legally mission-locked: "to foster trusted human connection for our users by developing systems that create high-resonance connections, responsibly steward personal information and insights, and structurally protect emotional wellbeing, informed consent, and relational alignment and trust across every interaction."
+Evryn, Inc. is a Delaware PBC, legally mission-locked: "to foster trusted human connection for our users by developing systems that create high-resonance connections, responsibly steward personal information and insights, and structurally protect emotional wellbeing, informed consent, and relational alignment and trust across every interaction."
 
 ---
 
