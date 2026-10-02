@@ -43,9 +43,11 @@ The operating consequence under cost pressure: **cut waste, never voice.** "Voic
 
 ## Film Industry as Ignition Point
 
+**What "film" means here.** Throughout this spoke, **"film" is shorthand for the whole motion picture industry — features, TV and streaming series, commercials, etc.** — because that is the word the people in it use. When precision matters, say **"the motion picture industry,"** not "the entertainment industry": the latter also takes in music, gaming and live performance — which, while it's likely we'll pull in plenty of people from surrounding disciplines, is broader than our *core* focus *(Justin, 2026-10-02)*.
+
 The plan targets the film industry first because:
 - Highest need for quality introductions — everyone is either clamoring for attention they can't get or drowning in attention they don't want
-- Highly collaborative — no one makes a movie alone — mixing business, creative, social, romantic, and big money
+- Highly collaborative — no one makes movies or TV alone — mixing business, creative, social, romantic, and big money
 - Very tight-knit — each new user knows 300-5,000 qualified leads
 - Current tools are woefully inadequate (Facebook threads, job boards, DM chains, referral lists)
 - Justin's extensive reach (~40 highly connected film people × ~2,000 contacts each ≈ 78,000 second-gen contacts, plus ~600-700 direct film/theatre/adjacent contacts)
@@ -247,7 +249,7 @@ Evryn's avatar system (see [business-model spoke](business-model.md)) is modeled
 
 | Market Segment | Evryn Financial Model Avatars | Strategic Role in GTM |
 |---|---|---|
-| **Film Creators & Crews** | Builders, Operators, Seekers, Legacy Gatekeepers | Ignition point. High-trust, high-stakes matches in a tightly-networked industry. The entry wedge and the signal boost. |
+| **Motion Picture Creators & Crews** (film, TV, streaming, commercials, etc.) | Builders, Operators, Seekers, Legacy Gatekeepers | Ignition point. High-trust, high-stakes matches in a tightly-networked industry. The entry wedge and the signal boost. |
 | **Disillusioned Daters** | Seekers, Casual Connectors, Social Anchors, Torchbearers | Emotionally resonant, high ARPU, naturally viral. These users evangelize when they feel seen. |
 | **Network-Burnout Professionals** | Operators, Builders | Mid-funnel utility users. They anchor credibility, respond well to value-first intros, and drive monetization through trust. |
 | **Creative Collaborators** | Builders, Operators, Casual Connectors, Social Anchors | CAC-efficient cohort. They retain when matched well and often escalate into repeat interactions. |
