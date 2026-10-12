@@ -20,7 +20,9 @@
 
 ---
 
-## 2026-10-11 (`Lucas`, a team read of a product idea: one `LEARNINGS.md` entry)
+## 2026-10-11 (`Lucas`, a team read of a product idea: one `LEARNINGS.md` entry, and one orchestration-protocol rule)
+
+- **`ac-orchestration-protocol.md`, "Relaying to Justin":** before a chat report that distills several agents' work goes to Justin, the sender makes one last deliberate pass over it. The pass stops at every name, label and phrase and asks whether Justin could know what it means from the report alone. Anything he couldn't, the sender adjusts. **Why:** a team's inside labels become the sender's own vocabulary after a few rounds, so a general reread misses them. *(Justin's wording, from his review in SCM. He ruled out a context-free subagent reader as too blank to judge clarity for him.)*
 
 - **`LEARNINGS.md`, Unpromoted:** a subagent's report can arrive as a `SubagentHandback` tool call rather than as its last text block, so a script that persists output verbatim from the transcript must extract that call's `message`, choosing which trip's hand-back deliberately. **Why it matters:** the orchestration protocol's "Persisting what a subagent returns" asks for exactly this extraction, and the naive version saves a fragment or nothing. *(The idea reviewed, "tap-to-match," lives in `evryn-team-workspace`; this repo's only change is the learning.)*
 
