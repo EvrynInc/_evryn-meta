@@ -20,6 +20,10 @@
 
 ---
 
+## 2026-10-11 (`Lucas`, a team read of a product idea: one `LEARNINGS.md` entry)
+
+- **`LEARNINGS.md`, Unpromoted:** a subagent's report can arrive as a `SubagentHandback` tool call rather than as its last text block, so a script that persists output verbatim from the transcript must extract that call's `message`, choosing which trip's hand-back deliberately. **Why it matters:** the orchestration protocol's "Persisting what a subagent returns" asks for exactly this extraction, and the naive version saves a fragment or nothing. *(The idea reviewed, "tap-to-match," lives in `evryn-team-workspace`; this repo's only change is the learning.)*
+
 ## 2026-10-02 (`Lucas`, Trusted Partner Briefing lane: the GTM spoke's "film," the legal name "Evryn, Inc.," and a fastidiousness warning on the packout protocol)
 
 - **GTM spoke (`ebd95be`):** "film" is defined as shorthand for the whole motion picture industry (features, TV and streaming, commercials); "no one makes movies or TV alone"; the segment row is renamed "Motion Picture Creators & Crews." Marlowe's edits, with Justin's tweaks.
