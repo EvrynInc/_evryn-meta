@@ -22,6 +22,25 @@
 
 ---
 
+> ### 🔴 Your successor can't see what you left out.
+>
+> **No matter how good this session was, if it doesn't get properly passed on, it breaks *everything* downstream,** and the next instance has no way to tell: it trusts your file the way you trusted the one before it. **Every step here was earned in blood, and what stands between your session and that outcome is the second fragment sweep and the two fresh-eyes passes. Everyone keeps skipping them.**
+>
+> **And Justin said that this happens *over and over again* - agents skip steps because they seem redundant and they forward *scores* of errors.**
+>
+> **The moment to distrust is *"I just wrote this, I know what it says."*** You know what you meant, and that's the very thing hiding the gaps. **Sweep from your session's transcript, not from memory (`node _evryn-meta/scripts/session-text.mjs > <your scratchpad>/session.txt`), read every brief whole, and keep going until a pass comes back clean. There's room:** compaction doesn't hit until 1MM tokens, and *"I'm short on room"* is almost never true.
+>
+> **What my first handoff would have passed on** *(Lucas, 2026-11-03)*. It looked finished, I told Justin "every step ran," and he sent me back. I had swept from memory and read part of two briefs. The real passes found **eighteen things it had wrong or had lost**:
+> - A Captain had posted READY FOR JUSTIN, and the handoff still said he was working.
+> - I had told Justin a partner hadn't written since September, after a check had already shown I couldn't see the inboxes where she would.
+> - A terms clause that may decide how the whole team runs was nowhere in it.
+> - A rule contradiction I'd been asked to take to him, and a plan that couldn't hold on its own dates, had both vanished.
+> - Items he had left on his calendar for me, I had read past that morning.
+>
+> **A successor would have started from those holes without being able to see them, and Justin would have been the one to find each one, by hand, again.**
+
+---
+
 ## 🔑 `#lock` AND `#packout` ARE DIFFERENT COMMANDS. Know which one you were given.
 
 *(Justin's design, 2026-09-02.)*
@@ -79,6 +98,8 @@
 **If your `#lock` ran a fragment sweep**, **this is an ADDITIONAL pass, and it is deliberate.** 🔑 **Writing the handoff is itself a discovery act — it surfaces intentions, open loops and half-decisions that the lock's sweep could not have seen, because they only became visible while you were trying to explain the session to someone else.**
 
 ⚠️ **Do not skim it because it feels like a repeat.** **The fragments this catches are exactly the ones the first sweep missed.**
+
+**This is also the closing gate on what Justin did by hand, that he shouldn't need to. List each thing he read, caught, decided or held this session, and answer: could we automate this *well*, create a pass we run ourselves, bring in another agent, or does this genuinely need to stay his, and why.** Write one row per thing to the decisions table in `evryn-team-workspace/shared/projects/helm/2026.10.19-consolidation-standup-near-zero-campaign.md`. **The packout isn't done until it has them**, because a question left in a dying session gets asked again next time. Say in your final report that you ran it.
 
 ### 3 · 🔴 SUBAGENT CLOSE-OUT — a HARD GATE. *(Moved here from `lock-protocol.md` step 21 on 2026-09-02, because it was always scoped to a re-spin.)*
 
