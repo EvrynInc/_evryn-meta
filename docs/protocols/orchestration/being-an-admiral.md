@@ -35,6 +35,8 @@
 
 🔑 **That ordering IS two-trip loading, for a session you cannot resume** (`ac-orchestration-protocol.md` → *Load first, task second*). The cascade loads before the Captain can see its task, so it cannot score its load against the work and quietly drop whatever looks irrelevant. ⇒ **Keep the three sentences in that order, and keep the task out of the command itself.** Collapse it to one line — *"load and execute <brief>"* — and the guarantee is gone, with nothing to show that it went. What else the brief must carry is in the lobby's *Subagent or standalone instance* (*"the brief must need NOTHING from him"*).
 
+**The command must also say that the session is responsible for writing its own memory:** *"Before you finish, write what you owe in your own `MEMORY.md` and topsheet, per the lock protocol's memory step; nobody else can write it for you."* **Why it's in the command as well as in the packout:** a session started by command has no close-out step unless it runs one, and it can finish well and end with its agent knowing nothing. This line makes it the session's job from the start; the packout's step 3 checks that it happened. *(Justin, 2026-11-04: "we need it at the beginning *and* the end.")*
+
 **A Captain spun fresh posts its load receipts and stops until you have checked them against the required list.** Justin spins it directly, so no check-in block of yours is in front of it, and nothing tells it to wait unless the brief or the handoff does. Reading receipts is not verifying them. *(Justin, 2026-09-28, after a fresh Captain went to work with five files missing and the Admiral read her receipts without checking them.)*
 
 ---
