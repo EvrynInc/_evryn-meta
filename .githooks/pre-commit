@@ -31,7 +31,14 @@
 set -e
 
 REPO_ROOT=$(git rev-parse --show-toplevel)
-SCANNER="$REPO_ROOT/../_evryn-meta/scripts/scan-control-chars.js"
+# Find the sibling repos from the MAIN checkout, through the shared .git folder,
+# not from this worktree's own top level: a worktree nested inside a repo (for
+# example .claude/worktrees/x, which a `claude --bg` session makes for itself)
+# has no sibling _evryn-meta, so a path built from $REPO_ROOT misses the scanner
+# and refuses every commit made there.
+COMMON_DIR=$(git rev-parse --path-format=absolute --git-common-dir)
+MAIN_ROOT=$(dirname "$COMMON_DIR")
+SCANNER="$MAIN_ROOT/../_evryn-meta/scripts/scan-control-chars.js"
 
 # Fail LOUD on a missing scanner. A guard that silently does nothing when its
 # tool is absent is worse than no guard -- it reports the same clean exit as a
@@ -50,7 +57,7 @@ if ! node "$SCANNER" "$REPO_ROOT"; then
   echo "" >&2
   echo "  If an author meant to WRITE an escape sequence as text and it became" >&2
   echo "  the real character, repair it with:" >&2
-  echo "      node $REPO_ROOT/../_evryn-meta/scripts/repair-control-chars.js <file>" >&2
+  echo "      node $MAIN_ROOT/../_evryn-meta/scripts/repair-control-chars.js <file>" >&2
   echo "  then re-run the SCANNER independently -- a tool reporting its own" >&2
   echo "  success is not a check." >&2
   echo "" >&2
