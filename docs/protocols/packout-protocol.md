@@ -99,7 +99,7 @@
 
 ⚠️ **Do not skim it because it feels like a repeat.** **The fragments this catches are exactly the ones the first sweep missed.** **Read back through the conversation beat by beat, with attention. If you've compacted, it's no longer in your context, so read it from your transcript instead:** `node _evryn-meta/scripts/session-text.mjs > <your scratchpad>/session.txt`.
 
-**This is also the closing gate on what Justin did by hand, that he shouldn't need to. List each thing he read, caught, decided or held this session, and answer: could we automate this *well*, create a pass we run ourselves, bring in another agent, or does this genuinely need to stay his, and why.** Write one row per thing to the decisions table in `evryn-team-workspace/shared/projects/helm/2026.10.19-consolidation-standup-near-zero-campaign.md`. **The packout isn't done until it has them**, because a question left in a dying session gets asked again next time. Say in your final report that you ran it.
+**This is also the closing gate on what Justin did by hand, that he shouldn't need to. List each thing he read, caught, decided or held this session, and answer: could we automate this *well*, create a pass we run ourselves, bring in another agent, or does this genuinely need to stay his, and why.** Write one row per thing to the decisions table in `evryn-team-workspace/shared/projects/helm/2026/2026.10.19-consolidation-standup-near-zero-campaign.md`. **The packout isn't done until it has them**, because a question left in a dying session gets asked again next time. Say in your final report that you ran it.
 
 ### 3 · 🔴 SUBAGENT CLOSE-OUT — a HARD GATE. *(Moved here from `lock-protocol.md` step 21 on 2026-09-02, because it was always scoped to a re-spin.)*
 
