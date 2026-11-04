@@ -1,15 +1,15 @@
 #!/usr/bin/env node
-// session-text.mjs — the conversation of a Claude Code session, pulled from its transcript, so a fragment sweep reads the record instead of memory.
+// session-text.mjs — the conversation of a Claude Code session, pulled from its transcript, for a fragment sweep after a compaction.
 //
 // Truncation check: the last line of this file should read `FULL FILE LOADED`.
 //
 // WHY THIS EXISTS
-//   A fragment sweep from memory feels thorough and finds nothing, because what you dropped leaves no trace in what you remember.
+//   A fragment sweep normally reads back through the conversation in your own context, which costs nothing new. After a compaction
+//   that conversation is gone from your context, and a summary is not the record. (Justin's ruling, 2026-11-03.)
 //   Every Claude Code session writes a transcript at ~/.claude/projects/<folder>/<session-id>.jsonl. This prints its user and
 //   assistant text in order, including messages the person sent mid-turn and what other agents sent in. It marks every compaction,
 //   and leaves out tool calls, tool results, harness reminders and subagents' own turns. It only reads: it writes to stdout, and it
 //   sends nothing anywhere.
-//   (2026-11-03: a sweep from this record found eighteen things a sweep from memory had missed.)
 //
 // USAGE (runs from any directory)
 //   node _evryn-meta/scripts/session-text.mjs > <your scratchpad>/session.txt          this session (reads CLAUDE_CODE_SESSION_ID)
