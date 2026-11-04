@@ -16,6 +16,8 @@
 >
 > **Tactical status:** *Always* load the latest snapshot in `evryn-team-workspace/shared/current-state/` for what's alive and prioritized across the team. For build-level detail (AC chunks, DC tasks, schema migrations), see `docs/current-state.md`. Do not rely on any "current state" section in this document — the snapshots are the source of truth and this doc drifts.
 
+> 🏛️ **The Hub and spokes are our constitution.** Justin, 2026-10-27: *"the hub and spokes are different — they aren't one piece among many — they are our constitution — they are what we define all other things by."* **Everything else you load (memory, current-state, briefs, research, a teammate's confident finding) answers to them.** Loading them doesn't bring them to mind: on 2026-10-24, six fully loaded agents re-derived or contradicted doctrine that was mostly already in their own context, because something more vivid won. **So before you state a finding, a proposal or a decision, say which Hub or spoke line it restates, extends or contradicts.** If a line looks wrong, raise it with Justin, who amends it in the open; don't work around it. *(What is true today lives in current-state; what we've legally committed to lives in the posted Terms and Privacy Notice.)*
+
 ---
 
 ## How We Hold the Hub and Spokes
