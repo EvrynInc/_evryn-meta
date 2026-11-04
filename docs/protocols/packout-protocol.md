@@ -28,9 +28,9 @@
 >
 > **And Justin said that this happens *over and over again* - agents skip steps because they seem redundant and they forward *scores* of errors.**
 >
-> **The moment to distrust is *"I just wrote this, I know what it says."*** You know what you meant, and that's the very thing hiding the gaps. **Sweep from your session's transcript, not from memory (`node _evryn-meta/scripts/session-text.mjs > <your scratchpad>/session.txt`), read every brief whole, and keep going until a pass comes back clean. There's room:** compaction doesn't hit until 1MM tokens, and *"I'm short on room"* is almost never true.
+> **The moment to distrust is *"I just wrote this, I know what it says."*** You know what you meant, and that's the very thing hiding the gaps. **Read back through the conversation carefully, beat by beat, read every brief whole, and keep going until a pass comes back clean. There's room:** compaction doesn't hit until 1MM tokens, and *"I'm short on room"* is almost never true.
 >
-> **What my first handoff would have passed on** *(Lucas, 2026-11-03)*. It looked finished, I told Justin "every step ran," and he sent me back. I had swept from memory and read part of two briefs. The real passes found **eighteen things it had wrong or had lost**:
+> **What my first handoff would have passed on** *(Lucas, 2026-11-03)*. It looked finished, I told Justin "every step ran," and he sent me back. I had glanced back through the session and read part of two briefs. The real passes found **eighteen things it had wrong or had lost**:
 > - A Captain had posted READY FOR JUSTIN, and the handoff still said he was working.
 > - I had told Justin a partner hadn't written since September, after a check had already shown I couldn't see the inboxes where she would.
 > - A terms clause that may decide how the whole team runs was nowhere in it.
@@ -97,7 +97,7 @@
 
 **If your `#lock` ran a fragment sweep**, **this is an ADDITIONAL pass, and it is deliberate.** 🔑 **Writing the handoff is itself a discovery act — it surfaces intentions, open loops and half-decisions that the lock's sweep could not have seen, because they only became visible while you were trying to explain the session to someone else.**
 
-⚠️ **Do not skim it because it feels like a repeat.** **The fragments this catches are exactly the ones the first sweep missed.**
+⚠️ **Do not skim it because it feels like a repeat.** **The fragments this catches are exactly the ones the first sweep missed.** **Read back through the conversation beat by beat, with attention. If you've compacted, it's no longer in your context, so read it from your transcript instead:** `node _evryn-meta/scripts/session-text.mjs > <your scratchpad>/session.txt`.
 
 **This is also the closing gate on what Justin did by hand, that he shouldn't need to. List each thing he read, caught, decided or held this session, and answer: could we automate this *well*, create a pass we run ourselves, bring in another agent, or does this genuinely need to stay his, and why.** Write one row per thing to the decisions table in `evryn-team-workspace/shared/projects/helm/2026.10.19-consolidation-standup-near-zero-campaign.md`. **The packout isn't done until it has them**, because a question left in a dying session gets asked again next time. Say in your final report that you ran it.
 
@@ -160,7 +160,7 @@
    - ⚠️ **`inbox-acp.md` and `inbox-act.md` are PERMANENT and are never deleted.** **`inbox-acv.md` is ambiguous and is Justin's call.**
 2. 🌳 **REAP WORKTREES AND BRANCHES.** `git worktree list` in every repo you touched. **Use `git branch -d` (lowercase) — a refusal is a signal that something is unmerged, not an obstacle to force past.** ⚠️ **Check `node_modules` counts around any reap** *(`ac.md`, Worktree & Branch Discipline)*.
 3. 🔒 **IF YOUR LINEAGE USES `HELD-SESSION-DOC` BANNERS, CHECK WHETHER ANYTHING IS HELD ON A CONDITION ONLY YOU COULD SATISFY.** `git grep -n "HELD-SESSION-DOC"`. ⚠️ **A banner reading *"RETIRE UPON: [your lane] has evaluated it"* becomes permanently unsatisfiable the moment your lane ends** — and it will sit there looking merely patient. ⇒ **Either satisfy it now, or re-point the owner to a lineage that still exists.**
-4. 📣 **TELL YOUR ACTIVE PEERS THE LANE IS CLOSING, in whatever channel they read — their inboxes, or, for an instance or subagent in a command structure, your log — before you go.** **Name what they should do with anything they were about to send you.** **A peer writing into a dead lane's mailbox gets no error and no reply.**
+4. 📣 **TELL YOUR ACTIVE PEERS THE LANE IS CLOSING, in whatever channel they read — their inboxes, or, for an instance or subagent in a command structure, your log — before you go.** **Name what they should do with anything they were about to send you.** **A peer writing into a dead lane's mailbox gets no error and no reply.** **And ask what whoever runs this work next (your successor, your Admiral, your Captain?) needs from you, then write it where they will read it, addressed to them,** with any reusable script moved out of your scratchpad first. A lane's records say what happened; they don't say what its successor should do differently. *(2026-11-03: a lane closed with a complete log, and Justin had to ask whether the Admiral running the next three consolidations had what it learned. It didn't.)*
 5. 📋 **UPDATE THE LANE'S STATUS ANYWHERE IT IS LISTED AS ACTIVE** — `current-state.md`, a conductor's brief, a roster. **A lane listed as running is a lane someone will route work to.**
 6. 🗂️ **RETIRE THE BRIEF OUTRIGHT — do not supersede it.** **Supersede means "a successor reads the new one." There is no successor.** **Archive it under its own date, name unchanged.**
 7. 🏁 **BANNER THE BRIEF `LANE-CLOSED`, AND SAY SO IN THE CHANGELOG AND CURRENT-STATE.** *(Justin's design, 2026-09-02. A founding-team agent has no changelog — the evryn-team-workspace `current-state.md` is both.)*
