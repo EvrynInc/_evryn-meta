@@ -1,6 +1,9 @@
-# server_version_num=170010 (expected to differ between local and live; not a stop)
-table task_history: owner=postgres rls=true force_rls=false
-table tasks: owner=postgres rls=true force_rls=false
+# server_version=17.10
+# server_version_num=170010
+table task_history: owner=postgres
+table tasks: owner=postgres
+rls task_history: enabled=true forced=false
+rls tasks: enabled=true forced=false
 column task_history #01 id bigint NOT NULL IDENTITY ALWAYS
 column task_history #02 task_id uuid NOT NULL
 column task_history #03 at timestamp with time zone NOT NULL DEFAULT now()
@@ -102,12 +105,27 @@ grant tasks: service_role SELECT
 grant tasks: service_role TRIGGER
 grant tasks: service_role TRUNCATE
 grant tasks: service_role UPDATE
-sequence task_history.id: owner=postgres privileges=postgres:SELECT,postgres:UPDATE,postgres:USAGE
-sequence tasks.short_id: owner=postgres privileges=postgres:SELECT,postgres:UPDATE,postgres:USAGE
-function task_history_guard_insert(): owner=postgres security=INVOKER volatility=v config=search_path="" privileges=postgres:EXECUTE body_md5=5591768c4d478b39badaff9d681c135d
-function task_history_refuse_change(): owner=postgres security=INVOKER volatility=v config=search_path="" privileges=postgres:EXECUTE body_md5=c5a5dcde2a6f03425297d10f1f3ce4e0
-function task_request_actor(): owner=postgres security=INVOKER volatility=s config=search_path="" privileges=postgres:EXECUTE,service_role:EXECUTE body_md5=fb106adf94be09e90daffe578e9110c4
-function task_roster(): owner=postgres security=INVOKER volatility=i config=search_path="" privileges=postgres:EXECUTE,service_role:EXECUTE body_md5=7cc0acd419d23c66f1596106e3ac7794
-function tasks_after_write(): owner=postgres security=INVOKER volatility=v config=search_path="" privileges=postgres:EXECUTE body_md5=e39010f0082dd5d81d68d1888b41127f
-function tasks_before_write(): owner=postgres security=INVOKER volatility=v config=search_path="" privileges=postgres:EXECUTE body_md5=4cb1e0f17050ff49793bf8756c351dc2
-function tasks_refuse_delete(): owner=postgres security=INVOKER volatility=v config=search_path="" privileges=postgres:EXECUTE body_md5=0c876d3a3c9374420871bcd32f549d7d
+sequence task_history.id: owner=postgres
+sequence tasks.short_id: owner=postgres
+sequence-grant task_history.id: postgres SELECT
+sequence-grant task_history.id: postgres UPDATE
+sequence-grant task_history.id: postgres USAGE
+sequence-grant tasks.short_id: postgres SELECT
+sequence-grant tasks.short_id: postgres UPDATE
+sequence-grant tasks.short_id: postgres USAGE
+function task_history_guard_insert(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=5591768c4d478b39badaff9d681c135d
+function task_history_refuse_change(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=c5a5dcde2a6f03425297d10f1f3ce4e0
+function task_request_actor(): owner=postgres security=INVOKER volatility=s config=search_path="" body_md5=fb106adf94be09e90daffe578e9110c4
+function task_roster(): owner=postgres security=INVOKER volatility=i config=search_path="" body_md5=7cc0acd419d23c66f1596106e3ac7794
+function tasks_after_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=e39010f0082dd5d81d68d1888b41127f
+function tasks_before_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=0da2325b3a39125cbf0c5ed789b5d353
+function tasks_refuse_delete(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=0c876d3a3c9374420871bcd32f549d7d
+function-grant task_history_guard_insert(): postgres EXECUTE
+function-grant task_history_refuse_change(): postgres EXECUTE
+function-grant task_request_actor(): postgres EXECUTE
+function-grant task_request_actor(): service_role EXECUTE
+function-grant task_roster(): postgres EXECUTE
+function-grant task_roster(): service_role EXECUTE
+function-grant tasks_after_write(): postgres EXECUTE
+function-grant tasks_before_write(): postgres EXECUTE
+function-grant tasks_refuse_delete(): postgres EXECUTE

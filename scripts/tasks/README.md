@@ -13,7 +13,8 @@
 | `tasks.mjs` | The CLI agents run (`pull`, `mine`, `closed`, `show`, `search`, `add`, `update`, `close`, `sign`, `export`). No npm dependencies. Logic in `lib/cli.mjs`. |
 | `check.mjs` | Is the environment ready? Presence of each variable, the project ref, the key kind, a `tasks` row count, `select 1` through the pooler. **Prints no value.** |
 | `migrate.mjs` | Applies `migrations/*.sql` in one transaction through `psql`. `--rehearse` applies and rolls back; `--apply-live` is required to commit live. |
-| `schema-snapshot.mjs` | **Read-only.** A deterministic text description of `tasks` and `task_history`. Compare two with `git diff --no-index`. |
+| `schema-snapshot.mjs` | **Read-only.** A deterministic text description of `tasks` and `task_history`, one fact per line: server version, owner, RLS, columns, constraints, indexes, triggers, policies, table/sequence grants, and every task function with its EXECUTE grants. |
+| `snapshot-compare.mjs` | Compares a local and a live snapshot and classifies every difference as a **STOP** or **LISTED** (Soren's S1 rule, encoded and tested). Exit 1 on any stop. Reads two files; touches nothing else. |
 | `import-linear.mjs` | One-time import of Linear's open tickets. **Dry run by default**; `--apply` writes as actor `ac`, idempotently on `linear_id`. Only reads Linear. |
 | `migrations/` | **Its own sequence**, never numbered into `evryn-team-runtime/migrations/`. Prerequisite: runtime `003_tasks_proposals.sql`. |
 | `test/unit/` | `node --test` against a fake PostgREST. |
@@ -36,7 +37,9 @@
 
 - **R5, the bulkhead:** every script refuses any URL that is not the Evryn Team project, before any request exists. The only other target accepted is a loopback test cluster.
 - **Tests can never read a real `.env`:** inside a test run (`node --test`, or `EVRYN_TASKS_TEST_MODE=1`) any attempt to read one throws `TEST TRIPWIRE`, and a test proves every script trips it.
-- **Live work belongs to Tasks AC, under Justin's go of 2026-11-05 14:52** (the brief's Log): `check.mjs`, `migrate.mjs --rehearse`, the before snapshot, `migrate.mjs --apply-live`, the after snapshot, the live checks. **Any difference between a live and a local snapshot in columns, defaults, constraints, policies, grants or owner is a stop, not a note.**
+- **Live work belongs to Tasks AC, under Justin's go of 2026-11-05 14:52** (the brief's Log): `check.mjs`, `migrate.mjs --rehearse`, the before snapshot, `migrate.mjs --apply-live`, the after snapshot, the live checks. **Compare each live snapshot with the local golden one in `test/fixtures/` using `snapshot-compare.mjs`.**
+  - **STOP** (Soren, S1, 2026-11-05 15:29): any difference in columns, defaults, constraints, triggers, policies, whether RLS is enabled, or owner; any grant difference to `service_role`, `anon`, `authenticated` or `PUBLIC`, on either table or on any task function's EXECUTE. The compare also stops on index and function-definition differences, and on any line it cannot classify.
+  - **LISTED, not a stop:** grants to any other (Supabase-only) role, and version-only privilege names (`MAINTAIN`). Both servers' versions print first.
 - **`export` output is not committed** and is not part of `#lock` until Justin rules.
 
 ## Running the tests

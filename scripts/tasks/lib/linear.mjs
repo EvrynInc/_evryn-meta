@@ -9,11 +9,14 @@
  *   verbatim status is kept in linear_status for the record. The map is a PROPOSAL that Tasks AC
  *   confirms before the real run.
  * - A title over 80 characters FAILS its ticket — never truncated. A body over 600 fails too,
- *   unless --long-body pointer is chosen (then the body becomes a pointer back to the ticket).
+ *   unless --long-body pointer is chosen (then the body becomes a pointer back to the ticket, and
+ *   the report lists every such ticket as OWED: move the substance to a doc before Linear closes).
  * - Nathan's tickets (any RACI label naming nathan) are HELD for him, not imported.
- * - A Justin ticket (R: justin) with a due date gets addressed_to justin + needed_by. One with no
- *   due date gets neither and is LISTED in the report, count and headlines, so Thea and the Admiral
- *   can date or close it (Soren, 14:47) — otherwise it would drop off his radar unseen.
+ * - A Justin ticket (R: justin, OR R: lucas with I: justin — see isJustinTicket) with a due date
+ *   gets addressed_to justin + needed_by. One with no due date gets neither and is LISTED in the
+ *   report, count and headlines, so Thea and the Admiral can date or close it (Soren, 14:47 and
+ *   15:29) — otherwise it would drop off his radar unseen.
+ * - "Needs Acceptance" imports as blocked and is listed under "awaiting Justin's acceptance".
  *
  * Truncation check: the last line of this file should read `FULL FILE LOADED`.
  */
@@ -29,9 +32,20 @@ export const STATUS_MAP = Object.freeze({
   Authorized: 'open', // NOT an authorization: Linear's column is non-binding (2026-07-24 safeguard)
   'Needs Authorization': 'proposed',
   'In Progress': 'in_progress',
-  'Needs Acceptance': 'in_progress',
+  // Blocked on Justin's acceptance (Soren S3, 15:29). Listed in the report under
+  // "awaiting Justin's acceptance"; linear_status keeps the verbatim "Needs Acceptance".
+  'Needs Acceptance': 'blocked',
   Blocked: 'blocked',
 });
+
+/**
+ * A "Justin ticket": R: justin, OR R: lucas together with I: justin. The Linear protocol (line 50)
+ * routes Justin-bound tickets to R: lucas, so most of them carry R: lucas + I: justin, not
+ * R: justin (Soren S3, 15:29). This definition drives BOTH addressed_to and the undated-Justin list.
+ */
+export function isJustinTicket(raci) {
+  return raci.r.includes('justin') || (raci.r.includes('lucas') && raci.i.includes('justin'));
+}
 
 export const OPEN_ISSUES_QUERY = `query OpenIssues($after: String) {
   issues(first: 50, after: $after, filter: { team: { name: { eq: "Evryn" } }, state: { type: { nin: ["completed", "canceled"] } } }) {
@@ -107,6 +121,7 @@ export function planIssue(issue, { longBody = 'fail' } = {}) {
     warnings,
     row: null,
     justinNoDate: false,
+    pointered: false,
   };
 
   const everyone = [...raci.r, ...raci.a, ...raci.c, ...raci.i];
@@ -128,6 +143,7 @@ export function planIssue(issue, { longBody = 'fail' } = {}) {
   if (description.length > 600) {
     if (longBody === 'pointer') {
       warnings.push(`body is ${description.length} characters; replaced by a pointer to the Linear ticket`);
+      plan.pointered = true;
       description = `Body (${description.length} chars) not imported; it stays in Linear ${issue.identifier}: ${issue.url ?? ''}`.slice(0, 600);
     } else {
       reasons.push(`body is ${description.length} characters (limit 600) — move it to a doc, or rerun with --long-body pointer`);
@@ -148,7 +164,7 @@ export function planIssue(issue, { longBody = 'fail' } = {}) {
   if (raci.i.length) row.raci.i = raci.i;
   if (other.length) row.tags = other;
   if (issue.dueDate) row.needed_by = issue.dueDate;
-  if (owner === 'justin') {
+  if (isJustinTicket(raci)) {
     if (issue.dueDate) row.addressed_to = 'justin';
     else plan.justinNoDate = true;
   }
@@ -186,10 +202,19 @@ export function renderReport(plans, { mode, applied } = {}) {
   lines.push('');
   lines.push(`## Titles over 80 characters (${long.length}) — each FAILS; shorten by hand, never truncated`);
   for (const p of long) lines.push(`- ${p.linear_id} (${p.title.length}): ${p.title}`);
+  const awaiting = plans.filter((p) => p.linearStatus === 'Needs Acceptance');
+  lines.push('');
+  lines.push(`## Awaiting Justin's acceptance (${awaiting.length}) — Linear "Needs Acceptance", imported as blocked`);
+  for (const p of awaiting) lines.push(`- ${p.linear_id} [${p.verdict}]: ${p.title}`);
   const nodate = plans.filter((p) => p.justinNoDate);
   lines.push('');
   lines.push(`## Justin tickets with NO due date (${nodate.length}) — imported WITHOUT addressed_to, so invisible to Thea until dated or closed`);
+  lines.push('   (a Justin ticket = R: justin, or R: lucas with I: justin)');
   for (const p of nodate) lines.push(`- ${p.linear_id}: ${p.title}`);
+  const pointered = plans.filter((p) => p.pointered && p.verdict === 'import');
+  lines.push('');
+  lines.push(`## Bodies replaced by a pointer to Linear (${pointered.length}) — OWED: move the substance to a doc before Linear closes`);
+  for (const p of pointered) lines.push(`- ${p.linear_id}: ${p.title}`);
   const held = plans.filter((p) => p.verdict === 'held');
   lines.push('');
   lines.push(`## Held for Nathan (${held.length}) — not imported`);

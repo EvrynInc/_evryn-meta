@@ -1,5 +1,7 @@
-# server_version_num=170010 (expected to differ between local and live; not a stop)
-table tasks: owner=postgres rls=true force_rls=false
+# server_version=17.10
+# server_version_num=170010
+table tasks: owner=postgres
+rls tasks: enabled=true forced=false
 column tasks #01 id uuid NOT NULL DEFAULT gen_random_uuid()
 column tasks #02 title text NOT NULL
 column tasks #03 description text NOT NULL DEFAULT ''::text

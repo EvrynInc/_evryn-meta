@@ -12,9 +12,9 @@
 -- existing value, touching public.proposals or any other existing table, or runtime code. So:
 --   - uniqueness is enforced with UNIQUE INDEXES (indexes are in the go; a UNIQUE constraint is not
 --     named in it);
---   - parent_id carries NO foreign key (an FK is a constraint type the go does not name); its
---     existence is checked by the trigger in 003 instead, which is sound because tasks can never be
---     deleted (also 003);
+--   - parent_id carries NO foreign key (an FK is a constraint type the go does not name; Soren
+--     agreed, S2 2026-11-05 15:29); the trigger in 003 checks the parent exists and refuses a cycle
+--     of any length, which is sound because tasks can never be deleted (also 003);
 --   - existing column comments are left exactly as they are, even where they are now stale.
 --
 -- Idempotent: re-applying converges (IF NOT EXISTS everywhere; constraints added only if absent).
@@ -63,7 +63,7 @@ comment on column public.tasks.closing_note is
 comment on column public.tasks.needed_by is
   'Needed-by date. Required whenever addressed_to is justin (tasks_justin_needs_date), so Thea can place it on his calendar. Nothing auto-closes for age.';
 comment on column public.tasks.parent_id is
-  'Parent task. Deliberately no foreign key (outside the 2026-11-05 go); the tasks_before_write trigger refuses a parent that does not exist or is the task itself. Sound because tasks are never deleted.';
+  'Parent task. Deliberately no foreign key (outside the 2026-11-05 go; agreed by Soren, S2 2026-11-05 15:29); the tasks_before_write trigger refuses a parent that does not exist, or that would create a cycle of any length (bounded walk, at most 50 ancestors). Sound because tasks are never deleted.';
 comment on column public.tasks.tags is 'Domain or topic tags. Screened by the CLI for personal data like every free-text field.';
 comment on column public.tasks.addressed_to is
   'One actor name: whom a watcher should wake. Shape-checked like the actor; a name outside the roster is written and flagged in task_history.';

@@ -2,7 +2,7 @@ import '../helpers.mjs';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { FAKE_KEY, TEST_ENV, jsonResponse } from '../helpers.mjs';
-import { LINEAR_ENDPOINT, OPEN_ISSUES_QUERY, STATUS_MAP, planIssue, renderReport } from '../../lib/linear.mjs';
+import { LINEAR_ENDPOINT, OPEN_ISSUES_QUERY, STATUS_MAP, isJustinTicket, parseLabels, planIssue, renderReport } from '../../lib/linear.mjs';
 import { runImport } from '../../import-linear.mjs';
 
 const LINEAR_KEY = 'lin_' + 'api_SENTINEL_never_print_123';
@@ -110,7 +110,44 @@ test('the report lists every ticket, the long titles, and the undated Justin tic
   assert.match(r, /DRY RUN/);
   assert.match(r, /\| EVR-1 \| open \| "Backlog" \| ok \|/);
   assert.match(r, /Titles over 80 characters \(1\)/);
-  assert.match(r, /Justin tickets with NO due date \(1\)[^\n]*\n- EVR-3: Sign the lease/);
+  assert.match(r, /Justin tickets with NO due date \(1\)[^\n]*\n[^\n]*R: lucas with I: justin[^\n]*\n- EVR-3: Sign the lease/);
+});
+
+// S3 (Soren, 2026-11-05 15:29)
+
+test('S3: "Needs Acceptance" imports as blocked, keeps the verbatim status, and is listed under awaiting Justin\'s acceptance', () => {
+  const p = planIssue(issue(20, { state: 'Needs Acceptance', title: 'Ship the website copy' }));
+  assert.equal(p.row.status, 'blocked');
+  assert.equal(p.row.linear_status, 'Needs Acceptance');
+  const r = renderReport([p, planIssue(issue(21))], { mode: 'dry-run' });
+  assert.match(r, /## Awaiting Justin's acceptance \(1\)[^\n]*\n- EVR-20 \[import\]: Ship the website copy/);
+});
+
+test('S3: a Justin ticket is R: justin, OR R: lucas with I: justin — and it drives addressed_to and the undated list', () => {
+  assert.equal(isJustinTicket(parseLabels(['R: justin']).raci), true);
+  assert.equal(isJustinTicket(parseLabels(['R: lucas', 'I: justin']).raci), true);
+  assert.equal(isJustinTicket(parseLabels(['R: lucas', 'A: justin']).raci), false, 'A: justin is the default on everything, not a Justin ticket');
+  assert.equal(isJustinTicket(parseLabels(['R: soren', 'I: justin']).raci), false);
+
+  const routed = planIssue(issue(22, { labels: ['R: lucas', 'A: justin', 'I: justin'], dueDate: '2026-11-20' }));
+  assert.equal(routed.row.addressed_to, 'justin');
+  assert.equal(routed.row.raci.r, 'lucas', 'the owner stays lucas');
+  const routedNoDate = planIssue(issue(23, { title: 'Pick the venue', labels: ['R: lucas', 'I: justin'] }));
+  assert.equal(routedNoDate.justinNoDate, true);
+  assert.equal(routedNoDate.row.addressed_to, undefined);
+  const notJustin = planIssue(issue(24, { labels: ['R: lucas', 'A: justin'] }));
+  assert.equal(notJustin.justinNoDate, false);
+  assert.match(renderReport([routedNoDate, notJustin], { mode: 'dry-run' }), /NO due date \(1\)[\s\S]*- EVR-23: Pick the venue/);
+});
+
+test('S3: every ticket whose body was replaced by a pointer is listed as OWED in the report', () => {
+  const big = 'b'.repeat(700);
+  const p = planIssue(issue(25, { title: 'Long one', description: big }), { longBody: 'pointer' });
+  assert.equal(p.pointered, true);
+  const short = planIssue(issue(26), { longBody: 'pointer' });
+  assert.equal(short.pointered, false);
+  const r = renderReport([p, short], { mode: 'dry-run' });
+  assert.match(r, /## Bodies replaced by a pointer to Linear \(1\) — OWED: move the substance to a doc before Linear closes\n- EVR-25: Long one/);
 });
 
 test('dry run (the default): reads Linear to the end, touches NO team endpoint, never prints the key', async () => {

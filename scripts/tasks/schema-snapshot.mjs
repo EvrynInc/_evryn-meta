@@ -8,11 +8,14 @@
  * USAGE
  *   node schema-snapshot.mjs > live-before.txt                    (the Evryn Team database)
  *   EVRYN_TASKS_LOCAL_PG=postgresql://postgres@127.0.0.1:<port>/postgres node schema-snapshot.mjs
- *   git diff --no-index local-before.txt live-before.txt
+ *   node snapshot-compare.mjs local-before.txt live-before.txt     (classifies every difference)
  *
- * Any difference in columns, defaults, constraints, policies, grants or owner between a local and a
- * live snapshot taken at the same point is a STOP, not a note (Soren, 14:47 and 14:49). The first
- * line records the server version, which is expected to differ and is not itself a stop.
+ * WHAT IS A STOP (Soren, S1, 2026-11-05 15:29) is decided by snapshot-compare.mjs, not by eye. Each
+ * fact this prints is ONE line with a kind prefix, so the compare can classify it: the server version
+ * (`#` lines, information), `table` (owner), `rls` (enabled / forced), `column`, `constraint`, `index`,
+ * `trigger`, `policy`, `grant` (table privileges, one grantee and privilege per line), `sequence` and
+ * `sequence-grant` (the identity sequences), `function` (definition hash, security mode, search_path)
+ * and `function-grant` (EXECUTE, one grantee per line, for every function the migrations create).
  *
  * Runs inside `begin transaction read only` and ends with rollback. Prints no credential.
  * Truncation check: the last line of this file should read `FULL FILE LOADED`.
@@ -24,9 +27,15 @@ import { runPsql } from './lib/pg.mjs';
 export const SNAPSHOT_SQL = String.raw`
 begin transaction read only;
 
-select '# server_version_num=' || current_setting('server_version_num') || ' (expected to differ between local and live; not a stop)';
+select '# server_version=' || current_setting('server_version');
+select '# server_version_num=' || current_setting('server_version_num');
 
-select format('table %s: owner=%s rls=%s force_rls=%s', c.relname, pg_get_userbyid(c.relowner), c.relrowsecurity::text, c.relforcerowsecurity::text)
+select format('table %s: owner=%s', c.relname, pg_get_userbyid(c.relowner))
+from pg_class c
+where c.relnamespace = 'public'::regnamespace and c.relkind = 'r' and c.relname in ('tasks','task_history')
+order by c.relname;
+
+select format('rls %s: enabled=%s forced=%s', c.relname, c.relrowsecurity::text, c.relforcerowsecurity::text)
 from pg_class c
 where c.relnamespace = 'public'::regnamespace and c.relkind = 'r' and c.relname in ('tasks','task_history')
 order by c.relname;
@@ -76,25 +85,37 @@ left join pg_roles r on r.oid = a.grantee
 where c.relnamespace = 'public'::regnamespace and c.relkind = 'r' and c.relname in ('tasks','task_history')
 order by c.relname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type;
 
-select format('sequence %s.%s: owner=%s privileges=%s', c.relname, att.attname, pg_get_userbyid(sc.relowner),
-  coalesce((select string_agg(coalesce(r.rolname, 'PUBLIC') || ':' || a.privilege_type, ',' order by coalesce(r.rolname, 'PUBLIC'), a.privilege_type)
-            from aclexplode(coalesce(sc.relacl, acldefault('s', sc.relowner))) a left join pg_roles r on r.oid = a.grantee), '-'))
+select format('sequence %s.%s: owner=%s', c.relname, att.attname, pg_get_userbyid(sc.relowner))
 from pg_class c
 join pg_attribute att on att.attrelid = c.oid and att.attidentity <> '' and not att.attisdropped
 join pg_class sc on sc.oid = pg_get_serial_sequence(format('public.%I', c.relname), att.attname)::regclass
 where c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history')
 order by c.relname, att.attname;
 
-select format('function %s(%s): owner=%s security=%s volatility=%s config=%s privileges=%s body_md5=%s',
+select format('sequence-grant %s.%s: %s %s', c.relname, att.attname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type)
+from pg_class c
+join pg_attribute att on att.attrelid = c.oid and att.attidentity <> '' and not att.attisdropped
+join pg_class sc on sc.oid = pg_get_serial_sequence(format('public.%I', c.relname), att.attname)::regclass
+cross join lateral aclexplode(coalesce(sc.relacl, acldefault('s', sc.relowner))) a
+left join pg_roles r on r.oid = a.grantee
+where c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history')
+order by c.relname, att.attname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type;
+
+select format('function %s(%s): owner=%s security=%s volatility=%s config=%s body_md5=%s',
   p.proname, pg_get_function_identity_arguments(p.oid), pg_get_userbyid(p.proowner),
   case when p.prosecdef then 'DEFINER' else 'INVOKER' end, p.provolatile,
   coalesce(array_to_string(p.proconfig, ';'), '-'),
-  coalesce((select string_agg(coalesce(r.rolname, 'PUBLIC') || ':' || a.privilege_type, ',' order by coalesce(r.rolname, 'PUBLIC'), a.privilege_type)
-            from aclexplode(coalesce(p.proacl, acldefault('f', p.proowner))) a left join pg_roles r on r.oid = a.grantee), '-'),
   md5(replace(p.prosrc, chr(13), '')))
 from pg_proc p
 where p.pronamespace = 'public'::regnamespace and (p.proname like 'task\_%' or p.proname like 'tasks\_%')
 order by p.proname;
+
+select format('function-grant %s(%s): %s %s', p.proname, pg_get_function_identity_arguments(p.oid), coalesce(r.rolname, 'PUBLIC'), a.privilege_type)
+from pg_proc p
+cross join lateral aclexplode(coalesce(p.proacl, acldefault('f', p.proowner))) a
+left join pg_roles r on r.oid = a.grantee
+where p.pronamespace = 'public'::regnamespace and (p.proname like 'task\_%' or p.proname like 'tasks\_%')
+order by p.proname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type;
 
 rollback;
 `;

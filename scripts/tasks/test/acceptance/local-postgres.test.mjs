@@ -193,7 +193,8 @@ suite('local copy is faithful to the Supabase shape', () => {
     assert.match(snapBefore, /^grant tasks: anon INSERT$/m);
     assert.match(snapBefore, /^grant tasks: anon SELECT$/m);
     assert.match(snapBefore, /^grant tasks: authenticated SELECT$/m);
-    assert.match(snapBefore, /^table tasks: owner=postgres rls=true/m);
+    assert.match(snapBefore, /^table tasks: owner=postgres$/m);
+    assert.match(snapBefore, /^rls tasks: enabled=true forced=false$/m);
   });
 
   test('the migration did NOT revoke tasks\' existing grants (outside the go)', () => {
@@ -494,8 +495,49 @@ suite('R3 constraints', () => {
     const parent = seed(DB);
     const child = seed(DB);
     refused(req(DB, `update public.tasks set parent_id = gen_random_uuid() where id = ${lit(child)};`, as), /parent_id names no existing task/);
-    refused(req(DB, `update public.tasks set parent_id = id where id = ${lit(child)};`, as), /own parent/);
+    refused(req(DB, `update public.tasks set parent_id = id where id = ${lit(child)};`, as), /would create a cycle/);
     ok(req(DB, `update public.tasks set parent_id = ${lit(parent)} where id = ${lit(child)};`, as));
+  });
+
+  // S2 (Soren, 15:29): a cycle of ANY length is refused, by a bounded walk up the ancestors.
+  const setParent = (child, parent) => req(DB, `update public.tasks set parent_id = ${lit(parent)} where id = ${lit(child)};`, as);
+
+  test('parent cycle of 2 (A→B, then B→A) is refused', () => {
+    const a = seed(DB);
+    const b = seed(DB);
+    ok(setParent(a, b));
+    refused(setParent(b, a), /would create a cycle/);
+    assert.equal(scalar(DB, `select coalesce(parent_id::text, 'null') from public.tasks where id = ${lit(b)};`), 'null');
+  });
+
+  test('parent cycle of 3 (A→B→C, then C→A) is refused', () => {
+    const a = seed(DB);
+    const b = seed(DB);
+    const c = seed(DB);
+    ok(setParent(a, b));
+    ok(setParent(b, c));
+    refused(setParent(c, a), /would create a cycle/);
+  });
+
+  test('a chain of exactly 50 ancestors is accepted; one more is refused at the bound', () => {
+    const tag = uniq('chain');
+    // t0 (no parent), t1 → t0, …, t50 → t49: t50 has 50 ancestors. One transaction, as service_role.
+    ok(req(DB, `do $$
+      declare prev uuid := null; cur uuid;
+      begin
+        for i in 0..50 loop
+          insert into public.tasks (title, status, raci, parent_id, tags)
+          values (${lit(tag)} || '-' || i, 'open', '{"r":"lucas"}', prev, array[${lit(tag)}])
+          returning id into cur;
+          prev := cur;
+        end loop;
+      end $$;`, as));
+    const deepest = scalar(DB, `select id from public.tasks where title = ${lit(`${tag}-50`)};`);
+    refused(
+      req(DB, `insert into public.tasks (title, status, raci, parent_id) values (${lit(`${tag}-51`)}, 'open', '{"r":"lucas"}', ${lit(deepest)});`, as),
+      /parent chain is deeper than 50 ancestors/,
+    );
+    assert.equal(scalar(DB, `select count(*) from public.tasks where title = ${lit(`${tag}-51`)};`), '0');
   });
 
   test('short_id cannot be chosen by a client; linear_id is unique', () => {
@@ -511,12 +553,38 @@ suite('R3 constraints', () => {
 
 suite('R4 grants and RLS', () => {
   for (const role of ['anon', 'authenticated']) {
-    test(`${role} INSERT into tasks is refused, and writes nothing`, (t) => {
+    // TWO LAYERS, PROVEN SEPARATELY (Soren, 15:29). An RLS violation is SQLSTATE 42501 too, so the
+    // code alone cannot say which layer refused: these assert on the MESSAGE, and neither refusal
+    // stands in for proof of the other.
+    test(`${role} INSERT into tasks is refused by the FUNCTION GRANT (message asserted), and writes nothing`, () => {
       const title = uniq(`${role}-insert`);
       const r = req(DB, `insert into public.tasks (title, status, raci) values (${lit(title)}, 'open', '{"r":"lucas"}');`, { role, header: hdr('ac') });
-      refused(r, /permission denied for function task_request_actor|row-level security/);
-      t.diagnostic(`${role} insert refused with: ${r.stderr.split('\n').find((l) => l.includes('ERROR')) ?? r.stderr}`);
+      refused(r, /ERROR: {2}permission denied for function task_request_actor/);
+      assert.doesNotMatch(r.stderr, /row-level security/);
       assert.equal(scalar(DB, `select count(*) from public.tasks where title = ${lit(title)};`), '0');
+    });
+
+    test(`${role} INSERT into tasks is refused by RLS ON ITS OWN, even if the function grant were widened (rolled back)`, () => {
+      const title = uniq(`${role}-rls`);
+      // As the owner, widen the grant INSIDE this transaction only, then act as the role. The
+      // transaction always ROLLS BACK, so nothing here survives, whatever happens.
+      const r = cluster.psql(DB, [
+        'begin;',
+        `grant execute on function public.task_request_actor() to ${role};`,
+        `grant execute on function public.task_roster() to ${role};`,
+        `set local role ${role};`,
+        `set local request.headers = ${lit(hdr('ac'))};`,
+        `insert into public.tasks (title, status, raci) values (${lit(title)}, 'open', '{"r":"lucas"}');`,
+        'rollback;',
+      ].join('\n'));
+      refused(r, /new row violates row-level security policy for table "tasks"/);
+      assert.equal(scalar(DB, `select count(*) from public.tasks where title = ${lit(title)};`), '0');
+      assert.equal(scalar(DB, `select has_function_privilege(${lit(role)}, 'public.task_request_actor()', 'EXECUTE')::text;`), 'false', 'the widened grant leaked');
+    });
+
+    test(`${role}: RLS is enabled on tasks and no policy admits the role`, () => {
+      assert.equal(scalar(DB, `select relrowsecurity::text from pg_class where oid = 'public.tasks'::regclass;`), 'true');
+      assert.equal(scalar(DB, `select count(*) from pg_policies where schemaname = 'public' and tablename = 'tasks' and (${lit(role)} = any (roles) or 'public' = any (roles));`), '0');
     });
 
     test(`${role} SELECT on tasks returns zero rows while service_role returns at least one`, () => {
@@ -556,7 +624,11 @@ suite('R4 grants and RLS', () => {
 
   test('task_history has RLS on, the service_role_only policy, and only SELECT/INSERT for service_role', () => {
     const snap = ok(runScript('schema-snapshot.mjs', DB));
-    assert.match(snap, /^table task_history: owner=postgres rls=true/m);
+    assert.match(snap, /^table task_history: owner=postgres$/m);
+    assert.match(snap, /^rls task_history: enabled=true forced=false$/m);
+    // R4 / S1: no new function is executable by PUBLIC, anon or authenticated.
+    assert.doesNotMatch(snap, /^function-grant [^:]+: (PUBLIC|anon|authenticated) EXECUTE$/m);
+    assert.match(snap, /^function-grant task_request_actor\(\): service_role EXECUTE$/m);
     assert.match(snap, /^policy task_history\.service_role_only: PERMISSIVE ALL to service_role/m);
     const grants = snap.split('\n').filter((l) => l.startsWith('grant task_history:') && !l.includes(' postgres '));
     assert.deepEqual(grants, ['grant task_history: service_role INSERT', 'grant task_history: service_role SELECT']);

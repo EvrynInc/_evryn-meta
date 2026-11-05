@@ -111,6 +111,9 @@ declare
   v_actor text := public.task_request_actor();
   -- Columns the database maintains itself: never count as a client change.
   v_skip  text[] := array['updated_at','owner','search'];
+  v_cur   uuid;
+  v_depth integer := 0;
+  v_max   constant integer := 50;
 begin
   if tg_op = 'INSERT' then
     new.created_by := v_actor;                   -- whatever the client sent is overwritten
@@ -133,13 +136,32 @@ begin
     end if;
   end if;
 
+  -- parent_id (no foreign key — outside the 2026-11-05 go; Soren S2, 15:29): the parent must exist,
+  -- and the new link must not close a CYCLE OF ANY LENGTH. Walk up the ancestors from the new parent;
+  -- meeting this task means a cycle. The walk is BOUNDED: a chain deeper than v_max ancestors is
+  -- refused rather than walked forever. Sound because tasks are never deleted (tasks_refuse_delete),
+  -- so an ancestor cannot vanish under the walk.
   if new.parent_id is not null and (tg_op = 'INSERT' or new.parent_id is distinct from old.parent_id) then
-    if new.parent_id = new.id then
-      raise exception using errcode = 'ET007', message = 'task write refused: a task cannot be its own parent.';
-    end if;
+    -- Serialize parent changes: two concurrent updates (A→B, B→A) could each pass a walk that cannot
+    -- see the other's uncommitted link. The lock is held to commit; each later statement in a
+    -- READ COMMITTED transaction then sees the earlier one's committed link.
+    perform pg_catalog.pg_advisory_xact_lock(7427016301);
     if not exists (select 1 from public.tasks t where t.id = new.parent_id) then
       raise exception using errcode = 'ET007', message = 'task write refused: parent_id names no existing task.';
     end if;
+    v_cur := new.parent_id;
+    while v_cur is not null loop
+      if v_cur = new.id then
+        raise exception using errcode = 'ET007',
+          message = 'task write refused: this parent would create a cycle (a task cannot be its own ancestor).';
+      end if;
+      v_depth := v_depth + 1;
+      if v_depth > v_max then
+        raise exception using errcode = 'ET007',
+          message = format('task write refused: the parent chain is deeper than %s ancestors.', v_max);
+      end if;
+      select t.parent_id into v_cur from public.tasks t where t.id = v_cur;
+    end loop;
   end if;
 
   return new;
@@ -148,7 +170,8 @@ $$;
 
 comment on function public.tasks_before_write() is
   'R1. BEFORE INSERT OR UPDATE on tasks: requires a request actor (task_request_actor), sets created_by on insert, '
-  'refuses changes to id/created_at/created_by, stamps updated_at only on a real change, checks parent_id exists.';
+  'refuses changes to id/created_at/created_by, stamps updated_at only on a real change, checks parent_id exists '
+  'and refuses a parent cycle of any length (bounded walk: more than 50 ancestors is refused).';
 
 drop trigger if exists tasks_before_write on public.tasks;
 create trigger tasks_before_write
