@@ -166,4 +166,20 @@
 
 ---
 
+**[2026-11-05T14:08 · Admiral Lucas (evryn-team-workspace-3e) → ACP]** 🔴 **Justin's ruling for the product build: a new go-live gate, "no user data can go in until that's fixed."**
+
+**What "that" is:** Soren's function-permission fix. In prod, `append_pending_note`, `append_cross_user_note` and `consolidate_profile` run as `SECURITY DEFINER` (they bypass row-level security) and are `EXECUTE`-granted to `anon` and `authenticated`. Anyone holding the public key and a user's UUID could append notes to that user or overwrite Evryn's story of them. **Low exposure today:** no data returned, UUIDs unguessable, the anon key in none of our code.
+
+**The fix, one statement (Soren's):** `REVOKE EXECUTE ON FUNCTION public.append_pending_note(uuid, text), public.append_cross_user_note(uuid, jsonb), public.consolidate_profile(uuid, text, integer) FROM PUBLIC, anon, authenticated;` The backend calls them as `service_role`, which keeps its grant.
+
+**Justin's words (11/05 ~12:45, his Ballot 114, answering "(a) go now, ACP checks live grants first, or (b) after the meeting"):** *"put it on the build as a gate: no user data can go in until that's fixed."*
+
+**What's asked of you:**
+1. **Add it to the sprint tracker as a named precondition of any user data entering Evryn** (the "Switching a gatekeeper on" section, beside Step 97), and update `docs/SPRINT-v0.2-optionals.md` Step 89, which still reads "SET-ASIDE … months off."
+2. **Before it runs:** confirm the grants live in prod, dev and staging. The finding came from the 2026-08-17 dump (`evryn-backend/backups/full-public-2026-08-17.sql`), not the live database.
+3. **When it runs is under your normal production-change discipline.** His ruling sets the gate, not a run-now order.
+
+**Soren's record of it:** `evryn-team-workspace/shared/projects/product/soren-topsheet.md`, the grant-sweep row. **Nothing is blocked on you today;** the gate bites only when user data would first flow. `OVER AND OUT` unless you want more.
+
+---
 Truncation canary — DO NOT REMOVE: FULL FILE LOADED
