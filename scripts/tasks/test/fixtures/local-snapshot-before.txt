@@ -1,0 +1,46 @@
+# server_version_num=170010 (expected to differ between local and live; not a stop)
+table tasks: owner=postgres rls=true force_rls=false
+column tasks #01 id uuid NOT NULL DEFAULT gen_random_uuid()
+column tasks #02 title text NOT NULL
+column tasks #03 description text NOT NULL DEFAULT ''::text
+column tasks #04 status text NOT NULL DEFAULT 'todo'::text
+column tasks #05 raci jsonb NOT NULL DEFAULT '{}'::jsonb
+column tasks #06 links jsonb NOT NULL DEFAULT '[]'::jsonb
+column tasks #07 created_at timestamp with time zone NOT NULL DEFAULT now()
+column tasks #08 updated_at timestamp with time zone NOT NULL DEFAULT now()
+constraint tasks.tasks_description_check: CHECK ((char_length(description) <= 600))
+constraint tasks.tasks_pkey: PRIMARY KEY (id)
+index tasks.tasks_pkey: CREATE UNIQUE INDEX tasks_pkey ON public.tasks USING btree (id)
+policy tasks.service_role_only: PERMISSIVE ALL to service_role using (true) with check (true)
+grant tasks: anon DELETE
+grant tasks: anon INSERT
+grant tasks: anon MAINTAIN
+grant tasks: anon REFERENCES
+grant tasks: anon SELECT
+grant tasks: anon TRIGGER
+grant tasks: anon TRUNCATE
+grant tasks: anon UPDATE
+grant tasks: authenticated DELETE
+grant tasks: authenticated INSERT
+grant tasks: authenticated MAINTAIN
+grant tasks: authenticated REFERENCES
+grant tasks: authenticated SELECT
+grant tasks: authenticated TRIGGER
+grant tasks: authenticated TRUNCATE
+grant tasks: authenticated UPDATE
+grant tasks: postgres DELETE
+grant tasks: postgres INSERT
+grant tasks: postgres MAINTAIN
+grant tasks: postgres REFERENCES
+grant tasks: postgres SELECT
+grant tasks: postgres TRIGGER
+grant tasks: postgres TRUNCATE
+grant tasks: postgres UPDATE
+grant tasks: service_role DELETE
+grant tasks: service_role INSERT
+grant tasks: service_role MAINTAIN
+grant tasks: service_role REFERENCES
+grant tasks: service_role SELECT
+grant tasks: service_role TRIGGER
+grant tasks: service_role TRUNCATE
+grant tasks: service_role UPDATE
