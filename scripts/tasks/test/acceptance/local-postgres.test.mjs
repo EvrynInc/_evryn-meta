@@ -168,6 +168,17 @@ after(() => {
 
 const suite = available ? describe : describe.skip;
 
+// An acceptance suite that cannot run must not look green: a silent skip reads exactly like a pass.
+// It FAILS unless the caller has said, explicitly, that skipping is acceptable on this machine.
+test('the acceptance suite actually ran (PostgreSQL 17 tools and runtime 003 were found)', () => {
+  if (available || process.env.EVRYN_TASKS_ACCEPTANCE_OPTIONAL === '1') return;
+  assert.fail(
+    `acceptance suite SKIPPED: ${pgToolsAvailable() ? '' : 'PostgreSQL client/server tools not found (set EVRYN_TASKS_PG_BIN). '}` +
+      `${existsSync(RUNTIME_003) ? '' : `runtime migration not found at ${RUNTIME_003} (set EVRYN_TASKS_RUNTIME_003). `}` +
+      'Set EVRYN_TASKS_ACCEPTANCE_OPTIONAL=1 only if skipping is genuinely acceptable here.',
+  );
+});
+
 // ---------------------------------------------------------------------------
 // The copy is faithful
 // ---------------------------------------------------------------------------
