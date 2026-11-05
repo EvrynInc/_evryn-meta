@@ -21,7 +21,8 @@ test('every test file imports ../helpers.mjs FIRST (it arms the .env tripwire be
   const tests = files.filter((f) => f.endsWith('.test.mjs'));
   assert.ok(tests.length >= 6);
   for (const f of tests) {
-    const firstImport = readFileSync(f, 'utf8').split('\n').find((l) => l.startsWith('import '));
+    // Split on CRLF too: core.autocrlf=true checks these files out with CRLF on Justin's machines.
+    const firstImport = readFileSync(f, 'utf8').split(/\r?\n/).find((l) => l.startsWith('import '));
     assert.equal(firstImport, "import '../helpers.mjs';", `${relative(TASKS_DIR, f)} does not import helpers first`);
   }
 });
@@ -30,7 +31,7 @@ test('SEALED-EXEC: every spawn call site carries the audit comment on the line a
   const code = files.filter((f) => f.endsWith('.mjs'));
   let sites = 0;
   for (const f of code) {
-    const lines = readFileSync(f, 'utf8').split('\n');
+    const lines = readFileSync(f, 'utf8').split(/\r?\n/);
     lines.forEach((line, i) => {
       if (/\b(spawnSync|spawn|execFile|execFileSync|exec|execSync)\(/.test(line) && !/^\s*(\*|\/\/)/.test(line) && !line.includes('function ')) {
         sites += 1;
