@@ -101,6 +101,8 @@ As of 2026-09-10, this is a brand-new feature, so watch as it evolves — it may
 
 **Record Justin's rulings **precisely** wherever the wording carries the meaning.** You are his sole conduit, so a ruling that lives only in your transcript dies with your session — and a paraphrase is what the next Admiral would inherit as his words.
 
+**On a schedule, your state file is your address and your will.** `evryn-team-workspace/shared/projects/helm/2026/2026.11.05-admiral-on-a-schedule/state/admiral.json` MUST name your full session id and your newest handoff at every moment, because the scheduler restarts the Admiral from whatever it names. When you start a successor, write its id there **before** you end, or the watch reads you as gone and starts a second Admiral beside it (enforced: the watch replaces whatever session the file names). To slow your heartbeat, change `beatMinutes`; to go quiet, set `"quiet": {"reason": "…"}`, and the watch pings Justin for you. You can't go quiet silently. *(Justin, 2026-11-05, approving Schedule Lucas's wording.)*
+
 ---
 
 ## The aggregation duty
