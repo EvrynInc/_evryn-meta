@@ -1,0 +1,43 @@
+  -- Declarations shared by the before- and after-assertions (one DO block = one set of variables).
+  v_found              text;
+  v_n                  integer;
+  -- Signatures captured BEFORE the migration and compared AFTER it, with the very same query text.
+  v_tasks_grants_sql   text := $q$
+    select coalesce(string_agg(coalesce(r.rolname, 'PUBLIC') || ' ' || a.privilege_type
+                               || case when a.is_grantable then '*' else '' end, ', ' order by 1), '(none)')
+      from pg_class c
+      cross join lateral aclexplode(coalesce(c.relacl, acldefault('r', c.relowner))) a
+      left join pg_roles r on r.oid = a.grantee
+     where c.oid = 'public.tasks'::regclass
+  $q$;
+  v_original_cols_sql  text := $q$
+    select string_agg(a.attname || ' ' || format_type(a.atttypid, a.atttypmod)
+                      || case when a.attnotnull then ' NOT NULL' else '' end
+                      || coalesce(' DEFAULT ' || pg_get_expr(d.adbin, d.adrelid), ''), '; ' order by a.attnum)
+      from pg_attribute a
+      left join pg_attrdef d on d.adrelid = a.attrelid and d.adnum = a.attnum
+     where a.attrelid = 'public.tasks'::regclass and a.attnum > 0 and not a.attisdropped
+       and a.attname in ('id','title','description','status','raci','links','created_at','updated_at')
+  $q$;
+  v_proposals_sql      text := $q$
+    select concat_ws(' | ',
+      (select pg_get_userbyid(relowner) || ' rls=' || relrowsecurity::text || ' force=' || relforcerowsecurity::text
+         from pg_class where oid = 'public.proposals'::regclass),
+      (select string_agg(a.attname || ' ' || format_type(a.atttypid, a.atttypmod)
+                         || case when a.attnotnull then ' NOT NULL' else '' end
+                         || coalesce(' DEFAULT ' || pg_get_expr(d.adbin, d.adrelid), ''), '; ' order by a.attnum)
+         from pg_attribute a left join pg_attrdef d on d.adrelid = a.attrelid and d.adnum = a.attnum
+        where a.attrelid = 'public.proposals'::regclass and a.attnum > 0 and not a.attisdropped),
+      (select string_agg(conname || ': ' || pg_get_constraintdef(oid), '; ' order by conname)
+         from pg_constraint where conrelid = 'public.proposals'::regclass),
+      (select string_agg(tgname || ' ' || tgenabled::text, '; ' order by tgname)
+         from pg_trigger where tgrelid = 'public.proposals'::regclass and not tgisinternal),
+      (select string_agg(policyname || ' ' || cmd || ' ' || array_to_string(roles, ','), '; ' order by policyname)
+         from pg_policies where schemaname = 'public' and tablename = 'proposals'),
+      (select string_agg(coalesce(r.rolname, 'PUBLIC') || ' ' || a.privilege_type, ', ' order by 1)
+         from pg_class c cross join lateral aclexplode(coalesce(c.relacl, acldefault('r', c.relowner))) a
+         left join pg_roles r on r.oid = a.grantee where c.oid = 'public.proposals'::regclass))
+  $q$;
+  v_tasks_grants_before    text;
+  v_original_cols_before   text;
+  v_proposals_before       text;

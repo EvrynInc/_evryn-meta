@@ -1,0 +1,166 @@
+  -- =========================================================================================
+  -- (c) AFTER-ASSERTIONS. Every new column, CHECK, index, trigger (ENABLE ALWAYS), RLS setting,
+  --     policy, and grant or revoke on the new objects — plus: nothing existing changed.
+  -- =========================================================================================
+
+  -- New columns, with their types
+  select string_agg(e.col || ' ' || e.typ, ', ') into v_found
+    from (values ('short_id','bigint'), ('owner','text'), ('created_by','text'), ('closed_at','timestamp with time zone'),
+                 ('closing_note','text'), ('needed_by','date'), ('parent_id','uuid'), ('tags','text[]'),
+                 ('addressed_to','text'), ('signed_at','timestamp with time zone'), ('signed_ref','text'),
+                 ('linear_id','text'), ('linear_status','text'), ('search','tsvector')) as e(col, typ)
+   where not exists (select 1 from pg_attribute a
+                      where a.attrelid = 'public.tasks'::regclass and a.attname = e.col and not a.attisdropped
+                        and format_type(a.atttypid, a.atttypmod) = e.typ);
+  if v_found is not null then
+    raise exception 'AFTER-ASSERTION FAILED: tasks columns missing or mistyped: %. Everything was rolled back.', v_found;
+  end if;
+  if (select attidentity from pg_attribute where attrelid = 'public.tasks'::regclass and attname = 'short_id') <> 'a'
+     or (select attgenerated from pg_attribute where attrelid = 'public.tasks'::regclass and attname = 'owner') <> 's'
+     or (select attgenerated from pg_attribute where attrelid = 'public.tasks'::regclass and attname = 'search') <> 's' then
+    raise exception 'AFTER-ASSERTION FAILED: short_id must be IDENTITY ALWAYS and owner/search GENERATED. Everything was rolled back.';
+  end if;
+
+  -- The original eight columns are untouched
+  execute v_original_cols_sql into v_found;
+  if v_found is distinct from v_original_cols_before then
+    raise exception 'AFTER-ASSERTION FAILED: an existing tasks column changed. Before: % / After: %. Everything was rolled back.', v_original_cols_before, v_found;
+  end if;
+
+  -- The seven CHECKs
+  select string_agg(nm, ', ') into v_found
+    from unnest(array['tasks_status_allowed','tasks_title_max_80','tasks_closed_needs_note','tasks_signed_needs_ref',
+                      'tasks_justin_needs_date','tasks_one_owner','tasks_addressed_to_shape']) as nm
+   where not exists (select 1 from pg_constraint where conrelid = 'public.tasks'::regclass and conname = nm and contype = 'c');
+  if v_found is not null then
+    raise exception 'AFTER-ASSERTION FAILED: CHECK constraint(s) missing: %. Everything was rolled back.', v_found;
+  end if;
+
+  -- Indexes: each one's DEFINITION — table, columns in order, access method, uniqueness — not merely
+  -- that something by that name exists (QC N2: an index created IF NOT EXISTS could be someone else's).
+  select string_agg(e.nm || ' (expected ' || e.tbl || ' ' || e.am || ' (' || e.cols || ')' || case when e.uniq then ' UNIQUE' else '' end || ')', '; ')
+    into v_found
+    from (values ('tasks_short_id_key',            'tasks',        'btree', 'short_id',        true),
+                 ('tasks_linear_id_key',           'tasks',        'btree', 'linear_id',       true),
+                 ('tasks_owner_status_idx',        'tasks',        'btree', 'owner,status',    false),
+                 ('tasks_addressed_to_status_idx', 'tasks',        'btree', 'addressed_to,status', false),
+                 ('tasks_closed_at_idx',           'tasks',        'btree', 'closed_at',       false),
+                 ('tasks_parent_id_idx',           'tasks',        'btree', 'parent_id',       false),
+                 ('tasks_search_idx',              'tasks',        'gin',   'search',          false),
+                 ('task_history_task_id_id_idx',   'task_history', 'btree', 'task_id,id',      false)) as e(nm, tbl, am, cols, uniq)
+   where not exists (
+     select 1
+       from pg_index i
+       join pg_class ic on ic.oid = i.indexrelid
+       join pg_am am on am.oid = ic.relam
+      where i.indexrelid = to_regclass('public.' || e.nm)
+        and i.indrelid = ('public.' || e.tbl)::regclass
+        and am.amname = e.am
+        and i.indisunique = e.uniq
+        and i.indpred is null and i.indexprs is null
+        and (select string_agg(a.attname, ',' order by k.ord)
+               from unnest(i.indkey) with ordinality as k(attnum, ord)
+               join pg_attribute a on a.attrelid = i.indrelid and a.attnum = k.attnum) = e.cols);
+  if v_found is not null then
+    raise exception 'AFTER-ASSERTION FAILED: index(es) missing or defined differently: %. Everything was rolled back.', v_found;
+  end if;
+
+  -- task_history's DEFINITION (it is created IF NOT EXISTS): exact columns, identity, constraints
+  select string_agg(a.attname || ' ' || format_type(a.atttypid, a.atttypmod)
+                    || case when a.attnotnull then ' NOT NULL' else '' end
+                    || case a.attidentity when 'a' then ' IDENTITY ALWAYS' when 'd' then ' IDENTITY BY DEFAULT' else '' end
+                    || coalesce(' DEFAULT ' || pg_get_expr(d.adbin, d.adrelid), ''), '; ' order by a.attnum)
+    into v_found
+    from pg_attribute a
+    left join pg_attrdef d on d.adrelid = a.attrelid and d.adnum = a.attnum
+   where a.attrelid = 'public.task_history'::regclass and a.attnum > 0 and not a.attisdropped;
+  if v_found is distinct from 'id bigint NOT NULL IDENTITY ALWAYS; task_id uuid NOT NULL; at timestamp with time zone NOT NULL DEFAULT now(); actor text NOT NULL; op text NOT NULL; changed_fields text[] NOT NULL DEFAULT ''{}''::text[]; old jsonb; new jsonb; flags text[] NOT NULL DEFAULT ''{}''::text[]' then
+    raise exception 'AFTER-ASSERTION FAILED: task_history columns are not as defined in migration 002. Found: %. Everything was rolled back.', v_found;
+  end if;
+  select string_agg(conname || ' ' || contype::text, ', ' order by conname) into v_found
+    from pg_constraint where conrelid = 'public.task_history'::regclass;
+  if v_found is distinct from 'task_history_op_check c, task_history_pkey p' then
+    raise exception 'AFTER-ASSERTION FAILED: task_history constraints are not as defined in migration 002. Found: %. Everything was rolled back.', v_found;
+  end if;
+
+  -- Triggers: all five present, on the right table, ENABLE ALWAYS
+  select string_agg(e.tbl || '.' || e.tg, ', ') into v_found
+    from (values ('tasks','tasks_before_write'), ('tasks','tasks_after_write'), ('tasks','tasks_refuse_delete'),
+                 ('task_history','task_history_guard_insert'), ('task_history','task_history_refuse_change')) as e(tbl, tg)
+   where not exists (select 1 from pg_trigger t
+                      where t.tgrelid = ('public.' || e.tbl)::regclass and t.tgname = e.tg and t.tgenabled = 'A');
+  if v_found is not null then
+    raise exception 'AFTER-ASSERTION FAILED: trigger(s) missing or not ENABLE ALWAYS: %. Everything was rolled back.', v_found;
+  end if;
+
+  -- RLS and the policy
+  if not (select relrowsecurity from pg_class where oid = 'public.tasks'::regclass)
+     or not (select relrowsecurity from pg_class where oid = 'public.task_history'::regclass) then
+    raise exception 'AFTER-ASSERTION FAILED: row-level security must be enabled on tasks and task_history. Everything was rolled back.';
+  end if;
+  if not exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'task_history'
+                  and policyname = 'service_role_only' and cmd = 'ALL' and roles = array['service_role']::name[]) then
+    raise exception 'AFTER-ASSERTION FAILED: task_history lacks the service_role_only policy. Everything was rolled back.';
+  end if;
+
+  -- task_history grants: service_role exactly SELECT + INSERT; anon/authenticated (and so PUBLIC) nothing
+  if not has_table_privilege('service_role', 'public.task_history', 'SELECT')
+     or not has_table_privilege('service_role', 'public.task_history', 'INSERT')
+     or has_table_privilege('service_role', 'public.task_history', 'UPDATE')
+     or has_table_privilege('service_role', 'public.task_history', 'DELETE')
+     or has_table_privilege('service_role', 'public.task_history', 'TRUNCATE') then
+    raise exception 'AFTER-ASSERTION FAILED: service_role must hold exactly SELECT and INSERT on task_history. Everything was rolled back.';
+  end if;
+  if has_table_privilege('anon', 'public.task_history', 'SELECT,INSERT,UPDATE,DELETE,TRUNCATE')
+     or has_table_privilege('authenticated', 'public.task_history', 'SELECT,INSERT,UPDATE,DELETE,TRUNCATE') then
+    raise exception 'AFTER-ASSERTION FAILED: anon or authenticated (or PUBLIC) holds a privilege on task_history. Everything was rolled back.';
+  end if;
+
+  -- The two new identity sequences: no client role holds anything
+  select string_agg(r.rol || ' on ' || s.seq, ', ') into v_found
+    from (values (pg_get_serial_sequence('public.tasks', 'short_id')), (pg_get_serial_sequence('public.task_history', 'id'))) as s(seq)
+    cross join (values ('anon'), ('authenticated'), ('service_role')) as r(rol)
+   where has_sequence_privilege(r.rol, s.seq, 'USAGE,SELECT,UPDATE');
+  if v_found is not null then
+    raise exception 'AFTER-ASSERTION FAILED: a client role holds a privilege on a new sequence: %. Everything was rolled back.', v_found;
+  end if;
+
+  -- Functions: all present, SECURITY INVOKER, search_path pinned; trigger functions executable by no client role;
+  -- the helpers and the snapshot function by service_role only
+  select string_agg(nm, ', ') into v_found
+    from unnest(array['task_roster','task_request_actor','tasks_before_write','tasks_after_write','tasks_refuse_delete',
+                      'task_history_guard_insert','task_history_refuse_change','team_tasks_schema_snapshot']) as nm
+   where not exists (select 1 from pg_proc p where p.pronamespace = 'public'::regnamespace and p.proname = nm
+                       and not p.prosecdef and p.proconfig @> array['search_path=""']);
+  if v_found is not null then
+    raise exception 'AFTER-ASSERTION FAILED: function(s) missing, SECURITY DEFINER, or without a pinned search_path: %. Everything was rolled back.', v_found;
+  end if;
+  select string_agg(r.rol || ' -> ' || f.fn, ', ') into v_found
+    from (values ('tasks_before_write'), ('tasks_after_write'), ('tasks_refuse_delete'),
+                 ('task_history_guard_insert'), ('task_history_refuse_change')) as f(fn)
+    cross join (values ('anon'), ('authenticated'), ('service_role')) as r(rol)
+   where has_function_privilege(r.rol, ('public.' || f.fn || '()')::regprocedure, 'EXECUTE');
+  if v_found is not null then
+    raise exception 'AFTER-ASSERTION FAILED: a client role can execute a trigger function: %. Everything was rolled back.', v_found;
+  end if;
+  select string_agg(f.fn, ', ') into v_found
+    from (values ('task_roster'), ('task_request_actor'), ('team_tasks_schema_snapshot')) as f(fn)
+   where not has_function_privilege('service_role', ('public.' || f.fn || '()')::regprocedure, 'EXECUTE')
+      or has_function_privilege('anon', ('public.' || f.fn || '()')::regprocedure, 'EXECUTE')
+      or has_function_privilege('authenticated', ('public.' || f.fn || '()')::regprocedure, 'EXECUTE');
+  if v_found is not null then
+    raise exception 'AFTER-ASSERTION FAILED: EXECUTE must be service_role only on: %. Everything was rolled back.', v_found;
+  end if;
+  if (select provolatile from pg_proc where oid = 'public.team_tasks_schema_snapshot()'::regprocedure) <> 's' then
+    raise exception 'AFTER-ASSERTION FAILED: team_tasks_schema_snapshot must be STABLE (read-only). Everything was rolled back.';
+  end if;
+
+  -- Nothing existing changed: tasks' grants, and public.proposals
+  execute v_tasks_grants_sql into v_found;
+  if v_found is distinct from v_tasks_grants_before then
+    raise exception 'AFTER-ASSERTION FAILED: grants on public.tasks changed. Before: % / After: %. Everything was rolled back.', v_tasks_grants_before, v_found;
+  end if;
+  execute v_proposals_sql into v_found;
+  if v_found is distinct from v_proposals_before then
+    raise exception 'AFTER-ASSERTION FAILED: public.proposals changed. Before: % / After: %. Everything was rolled back.', v_proposals_before, v_found;
+  end if;

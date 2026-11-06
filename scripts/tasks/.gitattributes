@@ -1,0 +1,5 @@
+# The migrations and the golden schema snapshots must be byte-stable across machines:
+# function bodies are hashed in the snapshot, and core.autocrlf is true on Justin's machines.
+*.sql text eol=lf
+*.plpgsql text eol=lf
+test/fixtures/*.txt text eol=lf
