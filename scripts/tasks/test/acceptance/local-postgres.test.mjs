@@ -940,7 +940,13 @@ suite(`paste files (defaults ${MODE})`, () => {
     const holder = openSession(db);
     await holder.send('begin; lock table public.tasks in access exclusive mode;');
     const started = Date.now();
-    const r = runPaste(db, pastes.apply);
+    // A hard 30 s kill, so a paste WITHOUT lock_timeout goes red here instead of hanging the suite
+    // (it would wait for the holder, which is released only after this call returns).
+    // SEALED-EXEC: followed 2026-08-11 — psql is an absolute path to the installed PostgreSQL 17 binary (findPgTool never consults PATH or a registry); no network.
+    const p = spawnSync(findPgTool('psql'), ['-X', '-v', 'ON_ERROR_STOP=1', '-q', '-A', '-t', '-f', '-'], {
+      input: pastes.apply, env: pgEnv(cluster.targetFor(db)), encoding: 'utf8', timeout: 30000, windowsHide: true,
+    });
+    const r = { status: p.status ?? -1, stdout: p.stdout ?? '', stderr: `${p.stderr ?? ''}${p.error ? ` [killed: ${p.error.message}]` : ''}` };
     const waited = Date.now() - started;
     await holder.finish('rollback;');
     refused(r, /canceling statement due to lock timeout/);
