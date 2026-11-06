@@ -23,11 +23,11 @@
     from pg_constraint con join pg_class c on c.oid = con.conrelid
    where c.relnamespace = 'public'::regnamespace
      and con.conname in ('tasks_status_allowed','tasks_note_max_600','tasks_acceptance_addressed','tasks_backlog_needs_review_date','task_history_note_max_600');
-  if v_found is distinct from $pin$constraint task_history.task_history_note_max_600: CHECK ((char_length(note) <= 600))
+  if v_found is distinct from replace($pin$constraint task_history.task_history_note_max_600: CHECK ((char_length(note) <= 600))
 constraint tasks.tasks_acceptance_addressed: CHECK (((status <> 'needs_acceptance'::text) OR (addressed_to IS NOT NULL)))
 constraint tasks.tasks_backlog_needs_review_date: CHECK (((status <> 'backlog'::text) OR (needed_by IS NOT NULL)))
 constraint tasks.tasks_note_max_600: CHECK ((char_length(note) <= 600))
-constraint tasks.tasks_status_allowed: CHECK ((status = ANY (ARRAY['backlog'::text, 'proposed'::text, 'open'::text, 'in_progress'::text, 'blocked'::text, 'needs_acceptance'::text, 'done'::text, 'decided_against'::text])))$pin$ then
+constraint tasks.tasks_status_allowed: CHECK ((status = ANY (ARRAY['backlog'::text, 'proposed'::text, 'open'::text, 'in_progress'::text, 'blocked'::text, 'needs_acceptance'::text, 'done'::text, 'decided_against'::text])))$pin$, chr(13), '') then
     raise exception 'AFTER-ASSERTION FAILED: the constraints 005 adds or replaces are missing, defined differently, or left NOT VALID by existing rows. Found: %. Everything was rolled back.', coalesce(v_found, '(none)');
   end if;
 
@@ -47,8 +47,8 @@ constraint tasks.tasks_status_allowed: CHECK ((status = ANY (ARRAY['backlog'::te
   -- bodies are exactly the reviewed ones (this hash pins Rule N/ET008, ET009, ET010 and the note handling
   -- without probing behaviour inside the paste; the acceptance suite proves behaviour).
   execute v_pin_functions_sql into v_found;
-  if v_found is distinct from $pin$function tasks_after_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=5424d669d256941cd7bb671d9a487cc2
-function tasks_before_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=f564a9be7ffeaa20db13902d5edcd38b$pin$ then
+  if v_found is distinct from replace($pin$function tasks_after_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=5424d669d256941cd7bb671d9a487cc2
+function tasks_before_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=f564a9be7ffeaa20db13902d5edcd38b$pin$, chr(13), '') then
     raise exception 'AFTER-ASSERTION FAILED: tasks_before_write or tasks_after_write is not the reviewed function (owner, security, search_path or body hash). Found: %. Everything was rolled back.', coalesce(v_found, '(none)');
   end if;
   -- ...and EXECUTE on them is held by no client role, PUBLIC included (CREATE OR REPLACE keeps a

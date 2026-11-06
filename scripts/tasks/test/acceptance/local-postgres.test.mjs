@@ -30,6 +30,7 @@ import { TASKS_DIR } from '../helpers.mjs';
 import { CODE_ROOT } from '../../lib/config.mjs';
 import { findPgTool, pgEnv, runPsql } from '../../lib/pg.mjs';
 import { buildPastes, changeSet } from '../../make-paste.mjs';
+import { splitSql } from '../../lib/sqlsplit.mjs';
 import { pgToolsAvailable, startCluster } from './cluster.mjs';
 
 const RUNTIME_003 =
@@ -832,6 +833,20 @@ suite(`QC fix trip 2 (defaults ${MODE})`, () => {
 /** psql -f splits on statements and sends them ONE AT A TIME — the harder case for atomicity. */
 const runPaste = (db, text, { continueOnError = false } = {}) =>
   runPsql(cluster.targetFor(db), ['-q', '-A', '-t', ...(continueOnError ? ['-v', 'ON_ERROR_STOP=0'] : []), '-f', '-'], { input: text });
+/**
+ * Feed a paste the way the Supabase editor does from a Windows clipboard: with CRLF line endings, AS THE
+ * SERVER RECEIVES THEM. psql on Windows turns CRLF into LF when it reads its input (measured 2026-11-06:
+ * a CRLF paste through runPaste passed while the same paste in the editor refused), so sending CRLF text
+ * through psql proves nothing. Instead the server builds the CRLF text itself and EXECUTEs it. Only the
+ * paste's first statement (its DO block) runs; Paste 2's trailing NOTIFY does not.
+ */
+const runPasteCRLF = (db, text) => {
+  const stmt = splitSql(text)[0];
+  assert.ok(!stmt.includes('$crlf$') && !stmt.includes('$src$'), 'a wrapper tag occurs in the paste');
+  return runPsql(cluster.targetFor(db), ['-q', '-A', '-t', '-f', '-'], {
+    input: `do $crlf$ begin execute replace($src$${stmt}$src$, chr(10), chr(13) || chr(10)); end $crlf$;`,
+  });
+};
 const snap = (db) => ok(runScript('schema-snapshot.mjs', db));
 let pasteDbs = 0;
 /** A database the way the live one was built, up to runtime 003 (no migration of ours). */
@@ -869,6 +884,16 @@ suite(`paste files, change set 001-004 (defaults ${MODE})`, () => {
     refused(req(db, 'select public.team_tasks_schema_snapshot();', { role: 'anon' }), /permission denied for function team_tasks_schema_snapshot/);
     // and the CLI's role can work in it
     ok(req(db, `insert into public.tasks (title, status, raci) values ('after paste', 'open', '{"r":"ac"}');`, { header: hdr('ac') }));
+  });
+
+  test('CRLF, as the editor sends it from a Windows clipboard: the 001-004 dry run and apply behave exactly as with LF', () => {
+    const db = freshDb();
+    const before = snap(db);
+    assert.match(runPasteCRLF(db, pastes.dryRun).stderr, /ERROR: {2}DRY RUN OK — nothing was changed \(0 rows; 0 NOT VALID\)/);
+    assert.equal(snap(db), before);
+    const r = runPasteCRLF(db, pastes.apply);
+    assert.equal(r.status, 0, r.stderr);
+    golden('local-snapshot-after-004.txt', snap(db));
   });
 
   test('Paste 2 run a SECOND time is refused by its before-assertions and changes nothing', () => {
@@ -1188,6 +1213,33 @@ suite(`paste files, change set 005 (defaults ${MODE})`, () => {
     assert.equal(rowsDigest(db), digest, 'an existing value changed, or a history row was written');
     // and the new rules are live in it
     refused(req(db, `update public.tasks set status = 'blocked' where title = 'existing 0';`, { header: hdr('ac') }), /a status change, or a new review date/);
+  });
+
+  // The 2026-11-06 live refusal: from a Windows clipboard the editor sends CRLF, so every multi-line
+  // pinned literal carried \r\n against the server's \n. These run the pastes with CRs really reaching
+  // the server (runPasteCRLF), and went RED on 47e2021 with exactly Justin's error.
+  test('CRLF, as the editor sends it: the 005 dry run reaches "DRY RUN OK — nothing was changed (N rows; 0 NOT VALID)" and changes nothing', () => {
+    const db = post004(2);
+    const before = snap(db);
+    const r = runPasteCRLF(db, p5.dryRun);
+    assert.match(r.stderr, /ERROR: {2}DRY RUN OK — nothing was changed \(2 rows; 0 NOT VALID\)/, r.stderr);
+    assert.equal(snap(db), before);
+  });
+
+  test('CRLF, as the editor sends it: the 005 apply reaches the new golden — the CRs really reached the server, and no comment or rule carries one', () => {
+    const db = post004(2);
+    const r = runPasteCRLF(db, p5.apply);
+    assert.equal(r.status, 0, r.stderr);
+    golden('local-snapshot-after.txt', snap(db));
+    // proof the wrapper delivered CRs (the function bodies are stored as sent; their hash pins strip CRs)
+    assert.equal(scalar(db, `select (position(chr(13) in prosrc) > 0)::text from pg_proc where oid = 'public.tasks_before_write()'::regprocedure;`), 'true');
+    // ...and nothing a reader or a check compares picked one up: comments, constraint definitions
+    assert.equal(scalar(db, `select count(*) from pg_description d join pg_constraint c on c.oid = d.objoid where c.conrelid in ('public.tasks'::regclass, 'public.task_history'::regclass) and position(chr(13) in d.description) > 0;`), '0');
+    assert.equal(scalar(db, `select count(*) from pg_description where objoid in ('public.tasks'::regclass, 'public.task_history'::regclass, 'public.tasks_before_write()'::regprocedure, 'public.tasks_after_write()'::regprocedure) and position(chr(13) in description) > 0;`), '0');
+    assert.equal(scalar(db, `select count(*) from pg_constraint where conrelid = 'public.tasks'::regclass and position(chr(13) in pg_get_constraintdef(oid)) > 0;`), '0');
+    // and the rules work, CR and all: Rule N refuses, a note passes
+    refused(req(db, `update public.tasks set status = 'blocked' where title = 'existing 0';`, { header: hdr('ac') }), /a status change, or a new review date/);
+    ok(req(db, `update public.tasks set status = 'blocked', note = 'crlf ok' where title = 'existing 0';`, { header: hdr('ac') }));
   });
 
   test('item 9b: on runtime 003\'s ORIGINAL shape, the 005 paste refuses and changes nothing', () => {
