@@ -65,6 +65,21 @@ test('the roster lives in exactly one place (public.task_roster in 003); nothing
   assert.deepEqual(holders.map((f) => relative(TASKS_DIR, f).replace(/\\/g, '/')), ['migrations/003_task_triggers.sql']);
 });
 
+test('Ruling 3.4 (Soren-005): the accountable default lives in ONE place — DEFAULT_ACCOUNTABLE in lib/defaults.mjs — and both its users import it', () => {
+  const code = files.filter((p) => p.endsWith('.mjs') && !relative(TASKS_DIR, p).replace(/\\/g, '/').startsWith('test/'));
+  const homes = code.filter((f) => /DEFAULT_ACCOUNTABLE\s*=/.test(readFileSync(f, 'utf8')));
+  assert.deepEqual(homes.map((f) => relative(TASKS_DIR, f).replace(/\\/g, '/')), ['lib/defaults.mjs']);
+  for (const f of code) {
+    const text = readFileSync(f, 'utf8');
+    // a defaulted accountable written as a literal: `?? 'justin'`, `?? "lucas"`, `accountable ... || 'x'`, `a: 'x'`
+    assert.doesNotMatch(text, /(\?\?|\|\|)\s*['"`](justin|lucas)['"`]/, `${relative(TASKS_DIR, f)} defaults a name with a literal`);
+    assert.doesNotMatch(text, /\ba:\s*['"`](justin|lucas)['"`]/, `${relative(TASKS_DIR, f)} writes raci.a with a literal`);
+  }
+  for (const user of ['lib/cli.mjs', 'lib/linear.mjs']) {
+    assert.match(readFileSync(join(TASKS_DIR, user), 'utf8'), /import \{ DEFAULT_ACCOUNTABLE \} from '\.\/defaults\.mjs';/, `${user} does not import the default`);
+  }
+});
+
 test('every migration and script carries its truncation canary', () => {
   for (const f of files.filter((p) => /\.(sql|mjs)$/.test(p) && !p.includes(`${'test'}`) && !p.endsWith('tasks.mjs'))) {
     assert.match(readFileSync(f, 'utf8').trimEnd(), /FULL FILE LOADED$/, relative(TASKS_DIR, f));

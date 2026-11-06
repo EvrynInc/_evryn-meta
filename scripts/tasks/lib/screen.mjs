@@ -27,8 +27,8 @@ export const PHONE = new RegExp(
   ].join('|'),
 );
 
-/** The free-text fields every write and the export screen (Soren, 14:49). */
-export const SCREENED_FIELDS = ['title', 'description', 'closing_note', 'signed_ref', 'tags', 'links'];
+/** The free-text fields every write and the export screen (Soren, 14:49; `note` added at 005: a note is exactly where someone pastes an email address). */
+export const SCREENED_FIELDS = ['title', 'description', 'closing_note', 'signed_ref', 'tags', 'links', 'note'];
 
 function asText(value) {
   if (value === null || value === undefined) return '';

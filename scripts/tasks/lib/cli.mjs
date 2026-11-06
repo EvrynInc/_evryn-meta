@@ -21,25 +21,39 @@ import {
   redact,
   teamRestTarget,
 } from './config.mjs';
+import { DEFAULT_ACCOUNTABLE } from './defaults.mjs';
 import { RestError, makeRest } from './rest.mjs';
 import { describeScreen, screenRow } from './screen.mjs';
 
-export const STATUSES = ['open', 'in_progress', 'blocked', 'done', 'decided_against', 'proposed'];
-export const OPEN_STATUSES = ['open', 'in_progress', 'blocked', 'proposed'];
+// The status lists (migration 005; Soren's cutover design §1.5). ONE list used to do two jobs — what a
+// write may set and what the daily pull shows — so they are split: adding backlog to a shared list would
+// put every idea in every startup pull. The database's tasks_status_allowed is the real list.
+export const STATUSES = ['backlog', 'proposed', 'open', 'in_progress', 'blocked', 'needs_acceptance', 'done', 'decided_against'];
+/** What add and update may set. done and decided_against are set only by close. */
+export const SETTABLE_STATUSES = ['backlog', 'proposed', 'open', 'in_progress', 'blocked', 'needs_acceptance'];
+/** The OPEN section of pull and mine. Never backlog: due backlog is its own section (Soren-005, Ruling 2). */
+export const PULL_STATUSES = ['proposed', 'open', 'in_progress', 'blocked', 'needs_acceptance'];
 export const CLOSED_STATUSES = ['done', 'decided_against'];
+/** Who may sign (Soren's design §2.2). The database enforces it (ET009); the CLI says so first. */
+export const SIGNERS = ['lucas', 'justin'];
 export const PULL_OPEN_CAP = 20;
+/** The due-for-review section's OWN cap: it never counts against PULL_OPEN_CAP (Soren-005, Ruling 2). */
+export const PULL_REVIEW_CAP = 10;
 export const PULL_CLOSED_CAP = 10;
 export const PULL_CLOSED_DAYS = 30;
+/** A backlog review date is at most this many Pacific days out. The database enforces it (ET010). */
+export const BACKLOG_REVIEW_MAX_DAYS = 90;
 export const SEARCH_MAX_CHARS = 200;
 export const TITLE_MAX = 80;
 export const BODY_MAX = 600;
+export const NOTE_MAX = 600;
 
 const HEADLINE_COLS = 'short_id,status,title,owner,addressed_to,needed_by,closed_at';
 /** Every column except the generated search vector. */
 export const ROW_COLS = [
   'id', 'short_id', 'title', 'description', 'status', 'raci', 'owner', 'links', 'tags',
   'created_by', 'created_at', 'updated_at', 'closed_at', 'closing_note', 'needed_by', 'parent_id',
-  'addressed_to', 'signed_at', 'signed_ref', 'linear_id', 'linear_status',
+  'addressed_to', 'signed_at', 'signed_ref', 'linear_id', 'linear_status', 'note',
 ].join(',');
 /** The export: every stored column a person wrote, minus the generated ones (owner, search). */
 export const EXPORT_COLS = ROW_COLS.split(',').filter((c) => c !== 'owner').join(',');
@@ -65,10 +79,15 @@ WHO YOU ARE
 
 AT THE START OF A SESSION
   pull --as <name>
-      Your open tasks plus anything addressed to you (headlines only), then your own tasks
-      closed as done or decided against in the last 30 days. Capped at ${PULL_OPEN_CAP} open and
-      ${PULL_CLOSED_CAP} closed lines; past that it prints "+N more" and the command for the full list.
+      Three sections, headlines only:
+        1. open work that is yours or addressed to you (never backlog);
+        2. your backlog items whose review date has arrived (Pacific "today") — propose
+           each, re-date it with --note, or close it --decided-against;
+        3. your own tasks closed as done or decided against in the last 30 days.
+      Each section has its own cap (${PULL_OPEN_CAP} open, ${PULL_REVIEW_CAP} due for review, ${PULL_CLOSED_CAP} closed);
+      past it, a loud "+N more ... NOT SHOWN" line names the command for the full list.
       One line a task:   T-12 [blocked] headline (needed 11/20)
+                         T-41 [backlog] headline (review 11/12)
 
 BEFORE YOU PROPOSE OR ADD ANYTHING
   search "<words>"
@@ -77,38 +96,66 @@ BEFORE YOU PROPOSE OR ADD ANYTHING
       without new information. Up to ${SEARCH_MAX_CHARS} characters. "quoted phrase", or, -word work.
 
 READING
-  mine --as <name>                 your open tasks and those addressed to you, no cap
+  mine --as <name>                 pull's open and due-for-review sections, no cap
+  mine --backlog --as <name>       all your backlog, by review date; "(due for review)" marks
+                                   the ones whose date has arrived. search also finds backlog.
   closed [--days N] [--by <name> | --all]
                                    done + decided against, closed in the last N days
                                    (default 30). Default owner: you (--as).
-  show T-12                        the whole task and its complete change history
+  show T-12                        the whole task and its complete change history, with
+                                   each write's note
 
 WRITING (all need --as)
   add --title "<headline>" [options]
   update T-12 [options]
+  update T-12 --note "<what's new>"   with no other option: a COMMENT (a pointer to a
+                                   contribution, a handoff), recorded in the history
   close T-12 --note "<what happened or why not, and where the record lives>" [--decided-against]
-  sign T-12 --ref "<where Justin's words are>"
+  sign T-12 --ref "<where Justin's words are>" [--note "..."]
 
   Options for add and update:
     --title "<at most 80 chars>"       --body "<at most 600 chars>"
-    --status open|in_progress|blocked|proposed    (add defaults to open)
-    --owner <name>         (add defaults to you)    --accountable <name>  (add defaults to justin)
+    --note "<why, at most 600 chars>"  the reason for THIS write. It belongs to this one
+                           write and lands in the history; the next write starts with none.
+                           The DATABASE refuses a status change without a note, and a new
+                           review date on a backlog item without one. A note identical to
+                           the task's last note counts as none: say what's new.
+    --status backlog|proposed|open|in_progress|blocked|needs_acceptance
+                           add defaults to open — or to proposed when --owner is someone else
+    --owner <name>         add defaults to you. An add owned by someone else is a REQUEST:
+                           it defaults to --status proposed and --to <that owner>.
+    --accountable <name>   (add defaults to ${DEFAULT_ACCOUNTABLE}). Use justin only on an item Justin authorized
+                           himself, and point at his words with --link.
     --consulted a,b        --informed a,b
     --to <name>            whom a watcher should wake ('none' clears it)
-    --needed-by YYYY-MM-DD ('none' clears it). REQUIRED whenever --to is justin.
+    --needed-by YYYY-MM-DD ('none' clears it). REQUIRED whenever --to is justin. On a backlog
+                           item it is the REVIEW date: required, at most ${BACKLOG_REVIEW_MAX_DAYS} days out.
     --parent T-n           ('none' clears it)
     --tags a,b             (replaces the tags)
     --link <doc path>      repeatable; on update it ADDS to the links
 
-  Statuses: open · in_progress · blocked · proposed · done · decided_against.
-    "proposed" means awaiting Justin's authorization.
-    done and decided_against are set ONLY by close, which requires a note.
+  The eight statuses:
+    backlog           an idea, not committed work. Carries a review date (--needed-by, at most
+                      ${BACKLOG_REVIEW_MAX_DAYS} days out); stays out of the open list and shows in pull only once that
+                      date arrives. Then: propose it, re-date it with --note, or close it.
+    proposed          awaiting a yes: Justin's, or Lucas's under
+                      shared/protocols/authorization-rules.md.
+    open              authorized; not started.
+    in_progress       being worked.
+    blocked           waiting on something; the note says on what.
+    needs_acceptance  submitted for acceptance. Must be addressed (--to); Justin-bound
+                      acceptance goes to lucas.
+    done              closed, delivered. Set ONLY by close, with its note.
+    decided_against   closed, won't happen. Set ONLY by close, with the reason. search finds
+                      it forever, so nobody re-raises it.
     A raw write that names no status is refused: the column's old default 'todo' is not allowed.
+  Read the task with show before you change its status; never have a subagent change one.
   Tasks are never deleted. If it won't happen, close it --decided-against with the reason.
 
   sign is a RECORD, NEVER A GATE. It records that Justin signed this item and where his words
-  are. Anyone holding the key can set it, so nothing outbound or irreversible may ever
-  depend on it.
+  are. Only lucas or justin may sign, change or clear a sign-off (the database refuses any
+  other name). But with one shared key a false "lucas" cannot be refused, so nothing
+  outbound or irreversible may ever depend on it.
 
 EXPORT
   export [--out <path>]
@@ -117,8 +164,8 @@ EXPORT
       is Justin's call and is still open. Refuses to write anything if any row fails the screen.
 
 THE SCREEN (a warning-grade screen, NOT a guarantee)
-  add, update, close, sign and export scan the title, body, closing note, signed ref, tags
-  and links. Anything shaped like an EMAIL ADDRESS is REFUSED. Anything shaped like a PHONE
+  add, update, close, sign and export scan the title, body, note, closing note, signed ref,
+  tags and links. Anything shaped like an EMAIL ADDRESS is REFUSED. Anything shaped like a PHONE
   NUMBER is WARNED about. That is all it catches: it cannot recognize privileged legal
   content, a trade secret or a user's personal story. Those never go in a task — put a
   pointer to the right doc instead.
@@ -174,10 +221,25 @@ function mmdd(dateLike) {
   return d.toLocaleDateString('en-US', { timeZone: 'America/Los_Angeles', month: '2-digit', day: '2-digit' });
 }
 
+/** "Today" as YYYY-MM-DD in Pacific time, from the injected clock — the same date the database's ET010 uses. */
+export function ptToday(now) {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now());
+}
+
+/** A YYYY-MM-DD date plus n days, as YYYY-MM-DD. */
+export function addDays(ymd, n) {
+  const [y, m, d] = ymd.split('-').map(Number);
+  return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10);
+}
+
+/**
+ * One headline. A backlog row's needed_by is its REVIEW date and says so ("review"), never "needed":
+ * the one column means "the day someone must look" in both cases (Soren-005, Ruling 6.2).
+ */
 export function headline(row, me) {
   const closed = CLOSED_STATUSES.includes(row.status) && row.closed_at ? ` ${mmdd(row.closed_at)}` : '';
   let line = `T-${row.short_id} [${row.status}${closed}] ${row.title}`;
-  if (row.needed_by) line += ` (needed ${mmdd(row.needed_by)})`;
+  if (row.needed_by) line += row.status === 'backlog' ? ` (review ${mmdd(row.needed_by)})` : ` (needed ${mmdd(row.needed_by)})`;
   if (me && row.owner !== me && row.addressed_to === me) line += ` (to you; owner ${row.owner})`;
   else if (row.addressed_to && row.addressed_to !== row.owner) line += ` (to ${row.addressed_to})`;
   return line;
@@ -190,6 +252,30 @@ function sortOpen(rows) {
     return da < db ? -1 : da > db ? 1 : a.short_id - b.short_id;
   });
 }
+
+/** Backlog by review date, then T-number. */
+function sortBacklog(rows) {
+  return [...rows].sort((a, b) => (a.needed_by < b.needed_by ? -1 : a.needed_by > b.needed_by ? 1 : a.short_id - b.short_id));
+}
+
+/** The open section's rows: PULL_STATUSES, owned by or addressed to `me`. */
+async function openRows(rest, me, pageSize) {
+  return sortOpen(
+    await rest.paginateAll('tasks', `select=${HEADLINE_COLS}&status=in.(${PULL_STATUSES.join(',')})&or=(owner.eq.${me},addressed_to.eq.${me})`, { pageSize }),
+  );
+}
+
+/**
+ * `me`'s backlog, OWNER ONLY (an undecided idea is its owner's to decide; nothing routes it onto someone
+ * else's screen). With `dueBy`, only rows whose review date has arrived (needed_by <= dueBy).
+ */
+async function backlogRows(rest, me, pageSize, { dueBy } = {}) {
+  const filter = [`select=${HEADLINE_COLS}`, 'status=eq.backlog', `owner=eq.${me}`];
+  if (dueBy) filter.push(`needed_by=lte.${dueBy}`);
+  return sortBacklog(await rest.paginateAll('tasks', filter.join('&'), { pageSize }));
+}
+
+const REVIEW_HEADING = (n) => `Backlog due for review — yours (${n}): propose it, re-date it with --note, or close it --decided-against:`;
 
 function sortClosed(rows) {
   return [...rows].sort((a, b) => (a.closed_at < b.closed_at ? 1 : a.closed_at > b.closed_at ? -1 : b.short_id - a.short_id));
@@ -261,7 +347,27 @@ const FIELD_OPTIONS = {
   parent: { type: 'string' },
   tags: { type: 'string' },
   link: { type: 'string', multiple: true },
+  note: { type: 'string' },
 };
+
+/**
+ * The backlog's two rules, checked courteously ahead of the database (which enforces both): a backlog
+ * item carries a review date, and it is at most BACKLOG_REVIEW_MAX_DAYS Pacific days out. `dating` says
+ * whether this write sets the date (an insert, a move into backlog, or a new needed_by) — the database's
+ * cap fires only then, so an unrelated update to an old row is never refused.
+ */
+function courtesyBacklog({ status, neededBy, dating, today }) {
+  if (status !== 'backlog') return;
+  if (!neededBy) {
+    throw new UsageError(`a backlog item needs a review date: --needed-by YYYY-MM-DD, at most ${BACKLOG_REVIEW_MAX_DAYS} days out`);
+  }
+  if (dating && neededBy > addDays(today, BACKLOG_REVIEW_MAX_DAYS)) {
+    throw new UsageError(
+      `a backlog item's review date can be at most ${BACKLOG_REVIEW_MAX_DAYS} days out (latest today: ${addDays(today, BACKLOG_REVIEW_MAX_DAYS)}). ` +
+        'Pick a review date within 90 days. If it is not worth looking at by then, close it --decided-against with the reason.',
+    );
+  }
+}
 
 function courtesyLengths(values) {
   if (values.title !== undefined) {
@@ -273,9 +379,15 @@ function courtesyLengths(values) {
   if (values.body !== undefined && values.body.length > BODY_MAX) {
     throw new UsageError(`--body is ${values.body.length} characters; the limit is ${BODY_MAX}. Put the substance in a doc and --link it.`);
   }
-  if (values.status !== undefined && !OPEN_STATUSES.includes(values.status)) {
+  if (values.note !== undefined) {
+    if (values.note.trim() === '') throw new UsageError('--note cannot be blank (the database treats a blank note as none)');
+    if (values.note.length > NOTE_MAX) {
+      throw new UsageError(`--note is ${values.note.length} characters; the limit is ${NOTE_MAX}. A note is a reason or a pointer: put the substance in a doc and --link it.`);
+    }
+  }
+  if (values.status !== undefined && !SETTABLE_STATUSES.includes(values.status)) {
     if (CLOSED_STATUSES.includes(values.status)) throw new UsageError(`use "close" to set ${values.status} (it requires a closing note)`);
-    throw new UsageError(`--status must be one of: ${OPEN_STATUSES.join(', ')}`);
+    throw new UsageError(`--status must be one of: ${SETTABLE_STATUSES.join(', ')}`);
   }
 }
 
@@ -286,13 +398,8 @@ function courtesyLengths(values) {
 const COMMANDS = {
   async pull({ rest, actor, say, now, pageSize }) {
     const me = actor;
-    const open = sortOpen(
-      await rest.paginateAll(
-        'tasks',
-        `select=${HEADLINE_COLS}&status=in.(${OPEN_STATUSES.join(',')})&or=(owner.eq.${me},addressed_to.eq.${me})`,
-        { pageSize },
-      ),
-    );
+    const open = await openRows(rest, me, pageSize);
+    const due = await backlogRows(rest, me, pageSize, { dueBy: ptToday(now) });
     const since = new Date(now().getTime() - PULL_CLOSED_DAYS * 86400000).toISOString();
     const closed = sortClosed(
       await rest.paginateAll(
@@ -307,6 +414,14 @@ const COMMANDS = {
     if (open.length > PULL_OPEN_CAP) {
       say(`  +${open.length - PULL_OPEN_CAP} more open — NOT SHOWN. Full list: tasks mine --as ${me}`);
     }
+    // Its own section and its own cap: a pile of due reviews never pushes committed work off the
+    // screen, and committed work never hides the reviews (Soren-005, Ruling 2).
+    say(REVIEW_HEADING(due.length));
+    if (due.length === 0) say('  (none)');
+    for (const r of due.slice(0, PULL_REVIEW_CAP)) say(`  ${headline(r, me)}`);
+    if (due.length > PULL_REVIEW_CAP) {
+      say(`  +${due.length - PULL_REVIEW_CAP} more due for review — NOT SHOWN. Full list: tasks mine --as ${me}`);
+    }
     say(`Closed by you in the last ${PULL_CLOSED_DAYS} days (${closed.length}):`);
     if (closed.length === 0) say('  (none)');
     for (const r of closed.slice(0, PULL_CLOSED_CAP)) say(`  ${headline(r, me)}`);
@@ -317,17 +432,23 @@ const COMMANDS = {
     return 0;
   },
 
-  async mine({ rest, actor, say, pageSize }) {
-    const open = sortOpen(
-      await rest.paginateAll(
-        'tasks',
-        `select=${HEADLINE_COLS}&status=in.(${OPEN_STATUSES.join(',')})&or=(owner.eq.${actor},addressed_to.eq.${actor})`,
-        { pageSize },
-      ),
-    );
+  async mine({ rest, actor, values, say, now, pageSize }) {
+    const today = ptToday(now);
+    if (values.backlog) {
+      const all = await backlogRows(rest, actor, pageSize);
+      say(`Backlog — yours, by review date (${all.length}):`);
+      if (all.length === 0) say('  (none)');
+      for (const r of all) say(`  ${headline(r, actor)}${r.needed_by && r.needed_by <= today ? ' (due for review)' : ''}`);
+      return 0;
+    }
+    const open = await openRows(rest, actor, pageSize);
     say(`Open — yours or addressed to you (${open.length}):`);
     if (open.length === 0) say('  (none)');
     for (const r of open) say(`  ${headline(r, actor)}`);
+    const due = await backlogRows(rest, actor, pageSize, { dueBy: today });
+    say(REVIEW_HEADING(due.length));
+    if (due.length === 0) say('  (none)');
+    for (const r of due) say(`  ${headline(r, actor)}`);
     return 0;
   },
 
@@ -372,7 +493,9 @@ const COMMANDS = {
     if (t.linear_id) say(`  linear: ${t.linear_id} (status in Linear: "${t.linear_status ?? ''}")`);
     say('  body:');
     for (const line of String(t.description || '(empty)').split('\n')) say(`    ${line}`);
-    const history = await rest.paginateAll('task_history', `task_id=eq.${t.id}&select=id,at,actor,op,changed_fields,old,new,flags`, {
+    // History is the record: each write's note is printed under its row; the row's own note column
+    // (which only holds the latest write's note) is deliberately not printed.
+    const history = await rest.paginateAll('task_history', `task_id=eq.${t.id}&select=id,at,actor,op,changed_fields,old,new,flags,note`, {
       cursorCol: 'id',
       pageSize,
     });
@@ -385,8 +508,9 @@ const COMMANDS = {
         const parts = (h.changed_fields ?? []).map(
           (f) => `${f}: ${JSON.stringify(h.old ? h.old[f] : null)} → ${JSON.stringify(h.new ? h.new[f] : null)}`,
         );
-        say(`  #${h.id} ${h.at} ${h.actor} ${parts.join(' · ')}${flags}`);
+        say(`  #${h.id} ${h.at} ${h.actor} ${parts.length ? parts.join(' · ') : 'commented'}${flags}`);
       }
+      if (h.note) for (const [i, line] of String(h.note).split('\n').entries()) say(`      ${i === 0 ? 'note: ' : '      '}${line}`);
     }
     return 0;
   },
@@ -409,13 +533,20 @@ const COMMANDS = {
     return 0;
   },
 
-  async add({ rest, actor, values, warn, say }) {
+  async add({ rest, actor, values, warn, say, now }) {
     if (values.title === undefined) throw new UsageError('add needs --title "<headline>"');
     courtesyLengths(values);
     const owner = values.owner ?? actor;
     checkName('--owner', owner);
-    const accountable = values.accountable ?? 'justin';
+    // An add owned by someone else is a REQUEST to them, not an authorized item on their plate: it
+    // defaults to proposed and is addressed to them (Soren's cutover design §1.5 and §3 item 1). Each
+    // default yields to the option that names it.
+    const routed = owner !== actor;
+    const accountable = values.accountable ?? DEFAULT_ACCOUNTABLE;
     checkName('--accountable', accountable);
+    if (accountable === 'justin' && !values.link) {
+      warn('WARNING add: accountable justin means Justin accepts it at close; link where he authorized it.');
+    }
     const raci = { r: owner, a: accountable };
     const c = nameList('--consulted', values.consulted);
     const i = nameList('--informed', values.informed);
@@ -424,16 +555,22 @@ const COMMANDS = {
     const row = {
       title: values.title,
       description: values.body ?? '',
-      status: values.status ?? 'open',
+      status: values.status ?? (routed ? 'proposed' : 'open'),
       raci,
       links: values.link ?? [],
     };
+    if (values.note !== undefined) row.note = values.note;
     if (values.tags !== undefined) row.tags = tagList(values.tags);
     if (values.to !== undefined && values.to !== 'none') row.addressed_to = checkName('--to', values.to);
+    else if (values.to === undefined && routed) row.addressed_to = owner;
     if (values['needed-by'] !== undefined && values['needed-by'] !== 'none') row.needed_by = checkDate(values['needed-by']);
     if (String(row.addressed_to ?? '').toLowerCase() === 'justin' && !row.needed_by) {
-      throw new UsageError('a task addressed to justin needs --needed-by YYYY-MM-DD');
+      throw new UsageError(`a task addressed to justin needs --needed-by YYYY-MM-DD${routed && values.to === undefined ? ' (an add owned by justin is addressed to him by default)' : ''}`);
     }
+    if (row.status === 'needs_acceptance' && !row.addressed_to) {
+      throw new UsageError('a needs_acceptance task must be addressed to whoever accepts it: --to <name> (Justin-bound acceptance goes to lucas)');
+    }
+    courtesyBacklog({ status: row.status, neededBy: row.needed_by, dating: true, today: ptToday(now) });
     screenOrRefuse('add', row, warn);
     if (values.parent !== undefined && values.parent !== 'none') row.parent_id = await resolveParent(rest, values.parent);
     const { data } = await rest.request('POST', `tasks?select=${HEADLINE_COLS}`, { body: row, prefer: 'return=representation' });
@@ -442,10 +579,13 @@ const COMMANDS = {
     return 0;
   },
 
-  async update({ rest, actor, values, positionals, warn, say }) {
+  async update({ rest, actor, values, positionals, warn, say, now }) {
     if (positionals.length !== 1) throw new UsageError('update takes one task id: update T-12 [options]');
     const n = parseTaskRef(positionals[0]);
     courtesyLengths(values);
+    if (values.status !== undefined && values.note === undefined) {
+      throw new UsageError('a status change needs --note "<why>" (the database refuses one without it)');
+    }
     const patch = {};
     if (values.title !== undefined) patch.title = values.title;
     if (values.body !== undefined) patch.description = values.body;
@@ -453,10 +593,20 @@ const COMMANDS = {
     if (values.tags !== undefined) patch.tags = tagList(values.tags);
     if (values.to !== undefined) patch.addressed_to = values.to === 'none' ? null : checkName('--to', values.to);
     if (values['needed-by'] !== undefined) patch.needed_by = values['needed-by'] === 'none' ? null : checkDate(values['needed-by']);
+    if (values.note !== undefined) patch.note = values.note;
+    // Screen BEFORE any request: the free text this write brings (the merged links below add only rows
+    // already in the database, which were screened when written).
+    screenOrRefuse(`update T-${n}`, { ...patch, ...(values.link !== undefined ? { links: values.link } : {}) }, warn);
 
     const touchesRaci = ['owner', 'accountable', 'consulted', 'informed'].some((k) => values[k] !== undefined);
-    const needsCurrent = touchesRaci || values.link !== undefined || values.to !== undefined || values['needed-by'] !== undefined;
-    const current = needsCurrent ? await fetchTask(rest, n, 'raci,links,addressed_to,needed_by') : null;
+    const needsCurrent =
+      touchesRaci || values.link !== undefined || values.to !== undefined || values['needed-by'] !== undefined ||
+      values.note !== undefined || values.status !== undefined;
+    const current = needsCurrent ? await fetchTask(rest, n, 'raci,links,addressed_to,needed_by,status,note') : null;
+    if (current && values.note !== undefined && values.note === current.note) {
+      // The database cannot tell "the same note again" from "no note", so it would silently drop this one.
+      throw new UsageError("--note matches this task's last note word for word, so the database would treat it as no note. Say what's new.");
+    }
     if (touchesRaci) {
       const raci = { ...(current.raci ?? {}) };
       if (values.owner !== undefined) raci.r = checkName('--owner', values.owner);
@@ -473,15 +623,29 @@ const COMMANDS = {
     if (current) {
       const to = 'addressed_to' in patch ? patch.addressed_to : current.addressed_to;
       const due = 'needed_by' in patch ? patch.needed_by : current.needed_by;
+      const status = patch.status ?? current.status;
       if (String(to ?? '').toLowerCase() === 'justin' && !due) {
         throw new UsageError('a task addressed to justin needs a needed-by date: add --needed-by YYYY-MM-DD');
+      }
+      if (status === 'needs_acceptance' && !to) {
+        throw new UsageError('a needs_acceptance task must be addressed to whoever accepts it: --to <name> (Justin-bound acceptance goes to lucas)');
+      }
+      const statusChanges = patch.status !== undefined && patch.status !== current.status;
+      const dateChanges = 'needed_by' in patch && patch.needed_by !== current.needed_by;
+      if (current.status === 'backlog' && status === 'backlog' && dateChanges && values.note === undefined) {
+        throw new UsageError('a new review date on a backlog item needs --note "<why it is worth another look>" (the database refuses one without it)');
+      }
+      courtesyBacklog({ status, neededBy: due, dating: statusChanges || dateChanges, today: ptToday(now) });
+      // Leaving backlog with no --needed-by: the review date silently becomes a deadline nobody chose.
+      if (current.status === 'backlog' && statusChanges && values['needed-by'] === undefined && current.needed_by) {
+        warn(`WARNING update T-${n}: its review date ${current.needed_by} becomes this item's needed-by; pass --needed-by <date> or none.`);
       }
     }
     if (values.parent !== undefined) patch.parent_id = await resolveParent(rest, values.parent);
     if (Object.keys(patch).length === 0) throw new UsageError('update needs at least one option to change (see --help)');
-    screenOrRefuse(`update T-${n}`, patch, warn);
     const row = await patchTask(rest, n, patch);
-    say(`updated ${headline(row, actor)}  (${Object.keys(patch).join(', ')})`);
+    const fields = Object.keys(patch).filter((k) => k !== 'note');
+    say(`${fields.length ? 'updated' : 'commented on'} ${headline(row, actor)}${fields.length ? `  (${fields.join(', ')}${patch.note !== undefined ? ', with a note' : ''})` : ''}`);
     return 0;
   },
 
@@ -506,7 +670,12 @@ const COMMANDS = {
     if (positionals.length !== 1) throw new UsageError('sign takes one task id: sign T-12 --ref "<where>"');
     const n = parseTaskRef(positionals[0]);
     if (values.ref === undefined || values.ref.trim() === '') throw new UsageError(`sign needs --ref "<where Justin's words are>"`);
+    if (!SIGNERS.includes(actor)) {
+      throw new UsageError(`only ${SIGNERS.join(' or ')} may sign (--as); the database refuses any other name. A sign records Justin's own yes, and goes through Lucas.`);
+    }
+    courtesyLengths({ note: values.note });
     const patch = { signed_at: now().toISOString(), signed_ref: values.ref };
+    if (values.note !== undefined) patch.note = values.note;
     screenOrRefuse(`sign T-${n}`, patch, warn);
     const row = await patchTask(rest, n, patch);
     say(`signed ${headline(row, actor)} — a record of Justin's signature, never a gate`);
@@ -538,14 +707,14 @@ const COMMANDS = {
 
 const COMMAND_SPECS = {
   pull: { needsActor: true, options: {} },
-  mine: { needsActor: true, options: {} },
+  mine: { needsActor: true, options: { backlog: { type: 'boolean' } } },
   closed: { needsActor: false, options: { days: { type: 'string' }, by: { type: 'string' }, all: { type: 'boolean' } } },
   show: { needsActor: false, options: {} },
   search: { needsActor: false, options: {} },
   add: { needsActor: true, write: true, options: FIELD_OPTIONS },
   update: { needsActor: true, write: true, options: FIELD_OPTIONS },
   close: { needsActor: true, write: true, options: { note: { type: 'string' }, 'decided-against': { type: 'boolean' } } },
-  sign: { needsActor: true, write: true, options: { ref: { type: 'string' } } },
+  sign: { needsActor: true, write: true, options: { ref: { type: 'string' }, note: { type: 'string' } } },
   export: { needsActor: false, options: { out: { type: 'string' } } },
 };
 
