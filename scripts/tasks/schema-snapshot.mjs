@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 /**
- * schema-snapshot.mjs — READ-ONLY. Print a deterministic text description of public.tasks and
- * public.task_history: columns, defaults, identity/generated, constraints, indexes, triggers, RLS,
- * policies, grants, owners, the identity sequences, and the task functions (security mode,
- * search_path, privileges, a hash of the body).
+ * schema-snapshot.mjs — READ-ONLY. Print a deterministic text description of public.tasks,
+ * public.task_history AND public.proposals (included so a before/after compare catches any change to
+ * a table the go forbids touching — QC Finding 6): columns, defaults, identity/generated,
+ * constraints, indexes, triggers, RLS, policies, grants, owners, the identity sequences, the task
+ * functions (security mode, search_path, privileges, a hash of the body), and the project's default
+ * privileges for future objects.
  *
  * USAGE
  *   node schema-snapshot.mjs > live-before.txt                    (the Evryn Team database)
@@ -15,13 +17,15 @@
  * (`#` lines, information), `table` (owner), `rls` (enabled / forced), `column`, `constraint`, `index`,
  * `trigger`, `policy`, `grant` (table privileges, one grantee and privilege per line), `sequence` and
  * `sequence-grant` (the identity sequences), `function` (definition hash, security mode, search_path)
- * and `function-grant` (EXECUTE, one grantee per line, for every function the migrations create).
+ * and `function-grant` (EXECUTE, one grantee per line, for every function the migrations create),
+ * and `default-acl` (the project's default privileges; LISTED by the compare, never a stop). The very
+ * first line is `# target=...`: where the snapshot was taken (loopback or the team pooler).
  *
  * Runs inside `begin transaction read only` and ends with rollback. Prints no credential.
  * Truncation check: the last line of this file should read `FULL FILE LOADED`.
  */
 import { pathToFileURL } from 'node:url';
-import { ConfigError, ENV_FILES, VAR, loadVars, pgTarget } from './lib/config.mjs';
+import { ConfigError, ENV_FILES, TEAM_REF, VAR, loadVars, pgTarget } from './lib/config.mjs';
 import { runPsql } from './lib/pg.mjs';
 
 export const SNAPSHOT_SQL = String.raw`
@@ -32,12 +36,12 @@ select '# server_version_num=' || current_setting('server_version_num');
 
 select format('table %s: owner=%s', c.relname, pg_get_userbyid(c.relowner))
 from pg_class c
-where c.relnamespace = 'public'::regnamespace and c.relkind = 'r' and c.relname in ('tasks','task_history')
+where c.relnamespace = 'public'::regnamespace and c.relkind = 'r' and c.relname in ('tasks','task_history','proposals')
 order by c.relname;
 
 select format('rls %s: enabled=%s forced=%s', c.relname, c.relrowsecurity::text, c.relforcerowsecurity::text)
 from pg_class c
-where c.relnamespace = 'public'::regnamespace and c.relkind = 'r' and c.relname in ('tasks','task_history')
+where c.relnamespace = 'public'::regnamespace and c.relkind = 'r' and c.relname in ('tasks','task_history','proposals')
 order by c.relname;
 
 select format('column %s #%s %s %s%s%s%s',
@@ -53,28 +57,28 @@ select format('column %s #%s %s %s%s%s%s',
 from pg_class c
 join pg_attribute a on a.attrelid = c.oid and a.attnum > 0 and not a.attisdropped
 left join pg_attrdef d on d.adrelid = c.oid and d.adnum = a.attnum
-where c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history')
+where c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history','proposals')
 order by c.relname, a.attnum;
 
 select format('constraint %s.%s: %s', c.relname, con.conname, pg_get_constraintdef(con.oid))
 from pg_constraint con join pg_class c on c.oid = con.conrelid
-where c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history')
+where c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history','proposals')
 order by c.relname, con.conname;
 
 select format('index %s.%s: %s', tablename, indexname, indexdef)
 from pg_indexes
-where schemaname = 'public' and tablename in ('tasks','task_history')
+where schemaname = 'public' and tablename in ('tasks','task_history','proposals')
 order by tablename, indexname;
 
 select format('trigger %s.%s: %s [enabled=%s]', c.relname, t.tgname, pg_get_triggerdef(t.oid), t.tgenabled)
 from pg_trigger t join pg_class c on c.oid = t.tgrelid
-where not t.tgisinternal and c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history')
+where not t.tgisinternal and c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history','proposals')
 order by c.relname, t.tgname;
 
 select format('policy %s.%s: %s %s to %s using (%s) with check (%s)',
   tablename, policyname, permissive, cmd, array_to_string(roles, ','), coalesce(qual, '-'), coalesce(with_check, '-'))
 from pg_policies
-where schemaname = 'public' and tablename in ('tasks','task_history')
+where schemaname = 'public' and tablename in ('tasks','task_history','proposals')
 order by tablename, policyname;
 
 select format('grant %s: %s %s%s', c.relname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type,
@@ -82,14 +86,14 @@ select format('grant %s: %s %s%s', c.relname, coalesce(r.rolname, 'PUBLIC'), a.p
 from pg_class c
 cross join lateral aclexplode(coalesce(c.relacl, acldefault('r', c.relowner))) a
 left join pg_roles r on r.oid = a.grantee
-where c.relnamespace = 'public'::regnamespace and c.relkind = 'r' and c.relname in ('tasks','task_history')
+where c.relnamespace = 'public'::regnamespace and c.relkind = 'r' and c.relname in ('tasks','task_history','proposals')
 order by c.relname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type;
 
 select format('sequence %s.%s: owner=%s', c.relname, att.attname, pg_get_userbyid(sc.relowner))
 from pg_class c
 join pg_attribute att on att.attrelid = c.oid and att.attidentity <> '' and not att.attisdropped
 join pg_class sc on sc.oid = pg_get_serial_sequence(format('public.%I', c.relname), att.attname)::regclass
-where c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history')
+where c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history','proposals')
 order by c.relname, att.attname;
 
 select format('sequence-grant %s.%s: %s %s', c.relname, att.attname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type)
@@ -98,7 +102,7 @@ join pg_attribute att on att.attrelid = c.oid and att.attidentity <> '' and not 
 join pg_class sc on sc.oid = pg_get_serial_sequence(format('public.%I', c.relname), att.attname)::regclass
 cross join lateral aclexplode(coalesce(sc.relacl, acldefault('s', sc.relowner))) a
 left join pg_roles r on r.oid = a.grantee
-where c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history')
+where c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history','proposals')
 order by c.relname, att.attname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type;
 
 select format('function %s(%s): owner=%s security=%s volatility=%s config=%s body_md5=%s',
@@ -117,8 +121,28 @@ left join pg_roles r on r.oid = a.grantee
 where p.pronamespace = 'public'::regnamespace and (p.proname like 'task\_%' or p.proname like 'tasks\_%')
 order by p.proname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type;
 
+-- Default privileges for FUTURE objects (QC Finding 1). Recorded so a before-compare can see whether a
+-- project still has Supabase's old defaults. The compare LISTS these and never stops on them: the
+-- migration grants and revokes every object it creates explicitly, so the defaults no longer decide
+-- the result.
+select format('default-acl %s %s %s: %s %s',
+  pg_get_userbyid(d.defaclrole), coalesce(n.nspname, '(all-schemas)'),
+  case d.defaclobjtype when 'r' then 'tables' when 'S' then 'sequences' when 'f' then 'functions'
+                       when 'T' then 'types' when 'n' then 'schemas' else d.defaclobjtype::text end,
+  coalesce(r.rolname, 'PUBLIC'), a.privilege_type)
+from pg_default_acl d
+left join pg_namespace n on n.oid = d.defaclnamespace
+cross join lateral aclexplode(d.defaclacl) a
+left join pg_roles r on r.oid = a.grantee
+order by 1;
+
 rollback;
 `;
+
+/** The first line of every snapshot. No credential, and no port (so local golden files stay stable). */
+export function targetLine(target) {
+  return target.local ? '# target=local-loopback' : `# target=evryn-team ref=${TEAM_REF} via session pooler`;
+}
 
 export function runSnapshot(argv, { env, psql = runPsql, out = (s) => process.stdout.write(s), err = console.error } = {}) {
   if (argv.length) {
@@ -138,7 +162,8 @@ export function runSnapshot(argv, { env, psql = runPsql, out = (s) => process.st
     return 1;
   }
   const text = r.stdout.split(/\r?\n/).filter((l) => l.trim() !== '').join('\n');
-  out(`${text}\n`);
+  // WHERE the snapshot came from (QC Finding 4): the compare refuses a "live" side that is loopback.
+  out(`${targetLine(target)}\n${text}\n`);
   return 0;
 }
 

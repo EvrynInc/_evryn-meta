@@ -142,6 +142,27 @@ test('migrate: a NOT VALID notice is surfaced; a psql failure is loud', () => {
   assert.match(errs.join('\n'), /Nothing was committed/);
 });
 
+test('migrate (QC Finding 5): --apply-live and --rehearse REFUSE a local target, and run nothing', () => {
+  for (const flag of ['--apply-live', '--rehearse']) {
+    const psql = fakePsql([]);
+    const errs = [];
+    const code = runMigrate([flag], { env: { ...FULL, EVRYN_TASKS_LOCAL_PG: 'postgresql://postgres@127.0.0.1:5999/x' }, psql, out: () => {}, err: (s) => errs.push(s) });
+    assert.equal(code, 2, flag);
+    assert.equal(psql.calls.length, 0);
+    assert.match(errs.join('\n'), /is for the live Evryn Team database/);
+  }
+});
+
+test('snapshot (QC Finding 4): the first line names the target, with no port or credential', () => {
+  let live = '';
+  runSnapshot([], { env: FULL, psql: fakePsql([{ stdout: 'x\n' }]), out: (s) => (live += s) });
+  assert.equal(live.split('\n')[0], `# target=evryn-team ref=${TEAM_REF} via session pooler`);
+  let local = '';
+  runSnapshot([], { env: { EVRYN_TASKS_LOCAL_PG: 'postgresql://postgres@127.0.0.1:5999/x' }, psql: fakePsql([{ stdout: 'x\n' }]), out: (s) => (local += s) });
+  assert.equal(local.split('\n')[0], '# target=local-loopback');
+  assert.ok(!`${live}${local}`.includes(PASSWORD) && !local.includes('5999'));
+});
+
 test('migrate: unknown flags are usage errors', () => {
   assert.equal(runMigrate(['--yolo'], { env: FULL, psql: fakePsql([]), out: () => {}, err: () => {} }), 2);
 });
@@ -160,5 +181,5 @@ test('snapshot: read-only transaction, SQL on stdin, nothing in argv but flags',
   assert.match(opts.input, /rollback;\s*$/);
   // No line may BEGIN a write statement (the word "grant" appears inside format strings, legitimately).
   assert.doesNotMatch(opts.input, /^\s*(insert|update|delete|alter|create|drop|grant|revoke|truncate|set)\b/im);
-  assert.equal(printed, 'table tasks: owner=postgres\n');
+  assert.equal(printed, `# target=evryn-team ref=${TEAM_REF} via session pooler\ntable tasks: owner=postgres\n`);
 });

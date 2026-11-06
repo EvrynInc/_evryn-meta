@@ -1,7 +1,14 @@
-# server_version=17.10
-# server_version_num=170010
+# target=local-loopback
+table proposals: owner=postgres
 table tasks: owner=postgres
+rls proposals: enabled=true forced=false
 rls tasks: enabled=true forced=false
+column proposals #01 id uuid NOT NULL DEFAULT gen_random_uuid()
+column proposals #02 task_id uuid NOT NULL
+column proposals #03 body text NOT NULL
+column proposals #04 status text NOT NULL DEFAULT 'needs_authorization'::text
+column proposals #05 frozen_at timestamp with time zone
+column proposals #06 created_at timestamp with time zone NOT NULL DEFAULT now()
 column tasks #01 id uuid NOT NULL DEFAULT gen_random_uuid()
 column tasks #02 title text NOT NULL
 column tasks #03 description text NOT NULL DEFAULT ''::text
@@ -10,10 +17,47 @@ column tasks #05 raci jsonb NOT NULL DEFAULT '{}'::jsonb
 column tasks #06 links jsonb NOT NULL DEFAULT '[]'::jsonb
 column tasks #07 created_at timestamp with time zone NOT NULL DEFAULT now()
 column tasks #08 updated_at timestamp with time zone NOT NULL DEFAULT now()
+constraint proposals.proposals_pkey: PRIMARY KEY (id)
+constraint proposals.proposals_status_check: CHECK ((status = ANY (ARRAY['needs_authorization'::text, 'authorized'::text, 'bounced'::text, 'denied'::text])))
+constraint proposals.proposals_task_id_fkey: FOREIGN KEY (task_id) REFERENCES tasks(id)
 constraint tasks.tasks_description_check: CHECK ((char_length(description) <= 600))
 constraint tasks.tasks_pkey: PRIMARY KEY (id)
+index proposals.proposals_pkey: CREATE UNIQUE INDEX proposals_pkey ON public.proposals USING btree (id)
 index tasks.tasks_pkey: CREATE UNIQUE INDEX tasks_pkey ON public.tasks USING btree (id)
+policy proposals.service_role_only: PERMISSIVE ALL to service_role using (true) with check (true)
 policy tasks.service_role_only: PERMISSIVE ALL to service_role using (true) with check (true)
+grant proposals: anon DELETE
+grant proposals: anon INSERT
+grant proposals: anon MAINTAIN
+grant proposals: anon REFERENCES
+grant proposals: anon SELECT
+grant proposals: anon TRIGGER
+grant proposals: anon TRUNCATE
+grant proposals: anon UPDATE
+grant proposals: authenticated DELETE
+grant proposals: authenticated INSERT
+grant proposals: authenticated MAINTAIN
+grant proposals: authenticated REFERENCES
+grant proposals: authenticated SELECT
+grant proposals: authenticated TRIGGER
+grant proposals: authenticated TRUNCATE
+grant proposals: authenticated UPDATE
+grant proposals: postgres DELETE
+grant proposals: postgres INSERT
+grant proposals: postgres MAINTAIN
+grant proposals: postgres REFERENCES
+grant proposals: postgres SELECT
+grant proposals: postgres TRIGGER
+grant proposals: postgres TRUNCATE
+grant proposals: postgres UPDATE
+grant proposals: service_role DELETE
+grant proposals: service_role INSERT
+grant proposals: service_role MAINTAIN
+grant proposals: service_role REFERENCES
+grant proposals: service_role SELECT
+grant proposals: service_role TRIGGER
+grant proposals: service_role TRUNCATE
+grant proposals: service_role UPDATE
 grant tasks: anon DELETE
 grant tasks: anon INSERT
 grant tasks: anon MAINTAIN

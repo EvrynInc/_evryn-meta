@@ -12,8 +12,11 @@
  *          enabled, or owner; and any difference in grants to service_role, anon, authenticated or
  *          PUBLIC, on both tables AND on every function the migrations create (an EXECUTE grant to
  *          PUBLIC, anon or authenticated is R4's exact failure).
- *   LISTED, not a stop — grants to any other role (Supabase-only roles), and privilege names that
- *          exist only in some Postgres versions (MAINTAIN, PostgreSQL 17+).
+ *   LISTED, not a stop — grants to any other role (Supabase-only roles); privilege names that exist
+ *          only in some Postgres versions (MAINTAIN, PostgreSQL 17+), and ONLY when the two servers
+ *          straddle that version (QC Finding 9); and `default-acl` lines (QC Finding 1).
+ *   REFUSED (exit 1, nothing compared) — a live side with no `# target=` line, a live side taken from
+ *          loopback, or both sides from the same target (QC Finding 4).
  *   The server version of each side is printed FIRST, so a version-only line can be told apart from
  *   a real one rather than assumed to be one.
  *
@@ -30,7 +33,8 @@ import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 export const CORE_ROLES = new Set(['service_role', 'anon', 'authenticated', 'PUBLIC']);
-export const VERSION_ONLY_PRIVILEGES = new Set(['MAINTAIN']);
+/** Privilege name → the server_version_num at which it first exists. */
+export const VERSION_ONLY_PRIVILEGES = new Map([['MAINTAIN', 170000]]);
 const STRUCTURAL_KINDS = new Set(['table', 'rls', 'column', 'constraint', 'index', 'trigger', 'policy', 'sequence', 'function']);
 const GRANT_KINDS = new Set(['grant', 'sequence-grant', 'function-grant']);
 
@@ -41,10 +45,16 @@ function lines(text) {
     .filter((l) => l !== '');
 }
 
-/** Classify one line that appears on only one side. Returns { stop: boolean, reason }. */
-export function classify(line) {
-  if (line.startsWith('#')) return { stop: false, reason: 'server version (information)' };
+/**
+ * Classify one line that appears on only one side. Returns { stop: boolean, reason }.
+ * `versionNums` is [localNum, liveNum] (server_version_num, or NaN when unknown): a version-only
+ * privilege is exempt ONLY when the two servers straddle the version that introduced it (QC Finding 9).
+ * Between two servers that both have it, a MAINTAIN grant to anon is a real difference.
+ */
+export function classify(line, versionNums = [NaN, NaN]) {
+  if (line.startsWith('#')) return { stop: false, reason: 'information' };
   const kind = line.split(' ', 1)[0];
+  if (kind === 'default-acl') return { stop: false, reason: 'default privilege for future objects (our objects are granted explicitly)' };
   if (STRUCTURAL_KINDS.has(kind)) return { stop: true, reason: kind };
   if (GRANT_KINDS.has(kind)) {
     // "<kind> <object>: <grantee> <PRIVILEGE>[ WITH GRANT OPTION]"
@@ -52,28 +62,49 @@ export function classify(line) {
     if (!m) return { stop: true, reason: `${kind} (unparseable)` };
     const [, grantee, privilege] = m;
     if (!CORE_ROLES.has(grantee)) return { stop: false, reason: `grant to a non-core role (${grantee})` };
-    if (VERSION_ONLY_PRIVILEGES.has(privilege)) return { stop: false, reason: `version-only privilege (${privilege})` };
+    if (VERSION_ONLY_PRIVILEGES.has(privilege)) {
+      const since = VERSION_ONLY_PRIVILEGES.get(privilege);
+      const [x, y] = versionNums;
+      const straddle = Number.isFinite(x) && Number.isFinite(y) && (x >= since) !== (y >= since);
+      if (straddle) return { stop: false, reason: `version-only privilege (${privilege}; the servers straddle ${since})` };
+    }
     return { stop: true, reason: `${kind} to ${grantee}` };
   }
   return { stop: true, reason: 'unrecognized line kind' };
 }
+
+const header = (ls, key) => ls.filter((l) => l.startsWith(`# ${key}=`)).map((l) => l.slice(`# ${key}=`.length))[0];
 
 export function compareSnapshots(localText, liveText) {
   const a = lines(localText);
   const b = lines(liveText);
   const setA = new Set(a);
   const setB = new Set(b);
-  const version = (ls) => ls.filter((l) => l.startsWith('# server_version=')).map((l) => l.slice('# server_version='.length))[0] ?? 'unknown';
+  const nums = [Number(header(a, 'server_version_num')), Number(header(b, 'server_version_num'))];
   const stops = [];
   const listed = [];
   for (const [side, mine, theirs] of [['only in local', a, setB], ['only in live', b, setA]]) {
     for (const line of mine) {
       if (theirs.has(line) || line.startsWith('#')) continue;
-      const c = classify(line);
+      const c = classify(line, nums);
       (c.stop ? stops : listed).push({ side, line, reason: c.reason });
     }
   }
-  return { localVersion: version(a), liveVersion: version(b), stops, listed };
+  return { localVersion: header(a, 'server_version') ?? 'unknown', liveVersion: header(b, 'server_version') ?? 'unknown', stops, listed };
+}
+
+/**
+ * QC Finding 4: refuse a comparison that cannot mean what it claims. The LIVE side must say where it
+ * was taken, must not be loopback, and must not be the same target as the local side. Returns a
+ * refusal reason, or null.
+ */
+export function checkTargets(localText, liveText) {
+  const localTarget = header(lines(localText), 'target');
+  const liveTarget = header(lines(liveText), 'target');
+  if (!liveTarget) return 'the live snapshot has no "# target=" line, so nothing says where it was taken';
+  if (liveTarget === 'local-loopback') return 'the "live" snapshot was taken from a local loopback cluster';
+  if (localTarget !== undefined && localTarget === liveTarget) return `both snapshots were taken from the same target (${liveTarget})`;
+  return null;
 }
 
 export function renderComparison(result) {
@@ -103,6 +134,11 @@ export function runCompare(argv, { read = (p) => readFileSync(p, 'utf8'), out = 
   } catch (e) {
     err(`COMPARE FAILED: ${e instanceof Error ? e.message : 'could not read the files'}`);
     return 2;
+  }
+  const refusal = checkTargets(localText, liveText);
+  if (refusal) {
+    out(`COMPARE REFUSED: ${refusal}.\nVERDICT: STOP (nothing was compared)\n`);
+    return 1;
   }
   const result = compareSnapshots(localText, liveText);
   out(renderComparison(result));

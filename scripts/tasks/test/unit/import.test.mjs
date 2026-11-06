@@ -7,8 +7,9 @@ import { runImport } from '../../import-linear.mjs';
 
 const LINEAR_KEY = 'lin_' + 'api_SENTINEL_never_print_123';
 
-function issue(id, { title = `Ticket ${id}`, state = 'Backlog', labels = ['R: lucas', 'A: justin'], description = '', dueDate = null } = {}) {
-  return { identifier: `EVR-${id}`, title, description, dueDate, url: `https://linear.app/evryn/issue/EVR-${id}`, state: { name: state, type: 'unstarted' }, labels: { nodes: labels.map((name) => ({ name })) } };
+function issue(id, { title = `Ticket ${id}`, state = 'Todo', stateType, labels = ['R: lucas', 'A: justin'], description = '', dueDate = null } = {}) {
+  const type = stateType ?? (state === 'Backlog' ? 'backlog' : 'unstarted');
+  return { identifier: `EVR-${id}`, title, description, dueDate, url: `https://linear.app/evryn/issue/EVR-${id}`, state: { name: state, type }, labels: { nodes: labels.map((name) => ({ name })) } };
 }
 
 /** Fake Linear (GraphQL, paginated) + fake team PostgREST. Records every call. */
@@ -39,6 +40,95 @@ async function runIt(argv, world, env = { ...TEST_ENV, LINEAR_API_KEY: LINEAR_KE
   const code = await runImport(argv, { env, fetchImpl: world.fetchImpl, out: (s) => (out += s), err: (s) => (err += `${s}\n`) });
   return { code, out, err };
 }
+
+// ---------------------------------------------------------------------------
+// QC fix trip 2: Backlog (Finding 2), held titles (13), report file (8), --dry-run (14)
+// ---------------------------------------------------------------------------
+
+test('Finding 2: a Backlog ticket is SKIPPED (by state type or name), never planned as a row, and carries no title', () => {
+  for (const t of [issue(40, { state: 'Backlog' }), issue(41, { state: 'Someday', stateType: 'backlog' })]) {
+    const p = planIssue(t);
+    assert.equal(p.verdict, 'skipped-backlog');
+    assert.equal(p.row, null);
+    assert.equal(p.title, null);
+  }
+  assert.equal(STATUS_MAP.Backlog, undefined, 'Backlog must not be in the import map');
+});
+
+test('Finding 2: the report counts Backlog BY R: OWNER, lists no Backlog titles, and leaves them out of the ticket table', () => {
+  const plans = [
+    planIssue(issue(50, { state: 'Backlog', title: 'secret backlog title A', labels: ['R: lucas'] })),
+    planIssue(issue(51, { state: 'Backlog', title: 'secret backlog title B', labels: ['R: lucas'] })),
+    planIssue(issue(52, { state: 'Backlog', title: 'secret backlog title C', labels: ['R: mira'] })),
+    planIssue(issue(53, { state: 'Backlog', title: 'secret backlog title D', labels: [] })),
+    planIssue(issue(54)),
+  ];
+  const r = renderReport(plans, { mode: 'dry-run' });
+  assert.match(r, /Backlog, not imported: 4 · open \(non-Backlog\): 1/);
+  assert.match(r, /## Backlog, by R: owner \(4\)[^\n]*\n- lucas: 2\n- \(no R: label\): 1\n- mira: 1\n/);
+  assert.doesNotMatch(r, /secret backlog title/);
+  assert.doesNotMatch(r, /\| EVR-5[0-3] \|/);
+});
+
+test('Finding 2: triage stays unmapped and FAILS loudly', () => {
+  const p = planIssue(issue(55, { state: 'Triage', stateType: 'triage' }));
+  assert.equal(p.verdict, 'fail');
+  assert.match(p.reasons.join(), /unmapped Linear status "Triage"/);
+});
+
+test('Finding 2: --apply never inserts a Backlog ticket', async () => {
+  const world = fakeWorld([issue(60, { state: 'Backlog' }), issue(61)]);
+  const r = await runIt(['--apply'], world);
+  assert.equal(r.code, 0, r.err);
+  const posts = world.calls.filter((c) => c.url.includes('/rest/v1/tasks') && c.init.method === 'POST');
+  assert.deepEqual(posts.map((c) => JSON.parse(c.init.body).linear_id), ['EVR-61']);
+});
+
+test('Finding 13: held Nathan tickets appear by Linear id ONLY — no title anywhere in the report', () => {
+  const plans = [
+    planIssue(issue(70, { title: 'privileged matter alpha', labels: ['R: nathan'] })),
+    planIssue(issue(71, { title: 'privileged matter beta', labels: ['R: lucas', 'C: nathan'], state: 'Needs Acceptance' })),
+    planIssue(issue(72, { title: 'x'.repeat(90), labels: ['R: nathan'] })),
+  ];
+  const r = renderReport(plans, { mode: 'dry-run' });
+  assert.doesNotMatch(r, /privileged matter|xxxxxxxxxx/);
+  assert.match(r, /## Held for Nathan \(3\)[^\n]*\n- EVR-70\n- EVR-71\n- EVR-72\n/);
+  assert.match(r, /\| EVR-70 \| .* \| \(title withheld — held for Nathan\) \|/);
+});
+
+test('Finding 8: the report FILE is redacted too, not only stdout', async () => {
+  // A team insert error that echoes the key lands in a ticket's reasons, hence in the report.
+  const world = {
+    fetchImpl: async (url, init) => {
+      if (url === LINEAR_ENDPOINT) return fakeWorld([issue(80)]).fetchImpl(url, init);
+      if (init.method === 'GET') return jsonResponse(200, []);
+      return jsonResponse(400, { message: `refused; your key was ${FAKE_KEY}`, code: 'XX000' });
+    },
+  };
+  let written = null;
+  const code = await runImport(['--apply', '--report', 'r.md'], {
+    env: { ...TEST_ENV, LINEAR_API_KEY: LINEAR_KEY },
+    fetchImpl: world.fetchImpl,
+    out: () => {},
+    err: () => {},
+    writeFile: (p, text) => {
+      written = text;
+    },
+  });
+  assert.equal(code, 1);
+  assert.ok(written, 'no report file was written');
+  assert.match(written, /<REDACTED>/);
+  assert.ok(!written.includes(FAKE_KEY) && !written.includes(LINEAR_KEY));
+});
+
+test('Finding 14: --dry-run is an explicit no-op alias; with --apply it is a usage error', async () => {
+  const world = fakeWorld([issue(90)]);
+  const r = await runIt(['--dry-run'], world);
+  assert.equal(r.code, 0, r.err);
+  assert.ok(world.calls.every((c) => c.url === LINEAR_ENDPOINT));
+  assert.match(r.out, /DRY RUN/);
+  assert.equal((await runIt(['--dry-run', '--apply'], fakeWorld([]))).code, 2);
+});
 
 test('the Linear query is read-only (no mutation) and scoped to team Evryn, open states only', () => {
   assert.doesNotMatch(OPEN_ISSUES_QUERY, /mutation/i);
@@ -108,7 +198,7 @@ test('the report lists every ticket, the long titles, and the undated Justin tic
   const plans = [planIssue(issue(1)), planIssue(issue(2, { title: 'y'.repeat(85) })), planIssue(issue(3, { title: 'Sign the lease', labels: ['R: justin'] }))];
   const r = renderReport(plans, { mode: 'dry-run' });
   assert.match(r, /DRY RUN/);
-  assert.match(r, /\| EVR-1 \| open \| "Backlog" \| ok \|/);
+  assert.match(r, /\| EVR-1 \| open \| "Todo" \| ok \|/);
   assert.match(r, /Titles over 80 characters \(1\)/);
   assert.match(r, /Justin tickets with NO due date \(1\)[^\n]*\n[^\n]*R: lucas with I: justin[^\n]*\n- EVR-3: Sign the lease/);
 });
@@ -157,7 +247,7 @@ test('dry run (the default): reads Linear to the end, touches NO team endpoint, 
   assert.equal(r.code, 0, r.err);
   assert.ok(world.calls.every((c) => c.url === LINEAR_ENDPOINT), 'a non-Linear request in a dry run');
   assert.equal(world.calls.length, 3, 'three pages of 2');
-  assert.match(r.out, /Open tickets read: 5/);
+  assert.match(r.out, /Tickets read: 5 · Backlog, not imported: 0 · open \(non-Backlog\): 5/);
   assert.ok(world.calls.every((c) => c.init.method === 'POST' && !/mutation/i.test(c.init.body)));
   assert.ok(!`${r.out}${r.err}`.includes(LINEAR_KEY));
 });

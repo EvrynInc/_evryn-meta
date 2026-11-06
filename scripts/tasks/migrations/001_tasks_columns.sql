@@ -36,6 +36,15 @@ end $$;
 -- sequence, and a later normal insert would collide on it — a quiet outage of `add` (Soren, 14:49).
 alter table public.tasks add column if not exists short_id bigint generated always as identity;
 alter table public.tasks add column if not exists owner text generated always as (raci->>'r') stored;
+
+-- The identity sequence just created: no client role needs it (inserting into an identity column
+-- needs no sequence privilege — proven by the acceptance suite), so revoke it from all of them. This
+-- makes the result IDENTICAL whether or not the project still has Supabase's old default privileges
+-- (QC Finding 1). Only this new sequence is touched: no ALTER DEFAULT PRIVILEGES, nothing existing.
+do $$ begin
+  execute format('revoke all on sequence %s from public, anon, authenticated, service_role',
+                 pg_get_serial_sequence('public.tasks', 'short_id'));
+end $$;
 alter table public.tasks add column if not exists created_by text;
 alter table public.tasks add column if not exists closed_at timestamptz;
 alter table public.tasks add column if not exists closing_note text;
@@ -118,7 +127,7 @@ begin
       ('tasks_justin_needs_date',
        $x$lower(addressed_to) is distinct from 'justin' or needed_by is not null$x$),
       ('tasks_one_owner',
-       $x$coalesce(btrim(raci->>'r'), '') <> ''$x$),
+       $x$coalesce(jsonb_typeof(raci->'r') = 'string' and btrim(raci->>'r') <> '', false)$x$),
       ('tasks_addressed_to_shape',
        $x$addressed_to is null or addressed_to ~ '^[A-Za-z0-9_.-]{1,64}$'$x$)
     ) as v(name, expr)
@@ -150,7 +159,9 @@ comment on constraint tasks_title_max_80 on public.tasks is 'The headline: at mo
 comment on constraint tasks_closed_needs_note on public.tasks is 'done and decided_against both require a non-blank closing_note and a closed_at. Decided-against is first-class.';
 comment on constraint tasks_signed_needs_ref on public.tasks is 'A signed time with no pointer to Justin''s words is refused outright (Soren, 14:44, correcting R7).';
 comment on constraint tasks_justin_needs_date on public.tasks is 'Every row addressed to Justin carries a needed_by (Soren, Q8). Case-insensitive, so ''Justin'' cannot slip past.';
-comment on constraint tasks_one_owner on public.tasks is 'One owner, enforced: raci->>''r'' must be non-blank (Soren, Q4 and 14:49).';
+comment on constraint tasks_one_owner on public.tasks is
+  'One owner, enforced: raci->''r'' must be a JSON STRING, non-blank (Soren, Q4 and 14:49). A JSON array of names is refused '
+  '(QC Finding 7): it would produce an owner value no watcher could ever match.';
 comment on constraint tasks_addressed_to_shape on public.tasks is 'addressed_to has the actor-name shape (isSafeActorName: ^[A-Za-z0-9_.-]{1,64}$).';
 
 -- Truncation canary — DO NOT REMOVE: FULL FILE LOADED

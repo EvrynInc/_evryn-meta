@@ -23,11 +23,12 @@
 import '../helpers.mjs';
 import { test, before, after, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { TASKS_DIR } from '../helpers.mjs';
 import { CODE_ROOT } from '../../lib/config.mjs';
+import { findPgTool, pgEnv } from '../../lib/pg.mjs';
 import { pgToolsAvailable, startCluster } from './cluster.mjs';
 
 const RUNTIME_003 =
@@ -84,6 +85,49 @@ function seed(db, { title = uniq('seed'), status = 'open', raci = '{"r":"lucas",
   return out.split('\n').pop();
 }
 
+/**
+ * A psql session held OPEN across other sessions' work, for concurrency tests. `send` writes SQL and
+ * waits until psql has executed it (a `\echo` marker comes back); `finish` writes the rest, closes
+ * stdin and resolves with { status, stdout, stderr }.
+ */
+function openSession(db) {
+  const psql = findPgTool('psql');
+  // SEALED-EXEC: followed 2026-08-11 — psql is an absolute path to the installed PostgreSQL 17 binary (findPgTool never consults PATH or a registry); no network.
+  const child = spawn(psql, ['-X', '-q', '-A', '-t', '-v', 'ON_ERROR_STOP=1'], { env: pgEnv(cluster.targetFor(db)), windowsHide: true });
+  let stdout = '';
+  let stderr = '';
+  let waiter = null;
+  child.stdout.on('data', (d) => {
+    stdout += d;
+    if (waiter && stdout.includes(waiter.marker)) {
+      const w = waiter;
+      waiter = null;
+      w.resolve();
+    }
+  });
+  child.stderr.on('data', (d) => {
+    stderr += d;
+  });
+  let n = 0;
+  return {
+    send(sql) {
+      n += 1;
+      const marker = `__READY_${n}__`;
+      return new Promise((resolve, reject) => {
+        waiter = { marker, resolve };
+        child.once('exit', () => reject(new Error(`psql exited early: ${stderr}`)));
+        child.stdin.write(`${sql}\n\\echo ${marker}\n`);
+      });
+    },
+    finish(sql) {
+      return new Promise((resolve) => {
+        child.on('close', (status) => resolve({ status, stdout, stderr }));
+        child.stdin.end(`${sql}\n`);
+      });
+    },
+  };
+}
+
 function historyCount(db, id) {
   return Number(scalar(db, `select count(*) from public.task_history where task_id = ${lit(id)};`));
 }
@@ -103,7 +147,21 @@ function runScript(script, db, args = []) {
   });
 }
 
-function golden(name, text) {
+/**
+ * Drop the lines that legitimately differ by default-privilege MODE (`default-acl`) or by run
+ * (`#` headers other than the target). What remains is "our objects": the part that must be
+ * IDENTICAL in both modes (QC Finding 1).
+ */
+function ourObjects(snapshot) {
+  return snapshot
+    .split(/\r?\n/)
+    .filter((l) => l !== '' && !l.startsWith('default-acl ') && !/^# server_version/.test(l))
+    .join('\n');
+}
+
+function golden(name, rawText) {
+  // The golden files hold "our objects" only, so ONE committed file serves both modes.
+  const text = `${ourObjects(rawText)}\n`;
   const path = join(FIXTURES, name);
   if (process.env.EVRYN_TASKS_UPDATE_SNAPSHOTS === '1') {
     writeFileSync(path, text, 'utf8');
@@ -125,13 +183,25 @@ alter default privileges in schema public revoke all on tables from anon, authen
 alter default privileges in schema public revoke all on sequences from anon, authenticated, service_role;
 alter default privileges in schema public revoke all on functions from anon, authenticated, service_role;`;
 
-/** Build a database the way the live one was built: defaults on → runtime 003 → (old rows) → defaults off. */
-function prepareDb(db, { legacyRows = '' } = {}) {
+/**
+ * THE TWO MODES (QC Finding 1). We do not know whether the live project still has Supabase's old
+ * default privileges, so the suite runs in either:
+ *   EVRYN_TASKS_DEFAULTS=off (default) — the defaults were removed before our migration;
+ *   EVRYN_TASKS_DEFAULTS=on            — they are still in force when our migration runs.
+ * Every behavioural test must pass in BOTH, and every run also builds a database in the OTHER mode and
+ * proves the after-snapshot of our objects is identical. (ALTER DEFAULT PRIVILEGES appears ONLY here,
+ * to model the platform; the migrations never use it.)
+ */
+const MODE = process.env.EVRYN_TASKS_DEFAULTS === 'on' ? 'on' : 'off';
+const OTHER_MODE = MODE === 'on' ? 'off' : 'on';
+
+/** Build a database the way the live one was built: defaults on → runtime 003 → (old rows) → defaults off unless mode 'on'. */
+function prepareDb(db, { legacyRows = '', defaults = MODE } = {}) {
   ok(cluster.psql('postgres', `create database ${db};`));
   ok(cluster.psql(db, SUPABASE_DEFAULTS_ON));
   ok(cluster.psql(db, readFileSync(RUNTIME_003, 'utf8')));
   if (legacyRows) ok(cluster.psql(db, legacyRows));
-  ok(cluster.psql(db, SUPABASE_DEFAULTS_OFF));
+  if (defaults === 'off') ok(cluster.psql(db, SUPABASE_DEFAULTS_OFF));
 }
 
 // ---------------------------------------------------------------------------
@@ -204,9 +274,30 @@ suite('local copy is faithful to the Supabase shape', () => {
     }
   });
 
-  test('golden snapshots: before and after migrating', () => {
+  test('golden snapshots: before and after migrating (our objects; identical in both modes)', () => {
     golden('local-snapshot-before.txt', snapBefore);
     golden('local-snapshot-after.txt', ok(runScript('schema-snapshot.mjs', DB)));
+  });
+
+  test(`QC Finding 1: the after-snapshot of our objects is IDENTICAL with Supabase's defaults ${MODE} (this run) and ${OTHER_MODE}`, (t) => {
+    const other = `tasks_mode_${OTHER_MODE}`;
+    prepareDb(other, { defaults: OTHER_MODE });
+    const m = runScript('migrate.mjs', other);
+    assert.equal(m.status, 0, m.stderr);
+    const mine = ourObjects(ok(runScript('schema-snapshot.mjs', DB)));
+    const theirs = ourObjects(ok(runScript('schema-snapshot.mjs', other)));
+    assert.equal(mine, theirs, 'our objects differ between the two default-privilege modes');
+    // ...while the default privileges themselves DO differ, so the test is not vacuous.
+    const acl = (db) => ok(runScript('schema-snapshot.mjs', db)).split('\n').filter((l) => l.startsWith('default-acl ')).join('\n');
+    assert.notEqual(acl(DB), acl(other), 'the two modes did not actually differ in default privileges');
+    t.diagnostic(`mode ${MODE} vs ${OTHER_MODE}: ${mine.split('\n').length} object lines identical`);
+  });
+
+  test('QC Finding 6: public.proposals is unchanged by the migration (columns, constraints, triggers, grants, RLS)', () => {
+    const proposals = (s) => s.split(/\r?\n/).filter((l) => /^(table|rls|column|constraint|index|trigger|policy|grant) proposals[ .:]/.test(l)).join('\n');
+    const before = proposals(snapBefore);
+    assert.match(before, /^column proposals #01 id uuid/m, 'proposals is not in the snapshot at all');
+    assert.equal(proposals(ok(runScript('schema-snapshot.mjs', DB))), before);
   });
 });
 
@@ -284,7 +375,10 @@ suite('R1 actor', () => {
 
   test('no actor (no headers, no evryn.actor) → refused', () => {
     const t = uniq('noactor');
-    refused(req(DB, insert(t)), /no actor/);
+    const r = req(DB, insert(t));
+    refused(r, /no actor/);
+    // QC Finding 12: the psql hint recommends SET LOCAL inside a transaction, never a session-level SET.
+    assert.match(r.stderr, /HINT: .*begin; set local evryn\.actor = '<name>'/);
     assert.equal(scalar(DB, `select count(*) from public.tasks where title = ${lit(t)};`), '0');
   });
 
@@ -478,6 +572,12 @@ suite('R3 constraints', () => {
     refused(req(DB, `insert into public.tasks (title, status, raci) values ('o', 'open', '{"r":"  "}');`, as), /tasks_one_owner/);
   });
 
+  test('QC Finding 7: one owner means one JSON STRING — an array, object, number or null is refused', () => {
+    for (const r of ['{"r":["lucas","soren"]}', '{"r":{"name":"lucas"}}', '{"r":42}', '{"r":null}', '{"r":true}']) {
+      refused(req(DB, `insert into public.tasks (title, status, raci) values ('o', 'open', ${lit(r)});`, as), /tasks_one_owner/, r);
+    }
+  });
+
   test('addressed_to must have the actor-name shape', () => {
     const id = seed(DB);
     refused(req(DB, `update public.tasks set addressed_to = 'two words' where id = ${lit(id)};`, as), /tasks_addressed_to_shape/);
@@ -517,6 +617,24 @@ suite('R3 constraints', () => {
     ok(setParent(a, b));
     ok(setParent(b, c));
     refused(setParent(c, a), /would create a cycle/);
+  });
+
+  test('QC Finding 10: under REPEATABLE READ, a cycle closed by a link committed after the snapshot is REFUSED, not committed', async () => {
+    const a = seed(DB);
+    const b = seed(DB);
+    // Session 1 opens a REPEATABLE READ transaction and takes its snapshot (B has no parent, A has none).
+    const s1 = openSession(DB);
+    await s1.send(`begin isolation level repeatable read;
+set local role service_role;
+set local request.headers = ${lit(hdr('ac'))};
+select count(*) from public.tasks;`);
+    // Session 2 links A → B and COMMITS, after session 1's snapshot.
+    ok(setParent(a, b));
+    // Session 1 now links B → A. Its snapshot cannot see A → B; reading A FOR SHARE must refuse.
+    const r = await s1.finish(`update public.tasks set parent_id = ${lit(a)} where id = ${lit(b)};
+commit;`);
+    refused(r, /could not serialize access due to concurrent update/);
+    assert.equal(scalar(DB, `select coalesce(parent_id::text, 'null') from public.tasks where id = ${lit(b)};`), 'null', 'the cycle was committed');
   });
 
   test('a chain of exactly 50 ancestors is accepted; one more is refused at the bound', () => {
@@ -638,6 +756,58 @@ suite('R4 grants and RLS', () => {
 // ---------------------------------------------------------------------------
 // R6 support, R8 pagination, search
 // ---------------------------------------------------------------------------
+
+suite(`QC fix trip 2 (defaults ${MODE})`, () => {
+  test('CTO fence 3: after the revokes, service_role can still INSERT, UPDATE and CLOSE a task, with history for each', () => {
+    const t = uniq('sr-lifecycle');
+    const id = ok(req(DB, `insert into public.tasks (title, status, raci) values (${lit(t)}, 'open', '{"r":"lucas","a":"justin"}') returning id;`, { header: hdr('lucas') })).split('\n').pop();
+    ok(req(DB, `update public.tasks set status = 'in_progress', description = 'started' where id = ${lit(id)};`, { header: hdr('lucas') }));
+    ok(req(DB, `update public.tasks set status = 'done', closed_at = now(), closing_note = 'shipped; record in docs/x.md' where id = ${lit(id)};`, { header: hdr('lucas') }));
+    assert.equal(scalar(DB, `select status from public.tasks where id = ${lit(id)};`), 'done');
+    assert.equal(scalar(DB, `select string_agg(op, ',' order by id) from public.task_history where task_id = ${lit(id)};`), 'insert,update,update');
+  });
+
+  test('QC Finding 1: no client role holds any privilege on the new identity sequences', () => {
+    for (const seq of [`pg_get_serial_sequence('public.tasks','short_id')`, `pg_get_serial_sequence('public.task_history','id')`]) {
+      for (const role of ['anon', 'authenticated', 'service_role', 'public']) {
+        for (const priv of ['USAGE', 'SELECT', 'UPDATE']) {
+          const has = role === 'public'
+            ? scalar(DB, `select count(*) from aclexplode(coalesce((select relacl from pg_class where oid = ${seq}::regclass), '{}')) a where a.grantee = 0;`) !== '0'
+            : scalar(DB, `select has_sequence_privilege(${lit(role)}, ${seq}, ${lit(priv)})::text;`) === 'true';
+          assert.equal(has, false, `${role} holds ${priv} on ${seq}`);
+        }
+      }
+    }
+  });
+
+  test('QC Finding 1: no trigger function is executable by any client role, service_role included; the two helpers by service_role only', () => {
+    for (const fn of ['tasks_before_write', 'tasks_after_write', 'tasks_refuse_delete', 'task_history_guard_insert', 'task_history_refuse_change']) {
+      for (const role of ['anon', 'authenticated', 'service_role']) {
+        assert.equal(scalar(DB, `select has_function_privilege(${lit(role)}, 'public.${fn}()', 'EXECUTE')::text;`), 'false', `${role} can execute ${fn}`);
+      }
+    }
+    for (const fn of ['task_roster', 'task_request_actor']) {
+      assert.equal(scalar(DB, `select has_function_privilege('service_role', 'public.${fn}()', 'EXECUTE')::text;`), 'true');
+      for (const role of ['anon', 'authenticated']) {
+        assert.equal(scalar(DB, `select has_function_privilege(${lit(role)}, 'public.${fn}()', 'EXECUTE')::text;`), 'false');
+      }
+    }
+  });
+
+  test('QC Finding 3: replica mode cannot skip the triggers — no-actor insert, history rewrite and task delete are all still refused', () => {
+    const id = seed(DB);
+    const replica = (body, header) => req(DB, `set local session_replication_role = replica;\n${body}`, { role: null, header });
+    refused(replica(`insert into public.tasks (title, status, raci) values (${lit(uniq('replica'))}, 'open', '{"r":"lucas"}');`), /no actor/);
+    refused(replica(`update public.task_history set actor = 'justin' where task_id = ${lit(id)};`), /history is append-only/);
+    refused(replica(`delete from public.tasks where id = ${lit(id)};`), /tasks are never deleted/);
+    refused(replica(`insert into public.task_history (task_id, actor, op) values (${lit(id)}, 'x', 'update');`), /history is written only by the database/);
+    // and a legitimate write in replica mode still records its history
+    const before = historyCount(DB, id);
+    ok(replica(`update public.tasks set description = 'replica edit' where id = ${lit(id)};`, hdr('ac')));
+    assert.equal(historyCount(DB, id), before + 1);
+    assert.equal(scalar(DB, `select string_agg(distinct tgenabled::text, ',') from pg_trigger t join pg_class c on c.oid = t.tgrelid where not t.tgisinternal and c.relname in ('tasks','task_history');`), 'A');
+  });
+});
 
 suite('search and R8', () => {
   test('full-text search finds a word in the body', () => {

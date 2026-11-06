@@ -1,7 +1,7 @@
 import '../helpers.mjs';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { classify, compareSnapshots, renderComparison, runCompare } from '../../snapshot-compare.mjs';
+import { checkTargets, classify, compareSnapshots, renderComparison, runCompare } from '../../snapshot-compare.mjs';
 
 // A base snapshot fixture, in schema-snapshot.mjs's line format.
 const BASE = `# server_version=17.6
@@ -70,10 +70,38 @@ test('STOP fixtures — a grant difference to each core role, on a table and on 
   assert.equal(r.stops[0].side, 'only in local');
 });
 
-test('LISTED fixtures — a Supabase-only role, and a version-only privilege name', () => {
+test('LISTED fixtures — a Supabase-only role, and a default privilege for future objects', () => {
   expectListed(add('grant tasks: supabase_admin SELECT'), /non-core role \(supabase_admin\)/);
   expectListed(add('function-grant task_roster(): supabase_admin EXECUTE'), /non-core role/);
-  expectListed(add('grant tasks: anon MAINTAIN'), /version-only privilege \(MAINTAIN\)/);
+  expectListed(add('default-acl postgres public tables: anon SELECT'), /default privilege/);
+});
+
+test('MAINTAIN (QC Finding 9): LISTED only when the servers straddle 17; a STOP between two 17s or when a version is unknown', () => {
+  // local 17, live 15: straddles → listed
+  const live15 = add('grant tasks: anon MAINTAIN').replace('server_version_num=170006', 'server_version_num=150008');
+  const r1 = compareSnapshots(add('grant tasks: anon MAINTAIN'), live15.replace('grant tasks: anon MAINTAIN\n', ''));
+  assert.equal(r1.stops.length, 0, renderComparison(r1));
+  assert.match(r1.listed[0].reason, /straddle 170000/);
+  // both 17: a MAINTAIN grant to anon is real
+  expectStop(add('grant tasks: anon MAINTAIN'), /grant to anon/);
+  // a version unknown on one side: not exempt
+  const noVersion = BASE.replace('# server_version_num=170006\n', '');
+  const r3 = compareSnapshots(noVersion, add('grant tasks: anon MAINTAIN'));
+  assert.equal(r3.stops.length, 1);
+});
+
+test('targets (QC Finding 4): a live side taken from loopback, with no target line, or from the same target is REFUSED', () => {
+  const local = `# target=local-loopback\n${BASE}`;
+  const live = `# target=evryn-team ref=azugibmylktinddyqkhd via session pooler\n${BASE}`;
+  assert.equal(checkTargets(local, live), null);
+  assert.match(checkTargets(local, local), /local loopback/);
+  assert.match(checkTargets(local, BASE), /no "# target=" line/);
+  assert.match(checkTargets(live, live), /same target/);
+  let printed = '';
+  const io = { read: (p) => ({ l: local, v: local })[p], out: (s) => (printed += s), err: () => {} };
+  assert.equal(runCompare(['l', 'v'], io), 1);
+  assert.match(printed, /COMPARE REFUSED: the "live" snapshot was taken from a local loopback cluster/);
+  assert.doesNotMatch(printed, /VERDICT: no stop/);
 });
 
 test('an unrecognized or unparseable line STOPS rather than slipping through', () => {
@@ -82,7 +110,9 @@ test('an unrecognized or unparseable line STOPS rather than slipping through', (
 });
 
 test('runCompare: exit 1 on a stop, 0 otherwise, 2 on usage', () => {
-  const files = { a: BASE, b: BASE, c: swap('<= 80', '<= 81') };
+  const L = '# target=local-loopback\n';
+  const V = '# target=evryn-team ref=azugibmylktinddyqkhd via session pooler\n';
+  const files = { a: L + BASE, b: V + BASE, c: V + swap('<= 80', '<= 81') };
   let printed = '';
   const io = { read: (p) => files[p], out: (s) => (printed += s), err: () => {} };
   assert.equal(runCompare(['a', 'b'], io), 0);

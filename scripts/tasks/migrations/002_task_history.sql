@@ -39,6 +39,13 @@ end $$;
 revoke all on table public.task_history from public, anon, authenticated, service_role;
 grant select, insert on table public.task_history to service_role;
 
+-- Its identity sequence: no client role needs it (QC Finding 1 — identical result with or without
+-- Supabase's old default privileges). Only this new sequence is touched.
+do $$ begin
+  execute format('revoke all on sequence %s from public, anon, authenticated, service_role',
+                 pg_get_serial_sequence('public.task_history', 'id'));
+end $$;
+
 comment on table public.task_history is
   'Append-only history of every change to public.tasks: who, when, which fields, old and new values. '
   'Written ONLY by the tasks_after_write trigger; a direct insert, and any update, delete or truncate, is refused '

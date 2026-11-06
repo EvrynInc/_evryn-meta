@@ -53,6 +53,15 @@ export function runMigrate(argv, { env, psql = runPsql, out = console.log, err =
     err(`MIGRATE REFUSED: ${e instanceof ConfigError ? e.message : 'could not resolve the target'}`);
     return 1;
   }
+  // QC Finding 5: the live flags must never quietly land on a local cluster — an operator who typed
+  // --apply-live must not be told "applied" about a database that is not live.
+  if (target.local && (rehearse || applyLive)) {
+    err(
+      `MIGRATE REFUSED: ${rehearse ? '--rehearse' : '--apply-live'} is for the live Evryn Team database, but EVRYN_TASKS_LOCAL_PG ` +
+        'selects a local loopback cluster. Unset it to target live, or drop the flag to migrate the local cluster.',
+    );
+    return 2;
+  }
   if (!target.local && !rehearse && !applyLive) {
     err('MIGRATE REFUSED: the target is the live Evryn Team database. Pass --rehearse (applies, then rolls back) or --apply-live.');
     return 2;

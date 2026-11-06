@@ -3,8 +3,9 @@
  *
  * - READ-ONLY against Linear: one GraphQL query, no mutation anywhere in this file. It never writes,
  *   comments, or changes a status in Linear (cutover is a Meta-Meeting decision).
- * - Team "Evryn", as `shared/protocols/linear-protocol.md` requires; open = state type not
- *   completed/canceled. Paginated to the end, loudly bounded.
+ * - Team "Evryn", as `shared/protocols/linear-protocol.md` requires; read = state type not
+ *   completed/canceled. Paginated to the end, loudly bounded. BACKLOG is read but NEVER imported
+ *   (Soren, 15:38): "open tickets" means non-Backlog, non-closed; the report counts Backlog by owner.
  * - NOTHING here treats Linear's "Authorized" column as authorization: it maps to `open`, and the
  *   verbatim status is kept in linear_status for the record. The map is a PROPOSAL that Tasks AC
  *   confirms before the real run.
@@ -26,8 +27,9 @@ import { screenRow } from './screen.mjs';
 export const LINEAR_ENDPOINT = 'https://api.linear.app/graphql';
 
 /** Proposed map, Linear state NAME → task status. Tasks AC confirms it before --apply. */
+// Backlog is deliberately ABSENT: it is skipped, never imported (Soren, 15:38; see planIssue).
+// Linear's `triage` state is unmapped too, so a triage ticket FAILS loudly rather than guessing.
 export const STATUS_MAP = Object.freeze({
-  Backlog: 'open',
   Todo: 'open',
   Authorized: 'open', // NOT an authorization: Linear's column is non-binding (2026-07-24 safeguard)
   'Needs Authorization': 'proposed',
@@ -100,9 +102,19 @@ export function parseLabels(labelNames) {
   return { raci, other };
 }
 
+/** Linear's Backlog: by state type (the stable signal) or by the state's name. */
+export function isBacklog(issue) {
+  return issue.state?.type === 'backlog' || issue.state?.name === 'Backlog';
+}
+
 /**
  * Plan one ticket. Returns { linear_id, title, linearStatus, status, verdict, reasons, warnings, row,
- * justinNoDate }. verdict: 'import' | 'fail' | 'held'.
+ * justinNoDate, pointered, backlogOwner }.
+ * verdict: 'import' | 'fail' | 'held' | 'skipped-backlog'.
+ *
+ * A HELD or BACKLOG plan carries NO title (title: null): the report cannot print what the plan does
+ * not hold. Held tickets are Nathan's privileged-content risk (QC Finding 13, confirmed by Soren); a
+ * Backlog ticket is only counted, by owner.
  */
 export function planIssue(issue, { longBody = 'fail' } = {}) {
   const reasons = [];
@@ -122,11 +134,24 @@ export function planIssue(issue, { longBody = 'fail' } = {}) {
     row: null,
     justinNoDate: false,
     pointered: false,
+    backlogOwner: null,
   };
+
+  // Soren, 15:38: Backlog is NOT imported. "Open tickets" in requirement 10 means non-Backlog,
+  // non-closed; Backlog stays readable in Linear for the cutover sweep, and the report counts it by owner.
+  if (isBacklog(issue)) {
+    plan.verdict = 'skipped-backlog';
+    plan.title = null;
+    plan.status = '(not imported)';
+    plan.backlogOwner = raci.r[0] ?? '(no R: label)';
+    reasons.push('Backlog — not imported (Soren, 15:38)');
+    return plan;
+  }
 
   const everyone = [...raci.r, ...raci.a, ...raci.c, ...raci.i];
   if (everyone.includes('nathan')) {
     plan.verdict = 'held';
+    plan.title = null;
     reasons.push('held for Nathan (privileged-content screen is his) — not imported');
     return plan;
   }
@@ -178,34 +203,51 @@ export function planIssue(issue, { longBody = 'fail' } = {}) {
   return plan;
 }
 
+/** A plan's title for the report — or a marker, for plans that deliberately carry none. */
+function shownTitle(p) {
+  if (p.title === null) return p.verdict === 'held' ? '(title withheld — held for Nathan)' : '(title not shown)';
+  return p.title;
+}
+
 export function renderReport(plans, { mode, applied } = {}) {
   const lines = [];
   const count = (v) => plans.filter((p) => p.verdict === v).length;
+  const active = plans.filter((p) => p.verdict !== 'skipped-backlog');
   lines.push(`# Linear import report — ${mode === 'apply' ? 'APPLY' : 'DRY RUN (nothing written anywhere)'}`);
   lines.push('');
-  lines.push(`Open tickets read: ${plans.length} · would import: ${count('import')} · fail: ${count('fail')} · held for Nathan: ${count('held')}`);
+  lines.push(
+    `Tickets read: ${plans.length} · Backlog, not imported: ${count('skipped-backlog')} · open (non-Backlog): ${active.length} · ` +
+      `would import: ${count('import')} · fail: ${count('fail')} · held for Nathan: ${count('held')}`,
+  );
   if (applied) {
     lines.push(`Applied: inserted ${applied.inserted} · already imported (skipped): ${applied.skipped} · insert failures: ${applied.failed}`);
   }
   lines.push('');
   lines.push('## Status map (proposed — Tasks AC confirms before --apply; "Authorized" is NOT an authorization)');
   for (const [k, v] of Object.entries(STATUS_MAP)) lines.push(`- "${k}" → ${v}`);
+  lines.push('- "Backlog" → not imported (counted by owner below); any other state → FAILS as unmapped');
   lines.push('');
-  lines.push('## Every open ticket');
+  lines.push('## Every open (non-Backlog) ticket');
   lines.push('| Linear | mapped | Linear status (verbatim) | screen / result | headline |');
   lines.push('|---|---|---|---|---|');
-  for (const p of plans) {
+  for (const p of active) {
     const result = p.verdict === 'import' ? (p.warnings.length ? `ok, WARN: ${p.warnings.join('; ')}` : 'ok') : `${p.verdict.toUpperCase()}: ${p.reasons.join('; ')}`;
-    lines.push(`| ${p.linear_id} | ${p.status} | "${p.linearStatus}" | ${result.replace(/\|/g, '/')} | ${p.title.replace(/\|/g, '/')} |`);
+    lines.push(`| ${p.linear_id} | ${p.status} | "${p.linearStatus}" | ${result.replace(/\|/g, '/')} | ${shownTitle(p).replace(/\|/g, '/')} |`);
   }
-  const long = plans.filter((p) => p.title.length > 80);
+  const backlog = plans.filter((p) => p.verdict === 'skipped-backlog');
+  const byOwner = new Map();
+  for (const p of backlog) byOwner.set(p.backlogOwner, (byOwner.get(p.backlogOwner) ?? 0) + 1);
+  lines.push('');
+  lines.push(`## Backlog, by R: owner (${backlog.length}) — NOT imported; stays in Linear for the cutover sweep (Soren, 15:38)`);
+  for (const [owner, n] of [...byOwner].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))) lines.push(`- ${owner}: ${n}`);
+  const long = active.filter((p) => p.title !== null && p.title.length > 80);
   lines.push('');
   lines.push(`## Titles over 80 characters (${long.length}) — each FAILS; shorten by hand, never truncated`);
   for (const p of long) lines.push(`- ${p.linear_id} (${p.title.length}): ${p.title}`);
-  const awaiting = plans.filter((p) => p.linearStatus === 'Needs Acceptance');
+  const awaiting = active.filter((p) => p.linearStatus === 'Needs Acceptance');
   lines.push('');
   lines.push(`## Awaiting Justin's acceptance (${awaiting.length}) — Linear "Needs Acceptance", imported as blocked`);
-  for (const p of awaiting) lines.push(`- ${p.linear_id} [${p.verdict}]: ${p.title}`);
+  for (const p of awaiting) lines.push(`- ${p.linear_id} [${p.verdict}]: ${shownTitle(p)}`);
   const nodate = plans.filter((p) => p.justinNoDate);
   lines.push('');
   lines.push(`## Justin tickets with NO due date (${nodate.length}) — imported WITHOUT addressed_to, so invisible to Thea until dated or closed`);
@@ -217,8 +259,8 @@ export function renderReport(plans, { mode, applied } = {}) {
   for (const p of pointered) lines.push(`- ${p.linear_id}: ${p.title}`);
   const held = plans.filter((p) => p.verdict === 'held');
   lines.push('');
-  lines.push(`## Held for Nathan (${held.length}) — not imported`);
-  for (const p of held) lines.push(`- ${p.linear_id}: ${p.title}`);
+  lines.push(`## Held for Nathan (${held.length}) — not imported; Linear ids only, titles withheld`);
+  for (const p of held) lines.push(`- ${p.linear_id}`);
   return `${lines.join('\n')}\n`;
 }
 

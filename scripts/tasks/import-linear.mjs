@@ -30,7 +30,8 @@ export async function runImport(argv, { env, fetchImpl = globalThis.fetch, out =
   try {
     ({ values } = parseArgs({
       args: argv,
-      options: { apply: { type: 'boolean' }, 'long-body': { type: 'string' }, report: { type: 'string' }, help: { type: 'boolean', short: 'h' } },
+      // --dry-run is accepted as an explicit no-op: a dry run is already the default (QC Finding 14).
+      options: { apply: { type: 'boolean' }, 'dry-run': { type: 'boolean' }, 'long-body': { type: 'string' }, report: { type: 'string' }, help: { type: 'boolean', short: 'h' } },
       strict: true,
       allowPositionals: false,
     }));
@@ -39,8 +40,12 @@ export async function runImport(argv, { env, fetchImpl = globalThis.fetch, out =
     return 2;
   }
   if (values.help) {
-    out('usage: node import-linear.mjs [--apply] [--long-body pointer] [--report <path>]\n  Dry run by default: reads Linear, writes a report, changes nothing.\n');
+    out('usage: node import-linear.mjs [--dry-run | --apply] [--long-body pointer] [--report <path>]\n  Dry run by default: reads Linear, writes a report, changes nothing. Backlog is never imported.\n');
     return 0;
+  }
+  if (values.apply && values['dry-run']) {
+    warn('usage error: --apply and --dry-run contradict each other; pass one');
+    return 2;
   }
   if (values['long-body'] !== undefined && values['long-body'] !== 'pointer') {
     warn("usage error: --long-body takes only 'pointer'");
@@ -89,7 +94,9 @@ export async function runImport(argv, { env, fetchImpl = globalThis.fetch, out =
 
     const report = renderReport(plans, { mode: values.apply ? 'apply' : 'dry-run', applied });
     if (values.report) {
-      writeFile(values.report, report, 'utf8');
+      // Redacted on the file path exactly as on stdout (QC Finding 8): an error message echoing a key
+      // must not land in the report file either.
+      writeFile(values.report, redact(report, secrets), 'utf8');
       warn(`report written to ${values.report}`);
     } else {
       out(redact(report, secrets));
