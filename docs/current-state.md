@@ -31,6 +31,16 @@
 
 ---
 
+> # 🔴 THE NEXT AC WHO READS THIS: DO THIS FIRST, BEFORE ANY OTHER WORK (Justin, 2026-11-06)
+>
+> **Add the load rule below to your operating manual, `.claude/agents/ac.md`** (that's where an AC's "`CLAUDE.md`" content lives; `_evryn-meta/CLAUDE.md` is only the router). Put it in your startup or context section, then **delete this notice** in the same commit and tell Justin it's done. **Why you:** ACs don't load team `CLAUDE.md`, where every founding-team agent got this rule today, and Justin wants it everyone's, everywhere. The exact words, adapted only in the example:
+>
+> > **State your load to whoever you report to, in your first report.** Not every file, but nothing vague: name the cascade by the file that lists it, what you added and why, what you skipped or deferred, how you verified it, your context after loading, and your compactions. *"Loaded"* or *"full cascade"* alone fails. **It goes to whoever you report to** (your Admiral, head AC or spinner), and they verify it. **Your first report to Justin either states your load or names who verified it.** **Why:** load lists drift from handoff to handoff, and a dropped file leaves no trace in the session that dropped it, so you can't feel the gap. **Whoever verifies a load decides for themselves what it needed, and never rubber-stamps the list** (`docs/protocols/ac-orchestration-protocol.md`, part 6). *(Justin, 2026-11-06.)*
+>
+> *Placed by Admiral Lucas (`evryn-team-workspace`), 2026-11-06. The team version is in `evryn-team-workspace/CLAUDE.md`, Context Discipline.*
+
+---
+
 > # 📁 `docs/working/` IS RETIRED. EVERYTHING IS IN `docs/sessions/` NOW.
 >
 > **One folder, not two.** Working docs and session docs were always the same thing, so they now live in one place. **Completed 2026-09-02: 58 files → 0.**
