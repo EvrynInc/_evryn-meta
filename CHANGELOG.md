@@ -20,6 +20,14 @@
 
 ---
 
+## 2026-11-06 (`Tasks AC`: the founding team's task database is live, in `scripts/tasks/`)
+
+- **New: `scripts/tasks/` (merge `7a60d07`).** A task CLI (`tasks.mjs`: `pull`, `mine`, `closed`, `show`, `search`, `add`, `update`, `close`, `sign`, `export`); `check.mjs`; `schema-snapshot.mjs` and `snapshot-compare.mjs`; `make-paste.mjs`; a one-time Linear importer; their own migration folder; and unit tests plus a local-Postgres acceptance suite. **No npm dependencies.** A task is one owed item with one owner, stored as a headline (at most 80 characters) and a short body (at most 600) that points to a doc. **Not yet on any agent's load: that waits on Justin's ruling.**
+- **Schema, in the Evryn Team Supabase project.** `public.tasks` (from the paused runtime's migration 003) is **extended by addition only**: 14 new columns, CHECKs, triggers, indexes. **New:** an append-only `task_history`, and the read-only function `team_tasks_schema_snapshot()`, callable only with the secret key. **The database enforces the rules itself:** a write with no actor name is refused, a close needs a note, history cannot be edited, tasks cannot be deleted, and a loop of parent tasks is refused. **It was applied by Justin pasting two generated files (a dry run, then the apply) into the SQL editor, so no agent holds a database credential.** Both gos are verbatim in the brief below.
+- **Consequences to know:** the paused runtime's `propose_work` tool now fails loudly against `tasks` (it sends no actor name). The fix is owed only if the runtime unfreezes. An insert that names no status is refused.
+- **Imported once from Linear:** 13 open tickets. **Backlog (19) is not imported;** it stays in Linear for the Meta-Meeting sweep. 9 are held for Nathan. **Linear itself is untouched.**
+- **Reviews:** QC (three passes, GO), Soren (R1–R8 pass); the live checks are recorded. **Record:** `evryn-team-workspace/shared/projects/helm/2026/2026.11.04-team-task-database/` (`brief.md` Log; the build, review and handoff docs beside it).
+
 ## 2026-10-11 (`Lucas`, a team read of a product idea: one `LEARNINGS.md` entry, and one orchestration-protocol rule)
 
 - **`ac-orchestration-protocol.md`, "Relaying to Justin":** before a chat report that distills several agents' work goes to Justin, the sender makes one last deliberate pass over it. The pass stops at every name, label and phrase and asks whether Justin could know what it means from the report alone. Anything he couldn't, the sender adjusts. **Why:** a team's inside labels become the sender's own vocabulary after a few rounds, so a general reread misses them. *(Justin's wording, from his review in SCM. He ruled out a context-free subagent reader as too blank to judge clarity for him.)*
