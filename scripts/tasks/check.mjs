@@ -16,6 +16,10 @@
  *       own before-assertions require runtime 003's exact shape and no task_history, so if a dry run
  *       had somehow committed, Paste 2 refuses and changes nothing (Soren, 16:07).
  *
+ *   node check.mjs --absent-005   the same ADVISORY check after change set 005's dry run (005-paste-1):
+ *                              tasks.note and task_history.note must NOT be visible. The binding guard is
+ *                              005 Paste 2's own before-assertions, exactly as above.
+ *
  * Exit 0 only if every check passed. Tasks AC runs this live; tests drive it with fakes.
  * Truncation check: the last line of this file should read `FULL FILE LOADED`.
  */
@@ -29,8 +33,9 @@ const UNKNOWN_RELATION = new Set(['42P01', 'PGRST205', 'PGRST200']);
 
 export async function runCheck({ argv = [], env, fetchImpl = globalThis.fetch, out = console.log } = {}) {
   const absentMode = argv.includes('--absent');
-  if (argv.some((a) => a !== '--absent')) {
-    out('usage: node check.mjs [--absent]');
+  const absent005 = argv.includes('--absent-005');
+  if (argv.some((a) => a !== '--absent' && a !== '--absent-005') || (absentMode && absent005)) {
+    out('usage: node check.mjs [--absent | --absent-005]');
     return 2;
   }
   let ok = true;
@@ -80,24 +85,30 @@ export async function runCheck({ argv = [], env, fetchImpl = globalThis.fetch, o
     }
   }
 
+  const probe = async (label, path, unknownCodes) => {
+    try {
+      await rest.request('GET', path);
+      say(`    ${label}: PRESENT — the migration appears to be applied (or the cache is stale). Do not run Paste 2; report this.`);
+      return false;
+    } catch (e) {
+      if (e instanceof RestError && unknownCodes.has(String(e.code))) {
+        say(`    ${label}: absent, as expected [${e.code}]`);
+        return true;
+      }
+      say(`    ${label}: UNEXPECTED — ${e instanceof Error ? e.message : 'unknown error'}${e instanceof RestError && e.code ? ` [${e.code}]` : ''}`);
+      return false;
+    }
+  };
   if (absentMode && rest) {
     say('  --absent (ADVISORY — PostgREST caches the schema; the binding guard is Paste 2\'s before-assertions):');
-    const probe = async (label, path, unknownCodes) => {
-      try {
-        await rest.request('GET', path);
-        say(`    ${label}: PRESENT — the migration appears to be applied (or the cache is stale). Do not run Paste 2; report this.`);
-        return false;
-      } catch (e) {
-        if (e instanceof RestError && unknownCodes.has(String(e.code))) {
-          say(`    ${label}: absent, as expected [${e.code}]`);
-          return true;
-        }
-        say(`    ${label}: UNEXPECTED — ${e instanceof Error ? e.message : 'unknown error'}${e instanceof RestError && e.code ? ` [${e.code}]` : ''}`);
-        return false;
-      }
-    };
     if (!(await probe('tasks.short_id column', 'tasks?select=short_id&limit=1', UNKNOWN_COLUMN))) ok = false;
     if (!(await probe('task_history table', 'task_history?select=id&limit=1', UNKNOWN_RELATION))) ok = false;
+  }
+  // The same advisory check after change set 005's dry run: its two new columns must not be visible.
+  if (absent005 && rest) {
+    say('  --absent-005 (ADVISORY — PostgREST caches the schema; the binding guard is 005 Paste 2\'s before-assertions):');
+    if (!(await probe('tasks.note column', 'tasks?select=note&limit=1', UNKNOWN_COLUMN))) ok = false;
+    if (!(await probe('task_history.note column', 'task_history?select=note&limit=1', UNKNOWN_COLUMN))) ok = false;
   }
 
   say(ok ? '  CHECK OK' : '  CHECK FAILED');

@@ -98,6 +98,29 @@ test('check --absent: if the new objects are visible, it FAILS and says not to r
   assert.match(lines.join('\n'), /PRESENT — .*Do not run Paste 2/);
 });
 
+/** A fake PostgREST that answers like a schema before or after change set 005. */
+function schema005Fetch({ migrated }) {
+  return async (url) => {
+    const u = new URL(url);
+    if (u.searchParams.get('select') === 'note' && (u.pathname.endsWith('/tasks') || u.pathname.endsWith('/task_history'))) {
+      return migrated ? jsonResponse(200, []) : jsonResponse(400, { code: '42703', message: 'column does not exist' });
+    }
+    return countFetch();
+  };
+}
+
+test('check --absent-005: after the 005 dry run both note columns report absent (ADVISORY); if visible it FAILS; it cannot be combined with --absent', async () => {
+  const lines = [];
+  assert.equal(await runCheck({ argv: ['--absent-005'], env: TEST_ENV, fetchImpl: schema005Fetch({ migrated: false }), out: (s) => lines.push(s) }), 0, lines.join('\n'));
+  assert.match(lines.join('\n'), /--absent-005 \(ADVISORY/);
+  assert.match(lines.join('\n'), /tasks\.note column: absent, as expected \[42703\]/);
+  assert.match(lines.join('\n'), /task_history\.note column: absent, as expected \[42703\]/);
+  const seen = [];
+  assert.equal(await runCheck({ argv: ['--absent-005'], env: TEST_ENV, fetchImpl: schema005Fetch({ migrated: true }), out: (s) => seen.push(s) }), 1);
+  assert.match(seen.join('\n'), /tasks\.note column: PRESENT/);
+  assert.equal(await runCheck({ argv: ['--absent', '--absent-005'], env: TEST_ENV, fetchImpl: countFetch, out: () => {} }), 2);
+});
+
 // ---------------------------------------------------------------------------
 // migrate.mjs — local loopback clusters only
 // ---------------------------------------------------------------------------
