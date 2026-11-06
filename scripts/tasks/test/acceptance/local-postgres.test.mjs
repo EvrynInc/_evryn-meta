@@ -160,8 +160,12 @@ function ourObjects(snapshot) {
 }
 
 function golden(name, rawText) {
-  // The golden files hold "our objects" only, so ONE committed file serves both modes.
-  const text = `${ourObjects(rawText)}\n`;
+  // The golden files hold our objects AND the server-version lines (QC N3: snapshot-compare needs the
+  // LOCAL version to decide whether a MAINTAIN difference is a version artifact). They drop only the
+  // mode-dependent default-acl lines, so ONE committed file serves both modes. The equality below
+  // ignores the version lines, so the file stays valid on a machine with another PostgreSQL 17 minor.
+  const keep = (s) => s.split(/\r?\n/).filter((l) => l !== '' && !l.startsWith('default-acl ')).join('\n');
+  const text = `${keep(rawText)}\n`;
   const path = join(FIXTURES, name);
   if (process.env.EVRYN_TASKS_UPDATE_SNAPSHOTS === '1') {
     writeFileSync(path, text, 'utf8');
@@ -170,7 +174,9 @@ function golden(name, rawText) {
   // A missing golden file FAILS rather than silently regenerating: a guard that rewrites its own
   // expectation can never go red.
   assert.ok(existsSync(path), `${name} is missing — rerun with EVRYN_TASKS_UPDATE_SNAPSHOTS=1 and review the diff`);
-  assert.equal(text, readFileSync(path, 'utf8').replace(/\r\n/g, '\n'), `${name} differs from the committed golden snapshot`);
+  const committed = readFileSync(path, 'utf8').replace(/\r\n/g, '\n');
+  assert.match(committed, /^# server_version_num=\d+$/m, `${name} lost its server_version_num line (QC N3)`);
+  assert.equal(ourObjects(text), ourObjects(committed), `${name} differs from the committed golden snapshot`);
 }
 
 const SUPABASE_DEFAULTS_ON = `
@@ -879,6 +885,66 @@ suite(`paste files (defaults ${MODE})`, () => {
     const db = freshDb();
     const before = snap(db);
     refused(runPaste(db, broken), /BEFORE-ASSERTION FAILED: public\.tasks constraints are not runtime 003's/);
+    assert.equal(snap(db), before);
+  });
+
+  // QC N2 — her probes Q3 and Q4: a state that is NOT runtime 003's through tasks' INDEXES or POLICIES.
+  test('QC N2 (Q3): a pre-existing tasks_short_id_key on (id) is refused by Paste 2 — nothing changed', () => {
+    const db = freshDb();
+    ok(cluster.psql(db, 'create unique index tasks_short_id_key on public.tasks (id);'));
+    const before = snap(db);
+    refused(runPaste(db, pastes.apply), /BEFORE-ASSERTION FAILED: public\.tasks indexes are not runtime 003's \(exactly tasks_pkey\)\. Found: tasks_pkey, tasks_short_id_key/);
+    assert.equal(snap(db), before);
+  });
+
+  test('QC N2 (Q4): an extra permissive anon policy on tasks is refused by Paste 2 — nothing changed', () => {
+    const db = freshDb();
+    ok(cluster.psql(db, 'create policy anon_read on public.tasks for select to anon using (true);'));
+    const before = snap(db);
+    refused(runPaste(db, pastes.apply), /BEFORE-ASSERTION FAILED: public\.tasks policies are not runtime 003's/);
+    assert.equal(snap(db), before);
+  });
+
+  test('QC N2: one of our index names pre-existing on ANOTHER table is refused (IF NOT EXISTS would have skipped ours)', () => {
+    const db = freshDb();
+    ok(cluster.psql(db, 'create index task_history_task_id_id_idx on public.proposals (task_id);'));
+    const before = snap(db);
+    refused(runPaste(db, pastes.apply), /BEFORE-ASSERTION FAILED: relation\(s\) named like this migration's indexes already exist: task_history_task_id_id_idx/);
+    assert.equal(snap(db), before);
+  });
+
+  // QC N4 — a breach INSIDE the paste must be caught by the paste's own after-assertions. Each test
+  // injects one extra statement into the migration section of Paste 2 and expects its assertion.
+  const inject = (sql) => {
+    const anchor = '  -- (c) AFTER-ASSERTIONS';
+    assert.equal(pastes.apply.split(anchor).length, 2, 'injection anchor not found exactly once');
+    return pastes.apply.replace(anchor, `  ${sql}\n${anchor}`);
+  };
+  for (const [label, sql, message] of [
+    ['alters public.proposals', 'execute $inj$ alter table public.proposals add column sneaky text $inj$;', /AFTER-ASSERTION FAILED: public\.proposals changed\./],
+    ['revokes a grant on public.tasks', 'execute $inj$ revoke select on public.tasks from anon $inj$;', /AFTER-ASSERTION FAILED: grants on public\.tasks changed\./],
+    ['grants a new sequence to anon', "execute format('grant usage on sequence %s to anon', pg_get_serial_sequence('public.tasks', 'short_id'));", /AFTER-ASSERTION FAILED: a client role holds a privilege on a new sequence: anon on public\.tasks_short_id_seq/],
+  ]) {
+    test(`QC N4: a migration that ${label} is caught INSIDE Paste 2 by its after-assertion — snapshot byte-identical`, () => {
+      const db = freshDb();
+      const before = snap(db);
+      const r = runPaste(db, inject(sql));
+      refused(r, message);
+      assert.equal(snap(db), before);
+    });
+  }
+
+  test('QC N7: a held lock on tasks FAILS the paste after lock_timeout (5s) instead of hanging — nothing changed', async () => {
+    const db = freshDb();
+    const before = snap(db);
+    const holder = openSession(db);
+    await holder.send('begin; lock table public.tasks in access exclusive mode;');
+    const started = Date.now();
+    const r = runPaste(db, pastes.apply);
+    const waited = Date.now() - started;
+    await holder.finish('rollback;');
+    refused(r, /canceling statement due to lock timeout/);
+    assert.ok(waited < 30000, `the paste waited ${waited} ms`);
     assert.equal(snap(db), before);
   });
 

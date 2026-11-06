@@ -40,7 +40,10 @@
 
 ## Applying it live — the procedure
 
-1. **Tasks AC:** `node make-paste.mjs --check` (the pastes match the sources), the full suites green in both modes, and `node check.mjs`.
+1. **Tasks AC, before handing a paste to Justin** (QC N5 — nothing inside a paste verifies itself):
+   - name the **reviewed commit** (the one QC reviewed and that is merged), and check that the worktree is at it;
+   - run `node make-paste.mjs --check` **on that commit** — it must print `OK: both paste files are current` — plus the full suites green in both modes, and `node check.mjs`;
+   - **state in the handoff the exact `-- migrations sha256: …` header line** of the paste being handed over. Justin (or anyone) can then confirm that the file in the editor is the reviewed one: its second line (Paste 2: third) must match, character for character.
 2. **Justin pastes `paste/paste-1-dry-run.sql`** (the whole file) into the Evryn Team project's SQL editor and runs it. **Expected: an ERROR reading `DRY RUN OK — nothing was changed (N rows; M NOT VALID)`.** That error is the success: every step and check ran, then everything rolled back. Any other error means a check failed and nothing changed; report it as it reads.
 3. **If M is above 0, STOP for the day.** Tasks AC reports which rows fail and the plan to fix and validate them (a NOT VALID constraint is a rule old data does not meet yet). Paste 2 also refuses by itself when M > 0.
 4. *(Advisory only)* `node check.mjs --absent` confirms through PostgREST that the new columns and `task_history` are not visible. **This is not the proof that nothing changed:** PostgREST caches the schema, and a stale cache reports a column as unknown even when it exists. **The binding guard is structural:** Paste 2's own before-assertions require runtime 003's exact shape and no `task_history`, so if a dry run had somehow committed, Paste 2 refuses and changes nothing.

@@ -1,7 +1,14 @@
   -- =========================================================================================
-  -- (a) BEFORE-ASSERTIONS. Live public.tasks must be exactly runtime 003's shape, and nothing this
-  --     migration creates may exist yet. STRUCTURE is pinned; tasks' existing GRANTS are not
-  --     (they may carry Supabase-only roles) — they are captured here and must be unchanged after.
+  -- (a) BEFORE-ASSERTIONS. What is checked, exactly:
+  --     - public.tasks and public.proposals exist; public.task_history does NOT;
+  --     - tasks' COLUMNS (names, types, NOT NULL, defaults, in order), its CONSTRAINTS, that it has
+  --       no non-internal TRIGGERS, its OWNER (postgres), RLS enabled, its POLICY set (exactly
+  --       service_role_only, PERMISSIVE, ALL, to service_role, true/true) and its INDEX set (exactly
+  --       tasks_pkey) — runtime 003's shape;
+  --     - none of the indexes or functions this migration creates exists yet, under any table, so
+  --       no CREATE … IF NOT EXISTS can silently skip ours (QC N2).
+  --     NOT pinned: tasks' existing GRANTS (they may carry Supabase-only roles). They, the original
+  --     columns and proposals are CAPTURED here and must be unchanged after.
   --     This is also the binding guard against a dry run that somehow committed: it would leave
   --     task_history behind, and this block would refuse.
   -- =========================================================================================
@@ -41,6 +48,28 @@
   end if;
   if not (select relrowsecurity from pg_class where oid = 'public.tasks'::regclass) then
     raise exception 'BEFORE-ASSERTION FAILED: row-level security is not enabled on public.tasks. Nothing was changed.';
+  end if;
+
+  select string_agg(policyname || ' ' || permissive || ' ' || cmd || ' to ' || array_to_string(roles, ',')
+                    || ' ' || coalesce(qual, '-') || '/' || coalesce(with_check, '-'), '; ' order by policyname)
+    into v_found
+    from pg_policies where schemaname = 'public' and tablename = 'tasks';
+  if v_found is distinct from 'service_role_only PERMISSIVE ALL to service_role true/true' then
+    raise exception 'BEFORE-ASSERTION FAILED: public.tasks policies are not runtime 003''s (exactly service_role_only, ALL, to service_role). Found: %. Nothing was changed.', coalesce(v_found, '(none)');
+  end if;
+
+  select string_agg(indexname, ', ' order by indexname) into v_found
+    from pg_indexes where schemaname = 'public' and tablename = 'tasks';
+  if v_found is distinct from 'tasks_pkey' then
+    raise exception 'BEFORE-ASSERTION FAILED: public.tasks indexes are not runtime 003''s (exactly tasks_pkey). Found: %. Nothing was changed.', coalesce(v_found, '(none)');
+  end if;
+
+  select string_agg(nm, ', ') into v_found
+    from unnest(array['tasks_short_id_key','tasks_linear_id_key','tasks_owner_status_idx','tasks_addressed_to_status_idx',
+                      'tasks_closed_at_idx','tasks_parent_id_idx','tasks_search_idx','task_history_task_id_id_idx']) as nm
+   where to_regclass('public.' || nm) is not null;
+  if v_found is not null then
+    raise exception 'BEFORE-ASSERTION FAILED: relation(s) named like this migration''s indexes already exist: %. Nothing was changed.', v_found;
   end if;
 
   select string_agg(proname, ', ' order by proname) into v_found

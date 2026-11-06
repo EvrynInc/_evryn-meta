@@ -100,6 +100,14 @@ test('the two pastes differ ONLY in the header, the final in-block statement, an
   assert.ok(!a.includes(NOTIFY), 'the dry run must never NOTIFY');
 });
 
+test('QC N7: the first statement inside each block sets a transaction-local lock_timeout of 5s', () => {
+  for (const text of [built.dryRun, built.apply]) {
+    const body = text.split('\nbegin\n')[1];
+    const firstStatement = body.split('\n').find((l) => l.trim() !== '' && !l.trim().startsWith('--'));
+    assert.equal(firstStatement, "  perform set_config('lock_timeout', '5s', true);");
+  }
+});
+
 test('Paste 1 ends with the exact dry-run wording as a prefix; Paste 2 refuses on any NOT VALID constraint', () => {
   assert.match(FINAL.dryRun, /raise exception 'DRY RUN OK — nothing was changed \(% rows; % NOT VALID\)'/);
   assert.match(FINAL.apply, /> 0 then raise exception 'APPLY REFUSED/);

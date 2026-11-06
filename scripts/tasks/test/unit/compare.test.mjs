@@ -1,6 +1,9 @@
 import '../helpers.mjs';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { TASKS_DIR } from '../helpers.mjs';
 import { checkTargets, classify, compareSnapshots, renderComparison, runCompare } from '../../snapshot-compare.mjs';
 
 // A base snapshot fixture, in schema-snapshot.mjs's line format.
@@ -88,6 +91,29 @@ test('MAINTAIN (QC Finding 9): LISTED only when the servers straddle 17; a STOP 
   const noVersion = BASE.replace('# server_version_num=170006\n', '');
   const r3 = compareSnapshots(noVersion, add('grant tasks: anon MAINTAIN'));
   assert.equal(r3.stops.length, 1);
+});
+
+test('QC N3: against the REAL golden fixture, a PostgreSQL-15-shaped live side LISTS the MAINTAIN lines and does not stop', () => {
+  const golden = readFileSync(join(TASKS_DIR, 'test', 'fixtures', 'local-snapshot-after.txt'), 'utf8').replace(/\r\n/g, '\n');
+  assert.match(golden, /^# server_version_num=17\d{4}$/m, 'the golden file must carry the local server version');
+  assert.match(golden, /^grant tasks: anon MAINTAIN$/m, 'precondition: the PG17 golden has MAINTAIN grants');
+  // PG 15 has no MAINTAIN privilege: same objects, minus those lines, with a 15 version.
+  const live15 = golden
+    .replace(/^# target=.*$/m, '# target=evryn-team ref=azugibmylktinddyqkhd via api')
+    .replace(/^# server_version=.*$/m, '# server_version=15.8')
+    .replace(/^# server_version_num=.*$/m, '# server_version_num=150008')
+    .split('\n').filter((l) => !/ MAINTAIN$/.test(l)).join('\n');
+  assert.equal(checkTargets(golden, live15), null);
+  const r = compareSnapshots(golden, live15);
+  assert.equal(r.stops.length, 0, renderComparison(r));
+  // Core roles' MAINTAIN lines are listed as version-only; postgres's as a non-core role. Nothing else differs.
+  const core = r.listed.filter((l) => / (anon|authenticated|service_role|PUBLIC) MAINTAIN$/.test(l.line));
+  assert.ok(core.length >= 6, `expected the core-role MAINTAIN lines to be listed, got ${core.length}`);
+  for (const l of core) assert.match(l.reason, /version-only privilege \(MAINTAIN; the servers straddle 170000\)/);
+  for (const l of r.listed) assert.match(l.line, / MAINTAIN$/, `an unexpected difference: ${l.line}`);
+  // ...and the same live side at PostgreSQL 17 would STOP on every one of them.
+  const live17 = live15.replace('server_version_num=150008', 'server_version_num=170006');
+  assert.ok(compareSnapshots(golden, live17).stops.length >= 6);
 });
 
 test('targets (QC Finding 4): a live side taken from loopback, with no target line, or from the same target is REFUSED', () => {

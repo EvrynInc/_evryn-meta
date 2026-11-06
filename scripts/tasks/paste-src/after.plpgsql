@@ -36,17 +36,51 @@
     raise exception 'AFTER-ASSERTION FAILED: CHECK constraint(s) missing: %. Everything was rolled back.', v_found;
   end if;
 
-  -- Indexes (uniqueness lives in two of them)
-  select string_agg(nm, ', ') into v_found
-    from unnest(array['tasks_short_id_key','tasks_linear_id_key','tasks_owner_status_idx','tasks_addressed_to_status_idx',
-                      'tasks_closed_at_idx','tasks_parent_id_idx','tasks_search_idx','task_history_task_id_id_idx']) as nm
-   where to_regclass('public.' || nm) is null;
+  -- Indexes: each one's DEFINITION — table, columns in order, access method, uniqueness — not merely
+  -- that something by that name exists (QC N2: an index created IF NOT EXISTS could be someone else's).
+  select string_agg(e.nm || ' (expected ' || e.tbl || ' ' || e.am || ' (' || e.cols || ')' || case when e.uniq then ' UNIQUE' else '' end || ')', '; ')
+    into v_found
+    from (values ('tasks_short_id_key',            'tasks',        'btree', 'short_id',        true),
+                 ('tasks_linear_id_key',           'tasks',        'btree', 'linear_id',       true),
+                 ('tasks_owner_status_idx',        'tasks',        'btree', 'owner,status',    false),
+                 ('tasks_addressed_to_status_idx', 'tasks',        'btree', 'addressed_to,status', false),
+                 ('tasks_closed_at_idx',           'tasks',        'btree', 'closed_at',       false),
+                 ('tasks_parent_id_idx',           'tasks',        'btree', 'parent_id',       false),
+                 ('tasks_search_idx',              'tasks',        'gin',   'search',          false),
+                 ('task_history_task_id_id_idx',   'task_history', 'btree', 'task_id,id',      false)) as e(nm, tbl, am, cols, uniq)
+   where not exists (
+     select 1
+       from pg_index i
+       join pg_class ic on ic.oid = i.indexrelid
+       join pg_am am on am.oid = ic.relam
+      where i.indexrelid = to_regclass('public.' || e.nm)
+        and i.indrelid = ('public.' || e.tbl)::regclass
+        and am.amname = e.am
+        and i.indisunique = e.uniq
+        and i.indpred is null and i.indexprs is null
+        and (select string_agg(a.attname, ',' order by k.ord)
+               from unnest(i.indkey) with ordinality as k(attnum, ord)
+               join pg_attribute a on a.attrelid = i.indrelid and a.attnum = k.attnum) = e.cols);
   if v_found is not null then
-    raise exception 'AFTER-ASSERTION FAILED: index(es) missing: %. Everything was rolled back.', v_found;
+    raise exception 'AFTER-ASSERTION FAILED: index(es) missing or defined differently: %. Everything was rolled back.', v_found;
   end if;
-  if not (select indisunique from pg_index where indexrelid = 'public.tasks_short_id_key'::regclass)
-     or not (select indisunique from pg_index where indexrelid = 'public.tasks_linear_id_key'::regclass) then
-    raise exception 'AFTER-ASSERTION FAILED: tasks_short_id_key and tasks_linear_id_key must be UNIQUE. Everything was rolled back.';
+
+  -- task_history's DEFINITION (it is created IF NOT EXISTS): exact columns, identity, constraints
+  select string_agg(a.attname || ' ' || format_type(a.atttypid, a.atttypmod)
+                    || case when a.attnotnull then ' NOT NULL' else '' end
+                    || case a.attidentity when 'a' then ' IDENTITY ALWAYS' when 'd' then ' IDENTITY BY DEFAULT' else '' end
+                    || coalesce(' DEFAULT ' || pg_get_expr(d.adbin, d.adrelid), ''), '; ' order by a.attnum)
+    into v_found
+    from pg_attribute a
+    left join pg_attrdef d on d.adrelid = a.attrelid and d.adnum = a.attnum
+   where a.attrelid = 'public.task_history'::regclass and a.attnum > 0 and not a.attisdropped;
+  if v_found is distinct from 'id bigint NOT NULL IDENTITY ALWAYS; task_id uuid NOT NULL; at timestamp with time zone NOT NULL DEFAULT now(); actor text NOT NULL; op text NOT NULL; changed_fields text[] NOT NULL DEFAULT ''{}''::text[]; old jsonb; new jsonb; flags text[] NOT NULL DEFAULT ''{}''::text[]' then
+    raise exception 'AFTER-ASSERTION FAILED: task_history columns are not as defined in migration 002. Found: %. Everything was rolled back.', v_found;
+  end if;
+  select string_agg(conname || ' ' || contype::text, ', ' order by conname) into v_found
+    from pg_constraint where conrelid = 'public.task_history'::regclass;
+  if v_found is distinct from 'task_history_op_check c, task_history_pkey p' then
+    raise exception 'AFTER-ASSERTION FAILED: task_history constraints are not as defined in migration 002. Found: %. Everything was rolled back.', v_found;
   end if;
 
   -- Triggers: all five present, on the right table, ENABLE ALWAYS

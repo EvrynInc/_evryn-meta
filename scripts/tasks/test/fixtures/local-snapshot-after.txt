@@ -1,4 +1,6 @@
 # target=local-loopback
+# server_version=17.10
+# server_version_num=170010
 table proposals: owner=postgres
 table task_history: owner=postgres
 table tasks: owner=postgres
