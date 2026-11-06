@@ -134,7 +134,8 @@ test('migrate: one transaction (-1), every file in order, lock_timeout; NOT VALI
   assert.ok(args.includes('-1'));
   assert.ok(args.includes("set local lock_timeout = '5s'"));
   const files = args.filter((a, i) => args[i - 1] === '-f').map((f) => f.split(/[\\/]/).pop());
-  assert.deepEqual(files, ['001_tasks_columns.sql', '002_task_history.sql', '003_task_triggers.sql', '004_schema_snapshot_fn.sql']);
+  // Locally, migrate.mjs applies EVERY migration (both change sets) in one transaction.
+  assert.deepEqual(files, ['001_tasks_columns.sql', '002_task_history.sql', '003_task_triggers.sql', '004_schema_snapshot_fn.sql', '005_linear_cutover.sql']);
   assert.equal(psql.calls[1].target.host, '127.0.0.1');
 
   const notice = 'NOTICE:  TASKS-MIGRATION: constraint tasks_title_max_80 left NOT VALID (still enforced on new writes); existing rows failing it: abc';

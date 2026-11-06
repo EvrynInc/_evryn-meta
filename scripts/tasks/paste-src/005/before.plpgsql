@@ -1,0 +1,175 @@
+  -- =========================================================================================
+  -- (a) BEFORE-ASSERTIONS for change set 005. They PIN TODAY'S LIVE SHAPE EXACTLY, and must never be
+  --     loosened to make a paste run (Soren's cutover design §1.6; ADR-061 rests on them). If one refuses,
+  --     the live database is not the shape this change was reviewed against: STOP and report it as it reads.
+  --
+  --     WHERE EVERY PINNED VALUE COMES FROM: the live schema snapshot taken over the API on 2026-11-06
+  --     ~09:57 PT, after Paste 2 of change set 001-004
+  --     (evryn-team-workspace/shared/projects/helm/2026/2026.11.06-linear-cutover/2026.11.06-live-schema-snapshot-after-004.txt,
+  --     "live L<n>" below). Each pinned line is copied VERBATIM from it, and each is identical to the same
+  --     line of the local golden fixture test/fixtures/local-snapshot-after-004.txt ("golden L<n>"; the two
+  --     files agree line for line on 4–180; the compare taken that day shows 0 STOPs). The queries render
+  --     the lines exactly as migration 004's snapshot function does, under the same search_path ''.
+  -- =========================================================================================
+
+  -- Deparsed definitions schema-qualify names according to the search_path; the snapshot function runs
+  -- under '' and so does everything below (migration 005 is fully schema-qualified). Transaction-local.
+  perform set_config('search_path', '', true);
+
+  if to_regclass('public.tasks') is null or to_regclass('public.task_history') is null or to_regclass('public.proposals') is null then
+    raise exception 'BEFORE-ASSERTION FAILED: public.tasks, public.task_history and public.proposals must all exist (change set 001-004 is the prerequisite). Nothing was changed.';
+  end if;
+
+  -- ADR-061's premise, pinned (Soren's design §2.1): a key holder cannot become the owner through the API.
+  -- PostgREST logs in as authenticator and switches to the key's role; neither may be a member of postgres.
+  if exists (select 1 from pg_roles where rolname = 'authenticator') and pg_has_role('authenticator', 'postgres', 'MEMBER') then
+    raise exception 'BEFORE-ASSERTION FAILED: the role authenticator is a member of postgres, so an API key could act as the owner. ADR-061''s premise does not hold. Nothing was changed.';
+  end if;
+  if exists (select 1 from pg_roles where rolname = 'service_role') and pg_has_role('service_role', 'postgres', 'MEMBER') then
+    raise exception 'BEFORE-ASSERTION FAILED: the role service_role is a member of postgres, so the API key could act as the owner. ADR-061''s premise does not hold. Nothing was changed.';
+  end if;
+
+  -- The three things the design names, each with its own legible message, before the full pins below.
+  if exists (select 1 from pg_attribute where attrelid in ('public.tasks'::regclass, 'public.task_history'::regclass) and attname = 'note' and not attisdropped) then
+    raise exception 'BEFORE-ASSERTION FAILED: a note column already exists on tasks or task_history, so 005 has already been applied (or partly). Nothing was changed.';
+  end if;
+  select string_agg(conname, ', ' order by conname) into v_found from pg_constraint
+   where conrelid in ('public.tasks'::regclass, 'public.task_history'::regclass)
+     and conname in ('tasks_acceptance_addressed','tasks_backlog_needs_review_date','tasks_note_max_600','task_history_note_max_600');
+  if v_found is not null then
+    raise exception 'BEFORE-ASSERTION FAILED: constraint(s) this change set adds already exist: %. Nothing was changed.', v_found;
+  end if;
+  -- live L59 / golden L59: the six-value status rule, validated (a NOT VALID one would deparse with that suffix).
+  select pg_get_constraintdef(oid) into v_found from pg_constraint where conrelid = 'public.tasks'::regclass and conname = 'tasks_status_allowed';
+  if v_found is distinct from $pin$CHECK ((status = ANY (ARRAY['open'::text, 'in_progress'::text, 'blocked'::text, 'done'::text, 'decided_against'::text, 'proposed'::text])))$pin$ then
+    raise exception 'BEFORE-ASSERTION FAILED: tasks_status_allowed is not the six-value rule that 001 created. Found: %. Nothing was changed.', coalesce(v_found, '(absent)');
+  end if;
+
+  -- live L4–L9 / golden L4–L9: owners and RLS of the three tables.
+  select string_agg(s.l, E'\n' order by s.k, s.relname) into v_found from (
+    select 1 as k, c.relname, format('table %s: owner=%s', c.relname, pg_get_userbyid(c.relowner)) as l
+      from pg_class c where c.relnamespace = 'public'::regnamespace and c.relkind = 'r' and c.relname in ('tasks','task_history','proposals')
+    union all
+    select 2, c.relname, format('rls %s: enabled=%s forced=%s', c.relname, c.relrowsecurity::text, c.relforcerowsecurity::text)
+      from pg_class c where c.relnamespace = 'public'::regnamespace and c.relkind = 'r' and c.relname in ('tasks','task_history','proposals')) s;
+  if v_found is distinct from $pin$table proposals: owner=postgres
+table task_history: owner=postgres
+table tasks: owner=postgres
+rls proposals: enabled=true forced=false
+rls task_history: enabled=true forced=false
+rls tasks: enabled=true forced=false$pin$ then
+    raise exception 'BEFORE-ASSERTION FAILED: the owners or RLS settings of tasks, task_history and proposals are not the live shape of 2026-11-06. Found: %. Nothing was changed.', coalesce(v_found, '(none)');
+  end if;
+
+  -- live L16–L24 / golden L16–L24: task_history's nine columns.
+  execute v_pin_columns_sql into v_found using 'task_history';
+  if v_found is distinct from $pin$column task_history #01 id bigint NOT NULL IDENTITY ALWAYS
+column task_history #02 task_id uuid NOT NULL
+column task_history #03 at timestamp with time zone NOT NULL DEFAULT now()
+column task_history #04 actor text NOT NULL
+column task_history #05 op text NOT NULL
+column task_history #06 changed_fields text[] NOT NULL DEFAULT '{}'::text[]
+column task_history #07 old jsonb
+column task_history #08 new jsonb
+column task_history #09 flags text[] NOT NULL DEFAULT '{}'::text[]$pin$ then
+    raise exception 'BEFORE-ASSERTION FAILED: task_history''s columns are not the live shape of 2026-11-06. Found: %. Nothing was changed.', coalesce(v_found, '(none)');
+  end if;
+
+  -- live L25–L46 / golden L25–L46: tasks' twenty-two columns (so: no note column).
+  execute v_pin_columns_sql into v_found using 'tasks';
+  if v_found is distinct from $pin$column tasks #01 id uuid NOT NULL DEFAULT gen_random_uuid()
+column tasks #02 title text NOT NULL
+column tasks #03 description text NOT NULL DEFAULT ''::text
+column tasks #04 status text NOT NULL DEFAULT 'todo'::text
+column tasks #05 raci jsonb NOT NULL DEFAULT '{}'::jsonb
+column tasks #06 links jsonb NOT NULL DEFAULT '[]'::jsonb
+column tasks #07 created_at timestamp with time zone NOT NULL DEFAULT now()
+column tasks #08 updated_at timestamp with time zone NOT NULL DEFAULT now()
+column tasks #09 short_id bigint NOT NULL IDENTITY ALWAYS
+column tasks #10 owner text GENERATED (raci ->> 'r'::text)
+column tasks #11 created_by text
+column tasks #12 closed_at timestamp with time zone
+column tasks #13 closing_note text
+column tasks #14 needed_by date
+column tasks #15 parent_id uuid
+column tasks #16 tags text[]
+column tasks #17 addressed_to text
+column tasks #18 signed_at timestamp with time zone
+column tasks #19 signed_ref text
+column tasks #20 linear_id text
+column tasks #21 linear_status text
+column tasks #22 search tsvector GENERATED to_tsvector('english'::regconfig, ((COALESCE(title, ''::text) || ' '::text) || COALESCE(description, ''::text)))$pin$ then
+    raise exception 'BEFORE-ASSERTION FAILED: tasks'' columns are not the live shape of 2026-11-06. Found: %. Nothing was changed.', coalesce(v_found, '(none)');
+  end if;
+
+  -- live L50–L51 / golden L50–L51: task_history's two constraints.
+  execute v_pin_constraints_sql into v_found using 'task_history';
+  if v_found is distinct from $pin$constraint task_history.task_history_op_check: CHECK ((op = ANY (ARRAY['insert'::text, 'update'::text])))
+constraint task_history.task_history_pkey: PRIMARY KEY (id)$pin$ then
+    raise exception 'BEFORE-ASSERTION FAILED: task_history''s constraints are not the live shape of 2026-11-06. Found: %. Nothing was changed.', coalesce(v_found, '(none)');
+  end if;
+
+  -- live L52–L60 / golden L52–L60: tasks' nine constraints, every one validated (the six-value status rule
+  -- among them; no tasks_acceptance_addressed, no tasks_backlog_needs_review_date, no tasks_note_max_600).
+  execute v_pin_constraints_sql into v_found using 'tasks';
+  if v_found is distinct from $pin$constraint tasks.tasks_addressed_to_shape: CHECK (((addressed_to IS NULL) OR (addressed_to ~ '^[A-Za-z0-9_.-]{1,64}$'::text)))
+constraint tasks.tasks_closed_needs_note: CHECK (((status <> ALL (ARRAY['done'::text, 'decided_against'::text])) OR ((COALESCE(btrim(closing_note), ''::text) <> ''::text) AND (closed_at IS NOT NULL))))
+constraint tasks.tasks_description_check: CHECK ((char_length(description) <= 600))
+constraint tasks.tasks_justin_needs_date: CHECK (((lower(addressed_to) IS DISTINCT FROM 'justin'::text) OR (needed_by IS NOT NULL)))
+constraint tasks.tasks_one_owner: CHECK (COALESCE(((jsonb_typeof((raci -> 'r'::text)) = 'string'::text) AND (btrim((raci ->> 'r'::text)) <> ''::text)), false))
+constraint tasks.tasks_pkey: PRIMARY KEY (id)
+constraint tasks.tasks_signed_needs_ref: CHECK (((signed_at IS NULL) OR (COALESCE(btrim(signed_ref), ''::text) <> ''::text)))
+constraint tasks.tasks_status_allowed: CHECK ((status = ANY (ARRAY['open'::text, 'in_progress'::text, 'blocked'::text, 'done'::text, 'decided_against'::text, 'proposed'::text])))
+constraint tasks.tasks_title_max_80: CHECK ((char_length(title) <= 80))$pin$ then
+    raise exception 'BEFORE-ASSERTION FAILED: tasks'' constraints are not the live shape of 2026-11-06. Found: %. Nothing was changed.', coalesce(v_found, '(none)');
+  end if;
+
+  -- live L62–L71 / golden L62–L71: the indexes of task_history and tasks.
+  select string_agg(format('index %s.%s: %s', i.tablename, i.indexname, i.indexdef), E'\n' order by i.tablename, i.indexname) into v_found
+    from pg_indexes i where i.schemaname = 'public' and i.tablename in ('tasks','task_history');
+  if v_found is distinct from $pin$index task_history.task_history_pkey: CREATE UNIQUE INDEX task_history_pkey ON public.task_history USING btree (id)
+index task_history.task_history_task_id_id_idx: CREATE INDEX task_history_task_id_id_idx ON public.task_history USING btree (task_id, id)
+index tasks.tasks_addressed_to_status_idx: CREATE INDEX tasks_addressed_to_status_idx ON public.tasks USING btree (addressed_to, status)
+index tasks.tasks_closed_at_idx: CREATE INDEX tasks_closed_at_idx ON public.tasks USING btree (closed_at)
+index tasks.tasks_linear_id_key: CREATE UNIQUE INDEX tasks_linear_id_key ON public.tasks USING btree (linear_id)
+index tasks.tasks_owner_status_idx: CREATE INDEX tasks_owner_status_idx ON public.tasks USING btree (owner, status)
+index tasks.tasks_parent_id_idx: CREATE INDEX tasks_parent_id_idx ON public.tasks USING btree (parent_id)
+index tasks.tasks_pkey: CREATE UNIQUE INDEX tasks_pkey ON public.tasks USING btree (id)
+index tasks.tasks_search_idx: CREATE INDEX tasks_search_idx ON public.tasks USING gin (search)
+index tasks.tasks_short_id_key: CREATE UNIQUE INDEX tasks_short_id_key ON public.tasks USING btree (short_id)$pin$ then
+    raise exception 'BEFORE-ASSERTION FAILED: the indexes of tasks and task_history are not the live shape of 2026-11-06. Found: %. Nothing was changed.', coalesce(v_found, '(none)');
+  end if;
+
+  -- live L72–L76 / golden L72–L76: the five triggers, each ENABLE ALWAYS ([enabled=A]).
+  select string_agg(format('trigger %s.%s: %s [enabled=%s]', c.relname, t.tgname, pg_get_triggerdef(t.oid), t.tgenabled), E'\n' order by c.relname, t.tgname) into v_found
+    from pg_trigger t join pg_class c on c.oid = t.tgrelid
+   where not t.tgisinternal and c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history','proposals');
+  if v_found is distinct from $pin$trigger task_history.task_history_guard_insert: CREATE TRIGGER task_history_guard_insert BEFORE INSERT ON public.task_history FOR EACH ROW EXECUTE FUNCTION public.task_history_guard_insert() [enabled=A]
+trigger task_history.task_history_refuse_change: CREATE TRIGGER task_history_refuse_change BEFORE DELETE OR UPDATE OR TRUNCATE ON public.task_history FOR EACH STATEMENT EXECUTE FUNCTION public.task_history_refuse_change() [enabled=A]
+trigger tasks.tasks_after_write: CREATE TRIGGER tasks_after_write AFTER INSERT OR UPDATE ON public.tasks FOR EACH ROW EXECUTE FUNCTION public.tasks_after_write() [enabled=A]
+trigger tasks.tasks_before_write: CREATE TRIGGER tasks_before_write BEFORE INSERT OR UPDATE ON public.tasks FOR EACH ROW EXECUTE FUNCTION public.tasks_before_write() [enabled=A]
+trigger tasks.tasks_refuse_delete: CREATE TRIGGER tasks_refuse_delete BEFORE DELETE OR TRUNCATE ON public.tasks FOR EACH STATEMENT EXECUTE FUNCTION public.tasks_refuse_delete() [enabled=A]$pin$ then
+    raise exception 'BEFORE-ASSERTION FAILED: the triggers on tasks, task_history and proposals are not the live shape of 2026-11-06 (five, each ENABLE ALWAYS). Found: %. Nothing was changed.', coalesce(v_found, '(none)');
+  end if;
+
+  -- live L78–L79 / golden L78–L79: the policies of task_history and tasks.
+  select string_agg(format('policy %s.%s: %s %s to %s using (%s) with check (%s)', p.tablename, p.policyname, p.permissive, p.cmd,
+           array_to_string(p.roles, ','), coalesce(p.qual, '-'), coalesce(p.with_check, '-')), E'\n' order by p.tablename, p.policyname) into v_found
+    from pg_policies p where p.schemaname = 'public' and p.tablename in ('tasks','task_history');
+  if v_found is distinct from $pin$policy task_history.service_role_only: PERMISSIVE ALL to service_role using (true) with check (true)
+policy tasks.service_role_only: PERMISSIVE ALL to service_role using (true) with check (true)$pin$ then
+    raise exception 'BEFORE-ASSERTION FAILED: the policies of tasks and task_history are not the live shape of 2026-11-06. Found: %. Nothing was changed.', coalesce(v_found, '(none)');
+  end if;
+
+  -- live L166–L167 / golden L166–L167: the two functions 005 replaces, with today's BODY HASHES.
+  execute v_pin_functions_sql into v_found;
+  if v_found is distinct from $pin$function tasks_after_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=e39010f0082dd5d81d68d1888b41127f
+function tasks_before_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=527670e20253b2a7c6059a57c3b6a37f$pin$ then
+    raise exception 'BEFORE-ASSERTION FAILED: tasks_before_write or tasks_after_write is not the function 003 created (owner, security, search_path or body hash differ). Found: %. Nothing was changed.', coalesce(v_found, '(none)');
+  end if;
+
+  -- Capture everything 005 must leave untouched; the after-assertions re-run the same queries.
+  for v_i in 1 .. array_length(v_capture_sqls, 1) loop
+    execute v_capture_sqls[v_i] into v_found;
+    v_captured := v_captured || coalesce(v_found, '(none)');
+  end loop;
