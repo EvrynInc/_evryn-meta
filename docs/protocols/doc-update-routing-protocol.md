@@ -47,7 +47,7 @@ Every durable surface a system change can invalidate, **grouped by who may chang
 | `evryn-backend/docs/glossary-phase-*.md` | New technical terms for Justin | AC | Offer Justin new terms when introducing a new concept; add on his yes. |
 | `evryn-team-runtime/docs/SPRINT-team-runtime-memory.md` | The team runtime's live tracker — the status source of truth for that repo | **ACT** (the team-runtime conductor) | Mark Steps DONE / add / reshape, per the file's own numbering and status rules. DC/QC don't write here. *(Added 2026-09-18 — this registry had named only the product lane's tracker.)* |
 | `_evryn-meta/docs/decisions/NNN-*.md` (ADRs) | Decisions | Author (anyone) | **Write the ADR at decision time** — excluded from propose-first. A decision captured only in a session doc evaporates under compaction. |
-| Linear (EVR workspace) | Discrete task tracking | AC / owner | Create/update tickets per `evryn-team-workspace/shared/protocols/linear-protocol.md`. |
+| The team task list, `scripts/tasks/tasks.mjs` (run `node scripts/tasks/tasks.mjs` inside `_evryn-meta`, or `node ../_evryn-meta/scripts/tasks/tasks.mjs` from a sibling repo; its `--help` is the manual) | Discrete task tracking | AC / owner | Add or update tasks per `evryn-team-workspace/shared/protocols/task-protocol.md`. Linear is retired and read-only. |
 
 ### Tier 2 — AC holds the pen, but each edit needs Justin's explicit go
 

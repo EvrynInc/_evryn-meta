@@ -186,7 +186,7 @@ Bash/CLI access to Supabase CLI + API, Linear API key (in `_evryn-meta/.env`), G
 
 **For current Build Projects status (AC/DC/QC/OC), read `docs/current-state.md`.** That file is the snapshot — updated during #lock, maintained by whoever is active (AC or Soren). If you need the Agent Team current state (only when necessary to understand the larger picture), read the latest dated entry in `evryn-team-workspace\shared\current-state`.
 
-**Task management:** [Linear (EVR workspace)](https://linear.app/evryn) — the team's task tracking system with RACI labels. For protocol and API key, see `evryn-team-workspace/shared/protocols/linear-protocol.md`.
+**Task management:** the team task list, `scripts/tasks/tasks.mjs` (run `node scripts/tasks/tasks.mjs` inside `_evryn-meta`, or `node ../_evryn-meta/scripts/tasks/tasks.mjs` from a sibling repo; its `--help` is the manual), under `evryn-team-workspace/shared/protocols/task-protocol.md`. Linear (EVR workspace) is retired and read-only history.
 
 **Live experiments / watch-list:** `evryn-team-workspace/shared/projects/product/watch-list.md` — the single home for what we're actively monitoring + experiments-in-flight (each entry: what we watch · the decision it feeds · its exit-criterion/trigger · owner). Soren's (tied to the v0.2 maintenance plan / EVR-114); ACP folds new watches in as lanes generate them (e.g. the Haiku screen's shadow-mode + the cache-temperature measurement).
 

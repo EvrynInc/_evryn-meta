@@ -130,7 +130,7 @@
 
 | Tool | Purpose | Status | Notes |
 |------|---------|--------|-------|
-| **Linear** | Backlog and task tracking | Active | Free tier. EVR workspace. Replaced ClickUp. |
+| **Linear** | Former task tracking; read-only history | Retired 2026-11-06 | Free tier. EVR workspace. Replaced by the team task list (ADR-061). |
 | **Slack** | Team communication + operator/product alerting | Active | ~$4.38/seat/mo (Justin only); agents use bot tokens (free, no seat required). Live channels: `#team-alerts` (founding-team → Justin pings), `#emergency-alerts` (Evryn silent-death / runaway-cost alerts, M1), `#dev-alerts` (build/deploy notifications), the operator approval channel (locked to Justin's verified Slack ID), `#evryn-approvals-staging` (the staging-environment approval channel), and Lucas's autonomous-runtime presence. |
 | **Notion** | Ideation/notes, historical vault | Active | Light use — some docs still linked. Historical content from early planning. |
 | **Google Drive** | Document storage (Docs & Sheets) | Active | Via Google Workspace |

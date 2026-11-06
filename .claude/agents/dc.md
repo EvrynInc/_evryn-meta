@@ -320,9 +320,9 @@ When writing to AC: assume it knows architecture and design decisions. Provide: 
 
 ## Build Priorities
 
-Build priorities are defined by **build docs in each repo** (the contract for what to build) and **[Linear (EVR workspace)](https://linear.app/evryn)** (task management across the team).
+Build priorities are defined by **build docs in each repo** (the contract for what to build) and **the team task list**, `scripts/tasks/tasks.mjs` (run `node scripts/tasks/tasks.mjs` inside `_evryn-meta`, or `node ../_evryn-meta/scripts/tasks/tasks.mjs` from a sibling repo; its `--help` is the manual).
 
-When creating Linear tickets (e.g., after placing research in a department folder), follow `evryn-team-workspace/shared/protocols/linear-protocol.md` for ticket standards and `evryn-team-workspace/shared/protocols/domain-routing.md` for who owns what domain. When in doubt about priority, check with Justin or Lucas.
+When adding a task (e.g., after placing research in a department folder), follow `evryn-team-workspace/shared/protocols/task-protocol.md` and `evryn-team-workspace/shared/protocols/domain-routing.md` for who owns what domain. When in doubt about priority, check with Justin or Lucas.
 
 ---
 
