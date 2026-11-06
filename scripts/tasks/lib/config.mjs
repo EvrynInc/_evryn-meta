@@ -11,8 +11,9 @@
  *     product database above all, which holds people's personal data — is refused BEFORE any
  *     request is built. A legacy JWT key is decoded (not verified; we only read its claims) and
  *     refused unless it is a service_role key for this same ref. A publishable key is refused.
- *     The ONE exception is the local-test channel EVRYN_TASKS_LOCAL_PG, which is accepted only
- *     for a loopback host, so it cannot be aimed at any real database either.
+ *     Postgres-protocol connections go ONLY to the local-test channel EVRYN_TASKS_LOCAL_PG, which is
+ *     accepted only for a loopback host, so it cannot be aimed at any real database either. No
+ *     database password exists or is read anywhere.
  *
  *  3. A TEST RUN CAN NEVER READ A REAL .env (Soren, 2026-11-05 14:53). The real credentials sit
  *     one directory away from any checkout of this repo, and these scripts find them from their
@@ -29,18 +30,13 @@ import { fileURLToPath } from 'node:url';
 export const TEAM_REF = 'azugibmylktinddyqkhd';
 export const TEAM_HOST = `${TEAM_REF}.supabase.co`;
 
-/** The session pooler. The direct DB host is IPv6-only from this network (S7 RESULTS §1). */
-export const POOLER = Object.freeze({
-  host: 'aws-1-us-west-2.pooler.supabase.com',
-  port: '5432',
-  user: `postgres.${TEAM_REF}`,
-  database: 'postgres',
-});
-
+// THERE IS NO DATABASE PASSWORD (Soren, 2026-11-05 16:00–16:08). Justin applies the migration himself
+// by pasting it into the Supabase SQL editor, so the owner credential never reaches an agent. The live
+// database is reached only through PostgREST with the secret key. Postgres-protocol tools (psql)
+// connect ONLY to a local loopback test cluster.
 export const VAR = Object.freeze({
   url: 'EVRYN_TEAM_SUPABASE_URL',
   key: 'EVRYN_TEAM_SUPABASE_SECRET_KEY',
-  password: 'EVRYN_TEAM_DB_PASSWORD',
   linear: 'LINEAR_API_KEY',
   local: 'EVRYN_TASKS_LOCAL_PG',
 });
@@ -207,17 +203,16 @@ export function localPgTarget(value) {
   };
 }
 
-/** R5 for the Postgres path: the team pooler (hard-coded host and user), or a loopback cluster. */
+/**
+ * R5 for the Postgres path: a LOOPBACK test cluster, and nothing else. There is no live Postgres
+ * target at all — the live database is changed only by Justin's paste, and read only over the API.
+ */
 export function pgTarget(vars) {
   if (vars[VAR.local]) return localPgTarget(vars[VAR.local]);
-  requireVars(vars, [VAR.password], 'evryn-team-workspace/.env');
-  return {
-    label: `Evryn Team (session pooler, ref ${TEAM_REF})`,
-    local: false,
-    ...POOLER,
-    password: vars[VAR.password],
-    sslmode: 'require',
-  };
+  throw new ConfigError(
+    `${VAR.local} is not set. Postgres-protocol tools here connect only to a local loopback test cluster; ` +
+      'the live database is changed only by the paste files (make-paste.mjs) and read only over the API (schema-snapshot.mjs --api).',
+  );
 }
 
 /** Last-line defence: strip any known secret from text before it is printed. */

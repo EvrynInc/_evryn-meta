@@ -92,7 +92,7 @@ test('MAINTAIN (QC Finding 9): LISTED only when the servers straddle 17; a STOP 
 
 test('targets (QC Finding 4): a live side taken from loopback, with no target line, or from the same target is REFUSED', () => {
   const local = `# target=local-loopback\n${BASE}`;
-  const live = `# target=evryn-team ref=azugibmylktinddyqkhd via session pooler\n${BASE}`;
+  const live = `# target=evryn-team ref=azugibmylktinddyqkhd via api\n${BASE}`;
   assert.equal(checkTargets(local, live), null);
   assert.match(checkTargets(local, local), /local loopback/);
   assert.match(checkTargets(local, BASE), /no "# target=" line/);
@@ -111,7 +111,7 @@ test('an unrecognized or unparseable line STOPS rather than slipping through', (
 
 test('runCompare: exit 1 on a stop, 0 otherwise, 2 on usage', () => {
   const L = '# target=local-loopback\n';
-  const V = '# target=evryn-team ref=azugibmylktinddyqkhd via session pooler\n';
+  const V = '# target=evryn-team ref=azugibmylktinddyqkhd via api\n';
   const files = { a: L + BASE, b: V + BASE, c: V + swap('<= 80', '<= 81') };
   let printed = '';
   const io = { read: (p) => files[p], out: (s) => (printed += s), err: () => {} };

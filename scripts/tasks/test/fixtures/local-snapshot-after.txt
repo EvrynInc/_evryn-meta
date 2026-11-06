@@ -44,7 +44,7 @@ column tasks #21 linear_status text
 column tasks #22 search tsvector GENERATED to_tsvector('english'::regconfig, ((COALESCE(title, ''::text) || ' '::text) || COALESCE(description, ''::text)))
 constraint proposals.proposals_pkey: PRIMARY KEY (id)
 constraint proposals.proposals_status_check: CHECK ((status = ANY (ARRAY['needs_authorization'::text, 'authorized'::text, 'bounced'::text, 'denied'::text])))
-constraint proposals.proposals_task_id_fkey: FOREIGN KEY (task_id) REFERENCES tasks(id)
+constraint proposals.proposals_task_id_fkey: FOREIGN KEY (task_id) REFERENCES public.tasks(id)
 constraint task_history.task_history_op_check: CHECK ((op = ANY (ARRAY['insert'::text, 'update'::text])))
 constraint task_history.task_history_pkey: PRIMARY KEY (id)
 constraint tasks.tasks_addressed_to_shape: CHECK (((addressed_to IS NULL) OR (addressed_to ~ '^[A-Za-z0-9_.-]{1,64}$'::text)))
@@ -67,11 +67,11 @@ index tasks.tasks_parent_id_idx: CREATE INDEX tasks_parent_id_idx ON public.task
 index tasks.tasks_pkey: CREATE UNIQUE INDEX tasks_pkey ON public.tasks USING btree (id)
 index tasks.tasks_search_idx: CREATE INDEX tasks_search_idx ON public.tasks USING gin (search)
 index tasks.tasks_short_id_key: CREATE UNIQUE INDEX tasks_short_id_key ON public.tasks USING btree (short_id)
-trigger task_history.task_history_guard_insert: CREATE TRIGGER task_history_guard_insert BEFORE INSERT ON public.task_history FOR EACH ROW EXECUTE FUNCTION task_history_guard_insert() [enabled=A]
-trigger task_history.task_history_refuse_change: CREATE TRIGGER task_history_refuse_change BEFORE DELETE OR UPDATE OR TRUNCATE ON public.task_history FOR EACH STATEMENT EXECUTE FUNCTION task_history_refuse_change() [enabled=A]
-trigger tasks.tasks_after_write: CREATE TRIGGER tasks_after_write AFTER INSERT OR UPDATE ON public.tasks FOR EACH ROW EXECUTE FUNCTION tasks_after_write() [enabled=A]
-trigger tasks.tasks_before_write: CREATE TRIGGER tasks_before_write BEFORE INSERT OR UPDATE ON public.tasks FOR EACH ROW EXECUTE FUNCTION tasks_before_write() [enabled=A]
-trigger tasks.tasks_refuse_delete: CREATE TRIGGER tasks_refuse_delete BEFORE DELETE OR TRUNCATE ON public.tasks FOR EACH STATEMENT EXECUTE FUNCTION tasks_refuse_delete() [enabled=A]
+trigger task_history.task_history_guard_insert: CREATE TRIGGER task_history_guard_insert BEFORE INSERT ON public.task_history FOR EACH ROW EXECUTE FUNCTION public.task_history_guard_insert() [enabled=A]
+trigger task_history.task_history_refuse_change: CREATE TRIGGER task_history_refuse_change BEFORE DELETE OR UPDATE OR TRUNCATE ON public.task_history FOR EACH STATEMENT EXECUTE FUNCTION public.task_history_refuse_change() [enabled=A]
+trigger tasks.tasks_after_write: CREATE TRIGGER tasks_after_write AFTER INSERT OR UPDATE ON public.tasks FOR EACH ROW EXECUTE FUNCTION public.tasks_after_write() [enabled=A]
+trigger tasks.tasks_before_write: CREATE TRIGGER tasks_before_write BEFORE INSERT OR UPDATE ON public.tasks FOR EACH ROW EXECUTE FUNCTION public.tasks_before_write() [enabled=A]
+trigger tasks.tasks_refuse_delete: CREATE TRIGGER tasks_refuse_delete BEFORE DELETE OR TRUNCATE ON public.tasks FOR EACH STATEMENT EXECUTE FUNCTION public.tasks_refuse_delete() [enabled=A]
 policy proposals.service_role_only: PERMISSIVE ALL to service_role using (true) with check (true)
 policy task_history.service_role_only: PERMISSIVE ALL to service_role using (true) with check (true)
 policy tasks.service_role_only: PERMISSIVE ALL to service_role using (true) with check (true)
@@ -164,6 +164,7 @@ function task_roster(): owner=postgres security=INVOKER volatility=i config=sear
 function tasks_after_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=e39010f0082dd5d81d68d1888b41127f
 function tasks_before_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=527670e20253b2a7c6059a57c3b6a37f
 function tasks_refuse_delete(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=0c876d3a3c9374420871bcd32f549d7d
+function team_tasks_schema_snapshot(): owner=postgres security=INVOKER volatility=s config=search_path="" body_md5=4a1710d9ec9339ff5aaacdd35160e987
 function-grant task_history_guard_insert(): postgres EXECUTE
 function-grant task_history_refuse_change(): postgres EXECUTE
 function-grant task_request_actor(): postgres EXECUTE
@@ -173,3 +174,5 @@ function-grant task_roster(): service_role EXECUTE
 function-grant tasks_after_write(): postgres EXECUTE
 function-grant tasks_before_write(): postgres EXECUTE
 function-grant tasks_refuse_delete(): postgres EXECUTE
+function-grant team_tasks_schema_snapshot(): postgres EXECUTE
+function-grant team_tasks_schema_snapshot(): service_role EXECUTE

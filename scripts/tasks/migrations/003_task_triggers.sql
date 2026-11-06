@@ -344,8 +344,8 @@ create trigger task_history_refuse_change
 
 -- ============================================================================
 -- ENABLE ALWAYS (QC Finding 3): the triggers fire even under session_replication_role = replica,
--- the switch a data restore uses to skip triggers. Without this, a pooler session holding the
--- password could write tasks with no actor and no history, rewrite history, or delete tasks.
+-- the switch a data restore uses to skip triggers. Without this, any owner-level session (the SQL
+-- editor, a restore tool) could write tasks with no actor and no history, rewrite history, or delete tasks.
 -- These alter only the triggers this migration creates (inside the go: "triggers").
 -- ============================================================================
 

@@ -54,8 +54,9 @@ test('TRIPWIRE end-to-end: every script, spawned in a test run without an inject
   const cases = [
     ['tasks.mjs', ['pull', '--as', 'ac']],
     ['check.mjs', []],
-    ['migrate.mjs', ['--rehearse']],
+    ['migrate.mjs', []],
     ['schema-snapshot.mjs', []],
+    ['schema-snapshot.mjs', ['--api']],
     ['import-linear.mjs', []],
   ];
   for (const [script, args] of cases) {
@@ -129,14 +130,13 @@ test('R5: key kinds — publishable refused; legacy anon refused; legacy for ano
 
 test('a missing variable is NAMED, and nothing else is printed', () => {
   assert.throws(() => teamRestTarget({ EVRYN_TEAM_SUPABASE_URL: TEAM_URL }), /missing variable: EVRYN_TEAM_SUPABASE_SECRET_KEY/);
-  assert.throws(() => pgTarget({}), /missing variable: EVRYN_TEAM_DB_PASSWORD/);
 });
 
-test('R5 for Postgres: the default target is the hard-coded team pooler with the team user', () => {
-  const t = pgTarget({ EVRYN_TEAM_DB_PASSWORD: 'pw-123456' });
-  assert.equal(t.host, 'aws-1-us-west-2.pooler.supabase.com');
-  assert.equal(t.user, `postgres.${TEAM_REF}`);
-  assert.equal(t.sslmode, 'require');
+test('R5 for Postgres: there is NO live Postgres target — without a loopback cluster, every psql path refuses (no password exists)', () => {
+  assert.throws(() => pgTarget({}), /EVRYN_TASKS_LOCAL_PG is not set/);
+  // Even a password-shaped variable from the old design opens nothing.
+  assert.throws(() => pgTarget({ EVRYN_TEAM_DB_PASSWORD: 'pw-123456' }), /only to a local loopback test cluster/);
+  assert.equal(pgTarget({ EVRYN_TASKS_LOCAL_PG: 'postgresql://postgres@127.0.0.1:5999/x' }).local, true);
 });
 
 test('the local-test channel accepts loopback only', () => {

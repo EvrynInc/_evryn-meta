@@ -1,0 +1,57 @@
+  -- =========================================================================================
+  -- (a) BEFORE-ASSERTIONS. Live public.tasks must be exactly runtime 003's shape, and nothing this
+  --     migration creates may exist yet. STRUCTURE is pinned; tasks' existing GRANTS are not
+  --     (they may carry Supabase-only roles) — they are captured here and must be unchanged after.
+  --     This is also the binding guard against a dry run that somehow committed: it would leave
+  --     task_history behind, and this block would refuse.
+  -- =========================================================================================
+  if to_regclass('public.tasks') is null or to_regclass('public.proposals') is null then
+    raise exception 'BEFORE-ASSERTION FAILED: public.tasks or public.proposals is missing; runtime migration 003 is the prerequisite. Nothing was changed.';
+  end if;
+  if to_regclass('public.task_history') is not null then
+    raise exception 'BEFORE-ASSERTION FAILED: public.task_history already exists, so this migration has already been applied (or partly). Nothing was changed.';
+  end if;
+
+  select string_agg(a.attname || ' ' || format_type(a.atttypid, a.atttypmod)
+                    || case when a.attnotnull then ' NOT NULL' else '' end
+                    || coalesce(' DEFAULT ' || pg_get_expr(d.adbin, d.adrelid), ''), '; ' order by a.attnum)
+    into v_found
+    from pg_attribute a
+    left join pg_attrdef d on d.adrelid = a.attrelid and d.adnum = a.attnum
+   where a.attrelid = 'public.tasks'::regclass and a.attnum > 0 and not a.attisdropped;
+  if v_found is distinct from 'id uuid NOT NULL DEFAULT gen_random_uuid(); title text NOT NULL; description text NOT NULL DEFAULT ''''::text; status text NOT NULL DEFAULT ''todo''::text; raci jsonb NOT NULL DEFAULT ''{}''::jsonb; links jsonb NOT NULL DEFAULT ''[]''::jsonb; created_at timestamp with time zone NOT NULL DEFAULT now(); updated_at timestamp with time zone NOT NULL DEFAULT now()' then
+    raise exception 'BEFORE-ASSERTION FAILED: public.tasks columns are not runtime 003''s shape. Found: %. Nothing was changed.', v_found;
+  end if;
+
+  select string_agg(conname || ': ' || pg_get_constraintdef(oid), '; ' order by conname)
+    into v_found
+    from pg_constraint where conrelid = 'public.tasks'::regclass;
+  if v_found is distinct from 'tasks_description_check: CHECK ((char_length(description) <= 600)); tasks_pkey: PRIMARY KEY (id)' then
+    raise exception 'BEFORE-ASSERTION FAILED: public.tasks constraints are not runtime 003''s. Found: %. Nothing was changed.', v_found;
+  end if;
+
+  select count(*) into v_n from pg_trigger where tgrelid = 'public.tasks'::regclass and not tgisinternal;
+  if v_n <> 0 then
+    raise exception 'BEFORE-ASSERTION FAILED: public.tasks already has % non-internal trigger(s); runtime 003 has none. Nothing was changed.', v_n;
+  end if;
+
+  select pg_get_userbyid(relowner) into v_found from pg_class where oid = 'public.tasks'::regclass;
+  if v_found is distinct from 'postgres' then
+    raise exception 'BEFORE-ASSERTION FAILED: public.tasks is owned by %, not postgres. Nothing was changed.', v_found;
+  end if;
+  if not (select relrowsecurity from pg_class where oid = 'public.tasks'::regclass) then
+    raise exception 'BEFORE-ASSERTION FAILED: row-level security is not enabled on public.tasks. Nothing was changed.';
+  end if;
+
+  select string_agg(proname, ', ' order by proname) into v_found
+    from pg_proc
+   where pronamespace = 'public'::regnamespace
+     and proname in ('task_roster','task_request_actor','tasks_before_write','tasks_after_write','tasks_refuse_delete',
+                     'task_history_guard_insert','task_history_refuse_change','team_tasks_schema_snapshot');
+  if v_found is not null then
+    raise exception 'BEFORE-ASSERTION FAILED: function(s) this migration creates already exist: %. Nothing was changed.', v_found;
+  end if;
+
+  execute v_tasks_grants_sql  into v_tasks_grants_before;
+  execute v_original_cols_sql into v_original_cols_before;
+  execute v_proposals_sql     into v_proposals_before;

@@ -52,7 +52,12 @@ test('no script invokes a tool by bare name through a package runner', () => {
 
 test('the roster lives in exactly one place (public.task_roster in 003); nothing else copies it', () => {
   // A "copy" = any shipped file naming three roster members who appear nowhere else together.
-  const shipped = files.filter((f) => !relative(TASKS_DIR, f).replace(/\\/g, '/').startsWith('test/'));
+  // The generated paste files contain migration 003 VERBATIM — a derived copy, not a second home:
+  // paste.test.mjs fails if they ever differ from what make-paste.mjs builds from the migrations.
+  const shipped = files.filter((f) => {
+    const rel = relative(TASKS_DIR, f).replace(/\\/g, '/');
+    return !rel.startsWith('test/') && !rel.startsWith('paste/');
+  });
   const holders = shipped.filter((f) => {
     const text = readFileSync(f, 'utf8').toLowerCase();
     return ['marlowe', 'dominic', 'nathan'].every((n) => text.includes(n));

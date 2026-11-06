@@ -28,7 +28,8 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { TASKS_DIR } from '../helpers.mjs';
 import { CODE_ROOT } from '../../lib/config.mjs';
-import { findPgTool, pgEnv } from '../../lib/pg.mjs';
+import { findPgTool, pgEnv, runPsql } from '../../lib/pg.mjs';
+import { buildPastes } from '../../make-paste.mjs';
 import { pgToolsAvailable, startCluster } from './cluster.mjs';
 
 const RUNTIME_003 =
@@ -142,7 +143,6 @@ function runScript(script, db, args = []) {
       EVRYN_TASKS_TEST_MODE: '1',
       EVRYN_TASKS_ENV_FROM_PROCESS: '1',
       EVRYN_TASKS_LOCAL_PG: cluster.urlFor(db),
-      EVRYN_TEAM_DB_PASSWORD: '',
     },
   });
 }
@@ -806,6 +806,96 @@ suite(`QC fix trip 2 (defaults ${MODE})`, () => {
     ok(replica(`update public.tasks set description = 'replica edit' where id = ${lit(id)};`, hdr('ac')));
     assert.equal(historyCount(DB, id), before + 1);
     assert.equal(scalar(DB, `select string_agg(distinct tgenabled::text, ',') from pg_trigger t join pg_class c on c.oid = t.tgrelid where not t.tgisinternal and c.relname in ('tasks','task_history');`), 'A');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// FIX TRIP 3: the paste files Justin runs in the Supabase SQL editor (no agent holds the password)
+// ---------------------------------------------------------------------------
+
+suite(`paste files (defaults ${MODE})`, () => {
+  const pastes = buildPastes();
+  /** psql -f splits on statements and sends them ONE AT A TIME — the harder case for atomicity. */
+  const runPaste = (db, text, { continueOnError = false } = {}) =>
+    runPsql(cluster.targetFor(db), ['-q', '-A', '-t', ...(continueOnError ? ['-v', 'ON_ERROR_STOP=0'] : []), '-f', '-'], { input: text });
+  const snap = (db) => ok(runScript('schema-snapshot.mjs', db));
+  let n = 0;
+  const freshDb = (legacyRows = '') => {
+    n += 1;
+    const db = `paste_${MODE}_${n}`;
+    prepareDb(db, { legacyRows });
+    return db;
+  };
+
+  test('Paste 1 (dry run) raises "DRY RUN OK — nothing was changed (0 rows; 0 NOT VALID)" and leaves the snapshot BYTE-IDENTICAL', () => {
+    for (const continueOnError of [false, true]) {
+      const db = freshDb();
+      const before = snap(db);
+      const r = runPaste(db, pastes.dryRun, { continueOnError });
+      assert.match(r.stderr, /ERROR: {2}DRY RUN OK — nothing was changed \(0 rows; 0 NOT VALID\)/, r.stderr);
+      assert.equal(snap(db), before, `the dry run changed something (continueOnError=${continueOnError})`);
+    }
+  });
+
+  test('Paste 2 (apply) succeeds and produces exactly the state migrate.mjs produces; the snapshot function returns the script\'s text', () => {
+    const db = freshDb();
+    const r = runPaste(db, pastes.apply);
+    assert.equal(r.status, 0, r.stderr);
+    assert.equal(ourObjects(snap(db)), ourObjects(snap(DB)), 'the paste and migrate.mjs produced different objects');
+    // The function, called as service_role (as PostgREST would), returns the same text as the script.
+    const lfOnly = (s) => s.replace(/\r\n/g, '\n').trim();
+    const fromFunction = lfOnly(ok(req(db, 'select public.team_tasks_schema_snapshot();')));
+    const fromScript = lfOnly(snap(db).replace(/\r\n/g, '\n').split('\n').slice(1).join('\n')); // minus the "# target=" line
+    assert.equal(fromFunction, fromScript);
+    refused(req(db, 'select public.team_tasks_schema_snapshot();', { role: 'anon' }), /permission denied for function team_tasks_schema_snapshot/);
+    // and the CLI's role can work in it
+    ok(req(db, `insert into public.tasks (title, status, raci) values ('after paste', 'open', '{"r":"ac"}');`, { header: hdr('ac') }));
+  });
+
+  test('Paste 2 run a SECOND time is refused by its before-assertions and changes nothing', () => {
+    const db = freshDb();
+    assert.equal(runPaste(db, pastes.apply).status, 0);
+    const before = snap(db);
+    const r = runPaste(db, pastes.apply);
+    refused(r, /BEFORE-ASSERTION FAILED: public\.task_history already exists/);
+    assert.equal(snap(db), before);
+  });
+
+  test('a deliberately BROKEN after-assertion rolls EVERYTHING back — snapshot byte-identical — even in continue-on-error mode', () => {
+    const broken = pastes.apply.replace("('search','tsvector')", "('search','tsvectorX')");
+    assert.notEqual(broken, pastes.apply, 'the break did not apply');
+    for (const continueOnError of [false, true]) {
+      const db = freshDb();
+      const before = snap(db);
+      const r = runPaste(db, broken, { continueOnError });
+      assert.match(r.stderr, /AFTER-ASSERTION FAILED: tasks columns missing or mistyped: search tsvectorX\. Everything was rolled back\./);
+      assert.equal(snap(db), before, `a failed paste left changes behind (continueOnError=${continueOnError})`);
+    }
+  });
+
+  test('a deliberately BROKEN before-assertion refuses before anything runs — snapshot byte-identical', () => {
+    const broken = pastes.apply.replace("tasks_pkey: PRIMARY KEY (id)'", "tasks_pkey: PRIMARY KEY (nope)'");
+    assert.notEqual(broken, pastes.apply, 'the break did not apply');
+    const db = freshDb();
+    const before = snap(db);
+    refused(runPaste(db, broken), /BEFORE-ASSERTION FAILED: public\.tasks constraints are not runtime 003's/);
+    assert.equal(snap(db), before);
+  });
+
+  test('a live tasks that is NOT runtime 003\'s shape is refused (an extra column)', () => {
+    const db = freshDb();
+    ok(cluster.psql(db, 'alter table public.tasks add column surprise text;'));
+    refused(runPaste(db, pastes.dryRun), /BEFORE-ASSERTION FAILED: public\.tasks columns are not runtime 003's shape/);
+  });
+
+  test('old rows that break a rule: the dry run REPORTS the counts, and Paste 2 REFUSES by itself, changing nothing', () => {
+    const db = freshDb(`insert into public.tasks (title, status, raci) values (${lit('L'.repeat(90))}, 'todo', '{}'::jsonb);
+                        insert into public.tasks (title, status, raci) values ('fine old row', 'proposed', '{"r":"lucas","a":"justin"}'::jsonb);`);
+    const before = snap(db);
+    assert.match(runPaste(db, pastes.dryRun).stderr, /DRY RUN OK — nothing was changed \(2 rows; 3 NOT VALID\)/);
+    assert.equal(snap(db), before);
+    refused(runPaste(db, pastes.apply), /APPLY REFUSED — 3 constraint\(s\) would be left NOT VALID by existing rows\. Nothing was changed\./);
+    assert.equal(snap(db), before);
   });
 });
 

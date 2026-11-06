@@ -8,150 +8,87 @@
  * privileges for future objects.
  *
  * USAGE
- *   node schema-snapshot.mjs > live-before.txt                    (the Evryn Team database)
  *   EVRYN_TASKS_LOCAL_PG=postgresql://postgres@127.0.0.1:<port>/postgres node schema-snapshot.mjs
- *   node snapshot-compare.mjs local-before.txt live-before.txt     (classifies every difference)
+ *       a LOCAL loopback cluster, through psql (before or after migrating)
+ *   node schema-snapshot.mjs --api
+ *       the LIVE Evryn Team database, AFTER Paste 2, through PostgREST with the secret key: it calls
+ *       public.team_tasks_schema_snapshot(). (There is no database password, so there is no live
+ *       "before" snapshot: Paste 2's own before-assertions pin the live shape instead.)
+ *   node snapshot-compare.mjs test/fixtures/local-snapshot-after.txt live-after.txt
  *
- * WHAT IS A STOP (Soren, S1, 2026-11-05 15:29) is decided by snapshot-compare.mjs, not by eye. Each
- * fact this prints is ONE line with a kind prefix, so the compare can classify it: the server version
- * (`#` lines, information), `table` (owner), `rls` (enabled / forced), `column`, `constraint`, `index`,
- * `trigger`, `policy`, `grant` (table privileges, one grantee and privilege per line), `sequence` and
- * `sequence-grant` (the identity sequences), `function` (definition hash, security mode, search_path)
- * and `function-grant` (EXECUTE, one grantee per line, for every function the migrations create),
- * and `default-acl` (the project's default privileges; LISTED by the compare, never a stop). The very
- * first line is `# target=...`: where the snapshot was taken (loopback or the team pooler).
+ * ONE SOURCE OF TRUTH. The query is NOT in this file: it is extracted from the body of
+ * public.team_tasks_schema_snapshot() in migrations/004_schema_snapshot_fn.sql (between the
+ * SNAPSHOT-QUERY markers), so the local script and the live function print the same text by
+ * construction.
  *
- * Runs inside `begin transaction read only` and ends with rollback. Prints no credential.
+ * THE LINE FORMAT. Each fact is ONE line with a kind prefix, so snapshot-compare.mjs can classify it:
+ * `#` headers (information), `table` (owner), `rls`, `column`, `constraint`, `index`, `trigger`,
+ * `policy`, `grant`, `sequence`, `sequence-grant`, `function`, `function-grant`, `default-acl`. The very
+ * first line is `# target=...`, added here: where the snapshot was taken.
+ *
+ * Local runs inside `begin transaction read only` … `rollback`. Prints no credential.
  * Truncation check: the last line of this file should read `FULL FILE LOADED`.
  */
-import { pathToFileURL } from 'node:url';
-import { ConfigError, ENV_FILES, TEAM_REF, VAR, loadVars, pgTarget } from './lib/config.mjs';
+import { readFileSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { ConfigError, ENV_FILES, TEAM_REF, VAR, loadVars, pgTarget, redact, teamRestTarget } from './lib/config.mjs';
 import { runPsql } from './lib/pg.mjs';
+import { RestError, makeRest } from './lib/rest.mjs';
 
-export const SNAPSHOT_SQL = String.raw`
-begin transaction read only;
+const SNAPSHOT_FN_FILE = join(dirname(fileURLToPath(import.meta.url)), 'migrations', '004_schema_snapshot_fn.sql');
 
-select '# server_version=' || current_setting('server_version');
-select '# server_version_num=' || current_setting('server_version_num');
+/** The snapshot query, extracted from migration 004 — the only copy that exists. */
+export function snapshotQuery(file = SNAPSHOT_FN_FILE) {
+  const text = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
+  const m = text.match(/-- SNAPSHOT-QUERY-BEGIN\n([\s\S]*?)\n-- SNAPSHOT-QUERY-END/);
+  if (!m) throw new Error(`schema-snapshot: SNAPSHOT-QUERY markers not found in ${file}`);
+  return m[1];
+}
 
-select format('table %s: owner=%s', c.relname, pg_get_userbyid(c.relowner))
-from pg_class c
-where c.relnamespace = 'public'::regnamespace and c.relkind = 'r' and c.relname in ('tasks','task_history','proposals')
-order by c.relname;
-
-select format('rls %s: enabled=%s forced=%s', c.relname, c.relrowsecurity::text, c.relforcerowsecurity::text)
-from pg_class c
-where c.relnamespace = 'public'::regnamespace and c.relkind = 'r' and c.relname in ('tasks','task_history','proposals')
-order by c.relname;
-
-select format('column %s #%s %s %s%s%s%s',
-  c.relname,
-  lpad(row_number() over (partition by c.relname order by a.attnum)::text, 2, '0'),
-  a.attname,
-  format_type(a.atttypid, a.atttypmod),
-  case when a.attnotnull then ' NOT NULL' else '' end,
-  case a.attidentity when 'a' then ' IDENTITY ALWAYS' when 'd' then ' IDENTITY BY DEFAULT' else '' end,
-  case when a.attgenerated = 's' then ' GENERATED ' || pg_get_expr(d.adbin, d.adrelid)
-       when d.adbin is not null then ' DEFAULT ' || pg_get_expr(d.adbin, d.adrelid)
-       else '' end)
-from pg_class c
-join pg_attribute a on a.attrelid = c.oid and a.attnum > 0 and not a.attisdropped
-left join pg_attrdef d on d.adrelid = c.oid and d.adnum = a.attnum
-where c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history','proposals')
-order by c.relname, a.attnum;
-
-select format('constraint %s.%s: %s', c.relname, con.conname, pg_get_constraintdef(con.oid))
-from pg_constraint con join pg_class c on c.oid = con.conrelid
-where c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history','proposals')
-order by c.relname, con.conname;
-
-select format('index %s.%s: %s', tablename, indexname, indexdef)
-from pg_indexes
-where schemaname = 'public' and tablename in ('tasks','task_history','proposals')
-order by tablename, indexname;
-
-select format('trigger %s.%s: %s [enabled=%s]', c.relname, t.tgname, pg_get_triggerdef(t.oid), t.tgenabled)
-from pg_trigger t join pg_class c on c.oid = t.tgrelid
-where not t.tgisinternal and c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history','proposals')
-order by c.relname, t.tgname;
-
-select format('policy %s.%s: %s %s to %s using (%s) with check (%s)',
-  tablename, policyname, permissive, cmd, array_to_string(roles, ','), coalesce(qual, '-'), coalesce(with_check, '-'))
-from pg_policies
-where schemaname = 'public' and tablename in ('tasks','task_history','proposals')
-order by tablename, policyname;
-
-select format('grant %s: %s %s%s', c.relname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type,
-              case when a.is_grantable then ' WITH GRANT OPTION' else '' end)
-from pg_class c
-cross join lateral aclexplode(coalesce(c.relacl, acldefault('r', c.relowner))) a
-left join pg_roles r on r.oid = a.grantee
-where c.relnamespace = 'public'::regnamespace and c.relkind = 'r' and c.relname in ('tasks','task_history','proposals')
-order by c.relname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type;
-
-select format('sequence %s.%s: owner=%s', c.relname, att.attname, pg_get_userbyid(sc.relowner))
-from pg_class c
-join pg_attribute att on att.attrelid = c.oid and att.attidentity <> '' and not att.attisdropped
-join pg_class sc on sc.oid = pg_get_serial_sequence(format('public.%I', c.relname), att.attname)::regclass
-where c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history','proposals')
-order by c.relname, att.attname;
-
-select format('sequence-grant %s.%s: %s %s', c.relname, att.attname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type)
-from pg_class c
-join pg_attribute att on att.attrelid = c.oid and att.attidentity <> '' and not att.attisdropped
-join pg_class sc on sc.oid = pg_get_serial_sequence(format('public.%I', c.relname), att.attname)::regclass
-cross join lateral aclexplode(coalesce(sc.relacl, acldefault('s', sc.relowner))) a
-left join pg_roles r on r.oid = a.grantee
-where c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history','proposals')
-order by c.relname, att.attname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type;
-
-select format('function %s(%s): owner=%s security=%s volatility=%s config=%s body_md5=%s',
-  p.proname, pg_get_function_identity_arguments(p.oid), pg_get_userbyid(p.proowner),
-  case when p.prosecdef then 'DEFINER' else 'INVOKER' end, p.provolatile,
-  coalesce(array_to_string(p.proconfig, ';'), '-'),
-  md5(replace(p.prosrc, chr(13), '')))
-from pg_proc p
-where p.pronamespace = 'public'::regnamespace and (p.proname like 'task\_%' or p.proname like 'tasks\_%')
-order by p.proname;
-
-select format('function-grant %s(%s): %s %s', p.proname, pg_get_function_identity_arguments(p.oid), coalesce(r.rolname, 'PUBLIC'), a.privilege_type)
-from pg_proc p
-cross join lateral aclexplode(coalesce(p.proacl, acldefault('f', p.proowner))) a
-left join pg_roles r on r.oid = a.grantee
-where p.pronamespace = 'public'::regnamespace and (p.proname like 'task\_%' or p.proname like 'tasks\_%')
-order by p.proname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type;
-
--- Default privileges for FUTURE objects (QC Finding 1). Recorded so a before-compare can see whether a
--- project still has Supabase's old defaults. The compare LISTS these and never stops on them: the
--- migration grants and revokes every object it creates explicitly, so the defaults no longer decide
--- the result.
-select format('default-acl %s %s %s: %s %s',
-  pg_get_userbyid(d.defaclrole), coalesce(n.nspname, '(all-schemas)'),
-  case d.defaclobjtype when 'r' then 'tables' when 'S' then 'sequences' when 'f' then 'functions'
-                       when 'T' then 'types' when 'n' then 'schemas' else d.defaclobjtype::text end,
-  coalesce(r.rolname, 'PUBLIC'), a.privilege_type)
-from pg_default_acl d
-left join pg_namespace n on n.oid = d.defaclnamespace
-cross join lateral aclexplode(d.defaclacl) a
-left join pg_roles r on r.oid = a.grantee
-order by 1;
-
-rollback;
-`;
+// search_path = '' exactly as inside the function (its `set search_path = ''`): the catalog
+// deparsers (pg_get_constraintdef, pg_get_triggerdef, …) schema-qualify names according to the
+// search_path, so without this the script and the function would print `tasks(id)` vs `public.tasks(id)`.
+export const SNAPSHOT_SQL = `begin transaction read only;\nset local search_path = '';\n${snapshotQuery()};\nrollback;\n`;
 
 /** The first line of every snapshot. No credential, and no port (so local golden files stay stable). */
 export function targetLine(target) {
-  return target.local ? '# target=local-loopback' : `# target=evryn-team ref=${TEAM_REF} via session pooler`;
+  if (target.local) return '# target=local-loopback';
+  return `# target=evryn-team ref=${TEAM_REF} via api`;
 }
 
-export function runSnapshot(argv, { env, psql = runPsql, out = (s) => process.stdout.write(s), err = console.error } = {}) {
-  if (argv.length) {
-    err('usage: node schema-snapshot.mjs   (no options; EVRYN_TASKS_LOCAL_PG selects a local loopback cluster)');
+const normalize = (text) => String(text).split(/\r?\n/).filter((l) => l.trim() !== '').join('\n');
+
+export async function runSnapshot(argv, { env, psql = runPsql, fetchImpl = globalThis.fetch, out = (s) => process.stdout.write(s), err = console.error } = {}) {
+  const api = argv.includes('--api');
+  if (argv.some((a) => a !== '--api')) {
+    err('usage: node schema-snapshot.mjs [--api]   (no flag: a local loopback cluster via EVRYN_TASKS_LOCAL_PG; --api: live, after Paste 2)');
     return 2;
   }
+
+  if (api) {
+    let secrets = [];
+    try {
+      const target = teamRestTarget(loadVars([VAR.url, VAR.key], { env, file: ENV_FILES.team }));
+      secrets = [target.key];
+      const rest = makeRest({ target, fetchImpl });
+      const { data } = await rest.request('POST', 'rpc/team_tasks_schema_snapshot', { body: {} });
+      if (typeof data !== 'string') throw new RestError('rpc/team_tasks_schema_snapshot did not return text');
+      out(`${targetLine({ local: false })}\n${normalize(data)}\n`);
+      return 0;
+    } catch (e) {
+      if (e instanceof ConfigError) err(`SNAPSHOT REFUSED: ${e.message}`);
+      else if (e instanceof RestError) {
+        err(redact(`SNAPSHOT FAILED: ${e.message}${e.code ? ` [${e.code}]` : ''}${e.hint ? ` hint: ${e.hint}` : ''}`, secrets));
+        if (e.status === 404) err('  (If Paste 2 has not been run, the snapshot function does not exist yet — that is expected.)');
+      } else err(redact(`SNAPSHOT FAILED: ${e instanceof Error ? e.message : 'unknown error'}`, secrets));
+      return 1;
+    }
+  }
+
   let target;
   try {
-    target = pgTarget(loadVars([VAR.password, VAR.local], { env, file: ENV_FILES.team }));
+    target = pgTarget(loadVars([VAR.local], { env, file: ENV_FILES.team }));
   } catch (e) {
     err(`SNAPSHOT REFUSED: ${e instanceof ConfigError ? e.message : 'could not resolve the target'}`);
     return 1;
@@ -161,14 +98,13 @@ export function runSnapshot(argv, { env, psql = runPsql, out = (s) => process.st
     err(`SNAPSHOT FAILED: psql exited ${r.status}\n${r.stderr.trim()}`);
     return 1;
   }
-  const text = r.stdout.split(/\r?\n/).filter((l) => l.trim() !== '').join('\n');
   // WHERE the snapshot came from (QC Finding 4): the compare refuses a "live" side that is loopback.
-  out(`${targetLine(target)}\n${text}\n`);
+  out(`${targetLine(target)}\n${normalize(r.stdout)}\n`);
   return 0;
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  process.exitCode = runSnapshot(process.argv.slice(2));
+  process.exitCode = await runSnapshot(process.argv.slice(2));
 }
 
 // Truncation canary — DO NOT REMOVE: FULL FILE LOADED
