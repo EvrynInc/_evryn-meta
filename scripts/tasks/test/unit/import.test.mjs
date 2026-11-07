@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { FAKE_KEY, TEST_ENV, jsonResponse } from '../helpers.mjs';
 import { LINEAR_ENDPOINT, OPEN_ISSUES_QUERY, STATUS_MAP, isJustinTicket, parseLabels, planIssue, renderReport } from '../../lib/linear.mjs';
 import { runImport } from '../../import-linear.mjs';
+import { DEFAULT_ACCOUNTABLE } from '../../lib/defaults.mjs';
 
 const LINEAR_KEY = 'lin_' + 'api_SENTINEL_never_print_123';
 
@@ -172,7 +173,10 @@ test('owner and accountable carry over; C/I become raci lists; other labels beco
   const p = planIssue(issue(8, { labels: ['R: Soren', 'A: lucas', 'C: mira', 'I: thea', 'infra'] }));
   assert.deepEqual(p.row.raci, { r: 'soren', a: 'lucas', c: ['mira'], i: ['thea'] });
   assert.deepEqual(p.row.tags, ['infra']);
-  assert.equal(planIssue(issue(9, { labels: ['R: emma'] })).row.raci.a, 'justin');
+  // Ruling 3.3 (Soren-005): a ticket with no A: label takes DEFAULT_ACCOUNTABLE, lucas; an explicit A: is honored.
+  assert.equal(planIssue(issue(9, { labels: ['R: emma'] })).row.raci.a, 'lucas');
+  assert.equal(planIssue(issue(9, { labels: ['R: emma'] })).row.raci.a, DEFAULT_ACCOUNTABLE);
+  assert.equal(planIssue(issue(9, { labels: ['R: emma', 'A: justin'] })).row.raci.a, 'justin');
 });
 
 test('no owner, two owners, unmapped status, email → fail; phone → warning only', () => {

@@ -4,7 +4,22 @@ import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
 import { join } from 'node:path';
 import { FAKE_KEY, TASKS_DIR, TEST_ENV, capture, fakePostgrest, jsonResponse } from '../helpers.mjs';
-import { HELP, PULL_CLOSED_CAP, PULL_OPEN_CAP, canonicalJson, headline, run } from '../../lib/cli.mjs';
+import {
+  CLOSED_STATUSES,
+  HELP,
+  PULL_CLOSED_CAP,
+  PULL_OPEN_CAP,
+  PULL_REVIEW_CAP,
+  PULL_STATUSES,
+  SETTABLE_STATUSES,
+  STATUSES,
+  addDays,
+  canonicalJson,
+  headline,
+  ptToday,
+  run,
+} from '../../lib/cli.mjs';
+import { DEFAULT_ACCOUNTABLE } from '../../lib/defaults.mjs';
 
 const NOW = new Date('2026-11-05T22:00:00Z');
 
@@ -122,7 +137,7 @@ test('every write sends x-evryn-actor', async () => {
   const post = r.calls.find((c) => c.init.method === 'POST');
   assert.equal(post.init.headers['x-evryn-actor'], 'mira');
   const body = JSON.parse(post.init.body);
-  assert.deepEqual(body.raci, { r: 'mira', a: 'justin' });
+  assert.deepEqual(body.raci, { r: 'mira', a: 'lucas' });
   assert.equal(body.status, 'open');
 });
 
@@ -217,7 +232,9 @@ test('R6: an email anywhere in a write is REFUSED and nothing is sent', async ()
     ['add', '--as', 'ac', '--title', 'ok', '--tags', 'x@y.io'],
     ['add', '--as', 'ac', '--title', 'ok', '--link', 'mailto:x@y.io'],
     ['close', 'T-1', '--as', 'ac', '--note', 'replied to x@y.com'],
-    ['sign', 'T-1', '--as', 'ac', '--ref', 'email from j@x.com'],
+    ['sign', 'T-1', '--as', 'lucas', '--ref', 'email from j@x.com'],
+    ['add', '--as', 'ac', '--title', 'ok', '--note', 'per x@y.io'],
+    ['update', 'T-1', '--as', 'ac', '--note', 'told q@r.org'],
     ['update', 'T-1', '--as', 'ac', '--title', 'see z@q.org'],
   ];
   for (const argv of cases) {
@@ -315,4 +332,261 @@ test('unknown options and commands are usage errors (exit 2)', async () => {
   assert.equal((await cli(['frobnicate'])).code, 2);
   assert.equal((await cli(['pull', '--as', 'ac', '--bogus'])).code, 2);
   assert.equal((await cli(['show', 'twelve'])).code, 2);
+});
+
+// ---------------------------------------------------------------------------
+// migration 005 — statuses, the note, sign, routing (Soren's cutover design §1.5)
+// ---------------------------------------------------------------------------
+
+const writes = (r) => r.calls.filter((c) => c.init.method !== 'GET');
+const patchOf = (r) => JSON.parse(r.calls.find((c) => c.init.method === 'PATCH').init.body);
+const postOf = (r) => JSON.parse(r.calls.find((c) => c.init.method === 'POST').init.body);
+
+test('005: the status lists are split, and the sets are exactly as designed', () => {
+  assert.deepEqual(STATUSES, ['backlog', 'proposed', 'open', 'in_progress', 'blocked', 'needs_acceptance', 'done', 'decided_against']);
+  assert.deepEqual(SETTABLE_STATUSES, ['backlog', 'proposed', 'open', 'in_progress', 'blocked', 'needs_acceptance']);
+  assert.deepEqual(PULL_STATUSES, ['proposed', 'open', 'in_progress', 'blocked', 'needs_acceptance']);
+  assert.deepEqual(CLOSED_STATUSES, ['done', 'decided_against']);
+  // siblings, asserted together: settable ∪ closed = all; pull = settable minus backlog; nothing closed is settable
+  assert.deepEqual([...SETTABLE_STATUSES, ...CLOSED_STATUSES].sort(), [...STATUSES].sort());
+  assert.deepEqual(PULL_STATUSES, SETTABLE_STATUSES.filter((s) => s !== 'backlog'));
+});
+
+test('005: update refuses --status without --note, before any request', async () => {
+  const r = await cli(['update', 'T-1', '--as', 'ac', '--status', 'blocked'], { rows: [task(1)] });
+  assert.equal(r.code, 2);
+  assert.match(r.err, /a status change needs --note/);
+  assert.equal(r.calls.length, 0);
+});
+
+test('005: update T-n --note alone is a COMMENT: the patch carries only the note', async () => {
+  const r = await cli(['update', 'T-1', '--as', 'ac', '--note', 'handed the spec to Mira: docs/x.md'], { rows: [task(1)] });
+  assert.equal(r.code, 0, r.err);
+  assert.deepEqual(patchOf(r), { note: 'handed the spec to Mira: docs/x.md' });
+  assert.match(r.out, /^commented on T-/m);
+});
+
+test('005: a status change with --note sends both', async () => {
+  const r = await cli(['update', 'T-1', '--as', 'ac', '--status', 'blocked', '--note', 'waiting on soren'], { rows: [task(1)] });
+  assert.equal(r.code, 0, r.err);
+  assert.deepEqual(patchOf(r), { status: 'blocked', note: 'waiting on soren' });
+});
+
+test('005: a --note identical to the task\'s current note is refused after one read, and nothing is written', async () => {
+  const r = await cli(['update', 'T-1', '--as', 'ac', '--status', 'open', '--note', 'same words'], { rows: [task(1, { status: 'blocked', note: 'same words' })] });
+  assert.equal(r.code, 2);
+  assert.match(r.err, /matches this task's last note word for word/);
+  assert.equal(r.calls.filter((c) => c.init.method === 'GET').length, 1);
+  assert.equal(writes(r).length, 0);
+});
+
+test('005: a blank or over-long --note is refused before any request', async () => {
+  for (const note of ['   ', 'n'.repeat(601)]) {
+    const r = await cli(['update', 'T-1', '--as', 'ac', '--note', note], { rows: [task(1)] });
+    assert.equal(r.code, 2);
+    assert.equal(r.calls.length, 0);
+  }
+});
+
+test('005: add --note writes the note on the insert', async () => {
+  const r = await cli(['add', '--as', 'ac', '--title', 'x', '--note', 'from the 11/06 standup']);
+  assert.equal(r.code, 0, r.err);
+  assert.equal(postOf(r).note, 'from the 11/06 standup');
+});
+
+test('005: close --note still writes closing_note, and no second note', async () => {
+  const r = await cli(['close', 'T-1', '--as', 'ac', '--note', 'shipped; docs/x.md']);
+  assert.equal(r.code, 0, r.err);
+  const p = patchOf(r);
+  assert.equal(p.closing_note, 'shipped; docs/x.md');
+  assert.equal(p.note, undefined);
+});
+
+test('005: sign refuses any actor but lucas or justin before a request; lucas may sign, with an optional --note', async () => {
+  for (const as of ['ac', 'nathan', 'mira']) {
+    const r = await cli(['sign', 'T-1', '--as', as, '--ref', 'brief Log 14:52']);
+    assert.equal(r.code, 2, as);
+    assert.match(r.err, /only lucas or justin may sign/);
+    assert.equal(r.calls.length, 0);
+  }
+  for (const as of ['lucas', 'justin']) {
+    const r = await cli(['sign', 'T-1', '--as', as, '--ref', 'brief Log 14:52', '--note', 'his yes at standup']);
+    assert.equal(r.code, 0, r.err);
+    assert.deepEqual(Object.keys(patchOf(r)).sort(), ['note', 'signed_at', 'signed_ref']);
+  }
+});
+
+test('005: an add owned by someone else is a REQUEST: proposed, addressed to them — each default yields to its option', async () => {
+  const req = await cli(['add', '--as', 'lucas', '--title', 'review the cutover doc', '--owner', 'soren']);
+  assert.equal(req.code, 0, req.err);
+  assert.equal(postOf(req).status, 'proposed');
+  assert.equal(postOf(req).addressed_to, 'soren');
+  const authorized = await cli(['add', '--as', 'lucas', '--title', 'x', '--owner', 'soren', '--status', 'open']);
+  assert.equal(postOf(authorized).status, 'open');
+  assert.equal(postOf(authorized).addressed_to, 'soren');
+  const unaddressed = await cli(['add', '--as', 'lucas', '--title', 'x', '--owner', 'soren', '--to', 'none']);
+  assert.equal(postOf(unaddressed).addressed_to, undefined);
+  const self = await cli(['add', '--as', 'soren', '--title', 'x']);
+  assert.equal(postOf(self).status, 'open');
+  assert.equal(postOf(self).addressed_to, undefined);
+});
+
+test('005: needs_acceptance must be addressed (courtesy, ahead of tasks_acceptance_addressed)', async () => {
+  assert.equal((await cli(['add', '--as', 'ac', '--title', 'x', '--status', 'needs_acceptance'])).code, 2);
+  assert.equal((await cli(['add', '--as', 'ac', '--title', 'x', '--status', 'needs_acceptance', '--to', 'lucas'])).code, 0);
+  const r = await cli(['update', 'T-1', '--as', 'ac', '--status', 'needs_acceptance', '--note', 'done; please accept'], { rows: [task(1)] });
+  assert.equal(r.code, 2);
+  assert.equal(writes(r).length, 0);
+});
+
+test('005: show prints each history row\'s note under it, and a note-only row as a comment', async () => {
+  const rows = [{ ...task(7), id: 'u7', raci: { r: 'lucas', a: 'lucas' }, description: '', created_at: 'c', updated_at: 'u', links: [], note: 'row note — never printed' }];
+  const history = [
+    { id: 1, task_id: 'u7', at: 'a1', actor: 'lucas', op: 'insert', changed_fields: ['title'], old: null, new: {}, flags: [], note: null },
+    { id: 2, task_id: 'u7', at: 'a2', actor: 'lucas', op: 'update', changed_fields: ['status'], old: { status: 'open' }, new: { status: 'blocked' }, flags: [], note: 'waiting on soren' },
+    { id: 3, task_id: 'u7', at: 'a3', actor: 'mira', op: 'update', changed_fields: [], old: {}, new: {}, flags: [], note: 'see docs/y.md' },
+  ];
+  const r = await cli(['show', 'T-7'], { rows, history });
+  assert.equal(r.code, 0, r.err);
+  assert.match(r.out, /#2 a2 lucas status: "open" → "blocked"\n {6}note: waiting on soren\n/);
+  assert.match(r.out, /#3 a3 mira commented\n {6}note: see docs\/y\.md\n/);
+  assert.ok(!r.out.includes('row note'), 'the row\'s own note column was printed');
+  assert.ok(r.calls.some((c) => c.url.includes('task_history') && c.url.includes(',note')), 'history read without its note');
+});
+
+test('005: export reads and writes the note column', async () => {
+  const r = await cli(['export'], { rows: [task(1, { note: 'n1' })] });
+  assert.equal(r.code, 0, r.err);
+  assert.match(r.calls[0].url, /select=[^&]*\bnote\b/);
+  assert.equal(JSON.parse(r.out)[0].note, 'n1');
+});
+
+// ---------------------------------------------------------------------------
+// Soren-005 Ruling 2: backlog due for review (fixed clock: NOW is 2026-11-05 14:00 PT)
+// ---------------------------------------------------------------------------
+
+const backlog = (n, needed_by, extra = {}) => task(n, { status: 'backlog', needed_by, ...extra });
+
+test('ptToday is Pacific: 2026-11-06T05:00Z is still 11/05 in Seattle', () => {
+  assert.equal(ptToday(() => new Date('2026-11-06T05:00:00Z')), '2026-11-05');
+  assert.equal(ptToday(() => NOW), '2026-11-05');
+  assert.equal(addDays('2026-11-05', 90), '2027-02-03');
+});
+
+test('Ruling 2.1–2.3: due yesterday and today appear in the review section; tomorrow, another owner\'s, and the open section never', async () => {
+  const rows = [
+    task(1, { owner: 'lucas' }),
+    backlog(2, '2026-11-04'),
+    backlog(3, '2026-11-05'),
+    backlog(4, '2026-11-06'),
+    backlog(5, '2026-11-01', { owner: 'soren' }),
+    backlog(6, '2026-11-01', { owner: 'soren', addressed_to: 'lucas' }),
+  ];
+  const r = await cli(['pull', '--as', 'lucas'], { rows });
+  assert.equal(r.code, 0, r.err);
+  const [openPart, rest] = r.out.split('Backlog due for review');
+  const reviewPart = rest.split('Closed by you')[0];
+  assert.ok(!/\[backlog\]/.test(openPart), 'a backlog row appeared in the open section');
+  assert.match(reviewPart, /^ — yours \(2\): propose it, re-date it with --note, or close it --decided-against:$/m);
+  assert.match(reviewPart, /T-2 \[backlog\] task 2 \(review 11\/04\)/);
+  assert.match(reviewPart, /T-3 \[backlog\] task 3 \(review 11\/05\)/);
+  assert.doesNotMatch(r.out, /T-4 |T-5 |T-6 /);
+  assert.ok(!/needed/.test(reviewPart), 'a backlog row said "needed"');
+});
+
+test('Ruling 2.4: twelve due rows give ten lines and a loud +2, and the open section\'s count and overflow do not move', async () => {
+  const open = Array.from({ length: PULL_OPEN_CAP + 1 }, (_, i) => task(i + 1));
+  const due = Array.from({ length: 12 }, (_, i) => backlog(100 + i, '2026-11-01'));
+  const r = await cli(['pull', '--as', 'lucas'], { rows: [...open, ...due] });
+  assert.match(r.out, new RegExp(`Open — yours or addressed to you \\(${PULL_OPEN_CAP + 1}\\)`));
+  assert.match(r.out, /\+1 more open — NOT SHOWN/);
+  assert.match(r.out, /Backlog due for review — yours \(12\)/);
+  assert.equal((r.out.match(/^ {2}T-\d+ \[backlog\]/gm) ?? []).length, PULL_REVIEW_CAP);
+  assert.match(r.out, /\+2 more due for review — NOT SHOWN\. Full list: tasks mine --as lucas/);
+  assert.equal((r.out.match(/^ {2}T-\d+ \[open\]/gm) ?? []).length, PULL_OPEN_CAP);
+});
+
+test('Ruling 2.5: at page size 2, five due rows are all counted (the review query pages to exhaustion)', async () => {
+  const r = await cli(['pull', '--as', 'lucas'], { rows: Array.from({ length: 5 }, (_, i) => backlog(i + 1, '2026-11-01')), pageSize: 2 });
+  assert.match(r.out, /Backlog due for review — yours \(5\)/);
+  assert.ok(r.calls.some((c) => c.url.includes('status=eq.backlog') && c.url.includes('owner=eq.lucas') && c.url.includes('needed_by=lte.2026-11-05')));
+});
+
+test('Ruling 2.6: mine shows every due row, uncapped; mine --backlog shows all, by date, marking the due ones', async () => {
+  const due = Array.from({ length: 12 }, (_, i) => backlog(100 + i, '2026-11-01'));
+  const later = backlog(200, '2026-12-01');
+  const mine = await cli(['mine', '--as', 'lucas'], { rows: [...due, later] });
+  assert.equal((mine.out.match(/^ {2}T-\d+ \[backlog\]/gm) ?? []).length, 12);
+  assert.doesNotMatch(mine.out, /NOT SHOWN/);
+  const all = await cli(['mine', '--backlog', '--as', 'lucas'], { rows: [later, backlog(5, '2026-11-05'), backlog(4, '2026-11-02')] });
+  assert.equal(all.code, 0, all.err);
+  const lines = all.out.split('\n').filter((l) => l.startsWith('  T-'));
+  assert.deepEqual(lines, [
+    '  T-4 [backlog] task 4 (review 11/02) (due for review)',
+    '  T-5 [backlog] task 5 (review 11/05) (due for review)',
+    '  T-200 [backlog] task 200 (review 12/01)',
+  ]);
+});
+
+test('Ruling 2.7: search still returns backlog', async () => {
+  const r = await cli(['search', 'idea'], { rows: [backlog(9, '2026-12-01', { title: 'an idea worth keeping' })] });
+  assert.match(r.out, /T-9 \[backlog\] an idea worth keeping \(review 12\/01\)/);
+});
+
+test('backlog courtesy: a review date is required and at most 90 Pacific days out; re-dating needs a note', async () => {
+  assert.equal((await cli(['add', '--as', 'ac', '--title', 'x', '--status', 'backlog'])).code, 2);
+  assert.equal((await cli(['add', '--as', 'ac', '--title', 'x', '--status', 'backlog', '--needed-by', '2027-02-04'])).code, 2); // +91
+  assert.equal((await cli(['add', '--as', 'ac', '--title', 'x', '--status', 'backlog', '--needed-by', '2027-02-02'])).code, 0); // +89
+  const redate = await cli(['update', 'T-1', '--as', 'ac', '--needed-by', '2026-12-01'], { rows: [backlog(1, '2026-11-20')] });
+  assert.equal(redate.code, 2);
+  assert.match(redate.err, /new review date on a backlog item needs --note/);
+  assert.equal(writes(redate).length, 0);
+  const ok = await cli(['update', 'T-1', '--as', 'ac', '--needed-by', '2026-12-01', '--note', 'Thea wants it after the meeting'], { rows: [backlog(1, '2026-11-20')] });
+  assert.equal(ok.code, 0, ok.err);
+  // an unrelated update to a backlog row dated near its cap is not refused (the cap fires only on dating)
+  const tags = await cli(['update', 'T-1', '--as', 'ac', '--tags', 'v0.3'], { rows: [backlog(1, '2027-02-01')] });
+  assert.equal(tags.code, 0, tags.err);
+});
+
+test('Ruling 6.2: leaving backlog without --needed-by warns that the review date becomes a needed-by', async () => {
+  const r = await cli(['update', 'T-1', '--as', 'lucas', '--status', 'proposed', '--note', 'worth doing'], { rows: [backlog(1, '2026-11-20')] });
+  assert.equal(r.code, 0, r.err);
+  assert.match(r.err, /its review date 2026-11-20 becomes this item's needed-by; pass --needed-by <date> or none\./);
+  const quiet = await cli(['update', 'T-1', '--as', 'lucas', '--status', 'proposed', '--note', 'worth doing', '--needed-by', 'none'], { rows: [backlog(1, '2026-11-20')] });
+  assert.doesNotMatch(quiet.err, /becomes this item's needed-by/);
+});
+
+// ---------------------------------------------------------------------------
+// Soren-005 Ruling 3: --accountable
+// ---------------------------------------------------------------------------
+
+test('Ruling 3.1: add without --accountable writes raci.a = lucas (DEFAULT_ACCOUNTABLE)', async () => {
+  const r = await cli(['add', '--as', 'mira', '--title', 'x']);
+  assert.equal(DEFAULT_ACCOUNTABLE, 'lucas');
+  assert.equal(postOf(r).raci.a, 'lucas');
+  assert.doesNotMatch(r.err, /accountable justin/);
+});
+
+test('Ruling 3.2: --accountable justin writes justin, and warns when there is no --link', async () => {
+  const bare = await cli(['add', '--as', 'lucas', '--title', 'x', '--accountable', 'justin']);
+  assert.equal(bare.code, 0, bare.err);
+  assert.equal(postOf(bare).raci.a, 'justin');
+  assert.match(bare.err, /accountable justin means Justin accepts it at close; link where he authorized it\./);
+  const linked = await cli(['add', '--as', 'lucas', '--title', 'x', '--accountable', 'justin', '--link', 'brief.md#log-14-52']);
+  assert.doesNotMatch(linked.err, /accountable justin means/);
+});
+
+test('005 help text: the eight statuses, the note rule, the sign rule, the backlog review, the accountable line', async () => {
+  for (const s of STATUSES) assert.match(HELP, new RegExp(`^ {4}${s} +\\S`, 'm'), `help lacks a line for ${s}`);
+  for (const s of [
+    "proposed          awaiting a yes: Justin's, or Lucas's under",
+    'shared/protocols/authorization-rules.md',
+    'Must be addressed (--to)',
+    'The DATABASE refuses a status change without a note',
+    'Only lucas or justin may sign',
+    'shows in pull only once that',
+    '(add defaults to lucas). Use justin only on an item Justin authorized',
+    'himself, and point at his words with --link.',
+  ]) assert.ok(HELP.includes(s), `help lacks: ${s}`);
+  assert.ok(!/backlog never appears in pull/.test(HELP), 'the superseded help line is back (Soren-005 Ruling 2)');
 });

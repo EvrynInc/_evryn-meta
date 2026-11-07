@@ -22,6 +22,7 @@
  * Truncation check: the last line of this file should read `FULL FILE LOADED`.
  */
 import { isSafeActorName } from './config.mjs';
+import { DEFAULT_ACCOUNTABLE } from './defaults.mjs';
 import { screenRow } from './screen.mjs';
 
 export const LINEAR_ENDPOINT = 'https://api.linear.app/graphql';
@@ -180,7 +181,7 @@ export function planIssue(issue, { longBody = 'fail' } = {}) {
     title: plan.title,
     description,
     status: status ?? 'open',
-    raci: { r: owner, a: raci.a[0] ?? 'justin' },
+    raci: { r: owner, a: raci.a[0] ?? DEFAULT_ACCOUNTABLE }, // an explicit A: label is still honored
     links: [],
     linear_id: issue.identifier,
     linear_status: linearStatus,

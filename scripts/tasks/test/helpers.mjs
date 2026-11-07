@@ -65,12 +65,14 @@ export function fakePostgrest({ rows = [], history = [], cap = 1000, onWrite } =
     let out = [...data];
     for (const [k, v] of params) {
       if (['select', 'order', 'limit', 'or'].includes(k)) continue;
-      const m = v.match(/^(eq|gt|gte|in|wfts\(english\))\.(.*)$/);
+      const m = v.match(/^(eq|gt|gte|lte|in|wfts\(english\))\.(.*)$/);
       if (!m) continue;
       const [, op, val] = m;
       if (op === 'eq') out = out.filter((r) => String(r[k]) === val);
       if (op === 'gt') out = out.filter((r) => r[k] > Number(val));
       if (op === 'gte') out = out.filter((r) => String(r[k]) >= val);
+      // like PostgREST: a NULL never satisfies a comparison
+      if (op === 'lte') out = out.filter((r) => r[k] !== null && r[k] !== undefined && String(r[k]) <= val);
       if (op === 'in') {
         const set = val.replace(/^\(|\)$/g, '').split(',');
         out = out.filter((r) => set.includes(String(r[k])));

@@ -1,0 +1,85 @@
+  -- =========================================================================================
+  -- (c) AFTER-ASSERTIONS for change set 005. They pin the RESULT, and prove that nothing else moved:
+  --     every query captured in (a) is re-run and must return exactly what it returned before.
+  --     The expected values below are the lines migration 004's snapshot function prints for them,
+  --     identical to the same lines of the golden fixture test/fixtures/local-snapshot-after.txt.
+  -- =========================================================================================
+
+  -- The note columns: tasks #23 and task_history #10, nullable text, no default.
+  execute v_pin_columns_sql into v_found using 'tasks';
+  if split_part(v_found, E'\n', 23) is distinct from 'column tasks #23 note text' or v_found like '%#24 %' then
+    raise exception 'AFTER-ASSERTION FAILED: tasks.note is not the 23rd and last column, nullable text with no default. Found: %. Everything was rolled back.', v_found;
+  end if;
+  execute v_pin_columns_sql into v_found using 'task_history';
+  if split_part(v_found, E'\n', 10) is distinct from 'column task_history #10 note text' or v_found like '%#11 %' then
+    raise exception 'AFTER-ASSERTION FAILED: task_history.note is not the 10th and last column, nullable text with no default. Found: %. Everything was rolled back.', v_found;
+  end if;
+
+  -- The five constraints 005 adds or replaces: exact definitions, and EVERY ONE VALIDATED. (A rule that
+  -- existing rows fail would deparse with " NOT VALID" and stop here, naming it; the paste's final
+  -- statement then never runs, so the dry run's NOT VALID count can only ever read 0.)
+  select string_agg(format('constraint %s.%s: %s', c.relname, con.conname, pg_get_constraintdef(con.oid)), E'\n' order by c.relname, con.conname)
+    into v_found
+    from pg_constraint con join pg_class c on c.oid = con.conrelid
+   where c.relnamespace = 'public'::regnamespace
+     and con.conname in ('tasks_status_allowed','tasks_note_max_600','tasks_acceptance_addressed','tasks_backlog_needs_review_date','task_history_note_max_600');
+  if v_found is distinct from replace($pin$constraint task_history.task_history_note_max_600: CHECK ((char_length(note) <= 600))
+constraint tasks.tasks_acceptance_addressed: CHECK (((status <> 'needs_acceptance'::text) OR (addressed_to IS NOT NULL)))
+constraint tasks.tasks_backlog_needs_review_date: CHECK (((status <> 'backlog'::text) OR (needed_by IS NOT NULL)))
+constraint tasks.tasks_note_max_600: CHECK ((char_length(note) <= 600))
+constraint tasks.tasks_status_allowed: CHECK ((status = ANY (ARRAY['backlog'::text, 'proposed'::text, 'open'::text, 'in_progress'::text, 'blocked'::text, 'needs_acceptance'::text, 'done'::text, 'decided_against'::text])))$pin$, chr(13), '') then
+    raise exception 'AFTER-ASSERTION FAILED: the constraints 005 adds or replaces are missing, defined differently, or left NOT VALID by existing rows. Found: %. Everything was rolled back.', coalesce(v_found, '(none)');
+  end if;
+
+  -- Their comments (dropping tasks_status_allowed dropped its comment; 005 re-issues it).
+  select string_agg(con.conname, ', ' order by con.conname) into v_found
+    from pg_constraint con
+   where con.conrelid in ('public.tasks'::regclass, 'public.task_history'::regclass)
+     and con.conname in ('tasks_status_allowed','tasks_note_max_600','tasks_acceptance_addressed','tasks_backlog_needs_review_date','task_history_note_max_600')
+     and coalesce(obj_description(con.oid, 'pg_constraint'), '') = '';
+  if v_found is not null
+     or obj_description((select oid from pg_constraint where conrelid = 'public.tasks'::regclass and conname = 'tasks_status_allowed'), 'pg_constraint') not like '%backlog%needs_acceptance%'
+     or obj_description((select oid from pg_constraint where conrelid = 'public.tasks'::regclass and conname = 'tasks_backlog_needs_review_date'), 'pg_constraint') not like '%review date%90-day cap%' then
+    raise exception 'AFTER-ASSERTION FAILED: a constraint comment is missing or is not 005''s: %. Everything was rolled back.', coalesce(v_found, 'tasks_status_allowed or tasks_backlog_needs_review_date');
+  end if;
+
+  -- The two replaced functions: still owned by postgres, SECURITY INVOKER, search_path "", and their NEW
+  -- bodies are exactly the reviewed ones (this hash pins Rule N/ET008, ET009, ET010 and the note handling
+  -- without probing behaviour inside the paste; the acceptance suite proves behaviour).
+  execute v_pin_functions_sql into v_found;
+  if v_found is distinct from replace($pin$function tasks_after_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=5424d669d256941cd7bb671d9a487cc2
+function tasks_before_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=f564a9be7ffeaa20db13902d5edcd38b$pin$, chr(13), '') then
+    raise exception 'AFTER-ASSERTION FAILED: tasks_before_write or tasks_after_write is not the reviewed function (owner, security, search_path or body hash). Found: %. Everything was rolled back.', coalesce(v_found, '(none)');
+  end if;
+  -- ...and EXECUTE on them is held by no client role, PUBLIC included (CREATE OR REPLACE keeps a
+  -- function's privileges; this proves it rather than assuming it).
+  select string_agg(r.rol || ' -> ' || f.fn, ', ') into v_found
+    from (values ('tasks_before_write'), ('tasks_after_write')) as f(fn)
+    cross join (values ('anon'), ('authenticated'), ('service_role')) as r(rol)
+   where has_function_privilege(r.rol, ('public.' || f.fn || '()')::regprocedure, 'EXECUTE');
+  if v_found is null then
+    select string_agg(p.proname || ' -> PUBLIC', ', ') into v_found
+      from pg_proc p cross join lateral aclexplode(coalesce(p.proacl, acldefault('f', p.proowner))) a
+     where p.oid in ('public.tasks_before_write()'::regprocedure, 'public.tasks_after_write()'::regprocedure) and a.grantee = 0;
+  end if;
+  if v_found is not null then
+    raise exception 'AFTER-ASSERTION FAILED: a client role can execute a replaced trigger function: %. Everything was rolled back.', v_found;
+  end if;
+
+  -- The triggers: all five still ENABLE ALWAYS. (Their definitions and OIDs are in the captures below,
+  -- which proves no trigger was dropped or recreated.)
+  select string_agg(c.relname || '.' || t.tgname || '=' || t.tgenabled::text, ', ') into v_found
+    from pg_trigger t join pg_class c on c.oid = t.tgrelid
+   where not t.tgisinternal and c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history') and t.tgenabled <> 'A';
+  if v_found is not null then
+    raise exception 'AFTER-ASSERTION FAILED: trigger(s) no longer ENABLE ALWAYS: %. Everything was rolled back.', v_found;
+  end if;
+
+  -- NOTHING ELSE CHANGED: every capture from (a), re-run, must be identical.
+  for v_i in 1 .. array_length(v_capture_sqls, 1) loop
+    execute v_capture_sqls[v_i] into v_found;
+    if coalesce(v_found, '(none)') is distinct from v_captured[v_i] then
+      raise exception 'AFTER-ASSERTION FAILED: % changed, and 005 must not change it. Before: % / After: %. Everything was rolled back.',
+        v_capture_names[v_i], v_captured[v_i], coalesce(v_found, '(none)');
+    end if;
+  end loop;

@@ -98,6 +98,29 @@ test('check --absent: if the new objects are visible, it FAILS and says not to r
   assert.match(lines.join('\n'), /PRESENT — .*Do not run Paste 2/);
 });
 
+/** A fake PostgREST that answers like a schema before or after change set 005. */
+function schema005Fetch({ migrated }) {
+  return async (url) => {
+    const u = new URL(url);
+    if (u.searchParams.get('select') === 'note' && (u.pathname.endsWith('/tasks') || u.pathname.endsWith('/task_history'))) {
+      return migrated ? jsonResponse(200, []) : jsonResponse(400, { code: '42703', message: 'column does not exist' });
+    }
+    return countFetch();
+  };
+}
+
+test('check --absent-005: after the 005 dry run both note columns report absent (ADVISORY); if visible it FAILS; it cannot be combined with --absent', async () => {
+  const lines = [];
+  assert.equal(await runCheck({ argv: ['--absent-005'], env: TEST_ENV, fetchImpl: schema005Fetch({ migrated: false }), out: (s) => lines.push(s) }), 0, lines.join('\n'));
+  assert.match(lines.join('\n'), /--absent-005 \(ADVISORY/);
+  assert.match(lines.join('\n'), /tasks\.note column: absent, as expected \[42703\]/);
+  assert.match(lines.join('\n'), /task_history\.note column: absent, as expected \[42703\]/);
+  const seen = [];
+  assert.equal(await runCheck({ argv: ['--absent-005'], env: TEST_ENV, fetchImpl: schema005Fetch({ migrated: true }), out: (s) => seen.push(s) }), 1);
+  assert.match(seen.join('\n'), /tasks\.note column: PRESENT/);
+  assert.equal(await runCheck({ argv: ['--absent', '--absent-005'], env: TEST_ENV, fetchImpl: countFetch, out: () => {} }), 2);
+});
+
 // ---------------------------------------------------------------------------
 // migrate.mjs — local loopback clusters only
 // ---------------------------------------------------------------------------
@@ -134,7 +157,8 @@ test('migrate: one transaction (-1), every file in order, lock_timeout; NOT VALI
   assert.ok(args.includes('-1'));
   assert.ok(args.includes("set local lock_timeout = '5s'"));
   const files = args.filter((a, i) => args[i - 1] === '-f').map((f) => f.split(/[\\/]/).pop());
-  assert.deepEqual(files, ['001_tasks_columns.sql', '002_task_history.sql', '003_task_triggers.sql', '004_schema_snapshot_fn.sql']);
+  // Locally, migrate.mjs applies EVERY migration (both change sets) in one transaction.
+  assert.deepEqual(files, ['001_tasks_columns.sql', '002_task_history.sql', '003_task_triggers.sql', '004_schema_snapshot_fn.sql', '005_linear_cutover.sql']);
   assert.equal(psql.calls[1].target.host, '127.0.0.1');
 
   const notice = 'NOTICE:  TASKS-MIGRATION: constraint tasks_title_max_80 left NOT VALID (still enforced on new writes); existing rows failing it: abc';

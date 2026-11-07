@@ -29,7 +29,8 @@ import { join } from 'node:path';
 import { TASKS_DIR } from '../helpers.mjs';
 import { CODE_ROOT } from '../../lib/config.mjs';
 import { findPgTool, pgEnv, runPsql } from '../../lib/pg.mjs';
-import { buildPastes } from '../../make-paste.mjs';
+import { buildPastes, changeSet } from '../../make-paste.mjs';
+import { splitSql } from '../../lib/sqlsplit.mjs';
 import { pgToolsAvailable, startCluster } from './cluster.mjs';
 
 const RUNTIME_003 =
@@ -46,9 +47,12 @@ let cluster;
 const lit = (s) => `'${String(s).replace(/'/g, "''")}'`;
 const hdr = (actor) => JSON.stringify({ 'x-evryn-actor': actor });
 
-/** Run SQL as a simulated PostgREST request (or as the owner when role is null). */
-function req(db, body, { role = 'service_role', header, evrynActor } = {}) {
-  const lines = ['begin;'];
+/**
+ * Run SQL as a simulated PostgREST request (or as the owner when role is null). `verbose` makes psql print
+ * the SQLSTATE in front of the message ("ERROR:  ET008: …"), so a test can assert on the code itself.
+ */
+function req(db, body, { role = 'service_role', header, evrynActor, verbose = false } = {}) {
+  const lines = verbose ? ['\\set VERBOSITY verbose', 'begin;'] : ['begin;'];
   if (role) lines.push(`set local role ${role};`);
   if (header !== undefined) lines.push(`set local request.headers = ${lit(header)};`);
   if (evrynActor !== undefined) lines.push(`set local evryn.actor = ${lit(evrynActor)};`);
@@ -226,7 +230,9 @@ before(async () => {
       'postgres',
       `create role anon nologin noinherit;
        create role authenticated nologin noinherit;
-       create role service_role nologin noinherit bypassrls;`,
+       create role service_role nologin noinherit bypassrls;
+       create role authenticator login noinherit;
+       grant anon, authenticated, service_role to authenticator;`,
     ),
   );
   prepareDb(DB);
@@ -429,8 +435,8 @@ suite('R1 actor', () => {
 
   test('a raw update with no actor fails; with an off-roster actor it is written and flagged', () => {
     const id = seed(DB);
-    refused(req(DB, `update public.tasks set status = 'blocked' where id = ${lit(id)};`), /no actor/);
-    ok(req(DB, `update public.tasks set status = 'blocked' where id = ${lit(id)};`, { header: hdr('nobody-real') }));
+    refused(req(DB, `update public.tasks set status = 'blocked', note = 'r1' where id = ${lit(id)};`), /no actor/);
+    ok(req(DB, `update public.tasks set status = 'blocked', note = 'r1' where id = ${lit(id)};`, { header: hdr('nobody-real') }));
     assert.equal(scalar(DB, `select status from public.tasks where id = ${lit(id)};`), 'blocked');
     assert.equal(scalar(DB, `select actor || ' ' || array_to_string(flags, ',') from public.task_history where task_id = ${lit(id)} order by id desc limit 1;`), 'nobody-real actor_off_roster');
   });
@@ -473,11 +479,12 @@ suite('R2 history', () => {
   test('one update → exactly one history row, recording only the changed fields', () => {
     const id = seed(DB);
     const before = historyCount(DB, id);
-    ok(req(DB, `update public.tasks set status = 'blocked' where id = ${lit(id)};`, { header: hdr('lucas') }));
+    ok(req(DB, `update public.tasks set status = 'blocked', note = 'waiting on soren' where id = ${lit(id)};`, { header: hdr('lucas') }));
     assert.equal(historyCount(DB, id), before + 1);
+    // 005: the note rides in task_history.note and is never a changed field
     assert.equal(
-      scalar(DB, `select array_to_string(changed_fields, ',') || ' ' || old::text || ' ' || new::text from public.task_history where task_id = ${lit(id)} order by id desc limit 1;`),
-      'status {"status": "open"} {"status": "blocked"}',
+      scalar(DB, `select array_to_string(changed_fields, ',') || ' ' || old::text || ' ' || new::text || ' ' || note from public.task_history where task_id = ${lit(id)} order by id desc limit 1;`),
+      'status {"status": "open"} {"status": "blocked"} waiting on soren',
     );
   });
 
@@ -536,8 +543,10 @@ suite('R3 constraints', () => {
 
   test('close without a note → refused (done and decided_against); blank note too; note without closed_at too', () => {
     const id = seed(DB);
-    refused(req(DB, `update public.tasks set status = 'done', closed_at = now() where id = ${lit(id)};`, as), /tasks_closed_needs_note/);
-    refused(req(DB, `update public.tasks set status = 'decided_against', closed_at = now() where id = ${lit(id)};`, as), /tasks_closed_needs_note/);
+    // (005: a status change with no note and no closing_note is now refused EARLIER, by Rule N (ET008), so
+    // these carry a write note to reach the constraint they prove.)
+    refused(req(DB, `update public.tasks set status = 'done', closed_at = now(), note = 'x' where id = ${lit(id)};`, as), /tasks_closed_needs_note/);
+    refused(req(DB, `update public.tasks set status = 'decided_against', closed_at = now(), note = 'x' where id = ${lit(id)};`, as), /tasks_closed_needs_note/);
     refused(req(DB, `update public.tasks set status = 'done', closed_at = now(), closing_note = '   ' where id = ${lit(id)};`, as), /tasks_closed_needs_note/);
     refused(req(DB, `update public.tasks set status = 'done', closing_note = 'shipped' where id = ${lit(id)};`, as), /tasks_closed_needs_note/);
     ok(req(DB, `update public.tasks set status = 'decided_against', closed_at = now(), closing_note = 'Justin said no; see brief Log 14:52' where id = ${lit(id)};`, as));
@@ -561,9 +570,11 @@ suite('R3 constraints', () => {
 
   test('a signed time with no ref → refused; with a ref → accepted', () => {
     const id = seed(DB);
-    refused(req(DB, `update public.tasks set signed_at = now() where id = ${lit(id)};`, as), /tasks_signed_needs_ref/);
-    refused(req(DB, `update public.tasks set signed_at = now(), signed_ref = ' ' where id = ${lit(id)};`, as), /tasks_signed_needs_ref/);
-    ok(req(DB, `update public.tasks set signed_at = now(), signed_ref = 'brief Log 14:52' where id = ${lit(id)};`, as));
+    // (005: only lucas or justin may sign at all (ET009), so this signs as lucas to reach the constraint.)
+    const asLucas = { header: hdr('lucas') };
+    refused(req(DB, `update public.tasks set signed_at = now() where id = ${lit(id)};`, asLucas), /tasks_signed_needs_ref/);
+    refused(req(DB, `update public.tasks set signed_at = now(), signed_ref = ' ' where id = ${lit(id)};`, asLucas), /tasks_signed_needs_ref/);
+    ok(req(DB, `update public.tasks set signed_at = now(), signed_ref = 'brief Log 14:52' where id = ${lit(id)};`, asLucas));
   });
 
   test('addressed to justin with no needed_by → refused (any case); with a date → accepted', () => {
@@ -767,7 +778,7 @@ suite(`QC fix trip 2 (defaults ${MODE})`, () => {
   test('CTO fence 3: after the revokes, service_role can still INSERT, UPDATE and CLOSE a task, with history for each', () => {
     const t = uniq('sr-lifecycle');
     const id = ok(req(DB, `insert into public.tasks (title, status, raci) values (${lit(t)}, 'open', '{"r":"lucas","a":"justin"}') returning id;`, { header: hdr('lucas') })).split('\n').pop();
-    ok(req(DB, `update public.tasks set status = 'in_progress', description = 'started' where id = ${lit(id)};`, { header: hdr('lucas') }));
+    ok(req(DB, `update public.tasks set status = 'in_progress', description = 'started', note = 'starting' where id = ${lit(id)};`, { header: hdr('lucas') }));
     ok(req(DB, `update public.tasks set status = 'done', closed_at = now(), closing_note = 'shipped; record in docs/x.md' where id = ${lit(id)};`, { header: hdr('lucas') }));
     assert.equal(scalar(DB, `select status from public.tasks where id = ${lit(id)};`), 'done');
     assert.equal(scalar(DB, `select string_agg(op, ',' order by id) from public.task_history where task_id = ${lit(id)};`), 'insert,update,update');
@@ -819,19 +830,35 @@ suite(`QC fix trip 2 (defaults ${MODE})`, () => {
 // FIX TRIP 3: the paste files Justin runs in the Supabase SQL editor (no agent holds the password)
 // ---------------------------------------------------------------------------
 
-suite(`paste files (defaults ${MODE})`, () => {
+/** psql -f splits on statements and sends them ONE AT A TIME — the harder case for atomicity. */
+const runPaste = (db, text, { continueOnError = false } = {}) =>
+  runPsql(cluster.targetFor(db), ['-q', '-A', '-t', ...(continueOnError ? ['-v', 'ON_ERROR_STOP=0'] : []), '-f', '-'], { input: text });
+/**
+ * Feed a paste the way the Supabase editor does from a Windows clipboard: with CRLF line endings, AS THE
+ * SERVER RECEIVES THEM. psql on Windows turns CRLF into LF when it reads its input (measured 2026-11-06:
+ * a CRLF paste through runPaste passed while the same paste in the editor refused), so sending CRLF text
+ * through psql proves nothing. Instead the server builds the CRLF text itself and EXECUTEs it. Only the
+ * paste's first statement (its DO block) runs; Paste 2's trailing NOTIFY does not.
+ */
+const runPasteCRLF = (db, text) => {
+  const stmt = splitSql(text)[0];
+  assert.ok(!stmt.includes('$crlf$') && !stmt.includes('$src$'), 'a wrapper tag occurs in the paste');
+  return runPsql(cluster.targetFor(db), ['-q', '-A', '-t', '-f', '-'], {
+    input: `do $crlf$ begin execute replace($src$${stmt}$src$, chr(10), chr(13) || chr(10)); end $crlf$;`,
+  });
+};
+const snap = (db) => ok(runScript('schema-snapshot.mjs', db));
+let pasteDbs = 0;
+/** A database the way the live one was built, up to runtime 003 (no migration of ours). */
+const freshDb = (legacyRows = '') => {
+  pasteDbs += 1;
+  const db = `paste_${MODE}_${pasteDbs}`;
+  prepareDb(db, { legacyRows });
+  return db;
+};
+
+suite(`paste files, change set 001-004 (defaults ${MODE})`, () => {
   const pastes = buildPastes();
-  /** psql -f splits on statements and sends them ONE AT A TIME — the harder case for atomicity. */
-  const runPaste = (db, text, { continueOnError = false } = {}) =>
-    runPsql(cluster.targetFor(db), ['-q', '-A', '-t', ...(continueOnError ? ['-v', 'ON_ERROR_STOP=0'] : []), '-f', '-'], { input: text });
-  const snap = (db) => ok(runScript('schema-snapshot.mjs', db));
-  let n = 0;
-  const freshDb = (legacyRows = '') => {
-    n += 1;
-    const db = `paste_${MODE}_${n}`;
-    prepareDb(db, { legacyRows });
-    return db;
-  };
 
   test('Paste 1 (dry run) raises "DRY RUN OK — nothing was changed (0 rows; 0 NOT VALID)" and leaves the snapshot BYTE-IDENTICAL', () => {
     for (const continueOnError of [false, true]) {
@@ -843,11 +870,12 @@ suite(`paste files (defaults ${MODE})`, () => {
     }
   });
 
-  test('Paste 2 (apply) succeeds and produces exactly the state migrate.mjs produces; the snapshot function returns the script\'s text', () => {
+  test('Paste 2 (apply) succeeds and produces exactly the golden after-004 state (the live shape since 2026-11-06); the snapshot function returns the script\'s text', () => {
     const db = freshDb();
     const r = runPaste(db, pastes.apply);
     assert.equal(r.status, 0, r.stderr);
-    assert.equal(ourObjects(snap(db)), ourObjects(snap(DB)), 'the paste and migrate.mjs produced different objects');
+    // migrate.mjs now applies 001–005, so the 001-004 paste is held to the after-004 golden instead.
+    golden('local-snapshot-after-004.txt', snap(db));
     // The function, called as service_role (as PostgREST would), returns the same text as the script.
     const lfOnly = (s) => s.replace(/\r\n/g, '\n').trim();
     const fromFunction = lfOnly(ok(req(db, 'select public.team_tasks_schema_snapshot();')));
@@ -856,6 +884,16 @@ suite(`paste files (defaults ${MODE})`, () => {
     refused(req(db, 'select public.team_tasks_schema_snapshot();', { role: 'anon' }), /permission denied for function team_tasks_schema_snapshot/);
     // and the CLI's role can work in it
     ok(req(db, `insert into public.tasks (title, status, raci) values ('after paste', 'open', '{"r":"ac"}');`, { header: hdr('ac') }));
+  });
+
+  test('CRLF, as the editor sends it from a Windows clipboard: the 001-004 dry run and apply behave exactly as with LF', () => {
+    const db = freshDb();
+    const before = snap(db);
+    assert.match(runPasteCRLF(db, pastes.dryRun).stderr, /ERROR: {2}DRY RUN OK — nothing was changed \(0 rows; 0 NOT VALID\)/);
+    assert.equal(snap(db), before);
+    const r = runPasteCRLF(db, pastes.apply);
+    assert.equal(r.status, 0, r.stderr);
+    golden('local-snapshot-after-004.txt', snap(db));
   });
 
   test('Paste 2 run a SECOND time is refused by its before-assertions and changes nothing', () => {
@@ -968,6 +1006,323 @@ suite(`paste files (defaults ${MODE})`, () => {
     assert.equal(snap(db), before);
     refused(runPaste(db, pastes.apply), /APPLY REFUSED — 3 constraint\(s\) would be left NOT VALID by existing rows\. Nothing was changed\./);
     assert.equal(snap(db), before);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// MIGRATION 005 — every rule proven at the database by a raw request that skips the CLI
+// (Soren's cutover design §1.5 items 1–7; Soren-005's backlog rulings, Ruling 1 tests 1–7)
+// ---------------------------------------------------------------------------
+
+suite(`005 rules at the database (defaults ${MODE})`, () => {
+  const as = (actor = 'ac') => ({ header: hdr(actor), verbose: true });
+  const upd = (id, set, actor = 'ac') => req(DB, `update public.tasks set ${set} where id = ${lit(id)};`, as(actor));
+  const lastHistory = (id, cols) => scalar(DB, `select ${cols} from public.task_history where task_id = ${lit(id)} order by id desc limit 1;`);
+  /** A date n Pacific days from today, computed by the database itself (the same clock ET010 reads). */
+  const ptPlus = (n) => scalar(DB, `select ((now() at time zone 'America/Los_Angeles')::date + ${n})::text;`);
+
+  test('§1.5 item 1: backlog (with a review date) and needs_acceptance (addressed) are accepted; banana is refused', () => {
+    ok(req(DB, `insert into public.tasks (title, status, raci, needed_by) values (${lit(uniq('bl'))}, 'backlog', '{"r":"lucas"}', ${lit(ptPlus(30))});`, as()));
+    ok(req(DB, `insert into public.tasks (title, status, raci, addressed_to) values (${lit(uniq('na'))}, 'needs_acceptance', '{"r":"lucas"}', 'lucas');`, as()));
+    refused(req(DB, `insert into public.tasks (title, status, raci) values ('b', 'banana', '{"r":"lucas"}');`, as()), /tasks_status_allowed/);
+  });
+
+  test('§1.5 item 2: a status change with no note is refused with ET008 (and its hint); with a note it succeeds, and the history row carries the note', () => {
+    const id = seed(DB);
+    const r = upd(id, `status = 'blocked'`);
+    refused(r, /ERROR: {2}ET008: task update refused: a status change, or a new review date on a backlog item, needs a note/);
+    assert.match(r.stderr, /if you sent one, it matches the previous note word for word, so say what's new/);
+    assert.equal(scalar(DB, `select status from public.tasks where id = ${lit(id)};`), 'open');
+    ok(upd(id, `status = 'blocked', note = 'waiting on soren'`));
+    assert.equal(lastHistory(id, `array_to_string(changed_fields, ',') || ' | ' || note`), 'status | waiting on soren');
+  });
+
+  test('§1.5 item 3: a note-only write (a comment) gives exactly one history row, empty changed_fields, the note — and bumps updated_at', () => {
+    const id = seed(DB);
+    const before = historyCount(DB, id);
+    const updatedBefore = scalar(DB, `select updated_at from public.tasks where id = ${lit(id)};`);
+    ok(upd(id, `note = 'pointer: docs/contribution.md'`, 'mira'));
+    assert.equal(historyCount(DB, id), before + 1);
+    assert.equal(lastHistory(id, `op || ' ' || cardinality(changed_fields) || ' ' || old::text || ' ' || new::text || ' ' || actor || ' ' || note`), 'update 0 {} {} mira pointer: docs/contribution.md');
+    assert.notEqual(scalar(DB, `select updated_at from public.tasks where id = ${lit(id)};`), updatedBefore);
+    assert.equal(scalar(DB, `select note from public.tasks where id = ${lit(id)};`), 'pointer: docs/contribution.md');
+  });
+
+  test('§1.3: the note belongs to ONE write — the next write without one clears it, records none, and a stale-note no-op writes nothing', () => {
+    const id = seed(DB);
+    ok(upd(id, `note = 'first'`));
+    ok(upd(id, `description = 'changed'`));
+    assert.equal(scalar(DB, `select coalesce(note, 'NULL') from public.tasks where id = ${lit(id)};`), 'NULL');
+    assert.equal(lastHistory(id, `array_to_string(changed_fields, ',') || ' ' || coalesce(note, 'NULL')`), 'description NULL');
+    // a raw client that sends the old note back sends "no note": nothing changes, no row
+    ok(upd(id, `note = 'second'`));
+    const before = historyCount(DB, id);
+    ok(upd(id, `note = 'second'`));
+    assert.equal(historyCount(DB, id), before);
+  });
+
+  test('§1.5 item 4: a status change whose note repeats the previous write\'s note word for word is refused (ET008)', () => {
+    const id = seed(DB);
+    ok(upd(id, `status = 'blocked', note = 'same words'`));
+    refused(upd(id, `status = 'open', note = 'same words'`), /ET008/);
+    assert.equal(scalar(DB, `select status from public.tasks where id = ${lit(id)};`), 'blocked');
+  });
+
+  test('§1.3: a blank note is no note — a status change carrying only whitespace is refused (ET008)', () => {
+    const id = seed(DB);
+    refused(upd(id, `status = 'blocked', note = '   '`), /ET008/);
+  });
+
+  test('§1.5 item 5: a close with a fresh closing_note and no note succeeds; reopening it with no note is refused', () => {
+    const id = seed(DB);
+    ok(upd(id, `status = 'done', closed_at = now(), closing_note = 'shipped; docs/x.md'`));
+    assert.equal(lastHistory(id, `array_to_string(changed_fields, ',') || ' ' || coalesce(note, 'NULL')`), 'closed_at,closing_note,status NULL');
+    refused(upd(id, `status = 'open'`), /ET008/);
+    ok(upd(id, `status = 'open', note = 'Justin sent it back: brief Log 15:10'`));
+  });
+
+  test('§1.3: an insert\'s note goes to task_history.note and NOT into the snapshot; a note over 600 characters is refused', () => {
+    const t = uniq('ins-note');
+    const id = ok(req(DB, `insert into public.tasks (title, status, raci, note) values (${lit(t)}, 'open', '{"r":"lucas"}', 'from the 11/06 standup') returning id;`, as())).split('\n').pop();
+    assert.equal(lastHistory(id, `note || ' ' || (new ? 'note')::text || ' ' || (array_position(changed_fields, 'note') is null)::text`), 'from the 11/06 standup false true');
+    refused(upd(id, `note = ${lit('n'.repeat(601))}`), /tasks_note_max_600/);
+  });
+
+  test('§1.5 item 6: a needs_acceptance task with no addressee is refused, on insert and on update', () => {
+    refused(req(DB, `insert into public.tasks (title, status, raci) values ('x', 'needs_acceptance', '{"r":"lucas"}');`, as()), /tasks_acceptance_addressed/);
+    const id = seed(DB);
+    refused(upd(id, `status = 'needs_acceptance', note = 'please accept'`), /tasks_acceptance_addressed/);
+    ok(upd(id, `status = 'needs_acceptance', addressed_to = 'lucas', note = 'please accept'`));
+  });
+
+  test('§1.5 item 7 / §2.2: a sign by nathan is refused (ET009); lucas and justin may sign; mira may not clear or change one', () => {
+    const id = seed(DB);
+    const sign = `signed_at = now(), signed_ref = 'brief Log 14:52'`;
+    const r = upd(id, sign, 'nathan');
+    refused(r, /ERROR: {2}ET009: task write refused: only lucas or justin may set, change or clear a sign-off/);
+    ok(upd(id, sign, 'lucas'));
+    ok(upd(id, `signed_ref = 'brief Log 14:53'`, 'justin'));
+    refused(upd(id, `signed_at = null, signed_ref = null`, 'mira'), /ET009/);
+    refused(upd(id, `signed_ref = 'elsewhere'`, 'mira'), /ET009/);
+    assert.equal(scalar(DB, `select signed_ref from public.tasks where id = ${lit(id)};`), 'brief Log 14:53');
+    // ...an unrelated write by anyone leaves the sign alone and is not refused
+    ok(upd(id, `description = 'more context'`, 'mira'));
+    // on INSERT too
+    refused(req(DB, `insert into public.tasks (title, status, raci, signed_at, signed_ref) values ('s', 'open', '{"r":"lucas"}', now(), 'x');`, as('nathan')), /ET009/);
+    ok(req(DB, `insert into public.tasks (title, status, raci, signed_at, signed_ref) values ('s', 'open', '{"r":"lucas"}', now(), 'x');`, as('lucas')));
+    // and the history records who signed
+    assert.equal(scalar(DB, `select string_agg(actor, ',' order by id) from public.task_history where task_id = ${lit(id)} and 'signed_ref' = any (changed_fields);`), 'lucas,justin');
+  });
+
+  // Ruling 1 (Soren-005): the backlog's review date
+  test('Ruling 1.1: a backlog insert with no needed_by is refused with SQLSTATE 23514 on tasks_backlog_needs_review_date (not a trigger error)', () => {
+    const r = req(DB, `insert into public.tasks (title, status, raci) values ('idea', 'backlog', '{"r":"lucas"}');`, as());
+    refused(r, /ERROR: {2}23514: new row for relation "tasks" violates check constraint "tasks_backlog_needs_review_date"/);
+    assert.doesNotMatch(r.stderr, /ET010/);
+  });
+
+  test('Ruling 1.2: a backlog insert at PT today +89 succeeds; at +91 it is refused with ET010', () => {
+    ok(req(DB, `insert into public.tasks (title, status, raci, needed_by) values (${lit(uniq('bl89'))}, 'backlog', '{"r":"lucas"}', ${lit(ptPlus(89))});`, as()));
+    const r = req(DB, `insert into public.tasks (title, status, raci, needed_by) values (${lit(uniq('bl91'))}, 'backlog', '{"r":"lucas"}', ${lit(ptPlus(91))});`, as());
+    refused(r, /ERROR: {2}ET010: task write refused: a backlog item's review date can be at most 90 days out\./);
+    assert.match(r.stderr, /close it --decided-against with the reason/);
+  });
+
+  const backlogRow = (days) =>
+    ok(req(DB, `insert into public.tasks (title, status, raci, needed_by) values (${lit(uniq('bl'))}, 'backlog', '{"r":"lucas"}', ${lit(ptPlus(days))}) returning id;`, as())).split('\n').pop();
+
+  test('Ruling 1.3: re-dating an existing backlog row to +91, even with a note, is refused with ET010', () => {
+    const id = backlogRow(10);
+    refused(upd(id, `needed_by = ${lit(ptPlus(91))}, note = 'later'`), /ET010/);
+  });
+
+  test('Ruling 1.4: re-dating to +30 without a note is refused (ET008); with one it succeeds, and history records the note and needed_by old → new', () => {
+    const id = backlogRow(10);
+    refused(upd(id, `needed_by = ${lit(ptPlus(30))}`), /ET008/);
+    ok(upd(id, `needed_by = ${lit(ptPlus(30))}, note = 'worth another look after the meeting'`));
+    assert.equal(
+      lastHistory(id, `array_to_string(changed_fields, ',') || ' ' || (old ->> 'needed_by') || '→' || (new ->> 'needed_by') || ' ' || note`),
+      `needed_by ${ptPlus(10)}→${ptPlus(30)} worth another look after the meeting`,
+    );
+  });
+
+  test('Ruling 1.5: an open row with needed_by at +200 is accepted (the cap is backlog-only)', () => {
+    ok(req(DB, `insert into public.tasks (title, status, raci, needed_by) values (${lit(uniq('far'))}, 'open', '{"r":"lucas"}', ${lit(ptPlus(200))});`, as()));
+  });
+
+  test('Ruling 1.6: an unrelated update (tags) to a backlog row dated +80 succeeds', () => {
+    const id = backlogRow(80);
+    ok(upd(id, `tags = array['v0.3']`));
+  });
+
+  test('Ruling 1.7: a blocked row dated +120, moved to backlog with a note, is refused with ET010', () => {
+    const id = ok(req(DB, `insert into public.tasks (title, status, raci, needed_by) values (${lit(uniq('blk'))}, 'blocked', '{"r":"lucas"}', ${lit(ptPlus(120))}) returning id;`, as())).split('\n').pop();
+    refused(upd(id, `status = 'backlog', note = 'parking it'`), /ET010/);
+  });
+
+  test('005 replaced two trigger FUNCTIONS and recreated no trigger: all five are still ENABLE ALWAYS, and both functions INVOKER with EXECUTE held by no client role', () => {
+    assert.equal(scalar(DB, `select string_agg(tgname || '=' || tgenabled::text, ',' order by tgname) from pg_trigger where tgrelid in ('public.tasks'::regclass, 'public.task_history'::regclass) and not tgisinternal;`),
+      'task_history_guard_insert=A,task_history_refuse_change=A,tasks_after_write=A,tasks_before_write=A,tasks_refuse_delete=A');
+    for (const fn of ['tasks_before_write', 'tasks_after_write']) {
+      assert.equal(scalar(DB, `select prosecdef::text || ' ' || array_to_string(proconfig, ';') from pg_proc where oid = 'public.${fn}()'::regprocedure;`), 'false search_path=""');
+      for (const role of ['anon', 'authenticated', 'service_role']) {
+        assert.equal(scalar(DB, `select has_function_privilege(${lit(role)}, 'public.${fn}()', 'EXECUTE')::text;`), 'false', `${role} can execute ${fn}`);
+      }
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// CHANGE SET 005's pastes (Soren's design §1.5 item 9 and §1.6; Soren-005 Ruling 4)
+// ---------------------------------------------------------------------------
+
+suite(`paste files, change set 005 (defaults ${MODE})`, () => {
+  const base = buildPastes();
+  const p5 = buildPastes(changeSet('005'));
+  /** A database at the live shape since 2026-11-06: runtime 003, then the 001-004 paste. */
+  const post004 = (rows = 0) => {
+    const db = freshDb();
+    assert.equal(runPaste(db, base.apply).status, 0);
+    for (let i = 0; i < rows; i += 1) seed(db, { title: `existing ${i}` });
+    return db;
+  };
+  const triggerOids = (db) => scalar(db, `select string_agg(tgname || ':' || oid, ',' order by tgname) from pg_trigger where not tgisinternal;`);
+  const rowsDigest = (db) => scalar(db, `select md5(coalesce(string_agg((to_jsonb(t) - 'note')::text, E'\\n' order by t.id), '')) || ' ' || (select count(*) from public.task_history) from public.tasks t;`);
+
+  test('item 9a: on the post-004 shape, Paste 1 raises "DRY RUN OK — nothing was changed (N rows; 0 NOT VALID)" and changes NOTHING (both psql modes)', () => {
+    for (const continueOnError of [false, true]) {
+      const db = post004(2);
+      const before = snap(db);
+      const digest = rowsDigest(db);
+      const r = runPaste(db, p5.dryRun, { continueOnError });
+      assert.match(r.stderr, /ERROR: {2}DRY RUN OK — nothing was changed \(2 rows; 0 NOT VALID\)/, r.stderr);
+      assert.equal(snap(db), before, `the dry run changed something (continueOnError=${continueOnError})`);
+      assert.equal(rowsDigest(db), digest);
+    }
+  });
+
+  test('item 9a: on the post-004 shape, Paste 2 reaches exactly the new golden state (= migrate.mjs\'s 001–005) — no trigger recreated, no row value changed, no history row written', () => {
+    const db = post004(3);
+    const oids = triggerOids(db);
+    const digest = rowsDigest(db);
+    const r = runPaste(db, p5.apply);
+    assert.equal(r.status, 0, r.stderr);
+    assert.equal(ourObjects(snap(db)), ourObjects(snap(DB)), 'the 005 paste and migrate.mjs produced different objects');
+    golden('local-snapshot-after.txt', snap(db));
+    assert.equal(triggerOids(db), oids, 'a trigger was dropped and recreated');
+    assert.equal(rowsDigest(db), digest, 'an existing value changed, or a history row was written');
+    // and the new rules are live in it
+    refused(req(db, `update public.tasks set status = 'blocked' where title = 'existing 0';`, { header: hdr('ac') }), /a status change, or a new review date/);
+  });
+
+  // The 2026-11-06 live refusal: from a Windows clipboard the editor sends CRLF, so every multi-line
+  // pinned literal carried \r\n against the server's \n. These run the pastes with CRs really reaching
+  // the server (runPasteCRLF), and went RED on 47e2021 with exactly Justin's error.
+  test('CRLF, as the editor sends it: the 005 dry run reaches "DRY RUN OK — nothing was changed (N rows; 0 NOT VALID)" and changes nothing', () => {
+    const db = post004(2);
+    const before = snap(db);
+    const r = runPasteCRLF(db, p5.dryRun);
+    assert.match(r.stderr, /ERROR: {2}DRY RUN OK — nothing was changed \(2 rows; 0 NOT VALID\)/, r.stderr);
+    assert.equal(snap(db), before);
+  });
+
+  test('CRLF, as the editor sends it: the 005 apply reaches the new golden — the CRs really reached the server, and no comment or rule carries one', () => {
+    const db = post004(2);
+    const r = runPasteCRLF(db, p5.apply);
+    assert.equal(r.status, 0, r.stderr);
+    golden('local-snapshot-after.txt', snap(db));
+    // proof the wrapper delivered CRs (the function bodies are stored as sent; their hash pins strip CRs)
+    assert.equal(scalar(db, `select (position(chr(13) in prosrc) > 0)::text from pg_proc where oid = 'public.tasks_before_write()'::regprocedure;`), 'true');
+    // ...and nothing a reader or a check compares picked one up: comments, constraint definitions
+    assert.equal(scalar(db, `select count(*) from pg_description d join pg_constraint c on c.oid = d.objoid where c.conrelid in ('public.tasks'::regclass, 'public.task_history'::regclass) and position(chr(13) in d.description) > 0;`), '0');
+    assert.equal(scalar(db, `select count(*) from pg_description where objoid in ('public.tasks'::regclass, 'public.task_history'::regclass, 'public.tasks_before_write()'::regprocedure, 'public.tasks_after_write()'::regprocedure) and position(chr(13) in description) > 0;`), '0');
+    assert.equal(scalar(db, `select count(*) from pg_constraint where conrelid = 'public.tasks'::regclass and position(chr(13) in pg_get_constraintdef(oid)) > 0;`), '0');
+    // and the rules work, CR and all: Rule N refuses, a note passes
+    refused(req(db, `update public.tasks set status = 'blocked' where title = 'existing 0';`, { header: hdr('ac') }), /a status change, or a new review date/);
+    ok(req(db, `update public.tasks set status = 'blocked', note = 'crlf ok' where title = 'existing 0';`, { header: hdr('ac') }));
+  });
+
+  test('item 9b: on runtime 003\'s ORIGINAL shape, the 005 paste refuses and changes nothing', () => {
+    const db = freshDb();
+    const before = snap(db);
+    refused(runPaste(db, p5.apply), /BEFORE-ASSERTION FAILED: public\.tasks, public\.task_history and public\.proposals must all exist/);
+    assert.equal(snap(db), before);
+  });
+
+  test('item 9b: on an ALREADY-APPLIED state, the 005 paste (dry run and apply) refuses and changes nothing', () => {
+    const db = post004();
+    assert.equal(runPaste(db, p5.apply).status, 0);
+    const before = snap(db);
+    refused(runPaste(db, p5.dryRun), /BEFORE-ASSERTION FAILED: a note column already exists/);
+    refused(runPaste(db, p5.apply), /BEFORE-ASSERTION FAILED: a note column already exists/);
+    assert.equal(snap(db), before);
+  });
+
+  test('a tasks_before_write that is not 003\'s exact body (one comment line added) is refused by the body-hash pin — nothing changed', () => {
+    const db = post004();
+    const body = scalar(db, `select prosrc from pg_proc where oid = 'public.tasks_before_write()'::regprocedure;`);
+    ok(cluster.psql(db, `create or replace function public.tasks_before_write() returns trigger language plpgsql security invoker set search_path = '' as $fn$${body}\n-- a stray edit\n$fn$;`));
+    const before = snap(db);
+    refused(runPaste(db, p5.apply), /BEFORE-ASSERTION FAILED: tasks_before_write or tasks_after_write is not the function 003 created/);
+    assert.equal(snap(db), before);
+  });
+
+  test('a live status rule that is NOT the six-value one (a seventh value) is refused — the drop never runs on an unknown variant', () => {
+    const db = post004();
+    ok(cluster.psql(db, `alter table public.tasks drop constraint tasks_status_allowed;
+      alter table public.tasks add constraint tasks_status_allowed check (status in ('open','in_progress','blocked','done','decided_against','proposed','parked'));`));
+    const before = snap(db);
+    refused(runPaste(db, p5.apply), /BEFORE-ASSERTION FAILED: tasks_status_allowed is not the six-value rule that 001 created/);
+    assert.equal(snap(db), before);
+  });
+
+  test('ADR-061\'s premise: if authenticator is a member of postgres, the paste refuses (fails closed) — nothing changed', () => {
+    const db = post004();
+    const before = snap(db);
+    ok(cluster.psql('postgres', 'grant postgres to authenticator;'));
+    try {
+      refused(runPaste(db, p5.apply), /BEFORE-ASSERTION FAILED: the role authenticator is a member of postgres/);
+    } finally {
+      ok(cluster.psql('postgres', 'revoke postgres from authenticator;'));
+    }
+    assert.equal(snap(db), before);
+  });
+
+  // A breach INSIDE the paste must be caught by 005's own after-assertions: each injects one statement
+  // into the migration section and expects its assertion, with everything rolled back.
+  const inject = (sql) => {
+    const anchor = '  -- (c) AFTER-ASSERTIONS for change set 005';
+    assert.equal(p5.apply.split(anchor).length, 2, 'injection anchor not found exactly once');
+    return p5.apply.replace(anchor, `  ${sql}\n${anchor}`);
+  };
+  for (const [label, sql, message] of [
+    ['recreates a trigger (resetting ENABLE ALWAYS)', 'execute $inj$ drop trigger tasks_after_write on public.tasks $inj$; execute $inj$ create trigger tasks_after_write after insert or update on public.tasks for each row execute function public.tasks_after_write() $inj$;', /AFTER-ASSERTION FAILED: trigger\(s\) no longer ENABLE ALWAYS: tasks\.tasks_after_write=O/],
+    ['adds an extra column to tasks', 'execute $inj$ alter table public.tasks add column sneaky text $inj$;', /AFTER-ASSERTION FAILED: tasks\.note is not the 23rd and last column/],
+    ['alters public.proposals', 'execute $inj$ alter table public.proposals add column sneaky text $inj$;', /AFTER-ASSERTION FAILED: columns other than note changed/],
+    ['revokes a grant on public.tasks', 'execute $inj$ revoke select on public.tasks from anon $inj$;', /AFTER-ASSERTION FAILED: table grants changed/],
+    ['grants EXECUTE on a replaced function to service_role', 'execute $inj$ grant execute on function public.tasks_after_write() to service_role $inj$;', /AFTER-ASSERTION FAILED: a client role can execute a replaced trigger function: service_role -> tasks_after_write/],
+    ['drops another constraint', 'execute $inj$ alter table public.tasks drop constraint tasks_title_max_80 $inj$;', /AFTER-ASSERTION FAILED: constraints other than the five 005 adds or replaces changed/],
+    // (with an actor, so the trigger lets the write through and only the paste's own check can catch it)
+    ['changes an existing value', "perform set_config('evryn.actor', 'ac', true); execute $inj$ update public.tasks set description = 'rewritten' $inj$;", /AFTER-ASSERTION FAILED: rows: no existing value changed, no history row written changed/],
+  ]) {
+    test(`a migration that ${label} is caught INSIDE the 005 paste by its after-assertion — snapshot byte-identical`, () => {
+      const db = post004(1);
+      const before = snap(db);
+      refused(runPaste(db, inject(sql)), message);
+      assert.equal(snap(db), before);
+    });
+  }
+
+  test('a deliberately BROKEN after-assertion (the pinned new body hash) rolls EVERYTHING back, even in continue-on-error mode', () => {
+    const broken = p5.apply.replace('body_md5=5424d669d256941cd7bb671d9a487cc2', 'body_md5=00000000000000000000000000000000');
+    assert.notEqual(broken, p5.apply, 'the break did not apply');
+    for (const continueOnError of [false, true]) {
+      const db = post004();
+      const before = snap(db);
+      // (psql exits 0 in continue-on-error mode, so assert on the message, as the 001-004 test does)
+      assert.match(runPaste(db, broken, { continueOnError }).stderr, /AFTER-ASSERTION FAILED: tasks_before_write or tasks_after_write is not the reviewed function/);
+      assert.equal(snap(db), before);
+    }
   });
 });
 

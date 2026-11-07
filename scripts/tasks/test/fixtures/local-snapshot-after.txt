@@ -22,6 +22,7 @@ column task_history #06 changed_fields text[] NOT NULL DEFAULT '{}'::text[]
 column task_history #07 old jsonb
 column task_history #08 new jsonb
 column task_history #09 flags text[] NOT NULL DEFAULT '{}'::text[]
+column task_history #10 note text
 column tasks #01 id uuid NOT NULL DEFAULT gen_random_uuid()
 column tasks #02 title text NOT NULL
 column tasks #03 description text NOT NULL DEFAULT ''::text
@@ -44,19 +45,24 @@ column tasks #19 signed_ref text
 column tasks #20 linear_id text
 column tasks #21 linear_status text
 column tasks #22 search tsvector GENERATED to_tsvector('english'::regconfig, ((COALESCE(title, ''::text) || ' '::text) || COALESCE(description, ''::text)))
+column tasks #23 note text
 constraint proposals.proposals_pkey: PRIMARY KEY (id)
 constraint proposals.proposals_status_check: CHECK ((status = ANY (ARRAY['needs_authorization'::text, 'authorized'::text, 'bounced'::text, 'denied'::text])))
 constraint proposals.proposals_task_id_fkey: FOREIGN KEY (task_id) REFERENCES public.tasks(id)
+constraint task_history.task_history_note_max_600: CHECK ((char_length(note) <= 600))
 constraint task_history.task_history_op_check: CHECK ((op = ANY (ARRAY['insert'::text, 'update'::text])))
 constraint task_history.task_history_pkey: PRIMARY KEY (id)
+constraint tasks.tasks_acceptance_addressed: CHECK (((status <> 'needs_acceptance'::text) OR (addressed_to IS NOT NULL)))
 constraint tasks.tasks_addressed_to_shape: CHECK (((addressed_to IS NULL) OR (addressed_to ~ '^[A-Za-z0-9_.-]{1,64}$'::text)))
+constraint tasks.tasks_backlog_needs_review_date: CHECK (((status <> 'backlog'::text) OR (needed_by IS NOT NULL)))
 constraint tasks.tasks_closed_needs_note: CHECK (((status <> ALL (ARRAY['done'::text, 'decided_against'::text])) OR ((COALESCE(btrim(closing_note), ''::text) <> ''::text) AND (closed_at IS NOT NULL))))
 constraint tasks.tasks_description_check: CHECK ((char_length(description) <= 600))
 constraint tasks.tasks_justin_needs_date: CHECK (((lower(addressed_to) IS DISTINCT FROM 'justin'::text) OR (needed_by IS NOT NULL)))
+constraint tasks.tasks_note_max_600: CHECK ((char_length(note) <= 600))
 constraint tasks.tasks_one_owner: CHECK (COALESCE(((jsonb_typeof((raci -> 'r'::text)) = 'string'::text) AND (btrim((raci ->> 'r'::text)) <> ''::text)), false))
 constraint tasks.tasks_pkey: PRIMARY KEY (id)
 constraint tasks.tasks_signed_needs_ref: CHECK (((signed_at IS NULL) OR (COALESCE(btrim(signed_ref), ''::text) <> ''::text)))
-constraint tasks.tasks_status_allowed: CHECK ((status = ANY (ARRAY['open'::text, 'in_progress'::text, 'blocked'::text, 'done'::text, 'decided_against'::text, 'proposed'::text])))
+constraint tasks.tasks_status_allowed: CHECK ((status = ANY (ARRAY['backlog'::text, 'proposed'::text, 'open'::text, 'in_progress'::text, 'blocked'::text, 'needs_acceptance'::text, 'done'::text, 'decided_against'::text])))
 constraint tasks.tasks_title_max_80: CHECK ((char_length(title) <= 80))
 index proposals.proposals_pkey: CREATE UNIQUE INDEX proposals_pkey ON public.proposals USING btree (id)
 index task_history.task_history_pkey: CREATE UNIQUE INDEX task_history_pkey ON public.task_history USING btree (id)
@@ -163,8 +169,8 @@ function task_history_guard_insert(): owner=postgres security=INVOKER volatility
 function task_history_refuse_change(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=c5a5dcde2a6f03425297d10f1f3ce4e0
 function task_request_actor(): owner=postgres security=INVOKER volatility=s config=search_path="" body_md5=61080bdcdf694cf32df51cb2c340dc2b
 function task_roster(): owner=postgres security=INVOKER volatility=i config=search_path="" body_md5=7cc0acd419d23c66f1596106e3ac7794
-function tasks_after_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=e39010f0082dd5d81d68d1888b41127f
-function tasks_before_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=527670e20253b2a7c6059a57c3b6a37f
+function tasks_after_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=5424d669d256941cd7bb671d9a487cc2
+function tasks_before_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=f564a9be7ffeaa20db13902d5edcd38b
 function tasks_refuse_delete(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=0c876d3a3c9374420871bcd32f549d7d
 function team_tasks_schema_snapshot(): owner=postgres security=INVOKER volatility=s config=search_path="" body_md5=4a1710d9ec9339ff5aaacdd35160e987
 function-grant task_history_guard_insert(): postgres EXECUTE
