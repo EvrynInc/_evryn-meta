@@ -23,7 +23,8 @@
 // CAVEATS, so nobody over-reads the number
 //   - It is the size at the LAST COMPLETED API call, so it lags the current turn by whatever that turn has added.
 //   - A session resumed after a restart can come back under a NEW session id; find it with --recent.
-//   - The compaction point is observed, not documented. Pack out well before it (~850K on a 1M window).
+//   - The compaction point is observed, not documented (~965K so far). Start your packout at ~850K, not before (team CLAUDE.md, #packout):
+//     a full packout fits in the room left, and packing out earlier costs Justin an extra re-spin.
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -73,7 +74,9 @@ function measure(file) {
 function report(label, file) {
   const m = measure(file);
   const pct = Math.round((m.now / WINDOW) * 100);
-  const flag = m.now >= 850_000 ? '  🔴 PACK OUT NOW' : m.now >= 700_000 ? '  🟡 plan a packout' : '';
+  // Justin, 2026-11-09: start packing out at ~850K, not before (team CLAUDE.md). A warning that fires earlier gets read as "pack out now",
+  // and agents were re-spinning an extra time or two a day. So nothing prints below 820K, and the line never says to pack out early.
+  const flag = m.now >= 850_000 ? '  🔴 start your packout now' : m.now >= 820_000 ? '  🟡 packout at ~850K: finish the current piece of work first' : '';
   console.log(`${label}\n  context ~${K(m.now)} (${pct}% of a 1M window) at last call ${pt(m.at)} PT · peak ~${K(m.peak)} · compactions ${m.compactions} · ${m.calls} calls${flag}`);
 }
 
