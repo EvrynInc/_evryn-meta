@@ -137,6 +137,8 @@
 
 ⚠️ **The temptation is strongest here because you believe you know what they say. You wrote one of them.** **That belief is precisely what a re-read exists to test.**
 
+🔴 **When your handoff replaces the incoming one, the incoming re-read is also where you catch a line you dropped that your successor needed.** Step 1's rule tells you to drop what your successor won't act on; this is the check that you didn't drop **too much*. **Walk the incoming brief line by line, and for each line say where it went:** carried into your handoff; moved to a named home (a task, a shelf, a Log); settled, and noted where your successor will meet it; or dead, and why. **A dropped line can't be seen in your new handoff, because it isn't there; only this walk, against the old one, can find it.** *(2026-11-10: this walk found eight lines that applying step 1's rule had wrongly dropped, one of them only after a skimmed first pass was redone whole.)*
+
 🔴 **SPECIAL ATTENTION TO THE LOAD LIST. Copy it VERBATIM from the incoming brief unless you have a compelling reason to change it — and if you change it, SURFACE THAT LOUDLY.** **A silently-altered load list hands your successor a different set of eyes than the one that was proven to work, and nothing about the change will be visible to them.**
 
 ### 5 · One more fresh-eyes pass of the OUTGOING handoff alone
