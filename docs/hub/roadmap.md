@@ -159,7 +159,7 @@ The vision: a world where the *default* would be that people can be trusted and 
 - **AI Founding Team** — 8 agents operating from `evryn-team-workspace`. 🔴 **Each name carries its pronouns, and they are load-bearing: use them.** **Lucas** Everhart (CoS, *he/him*) · **Soren** Thorne (CTO, *he/him*) · **Mira** Vasant (CPO — Product Experience, *she/her*) · **Emma** Cheng (COO/CFO, *she/her*) · **Marlowe** Reeve (CGO, *she/her*) · **Dominic** Wolfe (Strategic Advisor, *he/him*) · **Nathan** Rhodes (Internal Counsel, *he/him*) · **Thea** Mercer (EA, *she/her*). Previously planned as SDK agents (paused — ADR-021); currently operating in Claude Code and Cowork. Domain ownership and routing: `evryn-team-workspace/shared/protocols/domain-routing.md`.
 
 - **Human Advisors:** Andrew Lester (Operations), Salil Chatrath (Product), Manuele Capacci (Design), Megan Griffiths (Film Industry).
-- **Legal:** Fenwick & West (legal and strategic partner).
+- **Legal:** Nathan (internal counsel) drafts; licensed lawyers review by the item. No outside counsel on retainer since Fenwick & West stepped back on 2026-10-06.
 - **Pilot gatekeepers:** Lacey Leavitt (likely the first to go live) and Mark (August Island Pictures / Eva's Wild; not yet forwarding).
 
 ## Repositories
