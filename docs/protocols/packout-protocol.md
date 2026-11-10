@@ -85,13 +85,23 @@
 
 **Assess how stale your incoming brief actually is, and pick:**
 
-- **Clean it up and append** — the existing brief is largely accurate and still orienting.
-- **Write a fresh brief that supersedes it** — it is mostly stale, and a successor would be better served by one clean layer.
-- **Clean and carry** — the "stale" material is good context that just needs tightening so the next instance gets it without wading.
+- **Scenario 1: Clean it up and append** — the existing brief is largely accurate and still orienting.
+- **Scenario 2: Write a fresh brief that supersedes it** — it is mostly stale, and a successor would be better served by one clean layer.
+- **Scenario 3: Clean and carry** — the "stale" material is good context that just needs tightening so the next instance gets it without wading.
 
 *(Justin's framing: "How stale is your brief? Do you need to just clean it up and add a new appendage, or is it mostly stale and the next instance would do well to have a clean new brief? Or is the 'stale' stuff good context, just needs cleaning so next-you has it without getting bogged down?")*
 
 🔴 **`_evryn-meta/docs/protocols/lock-protocol.md` step 10's SUPERSEDE trigger decides this FOR you when it fires: the moment you write a correction that points at another section of the same document, that document needs superseding, not another correction.**
+
+#### What a handoff carries forward, and what it points to instead
+
+**A handoff is to ensure your successor can *competently* perform their immediate work, not to carry the lane's entire record. Carry forward only what it will act on, decide, or be hurt by not knowing before its own packout:** live items with their dates and owners; Justin's rulings and words not yet landed in a durable home; questions waiting on someone; and traps a fresh instance would walk into. **Everything else moves to its durable home before you drop it from the handoff** (owed work to a task, a proposal to the owner's inbound shelf, history to the lane's Log, what changed in you to your memory). The handoff must be clear enough to be worked from, and **clear about its limits**: the danger of keeping too much info in the handoff is that it bogs your successor down with irrelevant detail. The danger of trimming too much is that your successor arrives to work lobotomized. Both are a serious problem; the latter is a *much more* serious problem. Be *careful* to balance these. And link to the deeper sources — the persistent project files, the incoming handoff, etc. — **with enough context so that your successor will know when to go deeper, and when what's in the handoff is enough.**
+
+- **The mechanism, and why care doesn't fix it:** each handoff copies the last one's open list "word for word" because copying feels safe and dropping feels like losing something. No single handoff ever decides to drop a line, so an item nobody acts on is re-read by every successor, and the pile grows while each line's odds of action fall. **Copying is how a handoff accretes fat, and moving is how it sheds it.**
+- **The test for each line you'd carry:** *will my successor act on it, decide it, or be hurt by not knowing it before its own packout?* **If not, find or make its home, confirm the home holds it, then drop it.** Moving, over deleting: a line dropped without a home is *muscle* cut, and nobody will see the gap.
+- **The load list takes the same test, in both directions.** A file goes on only if the successor's first day needs it whole. A record (a closed lane's file, a long shared Log) is read from a named point, or on demand. Step 4's rule still holds: dropping a file for this test requires a compelling reason, and you say so loudly, in the handoff and in your successor's first report. **The cost of skipping this:** the load grows by a file every time a day needs one and never shrinks, until a fresh instance spends a fifth of its room on history before it does any work. *(Justin, 2026-11-10: a Laptop Admiral's load had grown to ~606K, a sixth of it a 375K-character check-in Log that was mostly closed history.)*
+- **A settled item still earns one line when your successor will meet it as open somewhere else** (an older report, a superseded entry, a peer's list): say it's settled, and where. **Dropping it silently is how a ruling gets undone:** the successor finds the old "open" listing, has nothing saying otherwise, and acts on it. *(Nathan, 2026-11-10: a handoff that "stood alone" left out a wording Justin had ruled on in the entry it superseded, and the next Nathan reverted it.)*
+- **Don't append dated "Update" sections to a handoff a successor will load.** Fold them in, or supersede (the trigger above).
 
 ### 2 · A careful fragment sweep of the conversation
 
