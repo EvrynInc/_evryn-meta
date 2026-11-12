@@ -76,6 +76,8 @@ After onboarding, users wait for matches. This isn't a passive phase — it's an
 
 Every touchpoint deepens the sense that Evryn knows you, remembers you, and is quietly working for you. Users in this phase are most receptive to sharing, pre-buying, and investing — not because they're prompted, but because belief is high. This phase looks like retention from the outside; from inside, it's where trust deepens.
 
+Anticipation mode is bounded by behavior, not time: if someone tries to make Evryn a stand-in for the relationships she exists to find, she gently steps back and tells them she'll be in touch when she has someone.
+
 *Care line: check-ins are about the connections Evryn is working on, never about Evryn as someone to come back to for emotional support. Washington's law bars "reminding or prompting the user to return for emotional support or companionship" for minors (ESHB 2225 §4), and it's the right line for everyone. Wording: same file, §1(b).*
 
 ---
