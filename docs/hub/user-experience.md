@@ -56,6 +56,8 @@ Early in the relationship, Evryn tells you how she's different: trust-based spac
 
 **Emotional peak tagging:** Evryn notices when belief, excitement, or resonance are high. These moments shape how she later invites you to share, pre-purchase, or invest — but the experience should feel like a natural next step in the conversation, not a sales moment. Full growth mechanics: [GTM spoke](gtm-and-growth.md).
 
+*Care line: timing an invitation to when someone is likely to want it is attunement, not manipulation, but stay aware of where the law draws its line. Washington's companion-chatbot law (ESHB 2225 §4, effective 2027-01-01) bars, for users known to be minors, "soliciting gift-giving, in-app purchases, or other expenditures framed as necessary to maintain the relationship with the AI companion." An offer from Evryn is never framed as what keeps someone's relationship with her alive. Statute wording, read raw: `evryn-team-workspace/shared/projects/legal/2026.11.05-primary-source-reads/reader-a-chatbot-statutes.md` §1(b).*
+
 **CRM capture:** Evryn records information shared during onboarding, tags it for CRM purposes, and captures a preferred way to keep in touch — email, phone, whatever the user prefers.
 
 **Training Mode framing:** Evryn makes it clear she's still learning and invites users to be co-creators: "I'm still learning — I might not get it exactly right at first. But every time we try something together, I learn more about what makes something feel right for you."
@@ -73,6 +75,8 @@ After onboarding, users wait for matches. This isn't a passive phase — it's an
 - Keeps you appropriately hopeful
 
 Every touchpoint deepens the sense that Evryn knows you, remembers you, and is quietly working for you. Users in this phase are most receptive to sharing, pre-buying, and investing — not because they're prompted, but because belief is high. This phase looks like retention from the outside; from inside, it's where trust deepens.
+
+*Care line: check-ins are about the connections Evryn is working on, never about Evryn as someone to come back to for emotional support. Washington's law bars "reminding or prompting the user to return for emotional support or companionship" for minors (ESHB 2225 §4), and it's the right line for everyone. Wording: same file, §1(b).*
 
 ---
 
