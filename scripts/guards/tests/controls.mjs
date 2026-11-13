@@ -27,6 +27,8 @@ const CONTROLS = [
   ['lib.mjs', 'look-alike domains match', "new RegExp(`(?<![a-z0-9-])(?:[a-z0-9-]+\\\\.)*${esc}${tail}`)", "new RegExp(`(?:[a-z0-9-]+\\\\.)*${esc}${tail}`)"],
   ['model-switch.mjs', 'hook never fires', 'triggers.includes(payload.source)', 'false'],
   ['model-switch.mjs', 'fires on a user switch too', "(process.env.EVRYN_MODEL_SWITCH_TRIGGER || 'auto')", "(process.env.EVRYN_MODEL_SWITCH_TRIGGER || 'auto,command')"],
+  ['subagent-model.mjs', 'subagent fallback never flagged', 'if (asked && off.length) {', 'if (false) {'],
+  ['subagent-model.mjs', 'blocks again on the second stop (loop)', "&& !payload.stop_hook_active)", ')'],
   ['compaction.mjs', 'no marker for the watch', 'if (compactNow) {', 'if (false) {'],
   ['compaction.mjs', 'the summary gets logged', 'keys: Object.keys(payload) });', 'keys: Object.keys(payload), s: payload.compact_summary });'],
 ];
