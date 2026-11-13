@@ -34,9 +34,13 @@ const META = 'METADATA_ONLY';
 
 const tool = name => (String(name || '').startsWith(P) ? String(name).slice(P.length) : null);
 const ledgerFile = session => path.join(DATA, 'gmail-cleared', `${safeName(session)}.json`);
-function ledger(session) { return readJSON(ledgerFile(session), { cleared: {}, counsel: {} }); }
+// cleared: participants checked by a metadata read. bodyChecked: a body read passed layer 2 clean (an attachment
+// download needs this: a lawyer's PDF forwarded inside an ordinary message has no counsel participant, and its
+// base64 bytes can't be scanned, so only a clean read of the forwarding message's text clears it; review probe B).
+function ledger(session) { return { cleared: {}, counsel: {}, bodyChecked: {}, ...readJSON(ledgerFile(session), {}) }; }
 function saveLedger(session, l) { fs.mkdirSync(path.dirname(ledgerFile(session)), { recursive: true }); fs.writeFileSync(ledgerFile(session), JSON.stringify(l)); }
-const isCleared = (l, id) => !!id && !l.counsel[id] && l.cleared[id] && now() - new Date(l.cleared[id]) < CLEAR_MINUTES * 60000;
+const fresh = (map, id) => !!id && map[id] && now() - new Date(map[id]) < CLEAR_MINUTES * 60000;
+const isCleared = (l, id) => !l.counsel[id] && fresh(l.cleared, id);
 
 // Does this call return body text? A metadata read doesn't; search_threads does unless its view is metadata or ids.
 function bodyBearing(t, input) {
@@ -63,6 +67,10 @@ function reshape(resp, text) {
 }
 const tryJSON = s => { try { return JSON.parse(s); } catch { return null; } };
 const idsIn = text => [...String(text).matchAll(/"(?:id|threadId|messageId)"\s*:\s*"([A-Za-z0-9_-]{6,})"/g)].map(m => m[1]);
+// Only "id" fields: a message's own metadata names its thread, but clearing that thread would let a body read of the
+// whole thread through when nobody checked the thread's other messages (review probe A). So a metadata read clears
+// the id it was asked about, plus the ids of the messages it actually returned, and never a threadId found inside.
+const ownIdsIn = text => [...String(text).matchAll(/"id"\s*:\s*"([A-Za-z0-9_-]{6,})"/g)].map(m => m[1]);
 
 // A stub that keeps what the rule allows (ids, dates, senders, subjects) and nothing a lawyer wrote.
 function stub(text, why) {
@@ -78,7 +86,9 @@ function stub(text, why) {
 // messages than the thread holds (the unlisted ones can't be checked). Subjects stay. Returns null if unparseable.
 function redactSearch(text, entries) {
   const j = tryJSON(text); if (!j) return null;
-  const threads = Array.isArray(j) ? j : (j.threads || j.items || []);
+  if (j && typeof j === 'object' && !Array.isArray(j) && !Object.keys(j).length) return { text, changed: 0 };   // {} = no results
+  const threads = Array.isArray(j) ? j : (j.threads || j.items);
+  if (!Array.isArray(threads)) return null;                            // a shape we don't know: withhold (review finding 8)
   let changed = 0;
   for (const th of threads) {
     const msgs = th.messages || [];
@@ -100,7 +110,13 @@ function pre(p) {
   const { entries, readAny } = loadCounsel();
   if (!readAny) return preDeny('Counsel-mail guard: the counsel list could not be read, so no message body may be opened until it can. Tell the Admiral.');
   const id = input[BODY_TOOLS[t]];
-  if (isCleared(ledger(p.session_id), id)) return null;
+  const l = ledger(p.session_id);
+  if (t === 'download_gmail_attachment') {
+    if (!l.counsel[id] && fresh(l.bodyChecked, id)) return null;
+    guardLog({ guard: 'gmail', event: 'pre-deny', session: p.session_id, tool: t, id });
+    return preDeny(`Counsel-mail guard: read this message's text first (messageFormat "METADATA_ONLY", then "PLAIN_TEXT"). Its attachments can be downloaded for ${CLEAR_MINUTES} minutes after its text has been read and found clean, because a lawyer's attachment forwarded inside an ordinary email can only be recognized from the forward's text.`);
+  }
+  if (isCleared(l, id)) return null;
   guardLog({ guard: 'gmail', event: 'pre-deny', session: p.session_id, tool: t, id });
   const what = t === 'get_draft' ? 'draft' : t === 'get_thread' ? 'thread' : 'message';
   return preDeny(`Counsel-mail guard: read this ${what} with messageFormat "METADATA_ONLY" first. If no listed lawyer is on it, the guard clears it for ${CLEAR_MINUTES} minutes and this read will go through. (For an attachment, read its message with METADATA_ONLY first.)`);
@@ -116,10 +132,21 @@ function post(p) {
   const hits = counselHits(text, entries);
   const l = ledger(p.session_id);
 
-  if (!body) {                                                          // a metadata read: clear, or mark counsel
-    const ids = [...new Set([input.threadId, input.messageId, input.draftId, ...idsIn(text)].filter(Boolean))];
-    if (hits.length) { ids.forEach(i => { l.counsel[i] = now().toISOString(); }); saveLedger(p.session_id, l); guardLog({ guard: 'gmail', event: 'counsel-marked', session: p.session_id, tool: t, ids }); return postContext(`Counsel-mail guard: this includes counsel (${hits.join(', ')}). Don't open any message in it; Justin reads it in Gmail. Senders, subjects and dates are fine.`); }
-    if (t in BODY_TOOLS) { ids.forEach(i => { l.cleared[i] = now().toISOString(); }); saveLedger(p.session_id, l); }
+  if (!body) {                                                          // no body asked for
+    const metadataRead = (t in BODY_TOOLS && input.messageFormat === META) || t === 'search_threads' || t === 'list_drafts';
+    if (hits.length) {
+      const all = [...new Set([input.threadId, input.messageId, input.draftId, ...idsIn(text)].filter(Boolean))];
+      all.forEach(i => { l.counsel[i] = now().toISOString(); }); saveLedger(p.session_id, l);
+      guardLog({ guard: 'gmail', event: 'counsel-marked', session: p.session_id, tool: t, ids: all });
+      const note = `Counsel-mail guard: this includes counsel (${hits.join(', ')}). Don't open any message in it; Justin reads it in Gmail. Senders, subjects and dates are fine.`;
+      // A metadata read carries only the fields the rule allows. Any other tool (labels, trash, drafts) may echo text,
+      // and no schema says it doesn't, so its result is replaced, not just annotated (review probe G).
+      return metadataRead ? postContext(note) : postReplace(reshape(p.tool_response, stub(text, `it includes counsel (${hits.join(', ')})`)), note);
+    }
+    if (t in BODY_TOOLS) {
+      const own = [...new Set([input[BODY_TOOLS[t]], ...ownIdsIn(text)].filter(Boolean))];
+      own.forEach(i => { l.cleared[i] = now().toISOString(); }); saveLedger(p.session_id, l);
+    }
     return null;
   }
 
@@ -133,6 +160,9 @@ function post(p) {
   if (hits.length) {                                                    // layer 2: a body that names counsel anywhere
     guardLog({ guard: 'gmail', event: 'withheld', session: p.session_id, tool: t, ids: idsIn(text).slice(0, 20), hits });
     return postReplace(reshape(p.tool_response, stub(text, `it includes counsel (${hits.join(', ')})`)));
+  }
+  if (t === 'get_message' || t === 'get_thread') {                     // a clean body read: its messages' attachments may follow
+    [input.messageId, ...ownIdsIn(text)].filter(Boolean).forEach(i => { l.bodyChecked[i] = now().toISOString(); }); saveLedger(p.session_id, l);
   }
   return null;
 }
