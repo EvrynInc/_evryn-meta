@@ -156,6 +156,20 @@ test('model switch: keyed on source, not on model names (a future step-down mode
   assert.match(run('model-switch.mjs', { hook_event_name: 'PostModelSwitch', session_id: 'ms3', source: 'auto', from_model: 'claude-fable-9', to_model: 'claude-opus-7' }).text, /MODEL DOWNGRADE/);
 });
 
+const subTranscript = (turns) => { const f = path.join(tmp, `agent-${++n}.jsonl`); fs.writeFileSync(f, turns.map(([served, asked]) => JSON.stringify({ type: 'assistant', requestedModel: asked, message: { model: served, content: [] } })).join('\n') + '\n'); return f; };
+const subStop = (f, active = false) => run('subagent-model.mjs', { hook_event_name: 'SubagentStop', session_id: 'sa', agent_id: 'a1', stop_hook_active: active, agent_transcript_path: f });
+
+test('subagent: a turn served by a fallback model blocks the stop once, with the disclosure', () => {
+  const o = subStop(subTranscript([['claude-opus-5-5', 'claude-opus-5-5'], ['claude-opus-4-8', 'claude-opus-5-5']]));
+  assert.equal(o.decision, 'block'); assert.match(o.reason, /claude-opus-4-8/); assert.match(o.reason, /top of your final report/);
+});
+
+test('subagent: no fallback, or the second stop, passes through', () => {
+  assert.equal(subStop(subTranscript([['claude-opus-5-5', 'claude-opus-5-5']])), null);
+  assert.equal(subStop(subTranscript([['claude-opus-4-8', 'claude-opus-5-5']]), true), null);
+  assert.equal(subStop(path.join(tmp, 'missing.jsonl')), null);
+});
+
 test('compaction: SessionStart(compact) delivers the STOP text and leaves a marker the watch reads', () => {
   const o = run('compaction.mjs', { hook_event_name: 'SessionStart', source: 'compact', session_id: 'cs1', cwd: 'x' });
   assert.match(o.text, /HOOK-DELIVERY-CANARY-7Q4X/); assert.match(o.text, /STOP/);
