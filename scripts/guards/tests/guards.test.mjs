@@ -128,6 +128,75 @@ test('fail closed: a body that arrives while the list cannot be read is withheld
   assert.ok(replaced(o) && !JSON.stringify(replaced(o)).includes(BODY));
 });
 
+test('a thread cleared earlier is closed again when a later metadata read shows a lawyer replied', () => {
+  const s = sid();
+  post(s, 'get_thread', { threadId: 'rr1', messageFormat: 'METADATA_ONLY' }, meta('rr1', 'friend@example.com'));
+  assert.equal(pre(s, 'get_thread', { threadId: 'rr1' }), null);
+  post(s, 'get_thread', { threadId: 'rr1', messageFormat: 'METADATA_ONLY' }, JSON.stringify({ id: 'rr1', messageCount: 2, messages: [{ id: 'rr1m1', sender: 'friend@example.com' }, { id: 'rr1m2', sender: 'partner@fenwick.com' }] }));
+  assert.ok(denied(pre(s, 'get_thread', { threadId: 'rr1' })));
+});
+
+test('review probe A: a message metadata read that names its thread does not clear the thread', () => {
+  const s = sid();
+  post(s, 'get_message', { messageId: 'pa1msg', messageFormat: 'METADATA_ONLY' }, JSON.stringify({ id: 'pa1msg', threadId: 'pa1thread', sender: 'friend@example.com', date: 'd' }));
+  assert.ok(denied(pre(s, 'get_thread', { threadId: 'pa1thread' })), 'the thread was never checked');
+  assert.equal(pre(s, 'get_message', { messageId: 'pa1msg' }), null, 'the message itself was checked');
+});
+
+test('review probe B: an attachment needs a clean body read of its message first', () => {
+  const s = sid();
+  post(s, 'get_message', { messageId: 'pb1msg', messageFormat: 'METADATA_ONLY' }, meta('pb1msg', 'justin@evryn.ai').replace('"id":"pb1msgm1"', '"id":"pb1msg"'));
+  assert.ok(denied(pre(s, 'download_gmail_attachment', { messageId: 'pb1msg', attachmentId: 'x' })), 'a metadata read alone is not enough');
+  post(s, 'get_message', { messageId: 'pb1msg' }, thread('pb1msg', 'justin@evryn.ai', 'here is the file'));
+  assert.equal(pre(s, 'download_gmail_attachment', { messageId: 'pb1msg', attachmentId: 'x' }), null, 'after a clean body read it is allowed');
+  const s2 = sid();
+  post(s2, 'get_message', { messageId: 'pb2msg' }, thread('pb2msg', 'justin@evryn.ai', 'Forwarded message From: partner@fenwick.com'));
+  assert.ok(denied(pre(s2, 'download_gmail_attachment', { messageId: 'pb2msg', attachmentId: 'x' })), 'a forward of a lawyer never clears its attachment');
+});
+
+test('review probe E: a reordered counsel table still guards; one that parses to nothing fails closed', () => {
+  const v = path.join(tmp, 'vault-reordered'); fs.mkdirSync(v, { recursive: true });
+  fs.writeFileSync(path.join(v, 'counsel-list.md'), '| Who | Address |\n|---|---|\n| Fenwick | `fenwick.com` |\n');
+  const env = { EVRYN_GUARD_VAULT: v };   // the repo copy (another lawyer) still reads, so only the reordered table stands between Fenwick and the model
+  const o = run('gmail-guard.mjs', { hook_event_name: 'PostToolUse', session_id: sid(), tool_name: G + 'get_thread', tool_input: { threadId: 'pe1' }, tool_response: thread('pe1', 'partner@fenwick.com', BODY) }, env);
+  assert.ok(replaced(o) && !JSON.stringify(replaced(o)).includes(BODY));
+  const v2 = path.join(tmp, 'vault-empty'); fs.mkdirSync(v2, { recursive: true });
+  fs.writeFileSync(path.join(v2, 'counsel-list.md'), '# a list with no table\nfenwick.com\n');
+  const env2 = { EVRYN_GUARD_VAULT: v2, EVRYN_GUARD_CODE_ROOT: path.join(tmp, 'nowhere') };
+  assert.ok(denied(run('gmail-guard.mjs', { hook_event_name: 'PreToolUse', session_id: sid(), tool_name: G + 'get_thread', tool_input: { threadId: 'pe2' } }, env2)));
+  const o2 = run('gmail-guard.mjs', { hook_event_name: 'PostToolUse', session_id: sid(), tool_name: G + 'get_thread', tool_input: { threadId: 'pe3' }, tool_response: thread('pe3', 'partner@fenwick.com', BODY) }, env2);
+  assert.ok(replaced(o2) && !JSON.stringify(replaced(o2)).includes(BODY), 'a body arriving while the list parses to nothing is withheld');
+});
+
+test('review probe G: a non-metadata tool that echoes counsel text is replaced, not just annotated', () => {
+  const o = post(sid(), 'label_thread', { threadId: 'pg1' }, thread('pg1', 'partner@fenwick.com', BODY));
+  assert.ok(replaced(o) && !JSON.stringify(replaced(o)).includes(BODY));
+});
+
+test('review finding 8: a search result in an unknown shape is withheld; an empty one passes', () => {
+  const r = replaced(post(sid(), 'search_threads', { query: 'x' }, JSON.stringify({ results: [{ snippet: BODY }] })));
+  assert.ok(r && !JSON.stringify(r).includes(BODY));
+  assert.equal(post(sid(), 'search_threads', { query: 'x' }, '{}'), null);
+});
+
+test('review finding 7: only the vault path counts as the vault, so test overrides are ignored there', async () => {
+  const { isVaultUrl } = await import(new URL('file:///' + path.join(DIR, 'lib.mjs').replace(/\\/g, '/')).href);
+  assert.ok(isVaultUrl('file:///C:/Program%20Files/ClaudeCode/evryn-guards/lib.mjs'));
+  assert.ok(isVaultUrl('file:///c:/program%20files/claudecode/evryn-guards/lib.mjs'));
+  assert.ok(!isVaultUrl('file:///C:/Program%20Files%20(x86)/ClaudeCode/evryn-guards/lib.mjs'));
+  assert.ok(!isVaultUrl('file:///C:/Users/jbmcg/Evryn/Code/_evryn-meta/scripts/guards/lib.mjs'));
+});
+
+test('review finding 13: the handback hook writes the disclosure into the report itself', () => {
+  const proj = path.join(tmp, 'proj'); const sess = 'sess-hb'; const subdir = path.join(proj, sess, 'subagents'); fs.mkdirSync(subdir, { recursive: true });
+  const mk = (id, turns) => fs.writeFileSync(path.join(subdir, `agent-${id}.jsonl`), turns.map(([s, a]) => JSON.stringify({ type: 'assistant', requestedModel: a, message: { model: s } })).join('\n') + '\n');
+  mk('hb1', [['claude-opus-5-5', 'claude-opus-5-5'], ['claude-opus-4-8', 'claude-opus-5-5']]);
+  mk('hb2', [['claude-opus-5-5', 'claude-opus-5-5']]);
+  const hb = (agent) => run('handback.mjs', { hook_event_name: 'PreToolUse', tool_name: 'SubagentHandback', session_id: sess, agent_id: agent, transcript_path: path.join(proj, `${sess}.jsonl`), tool_input: { message: 'MY REPORT' } });
+  const o = hb('hb1'); assert.match(o.hookSpecificOutput.updatedInput.message, /^⚠️ Part of this work ran on claude-opus-4-8/); assert.match(o.hookSpecificOutput.updatedInput.message, /MY REPORT$/);
+  assert.equal(hb('hb2'), null);
+});
+
 test('fail closed: an unparseable search result is withheld', () => {
   const r = replaced(post(sid(), 'search_threads', { query: 'x' }, 'not json ' + BODY)); assert.ok(r && !JSON.stringify(r).includes(BODY));
 });

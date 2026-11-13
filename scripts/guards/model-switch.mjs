@@ -15,10 +15,10 @@
 // Wired in managed-settings.json: { "PostModelSwitch": [ { "hooks": [ { "type": "command", "command": "node ...model-switch.mjs" } ] } ] }
 // Env, tests only: EVRYN_MODEL_SWITCH_TRIGGER=<comma list of sources that count> (the live delivery test uses "command").
 
-import { readStdin, guardLog } from './lib.mjs';
+import { readStdin, guardLog, env } from './lib.mjs';
 
 const { payload } = readStdin();
-const triggers = (process.env.EVRYN_MODEL_SWITCH_TRIGGER || 'auto').split(',').map(s => s.trim());
+const triggers = (env('EVRYN_MODEL_SWITCH_TRIGGER') || 'auto').split(',').map(s => s.trim());
 try {
   if (payload.hook_event_name === 'PostModelSwitch' && triggers.includes(payload.source)) {
     const from = payload.from_model || 'your previous model', to = payload.to_model || 'a fallback model';
