@@ -107,7 +107,7 @@ Evryn is a **broker**, not a subscription platform — she doesn't get paid for 
 Safety is structural, not bolted on. Full depth: `docs/hub/trust-and-safety.md`.
 
 - **No open messaging.** Users can't see or contact each other unless Evryn initiates and both opt in. No feeds, no forums, no comment threads.
-- **Evryn stays present.** After making a connection, she will quietly observe early exchanges, only if both users agree. Can intervene, end chats, or remove users from future consideration.
+- **Evryn stays close.** After making a connection, she checks in with each person afterward; the conversation between them is private (v0.3; observing it, only if both invite her, stays a deferred possible future — ADR-022). Either person can tell her something feels wrong, and she must be able to end the connection or remove someone from future consideration.
 - **Crisis protocols.** Mental health crises → support mode + resources + may escalate to human. Illegal activity → disengage + legal review.
 
 ## Current Strategy
