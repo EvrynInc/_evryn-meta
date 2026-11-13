@@ -30,6 +30,20 @@ The vision: a world where the default is that relationships are high quality and
 
 ---
 
+## The Walls, and Why a Web Is the Answer
+
+So much in the way things are currently positioned in the world suggests we're heading toward techno-feudalism: a privileged few living like gods inside walled cities run by AI and robots, while everyone else scrabbles in the rubble outside for scraps. Most of us live inside the walls today. We won't then. And we already see how the world treats people on the wrong side of its walls; in that future, that will be nearly all of us.
+
+But every wall rests on a question that, in practice, no one can answer cleanly: **who is inside, and who is outside?** And that comes down to friends of friends. Whoever the "king" is, he wants his friends and family inside. They want *their* friends and families. And on and on. But that breaks down eventually, and the line is drawn. Currently, people's larger networks are weak. And people's *real* networks are small. Which means most people will be outside the wall. **But if the web of real connection is strong enough and dense enough, no one can draw the line,** because whoever tries to put someone outside the wall finds that that person's network is *robustly* tied to everyone else's.
+
+**That web is what Evryn exists to weave.** Trusted, real connections that run across every domain of life and across every group that would otherwise stay siloed. Every connection she makes is one more thread a wall would have to cut through.
+
+**And the web keeps its own moral shape.** The only people such a network lets fall outside are the ones who have shown, by how they treat others, that they don't belong there. That is the standard Evryn already holds: character, not privilege, decides who is trusted ("Character becomes currency," the Hub; filtering from Evryn's ethos, the [trust-and-safety spoke](trust-and-safety.md)).
+
+**The condition, stated plainly:** this works only if the web is strong enough and wide enough. A thin network, or one that clusters among people who already hold power, builds the wall rather than dissolving it. So how far Evryn's connections reach *across* dividing lines is not only a growth question; it is how this part of the mission succeeds or fails.
+
+---
+
 ## Jurisdictional Trust Architecture
 
 The two-entity structure — Evryn, Inc. (Delaware PBC, revenue and product) and the Evryn Foundation (Switzerland, nonprofit custodian of trust data) — is the backbone of data sovereignty and legal resilience. The Foundation holds the Privacy-Sovereign Trust Core; Inc. accesses it through narrow, consent-governed APIs. Neither entity can unilaterally compromise the other. If Inc. breaks its mission, the Trust Severance Protocol activates. Cryptographic architecture ensures that even a full breach yields nothing readable.
