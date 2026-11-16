@@ -143,6 +143,10 @@
 
 ### 5 · One more fresh-eyes pass of the OUTGOING handoff alone
 
+> 🔴🔴 **THIS IS THE STEP EVERYONE WANTS TO SKIP THE MOST, AND IT ROUTINELY CATCHES THE MOST. SPIN A FRESH, SEPARATELY LOADED INSTANCE OF YOUR OWN AGENT FOR IT, EVERY TIME. NEVER SUBSTITUTE YOUR OWN RE-READ.** *(Justin, Mon 2026-11-16, sending an Admiral back to run it: "run the fresh Lucas to give a fresh-eyes pass - you'll see - it's super valuable.")*
+>
+> **Why your own re-read can't do this job:** you read your handoff with the session still in your head, so every gap fills itself from memory and reads as complete. A fresh instance has only the page, so a gap stays a gap. **It feels skippable at exactly the moment it matters most:** you're at the edge of your context, the successor's window is open, and you've just re-read the file twice. **The measured cost of skipping it:** on Mon 11/16 an Admiral re-read its handoff twice and called it clean; the fresh Lucas then found **7 must-fix items** (two rulings shown as still open, the day's approved objectives existing only in chat, two owed drafts and a live question from Justin missing, one ballot number naming two different ballots) **plus 11 should-fix**, in about five minutes. On Fri 11/13 the same step found 22. **Brief it with the handoff, the handoff it supersedes and the day's record of rulings, have it write its findings to a file, fold every must-fix in, and name the file in your handoff.** *(The protocol's original step-5 reader was your own re-read; on 11/16 Justin made a fresh instance the rule.)*
+
 **Hunting errors, omissions, staleness and clarity.** **The test is one question:**
 
 > ***Could a brand-new instance, holding none of your current context, understand this fully?***
