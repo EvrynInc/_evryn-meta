@@ -1,0 +1,12 @@
+{
+  "_what": "The scheduled watch's settings that no agent may change (review finding 10; build brief 1, revised block item 4). Copied into the vault by approve-guards with every '_' key removed. admiral-watch.mjs reads these from the vault and IGNORES the same keys in its state file (state/admiral.json), which agents write. models and takeoverLines are per role ('admiral', 'thea'); a role with no takeoverLine uses the start line built into admiral-watch.mjs (itself a vault copy). offHoursWorkCap bounds the one off-hours key the state file keeps: an 'offHoursWork' entry counts only on the listed weekdays (0 Sunday … 6 Saturday), only before latestHour, and only if its 'until' is at most maxHours ahead (Justin, 11/18: 'until 8:00 p.m.? ... just not all night'; guard Ballot 13 (a)). batchWindowIsOffHoursWork: false as shipped, because Ballot 13 (a) makes every off-hours exception Justin's, by name; the 11/06 design had the Thursday-night batch window count automatically, and that is now his call to restore. minClaudeVersion: the floor the watch, kill switch and launcher check before running claude.exe (review finding 1). Truncation check: the _end key must read FULL FILE LOADED.",
+  "models": { "admiral": "opus", "thea": "opus" },
+  "takeoverLines": {},
+  "brakeLimits": { "perHour": 8, "per12h": 20, "reserve": 3 },
+  "offHoursPolicy": "by-hand",
+  "weekendAllowance": 15,
+  "offHoursWorkCap": { "latestHour": 20, "days": [1, 2, 3, 4], "maxHours": 6 },
+  "batchWindowIsOffHoursWork": false,
+  "minClaudeVersion": "2.1.322",
+  "_end": "Truncation canary — DO NOT REMOVE: FULL FILE LOADED"
+}

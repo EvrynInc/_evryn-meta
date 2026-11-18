@@ -58,7 +58,14 @@ if (!message) {
 // Derive the shared parent that holds every Evryn repo as a sibling, from THIS
 // file's location. Never hardcode a machine path: Justin works from two machines
 // with different home directories, and a hardcoded path fails silently.
-const CODE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
+//
+// The vault (2026-11-18, DCG-V): an approved copy of this file runs from C:\Program Files\ClaudeCode\evryn-guards\ for the
+// vault gate's URGENT ping, where "two folders up" is not the code root. Run from there, it reads the code root from the
+// vault's own config.json (written by approve-guards); run from anywhere else, it never reads a config.json at all.
+const HERE = dirname(fileURLToPath(import.meta.url));
+const IN_VAULT = /^file:\/\/\/c:\/program%20files\/claudecode\//i.test(import.meta.url);
+const vaultRoot = () => { try { return JSON.parse(readFileSync(join(HERE, "config.json"), "utf8")).codeRoot || null; } catch { return null; } };
+const CODE_ROOT = (IN_VAULT && vaultRoot()) || resolve(HERE, "..", "..");
 
 const CHANNEL = useDev
   ? { envPath: join(CODE_ROOT, "_evryn-meta", ".env"), key: "SLACK_DEV_WEBHOOK_URL", label: "#dev-alerts" }

@@ -11,6 +11,7 @@
 //   EVRYN_GUARD_DATA=<dir>      the per-user data folder (default: %LOCALAPPDATA%\evryn-guards)
 //   EVRYN_GUARD_CODE_ROOT=<dir> the folder holding the Evryn repos (default: read from <vault>\config.json)
 //   EVRYN_GUARD_NOW=<ISO>       a pretend clock
+// (Attended or not is read from CLAUDE_CODE_SESSION_ATTENDED, which Claude Code sets itself; tests set it directly.)
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -108,7 +109,29 @@ export function subagentFallback(file) {
 }
 export const fallbackLine = (asked, off) => `⚠️ Part of this work ran on ${off.join(', ')} after a safety fallback, not ${asked}. Review it as lesser-model work, or re-run it.`;
 
+// ---------- attended or not (DCG-V, 2026-11-18) ----------
+// CLAUDE_CODE_SESSION_ATTENDED is undocumented (not in the env-vars docs, fetched raw 2026-11-18). Read from the v2.1.326
+// binary: Claude Code computes it itself and puts it in every Bash, PowerShell and hook subprocess's environment AFTER the
+// settings `env`, so no settings file can forge it. It is "1" only for an interactive session (and that session's
+// subagents), and "0" for any session whose kind is bg, daemon or daemon-worker, even one Justin has attached to.
+// ⇒ Only the exact string "1" counts as attended; missing, "0" or anything else is UNATTENDED, so a Claude Code version
+// that drops or renames the variable makes every guard here strict, never loose.
+export const attended = () => process.env.CLAUDE_CODE_SESSION_ATTENDED === '1';
+
+// A vault config file (outbound-allowlist.json, watch.json, ...). Missing or unreadable returns dflt, and each caller
+// chooses a strict dflt.
+export const vaultJSON = (name, dflt) => readJSON(path.join(VAULT, name), dflt);
+
+// A shell command, flattened so the obvious spellings compare equal: lowercase; backslashes as slashes; the quote and
+// escape characters that split a word without changing it ("c""url", c^url, c`url) removed. A classifier, not a parser:
+// see each guard's "can't see" list.
+export const normCmd = s => String(s || '').toLowerCase().replace(/\\/g, '/').replace(/["'`^]/g, '');
+
+// The text of every string in a tool input, for guards that must look at all of it (a URL, an attendee, a path).
+export const allStrings = o => (o == null ? [] : typeof o === 'string' ? [o] : typeof o === 'object' ? Object.values(o).flatMap(allStrings) : []);
+
 // Hook outputs.
+export const preAsk = reason => JSON.stringify({ hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'ask', permissionDecisionReason: reason } });
 export const preDeny = reason => JSON.stringify({ hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'deny', permissionDecisionReason: reason } });
 export const postContext = text => JSON.stringify({ hookSpecificOutput: { hookEventName: 'PostToolUse', additionalContext: text } });
 export const preUpdate = input => JSON.stringify({ hookSpecificOutput: { hookEventName: 'PreToolUse', updatedInput: input } });

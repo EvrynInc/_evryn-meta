@@ -1,0 +1,16 @@
+{
+  "_what": "The outbound gate's allowlist (outbound-gate.mjs; Justin's guard Ballot 10.1 (a)). Copied into the vault by approve-guards with every '_' key removed; changes only by Justin's approval. Each pattern is a JavaScript regular expression tested against ONE segment of a command after flattening (lowercase, backslashes as slashes, quote and escape characters removed). A command that substitutes another command's output is never allowlisted. 'allow' applies to every session; 'attendedAllow' only when Justin is at the session (CLAUDE_CODE_SESSION_ATTENDED is exactly 1). attendedMode: 'ask' sends anything else to Justin as a permission prompt in an attended session; 'deny' refuses it everywhere (the fallback, if the attended signal ever proves unreliable). justinAddresses: the only calendar guests an event may carry (DRAFT: Justin to confirm or add his other addresses). Truncation check: the _end key must read FULL FILE LOADED.",
+  "attendedMode": "ask",
+  "justinAddresses": ["justin@evryn.ai"],
+  "allow": [
+    { "_why": "the team ping and the task list: committed scripts; the message may contain any word", "pattern": "^node\\s+\\S*(_evryn-meta/)?scripts/(ping|tasks/tasks)\\.mjs(\\s.*)?$" },
+    { "_why": "git fetch, pull and push, to a named remote or to our own GitHub organization, never to another URL", "pattern": "^git(\\s+-c\\s+\\S+)*\\s+(fetch|pull|push)(\\s+(https://github\\.com/evryninc/\\S+|(?![^\\s]*(://|@))\\S+))*$" },
+    { "_why": "Railway status and log reads (no deploys)", "pattern": "^railway\\s+(status|logs|deployment\\s+list)(\\s+\\S+)*$" },
+    { "_why": "reinstall our own locked dependencies inside an Evryn repo (no new package names)", "pattern": "^npm\\s+(install|ci)(\\s+--?[a-z][a-z-]*)*$", "cwdInCodeRoot": true },
+    { "_why": "GitHub read-only views", "pattern": "^gh\\s+(pr|issue|run|repo|release)\\s+(view|list|status|checks|diff)(\\s+\\S+)*$" }
+  ],
+  "attendedAllow": [
+    { "_why": "DRAFT for Justin: fetching Claude Code's own docs raw, which team CLAUDE.md requires when wording matters", "pattern": "^curl\\s+(-[a-z]+\\s+)*(-o\\s+\\S+\\s+)?https://(code\\.claude\\.com|docs\\.anthropic\\.com)/\\S+(\\s+-o\\s+\\S+)?$" }
+  ],
+  "_end": "Truncation canary — DO NOT REMOVE: FULL FILE LOADED"
+}

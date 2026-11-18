@@ -1,10 +1,12 @@
 {
-  "_what": "TEMPLATE for C:\\Program Files\\ClaudeCode\\managed-settings.json (the vault; design §1). NOT installed. approve-guards copies it there from a commit, on Justin's UAC yes, with every key starting '_' removed. Every hook is exec form with the absolute path to node.exe (no shell, no PATH lookup, Fresh Soren's review finding 2) and onFailure block (a crashed or timed-out PreToolUse guard blocks the call, finding 3; PostToolUse can't block, so layer 1 is the Gmail guard of record). requiredMinimumVersion: onFailure needs v2.1.295 and PostModelSwitch v2.1.251 (finding 1). allowManagedHooksOnly: no lower hook can race a vaulted rewrite (finding 16). Verify node.exe's path on each machine before install. Truncation check: the _end key below must read FULL FILE LOADED.",
+  "_what": "TEMPLATE for C:\\Program Files\\ClaudeCode\\managed-settings.json (the vault; design §1). NOT installed. approve-guards copies it there from a commit, on Justin's UAC yes, with every key starting '_' removed. Every hook is exec form with the absolute path to node.exe (no shell, no PATH lookup, Fresh Soren's review finding 2) and onFailure block (a crashed or timed-out PreToolUse guard blocks the call, finding 3; PostToolUse can't block, so layer 1 is the Gmail guard of record). requiredMinimumVersion: onFailure needs v2.1.295 and PostModelSwitch v2.1.251 (finding 1). allowManagedHooksOnly: no lower hook can race a vaulted rewrite (finding 16). DCG-V 2026-11-18 added: the secrets guard (Ballots 23, 23.3), the outbound gate (Ballot 10.1), the browser guard (review finding 8) and the config guard (finding 5); every PreToolUse and ConfigChange guard here carries onFailure block. Verify node.exe's path on each machine before install. Truncation check: the _end key below must read FULL FILE LOADED.",
   "requiredMinimumVersion": "2.1.322",
   "allowManagedHooksOnly": true,
   "switchModelsOnFlag": true,
   "wslInheritsWindowsSettings": true,
-  "env": { "NODE_OPTIONS": "" },
+  "env": {
+    "NODE_OPTIONS": ""
+  },
   "permissions": {
     "deny": [
       "mcp__claude_ai_Gmail__send_message",
@@ -14,26 +16,199 @@
   },
   "hooks": {
     "PreToolUse": [
-      { "matcher": "mcp__claude_ai_Gmail__.*", "hooks": [ { "type": "command", "command": "C:\\Program Files\\nodejs\\node.exe", "args": ["C:\\Program Files\\ClaudeCode\\evryn-guards\\gmail-guard.mjs"], "onFailure": "block", "timeout": 20 } ] },
-      { "matcher": "SubagentHandback", "hooks": [ { "type": "command", "command": "C:\\Program Files\\nodejs\\node.exe", "args": ["C:\\Program Files\\ClaudeCode\\evryn-guards\\handback.mjs"], "timeout": 20 } ] }
+      {
+        "matcher": "mcp__claude_ai_Gmail__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "args": [
+              "C:\\Program Files\\ClaudeCode\\evryn-guards\\gmail-guard.mjs"
+            ],
+            "onFailure": "block",
+            "timeout": 20
+          }
+        ]
+      },
+      {
+        "matcher": "SubagentHandback",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "args": [
+              "C:\\Program Files\\ClaudeCode\\evryn-guards\\handback.mjs"
+            ],
+            "timeout": 20
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Grep|Edit|Write|NotebookEdit|Bash|PowerShell|Monitor",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "args": [
+              "C:\\Program Files\\ClaudeCode\\evryn-guards\\secrets-guard.mjs"
+            ],
+            "onFailure": "block",
+            "timeout": 20
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|PowerShell|Monitor|mcp__claude_ai_Google_Calendar__create_event|mcp__claude_ai_Google_Calendar__update_event",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "args": [
+              "C:\\Program Files\\ClaudeCode\\evryn-guards\\outbound-gate.mjs"
+            ],
+            "onFailure": "block",
+            "timeout": 20
+          }
+        ]
+      },
+      {
+        "matcher": "^mcp__(claude-in-chrome|Claude_Browser)__",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "args": [
+              "C:\\Program Files\\ClaudeCode\\evryn-guards\\browser-guard.mjs"
+            ],
+            "onFailure": "block",
+            "timeout": 20
+          }
+        ]
+      }
     ],
     "PostToolUse": [
-      { "matcher": "mcp__claude_ai_Gmail__.*", "hooks": [ { "type": "command", "command": "C:\\Program Files\\nodejs\\node.exe", "args": ["C:\\Program Files\\ClaudeCode\\evryn-guards\\gmail-guard.mjs"], "onFailure": "block", "timeout": 20 } ] }
+      {
+        "matcher": "mcp__claude_ai_Gmail__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "args": [
+              "C:\\Program Files\\ClaudeCode\\evryn-guards\\gmail-guard.mjs"
+            ],
+            "onFailure": "block",
+            "timeout": 20
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|NotebookEdit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "args": [
+              "C:\\Program Files\\ClaudeCode\\evryn-guards\\outbound-gate.mjs"
+            ],
+            "timeout": 20
+          }
+        ]
+      },
+      {
+        "matcher": "^mcp__(claude-in-chrome|Claude_Browser)__",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "args": [
+              "C:\\Program Files\\ClaudeCode\\evryn-guards\\browser-guard.mjs"
+            ],
+            "onFailure": "block",
+            "timeout": 20
+          }
+        ]
+      }
     ],
     "PostModelSwitch": [
-      { "hooks": [ { "type": "command", "command": "C:\\Program Files\\nodejs\\node.exe", "args": ["C:\\Program Files\\ClaudeCode\\evryn-guards\\model-switch.mjs"] } ] }
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "args": [
+              "C:\\Program Files\\ClaudeCode\\evryn-guards\\model-switch.mjs"
+            ]
+          }
+        ]
+      }
     ],
     "SubagentStop": [
-      { "hooks": [ { "type": "command", "command": "C:\\Program Files\\nodejs\\node.exe", "args": ["C:\\Program Files\\ClaudeCode\\evryn-guards\\subagent-model.mjs"] } ] }
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "args": [
+              "C:\\Program Files\\ClaudeCode\\evryn-guards\\subagent-model.mjs"
+            ]
+          }
+        ]
+      }
     ],
     "SessionStart": [
-      { "matcher": "compact", "hooks": [ { "type": "command", "command": "C:\\Program Files\\nodejs\\node.exe", "args": ["C:\\Program Files\\ClaudeCode\\evryn-guards\\compaction.mjs"] } ] }
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "args": [
+              "C:\\Program Files\\ClaudeCode\\evryn-guards\\compaction.mjs"
+            ]
+          }
+        ]
+      }
     ],
     "PreCompact": [
-      { "hooks": [ { "type": "command", "command": "C:\\Program Files\\nodejs\\node.exe", "args": ["C:\\Program Files\\ClaudeCode\\evryn-guards\\compaction.mjs"] } ] }
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "args": [
+              "C:\\Program Files\\ClaudeCode\\evryn-guards\\compaction.mjs"
+            ]
+          }
+        ]
+      }
     ],
     "PostCompact": [
-      { "hooks": [ { "type": "command", "command": "C:\\Program Files\\nodejs\\node.exe", "args": ["C:\\Program Files\\ClaudeCode\\evryn-guards\\compaction.mjs"] } ] }
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "args": [
+              "C:\\Program Files\\ClaudeCode\\evryn-guards\\compaction.mjs"
+            ]
+          }
+        ]
+      }
+    ],
+    "ConfigChange": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "args": [
+              "C:\\Program Files\\ClaudeCode\\evryn-guards\\config-guard.mjs"
+            ],
+            "onFailure": "block",
+            "timeout": 20
+          }
+        ]
+      }
     ]
   },
   "_end": "Truncation canary — DO NOT REMOVE: FULL FILE LOADED"

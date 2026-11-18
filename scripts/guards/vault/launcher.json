@@ -1,0 +1,8 @@
+{
+  "_what": "The task launcher's settings that no agent may change (design §8.1; build brief 7). Copied into the vault by approve-guards with every '_' key removed. The launcher itself is built by its own builder (launcher v2, after migration 006 v2 is signed); this file holds only what Justin has ruled. startOnly: 'justin-authorized' while the Admiral's authorizing rung is in shadow (his A1), later 'lucas-or-justin' by his approval. maxConcurrent: guard Ballot 12 (a), three to start. tasksPerSession: 1 (guard Ballot 15 was NOT ruled (a); Admiral Lucas 1.18: one task per session, batching waits for measured usage). mode: 'shadow' writes 'would start T-n' and starts nothing; the Fleet Admiral decides when it reads 'live'. Truncation check: the _end key must read FULL FILE LOADED.",
+  "startOnly": "justin-authorized",
+  "maxConcurrent": 3,
+  "tasksPerSession": 1,
+  "mode": "shadow",
+  "_end": "Truncation canary — DO NOT REMOVE: FULL FILE LOADED"
+}

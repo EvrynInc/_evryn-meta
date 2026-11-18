@@ -24,7 +24,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { readStdin, loadCounsel, counselHits, preDeny, postContext, postReplace, guardLog, DATA, safeName, now, readJSON } from './lib.mjs';
+import { readStdin, loadCounsel, counselHits, preDeny, postContext, postReplace, guardLog, DATA, VAULT, safeName, now, readJSON } from './lib.mjs';
 
 const P = 'mcp__claude_ai_Gmail__';
 const CLEAR_MINUTES = 15;
@@ -102,10 +102,42 @@ function redactSearch(text, entries) {
   return { text: JSON.stringify(j), changed };
 }
 
+// ---------- Justin's one-time opening of one counsel thread (guard Ballot 5 (b), 2026-11-17; DCG-V, 2026-11-18) ----------
+// He runs open-counsel-thread.cmd <threadId> from the vault; on his UAC yes it writes grants\counsel-<threadId>.json into
+// the vault (30 minutes). The FIRST get_thread of that thread, by one session, inside that window, goes through both
+// layers; nothing else does (not another session, not a second read, not its attachments). The grant is read ONLY from
+// the vault folder (lib's VAULT, which ignores every EVRYN_* override when running from the vault: review finding 7).
+// ⚠️ "Once" is recorded in the per-user data folder, which a session can delete; within the 30 minutes a session that
+// deletes its own record could read the thread again. The window, not the record, is the hard bound.
+const grantFile = id => path.join(VAULT, 'grants', `counsel-${safeName(id)}.json`);
+const usedFile = (id, g) => path.join(DATA, 'counsel-used', `${safeName(id)}-${safeName(g.grantedAt)}.json`);
+function liveGrant(id) {
+  if (!id) return null;
+  const g = readJSON(grantFile(id), null);
+  if (!g || g.threadId !== id || !(now() < new Date(g.expiresAt))) return null;
+  return g;
+}
+// Pre: claim the grant for this session, once. Post: honor it only for the session that claimed it, within the window.
+function claimGrant(id, session) {
+  const g = liveGrant(id); if (!g) return false;
+  const f = usedFile(id, g);
+  const used = readJSON(f, null);
+  if (used) return false;                                              // single use: already read once
+  fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, JSON.stringify({ session, at: now().toISOString() }));
+  guardLog({ guard: 'gmail', event: 'counsel-grant-used', session, id });
+  return true;
+}
+function grantClaimedBy(id, session) {
+  const g = liveGrant(id); if (!g) return false;
+  const used = readJSON(usedFile(id, g), null);
+  return !!used && used.session === session;
+}
+
 function pre(p) {
   const t = tool(p.tool_name); const input = p.tool_input || {};
   if (!t || !bodyBearing(t, input)) return null;                      // allow: nothing to check
   if (input.messageFormat === 'RAW') return preDeny('Counsel-mail guard: RAW format is never allowed (the guard cannot check it). Use METADATA_ONLY, then PLAIN_TEXT once it is cleared.');
+  if (t === 'get_thread' && claimGrant(input.threadId, p.session_id)) return null;   // Justin opened this one thread
   if (!(t in BODY_TOOLS)) return null;                                 // search and list_drafts are checked after, in layer 2
   const { entries, readAny } = loadCounsel();
   if (!readAny) return preDeny('Counsel-mail guard: the counsel list could not be read, so no message body may be opened until it can. Tell the Admiral.');
@@ -157,6 +189,10 @@ function post(p) {
     return r.changed ? postReplace(reshape(p.tool_response, r.text)) : null;
   }
 
+  if (hits.length && t === 'get_thread' && grantClaimedBy(input.threadId, p.session_id)) {   // the thread Justin opened
+    guardLog({ guard: 'gmail', event: 'counsel-grant-shown', session: p.session_id, id: input.threadId });
+    return null;
+  }
   if (hits.length) {                                                    // layer 2: a body that names counsel anywhere
     guardLog({ guard: 'gmail', event: 'withheld', session: p.session_id, tool: t, ids: idsIn(text).slice(0, 20), hits });
     return postReplace(reshape(p.tool_response, stub(text, `it includes counsel (${hits.join(', ')})`)));
