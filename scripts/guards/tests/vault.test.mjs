@@ -85,6 +85,15 @@ test('approve: a hook in the template that points outside the vault is refused',
   assert.deepEqual(checkManaged(ok, ['gmail-guard.mjs']), []);
   const bad = { hooks: { PreToolUse: [{ hooks: [{ command: 'node', args: ['C:\\Users\\x\\evil.mjs'] }] }] } };
   assert.equal(checkManaged(bad, ['gmail-guard.mjs']).length, 2);
+  // And through the real stage: a committed template with one hook outside the vault installs nothing.
+  const tpl = path.join(META, 'scripts', 'guards', 'vault', 'managed-settings.template.json'); const orig = fs.readFileSync(tpl, 'utf8');
+  const t = JSON.parse(orig); t.hooks.PreToolUse.push({ matcher: 'Read', hooks: [{ type: 'command', command: 'node', args: ['C:\\Users\\x\\evil.mjs'] }] });
+  fs.writeFileSync(tpl, JSON.stringify(t)); g(META, 'commit', '-q', '-am', 'outside hook');
+  try {
+    const T = target('t3b'); const r = approve(['stage', '--dry', T, '--yes']);
+    assert.notEqual(r.status, 0); assert.match(r.stderr, /REFUSED: managed-settings/);
+    assert.ok(!fs.existsSync(path.join(T, 'evryn-guards')));
+  } finally { g(META, 'revert', '--no-edit', 'HEAD'); }
 });
 
 test('approve: a staged file swapped after staging is refused at install, and the old vault stays', async () => {
