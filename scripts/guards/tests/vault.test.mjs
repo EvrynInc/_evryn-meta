@@ -45,6 +45,10 @@ for (const r of [META, TEAM]) { fs.mkdirSync(r, { recursive: true }); g(r, 'init
 for (const f of fs.readdirSync(DIR).filter(f => f.endsWith('.mjs'))) put(META, `scripts/guards/${f}`, fs.readFileSync(path.join(DIR, f)));
 for (const f of fs.readdirSync(path.join(SRC, 'vault'))) put(META, `scripts/guards/vault/${f}`, fs.readFileSync(path.join(fs.existsSync(path.join(DIR, 'vault', f)) ? path.join(DIR, 'vault') : path.join(SRC, 'vault'), f)));
 put(META, 'scripts/ping.mjs', fs.readFileSync(path.join(fs.existsSync(path.join(DIR, 'ping.mjs')) ? DIR : path.join(META_SRC, 'scripts'), 'ping.mjs')));
+// The task CLI's stand-in, with a multi-line import and a nested one, so the approver pins a closure (QCR New 1).
+put(META, 'scripts/tasks/tasks.mjs', "import { run } from './lib/cli.mjs';\nrun();\n");
+put(META, 'scripts/tasks/lib/cli.mjs', "import {\n  x,\n} from './config.mjs';\nimport { readFileSync } from 'node:fs';\nexport const run = () => x;\n");
+put(META, 'scripts/tasks/lib/config.mjs', 'export const x = 1;\n');
 for (const f of ['admiral-watch.mjs', 'kill-switch.mjs', 'claude-bin.mjs']) put(TEAM, `${FOLDER}/${f}`, `// fixture ${f}\nconsole.log('${f}');\n`);
 put(TEAM, `${FOLDER}/standing-orders.md`, '# orders\n'); put(TEAM, `${FOLDER}/standing-orders-thea.md`, '# thea orders\n');
 put(TEAM, 'shared/projects/legal/counsel-list.md', '| `fenwick.com` | Fenwick |\n');
@@ -73,7 +77,7 @@ test('approve (dry): installs exactly the listed files from the commit, strips "
   const managed = fs.readFileSync(path.join(T, 'managed-settings.json'), 'utf8');
   assert.ok(!/"_/.test(managed), 'no "_" keys reach Claude Code');
   assert.ok(JSON.parse(managed).allowManagedHooksOnly === true);
-  assert.ok(!/"_/.test(fs.readFileSync(path.join(V, 'outbound-allowlist.json'), 'utf8')), 'nested "_why" keys stripped too');
+  assert.ok(!/"_[a-z]+"\s*:/.test(fs.readFileSync(path.join(V, 'outbound-allowlist.json'), 'utf8')), 'nested "_why" keys stripped too (a value such as "_evryn-meta/…" is not a key)');
   assert.equal(JSON.parse(fs.readFileSync(path.join(V, 'config.json'), 'utf8')).codeRoot, CODE);
   assert.ok(fs.readdirSync(V).every(f => f in m.files || ['manifest.json', 'grants', 'approvals.log'].includes(f)), 'nothing unlisted');
 });
@@ -255,10 +259,13 @@ test('QCI finding 3 and note 15: every installed hook, run exactly as the manage
   const sub = path.join(tmp, 'sub-transcript.jsonl');
   fs.writeFileSync(sub, [['claude-opus-5-5', 'claude-opus-5-5'], ['claude-opus-4-8', 'claude-opus-5-5']].map(([s, a]) => JSON.stringify({ type: 'assistant', requestedModel: a, message: { model: s } })).join('\n') + '\n');
   const BODY = 'PRIVILEGED-BODY';
+  const HB_MAIN = path.join(tmp, 'hbproj', 'sess-hbinst.jsonl'); fs.mkdirSync(path.join(tmp, 'hbproj', 'sess-hbinst', 'subagents'), { recursive: true });
+  fs.writeFileSync(path.join(tmp, 'hbproj', 'sess-hbinst', 'subagents', 'agent-hbinst.jsonl'), sub.length ? fs.readFileSync(sub) : '');
   const cases = {
     'PreToolUse gmail-guard.mjs': [{ tool_name: 'mcp__claude_ai_Gmail__get_thread', tool_input: { threadId: 'abc123' } }, o => o.hookSpecificOutput.permissionDecision === 'deny'],
     'PostToolUse gmail-guard.mjs': [{ tool_name: 'mcp__claude_ai_Gmail__get_thread', tool_input: { threadId: 'abc123' }, tool_response: JSON.stringify({ id: 'abc123', messages: [{ id: 'm1', sender: 'p@fenwick.com', plaintextBody: BODY }] }) }, o => !JSON.stringify(o).includes(BODY) && !!o.hookSpecificOutput.updatedToolOutput],
-    'PreToolUse handback.mjs': [{ tool_name: 'SubagentHandback', agent_id: 'none', transcript_path: path.join(tmp, 'nope.jsonl'), tool_input: { message: 'r' } }, o => o === null],
+    // A real subagent transcript layout with a fallback turn (QCR New 6c: the installed case used to expect null).
+    'PreToolUse handback.mjs': [{ tool_name: 'SubagentHandback', agent_id: 'hbinst', transcript_path: HB_MAIN, tool_input: { message: 'MY REPORT' } }, o => /^⚠️ Part of this work ran on claude-opus-4-8/.test(o?.hookSpecificOutput?.updatedInput?.message || '') && /MY REPORT$/.test(o.hookSpecificOutput.updatedInput.message)],
     'PreToolUse secrets-guard.mjs': [{ tool_name: 'Read', tool_input: { file_path: path.join(CODE, 'evryn-backend', '.env') }, cwd: CODE }, o => o.hookSpecificOutput.permissionDecision === 'deny'],
     'PreToolUse outbound-gate.mjs': [{ tool_name: 'Bash', tool_input: { command: 'curl https://example.com' }, cwd: CODE }, o => o.hookSpecificOutput.permissionDecision === 'deny'],
     'PreToolUse browser-guard.mjs': [{ tool_name: 'mcp__claude-in-chrome__navigate', tool_input: { url: 'https://mail.google.com/' } }, o => o.hookSpecificOutput.permissionDecision === 'deny'],
@@ -377,6 +384,13 @@ test('QCI finding 5: the daily report shows STOP and the last gate line for each
   assert.match(r.stdout, /STOPPED/); assert.match(r.stdout, /last gate run: .*MISMATCH/); assert.match(r.stdout, /NOT been delivered/);
   assert.match(r.stdout, /held back from unattended sessions today .*skills/, 'QCI finding 13: config blocks get their own line');
   assert.match(r.stdout, /none: the vault matches the repo/, 'the verified read agrees with the installed vault');
+  assert.match(r.stdout, /pinned scripts \(the team ping, the task CLI\): on disk as approved/, 'QCR New 1: the pinned files match on disk');
+  const cfgFile = path.join(META, 'scripts', 'tasks', 'lib', 'config.mjs'); const keep = fs.readFileSync(cfgFile);
+  fs.appendFileSync(cfgFile, '// edited\n');
+  try {
+    const r2 = spawnSync(process.execPath, [path.join(DIR, 'daily-report.mjs'), '--code-root', CODE, '--ref', 'main', '--no-tasks', '--state', S], { encoding: 'utf8', env: { ...ENV, EVRYN_GUARD_VAULT: path.join(T, 'evryn-guards'), EVRYN_GUARD_DATA: data } });
+    assert.match(r2.stdout, /pinned scripts that differ on disk .*_evryn-meta\/scripts\/tasks\/lib\/config\.mjs/, 'an edited pinned file is listed');
+  } finally { fs.writeFileSync(cfgFile, keep); }
 });
 
 test('gate: a missing manifest, or one that drops a required file, stops everything; a tampered kill switch is not run', () => {
@@ -393,6 +407,136 @@ test('gate: a missing manifest, or one that drops a required file, stops everyth
   assert.equal(gate(V3, S3).status, 1);
   assert.ok(gateLog(S3).some(l => l.action === 'skipped-tampered' && l.script === 'kill-switch.mjs'));
   assert.ok(!gateLog(S3).some(l => l.action === 'would-run' && /kill-switch/.test(l.args[0])));
+});
+
+// ---------- QCR fix trip (DCF2, 2026-11-19) ----------
+// Run one hook of an installed (or vault-mode) layout exactly as its managed-settings.json says, re-rooted at `root`.
+function hookRun(root, event, script, payload, env) {
+  const managed = JSON.parse(fs.readFileSync(path.join(root, 'managed-settings.json'), 'utf8'));
+  const h = managed.hooks[event].flatMap(g => g.hooks).find(x => x.args.at(-1) === script);
+  const args = h.args.join(' ').replace('C:\\Program Files\\ClaudeCode', root).split(' ');
+  const out = execFileSync(h.command, args, { input: JSON.stringify({ hook_event_name: event, session_id: 'vm', ...payload }), encoding: 'utf8', env: { ...ENV, CLAUDE_CODE_SESSION_ATTENDED: '0', ...env } });
+  return out ? (out.trimStart().startsWith('{') ? JSON.parse(out) : { text: out }) : null;
+}
+// A VAULT-MODE copy of an installed layout (QCR New 6c): the whole <…>\ClaudeCode folder copied under another spaced
+// folder, with lib.mjs's vault test pointed at that copy (the technique the ping test uses), so IN_VAULT is true for every
+// hook, the gate and the daily report, and every EVRYN_* override must be ignored. nodejs is a junction beside it.
+function vaultModeCopy(T, name) {
+  const top = path.join(tmp, name); const root = path.join(top, 'ClaudeCode');
+  fs.cpSync(T, root, { recursive: true });
+  if (!fs.existsSync(path.join(top, 'nodejs'))) fs.symlinkSync(path.dirname(process.execPath), path.join(top, 'nodejs'), 'junction');
+  const libFile = path.join(root, 'evryn-guards', 'lib.mjs'); const src = fs.readFileSync(libFile, 'utf8');
+  const prefix = pathToFileURL(root + path.sep).href.toLowerCase().replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
+  const patched = src.replace('/^file:\\/\\/\\/c:\\/program%20files\\/claudecode\\//i', `/^${prefix}/i`);
+  assert.notEqual(patched, src, 'the vault test in lib.mjs was found and patched');
+  fs.writeFileSync(libFile, patched);
+  return root;
+}
+const SCHED_STATE = path.join(TEAM, ...FOLDER.split('/'), 'state');
+
+test('QCR New 1: the approver pins the allowlist\'s scripts from the commit, with the same hashing and import scan as the gate', async () => {
+  const T = installed('t-pins'); const V = path.join(T, 'evryn-guards');
+  const pins = JSON.parse(fs.readFileSync(path.join(V, 'outbound-pins.json'), 'utf8'));
+  const L = await import(pathToFileURL(path.join(DIR, 'lib.mjs')).href);
+  assert.deepEqual(pins.entries, ['_evryn-meta/scripts/ping.mjs', '_evryn-meta/scripts/tasks/tasks.mjs']);
+  for (const rel of ['scripts/ping.mjs', 'scripts/tasks/tasks.mjs', 'scripts/tasks/lib/cli.mjs', 'scripts/tasks/lib/config.mjs']) assert.equal(pins.files[`_evryn-meta/${rel}`], L.shaText(fs.readFileSync(path.join(META, rel))), rel);
+  assert.equal(Object.keys(pins.files).length, 4, 'the closure, nothing more');
+  for (const s of ["import {\n a } from './a.mjs';\nimport b from 'pkg';\nconst c = await import('../c.mjs');\nimport 'node:fs';\nconst d = require('./d.cjs');", "export { x } from './x.mjs';"]) assert.deepEqual(A.localImports(s), L.localImports(s), 'the approver and lib scan imports alike');
+  assert.equal(L.shaText('a\r\nb\n'), L.shaText('a\nb\n'), 'line endings are normalized');
+  // A pinned script that imports a package can't be pinned: refused, nothing installed.
+  const cli = path.join(META, 'scripts', 'tasks', 'lib', 'cli.mjs'); const keep = fs.readFileSync(cli);
+  fs.writeFileSync(cli, "import x from 'left-pad';\nexport const run = x;\n"); g(META, 'commit', '-q', '-am', 'a package');
+  try { const T2 = target('t-pins-pkg'); const r = approve(['stage', '--dry', T2, '--yes']); assert.notEqual(r.status, 0); assert.match(r.stderr, /imports a package/); assert.ok(!fs.existsSync(path.join(T2, 'evryn-guards'))); }
+  finally { g(META, 'revert', '--no-edit', 'HEAD'); fs.writeFileSync(cli, keep); }
+});
+
+test('QCR New 3: the claude floor checks ~/.local/bin and four editors\' extension folders, and refuses a below-floor copy there', () => {
+  const home = path.join(tmp, 'fake home'); const native = path.join(home, '.local', 'bin', 'claude.exe');
+  fs.mkdirSync(path.dirname(native), { recursive: true }); fs.writeFileSync(native, 'stand-in');
+  const exts = A.EDITOR_EXT.map(ed => { const f = path.join(home, ed, 'extensions', 'anthropic.claude-code-2.1.326-win32-x64', 'resources', 'native-binary', 'claude.exe'); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, 'stand-in'); return f; });
+  const found = A.claudeFiles(home, { where: false });
+  assert.ok(found.includes(native), 'the native installer copy'); for (const f of exts) assert.ok(found.includes(f), f);
+  const probs = A.versionProblems(found.map(file => ({ file, version: file === native ? '2.1.300 (Claude Code)' : '2.1.326 (Claude Code)' })), '2.1.322');
+  assert.deepEqual(probs, [`${native} reports 2.1.300 (Claude Code)`]);
+});
+
+test('QCR New 7: the stage folder is deleted after an install and after a refusal', () => {
+  const tdir = path.join(tmp, 'own tmp'); fs.mkdirSync(tdir, { recursive: true });
+  const stages = () => fs.readdirSync(tdir).filter(f => f.startsWith('evryn-guards-stage-'));
+  assert.equal(approve(['stage', '--dry', target('t-clean'), '--yes'], '', { TMP: tdir, TEMP: tdir }).status, 0);
+  assert.deepEqual(stages(), [], 'none left after an install');
+  const r = spawnSync(process.execPath, [APPROVE, 'stage', '--dry', target('t-clean2'), '--yes', '--code-root', CODE, '--meta', 'main', '--team', 'main', '--fake-claude', '2.1.300'], { encoding: 'utf8', env: { ...ENV, TMP: tdir, TEMP: tdir } });
+  assert.notEqual(r.status, 0); assert.deepEqual(stages(), [], 'none left after a refusal');
+});
+
+test('QCR New 6c: the counsel opening, granted by the installed approver, works through the installed hook for the named session only', () => {
+  const T = installed('t-open'); const V = path.join(T, 'evryn-guards');
+  assert.equal(approve(['open-counsel', 'thrOpen12345', 'sess-aaaa-1111-bbbb', '--dry', T], 'OPEN\n').status, 0);
+  const env = { EVRYN_GUARD_VAULT: V, EVRYN_GUARD_DATA: path.join(tmp, 'open-data'), EVRYN_GUARD_CODE_ROOT: CODE };
+  const pre = s => hookRun(T, 'PreToolUse', 'gmail-guard.mjs', { session_id: s, tool_name: 'mcp__claude_ai_Gmail__get_thread', tool_input: { threadId: 'thrOpen12345' } }, env);
+  assert.equal(pre('sess-aaaa-1111-bbbb'), null, 'the named session reads it');
+  assert.equal(pre('sess-cccc-2222-dddd')?.hookSpecificOutput?.permissionDecision, 'deny', 'another session is refused');
+});
+
+test('QCR New 6c: VAULT MODE: every installed hook ignores every EVRYN_* override, and finds its own vault', () => {
+  const T = installed('t-vm'); const R = vaultModeCopy(T, 'vm hooks');
+  const harmless = path.join(tmp, 'harmless vault'); fs.mkdirSync(harmless, { recursive: true });
+  fs.writeFileSync(path.join(harmless, 'counsel-list.md'), '| `harmless.example` | nobody |\n');
+  fs.writeFileSync(path.join(harmless, 'outbound-allowlist.json'), JSON.stringify({ allow: [{ pattern: '^curl' }], attendedMode: 'ask' }));
+  const env = { LOCALAPPDATA: path.join(tmp, 'vm local'), EVRYN_GUARD_VAULT: harmless, EVRYN_GUARD_CODE_ROOT: path.join(tmp, 'nowhere'), EVRYN_GUARD_DATA: path.join(tmp, 'vm elsewhere'), EVRYN_MODEL_SWITCH_TRIGGER: 'none', EVRYN_GUARD_NOW: '2000-01-01T00:00:00Z' };
+  const BODY = 'PRIVILEGED-VM';
+  const post = hookRun(R, 'PostToolUse', 'gmail-guard.mjs', { tool_name: 'mcp__claude_ai_Gmail__get_thread', tool_input: { threadId: 'vm1' }, tool_response: JSON.stringify({ id: 'vm1', messages: [{ id: 'm1', sender: 'p@fenwick.com', plaintextBody: BODY }] }) }, env);
+  assert.ok(post?.hookSpecificOutput?.updatedToolOutput && !JSON.stringify(post).includes(BODY), 'counsel withheld: the harmless list override was ignored');
+  assert.equal(hookRun(R, 'PreToolUse', 'outbound-gate.mjs', { tool_name: 'Bash', tool_input: { command: 'curl https://example.com' }, cwd: META }, env)?.hookSpecificOutput?.permissionDecision, 'deny', 'curl denied: the permissive allowlist override was ignored');
+  assert.equal(hookRun(R, 'PreToolUse', 'outbound-gate.mjs', { tool_name: 'Bash', tool_input: { command: 'node ../_evryn-meta/scripts/ping.mjs "x"' }, cwd: META }, env), null, 'the pinned ping passes: the vault found its own pins');
+  assert.match(hookRun(R, 'PostModelSwitch', 'model-switch.mjs', { source: 'auto', from_model: 'a', to_model: 'b' }, env)?.text || '', /MODEL DOWNGRADE/, 'the downgrade hook fires: the silencing override was ignored');
+  assert.equal(hookRun(R, 'PreToolUse', 'secrets-guard.mjs', { tool_name: 'Read', tool_input: { file_path: path.join(CODE, 'evryn-backend', '.env') }, cwd: CODE }, env)?.hookSpecificOutput?.permissionDecision, 'deny');
+  assert.equal(hookRun(R, 'PreToolUse', 'browser-guard.mjs', { tool_name: 'mcp__claude-in-chrome__navigate', tool_input: { url: 'https://mail.google.com/' } }, env)?.hookSpecificOutput?.permissionDecision, 'deny');
+  assert.equal(hookRun(R, 'ConfigChange', 'config-guard.mjs', { source: 'project_settings' }, env)?.decision, 'block');
+  assert.match(hookRun(R, 'SessionStart', 'compaction.mjs', { source: 'compact' }, env)?.text || '', /HOOK-DELIVERY-CANARY-7Q4X/);
+  assert.ok(fs.existsSync(path.join(tmp, 'vm local', 'evryn-guards', 'compacted', 'vm')), 'the marker went to %LOCALAPPDATA%, not the EVRYN_GUARD_DATA override');
+});
+
+test('QCR New 6c and New 2: VAULT MODE gate, not dry: a clean vault runs its own watch; the kill switch\'s STOP stops any role; a changed byte runs only vault stand-ins', () => {
+  const T = installed('t-vmg'); const R = vaultModeCopy(T, 'vm gate'); const V = path.join(R, 'evryn-guards');
+  const marks = path.join(tmp, 'vm-gate-marks.txt');
+  for (const f of ['kill-switch.mjs', 'ping.mjs']) fs.writeFileSync(path.join(V, f), `import fs from 'node:fs'; fs.appendFileSync(${JSON.stringify(marks)}, ${JSON.stringify(f)} + ' ' + process.argv[1] + '\\n');\n`);
+  const m = JSON.parse(fs.readFileSync(path.join(V, 'manifest.json'), 'utf8'));
+  // QCR New 6b: the watch stand-in records which EVRYN_* variables reached it.
+  fs.writeFileSync(path.join(V, 'admiral-watch.mjs'), "console.log('admiral-watch.mjs EVRYN=' + Object.keys(process.env).filter(k => /^EVRYN_/i.test(k)).sort().join(','));\n");
+  for (const f of ['kill-switch.mjs', 'ping.mjs', 'lib.mjs', 'admiral-watch.mjs']) m.files[f] = sha(path.join(V, f));
+  fs.writeFileSync(path.join(V, 'manifest.json'), JSON.stringify(m));
+  const ignored = { EVRYN_GATE_VAULT: path.join(tmp, 'nowhere'), EVRYN_GATE_DRY: '1', EVRYN_SHARED_DIR: path.join(tmp, 'elsewhere'), EVRYN_ANYTHING: 'x' };
+  const gateRun = S => spawnSync(process.execPath, [path.join(V, 'gate.mjs'), 'watch', S], { env: { ...ENV, ...ignored }, encoding: 'utf8' });
+  const S1 = path.join(tmp, 'vm state 1'); assert.equal(gateRun(S1).status, 0);
+  assert.match(fs.readFileSync(path.join(S1, 'run.log'), 'utf8'), /gate ok[\s\S]*admiral-watch\.mjs EVRYN=EVRYN_ADMIRAL_DIR\s/, 'not dry: it ran the vault\'s own watch, handing it no EVRYN_* variable but the state folder (QCR New 6b)');
+  // New 2: the kill switch writes STOP in the code root's Admiral state/; a Thea state folder must stop too.
+  fs.mkdirSync(SCHED_STATE, { recursive: true }); fs.writeFileSync(path.join(SCHED_STATE, 'STOP'), 'kill switch');
+  try {
+    const ST = path.join(tmp, 'vm state-thea'); assert.equal(gateRun(ST).status, 0);
+    assert.equal(gateLog(ST).at(-1).action, 'stopped-by-kill-switch'); assert.ok(!fs.existsSync(path.join(ST, 'run.log')), 'no watch ran');
+  } finally { fs.rmSync(path.join(SCHED_STATE, 'STOP')); }
+  fs.appendFileSync(path.join(V, 'gmail-guard.mjs'), ' ');
+  const S2 = path.join(tmp, 'vm state 2'); assert.equal(gateRun(S2).status, 1);
+  assert.ok(fs.existsSync(path.join(S2, 'STOP')));
+  const ran = fs.readFileSync(marks, 'utf8').trim().split('\n');
+  assert.deepEqual(ran.map(l => l.split(' ')[0]), ['kill-switch.mjs', 'ping.mjs']);
+  assert.ok(ran.every(l => l.includes(V)), 'only the vault copies ran');
+});
+
+test('QCR New 2: the gate (dry) stops a Thea state folder while the kill switch\'s STOP exists, and runs it again after', () => {
+  const T = installed('t-ks'); const V = path.join(T, 'evryn-guards'); const ST = path.join(tmp, 's ks thea');
+  fs.mkdirSync(SCHED_STATE, { recursive: true }); fs.writeFileSync(path.join(SCHED_STATE, 'STOP'), 'kill switch');
+  try { assert.equal(gate(V, ST).status, 0); assert.equal(gateLog(ST).at(-1).action, 'stopped-by-kill-switch'); }
+  finally { fs.rmSync(path.join(SCHED_STATE, 'STOP')); }
+  assert.equal(gate(V, ST).status, 0); assert.equal(gateLog(ST).at(-1).action, 'would-run-watch');
+});
+
+test('QCR New 6c: VAULT MODE daily report finds its own vault and ignores EVRYN_GUARD_VAULT', () => {
+  const T = installed('t-vmr'); const R = vaultModeCopy(T, 'vm report');
+  const r = spawnSync(process.execPath, [path.join(R, 'evryn-guards', 'daily-report.mjs'), '--code-root', CODE, '--ref', 'main', '--no-tasks', '--state', path.join(tmp, 'no state')], { encoding: 'utf8', env: { ...ENV, LOCALAPPDATA: path.join(tmp, 'vmr local'), EVRYN_GUARD_VAULT: path.join(tmp, 'nowhere') } });
+  assert.equal(r.status, 0, r.stderr);
+  assert.match(r.stdout, /vault approved/); assert.match(r.stdout, /none: the vault matches the repo/);
 });
 
 // Truncation canary — DO NOT REMOVE: FULL FILE LOADED

