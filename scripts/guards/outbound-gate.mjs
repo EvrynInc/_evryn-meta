@@ -64,6 +64,8 @@ const NETSET = new Set(['curl', 'wget', 'invoke-webrequest', 'iwr', 'invoke-rest
 const NET = /(^|[\s(=&/])(curl|wget|invoke-webrequest|iwr|invoke-restmethod|irm|ssh|scp|sftp|ftp|tftp|nc|ncat|netcat|telnet|socat|net\.webclient|webclient|start-bitstransfer|bitsadmin|certutil|gh|railway|npx|bunx|pnpx|rsync|sendmail|send-mailmessage|rundll32|mshta)(\.exe)?(?=$|[\s;|&)'"])/;
 // Words that run the word after them (their own options skipped). `timeout` also takes a duration.
 const WRAPPERS = new Set(['sudo', 'doas', 'env', 'exec', 'nohup', 'nice', 'time', 'timeout', 'command', 'builtin', 'xargs', 'watch', 'stdbuf', 'unbuffer', 'strace', 'ltrace', 'call', 'runas', 'start']);
+// Shell keywords after which the next word is the command (`if curl …`, `then curl …`, `do curl …`, `! curl …`).
+const KEYWORDS = new Set(['if', 'then', 'else', 'elif', 'do', 'while', 'until', '!', 'in']);
 // Shells whose code argument is parsed again as a command.
 const SHELLS = new Set(['bash', 'sh', 'zsh', 'dash', 'cmd', 'powershell', 'pwsh']);
 const GIT_NET = /^git(\s+-c\s+\S+)*\s+(push|pull|fetch|clone|ls-remote|remote\s+(add|set-url)|submodule\s+update|send-email|request-pull)\b/;
@@ -100,14 +102,14 @@ const re = s => { try { return new RegExp(s); } catch { return null; } };
 const inCodeRoot = cwd => !!cwd && path.resolve(cwd).toLowerCase().startsWith(path.resolve(codeRoot()).toLowerCase());
 const realOr = p => { try { return fs.realpathSync.native(p); } catch { return path.resolve(p); } };
 
-// A pinned script (QCR New 1): the vault's own ping by its full path, or a script under the code root whose real path is a
-// pinned entry and whose whole local import closure, on disk now, hashes to the reviewed values.
 // Does this script resolve to a pinned entry at all (whatever its content)? Such a script that fails its pin is refused
 // outright: the generic script check reads only the named file, and an edit to one of its imports would pass that.
 export function pinnedEntry(script, cwd, pins = PINS) {
   const rel = path.relative(realOr(codeRoot()), realOr(path.resolve(cwd || codeRoot(), script))).replace(/\\/g, '/').toLowerCase();
   return (pins.entries || []).some(e => String(e).toLowerCase() === rel);
 }
+// A pinned script (QCR New 1): the vault's own ping by its full path, or a script under the code root whose real path is a
+// pinned entry and whose whole local import closure, on disk now, hashes to the reviewed values.
 export function pinnedOk(script, cwd, pins = PINS) {
   const abs = path.resolve(cwd || codeRoot(), script);
   if (abs.toLowerCase() === path.join(VAULT, 'ping.mjs').toLowerCase()) return true;
@@ -147,6 +149,7 @@ function commandAt(words) {
     const w = words[i];
     if (/^[a-z_][a-z0-9_]*=/i.test(w)) { env.push(w); i++; continue; }                  // VAR=value prefix
     if (/^\$[a-z_][\w:]*=?$/i.test(w) && (w.endsWith('=') || words[i + 1] === '=')) { i += w.endsWith('=') ? 1 : 2; continue; }   // PowerShell $x = …
+    if (KEYWORDS.has(w.toLowerCase())) { i++; continue; }                                  // if/then/do/while/!: the next word runs
     const p = progName(w);
     if (WRAPPERS.has(p) && i + 1 < words.length && !(p === 'start' && /^(https?|ftp|file):/i.test(words[i + 1]))) {
       i++; while (i < words.length && /^[-/]/.test(words[i])) i++;
@@ -202,7 +205,7 @@ function shellFindings(command, cwd, session, powershell = false, depth = 0) {
   // reviewed one, byte for byte. Everything else is checked.
   const open = segs.filter(w => substitutes || !allowedSeg(w, cwd, ALLOW.allow, ALLOW.pinned));
   for (const w of open) found.push(...segFindings(w, powershell, depth));
-  for (const w of open) { const k = w.findIndex(x => progName(x) === 'node'); const s = k >= 0 && w.slice(k + 1).find(x => !x.startsWith('-')); if (s && pinnedEntry(s, cwd) && !pinnedOk(s, cwd)) found.push(`a pinned script that isn't the reviewed one (it, or a file it imports, changed; or an option or assignment rides it): ${s}`); }
+  for (const w of open) { const k = w.findIndex(x => progName(x) === 'node'); const s = k >= 0 && w.slice(k + 1).find(x => !x.startsWith('-') && pinnedEntry(x, cwd)); if (s && !pinnedOk(s, cwd)) found.push(`a pinned script that isn't the reviewed one (it, or a file it imports, changed; or an option or assignment rides it): ${s}`); }
   if (powershell && PS_RISK.test(c)) found.push('PowerShell COM HTTP or Invoke-Expression');
   // Scripts run by an interpreter, WHOEVER wrote them (QCI finding 6: a script written through Bash, or a copy of one,
   // was never recorded): read each and refuse it if it reaches the network. A script that can't be read (it doesn't
