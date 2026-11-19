@@ -1,8 +1,12 @@
 {
-  "_what": "The task launcher's settings that no agent may change (design §8.1; build brief 7). Copied into the vault by approve-guards with every '_' key removed. The launcher itself is built by its own builder (launcher v2, after migration 006 v2 is signed); this file holds only what Justin has ruled. startOnly: 'justin-authorized' while the Admiral's authorizing rung is in shadow (his A1), later 'lucas-or-justin' by his approval. maxConcurrent: guard Ballot 12 (a), three to start. tasksPerSession: 1 (guard Ballot 15 was NOT ruled (a); Admiral Lucas 1.18: one task per session, batching waits for measured usage). mode: 'shadow' writes 'would start T-n' and starts nothing; the Fleet Admiral decides when it reads 'live'. Truncation check: the _end key must read FULL FILE LOADED.",
-  "startOnly": "justin-authorized",
+  "_what": "The task launcher's settings that no agent may change (build brief 7 v2 §2.3, re-signed with conditions C1, C2 and C6 by Admiral Soren 1.18 pm2, 2026-11-18 15:27; DCG-L). Copied into the vault by approve-guards with every '_' key removed; the launcher (launcher.mjs, a vault copy) reads ONLY this file from the vault, and a repo copy never reads it. startOnly: 'justin-relay' this week (a Justin-tier record the Lucas seat relayed, with a pointer to his words, and the launch-time session check, C1); 'justin-signin' once task T-97's sign-in is live and Justin pastes the config switch; 'lucas-or-justin' only after the Admiral's authorizing rung leaves shadow, on his word. liveAllowed: the ceiling, shipped false; the launcher runs live only when this is true AND the Fleet Admiral's state/launcher-mode.json says live. maxConcurrent: guard Ballot 12 (a), counting launcher-started sessions only (walk-through question 7 (a), unruled). hours: guard Ballot 13 (a) and Justin 11/18 ('not all night ... maybe until 8:00 p.m.'); excludeDates beats days and extraDates (C6). AT JUSTIN'S APPROVAL these carry what he ruled: extraDates ['2026-11-20', '2026-11-27'] and excludeDates ['2026-11-26'] (his Ballot 9 (b): the team works Thanksgiving week Mon, Tue, Wed and Fri; Fri 11/20 is a working day). They ship empty because only his double-click sets values. exceptions: {task: 'T-n'} or {date: 'YYYY-MM-DD'}, each with until; none ever reaches past latestEnd or an excluded date. stopAtLatestEnd: shipped true (C2); every launcher-started session gets a pack-out message packOutWarningMinutes before latestEnd and is stopped at it. Truncation check: the _end key must read FULL FILE LOADED.",
+  "startOnly": "justin-relay",
+  "liveAllowed": false,
   "maxConcurrent": 3,
-  "tasksPerSession": 1,
-  "mode": "shadow",
+  "hours": { "days": ["Mon", "Tue", "Wed", "Thu"], "extraDates": [], "excludeDates": [], "start": "07:00", "end": "17:00", "latestEnd": "20:00", "exceptions": [] },
+  "models": { "default": "opus" },
+  "perTaskStarts": { "max": 2, "windowHours": 24, "minGapMinutes": 30 },
+  "stopAtLatestEnd": true,
+  "packOutWarningMinutes": 15,
   "_end": "Truncation canary — DO NOT REMOVE: FULL FILE LOADED"
 }

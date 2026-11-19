@@ -35,7 +35,9 @@ for (const r of [META, TEAM]) { fs.mkdirSync(r, { recursive: true }); g(r, 'init
 for (const f of fs.readdirSync(DIR).filter(f => f.endsWith('.mjs'))) put(META, `scripts/guards/${f}`, fs.readFileSync(path.join(DIR, f)));
 for (const f of fs.readdirSync(path.join(SRC, 'vault'))) put(META, `scripts/guards/vault/${f}`, fs.readFileSync(path.join(fs.existsSync(path.join(DIR, 'vault', f)) ? path.join(DIR, 'vault') : path.join(SRC, 'vault'), f)));
 put(META, 'scripts/ping.mjs', fs.readFileSync(path.join(META_SRC, 'scripts', 'ping.mjs')));
-for (const f of ['admiral-watch.mjs', 'kill-switch.mjs', 'claude-bin.mjs']) put(TEAM, `${FOLDER}/${f}`, `// fixture ${f}\nconsole.log('${f}');\n`);
+for (const f of ['config.mjs', 'rest.mjs']) put(META, `scripts/tasks/lib/${f}`, fs.readFileSync(path.join(META_SRC, 'scripts', 'tasks', 'lib', f)));
+const LAUNCHER_FILES = ['launcher.mjs', 'auth-check.mjs', 'start-task-session.mjs', 'approval.mjs', 'task-source.mjs'];
+for (const f of ['admiral-watch.mjs', 'kill-switch.mjs', 'claude-bin.mjs', ...LAUNCHER_FILES]) put(TEAM, `${FOLDER}/${f}`, `// fixture ${f}\nconsole.log('${f}');\n`);
 put(TEAM, `${FOLDER}/standing-orders.md`, '# orders\n'); put(TEAM, `${FOLDER}/standing-orders-thea.md`, '# thea orders\n');
 put(TEAM, 'shared/projects/legal/counsel-list.md', '| `fenwick.com` | Fenwick |\n');
 for (const r of [META, TEAM]) { g(r, 'add', '-A'); g(r, 'commit', '-q', '-m', 'fixture'); }
@@ -56,6 +58,24 @@ test('approve (dry): installs exactly the listed files from the commit, strips "
   assert.ok(!/"_/.test(fs.readFileSync(path.join(V, 'outbound-allowlist.json'), 'utf8')), 'nested "_why" keys stripped too');
   assert.equal(JSON.parse(fs.readFileSync(path.join(V, 'config.json'), 'utf8')).codeRoot, CODE);
   assert.ok(fs.readdirSync(V).every(f => f in m.files || ['manifest.json', 'grants', 'approvals.log'].includes(f)), 'nothing unlisted');
+});
+
+test('approve (dry): the task launcher installs whole: launcher, start check, CLI, approval rule, task source, and the task tool\'s config and REST modules under their vault names (DCG-L)', () => {
+  const T = target('t1L');
+  const r = approve(['stage', '--dry', T, '--yes']); assert.equal(r.status, 0, r.stdout + r.stderr);
+  const V = path.join(T, 'evryn-guards');
+  const m = JSON.parse(fs.readFileSync(path.join(V, 'manifest.json'), 'utf8'));
+  const want = { ...Object.fromEntries(LAUNCHER_FILES.map(f => [f, path.join(TEAM, ...FOLDER.split('/'), f)])),
+    'tasks-config.mjs': path.join(META, 'scripts', 'tasks', 'lib', 'config.mjs'), 'tasks-rest.mjs': path.join(META, 'scripts', 'tasks', 'lib', 'rest.mjs') };
+  for (const [name, src] of Object.entries(want)) {
+    assert.ok(name in m.files, `${name} is in the manifest, so the gate checks it`);
+    assert.equal(sha(path.join(V, name)), sha(src), `${name} is the committed source, byte for byte`);
+  }
+  const lj = JSON.parse(fs.readFileSync(path.join(V, 'launcher.json'), 'utf8'));
+  assert.equal(lj.liveAllowed, false, 'launcher.json ships liveAllowed false');
+  assert.equal(lj.stopAtLatestEnd, true, 'C2: stopAtLatestEnd ships true');
+  assert.deepEqual(lj.hours.excludeDates, [], 'C6: excludeDates exists, empty until Justin sets it');
+  assert.ok(!Object.keys(lj).some(k => k.startsWith('_')), 'the notes never reach the vault copy');
 });
 
 test('approve (dry): an uncommitted working-tree edit never rides in', () => {

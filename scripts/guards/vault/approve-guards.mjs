@@ -57,7 +57,14 @@ export const FILES = [
   ['ping.mjs', 'meta', 'scripts/ping.mjs'],
   ['counsel-list.md', 'team', 'shared/projects/legal/counsel-list.md'],
   ...['admiral-watch.mjs', 'kill-switch.mjs', 'claude-bin.mjs', 'standing-orders.md', 'standing-orders-thea.md'].map(f => [f, 'team', `${FOLDER}/${f}`]),
-  // Slots, added when each is built and approved: the launcher (brief 7), and each agent's orders page (guard Ballot 14).
+  // The task launcher (build brief 7 v2 §2.1; DCG-L, 2026-11-18): the launcher, its start check, its CLI, the approval
+  // rule it shares with the watch, its task source, and the two task-tool modules the source imports, so a vault copy
+  // imports nothing from a working tree. The task tool's modules get vault names of their own (beside config.json).
+  ...['launcher.mjs', 'auth-check.mjs', 'start-task-session.mjs', 'approval.mjs', 'task-source.mjs'].map(f => [f, 'team', `${FOLDER}/${f}`]),
+  ['tasks-config.mjs', 'meta', 'scripts/tasks/lib/config.mjs'],
+  ['tasks-rest.mjs', 'meta', 'scripts/tasks/lib/rest.mjs'],
+  // Slot, added when each is approved: each agent's orders page (guard Ballot 14), as orders-<agent>.md (the name
+  // launcher.mjs reads in the vault). Until then the launcher finds no orders page there and starts nobody.
 ];
 const MANAGED = ['managed-settings.json', 'meta', 'scripts/guards/vault/managed-settings.template.json'];
 const KEEP = ['grants', 'approvals.log'];                                 // carried forward from the old vault on every swap

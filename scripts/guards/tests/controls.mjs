@@ -73,6 +73,8 @@ const CONTROLS = [
   ['vault/approve-guards.mjs', '"_" keys reach Claude Code', 'obj = stripUnderscore(obj);', 'obj = obj;'],
   ['vault/approve-guards.mjs', 'a missing source installs silently', "catch { throw new Error(`REFUSED: ${p} is missing", "catch { buf = Buffer.from(''); if (0) throw new Error(`REFUSED: ${p} is missing"],
   ['vault/approve-guards.mjs', 'a hook outside the vault installs', "if (bad.length) throw new Error(`REFUSED: managed-settings", "if (false) throw new Error(`REFUSED: managed-settings"],
+  ['vault/approve-guards.mjs', 'the launcher is left out of the vault (DCG-L)', "...['launcher.mjs', 'auth-check.mjs', 'start-task-session.mjs', 'approval.mjs', 'task-source.mjs'].map(", '...[].map('],
+  ['vault/approve-guards.mjs', "the task tool's modules are left out of the vault (DCG-L)", "['tasks-config.mjs', 'meta', 'scripts/tasks/lib/config.mjs'],", ''],
   ['vault/approve-guards.mjs', 'grants are lost on re-approval', "for (const k of KEEP) if (fs.existsSync(path.join(vault, k)))", 'for (const k of []) if (fs.existsSync(path.join(vault, k)))'],
   ['gate.mjs', 'the gate never compares hashes', 'if (got !== want) bad.push', 'if (false) bad.push'],
   ['gate.mjs', 'the gate writes no STOP', "fs.writeFileSync(path.join(STATE, 'STOP'), `Stopped by the vault gate", "void (`Stopped by the vault gate"],
