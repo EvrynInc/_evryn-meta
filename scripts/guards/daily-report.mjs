@@ -30,7 +30,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import { fileURLToPath } from 'node:url';
-import { VAULT, DATA, readJSON, loadCounsel } from './lib.mjs';
+import { VAULT, DATA, readJSON, loadCounsel, shaText } from './lib.mjs';
 
 const argv = process.argv.slice(2);
 const opt = n => { const i = argv.indexOf(n); return i >= 0 ? argv[i + 1] : undefined; };
@@ -88,6 +88,13 @@ else {
     if (manifest.files?.[name] !== sha(buf)) pending.push(name);
   }
   out.push(pending.length ? pending.map(n => `- ${n}`).join('\n') : '- none: the vault matches the repo');
+  // The outbound allowlist's pinned scripts (QCR New 1): any file of a pinned closure that, ON DISK in the code root now,
+  // differs from the approved bytes means unattended runs of that script are refused until it is re-approved or restored.
+  const pins = readJSON(path.join(VAULT, 'outbound-pins.json'), null);
+  if (pins) {
+    const off = Object.entries(pins.files || {}).filter(([rel, want]) => { try { return shaText(fs.readFileSync(path.join(CODE, rel))) !== want; } catch { return true; } }).map(([rel]) => rel);
+    out.push(off.length ? `- ⚠️ pinned scripts that differ on disk from what you approved, so unattended agents can't run them: ${off.join(', ')}` : '- pinned scripts (the team ping, the task CLI): on disk as approved');
+  }
 }
 
 // 3 · This machine

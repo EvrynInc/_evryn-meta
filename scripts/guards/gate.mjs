@@ -17,9 +17,14 @@
 //                          through the VAULT's ping.mjs (which reads only the vault's webhook.json), logs, and exits 1.
 //                          🔴 After a mismatch it runs NO repo code (review finding 4).
 //   STOP present         → runs nothing, EXCEPT retrying an alarm that hasn't been delivered, at most once an hour.
+//   the kill switch's STOP (QCR New 2: <codeRoot>evryn-team-workspace…admiral-on-a-schedulestateSTOP, the code root
+//                          from the vault's config.json) → runs no watch, for EVERY role's state folder, Thea's included.
+//                          A mismatch still raises its alarm: the kill switch stops the schedule, not the tamper alarm.
 // The alarm is recorded as delivered only when the ping exits 0 (QCI finding 5). The FIRST alarm for a mismatch never
 // consults anything in the state folder, so nothing an agent writes there in advance can suppress it.
-// Every child runs with NODE_OPTIONS, NODE_PATH, NODE_COMPILE_CACHE and NODE_ICU_DATA removed from its environment.
+// Every child runs with NODE_OPTIONS, NODE_PATH, NODE_COMPILE_CACHE and NODE_ICU_DATA removed from its environment, and with
+// every EVRYN_* variable removed except the one the gate sets itself (QCR New 6b: a user-level EVRYN_SHARED_DIR, set with
+// setx, would otherwise move the watch's kill-switch and brake records).
 // tests/vault.test.mjs FAILS if a changed byte runs the watch, if the alarm path runs anything from outside the vault,
 // if a failed ping is recorded as delivered, or if the gate can't find itself under a path with a space.
 //
@@ -45,10 +50,13 @@ const DRY = !IN_VAULT && process.env.EVRYN_GATE_DRY === '1';
 const NODE = process.execPath;
 const [mode, stateArg] = process.argv.slice(2);
 // The files the gate refuses to run without, whatever the manifest says: an install that dropped one is a mismatch.
-const REQUIRED = ['admiral-watch.mjs', 'kill-switch.mjs', 'claude-bin.mjs', 'ping.mjs', 'watch.json', 'config.json', 'webhook.json', 'standing-orders.md', 'gate.mjs', 'lib.mjs'];
+const REQUIRED = ['admiral-watch.mjs', 'kill-switch.mjs', 'claude-bin.mjs', 'ping.mjs', 'watch.json', 'config.json', 'webhook.json', 'outbound-pins.json', 'standing-orders.md', 'gate.mjs', 'lib.mjs'];
+const SCHED = ['evryn-team-workspace', 'shared', 'projects', 'helm', '2026', '2026.11.05-admiral-on-a-schedule'];
 const HOUR = 3600000;
 // Children never inherit a variable node would load code or data from (QCI finding 3).
-export const cleanEnv = (extra = {}) => ({ ...Object.fromEntries(Object.entries(process.env).filter(([k]) => !/^NODE_(OPTIONS|PATH|COMPILE_CACHE|ICU_DATA)$/i.test(k))), ...extra });
+export const cleanEnv = (extra = {}) => ({ ...Object.fromEntries(Object.entries(process.env).filter(([k]) => !/^NODE_(OPTIONS|PATH|COMPILE_CACHE|ICU_DATA)$/i.test(k) && !/^EVRYN_/i.test(k))), ...extra });
+// The kill switch's STOP: the code root's Admiral state folder, whatever role this run serves (QCR New 2).
+const killSwitchStop = () => { const root = readJSON(path.join(VAULT, 'config.json'), {}).codeRoot; return root ? path.join(root, ...SCHED, 'state', 'STOP') : null; };
 
 const sha = f => createHash('sha256').update(fs.readFileSync(f)).digest('hex');
 const stamp = () => new Date().toISOString();
@@ -108,6 +116,8 @@ function main() {
   }
 
   const bad = check();
+  const ks = killSwitchStop();
+  if (!bad.length && ks && fs.existsSync(ks)) { log({ action: 'stopped-by-kill-switch', stop: ks }); return 0; }
   if (!bad.length) {
     if (DRY) { log({ action: 'would-run-watch', watch: path.join(VAULT, 'admiral-watch.mjs') }); return 0; }
     const r = spawnSync(NODE, [path.join(VAULT, 'admiral-watch.mjs'), mode], { env: cleanEnv({ EVRYN_ADMIRAL_DIR: STATE }), encoding: 'utf8', timeout: 14 * 60000 });

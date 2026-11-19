@@ -14,7 +14,10 @@
 //           change what a reviewed commit id installs (QCI finding 2). Strips every key starting "_" from the JSON files;
 //           refuses if any source is missing, if the managed settings' hooks aren't exactly the vault's launcher form,
 //           if watch.json's claude.exe floor differs from the managed settings' requiredMinimumVersion, or if any
-//           `claude` on this machine is older than that floor (QCI finding 8). Copies the team .env's Slack webhook into
+//           `claude` in the places claudeFiles() lists (the PATH, ~/.local/bin, four editors' extension folders; QCR
+//           New 3) is older than that floor (QCI finding 8). Hashes each pinned script of the outbound allowlist and its
+//           whole import closure at the commit into a vault outbound-pins.json (QCR New 1). Deletes its temp stage folder
+//           after an install and on any refusal (QCR New 7). Copies the team .env's Slack webhook into
 //           a vault-only webhook.json, showing only its host and last 6 characters (QCI finding 5). Writes the files and
 //           a plan (each file's SHA-256 and git blob id) to a fresh temp folder; shows what changes; asks him to type
 //           APPROVE; then elevates.
@@ -80,7 +83,7 @@ export const FILES = [
 ];
 const MANAGED = ['managed-settings.json', 'meta', 'scripts/guards/vault/managed-settings.template.json'];
 const KEEP = ['grants', 'approvals.log'];                                 // carried forward from the old vault on every swap
-export const GENERATED = ['config.json', 'webhook.json', 'manifest.json'];  // written by the stage half, not from git
+export const GENERATED = ['config.json', 'webhook.json', 'outbound-pins.json', 'manifest.json'];  // written by the stage half, not from git
 
 const sha = buf => createHash('sha256').update(buf).digest('hex');
 const shaFile = f => sha(fs.readFileSync(f));
@@ -159,6 +162,43 @@ export function readVerified(repo, commit, p) {
   return { buf: catVerified(repo, 'blob', oid), oid };
 }
 
+// ---------- the outbound allowlist's pinned scripts (QCR New 1; DCF2, 2026-11-19) ----------
+// For each `pinned` entry in the staged allowlist, walk its local import closure AT THE REVIEWED COMMIT (readVerified, so
+// every object is re-hashed) and record each file's text hash. outbound-gate.mjs trusts the entry only when every file of
+// the closure on disk hashes the same. These two functions MUST match lib.mjs's shaText and localImports exactly
+// (tests/vault.test.mjs compares them); they are copied rather than imported because the approver runs on its own.
+const shaText = buf => createHash('sha256').update(Buffer.from(buf.toString('utf8').replace(/\r\n/g, '\n'))).digest('hex');
+const BUILTIN = /^node:|^(fs|path|os|url|util|crypto|child_process|http|https|net|tls|dgram|readline|stream|events|zlib|assert|buffer|worker_threads|process)(\/|$)/;
+export function localImports(text) {
+  const rel = new Set(), bare = new Set();
+  const re = /\bfrom\s*['"]([^'"]+)['"]|\bimport\s*\(\s*['"]([^'"]+)['"]\s*\)|^\s*import\s*['"]([^'"]+)['"]|\brequire\s*\(\s*['"]([^'"]+)['"]\s*\)/gm;
+  for (const m of String(text).matchAll(re)) {
+    const spec = m[1] || m[2] || m[3] || m[4];
+    if (/^\.\.?\//.test(spec)) rel.add(spec); else if (!BUILTIN.test(spec)) bare.add(spec);
+  }
+  return { rel: [...rel], bare: [...bare] };
+}
+const REPO_OF = { '_evryn-meta': 'meta', 'evryn-team-workspace': 'team' };
+export function pinScripts(entries, repos, commits) {
+  const files = {};
+  for (const entry of entries || []) {
+    const [top, ...rest] = String(entry).split('/'); const repo = REPO_OF[top];
+    if (!repo || !rest.length || rest.includes('..')) throw new Error(`REFUSED: pinned entry ${entry} is not a file in _evryn-meta or evryn-team-workspace`);
+    const todo = [rest.join('/')]; const seen = new Set();
+    while (todo.length) {
+      const p = path.posix.normalize(todo.pop());
+      if (p.startsWith('..')) throw new Error(`REFUSED: ${entry} imports a file outside its repository`);
+      if (seen.has(p)) continue; seen.add(p);
+      const { buf } = readVerified(repos[repo], commits[repo], p);
+      files[`${top}/${p}`.toLowerCase()] = shaText(buf);
+      const { rel, bare } = localImports(buf.toString('utf8'));
+      if (bare.length) throw new Error(`REFUSED: pinned ${entry} reaches ${p}, which imports a package (${bare.join(', ')}); a pin can't cover a package`);
+      for (const r of rel) todo.push(path.posix.join(path.posix.dirname(p), r));
+    }
+  }
+  return { entries: (entries || []).map(e => String(e).toLowerCase()), files };
+}
+
 // ---------- claude versions (QCI finding 8) ----------
 export const parseVersion = s => { const m = String(s || '').match(/(\d+)\.(\d+)\.(\d+)/); return m ? m.slice(1, 4).map(Number) : null; };
 export function versionAtLeast(v, floor) {
@@ -166,14 +206,26 @@ export function versionAtLeast(v, floor) {
   for (let i = 0; i < 3; i++) if (a[i] !== b[i]) return a[i] > b[i];
   return true;
 }
-// Every claude this machine would run: each `where claude` result that Windows can execute, and every VS Code extension
-// copy. Each is asked its own --version (a folder name proves nothing).
-export function realClaudeVersions() {
+// Every claude this machine would run, from EXACTLY these places (QCR New 3; nowhere else is checked):
+//   1. each `where claude` result that Windows can execute (the PATH, npm's global `claude.cmd` included);
+//   2. %USERPROFILE%\.local\bin\claude.exe, the native installer's copy, which is often NOT on the PATH;
+//   3. the Claude Code extension's claude.exe in %USERPROFILE%\.vscode\extensions, .vscode-insiders\extensions,
+//      .cursor\extensions and .windsurf\extensions (every anthropic.claude-code-<version>-win32-x64 folder).
+// A copy anywhere else (a portable folder, another editor, WSL) is NOT checked. Each is asked its own --version.
+export const EDITOR_EXT = ['.vscode', '.vscode-insiders', '.cursor', '.windsurf'];
+export function claudeFiles(home = os.homedir(), { where = true } = {}) {
   const files = new Set();
-  try { for (const l of execFileSync(WHERE_EXE, ['claude'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).split(/\r?\n/)) if (/\.(exe|cmd|bat)$/i.test(l.trim())) files.add(l.trim()); } catch { /* none on PATH */ }
-  const ext = path.join(os.homedir(), '.vscode', 'extensions');
-  try { for (const d of fs.readdirSync(ext)) if (/^anthropic\.claude-code-[\d.]+-win32-x64$/.test(d)) { const f = path.join(ext, d, 'resources', 'native-binary', 'claude.exe'); if (fs.existsSync(f)) files.add(f); } } catch { /* none */ }
-  return [...files].map(file => {
+  if (where) try { for (const l of execFileSync(WHERE_EXE, ['claude'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).split(/\r?\n/)) if (/\.(exe|cmd|bat)$/i.test(l.trim())) files.add(l.trim()); } catch { /* none on PATH */ }
+  const native = path.join(home, '.local', 'bin', 'claude.exe');
+  if (fs.existsSync(native)) files.add(native);
+  for (const ed of EDITOR_EXT) {
+    const ext = path.join(home, ed, 'extensions');
+    try { for (const d of fs.readdirSync(ext)) if (/^anthropic\.claude-code-[\d.]+-win32-x64$/.test(d)) { const f = path.join(ext, d, 'resources', 'native-binary', 'claude.exe'); if (fs.existsSync(f)) files.add(f); } } catch { /* none */ }
+  }
+  return [...files];
+}
+export function realClaudeVersions(files = claudeFiles()) {
+  return files.map(file => {
     let out = '';
     try {
       out = /\.exe$/i.test(file) ? execFileSync(file, ['--version'], { encoding: 'utf8', timeout: 60000, stdio: ['ignore', 'pipe', 'ignore'] })
@@ -232,6 +284,8 @@ export function stage({ codeRoot, metaCommit = 'origin/main', teamCommit = 'orig
   write('config.json', { codeRoot });
   const hook = readWebhook(codeRoot);
   write('webhook.json', { team: hook });
+  // The outbound allowlist's pinned scripts, hashed from the reviewed commit (QCR New 1).
+  write('outbound-pins.json', pinScripts(json['outbound-allowlist.json'].pinned, repos, commits));
   plan.webhookHint = webhookHint(hook);
   // The manifest the gate checks: every vault file but itself, plus managed-settings.json beside the folder (note 16).
   write('manifest.json', { approvedAt: plan.stagedAt, commits, files: { ...plan.files }, managed: plan.managed });
@@ -385,10 +439,16 @@ async function cli(argv) {
   const fake = dryRoot && !IN_VAULT ? opt(argv, '--fake-claude') : undefined;
   const claudeVersions = fake ? () => fake.split(',').map((v, i) => ({ file: `fake-claude-${i}`, version: v })) : realClaudeVersions;
   const stageDir = fs.mkdtempSync(path.join(os.tmpdir(), 'evryn-guards-stage-'));
+  // The stage folder holds every staged file, the webhook included: it goes when this run ends, however it ends (QCR New 7).
+  try { return await stageAndInstall(); } finally { fs.rmSync(stageDir, { recursive: true, force: true }); }
+  async function stageAndInstall() {
   const { plan, planHash } = stage({ codeRoot: opt(argv, '--code-root') || codeRootFrom(), metaCommit: opt(argv, '--meta'), teamCommit: opt(argv, '--team'), stageDir, claudeVersions });
   say(`From _evryn-meta ${plan.commits.meta} and evryn-team-workspace ${plan.commits.team}:`);
   say(describe(plan, stageDir, root).join('\n'));
   say(`The alarm's Slack webhook: ${plan.webhookHint}. Check the host and the last 6 characters against your own record.`);
+  const allowFile = JSON.parse(fs.readFileSync(path.join(stageDir, 'outbound-allowlist.json'), 'utf8'));
+  say(`Scripts unattended agents may run to reach the network, pinned to these exact bytes: ${(allowFile.pinned || []).join(', ') || 'none'}.`);
+  for (const e of allowFile.attendedAllow || []) say(`Allowed ONLY in a session you are at, with no prompt: ${e.pattern}`);
   if (!(dryRoot && argv.includes('--yes'))) {
     if ((await ask('Type APPROVE to install these into the vault (Windows will then ask you "Yes"): ')) !== 'APPROVE') { say('Nothing installed.'); return 1; }
   }
@@ -396,6 +456,7 @@ async function cli(argv) {
   const status = runWrapper(wrap(['install', stageDir, planHash, selfHash]), { elevate: !dryRoot });
   say(status === 0 ? 'Installed. Open a NEW Claude Code session and run /status: it should list the managed settings file.' : `The install did not finish (exit ${status}). Nothing half-installed is left in place; tell Soren.`);
   return status;
+  }
 }
 
 const direct = process.argv[1] && path.resolve(process.argv[1]).toLowerCase() === SELF.toLowerCase();
