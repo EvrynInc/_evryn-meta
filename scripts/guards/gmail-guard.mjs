@@ -103,12 +103,15 @@ function redactSearch(text, entries) {
 }
 
 // ---------- Justin's one-time opening of one counsel thread (guard Ballot 5 (b), 2026-11-17; DCG-V, 2026-11-18) ----------
-// He runs open-counsel-thread.cmd <threadId> from the vault; on his UAC yes it writes grants\counsel-<threadId>.json into
-// the vault (30 minutes). The FIRST get_thread of that thread, by one session, inside that window, goes through both
-// layers; nothing else does (not another session, not a second read, not its attachments). The grant is read ONLY from
-// the vault folder (lib's VAULT, which ignores every EVRYN_* override when running from the vault: review finding 7).
-// ⚠️ "Once" is recorded in the per-user data folder, which a session can delete; within the 30 minutes a session that
-// deletes its own record could read the thread again. The window, not the record, is the hard bound.
+// He runs open-counsel-thread.cmd <threadId> [sessionId] from the vault; on his UAC yes it writes
+// grants\counsel-<threadId>.json into the vault (10 minutes; QCI finding 9). The FIRST get_thread of that thread, by one
+// session, inside that window, goes through both layers; nothing else does (not another session, not a second read, not
+// its attachments). When he names a session, the grant is honored ONLY for a hook payload carrying that session_id,
+// which Claude Code itself supplies. The grant is read ONLY from the vault folder (lib's VAULT, which ignores every
+// EVRYN_* override when running from the vault: review finding 7).
+// ⚠️ "Once" is recorded in the per-user data folder, which a session can delete; within the 10 minutes a session that
+// deletes that record could read the thread again, and with no session named, so could another session. The window,
+// and the session binding when he gives one, are the hard bounds.
 const grantFile = id => path.join(VAULT, 'grants', `counsel-${safeName(id)}.json`);
 const usedFile = (id, g) => path.join(DATA, 'counsel-used', `${safeName(id)}-${safeName(g.grantedAt)}.json`);
 function liveGrant(id) {
@@ -117,9 +120,10 @@ function liveGrant(id) {
   if (!g || g.threadId !== id || !(now() < new Date(g.expiresAt))) return null;
   return g;
 }
+const boundElsewhere = (g, session) => !!g.sessionId && g.sessionId !== session;   // QCI finding 9
 // Pre: claim the grant for this session, once. Post: honor it only for the session that claimed it, within the window.
 function claimGrant(id, session) {
-  const g = liveGrant(id); if (!g) return false;
+  const g = liveGrant(id); if (!g || boundElsewhere(g, session)) return false;
   const f = usedFile(id, g);
   const used = readJSON(f, null);
   if (used) return false;                                              // single use: already read once
@@ -128,7 +132,7 @@ function claimGrant(id, session) {
   return true;
 }
 function grantClaimedBy(id, session) {
-  const g = liveGrant(id); if (!g) return false;
+  const g = liveGrant(id); if (!g || boundElsewhere(g, session)) return false;
   const used = readJSON(usedFile(id, g), null);
   return !!used && used.session === session;
 }

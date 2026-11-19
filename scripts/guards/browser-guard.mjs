@@ -6,7 +6,7 @@
 // REQUIREMENT: while the counsel-mail guard is in force, no session (attended or not) may point a browser tool at
 // mail.google.com or drive.google.com, because the counsel-mail guard only covers the Gmail connector and a lawyer's
 // thread is as readable in a Gmail tab. tests/guards.test.mjs FAILS if a navigation there gets through.
-//   PreToolUse  (every mcp__claude-in-chrome__ and mcp__Claude_Browser__ tool): any string in the call's input that
+//   PreToolUse  (every Claude in Chrome, built-in browser and computer-use tool): any string in the call's input that
 //               names either host is DENIED (navigate, open a tab, a script that sets location, a form field).
 //   PostToolUse (same tools): a result that names either host as a page's address is REPLACED, which covers a tab that
 //               was already open on Gmail before the call (reading its text, its screenshot description, its tab list).
@@ -24,7 +24,10 @@ const HOSTS = /(^|[^a-z0-9.-])(mail\.google\.com|drive\.google\.com)(?![a-z0-9-]
 // Result side: only a full address (https://mail.google.com...), so a page that merely mentions Gmail isn't withheld. A page
 // that LINKS to Gmail with a full address is withheld too: an over-block, accepted, since the alternative is a hole.
 const ADDRESS = /https?:\/\/(mail|drive)\.google\.com(?![a-z0-9-])/i;
-const BROWSER = /^mcp__(claude-in-chrome|claude_browser)__/i;
+// Every browser surface, wherever its server sits: Claude in Chrome, the desktop app's built-in browser (also as
+// mcp__remote-devices__Claude_Browser__*), and computer use (mcp__computer-use__*, mcp__remote-devices__computer_*), which
+// can open a URL too (QCI finding 10). The template's matcher is the same expression; an extra match only over-blocks.
+const BROWSER = /^mcp__.*(claude-in-chrome|claude_browser|computer)/i;
 
 // A string that is a web address is judged by its HOST (so example.com/mail.google.com.html passes); any other text
 // (a script, a form value) by whether it names either host anywhere.

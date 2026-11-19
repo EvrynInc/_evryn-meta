@@ -3,8 +3,8 @@
 // block item 5; DCG-V, 2026-11-18).
 // Truncation check: the last line of this file should read FULL FILE LOADED.
 //
-// REQUIREMENT: in an unattended session, a mid-session change to user, project or local settings, or to a skill file,
-// MUST NOT take effect. Claude Code applies most settings edits to a running session at once, permissions and hooks
+// REQUIREMENT: in an unattended session, a mid-session change to any settings source but managed policy (user, project
+// or local settings, skills, and any source Claude Code adds later) MUST NOT take effect. Claude Code applies most settings edits to a running session at once, permissions and hooks
 // included (settings docs, line 178), so without this an unattended session could widen its own permissions or set an
 // `env` variable and have it count in the next tool call. A ConfigChange hook that answers `decision: "block"` keeps the
 // new settings out of the running session (hooks docs, "ConfigChange decision control"). The brief asked for `env` and
@@ -21,11 +21,16 @@
 
 import { readStdin, guardLog, attended } from './lib.mjs';
 
-const GUARDED = ['user_settings', 'project_settings', 'local_settings', 'skills'];
+// Everything but managed policy is blocked (QCI finding 13): a list of what to block would let through any source Claude
+// Code adds later (a made-up "plugin_settings" passed the old list). policy_settings can't be blocked anyway (docs).
+// The block is SILENT to the session (hooks docs: "A blocked change surfaces no message to you or to Claude"), so the
+// daily report gives these blocks their own line, and the standing orders should say settings and skill edits take
+// effect only in the next session.
+const ALLOWED = ['policy_settings'];
 const { payload } = readStdin();
 let out = null;
 try {
-  if (payload.hook_event_name === 'ConfigChange' && !attended() && GUARDED.includes(payload.source)) {
+  if (payload.hook_event_name === 'ConfigChange' && !attended() && !ALLOWED.includes(payload.source)) {
     guardLog({ guard: 'config', event: 'blocked', session: payload.session_id, source: payload.source, file: payload.file_path || null });
     out = JSON.stringify({ decision: 'block', reason: 'An unattended session keeps the settings it started with (vault config guard).' });
   }
