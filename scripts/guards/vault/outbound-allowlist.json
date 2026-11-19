@@ -4,7 +4,7 @@
   "justinAddresses": ["justin@evryn.ai"],
   "allow": [
     { "_why": "the team ping and the task list: committed scripts; the message may contain any word", "pattern": "^node\\s+\\S*(_evryn-meta/)?scripts/(ping|tasks/tasks)\\.mjs(\\s.*)?$" },
-    { "_why": "git fetch, pull and push, to a named remote or to our own GitHub organization, never to another URL", "pattern": "^git(\\s+-c\\s+\\S+)*\\s+(fetch|pull|push)(\\s+(https://github\\.com/evryninc/\\S+|(?![^\\s]*(://|@))\\S+))*$" },
+    { "_why": "git fetch, pull and push with NO -c setting, to origin or to a URL under our own GitHub organization, never to another remote or URL (QCI finding 6). The command is lowercased before matching, so -C (a folder) reads as -c: only a drive path is accepted after it. Any git setting that redirects git or runs a command is refused before this list is read.", "pattern": "^git(\\s+-c\\s+[a-z]:/\\S+)?\\s+(fetch|pull|push)(\\s+--?[a-z][a-z-]*)*(\\s+(origin|https://github\\.com/evryninc/[a-z0-9._/-]+)(\\s+[a-z0-9._/:+^~-]+)*)?(\\s+--?[a-z][a-z-]*)*$" },
     { "_why": "Railway status and log reads (no deploys)", "pattern": "^railway\\s+(status|logs|deployment\\s+list)(\\s+\\S+)*$" },
     { "_why": "reinstall our own locked dependencies inside an Evryn repo (no new package names)", "pattern": "^npm\\s+(install|ci)(\\s+--?[a-z][a-z-]*)*$", "cwdInCodeRoot": true },
     { "_why": "GitHub read-only views", "pattern": "^gh\\s+(pr|issue|run|repo|release)\\s+(view|list|status|checks|diff)(\\s+\\S+)*$" }
