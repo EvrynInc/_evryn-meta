@@ -1,5 +1,5 @@
 {
-  "_what": "TEMPLATE for C:\\Program Files\\ClaudeCode\\managed-settings.json (the vault; design §1). NOT installed. approve-guards copies it there from a commit, on Justin's UAC yes, with every key starting '_' removed. Every hook is exec form with the absolute path to node.exe (no shell, no PATH lookup, Fresh Soren's review finding 2) and onFailure block (a crashed or timed-out PreToolUse guard blocks the call, finding 3; PostToolUse can't block, so layer 1 is the Gmail guard of record). requiredMinimumVersion: onFailure needs v2.1.295 and PostModelSwitch v2.1.251 (finding 1). allowManagedHooksOnly: no lower hook can race a vaulted rewrite (finding 16). DCG-V 2026-11-18 added: the secrets guard (Ballots 23, 23.3), the outbound gate (Ballot 10.1), the browser guard (review finding 8) and the config guard (finding 5); every PreToolUse and ConfigChange guard here carries onFailure block. Verify node.exe's path on each machine before install. Truncation check: the _end key below must read FULL FILE LOADED.",
+  "_what": "TEMPLATE for C:\\Program Files\\ClaudeCode\\managed-settings.json (the vault; design §1). NOT installed. approve-guards copies it there from a commit, on Justin's UAC yes, with every key starting '_' removed. Every hook is exec form with the absolute path to node.exe (no shell, no PATH lookup, Fresh Soren's review finding 2) and onFailure block (a crashed or timed-out PreToolUse guard blocks the call, finding 3; PostToolUse can't block, so layer 1 is the Gmail guard of record). requiredMinimumVersion: onFailure needs v2.1.295 and PostModelSwitch v2.1.251 (finding 1). allowManagedHooksOnly: no lower hook can race a vaulted rewrite (finding 16). DCG-V 2026-11-18 added: the secrets guard (Ballots 23, 23.3), the outbound gate (Ballot 10.1), the browser guard (review finding 8) and the config guard (finding 5); every PreToolUse and ConfigChange guard here carries onFailure block. Verify node.exe's path on each machine before install. DCF 2026-11-18 (QCI findings 3 and 10): every hook now runs C:\\Windows\\System32\\cmd.exe /d (no AutoRun) on the vault's launcher line, which cds into the vault, clears NODE_OPTIONS, NODE_PATH, NODE_COMPILE_CACHE and NODE_ICU_DATA, and runs ..\\..\\nodejs\\node.exe (= C:\\Program Files\\nodejs\\node.exe) on the script: exec form alone can't clear the environment, and node runs whatever NODE_OPTIONS names before the script. No arg contains a space, so no quoting can alter it. approve-guards.mjs refuses a template whose hooks aren't exactly hookArgs(). The browser matcher also reaches the remote built-in browser and computer use. Truncation check: the _end key below must read FULL FILE LOADED.",
   "requiredMinimumVersion": "2.1.322",
   "allowManagedHooksOnly": true,
   "switchModelsOnFlag": true,
@@ -21,9 +21,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "command": "C:\\Windows\\System32\\cmd.exe",
             "args": [
-              "C:\\Program Files\\ClaudeCode\\evryn-guards\\gmail-guard.mjs"
+              "/d",
+              "/c",
+              "cd",
+              "/d",
+              "C:\\Program",
+              "Files\\ClaudeCode\\evryn-guards&&set",
+              "NODE_OPTIONS=&set",
+              "NODE_PATH=&set",
+              "NODE_COMPILE_CACHE=&set",
+              "NODE_ICU_DATA=&..\\..\\nodejs\\node.exe",
+              "gmail-guard.mjs"
             ],
             "onFailure": "block",
             "timeout": 20
@@ -35,9 +45,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "command": "C:\\Windows\\System32\\cmd.exe",
             "args": [
-              "C:\\Program Files\\ClaudeCode\\evryn-guards\\handback.mjs"
+              "/d",
+              "/c",
+              "cd",
+              "/d",
+              "C:\\Program",
+              "Files\\ClaudeCode\\evryn-guards&&set",
+              "NODE_OPTIONS=&set",
+              "NODE_PATH=&set",
+              "NODE_COMPILE_CACHE=&set",
+              "NODE_ICU_DATA=&..\\..\\nodejs\\node.exe",
+              "handback.mjs"
             ],
             "timeout": 20
           }
@@ -48,9 +68,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "command": "C:\\Windows\\System32\\cmd.exe",
             "args": [
-              "C:\\Program Files\\ClaudeCode\\evryn-guards\\secrets-guard.mjs"
+              "/d",
+              "/c",
+              "cd",
+              "/d",
+              "C:\\Program",
+              "Files\\ClaudeCode\\evryn-guards&&set",
+              "NODE_OPTIONS=&set",
+              "NODE_PATH=&set",
+              "NODE_COMPILE_CACHE=&set",
+              "NODE_ICU_DATA=&..\\..\\nodejs\\node.exe",
+              "secrets-guard.mjs"
             ],
             "onFailure": "block",
             "timeout": 20
@@ -62,9 +92,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "command": "C:\\Windows\\System32\\cmd.exe",
             "args": [
-              "C:\\Program Files\\ClaudeCode\\evryn-guards\\outbound-gate.mjs"
+              "/d",
+              "/c",
+              "cd",
+              "/d",
+              "C:\\Program",
+              "Files\\ClaudeCode\\evryn-guards&&set",
+              "NODE_OPTIONS=&set",
+              "NODE_PATH=&set",
+              "NODE_COMPILE_CACHE=&set",
+              "NODE_ICU_DATA=&..\\..\\nodejs\\node.exe",
+              "outbound-gate.mjs"
             ],
             "onFailure": "block",
             "timeout": 20
@@ -72,13 +112,23 @@
         ]
       },
       {
-        "matcher": "^mcp__(claude-in-chrome|Claude_Browser)__",
+        "matcher": "^mcp__.*(claude-in-chrome|Claude_Browser|computer)",
         "hooks": [
           {
             "type": "command",
-            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "command": "C:\\Windows\\System32\\cmd.exe",
             "args": [
-              "C:\\Program Files\\ClaudeCode\\evryn-guards\\browser-guard.mjs"
+              "/d",
+              "/c",
+              "cd",
+              "/d",
+              "C:\\Program",
+              "Files\\ClaudeCode\\evryn-guards&&set",
+              "NODE_OPTIONS=&set",
+              "NODE_PATH=&set",
+              "NODE_COMPILE_CACHE=&set",
+              "NODE_ICU_DATA=&..\\..\\nodejs\\node.exe",
+              "browser-guard.mjs"
             ],
             "onFailure": "block",
             "timeout": 20
@@ -92,9 +142,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "command": "C:\\Windows\\System32\\cmd.exe",
             "args": [
-              "C:\\Program Files\\ClaudeCode\\evryn-guards\\gmail-guard.mjs"
+              "/d",
+              "/c",
+              "cd",
+              "/d",
+              "C:\\Program",
+              "Files\\ClaudeCode\\evryn-guards&&set",
+              "NODE_OPTIONS=&set",
+              "NODE_PATH=&set",
+              "NODE_COMPILE_CACHE=&set",
+              "NODE_ICU_DATA=&..\\..\\nodejs\\node.exe",
+              "gmail-guard.mjs"
             ],
             "onFailure": "block",
             "timeout": 20
@@ -106,22 +166,42 @@
         "hooks": [
           {
             "type": "command",
-            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "command": "C:\\Windows\\System32\\cmd.exe",
             "args": [
-              "C:\\Program Files\\ClaudeCode\\evryn-guards\\outbound-gate.mjs"
+              "/d",
+              "/c",
+              "cd",
+              "/d",
+              "C:\\Program",
+              "Files\\ClaudeCode\\evryn-guards&&set",
+              "NODE_OPTIONS=&set",
+              "NODE_PATH=&set",
+              "NODE_COMPILE_CACHE=&set",
+              "NODE_ICU_DATA=&..\\..\\nodejs\\node.exe",
+              "outbound-gate.mjs"
             ],
             "timeout": 20
           }
         ]
       },
       {
-        "matcher": "^mcp__(claude-in-chrome|Claude_Browser)__",
+        "matcher": "^mcp__.*(claude-in-chrome|Claude_Browser|computer)",
         "hooks": [
           {
             "type": "command",
-            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "command": "C:\\Windows\\System32\\cmd.exe",
             "args": [
-              "C:\\Program Files\\ClaudeCode\\evryn-guards\\browser-guard.mjs"
+              "/d",
+              "/c",
+              "cd",
+              "/d",
+              "C:\\Program",
+              "Files\\ClaudeCode\\evryn-guards&&set",
+              "NODE_OPTIONS=&set",
+              "NODE_PATH=&set",
+              "NODE_COMPILE_CACHE=&set",
+              "NODE_ICU_DATA=&..\\..\\nodejs\\node.exe",
+              "browser-guard.mjs"
             ],
             "onFailure": "block",
             "timeout": 20
@@ -134,9 +214,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "command": "C:\\Windows\\System32\\cmd.exe",
             "args": [
-              "C:\\Program Files\\ClaudeCode\\evryn-guards\\model-switch.mjs"
+              "/d",
+              "/c",
+              "cd",
+              "/d",
+              "C:\\Program",
+              "Files\\ClaudeCode\\evryn-guards&&set",
+              "NODE_OPTIONS=&set",
+              "NODE_PATH=&set",
+              "NODE_COMPILE_CACHE=&set",
+              "NODE_ICU_DATA=&..\\..\\nodejs\\node.exe",
+              "model-switch.mjs"
             ]
           }
         ]
@@ -147,9 +237,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "command": "C:\\Windows\\System32\\cmd.exe",
             "args": [
-              "C:\\Program Files\\ClaudeCode\\evryn-guards\\subagent-model.mjs"
+              "/d",
+              "/c",
+              "cd",
+              "/d",
+              "C:\\Program",
+              "Files\\ClaudeCode\\evryn-guards&&set",
+              "NODE_OPTIONS=&set",
+              "NODE_PATH=&set",
+              "NODE_COMPILE_CACHE=&set",
+              "NODE_ICU_DATA=&..\\..\\nodejs\\node.exe",
+              "subagent-model.mjs"
             ]
           }
         ]
@@ -161,9 +261,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "command": "C:\\Windows\\System32\\cmd.exe",
             "args": [
-              "C:\\Program Files\\ClaudeCode\\evryn-guards\\compaction.mjs"
+              "/d",
+              "/c",
+              "cd",
+              "/d",
+              "C:\\Program",
+              "Files\\ClaudeCode\\evryn-guards&&set",
+              "NODE_OPTIONS=&set",
+              "NODE_PATH=&set",
+              "NODE_COMPILE_CACHE=&set",
+              "NODE_ICU_DATA=&..\\..\\nodejs\\node.exe",
+              "compaction.mjs"
             ]
           }
         ]
@@ -174,9 +284,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "command": "C:\\Windows\\System32\\cmd.exe",
             "args": [
-              "C:\\Program Files\\ClaudeCode\\evryn-guards\\compaction.mjs"
+              "/d",
+              "/c",
+              "cd",
+              "/d",
+              "C:\\Program",
+              "Files\\ClaudeCode\\evryn-guards&&set",
+              "NODE_OPTIONS=&set",
+              "NODE_PATH=&set",
+              "NODE_COMPILE_CACHE=&set",
+              "NODE_ICU_DATA=&..\\..\\nodejs\\node.exe",
+              "compaction.mjs"
             ]
           }
         ]
@@ -187,9 +307,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "command": "C:\\Windows\\System32\\cmd.exe",
             "args": [
-              "C:\\Program Files\\ClaudeCode\\evryn-guards\\compaction.mjs"
+              "/d",
+              "/c",
+              "cd",
+              "/d",
+              "C:\\Program",
+              "Files\\ClaudeCode\\evryn-guards&&set",
+              "NODE_OPTIONS=&set",
+              "NODE_PATH=&set",
+              "NODE_COMPILE_CACHE=&set",
+              "NODE_ICU_DATA=&..\\..\\nodejs\\node.exe",
+              "compaction.mjs"
             ]
           }
         ]
@@ -200,9 +330,19 @@
         "hooks": [
           {
             "type": "command",
-            "command": "C:\\Program Files\\nodejs\\node.exe",
+            "command": "C:\\Windows\\System32\\cmd.exe",
             "args": [
-              "C:\\Program Files\\ClaudeCode\\evryn-guards\\config-guard.mjs"
+              "/d",
+              "/c",
+              "cd",
+              "/d",
+              "C:\\Program",
+              "Files\\ClaudeCode\\evryn-guards&&set",
+              "NODE_OPTIONS=&set",
+              "NODE_PATH=&set",
+              "NODE_COMPILE_CACHE=&set",
+              "NODE_ICU_DATA=&..\\..\\nodejs\\node.exe",
+              "config-guard.mjs"
             ],
             "onFailure": "block",
             "timeout": 20

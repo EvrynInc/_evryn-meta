@@ -71,15 +71,25 @@ const CHANNEL = useDev
   ? { envPath: join(CODE_ROOT, "_evryn-meta", ".env"), key: "SLACK_DEV_WEBHOOK_URL", label: "#dev-alerts" }
   : { envPath: join(CODE_ROOT, "evryn-team-workspace", ".env"), key: "SLACK_TEAM_WEBHOOK_URL", label: "#team-alerts" };
 
-if (!existsSync(CHANNEL.envPath)) {
+// The vault (2026-11-18, DCF; QCI finding 5): run from the vault, the URL comes ONLY from the vault's webhook.json, which
+// approve-guards copied from the team .env on Justin's approval. The team .env is agent-writable, and the vault gate's
+// URGENT ping must not be something an agent can redirect or delete. Only the team channel exists there.
+let vaultUrl = null;
+if (IN_VAULT) {
+  if (useDev) { console.error("PING FAILED: the vault's copy sends only to #team-alerts"); process.exit(1); }
+  try { vaultUrl = JSON.parse(readFileSync(join(HERE, "webhook.json"), "utf8")).team || null; } catch { vaultUrl = null; }
+  if (!vaultUrl) { console.error("PING FAILED: the vault's webhook.json is missing or unreadable"); process.exit(1); }
+}
+
+if (!vaultUrl && !existsSync(CHANNEL.envPath)) {
   // Loud, specific failure. A ping that fails quietly is worse than no ping at all:
   // the agent believes Justin was told, and Justin was not.
   console.error(`PING FAILED: no .env at ${CHANNEL.envPath}`);
   process.exit(1);
 }
 
-const envText = readFileSync(CHANNEL.envPath, "utf8");
-const match = envText.match(new RegExp(`^${CHANNEL.key}\\s*=\\s*(.+)$`, "m"));
+const envText = vaultUrl ? "" : readFileSync(CHANNEL.envPath, "utf8");
+const match = vaultUrl ? [null, vaultUrl] : envText.match(new RegExp(`^${CHANNEL.key}\\s*=\\s*(.+)$`, "m"));
 
 if (!match) {
   console.error(`PING FAILED: ${CHANNEL.key} not found in ${CHANNEL.envPath}`);
