@@ -8,7 +8,8 @@
 --   - The only way a task becomes authorized is a task_authorizations row written by lucas or justin (ET012);
 --     that row's insert moves the task to open in the same transaction. Acceptance (done) is a second row.
 --   - The database keeps tasks.scope_hash (title, description, owner) itself. A later scope edit on authorized
---     work, by ANY actor, returns the task to proposed, clears its authorization and sets needs_reauthorization.
+--     work, by ANY actor, returns the task to proposed, clears its authorization and sets needs_reauthorization; a
+--     write may not change that scope and the status together (ET016).
 --   - The authorization pointer (tasks.authorization_id) moves only from inside the authorization trigger (ET014).
 --   - Which writes count as Justin-tier is one config row (public.task_auth_config) only the owner can change.
 --
@@ -258,9 +259,11 @@ as $$
 declare
   v_actor     text := public.task_request_actor();
   v_session   text := public.task_request_session();
-  -- C5: the data step's exemption needs BOTH the migration setting AND a non-client role.
+  -- C5: the data step's exemption needs BOTH the migration setting AND the owner of public.tasks as current_user
+  -- (an allow-list, so a role nobody thought to list gets nothing: QC6 NB4).
   v_migration boolean := coalesce(current_setting('evryn.migration', true), '') = '006'
-                         and current_user::text not in ('service_role','authenticator','anon','authenticated');
+                         and current_user = (select pg_catalog.pg_get_userbyid(c.relowner) from pg_catalog.pg_class c
+                                              where c.oid = 'public.tasks'::regclass);
   v_status    text;
   v_hash      text;
   v_auth_id   bigint;
@@ -477,9 +480,11 @@ declare
   v_active    constant text[] := array['open','in_progress','blocked','needs_acceptance'];
   v_closed    constant text[] := array['done','decided_against'];
   v_setting   text := coalesce(current_setting('evryn.authorizing', true), '');
-  -- C5: the data step's exemption needs BOTH the migration setting AND a non-client role.
+  -- C5: the data step's exemption needs BOTH the migration setting AND the owner of public.tasks as current_user
+  -- (an allow-list, so a role nobody thought to list gets nothing: QC6 NB4).
   v_migration boolean := coalesce(current_setting('evryn.migration', true), '') = '006'
-                         and current_user::text not in ('service_role','authenticator','anon','authenticated');
+                         and current_user = (select pg_catalog.pg_get_userbyid(c.relowner) from pg_catalog.pg_class c
+                                              where c.oid = 'public.tasks'::regclass);
   v_from_id   bigint;   -- the task_authorizations row the setting names, when its TASK half names this task (C4)
   v_from_kind text;
   v_from_auth boolean;
@@ -505,7 +510,10 @@ begin
   if v_setting ~ '^[0-9]{1,18}:[0-9A-Fa-f-]{36}$'
      and split_part(v_setting, ':', 2) = new.id::text then
     v_from_id := split_part(v_setting, ':', 1)::bigint;
-    select a.kind into v_from_kind from public.task_authorizations a where a.id = v_from_id;
+    -- C4, the row half (QC6 NB1): the named row must BELONG to this task and match its scope as this write leaves
+    -- it. The setting's text alone is not enough: naming another task's row, or this task's stale one, gets nothing.
+    select a.kind into v_from_kind from public.task_authorizations a
+     where a.id = v_from_id and a.task_id = new.id and a.scope_hash = new.scope_hash;
   end if;
   -- Every comparison below is NULL-safe: a NULL inside "if not (...)" would silently skip a refusal.
   v_from_auth := coalesce(v_from_kind = 'authorization', false);
@@ -578,6 +586,14 @@ begin
 
     -- A scope edit on authorized work returns it to proposed, for EVERY actor, lucas and justin included.
     if old.status = any (v_active) and old.authorization_id is not null and new.scope_hash is distinct from old.scope_hash then
+      -- ET016 (QC6 cosmetic 5): one write may not change both the scope and the status of authorized work, or the
+      -- return below would silently replace the status the writer asked for (e.g. leave a closed_at on a proposed row).
+      if new.status is distinct from old.status and new.status is distinct from 'proposed' then
+        raise exception using
+          errcode = 'ET016',
+          message = 'task update refused: this write changes both the scope (title, body or owner) and the status of authorized work.',
+          hint    = 'Change the scope in one write (it returns the task to proposed for re-authorization) and the status in another.';
+      end if;
       if new.title is distinct from old.title then v_fields := v_fields || 'title'::text; end if;
       if new.description is distinct from old.description then v_fields := v_fields || 'description'::text; end if;
       if (new.raci->>'r') is distinct from (old.raci->>'r') then v_fields := v_fields || 'owner'::text; end if;
@@ -603,11 +619,13 @@ begin
       elsif old.status = any (v_active) then
         if new.status = any (v_active) then
           if new.authorization_id is null then
-            raise exception using errcode = 'ET011', message = c_et011;
+            raise exception using errcode = 'ET011', message = c_et011,
+              hint = 'This active task carries no authorization record (authorization_id is NULL).';
           end if;
           select a.scope_hash into v_auth_hash from public.task_authorizations a where a.id = new.authorization_id;
           if v_auth_hash is distinct from new.scope_hash then
-            raise exception using errcode = 'ET011', message = c_et011;
+            raise exception using errcode = 'ET011', message = c_et011,
+              hint = 'This task''s scope no longer matches its authorization record.';
           end if;
         elsif new.status = 'proposed' then
           new.authorization_id := null;           -- an owner withdrawing: the yes goes with it
@@ -634,6 +652,12 @@ begin
         end if;
         new.authorization_id := null;
       end if;
+    end if;
+
+    -- A closed task no longer awaits a fresh yes: the database clears the flag (QC6 cosmetic 6). ET014 above still
+    -- refuses a client's own change to it.
+    if new.status = any (v_closed) and new.status is distinct from old.status then
+      new.needs_reauthorization := false;
     end if;
 
     -- Rule N (005): a status change carries a reason (the forced return above carries its own).
@@ -700,9 +724,10 @@ comment on function public.tasks_before_write() is
   'R1 (replaced by migration 006; keeps everything 005 does). BEFORE INSERT OR UPDATE on tasks: actor required; created_by set on insert; '
   'id/created_at/created_by immutable; stale note cleared; sign-off only by lucas/justin (ET009); Rule N (ET008); backlog 90-day cap (ET010); '
   'parent exists and no cycle (ET007). 006 adds: stamps scope_hash; inserts only backlog or proposed (ET011); authorization_id and '
-  'needs_reauthorization move only from the authorization trigger bound to that row and this task (ET014); a scope edit on authorized work '
-  'returns it to proposed with needs_reauthorization, for every actor; status moves into active work only by an authorization record and to '
-  'done only by an acceptance record (ET011); closed tasks'' scope only by lucas/justin (ET015).';
+  'needs_reauthorization move only from the authorization trigger bound to that row, this task, and this task''s scope (ET014); a scope edit '
+  'on authorized work returns it to proposed with needs_reauthorization, for every actor, and may not change the status in the same write '
+  '(ET016); status moves into active work only by an authorization record and to done only by an acceptance record (ET011); a move to '
+  'done or decided_against clears needs_reauthorization; closed tasks'' scope only by lucas/justin (ET015).';
 
 -- ============================================================================
 -- (i) R2 replaced: AFTER INSERT OR UPDATE on tasks, the history row
@@ -934,7 +959,7 @@ grant execute on function public.team_tasks_schema_snapshot() to service_role;
 -- transaction-local, and both cleared at the end. The exemption that setting grants is named exactly
 -- in the triggers above (C5): the blocked-with-backlog-tag -> backlog move; ET012's refusal of the
 -- backfill tier and migration_006 source; the NULL-session refusal for backfill rows. Nothing else, and
--- only for a non-client current_user.
+-- only when current_user is the owner of public.tasks (an allow-list: QC6 NB4).
 -- ============================================================================
 
 do $$ begin

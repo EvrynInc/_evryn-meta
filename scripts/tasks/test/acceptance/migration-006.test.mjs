@@ -101,6 +101,26 @@ const field = (db, id, col) => scalar(db, `select coalesce((${col})::text, 'NULL
 const upd = (db, id, set, opts) => req(db, `update public.tasks set ${set} where id = ${lit(id)};`, opts);
 const ptPlus = (db, n) => scalar(db, `select ((now() at time zone 'America/Los_Angeles')::date + ${n})::text;`);
 
+/**
+ * Seed a state no client can reach (QC6 NB2): as the owner, with the two tasks triggers disabled for this one
+ * transaction only, then re-enabled ALWAYS before it commits. The scope hash is NOT restamped here, so a seed that
+ * edits scope sets scope_hash itself.
+ */
+function raw(db, sql) {
+  return ok(cluster.psql(db, [
+    'begin;',
+    'alter table public.tasks disable trigger tasks_before_write;',
+    'alter table public.tasks disable trigger tasks_after_write;',
+    sql,
+    'alter table public.tasks enable always trigger tasks_before_write;',
+    'alter table public.tasks enable always trigger tasks_after_write;',
+    'commit;',
+  ].join('\n')));
+}
+/** Hand an authorized task in for acceptance, as its owner would. */
+const handIn = (db, id) => ok(upd(db, id, `status = 'needs_acceptance', addressed_to = 'lucas', note = ${lit(uniq('please accept'))}`));
+const MIG_SETTING = [`set local evryn.migration = '006';`];
+
 function runScript(script, db, { through } = {}) {
   // SEALED-EXEC: followed 2026-08-11 — process.execPath is the absolute path of the node binary already running this suite; no resolution, no network.
   return spawnSync(process.execPath, [join(TASKS_DIR, script)], {
@@ -545,6 +565,160 @@ suite(`006 keeps 005 (defaults ${MODE})`, () => {
     refused(req(DB, `insert into public.tasks (title, status, raci) values ('b', 'banana', '{"r":"lucas"}');`), /tasks_status_allowed/);
     refused(req(DB, `insert into public.tasks (title, raci) values ('no status', '{"r":"lucas"}');`), /tasks_status_allowed/);
   });
+
+  test('005 §1.3 on the 001–006 shape: a note-only write is ONE comment row (empty changed_fields, the note); a stale-note no-op writes nothing', () => {
+    for (const authorized of [false, true]) {
+      const id = authorized ? openTask(DB).id : newTask(DB);
+      const count = () => Number(scalar(DB, `select count(*) from public.task_history where task_id = ${lit(id)};`));
+      const before = count();
+      ok(upd(DB, id, `note = 'pointer: docs/contribution.md'`, { actor: 'mira' }));
+      assert.equal(count(), before + 1, `a comment wrote no row (authorized=${authorized})`);
+      assert.equal(scalar(DB, `select op || ' ' || cardinality(changed_fields) || ' ' || old::text || ' ' || new::text || ' ' || actor || ' ' || note from public.task_history where task_id = ${lit(id)} order by id desc limit 1;`),
+        'update 0 {} {} mira pointer: docs/contribution.md');
+      // a raw client sending the same note back sends "no note": nothing changes, no row
+      const again = count();
+      ok(upd(DB, id, `note = 'pointer: docs/contribution.md'`, { actor: 'mira' }));
+      assert.equal(count(), again, `a stale-note no-op wrote a row (authorized=${authorized})`);
+    }
+  });
+});
+
+// ---------------------------------------------------------------------------
+// QC6's findings, fixed before the one-time paste (DC6F, 2026-11-19). Each test has a control in the mutation run.
+// ---------------------------------------------------------------------------
+
+suite(`006: QC6 fixes (defaults ${MODE})`, () => {
+  // NB1 — C4's row half. Each pair of tasks here shares title, body and owner, so their scope hashes are EQUAL:
+  // only the task_id check can refuse the crafted write (the stale-row test isolates the scope check instead).
+  test('QC6-NB1 a: a setting naming row A and task C cannot authorize C, as service_role (set local) and as the owner', () => {
+    const title = uniq('twin');
+    const a = openTask(DB, { title });
+    for (const role of ['service_role', null]) {
+      const c = newTask(DB, { title });
+      refused(upd(DB, c, `authorization_id = ${a.aid}, status = 'open', note = 'crafted'`, { actor: 'lucas', role, sets: [`set local evryn.authorizing = '${a.aid}:${c}';`] }), /ET014/);
+      assert.equal(field(DB, c, `status || ' ' || coalesce(authorization_id::text, 'NULL')`), 'proposed NULL', `role ${role ?? 'owner'}`);
+    }
+  });
+
+  test('QC6-NB1 b: a task returned by a scope edit cannot be reopened on its OWN stale authorization row', () => {
+    const { id, aid } = openTask(DB);
+    ok(upd(DB, id, `description = 'a different job'`));
+    refused(upd(DB, id, `authorization_id = ${aid}, status = 'open', note = 'stale yes'`, { actor: 'ac', sets: [`set local evryn.authorizing = '${aid}:${id}';`] }), /ET01[14]/);
+    assert.equal(field(DB, id, `status || ' ' || coalesce(authorization_id::text, 'NULL') || ' ' || needs_reauthorization`), 'proposed NULL true');
+  });
+
+  test("QC6-NB1 c: ac cannot close task E as done with task D's acceptance row", () => {
+    const title = uniq('twin-acc');
+    const d = openTask(DB, { title });
+    handIn(DB, d.id);
+    const accD = authId(authReq(DB, d.id, { kind: 'acceptance', note: 'delivered' }));
+    const e = openTask(DB, { title });
+    handIn(DB, e.id);
+    refused(upd(DB, e.id, `status = 'done', closed_at = now(), closing_note = 'self-accepted'`, { actor: 'ac', sets: [`set local evryn.authorizing = '${accD}:${e.id}';`] }), /ET011/);
+    assert.equal(field(DB, e.id, 'status'), 'needs_acceptance');
+  });
+
+  // NB2 — one raw-request test per guard that only the body-hash pin protected.
+  test('QC6-NB2 a: a backfill row of kind acceptance is refused, even from the owner carrying evryn.migration', () => {
+    const { id } = openTask(DB);
+    handIn(DB, id);
+    refused(authReq(DB, id, { actor: 'justin', kind: 'acceptance', tier: 'backfill', session: null, role: null, sets: MIG_SETTING, note: 'x' }), /ET012: authorization refused: a backfill row can only be an authorization/);
+    assert.equal(field(DB, id, 'status'), 'needs_acceptance');
+  });
+
+  test('QC6-NB2 b: an authorization of a DONE task, written as lucas, is refused, and its pointer does not move', () => {
+    const { id, aid } = openTask(DB);
+    handIn(DB, id);
+    ok(authReq(DB, id, { kind: 'acceptance', note: 'delivered' }));
+    refused(authReq(DB, id), /ET012: authorization refused: the task is done/);
+    assert.equal(field(DB, id, `status || ' ' || authorization_id`), `done ${aid}`);
+  });
+
+  test('QC6-NB2 c: an acceptance of a needs_acceptance task that carries NO authorization is refused for that reason', () => {
+    const id = newTask(DB);
+    raw(DB, `update public.tasks set status = 'needs_acceptance', addressed_to = 'lucas' where id = ${lit(id)};`);
+    refused(authReq(DB, id, { kind: 'acceptance', note: 'delivered' }), /ET012: acceptance refused: the task carries no authorization\./);
+    assert.equal(field(DB, id, 'status'), 'needs_acceptance');
+  });
+
+  test("QC6-NB2 d: an acceptance of a task whose scope no longer matches its authorization is refused", () => {
+    const { id } = openTask(DB);
+    handIn(DB, id);
+    raw(DB, `update public.tasks set description = 'changed behind its back', scope_hash = public.task_scope_hash(title, 'changed behind its back', raci->>'r') where id = ${lit(id)};`);
+    refused(authReq(DB, id, { kind: 'acceptance', note: 'delivered' }), /ET012: acceptance refused: the task's scope no longer matches its authorization/);
+    assert.equal(field(DB, id, 'status'), 'needs_acceptance');
+  });
+
+  test('QC6-NB2 e: the NULL-session exemption is for backfill rows only — a lucas-tier row with no session is refused even from the owner carrying evryn.migration', () => {
+    const id = newTask(DB);
+    refused(authReq(DB, id, { actor: 'lucas', session: null, role: null, sets: MIG_SETTING }), /ET012: authorization refused: the request carries no x-evryn-session header/);
+    assert.equal(field(DB, id, 'status'), 'proposed');
+  });
+
+  test('QC6-NB2 f: the return applies only to ACTIVE tasks — a lucas title edit on a done task leaves it done (departure 6)', () => {
+    const { id } = openTask(DB);
+    handIn(DB, id);
+    ok(authReq(DB, id, { kind: 'acceptance', note: 'delivered' }));
+    ok(upd(DB, id, `title = ${lit(uniq('renamed after close'))}`, { actor: 'lucas' }));
+    assert.equal(field(DB, id, `status || ' ' || needs_reauthorization || ' ' || (authorization_id is not null)`), 'done false true');
+  });
+
+  test('QC6-NB2 g: an active → active move on a task with a NULL authorization pointer is refused (ET011, its own hint)', () => {
+    const id = newTask(DB);
+    raw(DB, `update public.tasks set status = 'open' where id = ${lit(id)};`);
+    const r = upd(DB, id, `status = 'in_progress', note = 'starting'`);
+    refused(r, /ET011/);
+    assert.match(r.stderr, /HINT:\s+This active task carries no authorization record/);
+    assert.equal(field(DB, id, 'status'), 'open');
+  });
+
+  test("QC6-NB2 h: an active → active move whose authorization row's scope no longer matches is refused (ET011, its own hint)", () => {
+    const { id } = openTask(DB);
+    raw(DB, `update public.tasks set description = 'x2', scope_hash = public.task_scope_hash(title, 'x2', raci->>'r') where id = ${lit(id)};`);
+    const r = upd(DB, id, `status = 'in_progress', note = 'starting'`);
+    refused(r, /ET011/);
+    assert.match(r.stderr, /HINT:\s+This task's scope no longer matches its authorization record/);
+    assert.equal(field(DB, id, 'status'), 'open');
+  });
+
+  // NB4 — C5 fails closed.
+  test('QC6-NB4: C5 is an allow-list — a role NOT on the old deny-list, carrying evryn.migration = 006, gets no exemption; the owner still does', () => {
+    ok(cluster.psql(DB, `do $$ begin if not exists (select 1 from pg_roles where rolname = 'c5_probe_role') then create role c5_probe_role nologin; end if; end $$;
+      grant service_role to c5_probe_role;`));
+    const { id } = openTask(DB, { extraCols: ', tags', extraVals: ", array['backlog']" });
+    ok(upd(DB, id, `status = 'blocked', note = 'waiting'`));
+    const backlogMove = `status = 'backlog', needed_by = ${lit(ptPlus(DB, 30))}, note = 'migration 006: pre-005 backlog item moved to backlog.'`;
+    refused(upd(DB, id, backlogMove, { actor: 'justin', role: 'c5_probe_role', sets: MIG_SETTING }), /ET011/);
+    const p = newTask(DB);
+    refused(authReq(DB, p, { actor: 'justin', tier: 'backfill', session: null, role: 'c5_probe_role', sets: MIG_SETTING }), /ET012: authorization refused: tier backfill and source migration_006/);
+    // the role is otherwise a working client: an ordinary write goes through
+    ok(upd(DB, p, `note = 'c5 probe role can write'`, { role: 'c5_probe_role' }));
+    // the owner, carrying the setting, gets the named exemptions (test 18's positive control)
+    ok(upd(DB, id, backlogMove, { actor: 'justin', role: null, sets: MIG_SETTING }));
+    assert.equal(field(DB, id, 'status'), 'backlog');
+    ok(authReq(DB, p, { actor: 'justin', tier: 'backfill', session: null, role: null, sets: MIG_SETTING }));
+  });
+
+  // Cosmetic 5 — ET016.
+  test('QC6-C5: on authorized work, one write that changes the scope AND the status is refused (ET016); scope plus a withdrawal to proposed is allowed', () => {
+    const { id, aid } = openTask(DB);
+    const r = upd(DB, id, `status = 'decided_against', closed_at = now(), closing_note = 'no', title = ${lit(uniq('renamed'))}`, { actor: 'lucas' });
+    refused(r, /ERROR: {2}ET016: task update refused: this write changes both the scope/);
+    assert.equal(field(DB, id, `status || ' ' || authorization_id || ' ' || (closed_at is null)`), `open ${aid} true`);
+    ok(upd(DB, id, `status = 'proposed', title = ${lit(uniq('rescoped'))}, note = 'withdrawn to rescope'`));
+    assert.equal(field(DB, id, `status || ' ' || coalesce(authorization_id::text, 'NULL') || ' ' || needs_reauthorization`), 'proposed NULL true');
+  });
+
+  // Cosmetic 6 — the flag cleared on close.
+  test('QC6-C6: a task returned for re-authorization and then decided against no longer carries needs_reauthorization; a client still cannot clear it (ET014)', () => {
+    const { id } = openTask(DB);
+    ok(upd(DB, id, `description = 'changed'`));
+    assert.equal(field(DB, id, 'needs_reauthorization'), 'true');
+    refused(upd(DB, id, 'needs_reauthorization = false'), /ET014/);
+    ok(upd(DB, id, `status = 'decided_against', closed_at = now(), closing_note = 'dropped'`));
+    assert.equal(field(DB, id, `status || ' ' || needs_reauthorization`), 'decided_against false');
+    assert.equal(scalar(DB, `select array_to_string(changed_fields, ',') from public.task_history where task_id = ${lit(id)} order by id desc limit 1;`), 'closed_at,closing_note,needs_reauthorization,status');
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -656,7 +830,7 @@ suite(`paste files, change set 006 (defaults ${MODE})`, () => {
 // Pinned values (filled from the first green run; a change to either is a deliberate, reviewed edit).
 const SCOPE_HASH_VECTOR = 'c4c6aa4c21a84b45c140f59e334f3a388321dff242f249074433ba7b8222c465';
 // The pinned NEW body hash of tasks_before_write in 006's after-assertions, broken.
-const AFTER_BREAK_FROM = 'body_md5=5f493f81525bb8aa777ff63c1c25279c';
+const AFTER_BREAK_FROM = 'body_md5=92263a2fb3f99572a1fc1d05c0e8a851';
 const AFTER_BREAK_TO = 'body_md5=00000000000000000000000000000000';
 
 // Truncation canary — DO NOT REMOVE: FULL FILE LOADED
