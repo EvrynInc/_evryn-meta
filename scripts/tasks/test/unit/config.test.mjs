@@ -58,6 +58,7 @@ test('TRIPWIRE end-to-end: every script, spawned in a test run without an inject
     ['schema-snapshot.mjs', []],
     ['schema-snapshot.mjs', ['--api']],
     ['import-linear.mjs', []],
+    ['audit.mjs', []],
   ];
   for (const [script, args] of cases) {
     const env = { ...process.env, EVRYN_TASKS_TEST_MODE: '1' };
