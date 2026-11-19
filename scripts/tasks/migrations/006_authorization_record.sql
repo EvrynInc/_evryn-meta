@@ -22,8 +22,8 @@
 --
 -- 🔴 PREREQUISITE: migrations 001–005 of this folder (live since 2026-11-06).
 --
--- WHAT IT TOUCHES: replaces three functions with CREATE OR REPLACE (tasks_before_write, tasks_after_write,
--- task_roster); recreates NO trigger on tasks or task_history (that would reset ENABLE ALWAYS); adds three
+-- WHAT IT TOUCHES: replaces four functions with CREATE OR REPLACE (tasks_before_write, tasks_after_write,
+-- task_roster, team_tasks_schema_snapshot); recreates NO trigger on tasks or task_history (that would reset ENABLE ALWAYS); adds three
 -- columns to tasks and one to task_history; creates two tables (task_authorizations, task_auth_config), five
 -- functions and three triggers, every new trigger ENABLE ALWAYS. Then the data steps (§2.2 of the brief).
 --
@@ -776,6 +776,130 @@ comment on function public.tasks_after_write() is
   'the flag reauthorization_needed when a scope edit voided an authorization, and the write''s note.';
 
 -- ============================================================================
+-- The schema snapshot (migration 004's function) now also describes the two new tables, so the live
+-- compare after this paste (schema-snapshot.mjs --api vs local-snapshot-after-006.txt) can see their columns,
+-- constraints, RLS, policies and grants. The query is 004's, verbatim, with the two table names added to each
+-- table list; schema-snapshot.mjs extracts it from the NEWEST migration that carries the SNAPSHOT-QUERY markers,
+-- so the script and the live function still print the same text by construction. On a database without the two
+-- tables it prints exactly what 004's query prints.
+-- ============================================================================
+
+create or replace function public.team_tasks_schema_snapshot()
+returns text
+language sql
+stable
+security invoker
+set search_path = ''
+as $snapshot$
+-- SNAPSHOT-QUERY-BEGIN
+select concat_ws(E'\n',
+  '# server_version=' || current_setting('server_version'),
+  '# server_version_num=' || current_setting('server_version_num'),
+
+  (select string_agg(format('table %s: owner=%s', c.relname, pg_get_userbyid(c.relowner)), E'\n' order by c.relname)
+     from pg_class c
+    where c.relnamespace = 'public'::regnamespace and c.relkind = 'r' and c.relname in ('tasks','task_history','proposals','task_authorizations','task_auth_config')),
+
+  (select string_agg(format('rls %s: enabled=%s forced=%s', c.relname, c.relrowsecurity::text, c.relforcerowsecurity::text), E'\n' order by c.relname)
+     from pg_class c
+    where c.relnamespace = 'public'::regnamespace and c.relkind = 'r' and c.relname in ('tasks','task_history','proposals','task_authorizations','task_auth_config')),
+
+  (select string_agg(s.line, E'\n' order by s.relname, s.attnum) from (
+     select c.relname, a.attnum,
+            format('column %s #%s %s %s%s%s%s',
+              c.relname,
+              lpad(row_number() over (partition by c.relname order by a.attnum)::text, 2, '0'),
+              a.attname,
+              format_type(a.atttypid, a.atttypmod),
+              case when a.attnotnull then ' NOT NULL' else '' end,
+              case a.attidentity when 'a' then ' IDENTITY ALWAYS' when 'd' then ' IDENTITY BY DEFAULT' else '' end,
+              case when a.attgenerated = 's' then ' GENERATED ' || pg_get_expr(d.adbin, d.adrelid)
+                   when d.adbin is not null then ' DEFAULT ' || pg_get_expr(d.adbin, d.adrelid)
+                   else '' end) as line
+       from pg_class c
+       join pg_attribute a on a.attrelid = c.oid and a.attnum > 0 and not a.attisdropped
+       left join pg_attrdef d on d.adrelid = c.oid and d.adnum = a.attnum
+      where c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history','proposals','task_authorizations','task_auth_config')) s),
+
+  (select string_agg(format('constraint %s.%s: %s', c.relname, con.conname, pg_get_constraintdef(con.oid)), E'\n' order by c.relname, con.conname)
+     from pg_constraint con join pg_class c on c.oid = con.conrelid
+    where c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history','proposals','task_authorizations','task_auth_config')),
+
+  (select string_agg(format('index %s.%s: %s', i.tablename, i.indexname, i.indexdef), E'\n' order by i.tablename, i.indexname)
+     from pg_indexes i
+    where i.schemaname = 'public' and i.tablename in ('tasks','task_history','proposals','task_authorizations','task_auth_config')),
+
+  (select string_agg(format('trigger %s.%s: %s [enabled=%s]', c.relname, t.tgname, pg_get_triggerdef(t.oid), t.tgenabled), E'\n' order by c.relname, t.tgname)
+     from pg_trigger t join pg_class c on c.oid = t.tgrelid
+    where not t.tgisinternal and c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history','proposals','task_authorizations','task_auth_config')),
+
+  (select string_agg(format('policy %s.%s: %s %s to %s using (%s) with check (%s)',
+            p.tablename, p.policyname, p.permissive, p.cmd, array_to_string(p.roles, ','), coalesce(p.qual, '-'), coalesce(p.with_check, '-')),
+          E'\n' order by p.tablename, p.policyname)
+     from pg_policies p
+    where p.schemaname = 'public' and p.tablename in ('tasks','task_history','proposals','task_authorizations','task_auth_config')),
+
+  (select string_agg(format('grant %s: %s %s%s', c.relname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type,
+                            case when a.is_grantable then ' WITH GRANT OPTION' else '' end),
+          E'\n' order by c.relname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type)
+     from pg_class c
+     cross join lateral aclexplode(coalesce(c.relacl, acldefault('r', c.relowner))) a
+     left join pg_roles r on r.oid = a.grantee
+    where c.relnamespace = 'public'::regnamespace and c.relkind = 'r' and c.relname in ('tasks','task_history','proposals','task_authorizations','task_auth_config')),
+
+  (select string_agg(format('sequence %s.%s: owner=%s', c.relname, att.attname, pg_get_userbyid(sc.relowner)), E'\n' order by c.relname, att.attname)
+     from pg_class c
+     join pg_attribute att on att.attrelid = c.oid and att.attidentity <> '' and not att.attisdropped
+     join pg_class sc on sc.oid = pg_get_serial_sequence(format('public.%I', c.relname), att.attname)::regclass
+    where c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history','proposals','task_authorizations','task_auth_config')),
+
+  (select string_agg(format('sequence-grant %s.%s: %s %s', c.relname, att.attname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type),
+          E'\n' order by c.relname, att.attname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type)
+     from pg_class c
+     join pg_attribute att on att.attrelid = c.oid and att.attidentity <> '' and not att.attisdropped
+     join pg_class sc on sc.oid = pg_get_serial_sequence(format('public.%I', c.relname), att.attname)::regclass
+     cross join lateral aclexplode(coalesce(sc.relacl, acldefault('s', sc.relowner))) a
+     left join pg_roles r on r.oid = a.grantee
+    where c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history','proposals','task_authorizations','task_auth_config')),
+
+  (select string_agg(format('function %s(%s): owner=%s security=%s volatility=%s config=%s body_md5=%s',
+            p.proname, pg_get_function_identity_arguments(p.oid), pg_get_userbyid(p.proowner),
+            case when p.prosecdef then 'DEFINER' else 'INVOKER' end, p.provolatile,
+            coalesce(array_to_string(p.proconfig, ';'), '-'),
+            md5(replace(p.prosrc, chr(13), ''))), E'\n' order by p.proname)
+     from pg_proc p
+    where p.pronamespace = 'public'::regnamespace
+      and (p.proname like 'task\_%' or p.proname like 'tasks\_%' or p.proname = 'team_tasks_schema_snapshot')),
+
+  (select string_agg(format('function-grant %s(%s): %s %s', p.proname, pg_get_function_identity_arguments(p.oid), coalesce(r.rolname, 'PUBLIC'), a.privilege_type),
+          E'\n' order by p.proname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type)
+     from pg_proc p
+     cross join lateral aclexplode(coalesce(p.proacl, acldefault('f', p.proowner))) a
+     left join pg_roles r on r.oid = a.grantee
+    where p.pronamespace = 'public'::regnamespace
+      and (p.proname like 'task\_%' or p.proname like 'tasks\_%' or p.proname = 'team_tasks_schema_snapshot')),
+
+  -- Default privileges for FUTURE objects (QC Finding 1): LISTED by the compare, never a stop.
+  (select string_agg(s.line, E'\n' order by s.line) from (
+     select format('default-acl %s %s %s: %s %s',
+              pg_get_userbyid(d.defaclrole), coalesce(n.nspname, '(all-schemas)'),
+              case d.defaclobjtype when 'r' then 'tables' when 'S' then 'sequences' when 'f' then 'functions'
+                                   when 'T' then 'types' when 'n' then 'schemas' else d.defaclobjtype::text end,
+              coalesce(r.rolname, 'PUBLIC'), a.privilege_type) as line
+       from pg_default_acl d
+       left join pg_namespace n on n.oid = d.defaclnamespace
+       cross join lateral aclexplode(d.defaclacl) a
+       left join pg_roles r on r.oid = a.grantee) s)
+)
+-- SNAPSHOT-QUERY-END
+$snapshot$;
+
+comment on function public.team_tasks_schema_snapshot() is
+  'Read-only text description of tasks, task_history, proposals, task_authorizations, task_auth_config, the task functions, their '
+  'grants and the default privileges — the same text schema-snapshot.mjs prints (it runs this very query, extracted from the newest '
+  'migration that carries it: 006). For comparing live with the local golden snapshot over the API after a paste. EXECUTE: service_role only.';
+
+-- ============================================================================
 -- Comments that the above made untrue
 -- ============================================================================
 
@@ -802,6 +926,8 @@ revoke all on function public.task_justin_tier_ok()            from public, anon
 grant execute on function public.task_scope_hash(text, text, text) to service_role;
 grant execute on function public.task_request_session()           to service_role;
 grant execute on function public.task_justin_tier_ok()            to service_role;
+revoke all on function public.team_tasks_schema_snapshot() from public, anon, authenticated, service_role;
+grant execute on function public.team_tasks_schema_snapshot() to service_role;
 
 -- ============================================================================
 -- §2.2 THE DATA STEPS. Run as actor justin (Justin pastes) with evryn.migration = '006', both

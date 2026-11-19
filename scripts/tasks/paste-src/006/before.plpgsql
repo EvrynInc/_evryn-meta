@@ -165,12 +165,14 @@ policy tasks.service_role_only: PERMISSIVE ALL to service_role using (true) with
     raise exception 'BEFORE-ASSERTION FAILED: the policies of tasks and task_history are not the post-005 shape. Found: %. Nothing was changed.', coalesce(v_found, '(none)');
   end if;
 
-  -- golden L171–L173: the three functions 006 replaces, with 005's BODY HASHES (and task_roster's from 003).
-  execute v_pin_functions_sql into v_found using array['task_roster','tasks_after_write','tasks_before_write'];
+  -- golden L171–L173 and L175: the four functions 006 replaces, with the BODY HASHES 005 (tasks_before_write,
+  -- tasks_after_write), 003 (task_roster) and 004 (team_tasks_schema_snapshot) left.
+  execute v_pin_functions_sql into v_found using array['task_roster','tasks_after_write','tasks_before_write','team_tasks_schema_snapshot'];
   if v_found is distinct from replace($pin$function task_roster(): owner=postgres security=INVOKER volatility=i config=search_path="" body_md5=7cc0acd419d23c66f1596106e3ac7794
 function tasks_after_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=5424d669d256941cd7bb671d9a487cc2
-function tasks_before_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=f564a9be7ffeaa20db13902d5edcd38b$pin$, chr(13), '') then
-    raise exception 'BEFORE-ASSERTION FAILED: task_roster, tasks_before_write or tasks_after_write is not the function 005 (or 003) left (owner, security, search_path or body hash differ). Found: %. Nothing was changed.', coalesce(v_found, '(none)');
+function tasks_before_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=f564a9be7ffeaa20db13902d5edcd38b
+function team_tasks_schema_snapshot(): owner=postgres security=INVOKER volatility=s config=search_path="" body_md5=4a1710d9ec9339ff5aaacdd35160e987$pin$, chr(13), '') then
+    raise exception 'BEFORE-ASSERTION FAILED: task_roster, tasks_before_write, tasks_after_write or team_tasks_schema_snapshot is not the function 005 (or 003, 004) left (owner, security, search_path or body hash differ). Found: %. Nothing was changed.', coalesce(v_found, '(none)');
   end if;
 
   -- Capture everything 006 must leave untouched; the after-assertions re-run the same queries.

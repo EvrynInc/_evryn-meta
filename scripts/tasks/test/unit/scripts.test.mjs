@@ -4,7 +4,9 @@ import assert from 'node:assert/strict';
 import { FAKE_KEY, TEST_ENV, fakeJwt, jsonResponse } from '../helpers.mjs';
 import { runCheck } from '../../check.mjs';
 import { runMigrate } from '../../migrate.mjs';
-import { SNAPSHOT_SQL, runSnapshot, snapshotQuery } from '../../schema-snapshot.mjs';
+import { SNAPSHOT_SQL, runSnapshot, snapshotFnFile, snapshotQuery } from '../../schema-snapshot.mjs';
+import { join as joinPath } from 'node:path';
+import { TASKS_DIR } from '../helpers.mjs';
 import { TEAM_REF } from '../../lib/config.mjs';
 
 const LOCAL = { EVRYN_TASKS_LOCAL_PG: 'postgresql://postgres@127.0.0.1:5999/x' };
@@ -188,6 +190,15 @@ test('snapshot: ONE source — the query is extracted from migration 004\'s func
   assert.equal(SNAPSHOT_SQL, `begin transaction read only;\nset local search_path = '';\n${q};\nrollback;\n`);
   // No line of the query may BEGIN a write statement (the word "grant" appears inside format strings, legitimately).
   assert.doesNotMatch(q, /^\s*(insert|update|delete|alter|create|drop|grant|revoke|truncate|set)\b/im);
+});
+
+test("snapshot: the query comes from the NEWEST migration that defines it (006), and is 004's verbatim with the two authorization tables added to each table list", () => {
+  assert.match(snapshotFnFile(), /006_authorization_record\.sql$/);
+  const q006 = snapshotQuery();
+  const q004 = snapshotQuery(joinPath(TASKS_DIR, 'migrations', '004_schema_snapshot_fn.sql'));
+  const widened = q004.split("('tasks','task_history','proposals')").join("('tasks','task_history','proposals','task_authorizations','task_auth_config')");
+  assert.notEqual(q006, q004);
+  assert.equal(q006, widened);
 });
 
 test('snapshot (local): SQL on stdin, flags-only argv, target line first with no port', async () => {

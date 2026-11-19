@@ -12,7 +12,7 @@
   v_history_max            bigint;
   -- "NOTHING ELSE CHANGED": each query is run BEFORE the migration and again AFTER it, with the same text,
   -- and the two results must be identical. Each EXCLUDES exactly what 006 adds or replaces (the four new
-  -- columns, the two new tables, the five new functions, the three replaced function bodies, the status
+  -- columns, the two new tables, the five new functions, the four replaced function bodies, the status
   -- rule's comment), so everything else on tasks, task_history and proposals is held still.
   v_capture_names text[] := array[
     'tables (owner, RLS) of tasks, task_history, proposals',
@@ -24,7 +24,7 @@
     'table grants on tasks, task_history, proposals',
     'identity sequences of tasks, task_history and their grants',
     'task functions 006 does not replace or create (incl. body hash)',
-    'the three replaced functions: same object, owner, security, volatility, search_path',
+    'the four replaced functions: same object, owner, security, volatility, search_path',
     'EXECUTE privileges on every task function 006 does not create'];
   v_capture_sqls text[] := array[
     $q$ select string_agg(format('table %s: owner=%s rls=%s forced=%s', c.relname, pg_get_userbyid(c.relowner), c.relrowsecurity, c.relforcerowsecurity), E'\n' order by c.relname)
@@ -71,14 +71,14 @@
           from pg_proc p
          where p.pronamespace = 'public'::regnamespace
            and (p.proname like 'task\_%' or p.proname like 'tasks\_%' or p.proname = 'team_tasks_schema_snapshot')
-           and p.proname not in ('tasks_before_write','tasks_after_write','task_roster',
+           and p.proname not in ('tasks_before_write','tasks_after_write','task_roster','team_tasks_schema_snapshot',
                                  'task_scope_hash','task_request_session','task_justin_tier_ok',
                                  'task_authorizations_before_insert','task_authorizations_after_insert','task_authorizations_refuse_change') $q$,
     $q$ select string_agg(format('function %s(%s): oid=%s owner=%s security=%s volatility=%s config=%s', p.proname,
                    pg_get_function_identity_arguments(p.oid), p.oid, pg_get_userbyid(p.proowner), case when p.prosecdef then 'DEFINER' else 'INVOKER' end,
                    p.provolatile, coalesce(array_to_string(p.proconfig, ';'), '-')), E'\n' order by p.proname)
           from pg_proc p
-         where p.pronamespace = 'public'::regnamespace and p.proname in ('tasks_before_write','tasks_after_write','task_roster') $q$,
+         where p.pronamespace = 'public'::regnamespace and p.proname in ('tasks_before_write','tasks_after_write','task_roster','team_tasks_schema_snapshot') $q$,
     $q$ select string_agg(format('function-grant %s(%s): %s %s%s', p.proname, pg_get_function_identity_arguments(p.oid), coalesce(r.rolname, 'PUBLIC'), a.privilege_type,
                    case when a.is_grantable then ' WITH GRANT OPTION' else '' end), E'\n' order by p.proname, coalesce(r.rolname, 'PUBLIC'), a.privilege_type)
           from pg_proc p

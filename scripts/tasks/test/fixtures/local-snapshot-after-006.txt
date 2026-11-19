@@ -2,9 +2,13 @@
 # server_version=17.10
 # server_version_num=170010
 table proposals: owner=postgres
+table task_auth_config: owner=postgres
+table task_authorizations: owner=postgres
 table task_history: owner=postgres
 table tasks: owner=postgres
 rls proposals: enabled=true forced=false
+rls task_auth_config: enabled=true forced=false
+rls task_authorizations: enabled=true forced=false
 rls task_history: enabled=true forced=false
 rls tasks: enabled=true forced=false
 column proposals #01 id uuid NOT NULL DEFAULT gen_random_uuid()
@@ -13,6 +17,24 @@ column proposals #03 body text NOT NULL
 column proposals #04 status text NOT NULL DEFAULT 'needs_authorization'::text
 column proposals #05 frozen_at timestamp with time zone
 column proposals #06 created_at timestamp with time zone NOT NULL DEFAULT now()
+column task_auth_config #01 id integer NOT NULL
+column task_auth_config #02 justin_tier_source text NOT NULL
+column task_auth_config #03 justin_user_id uuid
+column task_authorizations #01 id bigint NOT NULL IDENTITY ALWAYS
+column task_authorizations #02 task_id uuid NOT NULL
+column task_authorizations #03 kind text NOT NULL
+column task_authorizations #04 tier text NOT NULL
+column task_authorizations #05 source text NOT NULL
+column task_authorizations #06 actor text NOT NULL
+column task_authorizations #07 session_id text
+column task_authorizations #08 justin_ref text
+column task_authorizations #09 rule_ref text
+column task_authorizations #10 scope_hash text NOT NULL
+column task_authorizations #11 scope jsonb NOT NULL
+column task_authorizations #12 envelope jsonb NOT NULL DEFAULT '{}'::jsonb
+column task_authorizations #13 proposal_ref text
+column task_authorizations #14 note text NOT NULL
+column task_authorizations #15 at timestamp with time zone NOT NULL DEFAULT now()
 column task_history #01 id bigint NOT NULL IDENTITY ALWAYS
 column task_history #02 task_id uuid NOT NULL
 column task_history #03 at timestamp with time zone NOT NULL DEFAULT now()
@@ -53,6 +75,14 @@ column tasks #26 needs_reauthorization boolean NOT NULL DEFAULT false
 constraint proposals.proposals_pkey: PRIMARY KEY (id)
 constraint proposals.proposals_status_check: CHECK ((status = ANY (ARRAY['needs_authorization'::text, 'authorized'::text, 'bounced'::text, 'denied'::text])))
 constraint proposals.proposals_task_id_fkey: FOREIGN KEY (task_id) REFERENCES public.tasks(id)
+constraint task_auth_config.task_auth_config_id_check: CHECK ((id = 1))
+constraint task_auth_config.task_auth_config_justin_tier_source_check: CHECK ((justin_tier_source = ANY (ARRAY['lucas_relay'::text, 'justin_signin'::text])))
+constraint task_auth_config.task_auth_config_pkey: PRIMARY KEY (id)
+constraint task_authorizations.task_authorizations_kind_check: CHECK ((kind = ANY (ARRAY['authorization'::text, 'acceptance'::text])))
+constraint task_authorizations.task_authorizations_note_check: CHECK (((char_length(btrim(note)) >= 1) AND (char_length(btrim(note)) <= 600)))
+constraint task_authorizations.task_authorizations_pkey: PRIMARY KEY (id)
+constraint task_authorizations.task_authorizations_source_check: CHECK ((source = ANY (ARRAY['lucas_relay'::text, 'justin_signin'::text, 'migration_006'::text])))
+constraint task_authorizations.task_authorizations_tier_check: CHECK ((tier = ANY (ARRAY['lucas'::text, 'justin'::text, 'backfill'::text])))
 constraint task_history.task_history_note_max_600: CHECK ((char_length(note) <= 600))
 constraint task_history.task_history_op_check: CHECK ((op = ANY (ARRAY['insert'::text, 'update'::text])))
 constraint task_history.task_history_pkey: PRIMARY KEY (id)
@@ -69,6 +99,9 @@ constraint tasks.tasks_signed_needs_ref: CHECK (((signed_at IS NULL) OR (COALESC
 constraint tasks.tasks_status_allowed: CHECK ((status = ANY (ARRAY['backlog'::text, 'proposed'::text, 'open'::text, 'in_progress'::text, 'blocked'::text, 'needs_acceptance'::text, 'done'::text, 'decided_against'::text])))
 constraint tasks.tasks_title_max_80: CHECK ((char_length(title) <= 80))
 index proposals.proposals_pkey: CREATE UNIQUE INDEX proposals_pkey ON public.proposals USING btree (id)
+index task_auth_config.task_auth_config_pkey: CREATE UNIQUE INDEX task_auth_config_pkey ON public.task_auth_config USING btree (id)
+index task_authorizations.task_authorizations_pkey: CREATE UNIQUE INDEX task_authorizations_pkey ON public.task_authorizations USING btree (id)
+index task_authorizations.task_authorizations_task_id_id_idx: CREATE INDEX task_authorizations_task_id_id_idx ON public.task_authorizations USING btree (task_id, id)
 index task_history.task_history_pkey: CREATE UNIQUE INDEX task_history_pkey ON public.task_history USING btree (id)
 index task_history.task_history_task_id_id_idx: CREATE INDEX task_history_task_id_id_idx ON public.task_history USING btree (task_id, id)
 index tasks.tasks_addressed_to_status_idx: CREATE INDEX tasks_addressed_to_status_idx ON public.tasks USING btree (addressed_to, status)
@@ -79,12 +112,17 @@ index tasks.tasks_parent_id_idx: CREATE INDEX tasks_parent_id_idx ON public.task
 index tasks.tasks_pkey: CREATE UNIQUE INDEX tasks_pkey ON public.tasks USING btree (id)
 index tasks.tasks_search_idx: CREATE INDEX tasks_search_idx ON public.tasks USING gin (search)
 index tasks.tasks_short_id_key: CREATE UNIQUE INDEX tasks_short_id_key ON public.tasks USING btree (short_id)
+trigger task_authorizations.task_authorizations_after_insert: CREATE TRIGGER task_authorizations_after_insert AFTER INSERT ON public.task_authorizations FOR EACH ROW EXECUTE FUNCTION public.task_authorizations_after_insert() [enabled=A]
+trigger task_authorizations.task_authorizations_before_insert: CREATE TRIGGER task_authorizations_before_insert BEFORE INSERT ON public.task_authorizations FOR EACH ROW EXECUTE FUNCTION public.task_authorizations_before_insert() [enabled=A]
+trigger task_authorizations.task_authorizations_refuse_change: CREATE TRIGGER task_authorizations_refuse_change BEFORE DELETE OR UPDATE OR TRUNCATE ON public.task_authorizations FOR EACH STATEMENT EXECUTE FUNCTION public.task_authorizations_refuse_change() [enabled=A]
 trigger task_history.task_history_guard_insert: CREATE TRIGGER task_history_guard_insert BEFORE INSERT ON public.task_history FOR EACH ROW EXECUTE FUNCTION public.task_history_guard_insert() [enabled=A]
 trigger task_history.task_history_refuse_change: CREATE TRIGGER task_history_refuse_change BEFORE DELETE OR UPDATE OR TRUNCATE ON public.task_history FOR EACH STATEMENT EXECUTE FUNCTION public.task_history_refuse_change() [enabled=A]
 trigger tasks.tasks_after_write: CREATE TRIGGER tasks_after_write AFTER INSERT OR UPDATE ON public.tasks FOR EACH ROW EXECUTE FUNCTION public.tasks_after_write() [enabled=A]
 trigger tasks.tasks_before_write: CREATE TRIGGER tasks_before_write BEFORE INSERT OR UPDATE ON public.tasks FOR EACH ROW EXECUTE FUNCTION public.tasks_before_write() [enabled=A]
 trigger tasks.tasks_refuse_delete: CREATE TRIGGER tasks_refuse_delete BEFORE DELETE OR TRUNCATE ON public.tasks FOR EACH STATEMENT EXECUTE FUNCTION public.tasks_refuse_delete() [enabled=A]
 policy proposals.service_role_only: PERMISSIVE ALL to service_role using (true) with check (true)
+policy task_auth_config.service_role_read: PERMISSIVE SELECT to service_role using (true) with check (-)
+policy task_authorizations.service_role_only: PERMISSIVE ALL to service_role using (true) with check (true)
 policy task_history.service_role_only: PERMISSIVE ALL to service_role using (true) with check (true)
 policy tasks.service_role_only: PERMISSIVE ALL to service_role using (true) with check (true)
 grant proposals: anon DELETE
@@ -119,6 +157,25 @@ grant proposals: service_role SELECT
 grant proposals: service_role TRIGGER
 grant proposals: service_role TRUNCATE
 grant proposals: service_role UPDATE
+grant task_auth_config: postgres DELETE
+grant task_auth_config: postgres INSERT
+grant task_auth_config: postgres MAINTAIN
+grant task_auth_config: postgres REFERENCES
+grant task_auth_config: postgres SELECT
+grant task_auth_config: postgres TRIGGER
+grant task_auth_config: postgres TRUNCATE
+grant task_auth_config: postgres UPDATE
+grant task_auth_config: service_role SELECT
+grant task_authorizations: postgres DELETE
+grant task_authorizations: postgres INSERT
+grant task_authorizations: postgres MAINTAIN
+grant task_authorizations: postgres REFERENCES
+grant task_authorizations: postgres SELECT
+grant task_authorizations: postgres TRIGGER
+grant task_authorizations: postgres TRUNCATE
+grant task_authorizations: postgres UPDATE
+grant task_authorizations: service_role INSERT
+grant task_authorizations: service_role SELECT
 grant task_history: postgres DELETE
 grant task_history: postgres INSERT
 grant task_history: postgres MAINTAIN
@@ -161,8 +218,12 @@ grant tasks: service_role SELECT
 grant tasks: service_role TRIGGER
 grant tasks: service_role TRUNCATE
 grant tasks: service_role UPDATE
+sequence task_authorizations.id: owner=postgres
 sequence task_history.id: owner=postgres
 sequence tasks.short_id: owner=postgres
+sequence-grant task_authorizations.id: postgres SELECT
+sequence-grant task_authorizations.id: postgres UPDATE
+sequence-grant task_authorizations.id: postgres USAGE
 sequence-grant task_history.id: postgres SELECT
 sequence-grant task_history.id: postgres UPDATE
 sequence-grant task_history.id: postgres USAGE
@@ -182,7 +243,7 @@ function task_scope_hash(p_title text, p_description text, p_owner text): owner=
 function tasks_after_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=66ea1a39ed7bc4b2b28aeda4b82e9b86
 function tasks_before_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=5f493f81525bb8aa777ff63c1c25279c
 function tasks_refuse_delete(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=0c876d3a3c9374420871bcd32f549d7d
-function team_tasks_schema_snapshot(): owner=postgres security=INVOKER volatility=s config=search_path="" body_md5=4a1710d9ec9339ff5aaacdd35160e987
+function team_tasks_schema_snapshot(): owner=postgres security=INVOKER volatility=s config=search_path="" body_md5=4ce527c7b824f5c9fa73dd9e334dd15c
 function-grant task_authorizations_after_insert(): postgres EXECUTE
 function-grant task_authorizations_before_insert(): postgres EXECUTE
 function-grant task_authorizations_refuse_change(): postgres EXECUTE

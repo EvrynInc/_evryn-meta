@@ -17,9 +17,9 @@
  *   node snapshot-compare.mjs test/fixtures/local-snapshot-after.txt live-after.txt
  *
  * ONE SOURCE OF TRUTH. The query is NOT in this file: it is extracted from the body of
- * public.team_tasks_schema_snapshot() in migrations/004_schema_snapshot_fn.sql (between the
- * SNAPSHOT-QUERY markers), so the local script and the live function print the same text by
- * construction.
+ * public.team_tasks_schema_snapshot() in the NEWEST migration that defines it (004 created it; 006 widened
+ * it to task_authorizations and task_auth_config), between the SNAPSHOT-QUERY markers, so the local script
+ * and the live function print the same text by construction.
  *
  * THE LINE FORMAT. Each fact is ONE line with a kind prefix, so snapshot-compare.mjs can classify it:
  * `#` headers (information), `table` (owner), `rls`, `column`, `constraint`, `index`, `trigger`,
@@ -29,19 +29,31 @@
  * Local runs inside `begin transaction read only` … `rollback`. Prints no credential.
  * Truncation check: the last line of this file should read `FULL FILE LOADED`.
  */
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { ConfigError, ENV_FILES, TEAM_REF, VAR, loadVars, pgTarget, redact, teamRestTarget } from './lib/config.mjs';
 import { runPsql } from './lib/pg.mjs';
 import { RestError, makeRest } from './lib/rest.mjs';
 
-const SNAPSHOT_FN_FILE = join(dirname(fileURLToPath(import.meta.url)), 'migrations', '004_schema_snapshot_fn.sql');
+const MIGRATIONS = join(dirname(fileURLToPath(import.meta.url)), 'migrations');
+const MARKERS = /-- SNAPSHOT-QUERY-BEGIN\n([\s\S]*?)\n-- SNAPSHOT-QUERY-END/;
 
-/** The snapshot query, extracted from migration 004 — the only copy that exists. */
-export function snapshotQuery(file = SNAPSHOT_FN_FILE) {
+/**
+ * The migration that defines the CURRENT team_tasks_schema_snapshot(): the newest one carrying the markers
+ * (004 created it; 006 widened it to the authorization tables). A database at an earlier shape lacks those
+ * tables, and on it the newer query prints exactly what the older one does.
+ */
+export function snapshotFnFile(dir = MIGRATIONS) {
+  const files = readdirSync(dir).filter((f) => /^\d{3}_[A-Za-z0-9_-]+\.sql$/.test(f)).sort().reverse();
+  for (const f of files) if (MARKERS.test(readFileSync(join(dir, f), 'utf8').replace(/\r\n/g, '\n'))) return join(dir, f);
+  throw new Error(`schema-snapshot: no migration in ${dir} carries the SNAPSHOT-QUERY markers`);
+}
+
+/** The snapshot query, extracted from the newest migration that defines it — the only copy that exists. */
+export function snapshotQuery(file = snapshotFnFile()) {
   const text = readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
-  const m = text.match(/-- SNAPSHOT-QUERY-BEGIN\n([\s\S]*?)\n-- SNAPSHOT-QUERY-END/);
+  const m = text.match(MARKERS);
   if (!m) throw new Error(`schema-snapshot: SNAPSHOT-QUERY markers not found in ${file}`);
   return m[1];
 }

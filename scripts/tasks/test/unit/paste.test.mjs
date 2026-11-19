@@ -245,6 +245,6 @@ test('006\'s after-assertions pin every replaced or new function\'s body exactly
   const fnPin = [...after.matchAll(/\$pin\$(function [\s\S]*?)\$pin\$/g)].map((m) => m[1]);
   assert.equal(fnPin.length, 1);
   const lines = fnPin[0].split('\n');
-  assert.equal(lines.length, 9);
+  assert.equal(lines.length, 10);
   for (const line of lines) assert.ok(golden.includes(line), `pinned function line is not in the after-006 golden: ${line}`);
 });

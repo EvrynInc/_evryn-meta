@@ -124,7 +124,8 @@ trigger task_authorizations.task_authorizations_refuse_change: CREATE TRIGGER ta
 
   -- Every function 006 creates or replaces: owner postgres, SECURITY INVOKER, search_path "", and EXACTLY the reviewed body.
   execute v_pin_functions_sql into v_found using array['task_authorizations_after_insert','task_authorizations_before_insert','task_authorizations_refuse_change',
-                                                       'task_justin_tier_ok','task_request_session','task_roster','task_scope_hash','tasks_after_write','tasks_before_write'];
+                                                       'task_justin_tier_ok','task_request_session','task_roster','task_scope_hash','tasks_after_write','tasks_before_write',
+                                                       'team_tasks_schema_snapshot'];
   if v_found is distinct from replace($pin$function task_authorizations_after_insert(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=026bc7457c3711344c6ab08efdfc5303
 function task_authorizations_before_insert(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=38c6f5739d2305de7381db7e54a3f7ad
 function task_authorizations_refuse_change(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=eecb2325830df7e1d0d4de6664756c0c
@@ -133,7 +134,8 @@ function task_request_session(): owner=postgres security=INVOKER volatility=s co
 function task_roster(): owner=postgres security=INVOKER volatility=i config=search_path="" body_md5=36b76aa28682514ffc1d350101fd3122
 function task_scope_hash(p_title text, p_description text, p_owner text): owner=postgres security=INVOKER volatility=s config=search_path="" body_md5=0b2c81e44d8dda6f75b0c483951bfad8
 function tasks_after_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=66ea1a39ed7bc4b2b28aeda4b82e9b86
-function tasks_before_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=5f493f81525bb8aa777ff63c1c25279c$pin$, chr(13), '') then
+function tasks_before_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=5f493f81525bb8aa777ff63c1c25279c
+function team_tasks_schema_snapshot(): owner=postgres security=INVOKER volatility=s config=search_path="" body_md5=4ce527c7b824f5c9fa73dd9e334dd15c$pin$, chr(13), '') then
     raise exception 'AFTER-ASSERTION FAILED: a function 006 creates or replaces is not the reviewed one (owner, security, search_path or body hash). Found: %. Everything was rolled back.', coalesce(v_found, '(none)');
   end if;
   -- EXECUTE: the five trigger functions by no client role (PUBLIC included); the three helpers by service_role only.

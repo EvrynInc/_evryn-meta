@@ -615,7 +615,7 @@ suite(`paste files, change set 006 (defaults ${MODE})`, () => {
     assert.notEqual(brokenBefore, p6.apply, 'the before break did not apply');
     const { db } = post005WithRows();
     const before = snap(db);
-    refused(runPaste(db, brokenBefore), /BEFORE-ASSERTION FAILED: task_roster, tasks_before_write or tasks_after_write is not the function 005/);
+    refused(runPaste(db, brokenBefore), /BEFORE-ASSERTION FAILED: task_roster, tasks_before_write, tasks_after_write or team_tasks_schema_snapshot is not the function 005/);
     assert.equal(snap(db), before);
     const brokenAfter = p6.apply.replace(AFTER_BREAK_FROM, AFTER_BREAK_TO);
     assert.notEqual(brokenAfter, p6.apply, 'the after break did not apply');
