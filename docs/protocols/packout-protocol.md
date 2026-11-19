@@ -71,7 +71,7 @@
 **Two things this buys, and the second is the one people miss:**
 
 1. **The session is durably persisted before anything can go wrong** — a crash, a context wall, an interrupted turn.
-2. ⭐ **YOUR HANDOFF GETS LIGHTER.** *(Justin's words: "it'll also take some of the load off your handoff, because you'll persist the appropriate things to the their proper persistent homes, instead of letting them clutter the handoff.")* **What would otherwise have been handoff bulk is already sitting in project files, `current-state.md`, changelogs, etc. — where it belongs, and where your successor loads it anyway.**
+2. ⭐ **YOUR HANDOFF GETS LIGHTER.** *(Justin's words: "it'll also take some of the load off your handoff, because you'll persist the appropriate things to their proper persistent homes, instead of letting them clutter the handoff.")* **What would otherwise have been handoff bulk is already sitting in project files, `current-state.md`, changelogs, etc. — where it belongs, and where your successor loads it anyway.**
 
 ⭐ **THIS IS OBSERVED, NOT ASSERTED.** *(Recorded by `AC0-37h3b5`, 2026-09-02.)* **The lock that ran before the 2026-09-01 product-lane handoff is exactly why that lane's brief was thin enough to load cleanly the next morning.** **Its `CHANGELOG` and `current-state` entries carried what would otherwise have been pages of handoff.**
 
@@ -159,6 +159,8 @@
 
 ### 7 · 🔴 THE FINAL GATE: before you launch your successor, prove every step, one by one
 
+*(Justin, 2026-11-18, after an Admiral skipped three steps with ~100K of room to spare.)*
+
 **Re-open your `#lock` protocol and this file, and walk every single step of both against your packout record.** For each step, write one of two things:
 - **Done, with its evidence:** a commit, a file and line range read *after your last edit to it*, a tool call, a Log entry. Evidence is something a reader could check, not your memory of doing it.
 - **Not done:** then do it now.
@@ -171,7 +173,7 @@
 1. **The record gets written as a plan, then read as a report.** You draft the packout record while doing the steps, so "re-read from disk" goes in as the next intention, and a minute later it reads as a fact. **So: write each step's line only after its evidence exists, never before.**
 2. **Remembering feels like re-reading.** You hold the session in context, so a sweep "from context" or a glance at the file you just wrote feels complete. It is your memory checking your memory. **So: the second sweep reads the session text extracted by `session-text.mjs`, and the step-4 re-read is a whole-file `Read` of the handoff after your last edit to it.** Both leave evidence (a tool call with its line range); a pass from memory leaves none.
 3. **Interruptions fragment the checklist.** A packout run between incoming messages gets done in pieces across turns, and the pieces that land feel like the whole. **So: the final gate re-walks the full list at the end, whatever happened in between.**
-4. **A visible finish line pulls you past the steps.** An open successor window, a waiting Justin, a launch you've announced: the steps between you and it start to feel like friction rather than the job. **So: the beckoning next step is gated on this step, not on the window being open.**
+4. **Whatever comes next pulls you past the steps.** It might be an open successor window, a waiting Justin, a launch you've announced, or something none of us has seen yet; whatever it is, once it's in view, the steps between you and it start to feel like friction rather than the job. **So: whatever next thing is beckoning you waits on this gate, never the other way round.**
 
 **The tell that you're falling for the trap:** you're about to write "done" on a step and can't name the tool call, file range or commit that proves it.
 
@@ -185,7 +187,7 @@
 
 ## 🔑 THE TEST, and it is the elegant part: A LANE IS ENDING WHEN YOU HAVE NO HANDOFF TO WRITE.
 
-**Not "a short handoff." NONE.** ⇒ **Run steps 1–4 above exactly as written, and then ask what is actually left in the outgoing brief.** **If everything resolved — every owed item discharged to a durable home, every question answered, every file dispositioned — there is nothing for a successor to pick up, and that absence IS the signal.**
+**Not "a short handoff." NONE.** ⇒ **Run the main set first: steps 0–5 above, exactly as written, with step 5's fresh reader checking your closing record (the closing report, and the banner's "verified empty" claim) instead of a handoff. Skip step 6; check 6 below replaces it. Then ask what is actually left in the outgoing brief.** **If everything resolved — every owed item discharged to a durable home, every question answered, every file dispositioned — there is nothing for a successor to pick up, and that absence IS the signal.**
 
 ⚠️ **Run this as a TEST, not as a declaration.** **If you find yourself writing *"the next instance should…"* even once, the lane is NOT ending — you have a successor and you owe them a real brief.** 🔴 **Do not talk yourself into a wind-up because the work feels done. The brief writes itself either way; let it tell you which case you are in.**
 
@@ -213,6 +215,8 @@
 
 **And state the wind-up in your final report too** — the banner is for whoever finds the doc later; the report is for Justin now.
 
+**🔴 Then run step 7's final gate over everything, these checks included, before your final report. With no successor to launch, the gate holds back the report instead.**
+
 ⭐ **THE ONE-LINE VERSION OF ALL SEVEN: everything that could still ROUTE WORK TO YOU has to be switched off.** **A mailbox, a banner condition, a roster entry and a brief are all addresses — and an address that outlives its agent does not fail loudly. It swallows.**
 
 ---
@@ -220,7 +224,7 @@
 >
 > **You may have read the opening warning and moved on. Agents did, repeatedly, which is why Justin had to say it by hand before every packout, and why it is said twice now.**
 >
-> **Some steps won't *apply* in your situation, and you don't need to be slavish about those.** But every step here was designed **entirely from past failures**. So if a step reads as overkill, it isn't: it is there because skipping or skimping on it has broken things *way too many times*. Treat this like an astronaut's or a surgeon's checklist: **skip or skimp on even one step, and critical things break.** **The fragment sweeps and the fresh-eyes passes matter most.** They are the most-skipped steps, and they are the most important part of this file.
+> **Every step here was designed entirely from past failures**. So if a step reads as overkill, it isn't: it's there because skipping or skimping on it has broken **important things** *way too many times*. Treat this like an astronaut's or a surgeon's checklist: **if you skip or skimp on even one step, critical things break.** **The fragment sweeps and the fresh-eyes passes matter most.** They've tended to be the most-skipped steps, and they're actually often the most important steps in this file.
 >
 > ⇒ **Before you send your final report, check it names every step you skipped or deviated from, with its reason. Justin won't accept missing things that don't have *bulletproof* explanations.**
 
