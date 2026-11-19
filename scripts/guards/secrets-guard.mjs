@@ -5,7 +5,7 @@
 //
 // REQUIREMENT: an unattended session MUST NOT read `evryn-backend/.env` (it holds production's database, mailbox,
 // deploy and API keys) or `evryn-backend/backups/full-public-*.sql` (full copies of production's data), by the Read,
-// Grep, Edit, Write or NotebookEdit tools, by any Windows spelling of those paths (a trailing dot or space, a `:$DATA`
+// Grep, Edit, MultiEdit, Write or NotebookEdit tools (MultiEdit: QCR New 10), by any Windows spelling of those paths (a trailing dot or space, a `:$DATA`
 // stream suffix, an 8.3 short name, a junction, a `\\?\` or `\\localhost\C$\` prefix: each is canonicalized first), or
 // by the obvious shell routes (cat, type, Get-Content, cp, a node or python one-liner, a wildcard that expands to .env,
 // a recursive search, a copy or archive of the backend, git history of the backups folder). Enforced here, in a vaulted
@@ -21,16 +21,18 @@
 // file without naming it (the dotenv case above; a script that builds the name from pieces; a glob or reader not listed
 // below); copies made before this guard, or in another worktree or machine; a hard link made earlier (it shares no path
 // with the original; realpath can't see it); an archive or a git object read by id rather than by path; another repo's
-// .env (not in the ruling). It never reads either file: it looks only at paths and command text, and the only
+// .env (not in the ruling); a recursive grep of a folder INSIDE the backend that holds a link or a copy of .env (a recursive
+// grep is refused only for no path, ".", the backend itself or a folder above it, or a glob: QCR New 6), and an
+// option the parser doesn't know that takes the pattern's place. It never reads either file: it looks only at paths and command text, and the only
 // filesystem call it makes is realpath, which opens no file for reading.
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { readStdin, guardLog, preDeny, attended, normCmd, codeRoot } from './lib.mjs';
+import { readStdin, guardLog, preDeny, attended, normCmd, codeRoot, shellParse, progName } from './lib.mjs';
 
 // Glob is left out on purpose: it returns names, never contents. Edit and Write are in: an unattended session has no
 // business changing the keys file either.
-const FILE_TOOLS = { Read: 'file_path', NotebookEdit: 'notebook_path', Grep: 'path', Edit: 'file_path', Write: 'file_path' };
+const FILE_TOOLS = { Read: 'file_path', NotebookEdit: 'notebook_path', Grep: 'path', Edit: 'file_path', MultiEdit: 'file_path', Write: 'file_path' };
 const SHELL_TOOLS = ['Bash', 'PowerShell', 'Monitor'];
 
 // ---------- canonical paths (QCI finding 7) ----------
@@ -78,13 +80,47 @@ const globHits = (g, base) => {
 const READER = /(^|[\s;|&(])(cat|type|head|tail|less|more|gc|get-content|bat|strings|xxd|od|sed|awk|cut|sort|uniq|wc|base64|nl|tac|grep|findstr|sls|select-string|cp|copy|copy-item|mv|move|tee|diff|cmp)(\.exe)?\s/;
 // A dot-name with a wildcard in its first few characters can expand to .env: `.*`, `.e?v`, `.?nv`, `.e*`, `.[e]nv`.
 const DOT_GLOB = /(^|[\s/=])\.[a-z]{0,3}[?*[]/;
-// Recursive readers: they read every file, .env included (QCI finding 7).
-const RECURSIVE = /(^|[\s;|&(])(grep|egrep|fgrep)\b[^;|&]*\s-[a-z]*[rr]|(^|[\s;|&(])grep\b[^;|&]*--recursive|(^|[\s;|&(])rg\b[^;|&]*(\s-u|--hidden|--no-ignore|-uu)|(^|[\s;|&(])findstr\b[^;|&]*\s\/s|(select-string|sls)\b[^;|&]*-r(ecurse)?\b|(get-childitem|gci|dir|ls)\b[^;|&]*\s-(r|recurse|fo|force)\b[^;]*\|\s*(get-content|gc|cat|type|select-string|sls)|(get-content|gc)\s*\(\s*(get-childitem|gci|dir|ls)\b/;
+// Recursive readers: they read every file, .env included (QCI finding 7). A recursive grep is judged by its paths
+// (recursiveGrepHits, below; QCR New 6); these are the others.
+const RECURSIVE = /(^|[\s;|&(])rg\b[^;|&]*(\s-u|--hidden|--no-ignore|-uu)|(^|[\s;|&(])findstr\b[^;|&]*\s\/s|(select-string|sls)\b[^;|&]*-r(ecurse)?\b|(get-childitem|gci|dir|ls)\b[^;|&]*\s-(r|recurse|fo|force)\b[^;]*\|\s*(get-content|gc|cat|type|select-string|sls)|(get-content|gc)\s*\(\s*(get-childitem|gci|dir|ls)\b/;
 // Copying or archiving the whole backend moves .env somewhere the path rules can't follow.
 const BULK = /(^|[\s;|&(])(cp|copy-item|xcopy|robocopy|rsync|tar|zip|7z|compress-archive)\b[^;|&]*\s(-[a-z]*r[a-z]*\s+)?(\.|\.\/|\*)(\s|$)|(^|[\s;|&(])(xcopy|robocopy|compress-archive)\b/;
 
 // Shell: does this command text reach for either thing? The `.env` test needs an evryn-backend context, from the text
 // or from cwd, because other repos keep their own `.env` (ping.mjs reads the team workspace's, which is not this rule).
+// A recursive grep (grep|egrep|fgrep with -r, -R or --recursive, in any option cluster) reads .env only when one of its
+// paths is absent (grep then reads "."), ".", the backend itself or a folder above it, or a glob. A path inside the
+// backend (src, src/triage, ../evryn-backend/src) can't reach .env. The pattern is the first non-option word unless -e or
+// -f gave it. (QCR New 6.)
+export function recursiveGrepHits(command, cwd) {
+  const base = path.resolve(cwd || codeRoot());
+  for (const words of shellParse(command).segments) {
+    const at = words.findIndex(w => /^(grep|egrep|fgrep)$/.test(progName(w)));
+    if (at < 0) continue;
+    const args = words.slice(at + 1);
+    let recursive = false, patternGiven = false; const paths = [];
+    for (let i = 0; i < args.length; i++) {
+      const a = args[i];
+      if (a === '--') { const rest = args.slice(i + 1); if (!patternGiven) rest.shift(); paths.push(...rest); break; }
+      if (/^--(dereference-)?recursive$/.test(a)) { recursive = true; continue; }
+      if (/^-[a-zA-Z0-9]+$/.test(a)) { if (/[rR]/.test(a)) recursive = true; if (/[ef]$/.test(a)) { patternGiven = true; i++; } continue; }
+      if (/^--(regexp|file)=/.test(a)) { patternGiven = true; continue; }
+      if (/^--(regexp|file)$/.test(a)) { patternGiven = true; i++; continue; }
+      if (a.startsWith('-')) continue;
+      if (!patternGiven) { patternGiven = true; continue; }
+      paths.push(a);
+    }
+    if (!recursive) continue;
+    if (!paths.length) { if (inBackend(lower(base))) return true; continue; }
+    for (const p of paths) {
+      if (/[*?[\]{}]/.test(p)) { if (inBackend(lower(base)) || /evryn-backend/i.test(p)) return true; continue; }
+      const f = canon(p, base);
+      if (backend().some(b => b === f || b.startsWith(f.endsWith('/') ? f : f + '/'))) return true;   // the backend, or above it
+    }
+  }
+  return false;
+}
+
 function shellHits(command, cwd) {
   const c = normCmd(command);
   // `.en\v` is `.env` to bash, but normCmd turns the backslash into a slash: so also test with backslashes REMOVED.
@@ -100,6 +136,7 @@ function shellHits(command, cwd) {
     if (RECURSIVE.test(c)) hits.push('the production keys file, by a recursive search');
     if (BULK.test(c)) hits.push('the production keys file, by copying or archiving the backend');
   }
+  if (recursiveGrepHits(command, cwd)) hits.push('the production keys file, by a recursive grep of the backend or a folder above it');
   return hits;
 }
 
