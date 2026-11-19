@@ -6,6 +6,8 @@
  * ONE PAIR PER CHANGE SET (CHANGE_SETS below; Soren's cutover design §1.6, 2026-11-06):
  *   001-004 (APPLIED 2026-11-06): paste/paste-1-dry-run.sql, paste/paste-2-apply.sql — byte-identical forever
  *   005 (the Linear cutover):     paste/005-paste-1-dry-run.sql, paste/005-paste-2-apply.sql
+ *   006 (the authorization record): paste/006-paste-1-dry-run.sql, paste/006-paste-2-apply.sql (its dry run also
+ *                                 reports "B backlog rows moved; A rows backfilled": finalFor())
  * In each pair:
  *   …-1-dry-run.sql   the set's migrations, then RAISE "DRY RUN OK — nothing was changed (N rows; M NOT VALID)"
  *   …-2-apply.sql     the same, refused if M > 0, then NOTIFY pgrst to reload its schema cache
@@ -71,6 +73,19 @@ export const CHANGE_SETS = Object.freeze([
     files: { dryRun: join(PASTE_DIR, '005-paste-1-dry-run.sql'), apply: join(PASTE_DIR, '005-paste-2-apply.sql') },
     headerNote: 'CHANGE SET 005 (the Linear cutover). It applies ON TOP OF 001–004, which Justin pasted on 2026-11-06; it refuses on any other starting shape.',
   }),
+  Object.freeze({
+    id: '006',
+    migrations: ['006_authorization_record.sql'],
+    srcDir: join(PASTE_SRC, '006'),
+    srcLabel: 'paste-src/006/declare, before, after',
+    files: { dryRun: join(PASTE_DIR, '006-paste-1-dry-run.sql'), apply: join(PASTE_DIR, '006-paste-2-apply.sql') },
+    headerNote:
+      'CHANGE SET 006 (the authorization record). It applies ON TOP OF 005; it refuses on any other starting shape. Its data steps run as actor justin.',
+    // Its dry run also reports what the data steps did (build brief 5 v2 §2.2): B = pre-005 backlog rows moved
+    // (counted in its before-assertions, v_backlog_moved), A = rows backfilled.
+    finalDryRun:
+      `  raise exception 'DRY RUN OK — nothing was changed (% rows; % NOT VALID; % backlog rows moved; % rows backfilled)', (select count(*) from public.tasks), <NOT_VALID_COUNT>, v_backlog_moved, (select count(*) from public.task_authorizations where tier = 'backfill');`,
+  }),
 ]);
 
 /** The applied set's files (kept under this name for the tests and README that use it). */
@@ -107,6 +122,12 @@ export const FINAL = {
   dryRun: `  raise exception 'DRY RUN OK — nothing was changed (% rows; % NOT VALID)', (select count(*) from public.tasks), ${NOT_VALID_COUNT};`,
   apply: `  if ${NOT_VALID_COUNT} > 0 then raise exception 'APPLY REFUSED — % constraint(s) would be left NOT VALID by existing rows. Nothing was changed. Run Paste 1, have Tasks AC report the failing rows, and fix them first.', ${NOT_VALID_COUNT}; end if;`,
 };
+
+/** Statement (d) for one change set: FINAL, unless the set names its own dry-run statement (006 adds its data-step counts). */
+export function finalFor(set) {
+  if (!set.finalDryRun) return FINAL;
+  return { dryRun: set.finalDryRun.replace('<NOT_VALID_COUNT>', NOT_VALID_COUNT), apply: FINAL.apply };
+}
 
 export const NOTIFY = `notify pgrst, 'reload schema';`;
 
@@ -186,7 +207,7 @@ export function buildPastes(set = CHANGE_SETS[0]) {
       after.trimEnd(),
       '',
       '  -- (d) the final statement',
-      FINAL[which],
+      finalFor(set)[which],
       'end',
       '$paste$;',
       ...(which === 'apply' ? [NOTIFY] : []),

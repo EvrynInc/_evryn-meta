@@ -7,6 +7,8 @@
  *   is also sent as `Authorization: Bearer`, as supabase-js always did for those keys.
  * - Actor: `x-evryn-actor` on every request. The database refuses a write without it; the CLI
  *   refusing first is a courtesy, not the control.
+ * - Session: `x-evryn-session` when the caller has one (the CLI passes CLAUDE_CODE_SESSION_ID). As
+ *   forgeable as the actor; its value is that the honest path records it (migration 006).
  * - Errors: PostgREST's `message`, `code`, `hint` and `details` are surfaced; a network error
  *   surfaces only `err.message` (+ a cause code), never the error object, which can carry headers.
  * - R8: `paginateAll` walks a keyset on an ascending unique integer column and stops ONLY on a
@@ -37,13 +39,18 @@ function safeNetworkMessage(err) {
   return `${msg}${code}`;
 }
 
-export function makeRest({ target, actor, fetchImpl }) {
+/** The shape the database's task_request_session() accepts (migration 006); anything else it refuses (ET002). */
+export const SESSION_SHAPE = /^[A-Za-z0-9-]{1,64}$/;
+
+export function makeRest({ target, actor, session, fetchImpl }) {
   if (typeof fetchImpl !== 'function') throw new Error('makeRest: fetchImpl is required');
 
   async function request(method, path, { body, prefer, extraHeaders } = {}) {
     const headers = { apikey: target.key, Accept: 'application/json' };
     if (target.keyKind === 'legacy-service-role') headers.Authorization = `Bearer ${target.key}`;
     if (actor) headers['x-evryn-actor'] = actor;
+    // The session stamp (migration 006): recorded in task_history.session_id and task_authorizations.session_id.
+    if (session) headers['x-evryn-session'] = session;
     if (body !== undefined) headers['Content-Type'] = 'application/json';
     if (prefer) headers.Prefer = prefer;
     Object.assign(headers, extraHeaders ?? {});

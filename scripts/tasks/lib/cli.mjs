@@ -22,7 +22,7 @@ import {
   teamRestTarget,
 } from './config.mjs';
 import { DEFAULT_ACCOUNTABLE } from './defaults.mjs';
-import { RestError, makeRest } from './rest.mjs';
+import { RestError, SESSION_SHAPE, makeRest } from './rest.mjs';
 import { describeScreen, screenRow } from './screen.mjs';
 
 // The status lists (migration 005; Soren's cutover design §1.5). ONE list used to do two jobs — what a
@@ -31,6 +31,12 @@ import { describeScreen, screenRow } from './screen.mjs';
 export const STATUSES = ['backlog', 'proposed', 'open', 'in_progress', 'blocked', 'needs_acceptance', 'done', 'decided_against'];
 /** What add and update may set. done and decided_against are set only by close. */
 export const SETTABLE_STATUSES = ['backlog', 'proposed', 'open', 'in_progress', 'blocked', 'needs_acceptance'];
+/** What add may create (migration 006, ET011): nothing is created authorized, for anyone. */
+export const ADD_STATUSES = ['backlog', 'proposed'];
+/** Authorized work (migration 006): a task reaches these only through an authorization record. */
+export const ACTIVE_STATUSES = ['open', 'in_progress', 'blocked', 'needs_acceptance'];
+/** Who may write an authorization or acceptance record (migration 006, ET012). */
+export const AUTHORIZERS = ['lucas', 'justin'];
 /** The OPEN section of pull and mine. Never backlog: due backlog is its own section (Soren-005, Ruling 2). */
 export const PULL_STATUSES = ['proposed', 'open', 'in_progress', 'blocked', 'needs_acceptance'];
 export const CLOSED_STATUSES = ['done', 'decided_against'];
@@ -48,13 +54,16 @@ export const TITLE_MAX = 80;
 export const BODY_MAX = 600;
 export const NOTE_MAX = 600;
 
-const HEADLINE_COLS = 'short_id,status,title,owner,addressed_to,needed_by,closed_at';
+const HEADLINE_COLS = 'short_id,status,title,owner,addressed_to,needed_by,closed_at,needs_reauthorization';
 /** Every column except the generated search vector. */
 export const ROW_COLS = [
   'id', 'short_id', 'title', 'description', 'status', 'raci', 'owner', 'links', 'tags',
   'created_by', 'created_at', 'updated_at', 'closed_at', 'closing_note', 'needed_by', 'parent_id',
   'addressed_to', 'signed_at', 'signed_ref', 'linear_id', 'linear_status', 'note',
+  'scope_hash', 'authorization_id', 'needs_reauthorization',
 ].join(',');
+/** The authorization record's columns, as show prints them. */
+const AUTH_COLS = 'id,task_id,kind,tier,source,actor,session_id,justin_ref,rule_ref,scope_hash,scope,envelope,proposal_ref,note,at';
 /** The export: every stored column a person wrote, minus the generated ones (owner, search). */
 export const EXPORT_COLS = ROW_COLS.split(',').filter((c) => c !== 'owner').join(',');
 
@@ -110,8 +119,25 @@ WRITING (all need --as)
   update T-12 [options]
   update T-12 --note "<what's new>"   with no other option: a COMMENT (a pointer to a
                                    contribution, a handoff), recorded in the history
-  close T-12 --note "<what happened or why not, and where the record lives>" [--decided-against]
+  close T-12 --note "<why not, and where the record lives>" --decided-against
+                                   (closing as DONE is acceptance: use accept, below)
   sign T-12 --ref "<where Justin's words are>" [--note "..."]
+
+AUTHORIZING AND ACCEPTING (lucas or justin only; the DATABASE refuses anyone else)
+  authorize T-12 --tier lucas --rule "<the rule that allows it, e.g. authorization-rules.md §1 item 1>" --note "<why>"
+  authorize T-12 --tier justin --ref "<where Justin's own words are>" --note "<why>"
+      [--envelope '<json, e.g. {"max_api_usd": 5}>'] [--proposal <path[@commit]>]
+      Writes one row of the authorization record: who said yes, to exactly what scope, from which
+      session. It moves a backlog or proposed task to open in the same write. It is the ONLY way a
+      task becomes authorized: nothing is created open, and no status write makes it open.
+  accept T-12 --tier lucas|justin (--rule "..." | --ref "...") --note "<what was delivered, and where>"
+      Writes an acceptance row and closes the task as done. The task must be needs_acceptance. Work
+      Justin authorized himself (tier justin) is accepted only at tier justin.
+  Both need a session (they send CLAUDE_CODE_SESSION_ID, as every write does when it is set).
+
+  THE SCOPE of a task is its title, body and owner. On authorized work (open, in_progress, blocked,
+  needs_acceptance), changing any of them sends the task back to proposed, re-authorization needed.
+  So update refuses --title, --body or --owner there unless you add --rescope. Progress goes in --note.
 
   Options for add and update:
     --title "<at most 80 chars>"       --body "<at most 600 chars>"
@@ -121,7 +147,11 @@ WRITING (all need --as)
                            review date on a backlog item without one. A note identical to
                            the task's last note counts as none: say what's new.
     --status backlog|proposed|open|in_progress|blocked|needs_acceptance
-                           add defaults to open — or to proposed when --owner is someone else
+                           add defaults to proposed, for everyone, and creates only backlog or proposed
+                           (nothing is created authorized). update moves authorized work among
+                           open, in_progress, blocked and needs_acceptance, or withdraws it to proposed.
+    --rescope              update only: you mean to change the scope of authorized work (it returns to
+                           proposed and needs re-authorization)
     --owner <name>         add defaults to you. An add owned by someone else is a REQUEST:
                            it defaults to --status proposed and --to <that owner>.
     --accountable <name>   (add defaults to ${DEFAULT_ACCOUNTABLE}). Use justin only on an item Justin authorized
@@ -140,12 +170,12 @@ WRITING (all need --as)
                       date arrives. Then: propose it, re-date it with --note, or close it.
     proposed          awaiting a yes: Justin's, or Lucas's under
                       shared/protocols/authorization-rules.md.
-    open              authorized; not started.
+    open              authorized (by an authorization record; see authorize); not started.
     in_progress       being worked.
     blocked           waiting on something; the note says on what.
     needs_acceptance  submitted for acceptance. Must be addressed (--to); Justin-bound
                       acceptance goes to lucas.
-    done              closed, delivered. Set ONLY by close, with its note.
+    done              closed, delivered. Set ONLY by accept (an acceptance record), with its note.
     decided_against   closed, won't happen. Set ONLY by close, with the reason. search finds
                       it forever, so nobody re-raises it.
     A raw write that names no status is refused: the column's old default 'todo' is not allowed.
@@ -155,7 +185,8 @@ WRITING (all need --as)
   sign is a RECORD, NEVER A GATE. It records that Justin signed this item and where his words
   are. Only lucas or justin may sign, change or clear a sign-off (the database refuses any
   other name). But with one shared key a false "lucas" cannot be refused, so nothing
-  outbound or irreversible may ever depend on it.
+  outbound or irreversible may ever depend on it. Authorization is the authorization record
+  (authorize), never a sign.
 
 EXPORT
   export [--out <path>]
@@ -238,7 +269,8 @@ export function addDays(ymd, n) {
  */
 export function headline(row, me) {
   const closed = CLOSED_STATUSES.includes(row.status) && row.closed_at ? ` ${mmdd(row.closed_at)}` : '';
-  let line = `T-${row.short_id} [${row.status}${closed}] ${row.title}`;
+  const reauth = row.needs_reauthorization ? ', re-authorization needed' : '';
+  let line = `T-${row.short_id} [${row.status}${closed}${reauth}] ${row.title}`;
   if (row.needed_by) line += row.status === 'backlog' ? ` (review ${mmdd(row.needed_by)})` : ` (needed ${mmdd(row.needed_by)})`;
   if (me && row.owner !== me && row.addressed_to === me) line += ` (to you; owner ${row.owner})`;
   else if (row.addressed_to && row.addressed_to !== row.owner) line += ` (to ${row.addressed_to})`;
@@ -348,7 +380,76 @@ const FIELD_OPTIONS = {
   tags: { type: 'string' },
   link: { type: 'string', multiple: true },
   note: { type: 'string' },
+  rescope: { type: 'boolean' },
 };
+
+const AUTH_OPTIONS = {
+  tier: { type: 'string' },
+  rule: { type: 'string' },
+  ref: { type: 'string' },
+  note: { type: 'string' },
+  envelope: { type: 'string' },
+  proposal: { type: 'string' },
+};
+
+/**
+ * The courtesy checks for authorize and accept (the DATABASE is the control: ET012). Returns the row to insert,
+ * minus task_id. The database stamps actor, session, source, scope and its hash, whatever is sent.
+ */
+function authorizationRow(kind, { actor, values, positionals, session, warn }) {
+  if (positionals.length !== 1) throw new UsageError(`${kind === 'authorization' ? 'authorize' : 'accept'} takes one task id`);
+  if (!AUTHORIZERS.includes(actor)) {
+    throw new UsageError(`only ${AUTHORIZERS.join(' or ')} may ${kind === 'authorization' ? 'authorize' : 'accept'} (--as); the database refuses any other name. Propose it instead: --status proposed --to lucas.`);
+  }
+  if (!['lucas', 'justin'].includes(values.tier)) throw new UsageError('--tier must be lucas or justin');
+  if (values.tier === 'lucas' && !values.rule?.trim()) throw new UsageError('a Lucas-tier record needs --rule "<the rule that allows it>"');
+  if (values.tier === 'justin' && !values.ref?.trim()) throw new UsageError(`a Justin-tier record needs --ref "<where Justin's own words are>"`);
+  if (values.note === undefined || values.note.trim() === '') throw new UsageError('--note is required (why; on an acceptance, what was delivered and where)');
+  courtesyLengths({ note: values.note });
+  if (!session) {
+    throw new UsageError('this needs a session: run it from a Claude Code session (CLAUDE_CODE_SESSION_ID); the database refuses a record without one');
+  }
+  const row = { kind, tier: values.tier, note: values.note };
+  if (values.rule !== undefined) row.rule_ref = values.rule;
+  if (values.ref !== undefined) row.justin_ref = values.ref;
+  if (kind === 'authorization') {
+    if (values.envelope !== undefined) {
+      let env;
+      try {
+        env = JSON.parse(values.envelope);
+      } catch {
+        throw new UsageError('--envelope must be a JSON object, e.g. \'{"max_api_usd": 5}\'');
+      }
+      if (!env || typeof env !== 'object' || Array.isArray(env)) throw new UsageError('--envelope must be a JSON object');
+      row.envelope = env;
+    }
+    if (values.proposal !== undefined) row.proposal_ref = values.proposal;
+  } else if (values.envelope !== undefined || values.proposal !== undefined) {
+    throw new UsageError('--envelope and --proposal belong to an authorization, not an acceptance');
+  }
+  // The screen knows the task fields by name; map the record's free text onto them.
+  screenOrRefuse(kind === 'authorization' ? 'authorize' : 'accept', {
+    note: row.note,
+    signed_ref: [row.rule_ref, row.justin_ref].filter(Boolean).join(' '),
+    links: row.proposal_ref ? [row.proposal_ref] : [],
+    description: row.envelope ? JSON.stringify(row.envelope) : '',
+  }, warn);
+  return row;
+}
+
+async function insertAuthorization(kind, ctx) {
+  const row = authorizationRow(kind, ctx);
+  const n = parseTaskRef(ctx.positionals[0]);
+  const task = await fetchTask(ctx.rest, n, 'id');
+  const { data } = await ctx.rest.request('POST', 'task_authorizations?select=id,tier,source', {
+    body: { task_id: task.id, ...row },
+    prefer: 'return=representation',
+  });
+  const rec = Array.isArray(data) ? data[0] : data;
+  const after = await fetchTask(ctx.rest, n, HEADLINE_COLS);
+  ctx.say(`${kind === 'authorization' ? 'authorized' : 'accepted'} ${headline(after, ctx.actor)}  (T-auth #${rec?.id ?? '?'}, tier ${rec?.tier ?? row.tier}, source ${rec?.source ?? '?'})`);
+  return 0;
+}
 
 /**
  * The backlog's two rules, checked courteously ahead of the database (which enforces both): a backlog
@@ -493,6 +594,21 @@ const COMMANDS = {
     if (t.linear_id) say(`  linear: ${t.linear_id} (status in Linear: "${t.linear_status ?? ''}")`);
     say('  body:');
     for (const line of String(t.description || '(empty)').split('\n')) say(`    ${line}`);
+    if (t.needs_reauthorization) say('  RE-AUTHORIZATION NEEDED: its scope changed after it was authorized; it needs a fresh yes (tasks authorize).');
+    // The authorization record (migration 006): every yes and every acceptance, and whether the scope still matches.
+    const auths = await rest.paginateAll('task_authorizations', `task_id=eq.${t.id}&select=${AUTH_COLS}`, { cursorCol: 'id', pageSize });
+    say(`Authorization record (${auths.length}):`);
+    for (const a of auths) {
+      const current = a.id === t.authorization_id ? '  ← current' : '';
+      const matches = a.scope_hash === t.scope_hash ? 'scope still matches' : 'scope has CHANGED since';
+      say(`  T-auth #${a.id} ${a.at} ${a.kind} · tier ${a.tier} · source ${a.source} · by ${a.actor} · session ${a.session_id ?? '-'}${current}`);
+      say(`      ${a.justin_ref ? `Justin's words: ${a.justin_ref}` : `rule: ${a.rule_ref ?? '-'}`} · ${matches}`);
+      if (a.envelope && Object.keys(a.envelope).length) say(`      envelope: ${JSON.stringify(a.envelope)}`);
+      if (a.proposal_ref) say(`      proposal: ${a.proposal_ref}`);
+      const s = a.scope ?? {};
+      say(`      scope: "${s.title ?? ''}" · owner ${s.owner ?? '-'}${s.description ? ` · body: ${String(s.description).split('\n')[0].slice(0, 120)}` : ''}`);
+      say(`      note: ${a.note}`);
+    }
     // History is the record: each write's note is printed under its row; the row's own note column
     // (which only holds the latest write's note) is deliberately not printed.
     const history = await rest.paginateAll('task_history', `task_id=eq.${t.id}&select=id,at,actor,op,changed_fields,old,new,flags,note`, {
@@ -552,10 +668,18 @@ const COMMANDS = {
     const i = nameList('--informed', values.informed);
     if (c && c.length) raci.c = c;
     if (i && i.length) raci.i = i;
+    // Nothing is created authorized, for anyone (migration 006, ET011): add makes backlog or proposed only.
+    if (values.status !== undefined && !ADD_STATUSES.includes(values.status)) {
+      throw new UsageError(
+        `add creates a task as ${ADD_STATUSES.join(' or ')} only: nothing is created authorized. ` +
+          'Add it as proposed, then a yes is recorded with: tasks authorize T-<n> (lucas or justin).',
+      );
+    }
+    if (values.rescope) throw new UsageError('--rescope belongs to update, not add');
     const row = {
       title: values.title,
       description: values.body ?? '',
-      status: values.status ?? (routed ? 'proposed' : 'open'),
+      status: values.status ?? 'proposed',
       raci,
       links: values.link ?? [],
     };
@@ -599,10 +723,26 @@ const COMMANDS = {
     screenOrRefuse(`update T-${n}`, { ...patch, ...(values.link !== undefined ? { links: values.link } : {}) }, warn);
 
     const touchesRaci = ['owner', 'accountable', 'consulted', 'informed'].some((k) => values[k] !== undefined);
+    const touchesScope = values.title !== undefined || values.body !== undefined || values.owner !== undefined;
     const needsCurrent =
-      touchesRaci || values.link !== undefined || values.to !== undefined || values['needed-by'] !== undefined ||
+      touchesRaci || touchesScope || values.link !== undefined || values.to !== undefined || values['needed-by'] !== undefined ||
       values.note !== undefined || values.status !== undefined;
     const current = needsCurrent ? await fetchTask(rest, n, 'raci,links,addressed_to,needed_by,status,note') : null;
+    // Progress goes in notes, never in scope fields (migration 006). The DATABASE returns any scope edit on
+    // authorized work to proposed; this only stops the accidental one.
+    if (touchesScope && ACTIVE_STATUSES.includes(current.status)) {
+      if (!values.rescope) {
+        throw new UsageError(
+          "this changes the task's scope: it returns to proposed and needs re-authorization. Put progress in --note. Add --rescope if you mean to change the scope.",
+        );
+      }
+      warn(`WARNING update T-${n}: --rescope: this returns the task to proposed; it needs a fresh authorization (tasks authorize).`);
+    }
+    if (values.status !== undefined && ['backlog', 'proposed'].includes(current.status) && ACTIVE_STATUSES.includes(values.status)) {
+      throw new UsageError(
+        `T-${n} is ${current.status}: a task becomes authorized only by an authorization record (tasks authorize T-${n}, lucas or justin), never by a status write.`,
+      );
+    }
     if (current && values.note !== undefined && values.note === current.note) {
       // The database cannot tell "the same note again" from "no note", so it would silently drop this one.
       throw new UsageError("--note matches this task's last note word for word, so the database would treat it as no note. Say what's new.");
@@ -652,11 +792,15 @@ const COMMANDS = {
   async close({ rest, actor, values, positionals, warn, say, now }) {
     if (positionals.length !== 1) throw new UsageError('close takes one task id: close T-12 --note "..."');
     const n = parseTaskRef(positionals[0]);
+    // Closing as done is acceptance (migration 006): only an acceptance record makes work done.
+    if (!values['decided-against']) {
+      throw new UsageError('use accept (lucas or justin) to close as done; hand work in with update --status needs_acceptance --to lucas.');
+    }
     if (values.note === undefined || values.note.trim() === '') {
-      throw new UsageError('close needs --note "<what happened or why not, and where the record lives>"');
+      throw new UsageError('close needs --note "<why not, and where the record lives>"');
     }
     const patch = {
-      status: values['decided-against'] ? 'decided_against' : 'done',
+      status: 'decided_against',
       closing_note: values.note,
       closed_at: now().toISOString(),
     };
@@ -680,6 +824,14 @@ const COMMANDS = {
     const row = await patchTask(rest, n, patch);
     say(`signed ${headline(row, actor)} — a record of Justin's signature, never a gate`);
     return 0;
+  },
+
+  async authorize(ctx) {
+    return insertAuthorization('authorization', ctx);
+  },
+
+  async accept(ctx) {
+    return insertAuthorization('acceptance', ctx);
   },
 
   async export({ rest, values, warn, out, pageSize, writeFile }) {
@@ -715,6 +867,8 @@ const COMMAND_SPECS = {
   update: { needsActor: true, write: true, options: FIELD_OPTIONS },
   close: { needsActor: true, write: true, options: { note: { type: 'string' }, 'decided-against': { type: 'boolean' } } },
   sign: { needsActor: true, write: true, options: { ref: { type: 'string' }, note: { type: 'string' } } },
+  authorize: { needsActor: true, write: true, options: AUTH_OPTIONS },
+  accept: { needsActor: true, write: true, options: AUTH_OPTIONS },
   export: { needsActor: false, options: { out: { type: 'string' } } },
 };
 
@@ -749,7 +903,7 @@ export async function run(argv, deps = {}) {
       say(HELP);
       return 0;
     }
-    if (['pull', 'mine', 'add', 'update', 'close', 'sign', 'export'].includes(command) && positionals.length && !['update', 'close', 'sign'].includes(command)) {
+    if (['pull', 'mine', 'add', 'update', 'close', 'sign', 'export'].includes(command) && positionals.length && !['update', 'close', 'sign', 'authorize', 'accept'].includes(command)) {
       throw new UsageError(`${command} takes no positional arguments`);
     }
 
@@ -765,14 +919,21 @@ export async function run(argv, deps = {}) {
       );
     }
 
+    // The session stamp (migration 006): every request carries CLAUDE_CODE_SESSION_ID when it is set.
+    const session = envSource.CLAUDE_CODE_SESSION_ID || undefined;
+    if (session !== undefined && !SESSION_SHAPE.test(session)) {
+      throw new UsageError('CLAUDE_CODE_SESSION_ID is not a session id the database accepts (letters, digits and -, 1 to 64 characters)');
+    }
+
     const vars = loadVars([VAR.url, VAR.key], { env: deps.env, file: ENV_FILES.team });
     const target = teamRestTarget(vars); // R5: throws before any request exists
     secrets = [target.key];
-    const rest = makeRest({ target, actor, fetchImpl: deps.fetch ?? globalThis.fetch });
+    const rest = makeRest({ target, actor, session, fetchImpl: deps.fetch ?? globalThis.fetch });
 
     return await COMMANDS[command]({
       rest,
       actor,
+      session,
       values,
       positionals,
       say,

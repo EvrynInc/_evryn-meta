@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs';
 import { basename } from 'node:path';
 import { splitSql } from '../../lib/sqlsplit.mjs';
 import { join } from 'node:path';
-import { CHANGE_SETS, FINAL, NOTIFY, PASTE_FILES, buildPastes, changeSet, checkChangeSets, runMakePaste } from '../../make-paste.mjs';
+import { CHANGE_SETS, FINAL, NOTIFY, PASTE_FILES, buildPastes, changeSet, checkChangeSets, finalFor, runMakePaste } from '../../make-paste.mjs';
 import { MIGRATIONS_DIR, listMigrations } from '../../migrate.mjs';
 import { TASKS_DIR } from '../helpers.mjs';
 
@@ -58,7 +58,8 @@ test('splitSql over the real migrations: every statement survives, none is empty
 
 const built = buildPastes();
 const built005 = buildPastes(changeSet('005'));
-const ALL = [['001-004', built], ['005', built005]];
+const built006 = buildPastes(changeSet('006'));
+const ALL = [['001-004', built], ['005', built005], ['006', built006]];
 
 test('the committed paste files are exactly what the sources produce, for every change set (regenerate with node make-paste.mjs)', () => {
   const lf = (p) => readFileSync(p, 'utf8').replace(/\r\n/g, '\n');
@@ -127,15 +128,15 @@ test('each paste is ONE statement: a single DO $paste$ block (plus only the NOTI
 });
 
 test('in each set, the two pastes differ ONLY in the header, the final in-block statement, and Paste 2\'s trailing NOTIFY', () => {
-  for (const [, pair] of ALL) {
+  for (const [id, pair] of ALL) {
   const a = pair.dryRun.split('\n');
   const b = pair.apply.split('\n');
   const bodyStart = (ls) => ls.indexOf('do $paste$');
   const finalIdx = (ls) => ls.indexOf('  -- (d) the final statement') + 1;
   // identical from `do $paste$` to just before the final statement
   assert.deepEqual(a.slice(bodyStart(a), finalIdx(a)), b.slice(bodyStart(b), finalIdx(b)));
-  assert.equal(a[finalIdx(a)], FINAL.dryRun);
-  assert.equal(b[finalIdx(b)], FINAL.apply);
+  assert.equal(a[finalIdx(a)], finalFor(changeSet(id)).dryRun);
+  assert.equal(b[finalIdx(b)], finalFor(changeSet(id)).apply);
   // identical after it, except Paste 2's NOTIFY line
   assert.deepEqual(a.slice(finalIdx(a) + 1), b.slice(finalIdx(b) + 1).filter((l) => l !== NOTIFY));
   assert.ok(b.slice(finalIdx(b) + 1).includes(NOTIFY));
@@ -191,4 +192,59 @@ test('005\'s before-assertions pin TODAY\'S LIVE SHAPE: every pinned block is ve
   assert.match(before, /body_md5=527670e20253b2a7c6059a57c3b6a37f/);
   assert.match(before, /body_md5=e39010f0082dd5d81d68d1888b41127f/);
   assert.match(before, /pg_has_role\('authenticator', 'postgres', 'MEMBER'\)/);
+});
+
+// ---------------------------------------------------------------------------
+// change set 006 (the authorization record)
+// ---------------------------------------------------------------------------
+
+// The 005 pair as committed at ed9d5f9 (the CRLF fix that followed its first live dry run). Pinned now that 006
+// applies on top of it (build brief 5 v2 §2.1). ⚠️ Pinned to the COMMITTED bytes: whoever holds the live
+// record confirms they are the bytes Justin ran; if this fails, the record of 005 was rewritten.
+const APPLIED_005_SHA256 = {
+  '005-paste-1-dry-run.sql': '6bec1cbc3fcd25494b89cb615584e9f812b3e6bceacd257935cf2e16402c0a1f',
+  '005-paste-2-apply.sql': '97ffd67aa36965b739b1c578546652090bb25942369aca08281027b8a95ce707',
+};
+test('the 005 pair is byte-identical to the committed record (sha256 pinned), and still generated from 005 only', () => {
+  for (const which of ['dryRun', 'apply']) {
+    const p = changeSet('005').files[which];
+    const bytes = readFileSync(p).toString('utf8').replace(/\r\n/g, '\n');
+    assert.equal(createHash('sha256').update(bytes, 'utf8').digest('hex'), APPLIED_005_SHA256[basename(p)], `${basename(p)} changed`);
+    assert.equal(createHash('sha256').update(built005[which], 'utf8').digest('hex'), APPLIED_005_SHA256[basename(p)], `make-paste no longer builds ${basename(p)}`);
+  }
+});
+
+test('006: its dry run reports the data steps (B backlog rows moved; A rows backfilled); 001-004 and 005 keep the original final statement', () => {
+  assert.equal(finalFor(changeSet('001-004')), FINAL);
+  assert.equal(finalFor(changeSet('005')), FINAL);
+  const f = finalFor(changeSet('006'));
+  assert.match(f.dryRun, /raise exception 'DRY RUN OK — nothing was changed \(% rows; % NOT VALID; % backlog rows moved; % rows backfilled\)'/);
+  assert.match(f.dryRun, /v_backlog_moved, \(select count\(\*\) from public\.task_authorizations where tier = 'backfill'\);$/);
+  assert.ok(!f.dryRun.includes('<NOT_VALID_COUNT>'), 'the NOT VALID count placeholder was not filled');
+  assert.equal(f.apply, FINAL.apply);
+  assert.match(built006.apply, /^-- CHANGE SET 006 \(the authorization record\)\. It applies ON TOP OF 005/m);
+  assert.ok(!built006.apply.includes('migration 005_linear_cutover.sql'));
+});
+
+test('006\'s before-assertions pin THE POST-005 SHAPE: every pinned block is verbatim lines of the after-005 golden', () => {
+  const before = readFileSync(join(TASKS_DIR, 'paste-src', '006', 'before.plpgsql'), 'utf8').replace(/\r\n/g, '\n');
+  const golden = readFileSync(join(TASKS_DIR, 'test', 'fixtures', 'local-snapshot-after.txt'), 'utf8').replace(/\r\n/g, '\n').split('\n');
+  const pins = [...before.matchAll(/\$pin\$([\s\S]*?)\$pin\$/g)].map((m) => m[1]);
+  assert.ok(pins.length >= 9, `found ${pins.length} pins`);
+  for (const pin of pins) {
+    for (const line of pin.split('\n')) assert.ok(golden.includes(line), `pinned line is not in the after-005 golden: ${line}`);
+  }
+  assert.match(before, /body_md5=f564a9be7ffeaa20db13902d5edcd38b/);
+  assert.match(before, /body_md5=5424d669d256941cd7bb671d9a487cc2/);
+  assert.match(before, /pg_has_role\('authenticator', 'postgres', 'MEMBER'\)/);
+});
+
+test('006\'s after-assertions pin every replaced or new function\'s body exactly as the after-006 golden prints it', () => {
+  const after = readFileSync(join(TASKS_DIR, 'paste-src', '006', 'after.plpgsql'), 'utf8').replace(/\r\n/g, '\n');
+  const golden = readFileSync(join(TASKS_DIR, 'test', 'fixtures', 'local-snapshot-after-006.txt'), 'utf8').replace(/\r\n/g, '\n').split('\n');
+  const fnPin = [...after.matchAll(/\$pin\$(function [\s\S]*?)\$pin\$/g)].map((m) => m[1]);
+  assert.equal(fnPin.length, 1);
+  const lines = fnPin[0].split('\n');
+  assert.equal(lines.length, 9);
+  for (const line of lines) assert.ok(golden.includes(line), `pinned function line is not in the after-006 golden: ${line}`);
 });

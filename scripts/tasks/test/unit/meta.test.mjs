@@ -50,10 +50,12 @@ test('no script invokes a tool by bare name through a package runner', () => {
   }
 });
 
-test('the roster lives in exactly one place (public.task_roster in 003); nothing else copies it', () => {
+test('the roster lives in exactly one place (public.task_roster, defined in 003 and redefined in 006); nothing else copies it', () => {
   // A "copy" = any shipped file naming three roster members who appear nowhere else together.
-  // The generated paste files contain migration 003 VERBATIM — a derived copy, not a second home:
+  // The generated paste files contain migrations 003 and 006 VERBATIM — a derived copy, not a second home:
   // paste.test.mjs fails if they ever differ from what make-paste.mjs builds from the migrations.
+  // Migration 006 redefines the function (it adds `launcher`); a migration is history, so 003 keeps its
+  // original text. The live home is the function itself; no script may hold a list of its own.
   const shipped = files.filter((f) => {
     const rel = relative(TASKS_DIR, f).replace(/\\/g, '/');
     return !rel.startsWith('test/') && !rel.startsWith('paste/');
@@ -62,7 +64,7 @@ test('the roster lives in exactly one place (public.task_roster in 003); nothing
     const text = readFileSync(f, 'utf8').toLowerCase();
     return ['marlowe', 'dominic', 'nathan'].every((n) => text.includes(n));
   });
-  assert.deepEqual(holders.map((f) => relative(TASKS_DIR, f).replace(/\\/g, '/')), ['migrations/003_task_triggers.sql']);
+  assert.deepEqual(holders.map((f) => relative(TASKS_DIR, f).replace(/\\/g, '/')).sort(), ['migrations/003_task_triggers.sql', 'migrations/006_authorization_record.sql']);
 });
 
 test('Ruling 3.4 (Soren-005): the accountable default lives in ONE place — DEFAULT_ACCOUNTABLE in lib/defaults.mjs — and both its users import it', () => {

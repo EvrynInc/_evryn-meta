@@ -147,6 +147,10 @@ function runScript(script, db, args = []) {
       EVRYN_TASKS_TEST_MODE: '1',
       EVRYN_TASKS_ENV_FROM_PROCESS: '1',
       EVRYN_TASKS_LOCAL_PG: cluster.urlFor(db),
+      // This suite proves 001–005 on the post-005 shape (the live shape until 006's paste). Migration 006
+      // (nothing is created authorized) has its own suite on 001–006: migration-006.test.mjs, which also
+      // re-proves the 005 rules 006's replaced trigger must keep.
+      EVRYN_TASKS_MIGRATE_THROUGH: '005',
     },
   });
 }

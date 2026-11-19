@@ -1,0 +1,210 @@
+  -- =========================================================================================
+  -- (c) AFTER-ASSERTIONS for change set 006. They pin the RESULT (every new column, table, constraint,
+  --     index, policy, grant, trigger and function body), prove the data steps did exactly their job, and
+  --     prove nothing else moved: every capture from (a) is re-run and must be identical. The expected
+  --     lines for tasks, task_history and the functions are those of test/fixtures/local-snapshot-after-006.txt.
+  --     (The snapshot function of 004 does not describe task_authorizations or task_auth_config, so their
+  --     definitions are pinned here and nowhere else.)
+  -- =========================================================================================
+
+  -- The new columns: tasks #24–#26 and task_history #11, last.
+  execute v_pin_columns_sql into v_found using 'tasks';
+  if split_part(v_found, E'\n', 24) || E'\n' || split_part(v_found, E'\n', 25) || E'\n' || split_part(v_found, E'\n', 26)
+       is distinct from replace($pin$column tasks #24 scope_hash text
+column tasks #25 authorization_id bigint
+column tasks #26 needs_reauthorization boolean NOT NULL DEFAULT false$pin$, chr(13), '')
+     or v_found like '%#27 %' then
+    raise exception 'AFTER-ASSERTION FAILED: tasks'' new columns are not scope_hash, authorization_id, needs_reauthorization as #24–#26 and last. Found: %. Everything was rolled back.', v_found;
+  end if;
+  execute v_pin_columns_sql into v_found using 'task_history';
+  if split_part(v_found, E'\n', 11) is distinct from 'column task_history #11 session_id text' or v_found like '%#12 %' then
+    raise exception 'AFTER-ASSERTION FAILED: task_history.session_id is not the 11th and last column, nullable text. Found: %. Everything was rolled back.', v_found;
+  end if;
+
+  -- task_authorizations and task_auth_config, exactly.
+  execute v_pin_columns_sql into v_found using 'task_authorizations';
+  if v_found is distinct from replace($pin$column task_authorizations #01 id bigint NOT NULL IDENTITY ALWAYS
+column task_authorizations #02 task_id uuid NOT NULL
+column task_authorizations #03 kind text NOT NULL
+column task_authorizations #04 tier text NOT NULL
+column task_authorizations #05 source text NOT NULL
+column task_authorizations #06 actor text NOT NULL
+column task_authorizations #07 session_id text
+column task_authorizations #08 justin_ref text
+column task_authorizations #09 rule_ref text
+column task_authorizations #10 scope_hash text NOT NULL
+column task_authorizations #11 scope jsonb NOT NULL
+column task_authorizations #12 envelope jsonb NOT NULL DEFAULT '{}'::jsonb
+column task_authorizations #13 proposal_ref text
+column task_authorizations #14 note text NOT NULL
+column task_authorizations #15 at timestamp with time zone NOT NULL DEFAULT now()$pin$, chr(13), '') then
+    raise exception 'AFTER-ASSERTION FAILED: task_authorizations'' columns are not as migration 006 defines them. Found: %. Everything was rolled back.', coalesce(v_found, '(none)');
+  end if;
+  execute v_pin_columns_sql into v_found using 'task_auth_config';
+  if v_found is distinct from replace($pin$column task_auth_config #01 id integer NOT NULL
+column task_auth_config #02 justin_tier_source text NOT NULL
+column task_auth_config #03 justin_user_id uuid$pin$, chr(13), '') then
+    raise exception 'AFTER-ASSERTION FAILED: task_auth_config''s columns are not as migration 006 defines them. Found: %. Everything was rolled back.', coalesce(v_found, '(none)');
+  end if;
+  select string_agg(format('constraint %s.%s: %s', c.relname, con.conname, pg_get_constraintdef(con.oid)), E'\n' order by c.relname, con.conname) into v_found
+    from pg_constraint con join pg_class c on c.oid = con.conrelid
+   where c.relnamespace = 'public'::regnamespace and c.relname in ('task_authorizations','task_auth_config');
+  if v_found is distinct from replace($pin$constraint task_auth_config.task_auth_config_id_check: CHECK ((id = 1))
+constraint task_auth_config.task_auth_config_justin_tier_source_check: CHECK ((justin_tier_source = ANY (ARRAY['lucas_relay'::text, 'justin_signin'::text])))
+constraint task_auth_config.task_auth_config_pkey: PRIMARY KEY (id)
+constraint task_authorizations.task_authorizations_kind_check: CHECK ((kind = ANY (ARRAY['authorization'::text, 'acceptance'::text])))
+constraint task_authorizations.task_authorizations_note_check: CHECK (((char_length(btrim(note)) >= 1) AND (char_length(btrim(note)) <= 600)))
+constraint task_authorizations.task_authorizations_pkey: PRIMARY KEY (id)
+constraint task_authorizations.task_authorizations_source_check: CHECK ((source = ANY (ARRAY['lucas_relay'::text, 'justin_signin'::text, 'migration_006'::text])))
+constraint task_authorizations.task_authorizations_tier_check: CHECK ((tier = ANY (ARRAY['lucas'::text, 'justin'::text, 'backfill'::text])))$pin$, chr(13), '') then
+    raise exception 'AFTER-ASSERTION FAILED: the constraints of task_authorizations and task_auth_config are not as migration 006 defines them. Found: %. Everything was rolled back.', coalesce(v_found, '(none)');
+  end if;
+  select string_agg(format('index %s.%s: %s', i.tablename, i.indexname, i.indexdef), E'\n' order by i.tablename, i.indexname) into v_found
+    from pg_indexes i where i.schemaname = 'public' and i.tablename in ('task_authorizations','task_auth_config');
+  if v_found is distinct from replace($pin$index task_auth_config.task_auth_config_pkey: CREATE UNIQUE INDEX task_auth_config_pkey ON public.task_auth_config USING btree (id)
+index task_authorizations.task_authorizations_pkey: CREATE UNIQUE INDEX task_authorizations_pkey ON public.task_authorizations USING btree (id)
+index task_authorizations.task_authorizations_task_id_id_idx: CREATE INDEX task_authorizations_task_id_id_idx ON public.task_authorizations USING btree (task_id, id)$pin$, chr(13), '') then
+    raise exception 'AFTER-ASSERTION FAILED: the indexes of task_authorizations and task_auth_config are not as migration 006 defines them. Found: %. Everything was rolled back.', coalesce(v_found, '(none)');
+  end if;
+
+  -- RLS, policies and grants on the two new tables: service_role holds exactly SELECT + INSERT on the record and
+  -- SELECT on the config; anon and authenticated (and so PUBLIC) hold nothing; owner postgres.
+  select string_agg(format('table %s: owner=%s rls=%s', c.relname, pg_get_userbyid(c.relowner), c.relrowsecurity::text), E'\n' order by c.relname) into v_found
+    from pg_class c where c.relnamespace = 'public'::regnamespace and c.relname in ('task_authorizations','task_auth_config');
+  if v_found is distinct from replace($pin$table task_auth_config: owner=postgres rls=true
+table task_authorizations: owner=postgres rls=true$pin$, chr(13), '') then
+    raise exception 'AFTER-ASSERTION FAILED: task_authorizations and task_auth_config must be owned by postgres with RLS on. Found: %. Everything was rolled back.', coalesce(v_found, '(none)');
+  end if;
+  select string_agg(format('policy %s.%s: %s %s to %s using (%s) with check (%s)', p.tablename, p.policyname, p.permissive, p.cmd,
+           array_to_string(p.roles, ','), coalesce(p.qual, '-'), coalesce(p.with_check, '-')), E'\n' order by p.tablename, p.policyname) into v_found
+    from pg_policies p where p.schemaname = 'public' and p.tablename in ('task_authorizations','task_auth_config');
+  if v_found is distinct from replace($pin$policy task_auth_config.service_role_read: PERMISSIVE SELECT to service_role using (true) with check (-)
+policy task_authorizations.service_role_only: PERMISSIVE ALL to service_role using (true) with check (true)$pin$, chr(13), '') then
+    raise exception 'AFTER-ASSERTION FAILED: the policies of task_authorizations and task_auth_config are not as migration 006 defines them. Found: %. Everything was rolled back.', coalesce(v_found, '(none)');
+  end if;
+  select string_agg(format('%s %s', coalesce(r.rolname, 'PUBLIC'), a.privilege_type), ', ' order by coalesce(r.rolname, 'PUBLIC'), a.privilege_type) into v_found
+    from pg_class c cross join lateral aclexplode(coalesce(c.relacl, acldefault('r', c.relowner))) a left join pg_roles r on r.oid = a.grantee
+   where c.oid = 'public.task_authorizations'::regclass and coalesce(r.rolname, 'PUBLIC') <> 'postgres';
+  if v_found is distinct from 'service_role INSERT, service_role SELECT' then
+    raise exception 'AFTER-ASSERTION FAILED: task_authorizations grants must be exactly service_role INSERT and SELECT. Found: %. Everything was rolled back.', coalesce(v_found, '(none)');
+  end if;
+  select string_agg(format('%s %s', coalesce(r.rolname, 'PUBLIC'), a.privilege_type), ', ' order by coalesce(r.rolname, 'PUBLIC'), a.privilege_type) into v_found
+    from pg_class c cross join lateral aclexplode(coalesce(c.relacl, acldefault('r', c.relowner))) a left join pg_roles r on r.oid = a.grantee
+   where c.oid = 'public.task_auth_config'::regclass and coalesce(r.rolname, 'PUBLIC') <> 'postgres';
+  if v_found is distinct from 'service_role SELECT' then
+    raise exception 'AFTER-ASSERTION FAILED: task_auth_config grants must be exactly service_role SELECT. Found: %. Everything was rolled back.', coalesce(v_found, '(none)');
+  end if;
+  select string_agg(r.rol, ', ') into v_found
+    from (values ('anon'), ('authenticated'), ('service_role')) as r(rol)
+   where has_sequence_privilege(r.rol, pg_get_serial_sequence('public.task_authorizations', 'id'), 'USAGE,SELECT,UPDATE');
+  if v_found is not null then
+    raise exception 'AFTER-ASSERTION FAILED: a client role holds a privilege on task_authorizations'' identity sequence: %. Everything was rolled back.', v_found;
+  end if;
+
+  -- The config row, seeded exactly.
+  select string_agg(id || ' ' || justin_tier_source || ' ' || coalesce(justin_user_id::text, 'NULL'), '; ') into v_found from public.task_auth_config;
+  if v_found is distinct from '1 lucas_relay NULL' then
+    raise exception 'AFTER-ASSERTION FAILED: task_auth_config must hold exactly one row (1, lucas_relay, NULL). Found: %. Everything was rolled back.', coalesce(v_found, '(none)');
+  end if;
+
+  -- Triggers: every one on tasks, task_history and task_authorizations ENABLE ALWAYS, the three new ones present.
+  select string_agg(c.relname || '.' || t.tgname || '=' || t.tgenabled::text, ', ') into v_found
+    from pg_trigger t join pg_class c on c.oid = t.tgrelid
+   where not t.tgisinternal and c.relnamespace = 'public'::regnamespace and c.relname in ('tasks','task_history','task_authorizations') and t.tgenabled <> 'A';
+  if v_found is not null then
+    raise exception 'AFTER-ASSERTION FAILED: trigger(s) not ENABLE ALWAYS: %. Everything was rolled back.', v_found;
+  end if;
+  select string_agg(format('trigger %s.%s: %s', c.relname, t.tgname, pg_get_triggerdef(t.oid)), E'\n' order by t.tgname) into v_found
+    from pg_trigger t join pg_class c on c.oid = t.tgrelid where not t.tgisinternal and c.oid = 'public.task_authorizations'::regclass;
+  if v_found is distinct from replace($pin$trigger task_authorizations.task_authorizations_after_insert: CREATE TRIGGER task_authorizations_after_insert AFTER INSERT ON public.task_authorizations FOR EACH ROW EXECUTE FUNCTION public.task_authorizations_after_insert()
+trigger task_authorizations.task_authorizations_before_insert: CREATE TRIGGER task_authorizations_before_insert BEFORE INSERT ON public.task_authorizations FOR EACH ROW EXECUTE FUNCTION public.task_authorizations_before_insert()
+trigger task_authorizations.task_authorizations_refuse_change: CREATE TRIGGER task_authorizations_refuse_change BEFORE DELETE OR UPDATE OR TRUNCATE ON public.task_authorizations FOR EACH STATEMENT EXECUTE FUNCTION public.task_authorizations_refuse_change()$pin$, chr(13), '') then
+    raise exception 'AFTER-ASSERTION FAILED: the triggers on task_authorizations are not as migration 006 defines them. Found: %. Everything was rolled back.', coalesce(v_found, '(none)');
+  end if;
+
+  -- Every function 006 creates or replaces: owner postgres, SECURITY INVOKER, search_path "", and EXACTLY the reviewed body.
+  execute v_pin_functions_sql into v_found using array['task_authorizations_after_insert','task_authorizations_before_insert','task_authorizations_refuse_change',
+                                                       'task_justin_tier_ok','task_request_session','task_roster','task_scope_hash','tasks_after_write','tasks_before_write'];
+  if v_found is distinct from replace($pin$function task_authorizations_after_insert(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=026bc7457c3711344c6ab08efdfc5303
+function task_authorizations_before_insert(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=38c6f5739d2305de7381db7e54a3f7ad
+function task_authorizations_refuse_change(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=eecb2325830df7e1d0d4de6664756c0c
+function task_justin_tier_ok(): owner=postgres security=INVOKER volatility=s config=search_path="" body_md5=52f14dbf8c88812c79da0610a4dc6a7c
+function task_request_session(): owner=postgres security=INVOKER volatility=s config=search_path="" body_md5=c283938e3db4a235a7c3b8e1cfc032a4
+function task_roster(): owner=postgres security=INVOKER volatility=i config=search_path="" body_md5=36b76aa28682514ffc1d350101fd3122
+function task_scope_hash(p_title text, p_description text, p_owner text): owner=postgres security=INVOKER volatility=s config=search_path="" body_md5=0b2c81e44d8dda6f75b0c483951bfad8
+function tasks_after_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=66ea1a39ed7bc4b2b28aeda4b82e9b86
+function tasks_before_write(): owner=postgres security=INVOKER volatility=v config=search_path="" body_md5=5f493f81525bb8aa777ff63c1c25279c$pin$, chr(13), '') then
+    raise exception 'AFTER-ASSERTION FAILED: a function 006 creates or replaces is not the reviewed one (owner, security, search_path or body hash). Found: %. Everything was rolled back.', coalesce(v_found, '(none)');
+  end if;
+  -- EXECUTE: the five trigger functions by no client role (PUBLIC included); the three helpers by service_role only.
+  select string_agg(f.fn || ' -> ' || coalesce(r.rolname, 'PUBLIC'), ', ') into v_found
+    from (values ('public.tasks_before_write()'), ('public.tasks_after_write()'), ('public.task_authorizations_before_insert()'),
+                 ('public.task_authorizations_after_insert()'), ('public.task_authorizations_refuse_change()')) as f(fn)
+    join pg_proc p on p.oid = f.fn::regprocedure
+    cross join lateral aclexplode(coalesce(p.proacl, acldefault('f', p.proowner))) a
+    left join pg_roles r on r.oid = a.grantee
+   where a.grantee <> p.proowner;
+  if v_found is not null then
+    raise exception 'AFTER-ASSERTION FAILED: a client role can execute a trigger function: %. Everything was rolled back.', v_found;
+  end if;
+  select string_agg(f.fn || ' -> ' || coalesce(r.rolname, 'PUBLIC'), ', ' order by f.fn) into v_found
+    from (values ('public.task_scope_hash(text,text,text)'), ('public.task_request_session()'), ('public.task_justin_tier_ok()')) as f(fn)
+    join pg_proc p on p.oid = f.fn::regprocedure
+    cross join lateral aclexplode(coalesce(p.proacl, acldefault('f', p.proowner))) a
+    left join pg_roles r on r.oid = a.grantee
+   where a.grantee <> p.proowner;
+  if v_found is distinct from 'public.task_justin_tier_ok() -> service_role, public.task_request_session() -> service_role, public.task_scope_hash(text,text,text) -> service_role' then
+    raise exception 'AFTER-ASSERTION FAILED: EXECUTE on 006''s helper functions must be service_role only. Found: %. Everything was rolled back.', coalesce(v_found, '(none)');
+  end if;
+
+  -- THE DATA STEPS did exactly their job.
+  if coalesce(current_setting('evryn.migration', true), '') <> '' or coalesce(current_setting('evryn.actor', true), '') <> '' then
+    raise exception 'AFTER-ASSERTION FAILED: the data steps did not clear evryn.migration and evryn.actor. Everything was rolled back.';
+  end if;
+  execute v_rows_fixed_sql into v_found;
+  if v_found is distinct from v_rows_fixed_before then
+    raise exception 'AFTER-ASSERTION FAILED: a field 006 must never change changed (title, description, raci, links, tags, dates, signatures, linear ids…). Before: % / After: %. Everything was rolled back.', v_rows_fixed_before, v_found;
+  end if;
+  select md5(coalesce(string_agg(t.id::text || ':' || t.status, E'\n' order by t.id), '')) into v_found from public.tasks t;
+  if v_found is distinct from v_status_expected then
+    raise exception 'AFTER-ASSERTION FAILED: a status changed other than data step 1''s pre-005 backlog moves. Everything was rolled back.';
+  end if;
+  select count(*) into v_n from public.tasks
+   where scope_hash is null or scope_hash is distinct from public.task_scope_hash(title, description, raci->>'r');
+  if v_n <> 0 then
+    raise exception 'AFTER-ASSERTION FAILED: % row(s) carry no scope_hash, or one the database did not compute. Everything was rolled back.', v_n;
+  end if;
+  select count(*) into v_n from public.tasks t
+   where t.status in ('open','in_progress','blocked','needs_acceptance')
+     and not exists (select 1 from public.task_authorizations a
+                      where a.id = t.authorization_id and a.task_id = t.id and a.kind = 'authorization' and a.tier = 'backfill'
+                        and a.source = 'migration_006' and a.scope_hash = t.scope_hash);
+  if v_n <> 0 then
+    raise exception 'AFTER-ASSERTION FAILED: every active task must point at its own authorization row (backfill, migration_006, matching scope); % do not. Everything was rolled back.', v_n;
+  end if;
+  select count(*) into v_n from public.task_authorizations;
+  select count(*) into v_i from public.tasks where status in ('open','in_progress','blocked','needs_acceptance');
+  if v_n <> v_i or exists (select 1 from public.tasks where status not in ('open','in_progress','blocked','needs_acceptance') and (authorization_id is not null or needs_reauthorization)) then
+    raise exception 'AFTER-ASSERTION FAILED: the backfill wrote % row(s) for % active task(s), or touched a task that is not active. Everything was rolled back.', v_n, v_i;
+  end if;
+  if exists (select 1 from public.tasks where status = 'backlog' and needed_by > (now() at time zone 'America/Los_Angeles')::date + 90) then
+    raise exception 'AFTER-ASSERTION FAILED: a backlog row carries a review date over 90 days. Everything was rolled back.';
+  end if;
+  execute v_history_sql into v_found using v_history_max;
+  if v_found is distinct from v_history_before then
+    raise exception 'AFTER-ASSERTION FAILED: an existing task_history row changed. Everything was rolled back.';
+  end if;
+  select count(*) into v_n from public.task_history;
+  if v_n <> v_history_count_before + v_backlog_moved + v_i then
+    raise exception 'AFTER-ASSERTION FAILED: expected % new history row(s) (% backlog moves + % backfills), found %. Everything was rolled back.',
+      v_backlog_moved + v_i, v_backlog_moved, v_i, v_n - v_history_count_before;
+  end if;
+
+  -- NOTHING ELSE CHANGED: every capture from (a), re-run, must be identical.
+  for v_i in 1 .. array_length(v_capture_sqls, 1) loop
+    execute v_capture_sqls[v_i] into v_found;
+    if coalesce(v_found, '(none)') is distinct from v_captured[v_i] then
+      raise exception 'AFTER-ASSERTION FAILED: % changed, and 006 must not change it. Before: % / After: %. Everything was rolled back.',
+        v_capture_names[v_i], v_captured[v_i], coalesce(v_found, '(none)');
+    end if;
+  end loop;

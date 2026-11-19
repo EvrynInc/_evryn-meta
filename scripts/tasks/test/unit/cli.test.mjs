@@ -104,7 +104,8 @@ test('no secret in any output — including a forced server error that echoes th
 
 test('PostgREST refusals are printed with message, code and hint, and exit 1', async () => {
   const refuse = async () => jsonResponse(400, { message: 'new row violates check constraint "tasks_closed_needs_note"', code: '23514', hint: null });
-  const r = await cli(['close', 'T-3', '--as', 'ac', '--note', 'x'], { fetchImpl: refuse });
+  // (006: close is decided-against only; a done close is accept's)
+  const r = await cli(['close', 'T-3', '--as', 'ac', '--note', 'x', '--decided-against'], { fetchImpl: refuse });
   assert.equal(r.code, 1);
   assert.match(r.err, /tasks_closed_needs_note/);
   assert.match(r.err, /code: 23514/);
@@ -138,7 +139,8 @@ test('every write sends x-evryn-actor', async () => {
   assert.equal(post.init.headers['x-evryn-actor'], 'mira');
   const body = JSON.parse(post.init.body);
   assert.deepEqual(body.raci, { r: 'mira', a: 'lucas' });
-  assert.equal(body.status, 'open');
+  // 006: nothing is created authorized; a self-owned add is proposed too
+  assert.equal(body.status, 'proposed');
 });
 
 // ---------------------------------------------------------------------------
@@ -231,7 +233,7 @@ test('R6: an email anywhere in a write is REFUSED and nothing is sent', async ()
     ['add', '--as', 'ac', '--title', 'ok', '--body', 'a@b.io'],
     ['add', '--as', 'ac', '--title', 'ok', '--tags', 'x@y.io'],
     ['add', '--as', 'ac', '--title', 'ok', '--link', 'mailto:x@y.io'],
-    ['close', 'T-1', '--as', 'ac', '--note', 'replied to x@y.com'],
+    ['close', 'T-1', '--as', 'ac', '--note', 'replied to x@y.com', '--decided-against'],
     ['sign', 'T-1', '--as', 'lucas', '--ref', 'email from j@x.com'],
     ['add', '--as', 'ac', '--title', 'ok', '--note', 'per x@y.io'],
     ['update', 'T-1', '--as', 'ac', '--note', 'told q@r.org'],
@@ -272,7 +274,8 @@ test('close requires --note; --decided-against sets decided_against with closed_
 });
 
 test('update merges raci and adds links rather than replacing them', async () => {
-  const rows = [{ ...task(4), raci: { r: 'lucas', a: 'justin', c: ['mira'] }, links: ['docs/a.md'] }];
+  // (006: an owner change on authorized work is a scope change, so this row is proposed; the merge is the point here)
+  const rows = [{ ...task(4, { status: 'proposed' }), raci: { r: 'lucas', a: 'justin', c: ['mira'] }, links: ['docs/a.md'] }];
   const r = await cli(['update', 'T-4', '--as', 'lucas', '--owner', 'soren', '--link', 'docs/b.md'], { rows });
   assert.equal(r.code, 0);
   const patch = JSON.parse(r.calls.find((c) => c.init.method === 'PATCH').init.body);
@@ -394,8 +397,8 @@ test('005: add --note writes the note on the insert', async () => {
   assert.equal(postOf(r).note, 'from the 11/06 standup');
 });
 
-test('005: close --note still writes closing_note, and no second note', async () => {
-  const r = await cli(['close', 'T-1', '--as', 'ac', '--note', 'shipped; docs/x.md']);
+test('005: close --note still writes closing_note, and no second note (006: decided-against only)', async () => {
+  const r = await cli(['close', 'T-1', '--as', 'ac', '--note', 'shipped; docs/x.md', '--decided-against']);
   assert.equal(r.code, 0, r.err);
   const p = patchOf(r);
   assert.equal(p.closing_note, 'shipped; docs/x.md');
@@ -421,19 +424,24 @@ test('005: an add owned by someone else is a REQUEST: proposed, addressed to the
   assert.equal(req.code, 0, req.err);
   assert.equal(postOf(req).status, 'proposed');
   assert.equal(postOf(req).addressed_to, 'soren');
+  // 006: nothing is created authorized, for anyone: --status open on add is refused before any request
   const authorized = await cli(['add', '--as', 'lucas', '--title', 'x', '--owner', 'soren', '--status', 'open']);
-  assert.equal(postOf(authorized).status, 'open');
-  assert.equal(postOf(authorized).addressed_to, 'soren');
+  assert.equal(authorized.code, 2);
+  assert.equal(authorized.calls.length, 0);
+  const backlogReq = await cli(['add', '--as', 'lucas', '--title', 'x', '--owner', 'soren', '--status', 'backlog', '--needed-by', '2026-11-20']);
+  assert.equal(postOf(backlogReq).status, 'backlog');
+  assert.equal(postOf(backlogReq).addressed_to, 'soren');
   const unaddressed = await cli(['add', '--as', 'lucas', '--title', 'x', '--owner', 'soren', '--to', 'none']);
   assert.equal(postOf(unaddressed).addressed_to, undefined);
   const self = await cli(['add', '--as', 'soren', '--title', 'x']);
-  assert.equal(postOf(self).status, 'open');
+  assert.equal(postOf(self).status, 'proposed');
   assert.equal(postOf(self).addressed_to, undefined);
 });
 
 test('005: needs_acceptance must be addressed (courtesy, ahead of tasks_acceptance_addressed)', async () => {
   assert.equal((await cli(['add', '--as', 'ac', '--title', 'x', '--status', 'needs_acceptance'])).code, 2);
-  assert.equal((await cli(['add', '--as', 'ac', '--title', 'x', '--status', 'needs_acceptance', '--to', 'lucas'])).code, 0);
+  // 006: add creates backlog or proposed only, so needs_acceptance is refused on add whether addressed or not
+  assert.equal((await cli(['add', '--as', 'ac', '--title', 'x', '--status', 'needs_acceptance', '--to', 'lucas'])).code, 2);
   const r = await cli(['update', 'T-1', '--as', 'ac', '--status', 'needs_acceptance', '--note', 'done; please accept'], { rows: [task(1)] });
   assert.equal(r.code, 2);
   assert.equal(writes(r).length, 0);
@@ -589,4 +597,138 @@ test('005 help text: the eight statuses, the note rule, the sign rule, the backl
     'himself, and point at his words with --link.',
   ]) assert.ok(HELP.includes(s), `help lacks: ${s}`);
   assert.ok(!/backlog never appears in pull/.test(HELP), 'the superseded help line is back (Soren-005 Ruling 2)');
+});
+
+// ---------------------------------------------------------------------------
+// migration 006 — the authorization record (build brief 5 v2 §2.3)
+// ---------------------------------------------------------------------------
+
+const SESSION_ENV = { ...TEST_ENV, CLAUDE_CODE_SESSION_ID: '0b6f7c1e-2f43-4c5a-9d1e-5f7a8b9c0d1e' };
+const authRows = () => [{ ...task(5, { status: 'proposed' }), id: 'u5' }];
+/** A fake write handler for the authorization endpoint that records the body and answers like PostgREST. */
+function authWrite(seen) {
+  return ({ init, table }) => {
+    seen.push({ table, method: init.method, body: init.body ? JSON.parse(init.body) : undefined });
+    return jsonResponse(201, [{ id: 41, tier: 'lucas', source: 'lucas_relay' }]);
+  };
+}
+
+test('006: add refuses any status but backlog or proposed, before any request (nothing is created authorized)', async () => {
+  for (const status of ['open', 'in_progress', 'blocked', 'needs_acceptance']) {
+    const r = await cli(['add', '--as', 'lucas', '--title', 'x', '--status', status]);
+    assert.equal(r.code, 2, status);
+    assert.match(r.err, /add creates a task as backlog or proposed only: nothing is created authorized/);
+    assert.equal(r.calls.length, 0);
+  }
+  const r = await cli(['add', '--as', 'justin', '--title', 'x']);
+  assert.equal(postOf(r).status, 'proposed');
+});
+
+test('006: every request sends x-evryn-session when CLAUDE_CODE_SESSION_ID is set, and none when it is not; a malformed one is refused before any request', async () => {
+  const withS = await cli(['add', '--as', 'mira', '--title', 'x'], { env: SESSION_ENV });
+  assert.equal(withS.calls.find((c) => c.init.method === 'POST').init.headers['x-evryn-session'], SESSION_ENV.CLAUDE_CODE_SESSION_ID);
+  const without = await cli(['add', '--as', 'mira', '--title', 'x']);
+  assert.equal(without.calls.find((c) => c.init.method === 'POST').init.headers['x-evryn-session'], undefined);
+  const bad = await cli(['pull', '--as', 'mira'], { env: { ...TEST_ENV, CLAUDE_CODE_SESSION_ID: 'not a session!' } });
+  assert.equal(bad.code, 2);
+  assert.equal(bad.calls.length, 0);
+});
+
+test("006: authorize inserts one task_authorizations row for the task's uuid, with tier, rule, note, envelope and proposal; it prints the T-auth id", async () => {
+  const seen = [];
+  const r = await cli(['authorize', 'T-5', '--as', 'lucas', '--tier', 'lucas', '--rule', 'authorization-rules.md §1 item 1', '--note', 'inside T-81', '--envelope', '{"max_api_usd": 5}', '--proposal', 'docs/p.md@abc123'],
+    { env: SESSION_ENV, rows: authRows(), onWrite: authWrite(seen) });
+  assert.equal(r.code, 0, r.err);
+  assert.equal(seen.length, 1);
+  assert.equal(seen[0].table, 'task_authorizations');
+  assert.deepEqual(seen[0].body, { task_id: 'u5', kind: 'authorization', tier: 'lucas', note: 'inside T-81', rule_ref: 'authorization-rules.md §1 item 1', envelope: { max_api_usd: 5 }, proposal_ref: 'docs/p.md@abc123' });
+  assert.match(r.out, /^authorized T-5 .*\(T-auth #41, tier lucas, source lucas_relay\)/m);
+  const justin = [];
+  assert.equal((await cli(['authorize', 'T-5', '--as', 'lucas', '--tier', 'justin', '--ref', 'his words, Log 15:27', '--note', 'his yes'], { env: SESSION_ENV, rows: authRows(), onWrite: authWrite(justin) })).code, 0);
+  assert.equal(justin[0].body.justin_ref, 'his words, Log 15:27');
+});
+
+test('006: authorize and accept refuse, before any request: an actor but lucas or justin, no or a bad tier, a Lucas tier with no --rule, a Justin tier with no --ref, no note, no session, a bad envelope', async () => {
+  const base = ['authorize', 'T-5', '--note', 'n'];
+  for (const [argv, env, pattern] of [
+    [[...base, '--as', 'ac', '--tier', 'lucas', '--rule', 'r'], SESSION_ENV, /only lucas or justin may authorize/],
+    [[...base, '--as', 'lucas'], SESSION_ENV, /--tier must be lucas or justin/],
+    [[...base, '--as', 'lucas', '--tier', 'backfill'], SESSION_ENV, /--tier must be lucas or justin/],
+    [[...base, '--as', 'lucas', '--tier', 'lucas'], SESSION_ENV, /needs --rule/],
+    [[...base, '--as', 'lucas', '--tier', 'justin'], SESSION_ENV, /needs --ref/],
+    [['authorize', 'T-5', '--as', 'lucas', '--tier', 'lucas', '--rule', 'r'], SESSION_ENV, /--note is required/],
+    [[...base, '--as', 'lucas', '--tier', 'lucas', '--rule', 'r'], TEST_ENV, /needs a session/],
+    [[...base, '--as', 'lucas', '--tier', 'lucas', '--rule', 'r', '--envelope', '[1]'], SESSION_ENV, /--envelope must be a JSON object/],
+    [['accept', 'T-5', '--as', 'lucas', '--tier', 'lucas', '--rule', 'r', '--note', 'n', '--proposal', 'p'], SESSION_ENV, /belong to an authorization/],
+    [['accept', 'T-5', '--as', 'mira', '--tier', 'lucas', '--rule', 'r', '--note', 'n'], SESSION_ENV, /only lucas or justin may accept/],
+  ]) {
+    const r = await cli(argv, { env, rows: authRows() });
+    assert.equal(r.code, 2, argv.join(' '));
+    assert.match(r.err, pattern, argv.join(' '));
+    assert.equal(r.calls.length, 0, `a request left for ${argv.join(' ')}`);
+  }
+});
+
+test('006: accept inserts an acceptance row; close without --decided-against is retired and points at accept', async () => {
+  const seen = [];
+  const r = await cli(['accept', 'T-5', '--as', 'lucas', '--tier', 'lucas', '--rule', 'authorization-rules.md §1 item 2', '--note', 'delivered: docs/x.md'], { env: SESSION_ENV, rows: authRows(), onWrite: authWrite(seen) });
+  assert.equal(r.code, 0, r.err);
+  assert.deepEqual(seen[0].body, { task_id: 'u5', kind: 'acceptance', tier: 'lucas', note: 'delivered: docs/x.md', rule_ref: 'authorization-rules.md §1 item 2' });
+  const close = await cli(['close', 'T-5', '--as', 'lucas', '--note', 'shipped']);
+  assert.equal(close.code, 2);
+  assert.match(close.err, /use accept \(lucas or justin\) to close as done; hand work in with update --status needs_acceptance --to lucas\./);
+  assert.equal(close.calls.length, 0);
+});
+
+test('006: on authorized work, update refuses --title, --body or --owner without --rescope (no write); --rescope sends it and warns; on a proposed task there is no refusal', async () => {
+  for (const status of ['open', 'in_progress', 'blocked', 'needs_acceptance']) {
+    for (const opt of [['--title', 'new words'], ['--body', 'progress: half done'], ['--owner', 'soren']]) {
+      const r = await cli(['update', 'T-1', '--as', 'ac', ...opt], { rows: [task(1, { status, raci: { r: 'lucas' } })] });
+      assert.equal(r.code, 2, `${status} ${opt[0]}`);
+      assert.match(r.err, /this changes the task's scope: it returns to proposed and needs re-authorization\. Put progress in --note\. Add --rescope if you mean to change the scope\./);
+      assert.equal(writes(r).length, 0);
+    }
+  }
+  const re = await cli(['update', 'T-1', '--as', 'ac', '--body', 'a different job', '--rescope'], { rows: [task(1, { status: 'open' })] });
+  assert.equal(re.code, 0, re.err);
+  assert.equal(patchOf(re).description, 'a different job');
+  assert.match(re.err, /--rescope: this returns the task to proposed/);
+  const prop = await cli(['update', 'T-1', '--as', 'ac', '--title', 'sharper headline'], { rows: [task(1, { status: 'proposed' })] });
+  assert.equal(prop.code, 0, prop.err);
+  // progress in a note is never a scope change
+  assert.equal((await cli(['update', 'T-1', '--as', 'ac', '--note', 'progress: half done'], { rows: [task(1, { status: 'open' })] })).code, 0);
+});
+
+test('006: a status write from backlog or proposed into authorized work is refused before any write, pointing at authorize', async () => {
+  for (const [from, to] of [['proposed', 'open'], ['backlog', 'in_progress'], ['proposed', 'needs_acceptance']]) {
+    const r = await cli(['update', 'T-1', '--as', 'lucas', '--status', to, '--note', 'go', '--to', 'lucas'], { rows: [task(1, { status: from })] });
+    assert.equal(r.code, 2, `${from} → ${to}`);
+    assert.match(r.err, /a task becomes authorized only by an authorization record \(tasks authorize T-1, lucas or justin\)/);
+    assert.equal(writes(r).length, 0);
+  }
+});
+
+test('006: show prints the authorization record (tier, source, actor, session, ref, envelope, proposal, scope, whether it still matches) and RE-AUTHORIZATION NEEDED; pull marks the flag', async () => {
+  const t = { ...task(7, { status: 'proposed', needs_reauthorization: true }), id: 'u7', raci: { r: 'lucas', a: 'lucas' }, description: '', created_at: 'c', updated_at: 'u', links: [], scope_hash: 'h2', authorization_id: null };
+  const auths = [
+    { id: 3, task_id: 'u7', kind: 'authorization', tier: 'justin', source: 'lucas_relay', actor: 'lucas', session_id: 'sess-1', justin_ref: 'Log 15:27', rule_ref: null, scope_hash: 'h1', scope: { title: 'old words', description: 'the job', owner: 'lucas' }, envelope: { max_api_usd: 5 }, proposal_ref: 'docs/p.md', note: 'his yes', at: 'a3' },
+  ];
+  const base = fakePostgrest({ rows: [t] }).fetchImpl;
+  // paginateAll stops only on an empty page: answer the authorization record's second page with nothing
+  let authPages = 0;
+  const fetchImpl = async (url, init) => {
+    if (new URL(url).pathname.endsWith('/task_authorizations')) return jsonResponse(200, (authPages += 1) === 1 ? auths : []);
+    return base(url, init);
+  };
+  const r = await cli(['show', 'T-7'], { fetchImpl });
+  assert.equal(r.code, 0, r.err);
+  assert.match(r.out, /RE-AUTHORIZATION NEEDED/);
+  assert.match(r.out, /Authorization record \(1\):/);
+  assert.match(r.out, /T-auth #3 a3 authorization · tier justin · source lucas_relay · by lucas · session sess-1/);
+  assert.match(r.out, /Justin's words: Log 15:27 · scope has CHANGED since/);
+  assert.match(r.out, /envelope: \{"max_api_usd":5\}/);
+  assert.match(r.out, /proposal: docs\/p\.md/);
+  assert.match(r.out, /scope: "old words" · owner lucas · body: the job/);
+  const pull = await cli(['pull', '--as', 'lucas'], { rows: [task(9, { status: 'proposed', needs_reauthorization: true })] });
+  assert.match(pull.out, /T-9 \[proposed, re-authorization needed\] task 9/);
 });
