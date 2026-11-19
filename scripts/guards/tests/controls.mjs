@@ -152,6 +152,7 @@ const CONTROLS = [
   ['gate.mjs', 'QCR New 2: the kill switch\'s STOP does not stop another role', 'if (!bad.length && ks && fs.existsSync(ks))', 'if (false)'],
   ['gate.mjs', 'QCR New 6b: EVRYN_* variables reach the watch', " && !/^EVRYN_/i.test(k)", ''],
   ['lib.mjs', 'QCR New 6c: test overrides honored in the vault', 'export const env = name => (IN_VAULT ? undefined : process.env[name]);', 'export const env = name => process.env[name];'],
+  ['lib.mjs', 'QCR New 1: a comment or string saying from "x" counts as an import', "^\\s*(?:import|export)\\s+(?:type\\s+)?[\\w\\s{},*$]*?\\bfrom", "\\bfrom"],
   ['lib.mjs', 'QCR New 6c: the vault does not find itself (hard-coded path)', 'IN_VAULT ? path.dirname(fileURLToPath(import.meta.url)) : ', ''],
 ];
 

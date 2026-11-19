@@ -190,7 +190,7 @@ export const shaText = buf => createHash('sha256').update(Buffer.from(Buffer.isB
 const BUILTIN = /^node:|^(fs|path|os|url|util|crypto|child_process|http|https|net|tls|dgram|readline|stream|events|zlib|assert|buffer|worker_threads|process)(\/|$)/;
 export function localImports(text) {
   const rel = new Set(), bare = new Set();
-  const re = /\bfrom\s*['"]([^'"]+)['"]|\bimport\s*\(\s*['"]([^'"]+)['"]\s*\)|^\s*import\s*['"]([^'"]+)['"]|\brequire\s*\(\s*['"]([^'"]+)['"]\s*\)/gm;
+  const re = /^\s*(?:import|export)\s+(?:type\s+)?[\w\s{},*$]*?\bfrom\s*['"]([^'"]+)['"]|\bimport\s*\(\s*['"]([^'"]+)['"]\s*\)|^\s*import\s*['"]([^'"]+)['"]|\brequire\s*\(\s*['"]([^'"]+)['"]\s*\)/gm;
   for (const m of String(text).matchAll(re)) {
     const spec = m[1] || m[2] || m[3] || m[4];
     if (/^\.\.?\//.test(spec)) rel.add(spec); else if (!BUILTIN.test(spec)) bare.add(spec);

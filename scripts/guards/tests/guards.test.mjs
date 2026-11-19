@@ -518,6 +518,7 @@ test('shellParse: quote-aware words, joined quotes, substitutions outside single
   assert.deepEqual(p.segments.map(w => w[0]), ['curl', 'git', 'echo']);
   assert.deepEqual(p.substs, ['inner cmd']);
   assert.deepEqual(L.localImports("import {\n a } from './a.mjs';\nimport b from 'pkg';\nconst c = await import('../c.mjs');\nimport 'node:fs';"), { rel: ['./a.mjs', '../c.mjs'], bare: ['pkg'] });
+  assert.deepEqual(L.localImports("// tell \"the same note again\" from \"no note\"\nconst s = 'pick one from \"left-pad\"';\nexport { y } from './y.mjs';"), { rel: ['./y.mjs'], bare: [] }, 'a comment or string saying from "x" is not an import (the dry run found one in the real task CLI)');
 });
 
 // Truncation canary — DO NOT REMOVE: FULL FILE LOADED
