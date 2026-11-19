@@ -48,7 +48,9 @@ const URL_OPENER = /(^|[\s(=&;|])(start|start-process|saps|explorer(\.exe)?)\s+[
 const PS_RISK = /msxml2\.|winhttp\.|serverxmlhttp|(^|[\s(;|&])(iex|invoke-expression)(?=$|[\s(;'"])/;
 const PKG_NET = /(^|[^a-z0-9_.-])(npm|pnpm|yarn|bun)\s+(i|install|ci|add|publish|update|up|exec|dlx|x)\b|(^|[^a-z0-9_.-])(pip3?|python3?\s+-m\s+pip|uv|poetry)\s+(install|add|download)\b/;
 // Network APIs in code: inline (`node -e`, `python -c`, a PowerShell script block) or in a script this session wrote.
-const NET_API = /fetch\s*\(|https?\.(request|get)\s*\(|net\.(connect|createconnection)|tls\.connect|new\s+websocket|websocket\s*\(|xmlhttprequest|urllib|requests\.(get|post|put|patch|delete|request|session)|http\.client|socket\.(socket|create_connection)|invoke-webrequest|invoke-restmethod|net\.webclient|system\.net\.http|undici|axios|node-fetch|child_process.*curl/;
+// (DCF 11/18: also any import of node's network modules, so `require('https').request(` and `import http from 'node:http'`
+// count, not only the literal `https.request(`.)
+const NET_API = /require\s*\(\s*['"]?(node:)?(https?|net|tls|dgram|undici)['"]?\s*\)|\bfrom\s+['"](node:)?(https?|net|tls|dgram)['"]|import\s*\(\s*['"](node:)?(https?|net|tls|dgram)['"]|fetch\s*\(|https?\.(request|get)\s*\(|net\.(connect|createconnection)|tls\.connect|new\s+websocket|websocket\s*\(|xmlhttprequest|urllib|requests\.(get|post|put|patch|delete|request|session)|http\.client|socket\.(socket|create_connection)|invoke-webrequest|invoke-restmethod|net\.webclient|system\.net\.http|undici|axios|node-fetch|child_process.*curl/;
 // Inline code is checked for network APIs only when an interpreter runs it (node -e, python -c, pwsh -command), so a grep
 // FOR the word fetch( isn't refused. The PowerShell tool's whole command is code, so it is always checked.
 const INLINE = /(^|[\s(])(node|nodejs|deno|bun|python3?|py|ruby|perl|php|pwsh|powershell)(\.exe)?(\s+\S+)*?\s+(-(e|c|p|r|ec|command)|--(eval|print))(\s|$)/;

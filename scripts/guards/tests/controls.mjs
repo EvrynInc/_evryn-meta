@@ -92,7 +92,7 @@ const CONTROLS = [
   ['vault/approve-guards.mjs', 'QCI 4: the wrapper runs a copy it never checked', 'if($got -ne $want){', 'if($false){'],
   ['vault/approve-guards.mjs', 'QCI 5: the vaulted webhook is not the team .env\'s', "write('webhook.json', { team: hook });", "write('webhook.json', { team: 'https://hooks.slack.com/x' });"],
   ['vault/approve-guards.mjs', 'QCI 5: the full webhook is printed', 'export const webhookHint = url => `${new URL(url).host} …${url.slice(-6)}`;', 'export const webhookHint = url => url;'],
-  ['ping.mjs', 'QCI 5: the vault ping reads the team .env, not webhook.json', 'if (IN_VAULT) {\n  if (useDev)', 'if (false) {\n  if (useDev)'],
+  ['ping.mjs', 'QCI 5: the vault ping reads the team .env, not webhook.json', 'if (IN_VAULT) {', 'if (false) {'],
   ['gate.mjs', 'QCI 5: a failed alarm is recorded as delivered', 'tries: 1, delivered: status === 0 }));', 'tries: 1, delivered: true }));'],
   ['gate.mjs', 'QCI 5: a pre-written alarm record suppresses the first ping', 'const status = alarm(bad, log, { kill: true });', 'const status = readJSON(alarmFile, {}).delivered ? 0 : alarm(bad, log, { kill: true });'],
   ['gate.mjs', 'QCI 5: an undelivered alarm is retried every run, not hourly', '!(Date.now() - new Date(a.lastTry) < HOUR)', 'true'],
@@ -111,6 +111,7 @@ const CONTROLS = [
   ['outbound-gate.mjs', 'QCI 6: -ec is not an encoded command', String.raw`const ENCODED = /(^|\s)-e[a-z]*\s+[a-z0-9+/=]{16,}/;`, String.raw`const ENCODED = /(^|\s)-(e|en|enc|enco|encod|encode|encoded|encodedc|encodedcommand)\s+[a-z0-9+/=]{16,}/;`],
   ['outbound-gate.mjs', 'QCI 6: git settings that redirect or run commands not caught', 'if (GIT_RISK.test(seg)) {', 'if (false) {'],
   ['vault/outbound-allowlist.json', 'QCI 6: any named remote is allowlisted for git push', '(origin|https://github', '([a-z]+|https://github'],
+  ['outbound-gate.mjs', 'an imported network module (require(\'https\')) not counted', String.raw`const NET_API = /require\s*\(\s*['"]?(node:)?(https?|net|tls|dgram|undici)['"]?\s*\)|\bfrom\s+['"](node:)?(https?|net|tls|dgram)['"]|import\s*\(\s*['"](node:)?(https?|net|tls|dgram)['"]|fetch`, 'const NET_API = /fetch'],
   ['outbound-gate.mjs', 'QCI 6: preloaded files not checked', '[...openText.matchAll(PRELOAD)].map(m => m[5])', '[]'],
   ['outbound-gate.mjs', 'QCI 6: code piped into an interpreter not caught', 'if (open.length && STDIN_PIPE.test(c))', 'if (false)'],
   ['outbound-gate.mjs', 'QCI 6: a heredoc-written script run in the same command not caught', 'if (files.length && NET_API.test(openText))', 'if (false)'],
@@ -120,7 +121,9 @@ const CONTROLS = [
   ['outbound-gate.mjs', 'calendar: an attendee spelled with a space slips through', 'Array.isArray(input?.attendees) ? input.attendees : []', '[]'],
   ['secrets-guard.mjs', 'QCI 7: no realpath (junctions and 8.3 names pass)', 'try { head = fs.realpathSync.native(head); }', 'try { void 0; }'],
   ['secrets-guard.mjs', 'QCI 7: stream suffixes and trailing dots kept', String.raw`x.replace(/:.*$/, '').replace(/[. ]+$/, '')`, 'x'],
-  ['secrets-guard.mjs', 'QCI 7: \\\\?\\ and admin-share prefixes kept', String.raw`s = s.replace(/^\/\/[?.]\/(unc\/)?/i`, String.raw`s = s.replace(/^NEVER/i`],
+  // The prefix stripping overlaps the name net (a path ending evryn-backend/.env), so one control removes both: it shows
+  // the stripping is what catches \\?\ and \\localhost\C$\ when the name net doesn't.
+  ['secrets-guard.mjs', 'QCI 7: \\\\?\\ and admin-share prefixes kept (and the name net off)', String.raw`s = s.replace(/^\/\/[?.]\/(unc\/)?/i`, String.raw`s = s.replace(/^NEVER/i`, String.raw` || /(^|\/)evryn-backend\/\.env$/.test(p);`, ';'],
   ['secrets-guard.mjs', 'QCI 7: recursive searches not caught', 'if (RECURSIVE.test(c))', 'if (false)'],
   ['secrets-guard.mjs', 'QCI 7: wildcards that expand to .env not caught', 'if (READER.test(c) && DOT_GLOB.test(c))', 'if (false)'],
   ['secrets-guard.mjs', 'QCI 7: copying or archiving the backend not caught', 'if (BULK.test(c))', 'if (false)'],
@@ -169,10 +172,16 @@ function copy(mut) {
 }
 
 let ok = true;
+// Preflight: every control's text must be found and its mutation must pass its syntax check BEFORE the long run starts,
+// so one stale control can't throw away half an hour of suite runs.
+const broken = [CRASH_PROBE, ...CONTROLS].flatMap(c => { try { copy(c); return []; } catch (e) { return [String(e.message)]; } });
+if (broken.length) { console.log(`REFUSED: ${broken.length} control(s) can't be applied:\n${broken.join('\n')}`); process.exit(1); }
 const clean = await suite(copy(null));
 console.log(`clean copy: ${clean} (${CLEAN_TESTS} tests)`);
 if (clean !== 'pass') { console.log('REFUSED: the clean copy does not pass, so no control can mean anything. Fix the suite first.'); process.exit(1); }
-const jobs = [{ c: CRASH_PROBE, probe: true }, ...CONTROLS.map(c => ({ c }))];
+// CONTROLS_ONLY=<regex> runs only the controls whose label matches (a quick re-check; a full run is the record).
+const only = process.env.CONTROLS_ONLY ? new RegExp(process.env.CONTROLS_ONLY) : null;
+const jobs = [{ c: CRASH_PROBE, probe: true }, ...CONTROLS.filter(c => !only || only.test(c[1])).map(c => ({ c }))];
 const results = new Array(jobs.length); let next = 0;
 await Promise.all(Array.from({ length: Number(process.env.CONTROLS_JOBS || 6) }, async () => { while (next < jobs.length) { const i = next++; results[i] = await suite(copy(jobs[i].c)); } }));
 jobs.forEach(({ c, probe }, i) => {
