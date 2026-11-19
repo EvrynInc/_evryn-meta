@@ -16,6 +16,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
+import { createHash } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
 
 // 🔴 Test overrides are IGNORED when this file runs from the vault (Fresh Soren's review, finding 7): any lower
 // settings file's `env` can set an EVRYN_* variable, so an honored override in production is a way around every guard
@@ -25,7 +27,9 @@ export const isVaultUrl = url => /^file:\/\/\/c:\/program%20files\/claudecode\//
 export const IN_VAULT = isVaultUrl(import.meta.url);
 export const env = name => (IN_VAULT ? undefined : process.env[name]);
 export const now = () => (env('EVRYN_GUARD_NOW') ? new Date(env('EVRYN_GUARD_NOW')) : new Date());
-export const VAULT = env('EVRYN_GUARD_VAULT') || 'C:\\Program Files\\ClaudeCode\\evryn-guards';
+// From the vault, the vault is the folder this file sits in (DCF2, 2026-11-19: the same path in production, and it lets a
+// vault-mode test copy under a spaced temp folder find its own vault; QCR finding 6c).
+export const VAULT = IN_VAULT ? path.dirname(fileURLToPath(import.meta.url)) : (env('EVRYN_GUARD_VAULT') || 'C:\\Program Files\\ClaudeCode\\evryn-guards');
 export const DATA = env('EVRYN_GUARD_DATA') || path.join(process.env.LOCALAPPDATA || path.join(os.homedir(), 'AppData', 'Local'), 'evryn-guards');
 
 export function readStdin() {
@@ -126,6 +130,73 @@ export const vaultJSON = (name, dflt) => readJSON(path.join(VAULT, name), dflt);
 // escape characters that split a word without changing it ("c""url", c^url, c`url) removed. A classifier, not a parser:
 // see each guard's "can't see" list.
 export const normCmd = s => String(s || '').toLowerCase().replace(/\\/g, '/').replace(/["'`^]/g, '');
+
+// ---------- shell commands, parsed quote-aware (DCF2, 2026-11-19; QCR findings New 1 and New 5) ----------
+// A classifier's view of a shell command: segments (split on unquoted ; | & && || newlines and ( ) { }), each a list of
+// words with quotes removed and quoted pieces joined (so c""url is the word curl), plus the text of every command
+// substitution ($(…), `…`, <(…), >(…)) found outside single quotes, which stands in its word as "$SUBST". Backslashes are
+// kept as written. NOT a shell: it doesn't expand variables, globs, aliases, here-docs or PowerShell script blocks; each
+// guard's "can't see" list says what that costs.
+function grab(s, i) {                                                   // s[i-1] was "(": return [inner, index after ")"]
+  let depth = 1, j = i, q = null;
+  for (; j < s.length; j++) {
+    const c = s[j];
+    if (q) { if (c === q) q = null; continue; }
+    if (c === "'" || c === '"') q = c;
+    else if (c === '(') depth++;
+    else if (c === ')' && --depth === 0) return [s.slice(i, j), j + 1];
+  }
+  return [s.slice(i), s.length];
+}
+export function shellParse(command) {
+  const s = String(command || '');
+  const segments = []; const substs = [];
+  let words = [], word = '', inWord = false;
+  const pushWord = () => { if (inWord) words.push(word); word = ''; inWord = false; };
+  const endSeg = () => { pushWord(); if (words.length) segments.push(words); words = []; };
+  for (let i = 0; i < s.length;) {
+    const c = s[i];
+    if (c === "'") { const j = s.indexOf("'", i + 1); const e = j < 0 ? s.length : j; word += s.slice(i + 1, e); inWord = true; i = e + 1; continue; }
+    if (c === '"') {
+      inWord = true; i++;
+      while (i < s.length && s[i] !== '"') {
+        if (s[i] === '\\' && '"$`'.includes(s[i + 1] || 'x')) { word += s[i + 1]; i += 2; continue; }
+        if (s[i] === '$' && s[i + 1] === '(') { const [inner, e] = grab(s, i + 2); substs.push(inner); word += '$SUBST'; i = e; continue; }
+        if (s[i] === '`') { const j = s.indexOf('`', i + 1); const e = j < 0 ? s.length : j; substs.push(s.slice(i + 1, e)); word += '$SUBST'; i = e + 1; continue; }
+        word += s[i]; i++;
+      }
+      i++; continue;
+    }
+    if ((c === '$' || c === '<' || c === '>') && s[i + 1] === '(') { const [inner, e] = grab(s, i + 2); substs.push(inner); word += '$SUBST'; inWord = true; i = e; continue; }
+    if (c === '`') { const j = s.indexOf('`', i + 1); const e = j < 0 ? s.length : j; substs.push(s.slice(i + 1, e)); word += '$SUBST'; inWord = true; i = e + 1; continue; }
+    if (c === '^') { i++; continue; }                                  // cmd's escape character splits a word without changing it
+    if (/\s/.test(c) && c !== '\n' && c !== '\r') { pushWord(); i++; continue; }
+    if (';|&\n\r(){}'.includes(c)) { endSeg(); i++; continue; }
+    word += c; inWord = true; i++;
+  }
+  endSeg();
+  return { segments, substs };
+}
+// The program a word names: its last path part, lowercased, without .exe (C:/Windows/System32/curl.exe → curl).
+export const progName = w => String(w || '').replace(/\\/g, '/').split('/').pop().toLowerCase().replace(/\.exe$/, '');
+
+// ---------- content pins for allowlisted scripts (DCF2, 2026-11-19; QCR finding New 1) ----------
+// A script's text, hashed with line endings normalized (the repos check out with core.autocrlf, so the working tree holds
+// CRLF where git holds LF; the same reviewed text must hash the same either way).
+export const shaText = buf => createHash('sha256').update(Buffer.from(Buffer.isBuffer(buf) ? buf.toString('utf8').replace(/\r\n/g, '\n') : String(buf).replace(/\r\n/g, '\n'))).digest('hex');
+// The local files a module imports: relative specifiers in static imports, re-exports, import() with a literal, and
+// require() with a literal. `bare` lists every other specifier that isn't a node: builtin (a package, which a pin can't
+// cover). A specifier built at run time is invisible here; the pinned file's own hash is what fixes its text.
+const BUILTIN = /^node:|^(fs|path|os|url|util|crypto|child_process|http|https|net|tls|dgram|readline|stream|events|zlib|assert|buffer|worker_threads|process)(\/|$)/;
+export function localImports(text) {
+  const rel = new Set(), bare = new Set();
+  const re = /\bfrom\s*['"]([^'"]+)['"]|\bimport\s*\(\s*['"]([^'"]+)['"]\s*\)|^\s*import\s*['"]([^'"]+)['"]|\brequire\s*\(\s*['"]([^'"]+)['"]\s*\)/gm;
+  for (const m of String(text).matchAll(re)) {
+    const spec = m[1] || m[2] || m[3] || m[4];
+    if (/^\.\.?\//.test(spec)) rel.add(spec); else if (!BUILTIN.test(spec)) bare.add(spec);
+  }
+  return { rel: [...rel], bare: [...bare] };
+}
 
 // The text of every string in a tool input, for guards that must look at all of it (a URL, an attendee, a path).
 export const allStrings = o => (o == null ? [] : typeof o === 'string' ? [o] : typeof o === 'object' ? Object.values(o).flatMap(allStrings) : []);
