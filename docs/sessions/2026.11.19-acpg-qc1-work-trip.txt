@@ -1,0 +1,74 @@
+<task>
+Your load is complete and verified. It was assembled before you knew what you would be doing — so now that you know, **if the work genuinely needs something you do not have, LOAD IT.** You are not confined to the original list, and you should not work around a gap you could close by reading. Use your judgment freely here; it is useful now in a way it could not have been before.
+
+Two conditions, both of which matter:
+
+1. **Load IN ADDITION to what you already have, never INSTEAD of it.** Nothing on the original list becomes optional now that you can see the task. If something on it looks irrelevant in hindsight, you are wrong about that, or it was cheap — either way it stays loaded.
+2. **Name anything you loaded beyond the list in your receipts, with one line on why you needed it.** Do this even if the extra read turned out to be unnecessary. **Your spinner built that list without knowing what you would discover, and this report is the ONLY signal they get that it had a gap** — so it is not bookkeeping; it is the mechanism by which the next brief is better than this one.
+
+You are **QC1**. Your load is verified by script against your transcript. I am AC-PG, the lane AC for this build. **Read-only for the code: you write nothing except your report file and your sandbox's scratch.**
+
+**Read these first, in full, each to its bottom canary:**
+1. `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-sorenpg-acpg-packout-guard-step1-brief.md` (full; run `wc -l` first because its Log grows). Its §1–§5 and its Log carry the plan, the Captain's rulings (the 17:28, 17:42, 17:55 and 18:13 entries) and my 18:13 review of DC1's work.
+2. `C:/Users/jbmcg/Evryn/Code/evryn-team-workspace/shared/projects/product/2026/2026.11.19-packout-guard-build/2026.11.19-packout-guard-build-brief.md` (full — 238 lines). This is the spec: §3.1–§3.3 and the §4 controls. **There is no C13.**
+3. `C:/Users/jbmcg/Evryn/Code/evryn-team-workspace/shared/projects/helm/2026/2026.11.19-packout-chain-investigation/2026.11.19-guard-design-soren-review.md` (full — 376 lines). §1 is the evidence, including the four ways the prototype's instrument was wrong.
+4. `C:/Users/jbmcg/Evryn/Code/evryn-team-workspace/shared/projects/helm/2026/2026.11.19-packout-chain-investigation/2026.11.19-packout-chain-ledger.md` (full — 398 lines). Its seat entries are the expected verdicts.
+5. `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-acpg-DC1-report.md` (full — 307 lines). This is the builder's own account. **Treat it as a set of claims to test, not as findings.**
+
+**The job: an independent, adversarial review of `packout.mjs` step 1, at branch head `066560c`, by PROBING the real script on real transcripts, not by reading it.** The code is itself a check that later checks will rely on, so it must be proven able to FAIL as well as PASS. Specifically:
+- **(1) Re-run every control yourself** from a **detached sandbox worktree outside the code folder**: `git -C C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard worktree add --detach C:/Users/jbmcg/.claude/jobs/d1700c43/tmp/sandbox-qc1 066560c`. The controls are:
+  - the `node --test` suite;
+  - `historical.mjs`;
+  - `mutations.mjs`;
+  - a real-path run of `begin`, `sweep` and `check` in your own session.
+
+  For each control, say whether it went red **for the mutation's reason**, as distinct from going red for any reason at all.
+- **(2) Judge each "ledger silent" FAIL as either a real failure or an instrument miss, with the transcript line that settles it.** My 18:13 review names the ones to probe hardest:
+  - Thea's C12, against ledger line 305 ("four near-zero rows");
+  - the C2 "task note none" FAILs (Lucas am2, Lucas am3, Thea);
+  - am3's C12;
+  - C9 on windowed reads.
+
+  **The Captain's ruling (18:13):** a task note is a `tasks.mjs update … --note` or `close … --note` call. An update without `--note` is the seat's own gap, not an instrument miss, so say which case each one is. **A false FAIL is the costliest error here,** because each one becomes Justin's time.
+- **(3) Probe DC1's 4 errored Bash calls**, which its return didn't itemize. Find them in its transcript (`C:/Users/jbmcg/.claude/projects/c--Users-jbmcg-Evryn-Code--evryn-meta/d1700c43-f67c-4a05-9b5d-d82f21b10f88/subagents/agent-a3fead75958a4e88e.jsonl`, by script; `calls.mjs` marks them `ERR`). For each, say what it was and whether its failure was absorbed into a claim.
+- **(4) Look for what nobody named.** Ways a check passes when it shouldn't (the dangerous direction); command-parsing still standing in for content; checks that read the wrong session's writes; C8 or C7 judged against the wrong file version; `verify` passes that a tampered report or transcript could earn; anything in the spec (build brief §3) the code doesn't do; and anything the code does that the spec doesn't ask for.
+- **Severity per your rubric. Evidence for every finding:** a command and its output, or a transcript line. A finding with no evidence is a lead; label it as one.
+
+**How much of the system I've read, so you weigh this correctly:** all five documents above, the code's file list (not its contents, line by line), and the results of my own re-runs of the suite (31/31) and `historical.mjs` (31/31 assertions hold). **I have not read the code itself, and I have not run `mutations.mjs` or a real-path run.** You will be the first agent other than its author to read the code. Treat everything in DC1's report and my review as a LEAD. Where this brief is silent, assume I couldn't see it. 🔴 **You are not just executing.** If anything I've given you is wrong, internally inconsistent, or unverifiable, say so first. A contradiction you surface costs one message; one you resolve quietly costs a false record nobody knows is false.
+
+**Limits, binding:**
+- **Write only:** your report file, your sandbox `C:/Users/jbmcg/.claude/jobs/d1700c43/tmp/sandbox-qc1`, and scratch at `C:/Users/jbmcg/.claude/jobs/d1700c43/tmp/qc1/`.
+- **Do not edit or commit any file in `_evryn-meta-packout-guard`** other than your report. I commit your report. You may `git add` and commit it by path yourself (`git commit -F - -- <report>`) on `soren/packout-guard` if I haven't.
+- No push, no merge. No `git checkout`, `stash`, `merge`, `reset` or `rebase` in any main folder. Never `EnterWorktree`. Install nothing: no settings, hooks, `CLAUDE.md` or protocol text.
+- **Read transcripts only by script, never into your context. Never read a secret value** (no `.env`, no `backups/full-public*`). Send nothing outside the company; no network.
+- Tests use `PACKOUT_STATE_DIR`. Your real-path run uses your scratch as its state folder.
+- **Spin no subagents.** If you ever did, you would pin every spin's model explicitly.
+- **Reap your sandbox before you return** (`git worktree remove`, never `--force`), and confirm with `git worktree list`.
+- **Finish the whole task, not just the tractable part.** If you genuinely cannot finish something, do the rest and say plainly what is missing and why.
+- 🔴 **Time: stop by 19:10 PT** and return, whatever state you're in. Write what you have and name what you didn't reach. **Shorten no probe to fit.**
+
+**Your output:** write the full report to `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-acpg-QC1-report.md` (with a canary). It must carry:
+- a verdict, GO or NO-GO;
+- each finding with its severity and evidence;
+- your re-run of every control;
+- your ruling on each probed FAIL;
+- DC1's 4 errored Bash calls;
+- what you didn't reach.
+
+**Your return to me is at most 25 lines,** with your headings capped at `##`.
+</task>
+
+<questions_first>
+Do the work — or, if a real gap would compromise it, output a numbered list of blocking questions INSTEAD and stop. Don't guess past a real gap — but also don't manufacture questions to dodge the work.
+</questions_first>
+
+<output_format>
+Wrap your entire final response in a heading pair, so your spinner can see at a glance where your output begins and ends inside a wall of tool output.
+
+Open with:  ## QC1's Output
+Close with: ## End of QC1's Output
+
+Use your own designated name — the one given to you in <identity>. Put nothing after the closing line.
+</output_format>
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
