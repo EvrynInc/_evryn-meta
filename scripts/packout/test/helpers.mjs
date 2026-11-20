@@ -81,7 +81,7 @@ export const verdicts = (out) => Object.fromEntries([...out.matchAll(/^(PASS|FAI
  * The GOOD packout, built step by step against the real CLI: every check should PASS.
  * Returns { f, tx, L } where L names the deciding transcript line of each step, for mutation tests.
  */
-export function goodPackout({ agent = 'soren', shortSweeps = false, bashSweeps = false } = {}) {
+export function goodPackout({ agent = 'soren', shortSweeps = false, bashSweeps = false, earlySweep2 = false } = {}) {
   const NL = String.fromCharCode(10), TAB = String.fromCharCode(9);
   const readSweep = (tx, p) => {
     const lines = fs.readFileSync(p, 'utf8').split(NL);
@@ -110,12 +110,14 @@ export function goodPackout({ agent = 'soren', shortSweeps = false, bashSweeps =
   const s1 = r.out.match(/sweep 1: (.*?) \(/)[1];
   L.sweep1 = tx.bash('node packout.mjs sweep', r.out);
   L.sweep1Read = readSweep(tx, s1);
-  L.handoffWrite = tx.write(f.handoff, `# Outgoing handoff\n\nSubagent a1b2c3d4 (the fresh reader).\n\n## Uncommitted\n\n\`shared/handoff-out.md\`\n\`shared/carried.md\`\n\nTruncation canary — DO NOT REMOVE: FULL FILE LOADED\n`);
+  const writeHandoff = () => { L.handoffWrite = tx.write(f.handoff, `# Outgoing handoff\n\nSubagent a1b2c3d4 (the fresh reader).\n\n## Uncommitted\n\n\`shared/handoff-out.md\`\n\`shared/carried.md\`\n\nTruncation canary — DO NOT REMOVE: FULL FILE LOADED\n`); tx.flush(); };
+  if (!earlySweep2) writeHandoff();
   tx.flush();
   r = run(f, 'sweep', '--handoff', f.handoff, '--transcript', f.transcript); if (r.code !== 0) throw new Error('sweep2: ' + r.err);
   const s2 = r.out.match(/sweep 2: (.*?) \(/)[1];
   L.sweep2 = tx.bash('node packout.mjs sweep', r.out);
   L.sweep2Read = readSweep(tx, s2);
+  if (earlySweep2) writeHandoff(); // both sweeps BEFORE the handoff's first write: the second cannot count for C5
   const fe = f.handoff.replace(/\.md$/, '.fresh-eyes.md');
   fs.writeFileSync(fe, '# Findings\n\nnone\n\nTruncation canary — DO NOT REMOVE: FULL FILE LOADED\n'); // written by ANOTHER session: no call here
   L.findingsRead = tx.read(fe);

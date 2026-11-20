@@ -25,8 +25,11 @@ const M = [
   ['C1', CH, 'const w = calls.filter(after(from)).find((k) => writes(k, memoryPath));', 'const w = calls.filter(after(from)).find((k) => true);', /mutation C1:/],
   ['C2', CH, 'const ok = cs && (ts || !topsheetPath) && tn;', 'const ok = cs && (ts || !topsheetPath);', /mutation C2:/],
   ['C3', CH, 'const target = s.N + 1; // the marker line', 'const target = s.N; // the marker line', /instrument 2:/],
-  ['C4', CH, "return hw.length ? R('C4', 'PASS'", "return true ? R('C4', 'PASS'", /mutation C4:/],
-  ['C5', CH, 'const cand = ctx.sweeps.filter((s) => s.createdN > first && (!c3 || s !== c3));', 'const cand = ctx.sweeps.filter((s) => s.createdN >= 0 && (!c3 || s !== c3));', /mutation C5:/],
+  // (first run: `return true ? R('C4','PASS', …hw[0].n…)` did NOT go red — the evidence expression throws on an empty list, and a
+  // crashed check is reported FAIL. Fail-safe, but it proved nothing; this mutation breaks the deciding filter instead.)
+  ['C4', CH, 'function handoffWrites(ctx) { return ctx.calls.filter(after(ctx.from)).filter((k) => writes(k, ctx.handoff)); }', 'function handoffWrites(ctx) { return ctx.calls.filter(after(ctx.from)).filter((k) => k.ok); }', /mutation C4:/],
+  // (first run: this mutation did NOT go red — no test made a second sweep before the handoff's first write. Test C5b added.)
+  ['C5', CH, 'const cand = ctx.sweeps.filter((s) => s.createdN > first && (!c3 || s !== c3));', 'const cand = ctx.sweeps.filter((s) => s.createdN >= 0 && (!c3 || s !== c3));', /mutation C5b:/],
   ['C6', CH, 'const miss = spawns.filter(', 'const miss = [].filter(', /mutation C6:/],
   ['C7', CH, "if (!reads.length) return R('C7', 'FAIL'", "if (!reads.length) return R('C7', 'PASS'", /mutation C7:/],
   ['C8', CH, 'const eq = equalsFile(lw, handoffText);', 'const eq = { equal: true };', /instrument 3:/],

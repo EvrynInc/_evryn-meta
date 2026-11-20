@@ -44,6 +44,11 @@ test('mutation C3: deleting both sweep Reads flips C3 (and C5) to FAIL; deleting
   g = goodPackout(); g.tx.blank(g.L.sweep1Read).flush();
   only(check(g.f).out, ['C5']); // one owned sweep read to its marker satisfies the lock sweep, so the SECOND sweep is what is missing
 });
+test('mutation C5b: a second sweep made BEFORE the handoff\'s first write does not count for C5', () => {
+  const g = goodPackout({ earlySweep2: true });
+  const v = only(check(g.f).out, ['C5']);
+  assert.match(v.C5.e, /no sweep extract made after the handoff's first write/);
+});
 test('mutation C6: inserting an Agent call the handoff does not name flips C6 to FAIL', () => {
   const g = goodPackout(); g.tx.agent('helper described only by its job', 'ffff0000eeee1111'); g.tx.flush();
   const v = only(check(g.f).out, ['C6']);
