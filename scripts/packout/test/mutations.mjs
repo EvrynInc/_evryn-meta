@@ -51,7 +51,18 @@ const M = [
   ['F6', CH, "return normPath(p) === qq || normPath(p).endsWith('/' + qq);", 'return normPath(p).endsWith(qq);', /F6:/],
   ['F7', CH, "/tasks\\.mjs[\"']?\\s+(update|close)\\b[^|]*\\s--note\\b/", '/tasks\\.mjs[^|]*note/', /F7:/],
   ['F8', PO, 'if (!prev.sessions.includes(session) && !a.resume) die(', 'if (false) die(', /F8:/],
-  ['F10', TX, '    else if (o.isCompactSummary) summaries.push({ n, ts: o.timestamp });', '    if (o.isCompactSummary) compactions.push({ n, ts: o.timestamp });', /F10:/],
+  // ---- fix trip 2 (QC2's N9, N1, N10, N13, N17, N15 a/c): each row REVERTS one fix; its test must go red
+  ['N9-bound', PO, 'const bound = Math.max(meta.n, checkRow.n);', 'const bound = meta.n;', /N9 \(honest, same turn\)/],
+  ['N9-C11', PO, 'if (i11 >= 0) lines[i11] = C11({ compactions: full.compactions, calls: full.calls });', 'void i11;', /N9: a compaction AFTER check/],
+  ['N9-norow', PO, 'if (!checkRow) { console.log(', 'if (false) { console.log(', /N9: a report no check call/],
+  ['N1', PO, 'const t = findTranscript(a.predecessor);', 'const t = fs.existsSync(meta.transcript) ? meta.transcript : null;', /N1 \(QC2 P1b\)/],
+  ['N10', PO, "if (!a.predecessor || a.predecessor === true || !a.handoff || a.handoff === true) die(", 'if (false) die(', /N10:/],
+  ['N13', PO, 'if (a.agent !== prev.agent) die(', 'if (false) die(', /N13:/],
+  ['N17-verify', PO, 'const repPath = path.resolve(winPath(a.report));', 'const repPath = path.resolve(a.report);', /N17:/],
+  ['N17-check', PO, 'const out = a.out || path.resolve(winPath(a.handoff))', 'const out = a.out || path.resolve(a.handoff)', /N17:/],
+  ['N15a', PO, 'if (!s) forVerify ? (console.log(', 'if (!s) false ? (console.log(', /N15 \(a\)/],
+  ['N15c', PO, 'if (isMain) {', 'if (true) {', /N15 \(c\)/],
+  ['F10', TX,'    else if (o.isCompactSummary) summaries.push({ n, ts: o.timestamp });', '    if (o.isCompactSummary) compactions.push({ n, ts: o.timestamp });', /F10:/],
 ];
 const count = (s, sub) => s.split(sub).length - 1;
 // SEALED-EXEC: followed 2026-11-19 — process.execPath is the node binary already running this script; no network.

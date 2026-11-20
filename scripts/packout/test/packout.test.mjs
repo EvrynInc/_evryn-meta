@@ -7,8 +7,10 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { goodPackout, check, run, verdicts, Tx, codeRoot, PACKOUT } from './helpers.mjs';
-import { parse, winPath } from '../lib/transcript.mjs';
+import { goodPackout, check, checkRecorded, verify, run, verdicts, Tx, codeRoot, PACKOUT } from './helpers.mjs';
+import { pathToFileURL } from 'node:url';
+import { parse, winPath, hashFirst } from '../lib/transcript.mjs';
+const verdictsN = (rep) => { const m = /```json\n([\s\S]*?)\n```/.exec(fs.readFileSync(rep, 'utf8')); return JSON.parse(m[1]).n; };
 import { C4, uncommittedList, bashWriteTargets, launchSegment, isTaskNote } from '../lib/checks.mjs';
 
 const ALL = ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12'];
@@ -153,53 +155,59 @@ test('a launch is a segment whose first word is the claude binary (or "$VAR" set
   assert.equal(launchSegment('cat > note.md <<EOF\nclaude --bg -n x\nEOF'), null);
 });
 
-// ---- verify (ruling ⓹)
-function passed() { const g = goodPackout(); const r = check(g.f); assert.equal(r.code, 0); return { g, rep: g.f.handoff.replace(/\.md$/, '.packout-report.md') }; }
+// ---- verify (ruling ⓹). check's own row is written into the transcript (checkRecorded), as a real seat's is; verify anchors on it.
+function passed() { const g = goodPackout(); const r = checkRecorded(g); assert.equal(r.code, 0); return { g, rep: g.f.handoff.replace(/\.md$/, '.packout-report.md') }; }
 test('verify: same machine, untouched → VERIFY PASS', () => {
   const { g, rep } = passed();
-  const r = run(g.f, 'verify', '--report', rep);
+  const r = verify(g, rep);
   assert.equal(r.code, 0, r.out + r.err); assert.match(r.out, /^VERIFY PASS/);
 });
 test('verify: a tampered report (a verdict changed) → FAIL', () => {
   const { g, rep } = passed();
   fs.writeFileSync(rep, fs.readFileSync(rep, 'utf8').replace('"C8":"PASS"', '"C8":"OPEN"'));
-  const r = run(g.f, 'verify', '--report', rep);
+  const r = verify(g, rep);
   assert.equal(r.code, 1); assert.match(r.out, /C8: report says OPEN, re-run says PASS/);
 });
 test('verify: the handoff edited after the PASS → FAIL (C8 re-judged against the file now)', () => {
   const { g, rep } = passed();
   fs.appendFileSync(g.f.handoff, 'late edit\n');
-  const r = run(g.f, 'verify', '--report', rep);
+  const r = verify(g, rep);
   assert.equal(r.code, 1); assert.match(r.out, /C8: report says PASS, re-run says FAIL/);
 });
 test('verify: lines appended to the transcript after the check are fine; a change inside lines 1..N fails with that message', () => {
   const { g, rep } = passed();
   g.tx.say('later turn'); g.tx.flush();
-  assert.equal(run(g.f, 'verify', '--report', rep).code, 0, 'growth after N is expected');
+  assert.equal(verify(g, rep).code, 0, 'growth after N is expected');
   const t = fs.readFileSync(g.f.transcript, 'utf8').split('\n'); t[1] = t[1].replace('Working.', 'Working!'); fs.writeFileSync(g.f.transcript, t.join('\n'));
-  const r = run(g.f, 'verify', '--report', rep);
+  const r = verify(g, rep);
   assert.equal(r.code, 1); assert.match(r.out, /first \d+ lines changed/);
 });
 const editMeta = (rep, fn) => { const t = fs.readFileSync(rep, 'utf8'); const m = /```json\n([\s\S]*?)\n```/.exec(t); const j = JSON.parse(m[1]); fn(j); fs.writeFileSync(rep, t.replace(m[1], JSON.stringify(j))); };
-test('verify: cross-machine (another host, transcript absent) is DOWNGRADED with exit 3, never 0, and catches a handoff change', () => {
+test('verify: cross-machine (no transcript for the session here, report from another host) is DOWNGRADED with exit 3, never 0, and catches a handoff change', () => {
   const { g, rep } = passed();
   editMeta(rep, (j) => { j.machine = 'SOME-OTHER-HOST'; });
   fs.renameSync(g.f.transcript, g.f.transcript + '.elsewhere');
-  let r = run(g.f, 'verify', '--report', rep);
+  let r = verify(g, rep);
   assert.equal(r.code, 3); assert.match(r.out, /VERIFY DOWNGRADED \(cross-machine\).*NOT a pass/);
   fs.appendFileSync(g.f.handoff, 'late\n');
-  r = run(g.f, 'verify', '--report', rep);
+  r = verify(g, rep);
   assert.equal(r.code, 1); assert.match(r.out, /handoff changed since the check/);
+});
+test('verify: a report saying it was made HERE, with no transcript for its session here → FAIL', () => {
+  const { g, rep } = passed();
+  fs.renameSync(g.f.transcript, g.f.transcript + '.elsewhere');
+  const r = verify(g, rep);
+  assert.equal(r.code, 1); assert.match(r.out, /made on this machine.*no transcript for session testsess/);
 });
 
 // ---- QC1's findings and AC-PG's F-AC1/F-AC2 (fix trip). Each test fails without its fix.
 test('F1 (QC1 P1): a forged report pointing at a missing transcript, same machine → VERIFY FAIL, not DOWNGRADED', () => {
   const g = goodPackout(); g.tx.blank(g.L.memory).flush();
   const rep = g.f.handoff.replace(/\.md$/, '.packout-report.md');
-  assert.equal(check(g.f).code, 1);
+  assert.equal(checkRecorded(g).code, 1);
   editMeta(rep, (j) => { j.verdicts.C1 = 'PASS'; j.transcript = 'C:/nowhere/forged.jsonl'; });
-  const r = run(g.f, 'verify', '--report', rep);
-  assert.equal(r.code, 1, r.out); assert.match(r.out, /made on this machine.*not here/);
+  const r = verify(g, rep);
+  assert.equal(r.code, 1, r.out); assert.match(r.out, /C1: report says PASS, re-run says FAIL/);
 });
 test('F1: verify checks the successor footer — a wrong PREDECESSOR or HANDOFF fails; the right ones pass', () => {
   const { g, rep } = passed();
@@ -210,10 +218,92 @@ test('F1: verify checks the successor footer — a wrong PREDECESSOR or HANDOFF 
 test('F2 (QC1 P2): a forged report state (incoming dropped, C7 flipped to PASS) → VERIFY FAIL; state comes from the transcript', () => {
   const g = goodPackout(); g.tx.blank(g.L.incomingRead).flush();
   const rep = g.f.handoff.replace(/\.md$/, '.packout-report.md');
-  assert.equal(verdicts(check(g.f).out).C7.v, 'FAIL');
+  assert.equal(verdicts(checkRecorded(g).out).C7.v, 'FAIL');
   editMeta(rep, (j) => { j.incoming = null; if (j.state) j.state.incoming = null; j.verdicts.C7 = 'PASS'; });
-  const r = run(g.f, 'verify', '--report', rep);
+  const r = verify(g, rep);
   assert.equal(r.code, 1, r.out); assert.match(r.out, /C7: report says PASS, re-run says FAIL|incoming/);
+});
+
+// ---- QC2's findings (fix trip 2). Each test fails without its fix.
+test('N9 (QC2 P9): a forged n (with its sha recomputed) that hides a compaction → VERIFY FAIL; C11 is judged on the whole transcript', () => {
+  const g = goodPackout(); g.tx.compact(); g.tx.flush();
+  const rep = g.f.handoff.replace(/\.md$/, '.packout-report.md');
+  assert.equal(checkRecorded(g).code, 1);
+  const n = verdictsN(rep) - 1; // the line before the compaction row
+  editMeta(rep, (j) => { j.n = n; j.sha = hashFirst(g.f.transcript, n).sha; j.verdicts.C11 = 'PASS'; });
+  const r = verify(g, rep);
+  assert.equal(r.code, 1, r.out); assert.match(r.out, /C11: report says PASS, re-run says FAIL/);
+});
+test('N9 (QC2 P9b): a forged n that hides an unlisted, uncommitted Write → VERIFY FAIL; C10 is judged at least to check\'s own row', () => {
+  const g = goodPackout(); g.tx.write(path.join(g.f.tw, 'shared', 'stray9.md'), 'x\n'); g.tx.flush();
+  const rep = g.f.handoff.replace(/\.md$/, '.packout-report.md');
+  assert.equal(checkRecorded(g).code, 1);
+  const n = verdictsN(rep) - 2; // before the Write's two rows
+  editMeta(rep, (j) => { j.n = n; j.sha = hashFirst(g.f.transcript, n).sha; j.verdicts.C10 = 'PASS'; });
+  const r = verify(g, rep);
+  assert.equal(r.code, 1, r.out); assert.match(r.out, /C10: report says PASS, re-run says FAIL/);
+});
+test('N9 (honest, same turn): a repo Write landing after check counted its lines but before check\'s own row → VERIFY FAIL', () => {
+  const g = goodPackout();
+  const r0 = checkRecorded(g, { before: () => g.tx.write(path.join(g.f.tw, 'shared', 'sameturn.md'), 'x\n') });
+  assert.equal(r0.code, 0, 'check could not see the Write: its row had not reached the transcript');
+  const r = verify(g, g.f.handoff.replace(/\.md$/, '.packout-report.md'));
+  assert.equal(r.code, 1, r.out); assert.match(r.out, /C10: report says PASS, re-run says FAIL/);
+});
+test('N9: a compaction AFTER check\'s own row, before verify → VERIFY FAIL (C11 is unbounded)', () => {
+  const { g, rep } = passed();
+  g.tx.compact(); g.tx.flush();
+  const r = verify(g, rep);
+  assert.equal(r.code, 1, r.out); assert.match(r.out, /C11: report says PASS, re-run says FAIL/);
+});
+test('N9: a report no check call in the transcript produced → VERIFY FAIL', () => {
+  const g = goodPackout(); const r0 = check(g.f); assert.equal(r0.code, 0); // check ran, but its row never reached the transcript
+  const r = verify(g, g.f.handoff.replace(/\.md$/, '.packout-report.md'));
+  assert.equal(r.code, 1); assert.match(r.out, /no `packout.mjs check` call/);
+});
+test('N1 (QC2 P1b): QC1\'s P1 plus an edited machine field, real transcript present → VERIFY FAIL, not DOWNGRADED', () => {
+  const g = goodPackout(); g.tx.blank(g.L.memory).flush();
+  const rep = g.f.handoff.replace(/\.md$/, '.packout-report.md');
+  assert.equal(checkRecorded(g).code, 1);
+  editMeta(rep, (j) => { j.verdicts.C1 = 'PASS'; j.transcript = 'C:/nowhere/forged.jsonl'; j.machine = 'SOME-OTHER-HOST'; });
+  const r = verify(g, rep);
+  assert.equal(r.code, 1, r.out); assert.match(r.out, /C1: report says PASS, re-run says FAIL/);
+});
+test('N10: verify without --predecessor or --handoff exits non-zero', () => {
+  const { g, rep } = passed();
+  for (const extra of [[], ['--predecessor', 'testsess'], ['--handoff', g.f.handoff]]) {
+    const r = run(g.f, 'verify', '--report', rep, ...extra);
+    assert.notEqual(r.code, 0); assert.match(r.err, /verify needs --report, --predecessor and --handoff/);
+  }
+});
+test('N13: a second begin with a different --agent or --incoming is refused, naming both values', () => {
+  const g = goodPackout();
+  let r = run(g.f, 'begin', '--agent', 'thea', '--handoff', g.f.handoff, '--incoming', g.f.incoming, '--transcript', g.f.transcript);
+  assert.equal(r.code, 1); assert.match(r.err, /began with --agent soren; this begin says --agent thea/);
+  r = run(g.f, 'begin', '--agent', 'soren', '--handoff', g.f.handoff, '--transcript', g.f.transcript);
+  assert.equal(r.code, 1); assert.match(r.err, /began with --incoming .*handoff-in\.md; this begin says --incoming \(none\)/);
+  r = run(g.f, 'begin', '--agent', 'soren', '--handoff', g.f.handoff, '--incoming', g.f.incoming, '--transcript', g.f.transcript);
+  assert.equal(r.code, 0, r.err);
+});
+test('N17: check and verify with Git-Bash /c/... paths on win32', { skip: process.platform !== 'win32' }, () => {
+  const g = goodPackout();
+  const gb = (p) => p.replace(/\\/g, '/').replace(/^([A-Za-z]):\//, (_, d) => `/${d.toLowerCase()}/`);
+  const r1 = run(g.f, 'check', '--handoff', gb(g.f.handoff), '--transcript', gb(g.f.transcript));
+  assert.equal(r1.code, 0, r1.out + r1.err);
+  g.tx.bash(`node packout.mjs check --handoff ${gb(g.f.handoff)}`, r1.out); g.tx.flush();
+  const rep = g.f.handoff.replace(/\.md$/, '.packout-report.md');
+  const r2 = run(g.f, 'verify', '--report', gb(rep), '--predecessor', 'testsess', '--handoff', gb(g.f.handoff));
+  assert.equal(r2.code, 0, r2.out + r2.err); assert.match(r2.out, /^VERIFY PASS/);
+});
+test('N15 (a): verify with the predecessor\'s state missing says so, not "run begin first"', () => {
+  const { g, rep } = passed();
+  const st = fs.readdirSync(g.f.state)[0]; fs.renameSync(path.join(g.f.state, st), path.join(g.f.root, 'moved-state'));
+  const r = verify(g, rep);
+  assert.equal(r.code, 1); assert.match(r.out, /predecessor's packout state .* is missing on this machine/); assert.doesNotMatch(r.err + r.out, /run begin first/);
+});
+test('N15 (c): importing packout.mjs does not run the CLI; its exports are usable', () => {
+  const r = spawnSync(process.execPath, ['--input-type=module', '-e', `import(${JSON.stringify(pathToFileURL(PACKOUT).href)}).then((m) => console.log(typeof m.anchors, typeof m.profileFor))`], { encoding: 'utf8' });
+  assert.equal(r.status, 0, r.stderr); assert.match(r.stdout, /^function function/);
 });
 test('F-AC1: a sweep run in the same turn as the handoff Write (the run-time count lags) still counts after the Write: C5 PASS', () => {
   const g = goodPackout({ lagSweep: true });
@@ -261,7 +351,7 @@ test('F8: a second begin from a different session is refused unless --resume', (
   const g = goodPackout();
   const r = spawnSync(process.execPath, [PACKOUT, 'begin', '--agent', 'soren', '--handoff', g.f.handoff, '--transcript', g.f.transcript], { encoding: 'utf8', env: { ...process.env, PACKOUT_STATE_DIR: g.f.state, PACKOUT_CODE_ROOT: g.f.root, CLAUDE_CODE_SESSION_ID: 'another-session' } });
   assert.equal(r.status, 1); assert.match(r.stderr, /REFUSED.*--resume/);
-  const r2 = spawnSync(process.execPath, [PACKOUT, 'begin', '--agent', 'soren', '--handoff', g.f.handoff, '--transcript', g.f.transcript, '--resume'], { encoding: 'utf8', env: { ...process.env, PACKOUT_STATE_DIR: g.f.state, PACKOUT_CODE_ROOT: g.f.root, CLAUDE_CODE_SESSION_ID: 'another-session' } });
+  const r2 = spawnSync(process.execPath, [PACKOUT, 'begin', '--agent', 'soren', '--handoff', g.f.handoff, '--incoming', g.f.incoming, '--transcript', g.f.transcript, '--resume'], { encoding: 'utf8', env: { ...process.env, PACKOUT_STATE_DIR: g.f.state, PACKOUT_CODE_ROOT: g.f.root, CLAUDE_CODE_SESSION_ID: 'another-session' } });
   assert.equal(r2.status, 0, r2.stderr);
 });
 test('F4 (minimum): findings last written before the handoff\'s first write fail C9', () => {

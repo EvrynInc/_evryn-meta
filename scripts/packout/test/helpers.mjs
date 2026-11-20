@@ -55,7 +55,8 @@ export function codeRoot(agent = 'soren') {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'packout-test-'));
   const tw = path.join(root, 'evryn-team-workspace');
   const f = {
-    root, tw, state: path.join(root, 'state'), transcript: path.join(root, 'tx.jsonl'),
+    // the transcript sits where verify finds it BY SESSION (N1): <PACKOUT_PROJECTS_DIR>/<project>/<session>.jsonl
+    root, tw, state: path.join(root, 'state'), transcript: path.join(root, 'projects', 'proj', 'testsess.jsonl'),
     memory: path.join(tw, '.claude', 'agent-memory', agent, 'MEMORY.md'),
     cs: path.join(tw, 'shared', 'current-state', 'current-state.md'),
     top: path.join(tw, 'shared', 'projects', 'product', `${agent}-topsheet.md`),
@@ -63,6 +64,7 @@ export function codeRoot(agent = 'soren') {
     handoff: path.join(tw, 'shared', 'handoff-out.md'),
     incoming: path.join(tw, 'shared', 'handoff-in.md'),
   };
+  fs.mkdirSync(path.dirname(f.transcript), { recursive: true });
   for (const p of [f.memory, f.cs, f.top, f.nz]) { fs.mkdirSync(path.dirname(p), { recursive: true }); fs.writeFileSync(p, '# file\n\nTruncation canary — DO NOT REMOVE: FULL FILE LOADED\n'); }
   fs.writeFileSync(f.incoming, '# Incoming handoff\n\n## Uncommitted\n\n`shared/carried.md`\n\nTruncation canary — DO NOT REMOVE: FULL FILE LOADED\n');
   fs.writeFileSync(path.join(tw, 'shared', 'carried.md'), 'carried\n');
@@ -136,5 +138,13 @@ export function goodPackout({ agent = 'soren', shortSweeps = false, bashSweeps =
 }
 
 export const check = (f) => run(f, 'check', '--handoff', f.handoff, '--transcript', f.transcript);
+/** Run check AND write its own Bash row into the transcript, as a real seat's would be (verify anchors on that row: N9). */
+export function checkRecorded(g, { before } = {}) {
+  const r = check(g.f);
+  if (before) before(); // rows that land after check counted its lines but before check's own row (the same-turn lag)
+  g.tx.bash(`node packout.mjs check --handoff ${g.f.handoff}`, r.out); g.tx.flush();
+  return r;
+}
+export const verify = (g, rep, ...extra) => run(g.f, 'verify', '--report', rep, '--predecessor', 'testsess', '--handoff', g.f.handoff, ...extra);
 
 // Truncation canary — DO NOT REMOVE: FULL FILE LOADED

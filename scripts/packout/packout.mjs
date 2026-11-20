@@ -6,7 +6,7 @@
 //   node _evryn-meta/scripts/packout/packout.mjs begin  --agent <name> --handoff <path> [--incoming <path>]
 //   node _evryn-meta/scripts/packout/packout.mjs sweep  --handoff <path>
 //   node _evryn-meta/scripts/packout/packout.mjs check  --handoff <path>                      (writes <handoff-stem>.packout-report.md)
-//   node _evryn-meta/scripts/packout/packout.mjs verify --report <path>
+//   node _evryn-meta/scripts/packout/packout.mjs verify --report <path> --predecessor <session> --handoff <path>   (both from the footer)
 //   node _evryn-meta/scripts/packout/packout.mjs check --historical --transcript <file> --to <N> --from <line> --agent <name>
 //        --handoff <suffix> --final <file> [--incoming <suffix> --incoming-file <file>] [--findings <suffix> --findings-file <file>]
 //        [--hist <json-file>] [--out <report>]
@@ -22,7 +22,7 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { parse, hashFirst, sha12, normPath, winPath, readLines } from './lib/transcript.mjs';
 import { buildExtract, actionDigest } from './lib/sweep.mjs';
-import { runAll, stripHeredocs } from './lib/checks.mjs';
+import { runAll, stripHeredocs, C11 } from './lib/checks.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const CODE = process.env.PACKOUT_CODE_ROOT || path.resolve(HERE, '..', '..', '..');
@@ -52,7 +52,12 @@ function findTranscript(session) {
   let dirs = [];
   try { dirs = fs.readdirSync(PROJECTS).map((d) => path.join(PROJECTS, d)).filter((d) => fs.statSync(d).isDirectory()); } catch { return null; }
   const hits = [];
-  for (const d of dirs) for (const f of fs.readdirSync(d)) if (f.endsWith('.jsonl') && f.startsWith(session)) hits.push(path.join(d, f));
+  for (const d of dirs) for (const f of fs.readdirSync(d)) {
+    if (f.endsWith('.jsonl') && f.startsWith(session)) hits.push(path.join(d, f));
+    // a subagent's transcript lives at <project>/<parent-session>/subagents/agent-<agentId>.jsonl
+    const sub = path.join(d, f, 'subagents', `agent-${session}.jsonl`);
+    if (!f.endsWith('.jsonl') && fs.existsSync(sub)) hits.push(sub);
+  }
   return hits.length === 1 ? hits[0] : null;
 }
 function transcriptFor(a, s) {
@@ -210,6 +215,11 @@ function cmdBegin(a) {
   if (prev) {
     // F8: a second begin from a DIFFERENT session must say it is a resume; it then joins the chain with its own transcript.
     if (!prev.sessions.includes(session) && !a.resume) die(`REFUSED: a packout for this handoff already began in session ${prev.sessions.join(' → ')}; pass --resume to add session ${session} to its chain`, 1);
+    // N13: a second begin may not silently change what the packout is judged as (QC2 P13: an added --incoming was ignored,
+    // leaving C7 an unearned "no incoming" PASS). Refuse, naming both values.
+    const inc = a.incoming ? path.resolve(winPath(a.incoming)) : null;
+    if (a.agent !== prev.agent) die(`REFUSED: this packout began with --agent ${prev.agent}; this begin says --agent ${a.agent}`, 1);
+    if (normPath(inc || '') !== normPath(prev.incoming || '')) die(`REFUSED: this packout began with --incoming ${prev.incoming || '(none)'}; this begin says --incoming ${inc || '(none)'}`, 1);
     s = prev; if (!s.sessions.includes(session)) s.sessions.push(session);
     s.transcripts = s.transcripts || {}; s.transcripts[session] = t; s.transcript = t;
   } else s = { agent: a.agent, handoff, incoming: a.incoming ? path.resolve(winPath(a.incoming)) : null, sessions: [session], transcripts: { [session]: t }, transcript: t, beganAtRun: readLines(t).length, beganTs: new Date().toISOString(), incomingSha: a.incoming ? shaFile(path.resolve(winPath(a.incoming))) : null, sweeps: [] };
@@ -239,8 +249,11 @@ function cmdSweep(a) {
 }
 
 /** Judge a live packout. State supplies only the extract files' paths and hashes; every position comes from the transcript. */
-function liveCheck(a, { boundN } = {}) {
-  const handoff = path.resolve(winPath(a.handoff)); const s = loadState(handoff); if (!s) die('no packout state: run begin first');
+function liveCheck(a, { boundN, forVerify } = {}) {
+  const handoff = path.resolve(winPath(a.handoff));
+  const s = loadState(handoff);
+  // N15 (a): a successor is told the PREDECESSOR's state is missing here, not to "run begin"
+  if (!s) forVerify ? (console.log(`VERIFY FAIL\tthe predecessor's packout state for ${handoff} is missing on this machine (${statePath(handoff)}); its sweep extracts cannot be checked`), process.exit(1)) : die('no packout state: run begin first');
   const t = transcriptFor(a, s); const parsed = parse(t, { to: boundN });
   const an = anchors(parsed.calls, handoff);
   const notes = [];
@@ -292,37 +305,51 @@ function cmdHistorical(a) {
   process.exit(r.fails ? 1 : 0);
 }
 
-// verify (ruling ⓹, hardened per QC1 F1/F2):
-//  - the report's identity must match the successor's footer when given (--predecessor, --handoff);
-//  - the report's machine equal to this host and its transcript absent ⇒ FAIL (a missing path is not a different machine);
-//  - nothing is taken from the report but the claims under test: verify re-derives every verdict from the transcript and the
-//    on-disk state, bounded at N, and compares; the report's echoed agent/incoming/from must equal the re-derivation;
-//  - cross-machine ⇒ DOWNGRADED, exit 3 (never 0), so no caller can read it as a pass.
+// verify (ruling ⓹, hardened per QC1 F1/F2 and QC2 N9/N1/N10):
+//  - N10: --predecessor and --handoff (the successor's footer) are REQUIRED, and must match the report;
+//  - N1: verify finds the predecessor's transcript ITSELF, by session, the way check does; the report's transcript path and
+//    machine are hints only. It downgrades only when no transcript for that session exists on this machine;
+//  - N9: the report does not choose the bound. verify finds the `packout.mjs check` call whose output names this report and
+//    judges at least to that row (so C6/C10 see everything up to check's own row), and judges C11 UNBOUNDED;
+//  - nothing else is taken from the report but the claims under test; cross-machine ⇒ DOWNGRADED, exit 3, never 0.
 function cmdVerify(a) {
   if (!a.report) die('verify needs --report');
-  const txt = readOrNull(winPath(a.report)); if (txt == null) die(`report not readable: ${a.report}`, 1);
+  if (!a.predecessor || a.predecessor === true || !a.handoff || a.handoff === true) die('verify needs --report, --predecessor and --handoff (the last two from your start line\'s PREDECESSOR footer)');
+  const repPath = path.resolve(winPath(a.report));
+  const txt = readOrNull(repPath); if (txt == null) die(`report not readable: ${a.report}`, 1);
   const m = /```json\n([\s\S]*?)\n```/.exec(txt); if (!m) { console.log('VERIFY FAIL\tthe report carries no machine block'); process.exit(1); }
   let meta; try { meta = JSON.parse(m[1]); } catch { console.log('VERIFY FAIL\tthe report\'s machine block is not valid JSON'); process.exit(1); }
   const problems = [];
-  if (a.predecessor && a.predecessor !== true && meta.session !== a.predecessor) problems.push(`the report is for session ${meta.session}, the footer names ${a.predecessor}`);
-  if (a.handoff && a.handoff !== true && normPath(path.resolve(winPath(a.handoff))) !== normPath(meta.handoff)) problems.push(`the report is for handoff ${meta.handoff}, the footer names ${a.handoff}`);
+  if (meta.session !== a.predecessor) problems.push(`the report is for session ${meta.session}, the footer names ${a.predecessor}`);
+  if (normPath(path.resolve(winPath(a.handoff))) !== normPath(meta.handoff)) problems.push(`the report is for handoff ${meta.handoff}, the footer names ${a.handoff}`);
   if (problems.length) { console.log(`VERIFY FAIL\t${problems.join(' · ')}`); process.exit(1); }
-  if (fs.existsSync(meta.transcript)) {
-    const h = hashFirst(meta.transcript, meta.n);
+  const t = findTranscript(a.predecessor);
+  if (t) {
+    const h = hashFirst(t, meta.n);
     if (h.n !== meta.n || h.sha !== meta.sha) {
       console.log(`VERIFY FAIL\tthe transcript's first ${meta.n} lines changed since the check (sha ${meta.sha} at check, ${h.sha} now; ${h.n} lines): the report no longer describes this transcript`);
       process.exit(1);
     }
-    const { lines, meta: now } = liveCheck({ handoff: meta.handoff, transcript: meta.transcript }, { boundN: meta.n });
+    // N9: the bound is check's own row, found in the transcript, never the report's n alone
+    const full = parse(t);
+    const checkRow = full.calls.filter((k) => k.ok && k.name === 'Bash' && /packout\.mjs["']?\s+check\b/.test(stripHeredocs(String(k.input.command || ''))))
+      .filter((k) => { const r = String(k.text || '').match(/report: (.+)$/m); return r && normPath(r[1].trim()) === normPath(repPath); }).pop();
+    if (!checkRow) { console.log(`VERIFY FAIL\tno \`packout.mjs check\` call in the predecessor's transcript produced this report (${repPath})`); process.exit(1); }
+    const bound = Math.max(meta.n, checkRow.n);
+    const { lines, meta: now } = liveCheck({ handoff: meta.handoff, transcript: t }, { boundN: bound, forVerify: true });
+    // C11 is judged on the WHOLE transcript: a compaction anywhere before the successor starts means the predecessor compacted
+    const i11 = lines.findIndex((r) => r.id === 'C11');
+    if (i11 >= 0) lines[i11] = C11({ compactions: full.compactions, calls: full.calls });
     for (const k of ['agent', 'from', 'session']) if (String(now[k]) !== String(meta[k])) problems.push(`the report's ${k} (${meta[k]}) differs from the transcript's (${now[k]})`);
     if (normPath(now.incoming || '') !== normPath(meta.incoming || '')) problems.push(`the report's incoming (${meta.incoming}) differs from the begin call's (${now.incoming})`);
     for (const r of lines) if (meta.verdicts?.[r.id] !== r.verdict) problems.push(`${r.id}: report says ${meta.verdicts?.[r.id]}, re-run says ${r.verdict} (${r.evidence})`);
     if (Object.values(meta.verdicts || {}).includes('FAIL')) problems.push('the report itself carries a FAIL');
     if (problems.length) { console.log(`VERIFY FAIL\t${problems.join(' · ')}`); process.exit(1); }
-    console.log(`VERIFY PASS\tsame machine: transcript 1..${meta.n} sha ${meta.sha} unchanged; ${lines.length} verdicts re-derived from the transcript and on-disk state, and equal; the handoff now equals what the predecessor last read (C8)`);
+    const hint = normPath(meta.transcript || '') !== normPath(t) ? ` (the report's transcript path ${meta.transcript} differs; the transcript found by session was used)` : '';
+    console.log(`VERIFY PASS\tsame machine: transcript ${t} found by session; lines 1..${meta.n} sha ${meta.sha} unchanged; ${lines.length} verdicts re-derived to check's own row ${checkRow.n} (C11 over the whole transcript), and equal${hint}`);
     process.exit(0);
   }
-  if (meta.machine === os.hostname()) { console.log(`VERIFY FAIL\tthe report says it was made on this machine (${meta.machine}), but its transcript ${meta.transcript} is not here`); process.exit(1); }
+  if (meta.machine === os.hostname()) { console.log(`VERIFY FAIL\tthe report says it was made on this machine (${meta.machine}), but no transcript for session ${a.predecessor} is here`); process.exit(1); }
   const nowSha = shaFile(meta.handoff);
   if (nowSha !== meta.handoffSha) problems.push(`the handoff changed since the check (sha ${meta.handoffSha} at check, ${nowSha} now)`);
   if (Object.values(meta.verdicts || {}).includes('FAIL')) problems.push('the report itself carries a FAIL');
@@ -331,12 +358,16 @@ function cmdVerify(a) {
   process.exit(3);
 }
 
-const a = args(process.argv.slice(2));
-const sub = a._[0];
-if (sub === 'begin') cmdBegin(a);
-else if (sub === 'sweep') cmdSweep(a);
-else if (sub === 'check') cmdCheck(a);
-else if (sub === 'verify') cmdVerify(a);
-else die('usage: packout.mjs begin|sweep|check|verify … (see the header of this file)');
+// N15 (c): run the CLI only when this file is the program, so `import` of its exports (anchors, profileFor) works
+const isMain = !!process.argv[1] && path.resolve(process.argv[1]).toLowerCase() === fileURLToPath(import.meta.url).toLowerCase();
+if (isMain) {
+  const a = args(process.argv.slice(2));
+  const sub = a._[0];
+  if (sub === 'begin') cmdBegin(a);
+  else if (sub === 'sweep') cmdSweep(a);
+  else if (sub === 'check') cmdCheck(a);
+  else if (sub === 'verify') cmdVerify(a);
+  else die('usage: packout.mjs begin|sweep|check|verify … (see the header of this file)');
+}
 
 // Truncation canary — DO NOT REMOVE: FULL FILE LOADED
