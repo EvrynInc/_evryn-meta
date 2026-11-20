@@ -12,10 +12,13 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
-const SELF_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..');
 const root = process.argv[2] && path.resolve(process.argv[2]);
 if (!root || !fs.existsSync(path.join(root, 'scripts', 'packout', 'packout.mjs'))) { console.error('usage: mutations.mjs <sandbox-root>'); process.exit(2); }
-if (path.resolve(root).toLowerCase() === SELF_ROOT.toLowerCase()) { console.error('REFUSED: run this in a sandbox worktree, never the real checkout'); process.exit(2); }
+// A sandbox is a DETACHED worktree (`git worktree add --detach`): a checkout on a branch is somebody's real tree, so refuse it.
+// SEALED-EXEC: followed 2026-11-19 — system git on disk, read-only rev-parse; no network.
+const head = spawnSync('git', ['-C', root, 'rev-parse', '--abbrev-ref', 'HEAD'], { encoding: 'utf8' }).stdout.trim();
+if (head !== 'HEAD') { console.error(`REFUSED: ${root} is on branch "${head}"; run this only in a detached sandbox worktree`); process.exit(2); }
+void fileURLToPath;
 
 const CH = 'scripts/packout/lib/checks.mjs', TX = 'scripts/packout/lib/transcript.mjs';
 const M = [
