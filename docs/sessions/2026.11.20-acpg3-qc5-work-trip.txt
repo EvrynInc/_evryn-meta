@@ -1,0 +1,72 @@
+<task>
+Your load is complete and verified. It was assembled before you knew what you would be doing — so now that you know, **if the work genuinely needs something you do not have, LOAD IT.** You are not confined to the original list, and you should not work around a gap you could close by reading. Use your judgment freely here; it is useful now in a way it could not have been before.
+
+Two conditions, both of which matter:
+
+1. **Load IN ADDITION to what you already have, never INSTEAD of it.** Nothing on the original list becomes optional now that you can see the task. If something on it looks irrelevant in hindsight, you are wrong about that, or it was cheap — either way it stays loaded.
+2. **Name anything you loaded beyond the list in your receipts, with one line on why you needed it.** Do this even if the extra read turned out to be unnecessary. **Your spinner built that list without knowing what you would discover, and this report is the ONLY signal they get that it had a gap** — so it is not bookkeeping; it is the mechanism by which the next brief is better than this one.
+
+**You are QC5.** Use that name in your output headings. Your spinner is AC-PG3, the lane AC of the packout-guard build. You are a FRESH reviewer: not QC1–QC4 resumed. **This is the last review round of step 1: after you pass it, the Captain signs.**
+
+**What this lane is.** `scripts/packout/packout.mjs` (step 1 of the packout guard) is a script a seat runs by hand while it packs out: `begin`, `sweep`, `check` (writes the packout report) and `verify` (the successor's first act). QC4 found that the seven earlier fixes all hold, and found two honest-path blockers they did not touch; the Captain added a third. **DC2's fix trip 4 has just landed those three, plus the script's README.** Your review is scoped to that trip.
+
+**How much I have read, so you weigh this correctly:** the lane's Log, the definition of done, QC3's and QC4's reports, DC2's report, and the fix-trip-4 diff of C7 and C12 in `checks.mjs`. **I have NOT read the code whole, the tests, or the README.** Treat every claim below as a LEAD, including line numbers, and **say so loudly and early if any of it is wrong.** Where I am silent, assume I could not see it.
+
+🔴 **You are not just executing. If anything here is wrong, internally inconsistent, or unverifiable, STOP and tell me before acting.**
+
+### 1 · Read first, each whole to its canary (run `wc -l` first and read to the end)
+1. **QC4's report**, `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.20-acpg3-QC4-report.md`, whole: its §4 is where the three findings and their probes are (Q4-1 probes A–D, Q4-2 probe E, Q4-6 `p7`). Its scratch is `C:/Users/jbmcg/.claude/jobs/e8af53fa/tmp/qc4/`; you may READ it, never write there.
+2. **DC2's report**, `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.20-acpg3-DC2-report.md`, its **"## Fix trip 4"** section to the canary (find it with `Grep`).
+3. **The live brief** `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-sorenpg-acpg-packout-guard-step1-brief.md`, **from the entry headed "AC-PG3: QC4's report landed" to the end** (find it with `Grep`): my decisions and the Captain's 12:06 ruling, which sets your scope and stop rule.
+
+### 2 · Your stop rule (the Captain's 12:06 ruling, narrower than QC4's)
+- **A BLOCKER is a wrong verdict caused by, or left in, fix trip 4's three changes:** a false PASS on an honest skip, or a false FAIL on an honest packout, traceable to Q4-1, Q4-2 or Q4-6 as built.
+- **Anything else you notice goes to the v1.1 queue and never blocks:** a check v1 doesn't have, a hole that needs deliberate tampering with a seat-writable file, or anything outside these three changes. **Log it, rate it, and say plainly it doesn't block.**
+
+### 3 · What to verify
+1. **Q4-1 (C7 judged on the whole read alone):** C7 no longer compares the incoming handoff with the file as it stands now; it judges the seat's last whole Read after `begin`, by the read's own reported length. **Probe:** QC4's A (a SUPERSEDED banner after the re-read) → PASS; B (a HELD banner) → PASS; C (archived by `git mv` after the re-read) → PASS; D (a banner after a clean `check`) → `verify` PASS. **Then hunt the honest false PASS this could open:** no read after `begin`, a read short of the end, a read only before `begin`, a read of a DIFFERENT file at a similar path, a read whose window stops before the canary, a long file read across several windows, and the outgoing handoff (C8 must still compare with the file now). Each must give the verdict D3 requires.
+2. **Q4-2 (C12 under either name):** the near-zero table written under its old name (`2026.10.19-consolidation-standup-near-zero-campaign.md`) → PASS; under its new name (`2026.10.19-near-zero-campaign.md`) → PASS; no write and no `PACKOUT-NONE C12` line → FAIL. Check that the run-time resolution can't pick an unrelated file that merely shares part of the name.
+3. **Q4-6 (`beginsNaming` needs a real run):** QC4's `p7` shape (genuine cross-machine, plus another transcript holding a `grep` of a start line whose output is the footer) → DOWNGRADED, exit 3; QC3's GHOST (a real `begin` row naming the handoff) → still FAIL; DUP → still FAIL, ambiguous.
+4. **The README** (`scripts/packout/README.md`): check that it is accurate against the code as built (subcommands, exit codes, the checks, the machine-readable forms), that it states v1's strength honestly (honest skips, not forgery), and that it names the residuals and deferrals. A wrong statement a seat would act on is a finding; style is not.
+5. **No fix may add trust in another file the outgoing seat can write.** Check each of the three.
+
+**Then, the whole:**
+- **The FULL mutation run** in a fresh detached sandbox **outside the code folder**: `git -C C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard worktree add --detach C:/Users/jbmcg/.claude/jobs/e8af53fa/tmp/sandbox-qc5 <head>`. Baseline suite in the sandbox first, then `mutations.mjs <sandbox>`, then the suite again and `git status` (0 lines). **Every row must read RED for its reason; judge each by the name of its failing test.** Run it in the background, per-row output to your scratch; under load a row has taken up to ~4 minutes, so expect a long run. **QC4's own full run may still be running in `sandbox-qc4`; don't touch that sandbox.** If yours is killed: show the sandbox diff, restore it with `git restore`, and report which rows finished. Reap it with `git worktree remove` (never `--force`).
+- **Regressions:** the suite; `historical.mjs` (31/31, all five freeze hashes, `PACKOUT_CODE_ROOT=C:/Users/jbmcg/Evryn/Code`).
+- **The real path, read-only:** Guard Design Soren 11.19 2's real report (predecessor `09858954-0057-4f2d-a8ff-fa012bf86a13`; report and handoff in `evryn-team-workspace/shared/projects/product/2026/2026.11.19-packout-guard-build/`) → VERIFY PASS; AC-PG's (`docs/sessions/2026.11.19-acpg-acpg2-handoff.packout-report.md`, predecessor `d1700c43-…`) → VERIFY FAIL "the report itself carries a FAIL". **Show `~/.claude/packout/` unchanged afterwards.**
+
+### 4 · Limits
+- **Read-only on the lane's code:** you write only your report (in the worktree, committed by path with the pathspec on the commit, on `soren/packout-guard`), your scratch (`C:/Users/jbmcg/.claude/jobs/e8af53fa/tmp/qc5/`), and your sandbox (mutations only, restored). No push, no merge; never `EnterWorktree`.
+- No `checkout`, `stash`, `merge`, `reset` or `rebase` in any main folder. Install nothing: no settings file, hook, `CLAUDE.md`, protocol or agent-definition text. Read transcripts only by script, never into context. No secrets. No network. Spin no subagents. Write nothing to `~/.claude/packout/` or into `evryn-team-workspace`.
+- **No recursive delete in any Bash command.** Put any text containing backticks in a file or a quoted heredoc. Git on this machine takes `C:/…` paths, not `/c/…`.
+- Don't touch any settings file, even one named by a session-startup step; this branch is deliberate.
+- **Finish the whole task, not just the tractable part.** If you genuinely cannot finish something, do the rest and say plainly what is missing and why. **If you receive a STOP message from me, commit what you have and return.**
+- **Until `packout.mjs` is signed and live, every packout in this lane is checked by the session `Packout Checker 11.20 am 2` before its successor launches** (Justin's rule, 11/20 9:11).
+
+### 5 · Write your report, then return
+Write **`docs/sessions/2026.11.20-acpg3-QC5-report.md`** (with a truncation canary), committed **section by section as each piece lands**, any unfinished section marked NOT YET RUN. It carries:
+- your verdict, **GO or NO-GO by the stop rule above**, with what you would accept as GO;
+- each of the three fixes and the README: verified or not, with the probe and its output;
+- the full mutation run, row by row, with the baseline and after-suite;
+- the regressions and the two real-path results;
+- every finding, its severity, and **which side of the stop rule it falls**;
+- what you did not reach;
+- your receipts: every file read with its line ranges, every failed call on its own line, every transcript touched by script.
+
+**Return at most 25 lines.**
+</task>
+
+<questions_first>
+Do the work — or, if a real gap would compromise it, output a numbered list of blocking questions INSTEAD and stop. Don't guess past a real gap — but also don't manufacture questions to dodge the work.
+</questions_first>
+
+<output_format>
+Wrap your entire final response in a heading pair, so your spinner can see at a glance where your output begins and ends inside a wall of tool output.
+
+Open with:  ## [your designated name]'s Output
+Close with: ## End of [your designated name]'s Output
+
+Use your own designated name — the one given to you in <identity>. Put nothing after the closing line.
+</output_format>
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
