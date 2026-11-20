@@ -1,0 +1,33 @@
+<task>
+Your load is complete and verified. It was assembled before you knew what you would be doing — so now that you know, **if the work genuinely needs something you do not have, LOAD IT.** You are not confined to the original list, and you should not work around a gap you could close by reading. Use your judgment freely here; it is useful now in a way it could not have been before.
+
+Two conditions, both of which matter:
+
+1. **Load IN ADDITION to what you already have, never INSTEAD of it.** Nothing on the original list becomes optional now that you can see the task. If something on it looks irrelevant in hindsight, you are wrong about that, or it was cheap — either way it stays loaded.
+2. **Name anything you loaded beyond the list in your receipts, with one line on why you needed it.** Do this even if the extra read turned out to be unnecessary. **Your spinner built that list without knowing what you would discover, and this report is the ONLY signal they get that it had a gap** — so it is not bookkeeping; it is the mechanism by which the next brief is better than this one.
+
+You are AC-PG. Your load is verified by your Captain, by script against your transcript: all 19 files whole (34 calls; the two errored `ac.md` reads at the token cap were retried and covered; 0 compactions; `_evryn-meta`'s router `CLAUDE.md`).
+
+**Read `_evryn-meta/docs/sessions/2026.11.19-sorenpg-acpg-packout-guard-step1-brief.md` (full — 90 lines; confirm the bottom canary) first — it is your marching orders and it supersedes this message where they conflict.** Then execute it from its §3 step 1 (create your worktree), and stop at §3 step 2 for my reply to your plan before you spin anyone. Its §2 says how little of the system I have read: treat everything in it as a lead.
+
+**You will spin your own subagents (DC, QC, other ACs). When you do, you MUST follow `ac-orchestration-protocol.md` exactly — the tagged brief, pasted VERBATIM, with only the codified substitutions. That includes TWO-TRIP LOADING, which is not optional: trip 1 sends `<identity>` + `<mandatory_load>` + `<receipts>` and tells the agent NOTHING about the work; you verify its receipts against your list; only then do you resume it with `<task>`. Never send a load brief that mentions, hints at, or annotates files by what the work will need them for — the guarantee is that the agent cannot compute relevance during the load, and one hint hands that back. You do NOT get to improvise, condense, or "adapt" a brief; that HARD RULE binds you exactly as it binds the AC who spun you, and you may not change one word of those blocks without Justin's explicit prior OK. You are also bound by everything in this protocol that governs a spinner: assemble the load yourself and name every file with its line span, verify the receipts and re-load on any gap before granting the task, pin every spin's model explicitly, and NEVER tell a child where to report.**
+
+Your limits for this trip are the brief's §5; they replace the load trip's read-only limits. Reach me only with the literal `SendMessage` target `Guard Design Soren 11.19 2` (a deliberate routing override, not a role).
+</task>
+
+<questions_first>
+Do the work — or, if a real gap would compromise it, output a numbered list of blocking questions INSTEAD and stop. Don't guess past a real gap — but also don't manufacture questions to dodge the work.
+</questions_first>
+
+<output_format>
+Wrap your entire final response in a heading pair, so your spinner can see at a glance where your output begins and ends inside a wall of tool output.
+
+Open with:  ## [your designated name]'s Output
+Close with: ## End of [your designated name]'s Output
+
+Use your own designated name — the one given to you in <identity>. Put nothing after the closing line.
+</output_format>
+
+<isolation>
+You work in a dedicated worktree on your own branch; you never touch `main`; you never deploy (`railway up`).
+</isolation>
