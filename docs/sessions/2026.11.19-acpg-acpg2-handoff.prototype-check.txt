@@ -1,0 +1,17 @@
+PROTOTYPE packout-check.mjs (the review's appendix, lines 257-373; unsigned; it carries the +/-2 tolerance and command-parsing that step 1 removes) run on AC-PG's own packout at 2026-11-19T20:29-0800, from row 1870 (begin's own row, as the generated report records it). LABELLED AS THE PROTOTYPE. The generated report beside this file is the packout record. Known disagreements by design: the prototype has no AC profile (C1), finds only session-text.mjs extractions, not packout.mjs sweeps (C3, C5), and identifies the reader by any Agent call (C9).
+FAIL	C1 memory	no write to own MEMORY.md after the packout start
+FAIL	C2 current-state	no current-state write after the start (a "none, because" line would need a person)
+PASS	C4 handoff written	first write 1924, last 2012 (4 writes)
+FAIL	C3 lock sweep	no session-text extraction after the start
+FAIL	C5 second sweep	no extraction after the handoff was first written
+PASS	C7 incoming re-read	read whole after the start
+PASS	C8 outgoing re-read after LAST edit	whole after the last write (2012)
+PASS	C8b last whole Read = final file	Read at 2017 matches the final file exactly
+FAIL	C9 step-5 reader spawned	no subagent spawned after the handoff was first written
+INFO	C6 spawns to ledger	3 Agent or claude --bg calls in the session; each must be named in the handoff (a person or the reader checks names)
+PASS	C11 compaction	none in the transcript
+INFO	INFO protocols	not re-read after the start (not required, per Justin R10)
+SUMMARY	5 FAIL, 5 PASS	(transcript lines 1870..end)
+exit=1
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
