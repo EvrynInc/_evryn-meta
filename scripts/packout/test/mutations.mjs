@@ -31,7 +31,8 @@ const M = [
   ['C7', CH, "if (!reads.length) return R('C7', 'FAIL'", "if (!reads.length) return R('C7', 'PASS'", /mutation C7:/],
   ['C8', CH, 'const eq = equalsFile(lw, handoffText);', 'const eq = { equal: true };', /instrument 3:/],
   ['C9', CH, "if (!reads.length) return R('C9', 'FAIL'", "if (!reads.length) return R('C9', 'PASS'", /mutation C9:/],
-  ['C10', CH, 'if (c === false && !named(p)) bad.push(`${p} (written', 'if (false && !named(p)) bad.push(`${p} (written', /mutation C10:/],
+  // (fix trip 3b: C10's line gained the committed-since-write term; this row's target follows it, same mutation)
+  ['C10', CH, 'if (c === false && !named(p) && !committedSinceWrite(ctx, p, ts)) bad.push(', 'if (false && !named(p) && !committedSinceWrite(ctx, p, ts)) bad.push(', /mutation C10:/],
   ['C11', CH, "if (!compactions.length) return R('C11', 'PASS'", "if (true) return R('C11', 'PASS'", /mutation C11:/],
   ['C12', CH, 'const w = calls.filter(after(from)).find((k) => writes(k, nearZeroPath));', 'const w = calls.filter(after(from)).find(() => true);', /mutation C12:/],
   ['dedupe', TX, "if (b.type === 'tool_use' && !byId.has(b.id)) {", "if (b.type === 'tool_use') {", /instrument 1:/],
@@ -71,6 +72,8 @@ const M = [
   ['Q3-1c', PO, "const sub = runsPackout(cmd, ['begin', 'sweep']); if (!sub) continue;", "const sub = (cmd.match(/packout\\.mjs[\"']?\\s+(begin|sweep)\\b/) || [])[1]; if (!sub) continue;", /Q3-1 \(c\) STATE-ii/],
   ['Q3-5', PO, 'if (i10 >= 0) lines[i10] = C10({ ...ctx, calls: full.calls });', 'void i10;', /Q3-5:/],
   ['Q3-6', PO, 'report: ${outAbs}`);', 'report: ${out}`);', /Q3-6:/],
+  // ---- fix trip 3b (the Captain's ⓼ (a)): revert "committed = a commit no earlier than this session's last write"
+  ['C10-since', CH, ' && !committedSinceWrite(ctx, p, ts)) bad.push(', ') bad.push(', /C10 \(3b, i\)/],
 ];
 const count = (s, sub) => s.split(sub).length - 1;
 // --count: READ-ONLY. Count every row's target text in its file and exit 1 unless each occurs exactly once (Q3-4: re-count EVERY

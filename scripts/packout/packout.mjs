@@ -133,6 +133,17 @@ function isCommitted(p) {
   const o = gitOut(root, ['status', '--porcelain', '--', abs]);
   return o == null ? null : o.trim() === '';
 }
+/** Fix trip 3b (Captain's ⓼ (a), 11/20): is the file's NEWEST commit no earlier than `ms` (this session's last write to it)?
+ *  true / false; null when its repo can't be found or git fails (the caller then FAILs, as before). Commit times are whole
+ *  seconds, so the write is floored to its second. One `git log` per written file (measured on Soren 2's real report: see DC2). */
+function committedAfter(p, ms) {
+  const abs = path.isAbsolute(p) ? p : path.join(CODE, p);
+  const root = rootOf(abs); if (!root) return null;
+  const o = gitOut(root, ['log', '-1', '--format=%ct', '--', abs]);
+  if (o == null) return null;
+  const ct = parseInt(o.trim(), 10);
+  return Number.isFinite(ct) ? ct >= Math.floor(ms / 1000) : false; // no commit at all: not committed
+}
 
 function report(lines, meta, out) {
   const fails = lines.filter((r) => r.verdict === 'FAIL').length; const opens = lines.filter((r) => r.verdict === 'OPEN').length;
@@ -191,7 +202,7 @@ function historicalSweeps(calls) {
 
 function buildCtx({ parsed, from, agent, handoff, handoffText, incoming, incomingText, findings, findingsText, sweeps, historical, hist }) {
   const prof = profileFor(agent);
-  const ctx = { ...prof, calls: parsed.calls, compactions: parsed.compactions, from, agent, handoff, handoffText, incoming, incomingText, findings, findingsText, sweeps, historical: !!historical, rootOf, isCommitted };
+  const ctx = { ...prof, calls: parsed.calls, compactions: parsed.compactions, from, agent, handoff, handoffText, incoming, incomingText, findings, findingsText, sweeps, historical: !!historical, rootOf, isCommitted, committedAfter };
   if (hist) {
     if ('uncommitted' in hist) ctx.uncommittedOverride = hist.uncommitted;
     if ('incomingUncommitted' in hist) ctx.incomingUncommittedOverride = hist.incomingUncommitted;

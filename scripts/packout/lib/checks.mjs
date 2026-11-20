@@ -328,6 +328,18 @@ export function uncommittedList(text) {
   return [...m[1].matchAll(/`([^`]+)`/g)].map((x) => x[1]);
 }
 
+/** Fix trip 3b (Captain's ⓼ (a), 11/20): a written file that is dirty NOW still counts as committed when its newest commit is no
+ *  earlier than this session's last write to it. "Committed" means this session's write reached a commit, not that the file is
+ *  clean today: every team packout writes the same shared files (current-state, topsheets, the near-zero table), and another
+ *  seat's later, uncommitted edit must not fail the predecessor. An uncommitted write with no later commit still FAILs (X1).
+ *  Fails LOUD, exactly as before this fix: a write row with no usable timestamp, a file whose repo can't be found, or a git
+ *  failure all return false here, so the file FAILs. No shared-file exemption; nothing read from state.json. */
+function committedSinceWrite(ctx, p, ts) {
+  const ms = Date.parse(ts || '');
+  if (!Number.isFinite(ms) || typeof ctx.committedAfter !== 'function') return false;
+  return ctx.committedAfter(p, ms) === true;
+}
+
 export function C10(ctx) {
   const { calls, handoffText, incomingText, isCommitted, rootOf } = ctx;
   const outList = ctx.uncommittedOverride ?? uncommittedList(handoffText);
@@ -336,22 +348,25 @@ export function C10(ctx) {
   const listed = new Set((outList || []).map(normPath));
   // F6: match on a path-segment boundary, never a bare suffix (`ray.md` must not cover `shared/stray.md`)
   const named = (p) => [...listed].some((q) => { const qq = q.replace(/^\.?\//, ''); return normPath(p) === qq || normPath(p).endsWith('/' + qq); });
+  // each written file keeps its LAST write (row and timestamp): later rows overwrite earlier ones
   const written = new Map();
   for (const k of calls) {
     if (!k.ok) continue;
-    if (k.name === 'Edit' || k.name === 'Write' || k.name === 'NotebookEdit') { const p = k.input.file_path || k.input.notebook_path; if (p && rootOf(p)) written.set(normPath(p), k.n); }
+    if (k.name === 'Edit' || k.name === 'Write' || k.name === 'NotebookEdit') { const p = k.input.file_path || k.input.notebook_path; if (p && rootOf(p)) written.set(normPath(p), { n: k.n, ts: k.ts }); }
     // F5: files written by Bash count too (append-entry, >>, tee, …), resolved against the call's own working directory
     if (k.name === 'Bash') for (const t of bashWriteTargets(String(k.input.command || ''))) {
       if (t.includes('$')) continue; // an unresolved variable names no file we can check
       const w = winPath(t); const p = path.isAbsolute(w) ? w : (k.cwd ? path.resolve(k.cwd, w) : null);
-      if (p && rootOf(p)) written.set(normPath(p), k.n);
+      if (p && rootOf(p)) written.set(normPath(p), { n: k.n, ts: k.ts });
     }
   }
   const bad = [];
   // listed paths are repo-relative to the repo that holds the handoff (live); historical overrides match by suffix
   const listRoot = ctx.historical ? null : rootOf(ctx.handoff);
   const abs = (p) => (listRoot && !path.isAbsolute(p) ? path.join(listRoot, p) : p);
-  for (const [p, n] of written) { const c = isCommitted(p); if (c === false && !named(p)) bad.push(`${p} (written at ${n}) is uncommitted and not in "## Uncommitted"`); }
+  // 3b: committedSinceWrite fails LOUD: a write with no usable timestamp, a file with no repo, or a git failure counts as NOT
+  // committed, so that file FAILs exactly as it did before this fix.
+  for (const [p, { n, ts }] of written) { const c = isCommitted(p); if (c === false && !named(p) && !committedSinceWrite(ctx, p, ts)) bad.push(`${p} (written at ${n}) is uncommitted and not in "## Uncommitted"`); }
   for (const p of inList || []) { const c = isCommitted(abs(p)); if (c === false && !named(p)) bad.push(`incoming's uncommitted ${p} is neither committed nor carried forward`); }
   const note = `${written.size} repo files written; outgoing list ${outList ? outList.length : 'absent'}; incoming list ${inList ? inList.length : 'absent'}`;
   return bad.length ? R('C10', 'FAIL', bad.join('; ') + ` (${note})`) : R('C10', 'PASS', note + (ctx.historical ? ' [fixture-assisted: lists transcribed by the manifest]' : ''));
