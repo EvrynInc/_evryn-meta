@@ -84,6 +84,14 @@ const M = [
   ['Q5-1', CH, 'reads.slice(0, j + 1).filter((k) => k.win.total === t), incomingText, t);', 'reads.slice(0, j + 1), incomingText, t);', /Q5-1 \[H9\]/],
   ['Q5-3', CH, "const inWhole = ctx.incoming && !ctx.historical && !('incomingUncommittedOverride' in ctx) ? incomingWhole(ctx) : null;", 'const inWhole = null;', /Q5-3 \[X2\]/],
   ['Q4-6', PO, "if (runsPackout(cmd, ['begin']) !== 'begin') continue; // Q4-6", "if (runsPackout(cmd, ['begin']) !== 'begin' && !/packout\\.mjs[\"']?\\s+begin\\b/.test(stripHeredocs(cmd))) continue; // Q4-6", /Q4-6 \[p7\]/],
+  // ---- fix trip 6 (counsel's P1 and P4; the Captain's 14:13 and 14:23 rulings): each row REVERTS one fix; its test must go red
+  ['T6-1-incoming', PO, 'if (!a.incoming || a.incoming === true) die(', 'if (false) die(', /item 1 \[P1\]/],
+  ['T6-2-repo', CH, 'if (top && normPath(top) === normPath(cand)) return path.join(ctx.codeRoot, rel);', 'if (false) return path.join(ctx.codeRoot, rel);', /item 2 \[P4\]/],
+  ['T6-2-loud', CH, 'if (c === null && !ctx.historical) { bad.push(', 'if (false) { bad.push(', /item 2 \[no repo\]/],
+  // (item 6 has two halves, so two rows on one target: each drops one auto-listed path; the item 6 test exercises both)
+  ['T6-6-handoff', CH, 'const autoListed = ctx.historical ? [] : [ctx.handoff, ctx.reportPath];', 'const autoListed = ctx.historical ? [] : [null, ctx.reportPath];', /item 6:/],
+  ['T6-6-report', CH, 'const autoListed = ctx.historical ? [] : [ctx.handoff, ctx.reportPath];', 'const autoListed = ctx.historical ? [] : [ctx.handoff, null];', /item 6:/],
+  ['T6-7-form', CH, '+ ` (${note}); ${FORM}`)', '+ ` (${note})`)', /item 7:/],
 ];
 const count = (s, sub) => s.split(sub).length - 1;
 // --count: READ-ONLY. Count every row's target text in its file and exit 1 unless each occurs exactly once (Q3-4: re-count EVERY

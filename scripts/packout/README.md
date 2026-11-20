@@ -14,13 +14,13 @@
 ## Usage: four subcommands, in this order
 
 ```
-node _evryn-meta/scripts/packout/packout.mjs begin  --agent <name> --handoff <path> [--incoming <path>]
+node _evryn-meta/scripts/packout/packout.mjs begin  --agent <name> --handoff <path> --incoming <path>|none
 node _evryn-meta/scripts/packout/packout.mjs sweep  --handoff <path>
 node _evryn-meta/scripts/packout/packout.mjs check  --handoff <path>
 node _evryn-meta/scripts/packout/packout.mjs verify --report <path> --predecessor <session> --handoff <path>
 ```
 
-1. **`begin`** runs once, when the packout starts. It prints the successor's footer line; put that line in the successor's start line.
+1. **`begin`** runs once, **as the very first act of the packout**: writes made before it don't count, so a late `begin` FAILs steps that did run. `--incoming` is required: the incoming handoff's path, or `none` when this packout genuinely has no incoming handoff (an omitted `--incoming` is refused, because it would silently switch off C7 and C10's incoming half). It prints the successor's footer line; put that line in the successor's start line. **A second `begin` cannot change `--agent` or `--incoming`:** to correct either, start a fresh packout with a new handoff path.
 2. **`sweep`** runs once for the lock's fragment sweep, and again after the handoff's first write. Read each extract it names with the Read tool, down to its end marker.
 3. **`check`** runs at the final gate, and again until it passes. It writes `<handoff-stem>.packout-report.md` beside the handoff. That report is the packout record; the seat writes no step claims of its own.
 4. **`verify`** is the successor's first act, using the three values from its footer. It finds the predecessor's transcript itself and re-derives every verdict.
@@ -46,7 +46,7 @@ node _evryn-meta/scripts/packout/packout.mjs verify --report <path> --predecesso
 | C7 | the incoming handoff is Read whole after `begin`: one version of it, every line, by Reads reporting the same length. The report says "to its canary", or "(the file carries no canary)" when the last line read is not one. **It is judged on that read alone**, so packout step 6 may then banner, supersede or archive the file (C10 reads the incoming's list from the same read) |
 | C8 | the last whole Read of the handoff equals the handoff as it stands now, exactly |
 | C9 | `<handoff-stem>.fresh-eyes.md` was written by another session after the handoff's first write, and Read whole by this seat; that last whole Read equals the findings file now |
-| C10 | every file this session wrote is clean, committed after its last write, or listed under `## Uncommitted`; and every path in the incoming's list (taken from the seat's whole Read of the incoming) is committed or carried forward. If that list can be read neither from a whole Read nor from the file, C10 FAILs and says so |
+| C10 | every file this session wrote is clean, committed after its last write, or listed under `## Uncommitted` (the handoff itself and its packout report count as listed; the start line and work trip do not); and every path in the incoming's list (taken from the seat's whole Read of the incoming) is committed or carried forward. A listed path whose first segment names a repo (`evryn-team-workspace/shared/x.md`) resolves under the code root; any other relative path, against the handoff's repo. A listed path that resolves to no repo FAILs loud, and so does a list that can be read neither from a whole Read nor from the file |
 | C11 | there is no compaction in the transcript. If there is one, the seat must stop, and any write after it is UNVERIFIED |
 | C12 | the near-zero decisions table (under either of its names) is written after `begin`, or a `PACKOUT-NONE C12: nothing by hand — <reason>` line is in the handoff |
 
@@ -58,7 +58,7 @@ node _evryn-meta/scripts/packout/packout.mjs verify --report <path> --predecesso
 - **`PACKOUT-NONE` lines**, each at the start of a line in the handoff: `PACKOUT-NONE C1: <reason>` (AC only, interim), `PACKOUT-NONE C2: <reason>`, and `PACKOUT-NONE C12: nothing by hand — <reason>` (with an em dash). They prove presence only, and the report says so.
 - **Extract marker** (written by `sweep`): `END OF SESSION TEXT · <N> lines · sha256 <12>`.
 - **Footer** (printed by `begin`): `PREDECESSOR: <session> · HANDOFF: <path> · REPORT: <path>`.
-- **Findings:** `<handoff-stem>.fresh-eyes.md`, beside the handoff.
+- **Findings:** `<handoff-stem>.fresh-eyes.md`, beside the handoff. **Never edit the fresh reader's findings file, not even to mark items folded:** C9 FAILs on any write to it by this session, and nothing can repair that afterwards. Record folds in the handoff.
 - **Report:** `<handoff-stem>.packout-report.md`, beside the handoff.
 - **A task note** is a `tasks.mjs update` or `close` call with `--note`.
 
@@ -66,7 +66,7 @@ node _evryn-meta/scripts/packout/packout.mjs verify --report <path> --predecesso
 
 - **N11: the transcript is writable.** A seat can hand-edit its own evidence. Closing this needs the vault.
 - **Q3-1 part (a): an edited state folder.** A seat that rewrites its own sweep extract and `state.json` can buy C5 PASS. This is deliberate tampering, and it is closed by the hooks and vault, not by v1.
-- **Q4-3: C10 judges a commit's TIME, not its content.** Two sequences leave the write uncommitted while C10 still PASSes: a stale staged copy committed after the write without a pathspec, or a later `--amend` of an older commit touching the file. QC4 measured the seat's own sequence at **0 of 826 commits over 7 days.** A content check was declined because it risks the honest false-FAIL class that fix trip 3b closed.
+- **Q4-3: C10 judges a commit's TIME, not its content.** Two sequences leave the write uncommitted while C10 still PASSes: a stale staged copy committed after the write without a pathspec, or a later `--amend` of an older commit touching the file. QC4 measured the seat's own sequence at **0 of 826 commits over 7 days.** **The cross-seat route is unmeasured:** another seat's index holding our file across our write, then a whole-index commit (685 of 748 team commits take the whole index). A content check was declined because it risks the honest false-FAIL class that fix trip 3b closed.
 - **`verify` finds `check`'s own row by text match only.** An `echo` that prints a `report:` line could bind it. That takes deliberate tampering.
 - **Git commit times can be forged** (`GIT_COMMITTER_DATE`), which C10 trusts. That also takes deliberate tampering.
 
@@ -89,6 +89,8 @@ node _evryn-meta/scripts/packout/packout.mjs verify --report <path> --predecesso
 - **Q5-5** (C12 accepts an exact-name copy of the near-zero table elsewhere under `shared/`): v1.1.
 - **The same-version case** (an edit that keeps the incoming's line count, made between two partial Reads, can still be stitched into one "whole" read): v1.1.
 - **The orphan path's verdict** (a repaired packout can't reach VERIFY PASS): step 4's quarantine.
+- **C6's name-substring match** (a launch named `X` passes when the handoff names only `X 2`; 60 of 61 real launches print no id, so names decide): v1.1, a whole-name match on a word boundary.
+- **A second `begin` that corrects its own `--agent` or `--incoming`** (from the same session, before any sweep, both rows recorded in the report): v1.1. Until then the refusal names the repair: a fresh packout with a new handoff path.
 
 ## Tests
 

@@ -289,7 +289,7 @@ test('N13: a second begin with a different --agent or --incoming is refused, nam
   const g = goodPackout();
   let r = run(g.f, 'begin', '--agent', 'thea', '--handoff', g.f.handoff, '--incoming', g.f.incoming, '--transcript', g.f.transcript);
   assert.equal(r.code, 1); assert.match(r.err, /began with --agent soren; this begin says --agent thea/);
-  r = run(g.f, 'begin', '--agent', 'soren', '--handoff', g.f.handoff, '--transcript', g.f.transcript);
+  r = run(g.f, 'begin', '--agent', 'soren', '--handoff', g.f.handoff, '--incoming', 'none', '--transcript', g.f.transcript); // fix trip 6: `none` is explicit
   assert.equal(r.code, 1); assert.match(r.err, /began with --incoming .*handoff-in\.md; this begin says --incoming \(none\)/);
   r = run(g.f, 'begin', '--agent', 'soren', '--handoff', g.f.handoff, '--incoming', g.f.incoming, '--transcript', g.f.transcript);
   assert.equal(r.code, 0, r.err);
@@ -326,7 +326,7 @@ test('F-AC2: a write made before begin in the same turn (the run-time count lags
 test('F3: sweep refuses an extract with no user or assistant turn; nothing is recorded', () => {
   const f = codeRoot(); const tx = new Tx(f.transcript);
   tx.read(f.incoming); tx.flush();
-  assert.equal(run(f, 'begin', '--agent', 'soren', '--handoff', f.handoff, '--transcript', f.transcript).code, 0);
+  assert.equal(run(f, 'begin', '--agent', 'soren', '--handoff', f.handoff, '--incoming', 'none', '--transcript', f.transcript).code, 0);
   const r = run(f, 'sweep', '--handoff', f.handoff, '--transcript', f.transcript);
   assert.equal(r.code, 1); assert.match(r.err, /no user or assistant turn/);
 });
@@ -358,7 +358,7 @@ test('F7: a task note is tasks.mjs update|close with --note, $VAR resolved; `add
 });
 test('F8: a second begin from a different session is refused unless --resume', () => {
   const g = goodPackout();
-  const r = spawnSync(process.execPath, [PACKOUT, 'begin', '--agent', 'soren', '--handoff', g.f.handoff, '--transcript', g.f.transcript], { encoding: 'utf8', env: { ...process.env, PACKOUT_STATE_DIR: g.f.state, PACKOUT_CODE_ROOT: g.f.root, CLAUDE_CODE_SESSION_ID: 'another-session' } });
+  const r = spawnSync(process.execPath, [PACKOUT, 'begin', '--agent', 'soren', '--handoff', g.f.handoff, '--incoming', g.f.incoming, '--transcript', g.f.transcript], { encoding: 'utf8', env: { ...process.env, PACKOUT_STATE_DIR: g.f.state, PACKOUT_CODE_ROOT: g.f.root, CLAUDE_CODE_SESSION_ID: 'another-session' } });
   assert.equal(r.status, 1); assert.match(r.stderr, /REFUSED.*--resume/);
   const r2 = spawnSync(process.execPath, [PACKOUT, 'begin', '--agent', 'soren', '--handoff', g.f.handoff, '--incoming', g.f.incoming, '--transcript', g.f.transcript, '--resume'], { encoding: 'utf8', env: { ...process.env, PACKOUT_STATE_DIR: g.f.state, PACKOUT_CODE_ROOT: g.f.root, CLAUDE_CODE_SESSION_ID: 'another-session' } });
   assert.equal(r2.status, 0, r2.stderr);
@@ -558,6 +558,76 @@ test('Q3-6: check --out <relative> prints the resolved report path, so verify st
   g.tx.bash(`node packout.mjs check --handoff ${g.f.handoff} --out rel-out.packout-report.md`, r.out); g.tx.flush();
   const v = verify(g, rep);
   assert.equal(v.code, 0, v.out); assert.match(v.out, /^VERIFY PASS/);
+});
+
+// ---- fix trip 6: counsel's P1 and P4 (honest-path blockers) and wording items 3 and 4 (the Captain's 14:13 ruling).
+// Each of items 1 and 2 fails without its fix. Names carry no "(<digit>" (mutations.mjs cuts a test name there).
+test('item 1 [P1]: begin with no --incoming, or a bare --incoming flag, is REFUSED naming both forms, and records nothing', () => {
+  const f = codeRoot(); const tx = new Tx(f.transcript); tx.user('pack out'); tx.say('ok'); tx.flush();
+  for (const extra of [[], ['--incoming']]) {
+    const r = run(f, 'begin', '--agent', 'soren', '--handoff', f.handoff, ...extra, '--transcript', f.transcript);
+    assert.notEqual(r.code, 0, r.out); assert.match(r.err, /REFUSED: begin needs --incoming <path>, or --incoming none/);
+  }
+  assert.equal(fs.existsSync(f.state), false, 'a refused begin writes no state');
+});
+test('item 1 [none]: begin --incoming none keeps the no-incoming verdicts, and verify re-derives them from the begin row → VERIFY PASS', () => {
+  const g = goodPackout({ noIncoming: true });
+  const r = checkRecorded(g); assert.equal(r.code, 0, r.out);
+  const v = only(r.out, []); assert.match(v.C7.e, /no incoming handoff given/); assert.match(v.C10.e, /incoming list 0/);
+  const vr = verify(g, reportOf(g)); assert.equal(vr.code, 0, vr.out); assert.match(vr.out, /^VERIFY PASS/);
+});
+// The seat drops the incoming's one listed path from its own list and leaves the file dirty (counsel's P4 family).
+const dropCarried = (listLine) => {
+  const g = goodPackout({ listLine });
+  fs.writeFileSync(path.join(g.f.tw, 'shared', 'carried.md'), 'changed, uncommitted\n');
+  fs.writeFileSync(g.f.handoff, fs.readFileSync(g.f.handoff, 'utf8').replace('`shared/carried.md`\n', ''));
+  g.tx.read(g.f.handoff); g.tx.flush();
+  return verdicts(check(g.f).out);
+};
+test('item 2 [P4]: the same dropped path FAILs C10 for the same reason in every form: shared-parent P4, repo-relative P4b, ./ P4c, backslash P4d', () => {
+  // the siblings in ONE block, so a form that resolves differently shows here rather than having to be remembered
+  for (const [line, shown] of [['`evryn-team-workspace/shared/carried.md`', 'evryn-team-workspace/shared/carried.md'], ['`shared/carried.md`', 'shared/carried.md'], ['`./shared/carried.md`', './shared/carried.md'], ['`shared\\carried.md`', 'shared\\carried.md']]) {
+    const v = dropCarried(line);
+    assert.equal(v.C10.v, 'FAIL', `${line}: ${v.C10.e}`);
+    assert.ok(v.C10.e.includes(`incoming's uncommitted ${shown} is neither committed nor carried forward`), `${line}: ${v.C10.e}`);
+  }
+  // control: the shared-parent form, carried forward and clean, still PASSes everything
+  only(check(goodPackout({ listLine: '`evryn-team-workspace/shared/carried.md`' }).f).out, []);
+});
+test('item 2 [no repo]: an incoming entry that resolves to no repo, not carried forward → C10 FAIL, loud, naming the path; never skipped', () => {
+  const g = goodPackout({ listLine: '`nowhere/carried.md`' });
+  const v = only(check(g.f).out, ['C10']);
+  assert.match(v.C10.e, /incoming's uncommitted nowhere\/carried\.md resolves to no repo \(looked at .*nowhere.carried\.md\)/);
+});
+test('item 3: the generated report carries v1\'s strength in one line, exactly', () => {
+  const g = goodPackout(); assert.equal(check(g.f).code, 0);
+  assert.ok(fs.readFileSync(reportOf(g), 'utf8').split('\n').includes('> Detects honest skips; does not resist a seat that edits its own evidence.'));
+});
+test('item 4: a second begin changing --agent [P3] or --incoming [P2] is refused, and the refusal names the repair, exactly', () => {
+  const g = goodPackout(); const REPAIR = 'to correct `--agent` or `--incoming`, start a fresh packout with a new handoff path.';
+  let r = run(g.f, 'begin', '--agent', 'sorne', '--handoff', g.f.handoff, '--incoming', g.f.incoming, '--transcript', g.f.transcript);
+  assert.equal(r.code, 1); assert.ok(r.err.includes(REPAIR), r.err);
+  r = run(g.f, 'begin', '--agent', 'soren', '--handoff', g.f.handoff, '--incoming', 'C:/nowhere/handof-in.md', '--transcript', g.f.transcript);
+  assert.equal(r.code, 1); assert.ok(r.err.includes(REPAIR), r.err);
+});
+// ---- fix trip 6 additions (the Captain's 14:23 ruling, from field test 1): items 6 and 7
+test('item 6: the handoff and its packout report, uncommitted and not listed, count as listed → C10 PASS; another unlisted write still FAILs, X1 kept', () => {
+  const g = goodPackout();
+  // the handoff's own line goes from its list (the seat named its files in words), and the seat hand-writes its report: both uncommitted
+  fs.writeFileSync(g.f.handoff, fs.readFileSync(g.f.handoff, 'utf8').replace('`shared/handoff-out.md`\n', '')); g.tx.read(g.f.handoff);
+  g.tx.write(reportOf(g), '# a report the seat wrote by hand\n'); g.tx.flush();
+  let v = only(check(g.f).out, []); assert.match(v.C10.e, /outgoing list 1/);
+  // verify binds the same report path, so it re-derives the same PASS
+  const r0 = checkRecorded(g); assert.equal(r0.code, 0, r0.out);
+  const vr = verify(g, reportOf(g)); assert.equal(vr.code, 0, vr.out); assert.match(vr.out, /^VERIFY PASS/);
+  g.tx.write(path.join(g.f.tw, 'shared', 'stray6.md'), 'x\n'); g.tx.flush();
+  v = only(check(g.f).out, ['C10']); assert.match(v.C10.e, /stray6\.md \(written at \d+\) is uncommitted and not in "## Uncommitted"/);
+  assert.doesNotMatch(v.C10.e, /handoff-out\.(md|packout-report\.md) \(written/);
+});
+test('item 7: a C10 FAIL names the expected form, exactly', () => {
+  const g = goodPackout(); g.tx.write(path.join(g.f.tw, 'shared', 'stray7.md'), 'x\n'); g.tx.flush();
+  const v = only(check(g.f).out, ['C10']);
+  assert.ok(v.C10.e.includes('list each path in backticks, one per line, under `## Uncommitted`.'), v.C10.e);
 });
 
 // Truncation canary — DO NOT REMOVE: FULL FILE LOADED

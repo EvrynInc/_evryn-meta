@@ -380,7 +380,10 @@ export function C10(ctx) {
   const inWhole = ctx.incoming && !ctx.historical && !('incomingUncommittedOverride' in ctx) ? incomingWhole(ctx) : null;
   const inList = !ctx.incoming ? [] : !inWhole ? (ctx.incomingUncommittedOverride ?? uncommittedList(incomingText)) : !inWhole.fail ? (uncommittedList(wholeText(inWhole)) ?? []) : incomingText != null ? (uncommittedList(incomingText) ?? []) : null;
   if (ctx.historical && (outList == null || (ctx.incoming && inList == null))) return R('C10', 'OPEN', '(historical: no machine-readable uncommitted list, and the manifest transcribes none)');
-  const listed = new Set((outList || []).map(normPath));
+  // Fix trip 6, item 6 (field test 1, the Captain's 14:23 ruling): the outgoing handoff and its packout report count as listed; the
+  // tool knows both paths (begin's --handoff; check's or verify's report). The start line and work trip stay the seat's to list.
+  const autoListed = ctx.historical ? [] : [ctx.handoff, ctx.reportPath];
+  const listed = new Set([...(outList || []), ...autoListed.filter(Boolean)].map(normPath));
   // F6: match on a path-segment boundary, never a bare suffix (`ray.md` must not cover `shared/stray.md`)
   const named = (p) => [...listed].some((q) => { const qq = q.replace(/^\.?\//, ''); return normPath(p) === qq || normPath(p).endsWith('/' + qq); });
   // each written file keeps its LAST write (row and timestamp): later rows overwrite earlier ones
@@ -399,13 +402,36 @@ export function C10(ctx) {
   // listed paths are repo-relative to the repo that holds the handoff (live); historical overrides match by suffix
   const listRoot = ctx.historical ? null : rootOf(ctx.handoff);
   const abs = (p) => (listRoot && !path.isAbsolute(p) ? path.join(listRoot, p) : p);
+  // Fix trip 6, item 2 (counsel's P4): a listed path whose FIRST SEGMENT names a repo under the code root (the writing protocol's
+  // shared-parent form, `evryn-team-workspace/shared/x.md`) resolves there; any other relative path resolves against the handoff's
+  // repo, as before. Historical mode keeps `abs` exactly, so the six frozen verdicts cannot move. null = resolves to no place.
+  const resolveListed = (p) => {
+    if (ctx.historical) return abs(p);
+    const w = String(winPath(p)).replace(/\\/g, '/');
+    if (path.isAbsolute(w)) return w;
+    const rel = w.replace(/^(\.\/)+/, '');
+    const first = rel.split('/')[0];
+    if (ctx.codeRoot && first && first !== '.' && first !== '..') {
+      const cand = path.join(ctx.codeRoot, first); const top = rootOf(path.join(cand, '_'));
+      if (top && normPath(top) === normPath(cand)) return path.join(ctx.codeRoot, rel);
+    }
+    return listRoot ? path.join(listRoot, rel) : null;
+  };
   // 3b: committedSinceWrite fails LOUD: a write with no usable timestamp, a file with no repo, or a git failure counts as NOT
   // committed, so that file FAILs exactly as it did before this fix.
   for (const [p, { n, ts }] of written) { const c = isCommitted(p); if (c === false && !named(p) && !committedSinceWrite(ctx, p, ts)) bad.push(`${p} (written at ${n}) is uncommitted and not in "## Uncommitted"`); }
   if (inWhole && inList == null) bad.push(`the incoming's "## Uncommitted" list cannot be read: no whole Read of it (${inWhole.fail}) and the file is not readable now`); // Q5-3: loud, never a silent skip
-  for (const p of inList || []) { const c = isCommitted(abs(p)); if (c === false && !named(p)) bad.push(`incoming's uncommitted ${p} is neither committed nor carried forward`); }
+  for (const p of inList || []) {
+    if (named(p)) continue; // carried forward: the obligation is met, whatever its commit state
+    const q = resolveListed(p); const c = q == null ? null : isCommitted(q);
+    // Fix trip 6, item 2: a path that resolves to no repo can't be judged, so it FAILs loud; it used to be skipped (c === null)
+    if (c === null && !ctx.historical) { bad.push(`incoming's uncommitted ${p} resolves to no repo (${q == null ? 'the handoff is in no repo' : 'looked at ' + q}), so it can't be judged; commit it, carry it forward, or correct its path`); continue; }
+    if (c === false) bad.push(`incoming's uncommitted ${p} is neither committed nor carried forward`);
+  }
   const note = `${written.size} repo files written; outgoing list ${outList ? outList.length : 'absent'}; incoming list ${inList ? inList.length : 'absent'}`;
-  return bad.length ? R('C10', 'FAIL', bad.join('; ') + ` (${note})`) : R('C10', 'PASS', note + (ctx.historical ? ' [fixture-assisted: lists transcribed by the manifest]' : ''));
+  // Fix trip 6, item 7: the FAIL names the form the check reads
+  const FORM = 'list each path in backticks, one per line, under `## Uncommitted`.';
+  return bad.length ? R('C10', 'FAIL', bad.join('; ') + ` (${note}); ${FORM}`) : R('C10', 'PASS', note + (ctx.historical ? ' [fixture-assisted: lists transcribed by the manifest]' : ''));
 }
 
 export function C11(ctx) {

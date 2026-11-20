@@ -51,7 +51,7 @@ export class Tx {
 export const git = (cwd, ...a) => execFileSync('git', ['-C', cwd, ...a], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
 
 /** A throwaway code root: evryn-team-workspace (a git repo) with memory, current-state, topsheet and near-zero files. */
-export function codeRoot(agent = 'soren', { nzName = '2026.10.19-consolidation-standup-near-zero-campaign.md' } = {}) {
+export function codeRoot(agent = 'soren', { nzName = '2026.10.19-consolidation-standup-near-zero-campaign.md', listLine = '`shared/carried.md`' } = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'packout-test-'));
   const tw = path.join(root, 'evryn-team-workspace');
   const f = {
@@ -66,7 +66,8 @@ export function codeRoot(agent = 'soren', { nzName = '2026.10.19-consolidation-s
   };
   fs.mkdirSync(path.dirname(f.transcript), { recursive: true });
   for (const p of [f.memory, f.cs, f.top, f.nz]) { fs.mkdirSync(path.dirname(p), { recursive: true }); fs.writeFileSync(p, '# file\n\nTruncation canary — DO NOT REMOVE: FULL FILE LOADED\n'); }
-  fs.writeFileSync(f.incoming, '# Incoming handoff\n\n## Uncommitted\n\n`shared/carried.md`\n\nTruncation canary — DO NOT REMOVE: FULL FILE LOADED\n');
+  // listLine (fix trip 6, item 2): the incoming's one "## Uncommitted" entry, in whatever form a test needs (default: repo-relative)
+  fs.writeFileSync(f.incoming, `# Incoming handoff\n\n## Uncommitted\n\n${listLine}\n\nTruncation canary — DO NOT REMOVE: FULL FILE LOADED\n`);
   fs.writeFileSync(path.join(tw, 'shared', 'carried.md'), 'carried\n');
   git(tw, 'init', '-q'); git(tw, 'config', 'user.email', 't@t'); git(tw, 'config', 'user.name', 't'); git(tw, 'add', '-A'); git(tw, 'commit', '-qm', 'base');
   return f;
@@ -85,7 +86,7 @@ export const verdicts = (out) => Object.fromEntries([...out.matchAll(/^(PASS|FAI
  * The GOOD packout, built step by step against the real CLI: every check should PASS.
  * Returns { f, tx, L } where L names the deciding transcript line of each step, for mutation tests.
  */
-export function goodPackout({ agent = 'soren', shortSweeps = false, bashSweeps = false, earlySweep2 = false, lagBegin = false, lagSweep = false, nzName } = {}) {
+export function goodPackout({ agent = 'soren', shortSweeps = false, bashSweeps = false, earlySweep2 = false, lagBegin = false, lagSweep = false, nzName, listLine, noIncoming = false } = {}) {
   const NL = String.fromCharCode(10), TAB = String.fromCharCode(9);
   const readSweep = (tx, p) => {
     const lines = fs.readFileSync(p, 'utf8').split(NL);
@@ -93,20 +94,22 @@ export function goodPackout({ agent = 'soren', shortSweeps = false, bashSweeps =
     if (bashSweeps) return tx.bash(`sed -n '1,9999p' ${p}`, lines.map((l, i) => (i + 1) + TAB + l).join(NL));
     return shortSweeps ? tx.read(p, { a: 1, b: N }) : tx.read(p);
   };
-  const f = codeRoot(agent, nzName ? { nzName } : undefined);
+  const f = codeRoot(agent, { ...(nzName ? { nzName } : {}), ...(listLine ? { listLine } : {}) });
   const tx = new Tx(f.transcript);
   const L = {};
   tx.user('start line: do the work, then pack out');
   tx.say('Working.');
   L.agent = tx.agent('Fresh-eyes reader', 'a1b2c3d4e5f6a7b8');
   tx.flush();
-  let r = run(f, 'begin', '--agent', agent, '--handoff', f.handoff, '--incoming', f.incoming, '--transcript', f.transcript);
+  // noIncoming (fix trip 6, item 1): the explicit `--incoming none`, for a seat that genuinely has no predecessor
+  const incArg = noIncoming ? 'none' : f.incoming;
+  let r = run(f, 'begin', '--agent', agent, '--handoff', f.handoff, '--incoming', incArg, '--transcript', f.transcript);
   if (r.code !== 0) throw new Error('begin failed: ' + r.err);
   // lagBegin (F-AC2): the run-time line count is taken BEFORE a write made earlier in the same turn; the begin call's own row
   // lands after that write. Anchored to its own row, begin must not count that write as "after begin".
   if (lagBegin) L.memory = tx.edit(f.memory, '# file', '# file\n\nnote');
   // typed with a shell variable, as seats do: the transcript keeps `$I` literally; begin's own BEGIN-ARGS line resolves it
-  L.begin = tx.bash(`I=${f.incoming.replace(/\\/g, '/')}; node packout.mjs begin --agent ${agent} --handoff ${f.handoff} --incoming $I`, r.out);
+  L.begin = tx.bash(noIncoming ? `node packout.mjs begin --agent ${agent} --handoff ${f.handoff} --incoming none` : `I=${f.incoming.replace(/\\/g, '/')}; node packout.mjs begin --agent ${agent} --handoff ${f.handoff} --incoming $I`, r.out);
   if (!lagBegin) L.memory = tx.edit(f.memory, '# file', '# file\n\nnote');
   L.cs = tx.bash(`node _evryn-meta/scripts/append-entry.mjs ${f.cs.replace(/\\/g, '/')} entry.md`, ''); fs.appendFileSync(f.cs, 'x\n');
   L.top = tx.edit(f.top, '# file', '# file\nrow');
