@@ -1,0 +1,27 @@
+DRAFT start line for AC-PG2. Written by AC-PG (d1700c43), Thu 2026-11-19 ~20:3x PT, for Guard Design Soren 11.19 2 to assemble and launch. AC-PG does not launch it.
+Committed beside docs/sessions/2026.11.19-acpg-acpg2-handoff.md.
+
+HOW THE CAPTAIN BUILDS IT (the way he built AC-PG's): two trips, by script, from the protocol files.
+- Load trip: the AC <identity> block from _evryn-meta/docs/protocols/orchestration/spinning-an-ac.md, designated AC-PG2 (a sub-AC); the core <mandatory_load> and <receipts> blocks verbatim; #cascade-override with the separate-codebase reason.
+- The file list is AC-PG's load trip of record, verbatim (docs/sessions/2026.11.19-sorenpg-acpg-load-trip.txt), PLUS two additions, both named loudly:
+  - _evryn-meta/docs/protocols/orchestration/spinning-an-ac.md (whole)
+  - _evryn-meta/scripts/append-entry.mjs (whole)
+- Re-count every file with `wc -l` at launch.
+- Task-bearing documents are trip-2 reading (the lobby's rule).
+
+WORK TRIP: the concrete task, beneath the verbatim <task> preamble.
+1. FIRST ACT, before relying on anything: verify AC-PG's packout by script. From C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard run:
+     node scripts/packout/packout.mjs verify --report docs/sessions/2026.11.19-acpg-acpg2-handoff.packout-report.md --predecessor d1700c43-f67c-4a05-9b5d-d82f21b10f88 --handoff docs/sessions/2026.11.19-acpg-acpg2-handoff.md
+   - The guard is unsigned (QC3 hasn't verified fix trip 2). So ALSO check by hand, with calls.mjs against AC-PG's transcript (~/.claude/projects/c--Users-jbmcg-Evryn-Code--evryn-meta/d1700c43-f67c-4a05-9b5d-d82f21b10f88.jsonl, read by script only), that each step the report says PASS really happened.
+   - For each OPEN or FAIL step, do it yourself from that transcript and record it in a repair section of the report.
+   - Say what you found in your Report #0.
+2. Read, whole, each to its canary:
+   - the handoff, docs/sessions/2026.11.19-acpg-acpg2-handoff.md;
+   - the live brief's Log from AC-PG's 19:04 SET-DOWN entry to the end;
+   - the build brief;
+   - the QC1, QC2 and DC1 reports;
+   - the ledger.
+3. Do the handoff's §2: spin a NEW Opus QC3 (two trips, the QC2 trips of record as the template, the load verified by script, the trips committed in the Log first). It verifies fix trip 2 (N9, N1, N10, N13, N17, N15a/c), runs the lost mutation rows, checks for regressions and looks for what nobody named. Then decide its findings. A fix trip 3 needs a FRESH DC (DC1 can't be resumed). A fix trip is verified by a NEW QC. Then READY FOR CAPTAIN, per brief §4.
+4. Limits: the brief's §5, the Captain's stop lines (CHECKPOINT at 97%, STOP at 98%), nothing installed, merged, deployed or pushed. Reach the Captain only via the literal SendMessage target `Guard Design Soren 11.19 2`. Write your own set-down, and your own packout with packout.mjs, before you finish.
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
