@@ -1,0 +1,97 @@
+<task>
+Your load is complete and verified. It was assembled before you knew what you would be doing — so now that you know, **if the work genuinely needs something you do not have, LOAD IT.** You are not confined to the original list, and you should not work around a gap you could close by reading. Use your judgment freely here; it is useful now in a way it could not have been before.
+
+Two conditions, both of which matter:
+
+1. **Load IN ADDITION to what you already have, never INSTEAD of it.** Nothing on the original list becomes optional now that you can see the task. If something on it looks irrelevant in hindsight, you are wrong about that, or it was cheap — either way it stays loaded.
+2. **Name anything you loaded beyond the list in your receipts, with one line on why you needed it.** Do this even if the extra read turned out to be unnecessary. **Your spinner built that list without knowing what you would discover, and this report is the ONLY signal they get that it had a gap** — so it is not bookkeeping; it is the mechanism by which the next brief is better than this one.
+
+**You are DC2.** Use that name in your output headings. Your spinner is AC-PG3, the lane AC of the packout-guard build. You are the second DC in this lane; DC1 built step 1 last night and is gone.
+
+**What this lane is.** `scripts/packout/packout.mjs` (step 1 of the packout guard) is a script a seat runs by hand while it packs out: `begin`, `sweep`, `check` (writes the packout report) and `verify` (the successor's first act). Three reviews (QC1, QC2, QC3) have run on it. QC3 returned NO-GO. **This is fix trip 3, and its scope is fixed by the Captain's definition of done: six small items, each a few lines plus a test and a mutation row.** Nothing else.
+
+**How much I have read, so you weigh this correctly:** the lane's Log from AC-PG's 19:04 set-down to its end, the build brief whole (including the definition of done), QC3's and QC2's reports whole, and DC1's fix-trip sections. **I have NOT read the code.** You are about to be the most-informed party on every question of what the code does. **Treat every claim below as a LEAD,** including line numbers, and **say so loudly and early if any of it is wrong.** Where I am silent, assume I could not see it, not that I checked.
+
+🔴 **You are not just executing. If anything here is wrong, internally inconsistent, or unverifiable, STOP and tell me before acting.** A contradiction you surface costs one message; one you resolve quietly costs a false record nobody knows is false.
+
+### 1 · Read first, each whole to its canary (run `wc -l` first and read to the end)
+1. `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-acpg-QC3-report.md` (245 lines): the findings, their evidence and its §5 fix sketches. Its scratch died with its job, so §5 is the only copy of its recipes.
+2. `C:/Users/jbmcg/Evryn/Code/evryn-team-workspace/shared/projects/product/2026/2026.11.19-packout-guard-build/2026.11.19-packout-guard-build-brief.md`, **lines 367–408 only**: the definition of done. **It decides scope; where anything below differs from it, it wins, and tell me.**
+3. The live brief `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-sorenpg-acpg-packout-guard-step1-brief.md`, **from the entry headed "AC-PG2: SET-DOWN (Thursday night)" to the end** (find the heading's line with `Grep`, then Read from there to the canary). Its §2 table is the decision record for each Q3 item.
+4. `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-acpg-DC1-report.md`, **the "## Fix trip 2" section to the canary** (from its heading, about line 508): the fixture conventions (`checkRecorded`, `PACKOUT_PROJECTS_DIR`) and the runner changes.
+
+### 2 · Fix exactly these six. Each ships a test that FAILS without its fix, and a mutation row in `mutations.mjs` that reverts it.
+**Prove each test can fail by reverting the fix and watching it go red; record the command.** If a break command is refused, say so and don't route around it.
+
+1. **Q3-2 (with AC-PG2's refinement): the downgrade must not be reachable by naming a session id that matches no transcript.**
+   - `verify` may downgrade (exit 3) **only when no transcript on this machine** (everything `findTranscript` can see under `PACKOUT_PROJECTS_DIR`, subagent transcripts included) **holds a `packout.mjs begin` row whose output names this handoff** (match it the way the begin anchor already matches begin's footer). If such a row exists anywhere here, this is the same machine: **FAIL**, naming what was found.
+   - **An ambiguous `findTranscript` (more than one hit) is a FAIL, never an absence.**
+   - **The downgrade branch also refuses a report carrying a FAIL** (exit 1, not 3).
+   - **Base this on transcripts, never on `state.json`'s presence:** the seat can delete that file. (The Captain's design rule for this lane: no fix to `verify` may move trust to another file the outgoing seat can write.)
+   - **Tests:** QC3's GHOST shape (a ghost session id in report and footer plus an edited `machine`, with the real transcript holding the begin row → FAIL, not 3); QC3's DUP shape (the transcript copied under a second project folder → FAIL, "ambiguous"); and **the genuine cross-machine case still gives DOWNGRADED, exit 3** (no begin row naming the handoff anywhere here, another host, no FAIL in the report).
+   - ⚠️ **Measure the cost.** This scans every transcript on the machine (QC3 counted 403 top-level and 231 subagent transcripts; some are many MB). Time a real `verify` (§4). **If it takes more than ~15 seconds, stop and tell me your options before building around it** (a cheap string pre-filter for the handoff path before parsing is the obvious one).
+2. **Q3-1 part (c) ONLY: an anchor needs a real command.** The `begin` and `sweep` anchors count a Bash row only when a command segment actually runs `node` on a path ending `packout.mjs` with that subcommand (as `launchSegment` does for launches). An `echo` whose text contains `packout.mjs sweep` must not anchor.
+   - **Tests:** QC3's STATE-ii (`echo "node packout.mjs sweep" >/dev/null; echo "sweep 9: <path> …"` plus a state entry) → C5 FAIL; a real `node …packout.mjs sweep` still anchors.
+   - 🔴 **The honest-path regression is the risk here, so check it against real rows:** every real `begin`, `sweep` and `check` row in the two real top-level packouts on this machine (AC-PG, session `d1700c43…`; Guard Design Soren 11.19 2, session `09858954…`) must still anchor after your change (by script; transcripts never into context). Honest forms include a leading `cd … &&`, a relative or `../_evryn-meta/…` path, and quoted paths. **If a real form would stop anchoring, stop and tell me.**
+   - 🚫 **Q3-1 part (a), rebuilding each extract from the transcript, is OUT of v1** (definition of done §2). **Don't build it.**
+3. **Q3-3: pin `verify`'s refusal of a FAILing report.** Two tests:
+   - same machine: a good packout minus one step, `checkRecorded`, report untouched → exit 1, "the report itself carries a FAIL";
+   - downgrade branch: the same kind of report with `machine` edited and no transcript here holding its begin row → exit 1, not 3.
+   - **Both lines become mutation rows** (QC3 named them `VERIFY-FAILGUARD-same` and `VERIFY-FAILGUARD-cross`).
+4. **Q3-4: make the runner pass on a sound tree.** Repoint `F1-host`'s and `F1-exit3`'s test regexes to the tests' current names; replace `F1-footer` with QC3's `F1-footer-handoff` row (the footer's HANDOFF comparison); add `N13-incoming` (the incoming half of N13's guard); and the two `VERIFY-FAILGUARD` rows above. 🔴 **Re-count the target text of EVERY row, old and new, and confirm each occurs exactly once; record that check.** A row whose target was rewritten prints NOT APPLIED; a renamed test prints NOT RED.
+5. **Q3-5: judge C10 to the end of the transcript in `verify`.** C6 stays bounded (at the `check` row, as now), because the successor's own launch follows `check`.
+   - **Tests:** an uncommitted, unlisted Write after `check`'s own row → `verify` FAIL on C10; an `Agent` spawn after `check`'s row → still PASS on C6.
+6. **Q3-6: `check` prints the resolved report path** (`path.resolve(out)`), so `check --out <relative>` can still be verified. **Test:** `check --out <relative>`, `checkRecorded`, then `verify` → PASS.
+
+**Out of scope, don't touch:** the footer-PREDECESSOR and echo-field tests QC3 called low-stakes; N15 (b) and (d); F11; the session chain; C9 writer identity; anything in the hooks (steps 2–5).
+
+### 3 · Then re-run, and report each result with its command
+- **the suite** (`node --test "scripts/packout/test/*.test.mjs"`);
+- **`historical.mjs`** (31/31 must still hold, all five freeze hashes; `PACKOUT_CODE_ROOT=C:/Users/jbmcg/Evryn/Code`);
+- **the FULL mutation run** in a fresh detached sandbox **outside the code folder**: `git -C C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard worktree add --detach C:/Users/jbmcg/.claude/jobs/e8af53fa/tmp/sandbox-dc2 <your head>`. Baseline suite in the sandbox first, then `mutations.mjs <sandbox>`, then the suite again and `git status` (0 lines). **Every row must read RED for its check's reason.** Judge each row by the name of its failing test, not by the count alone. Run it in the background, writing per-row output to a file in my scratch (`C:/Users/jbmcg/.claude/jobs/e8af53fa/tmp/dc2/`), because last night's full run was killed for low memory at row 9. **If it is killed again:** show the sandbox diff, restore it with `git restore`, and report which rows finished. Then reap the sandbox with `git worktree remove` (never `--force`).
+
+### 4 · The real-path regression (read-only)
+`verify` writes nothing, so it can run on real reports. Run it, record the output, and time it:
+- **Guard Design Soren 11.19 2's real packout** must still give **VERIFY PASS** (it did at 21:41 last night, and it is the definition of done's one real top-level PASS). Its report sits beside its handoff, `2026.11.19-guard-design-soren-2-to-guard-design-soren-3-handoff.md`, in `C:/Users/jbmcg/Evryn/Code/evryn-team-workspace/shared/projects/product/2026/2026.11.19-packout-guard-build/`, and its footer (in the handoff or its successor's start line beside it) names its predecessor. **If your Q3-5 change flips it, don't "fix" it: tell me what C10 now sees.**
+- **AC-PG's real report** (`docs/sessions/2026.11.19-acpg-acpg2-handoff.packout-report.md` in the worktree; predecessor `d1700c43…`) must still give **VERIFY FAIL "the report itself carries a FAIL"**, exit 1.
+- **Write nothing to `~/.claude/packout/`:** check that its folders' mtimes are unchanged afterwards, and that the worktree's `git status` is clean.
+
+### 5 · Limits
+- **Work in the lane's worktree `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard`, on its branch `soren/packout-guard`** (DC1 worked here too; there is no separate DC branch), plus your sandbox and my scratch's `dc2/` folder. **Commit by path with the pathspec on the commit; no push, no merge; never `EnterWorktree`.**
+- No `checkout`, `stash`, `merge`, `reset` or `rebase` in any main folder (`_evryn-meta`, `evryn-team-workspace`).
+- Install nothing: no settings file, hook, `CLAUDE.md`, protocol or agent-definition text. Read transcripts only by script, never into context. No secrets (no `.env`, no `backups/full-public*`). No network. Spin no subagents.
+- **No recursive delete in any Bash command** (project settings deny it); use fresh scratch paths instead. **Put any commit message or report text containing backticks in a file or a quoted heredoc,** never a double-quoted string (DC1's near-miss last night).
+- **Don't edit my brief's Log.**
+- **Finish the whole task, not just the tractable part.** If you genuinely cannot finish something, do the rest and say plainly what is missing and why. **If you receive a STOP message from me, commit what passes and return.**
+
+### 6 · Write your report, then return
+Write **`docs/sessions/2026.11.20-acpg3-DC2-report.md`** (with a truncation canary), committed. It carries:
+- each item: its fix commit, its test (by name), and the revert that proved the test can fail;
+- the count check of every mutation row's target text;
+- the counts (suite, historical, the full mutation run row by row, with what each row mutated and the test that went red);
+- the two real-path `verify` results and their timings;
+- anything you bounced or found wrong in this brief;
+- what's undone;
+- **your load note:** what on your load list you actually needed, and what you genuinely didn't (careful: a file already in your head can feel unneeded). The next DC's list is derived from it.
+
+**Return at most 25 lines.**
+</task>
+
+<questions_first>
+Do the work — or, if a real gap would compromise it, output a numbered list of blocking questions INSTEAD and stop. Don't guess past a real gap — but also don't manufacture questions to dodge the work.
+</questions_first>
+
+<output_format>
+Wrap your entire final response in a heading pair, so your spinner can see at a glance where your output begins and ends inside a wall of tool output.
+
+Open with:  ## [your designated name]'s Output
+Close with: ## End of [your designated name]'s Output
+
+Use your own designated name — the one given to you in <identity>. Put nothing after the closing line.
+</output_format>
+
+<isolation>
+You work in a dedicated worktree on your own branch; you never touch `main`; you never deploy (`railway up`).
+</isolation>
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
