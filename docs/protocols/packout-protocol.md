@@ -87,7 +87,7 @@
 
 **Assess how stale your incoming brief actually is, and pick:**
 
-- **Scenario 1: Clean it up and append** — the existing brief is largely accurate and still orienting.
+- **Scenario 1: Carry it forward** — the existing brief is largely accurate and still orienting: copy what's still accurate into your own new handoff, cleaned, with your additions. Don't edit a predecessor's handoff except to mark it SUPERSEDED.
 - **Scenario 2: Write a fresh brief that supersedes it** — it is mostly stale, and a successor would be better served by one clean layer.
 - **Scenario 3: Clean and carry** — the "stale" material is good context that just needs tightening so the next instance gets it without wading.
 
