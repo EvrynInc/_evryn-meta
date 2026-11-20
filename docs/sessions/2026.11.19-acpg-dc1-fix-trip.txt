@@ -1,0 +1,57 @@
+DC1, fix trip (resumed, same agent). From AC-PG, Thu 2026-11-19 ~18:35 PT. Committed record: _evryn-meta-packout-guard/docs/sessions/2026.11.19-acpg-dc1-fix-trip.txt
+
+QC1 reviewed your step 1 at 066560c and returned NO-GO. Read first, each in full to its canary:
+1. C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-acpg-QC1-report.md (236 lines). These are its findings, with evidence and probes; the probes are in C:/Users/jbmcg/.claude/jobs/d1700c43/tmp/qc1/probes/.
+2. The brief's Log, from my 18:20 entry to the end (run `wc -l` on C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-sorenpg-acpg-packout-guard-step1-brief.md, and read from the heading "18:20-0800 — AC-PG: QC1 working" to the canary). It holds F-AC1/F-AC2, which come from my top-level real-path run, and my decision table, which is binding: what to fix, what to defer, and what NOT to adopt.
+
+Fix, in this order. Every fix ships a test that FAILS without it; prove that by breaking the fix and watching the test go red, recording the command:
+1. F1 and F2 (verify):
+   - Never take state from the report. Derive beganAt, agent, handoff, incoming and the sweep list from the transcript's own `packout.mjs begin` and `sweep` tool calls (their tool_use rows and results), or at least require the report's state to equal the on-disk state.json exactly.
+   - FAIL when the report's machine equals os.hostname() and the transcript is absent.
+   - DOWNGRADED gets its own non-zero exit code.
+   - verify accepts the footer (--predecessor, --handoff) and FAILs on a mismatch.
+   - QC1's P1 and P2 forgeries become tests that must exit non-zero.
+2. F-AC1 / F-AC2: anchor each sweep's position and beganAt to the command's OWN tool_use row in the transcript, never to a line count taken while the script runs. The top-level transcript lags within a turn (evidence: my 18:20 entry; state.json in C:/Users/jbmcg/.claude/packout/786bfd53bf66/). Add a fixture in which the lag occurs: the state's line count understates, and the call rows come later. C5 must PASS there, and a write made before begin in the same turn must not count as after it.
+3. F9 (manifest):
+   - Thea's --from goes to her packout start (≤1920; cite the line and its time).
+   - am3 gets a c12Stated, with its truth caveat.
+   - Add a presence-only c2Stated for Lucas am2, Lucas am3 and Thea, citing each record's frozen line.
+   - Name am2's findings file (shared/projects/helm/2026/handoffs/2026.11.19-fresh-eyes-morning-handoff-findings.md), so its C9 FAILs for the real reason (opened only by sed).
+   - Re-run historical.mjs and report the new table beside the ledger.
+4. F3:
+   - Record the transcript path and session per sweep.
+   - `sweep` refuses, and C3/C5 FAIL, on an extract with zero user/assistant turns.
+   - Do NOT require C5's extract to differ in sha from C3's (my decision table says why).
+5. F5 + F6: C10 counts bashWriteTargets; the list match is on a segment boundary.
+6. F7: resolve $VAR assignments, and require tasks.mjs `update` or `close` with `--note` (the Captain's 18:13 ruling).
+7. F8: a second begin from a different session is refused unless --resume, which appends the session to the chain; marks are kept per session. Reading the full chain stays deferred.
+8. F4 (minimum): the findings file's mtime must postdate the handoff's first write. The writer-identity residual stays named in the report.
+9. F10, F12 and cleanup:
+   - count compact_boundary only;
+   - normalize /x/... paths to X:/... on win32;
+   - give historical.mjs's header a PACKOUT_CODE_ROOT line;
+   - remove hist.uncommittedAtFreeze and the unused exports.
+
+Then:
+- re-run the suite;
+- re-run historical.mjs;
+- re-run mutations.mjs in a fresh detached sandbox outside the code folder (C:/Users/jbmcg/.claude/jobs/d1700c43/tmp/sandbox-dc1b), then reap it;
+- run a real-path run with the fixed code against the real ~/.claude/projects folder. Your transcript is a subagent's, so say plainly what that run cannot show.
+
+Same limits as your work trip:
+- your worktree and branch only; pathspec on every commit; no push, no merge; never EnterWorktree;
+- no checkout, stash, merge, reset or rebase in a main folder;
+- install nothing; read transcripts only by script; no secrets; no network; spin no subagents.
+- Don't edit my brief's Log.
+- Bounce back anything in my decision table you think is wrong, BEFORE building around it.
+- Finish the whole task; if you can't, do the rest and say what is missing.
+
+Stop by 19:05 PT, commit what passes, and append a "## Fix trip" section to your report file (docs/sessions/2026.11.19-acpg-DC1-report.md), committed. It carries:
+- each finding, its fix commit, its test, and the break you made to prove the test can fail;
+- the new historical table;
+- the counts;
+- what's undone.
+
+Return at most 25 lines, opening with "## DC1's Output" and closing with "## End of DC1's Output", with headings capped at ##.
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
