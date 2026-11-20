@@ -101,7 +101,8 @@ export function goodPackout({ agent = 'soren', shortSweeps = false, bashSweeps =
   // lagBegin (F-AC2): the run-time line count is taken BEFORE a write made earlier in the same turn; the begin call's own row
   // lands after that write. Anchored to its own row, begin must not count that write as "after begin".
   if (lagBegin) L.memory = tx.edit(f.memory, '# file', '# file\n\nnote');
-  L.begin = tx.bash(`node packout.mjs begin --agent ${agent} --handoff ${f.handoff} --incoming ${f.incoming}`, r.out);
+  // typed with a shell variable, as seats do: the transcript keeps `$I` literally; begin's own BEGIN-ARGS line resolves it
+  L.begin = tx.bash(`I=${f.incoming.replace(/\\/g, '/')}; node packout.mjs begin --agent ${agent} --handoff ${f.handoff} --incoming $I`, r.out);
   if (!lagBegin) L.memory = tx.edit(f.memory, '# file', '# file\n\nnote');
   L.cs = tx.bash(`node _evryn-meta/scripts/append-entry.mjs ${f.cs.replace(/\\/g, '/')} entry.md`, ''); fs.appendFileSync(f.cs, 'x\n');
   L.top = tx.edit(f.top, '# file', '# file\nrow');

@@ -185,8 +185,10 @@ export function anchors(calls, handoff) {
     if (m[1] === 'begin') {
       const f = out.match(/PREDECESSOR: (\S+) · HANDOFF: (.+?) · REPORT:/);
       if (!f || normPath(f[2].trim()) !== want) continue;
-      const arg = (name) => { const x = cmd.match(new RegExp(`--${name}\\s+("[^"]+"|'[^']+'|\\S+)`)); return x ? x[1].replace(/^["']|["']$/g, '') : null; };
-      if (!begin) begin = { n: k.n, ts: k.ts, session: f[1], agent: arg('agent'), incoming: arg('incoming') };
+      // The resolved arguments come from begin's own second output line (BEGIN-ARGS), never from re-parsing the command:
+      // the transcript stores the command as typed, so `--incoming $R/in.md` would read as a literal "$R" (real-path run, 18:41).
+      const ba = out.match(/^BEGIN-ARGS: agent=(.*?) · incoming=(.*)$/m);
+      if (!begin && ba) begin = { n: k.n, ts: k.ts, session: f[1], agent: ba[1].trim(), incoming: ba[2].trim() === '-' ? null : ba[2].trim() };
     } else {
       const s = out.match(/sweep (\d+): (.+?) \((\d+) lines \+ marker/);
       if (s && !sweeps.has(normPath(s[2]))) sweeps.set(normPath(s[2]), { n: k.n, k: +s[1] });
@@ -214,6 +216,7 @@ function cmdBegin(a) {
   saveState(handoff, s);
   const rep = handoff.replace(/\.md$/i, '') + '.packout-report.md';
   console.log(`PREDECESSOR: ${session} · HANDOFF: ${handoff} · REPORT: ${rep}`);
+  console.log(`BEGIN-ARGS: agent=${s.agent} · incoming=${s.incoming || '-'}`);
 }
 
 function cmdSweep(a) {
@@ -297,7 +300,7 @@ function cmdHistorical(a) {
 //  - cross-machine ⇒ DOWNGRADED, exit 3 (never 0), so no caller can read it as a pass.
 function cmdVerify(a) {
   if (!a.report) die('verify needs --report');
-  const txt = readOrNull(a.report); if (txt == null) die(`report not readable: ${a.report}`, 1);
+  const txt = readOrNull(winPath(a.report)); if (txt == null) die(`report not readable: ${a.report}`, 1);
   const m = /```json\n([\s\S]*?)\n```/.exec(txt); if (!m) { console.log('VERIFY FAIL\tthe report carries no machine block'); process.exit(1); }
   let meta; try { meta = JSON.parse(m[1]); } catch { console.log('VERIFY FAIL\tthe report\'s machine block is not valid JSON'); process.exit(1); }
   const problems = [];
