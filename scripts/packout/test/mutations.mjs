@@ -28,7 +28,8 @@ const M = [
   // (first run: this mutation did NOT go red — no test made a second sweep before the handoff's first write. Test C5b added.)
   ['C5', CH, 'const cand = ctx.sweeps.filter((s) => s.createdN > first && (!c3 || s !== c3));', 'const cand = ctx.sweeps.filter((s) => s.createdN >= 0 && (!c3 || s !== c3));', /mutation C5b:/],
   ['C6', CH, 'const miss = spawns.filter(', 'const miss = [].filter(', /mutation C6:/],
-  ['C7', CH, "if (!reads.length) return R('C7', 'FAIL'", "if (!reads.length) return R('C7', 'PASS'", /mutation C7:/],
+  // (fix trip 5: C7's no-read decision moved into incomingWhole; this row follows it, the same mutation: no Read counts as whole)
+  ['C7', CH, 'if (!reads.length) return { fail: `no Read of the incoming handoff after line ${from}`, reads };', 'if (!reads.length) return { lw: [], T: 0, reads };', /mutation C7:/],
   ['C8', CH, 'const eq = equalsFile(lw, handoffText);', 'const eq = { equal: true };', /instrument 3:/],
   ['C9', CH, "if (!reads.length) return R('C9', 'FAIL'", "if (!reads.length) return R('C9', 'PASS'", /mutation C9:/],
   // (fix trip 3b: C10's line gained the committed-since-write term; this row's target follows it, same mutation)
@@ -79,6 +80,9 @@ const M = [
   // (the replacement must not CONTAIN the target, or the runner's applied-check sees it still present: hence "C7" in double quotes)
   ['Q4-1', CH, "return R('C7', 'PASS', `read whole (${lw", "if (incomingText == null || !equalsFile(lw, incomingText).equal) return R(\"C7\", 'FAIL', 'Q4-1 reverted: the read must equal the file now'); return R(\"C7\", 'PASS', `read whole (${lw", /Q4-1 \[A\]/],
   ['Q4-2', PO, "const NEAR_ZERO_NAMES = ['2026.10.19-near-zero-campaign.md', '2026.10.19-consolidation-standup-near-zero-campaign.md'];", "const NEAR_ZERO_NAMES = ['2026.10.19-consolidation-standup-near-zero-campaign.md'];", /Q4-2 \[new name\]/],
+  // ---- fix trip 5 (QC5's Q5-1/Q5-2 and Q5-3; the Captain's 13:04 ruling): each row REVERTS one fix; its test must go red
+  ['Q5-1', CH, 'reads.slice(0, j + 1).filter((k) => k.win.total === t), incomingText, t);', 'reads.slice(0, j + 1), incomingText, t);', /Q5-1 \[H9\]/],
+  ['Q5-3', CH, "const inWhole = ctx.incoming && !ctx.historical && !('incomingUncommittedOverride' in ctx) ? incomingWhole(ctx) : null;", 'const inWhole = null;', /Q5-3 \[X2\]/],
   ['Q4-6', PO, "if (runsPackout(cmd, ['begin']) !== 'begin') continue; // Q4-6", "if (runsPackout(cmd, ['begin']) !== 'begin' && !/packout\\.mjs[\"']?\\s+begin\\b/.test(stripHeredocs(cmd))) continue; // Q4-6", /Q4-6 \[p7\]/],
 ];
 const count = (s, sub) => s.split(sub).length - 1;

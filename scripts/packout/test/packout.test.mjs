@@ -495,13 +495,41 @@ test('Q4-1 [D]: a clean check, then the incoming bannered before the successor\'
 });
 test('Q4-1 kept: no Read of the incoming after begin, or a Read short of its end, still FAILs C7 (also when the file has moved)', () => {
   let g = goodPackout(); g.tx.blank(g.L.incomingRead).flush(); archive(g.f);
-  let v = only(check(g.f).out, ['C7']); assert.match(v.C7.e, /no Read of the incoming handoff after line/);
+  // (fix trip 5, Q5-3: with no whole read AND the file moved, the incoming's list can't be read, so C10 now FAILs loud beside C7)
+  let v = only(check(g.f).out, ['C7', 'C10']); assert.match(v.C7.e, /no Read of the incoming handoff after line/); assert.match(v.C10.e, /"## Uncommitted" list cannot be read/);
   g = goodPackout(); g.tx.blank(g.L.incomingRead); g.tx.read(g.f.incoming, { a: 1, b: 3 }); g.tx.flush();
   v = only(check(g.f).out, ['C7']); assert.match(v.C7.e, /incoming never read whole/);
   // a whole Read made only BEFORE begin (spliced in after the opening user row) does not count
   g = goodPackout(); g.tx.blank(g.L.incomingRead);
   const early = new Tx(path.join(g.f.root, 'early.jsonl')); early.read(g.f.incoming); g.tx.rows.splice(1, 0, ...early.rows); g.tx.flush();
   v = only(check(g.f).out, ['C7']); assert.match(v.C7.e, /no Read of the incoming handoff after line/);
+});
+// ---- fix trip 5: QC5's Q5-1, Q5-2 (one C7 change) and Q5-3 (the Captain's 13:04 ruling). Each fails without its fix.
+test('Q5-2 [H8]: a whole Read, step 6\'s banner (+2 lines), then a Read of lines 1-3 to see it → C7 PASS on the whole read of the old version', () => {
+  const g = goodPackout();
+  g.tx.edit(g.f.incoming, '# Incoming handoff', '**SUPERSEDED BY:** shared/handoff-out.md\n\n# Incoming handoff'); g.tx.read(g.f.incoming, { a: 1, b: 3 }); g.tx.flush();
+  git(g.f.tw, 'commit', '-qm', 'step 6: supersede the incoming', '--', 'shared/handoff-in.md');
+  const v = only(check(g.f).out, []); assert.match(v.C7.e, /read whole \(\d+; 8 lines\) to its canary/);
+});
+test('Q5-1 [H9]: a partial Read, a trimming Edit, then a one-line Read of the new version → C7 FAIL (two versions are never stitched)', () => {
+  const g = goodPackout(); g.tx.blank(g.L.incomingRead);
+  g.tx.read(g.f.incoming, { a: 1, b: 4 }); g.tx.edit(g.f.incoming, '## Uncommitted\n\n`shared/carried.md`\n\n', ''); g.tx.read(g.f.incoming, { a: 1, b: 1 }); g.tx.flush();
+  git(g.f.tw, 'commit', '-qm', 'carry', '--', 'shared/handoff-in.md');
+  const v = only(check(g.f).out, ['C7']); assert.match(v.C7.e, /incoming never read whole after line \d+ \(reads \d+:1-4, \d+:1-1; 4 lines\)/);
+});
+test('Q5-3 [X2]: the incoming lists an uncommitted path, the seat drops it and leaves it dirty, then step 6 archives the incoming by git mv → C10 FAIL', () => {
+  const g = goodPackout();
+  fs.writeFileSync(path.join(g.f.tw, 'shared', 'carried.md'), 'changed, uncommitted\n');
+  fs.writeFileSync(g.f.handoff, fs.readFileSync(g.f.handoff, 'utf8').replace('`shared/carried.md`\n', '')); g.tx.read(g.f.handoff); g.tx.flush();
+  archive(g.f);
+  const v = only(check(g.f).out, ['C10']); assert.match(v.C10.e, /incoming's uncommitted shared\/carried\.md is neither committed nor carried forward/);
+});
+test('Q5-3 kept: an incoming read whole with NO "## Uncommitted" section is not failed on C10\'s incoming half', () => {
+  const g = goodPackout();
+  fs.writeFileSync(g.f.incoming, '# Incoming handoff\n\nNothing uncommitted.\n\nTruncation canary — DO NOT REMOVE: FULL FILE LOADED\n');
+  git(g.f.tw, 'commit', '-qm', 'an incoming with no list', '--', 'shared/handoff-in.md');
+  g.tx.read(g.f.incoming); g.tx.flush();
+  const v = only(check(g.f).out, []); assert.match(v.C10.e, /incoming list 0/);
 });
 test('Q4-2 [new name]: the near-zero table written at 2026.10.19-near-zero-campaign.md → C12 PASS', () => {
   const g = goodPackout({ nzName: '2026.10.19-near-zero-campaign.md' });

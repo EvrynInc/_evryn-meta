@@ -258,23 +258,45 @@ export function C6(ctx) {
     : R('C6', 'PASS', `all named: ${list}`);
 }
 
-export function C7(ctx) {
+/**
+ * The seat's WHOLE READ of the incoming handoff after `begin`, judged on the transcript alone (Q4-1), or why there is none.
+ * Returns { lw (the reads composing it), T (its length), reads } or { fail: <reason>, reads }.
+ * Q5-1/Q5-2 (fix trip 5, the Captain's 13:04 ruling): packout step 6 changes the incoming BETWEEN reads, so reads of two versions
+ * must never be stitched together. Only Reads reporting the SAME totalLines are composed, and the NEWEST such group that covers
+ * lines 1..T by itself wins (as C8's HIST-ORDER branch filters `k.win.total === T`). So a whole read, then a banner, then a short
+ * look still PASSes (the old version stands alone), and a partial read, a trimming edit and a short look of the new one does not.
+ * Reads with no totalLines (numbered text only) keep the old fallback: the file on disk supplies T, and if it is gone too and no
+ * read reports a length, "whole" cannot be judged (FAIL loud).
+ */
+function incomingWhole(ctx) {
   const { calls, from, incoming, incomingText } = ctx;
+  const reads = calls.filter((k) => k.n >= from && isRead(k, incoming));
+  if (!reads.length) return { fail: `no Read of the incoming handoff after line ${from}`, reads };
+  for (let j = reads.length - 1; j >= 0; j--) {
+    const t = reads[j].win.total; if (!Number.isInteger(t)) continue;
+    const lw = lastWhole(reads.slice(0, j + 1).filter((k) => k.win.total === t), incomingText, t);
+    if (lw) return { lw, T: t, reads };
+  }
+  const bare = reads.filter((k) => !Number.isInteger(k.win.total));
+  if (bare.length && incomingText == null && !reads.some((k) => Number.isInteger(k.win.total))) return { fail: `the incoming's Reads report no length (totalLines) and the file is not readable now, so a whole read cannot be judged`, reads };
+  if (bare.length && incomingText != null) { const T = fileLines(incomingText).length; const lw = lastWhole(bare, incomingText, T); if (lw) return { lw, T, reads }; }
+  const shown = reads[reads.length - 1].win.total ?? (incomingText != null ? fileLines(incomingText).length : '?');
+  return { fail: `incoming never read whole after line ${from} (reads ${reads.map((k) => `${k.n}:${k.win.start}-${k.win.start + k.win.lines.length - 1}`).join(', ')}; ${shown} lines)`, reads };
+}
+/** The text of a whole read (incomingWhole's result), line 1..T, as the seat read it. */
+const wholeText = (w) => { const m = compose(w.lw); return Array.from({ length: w.T }, (_, i) => m.get(i + 1) ?? '').join('\n'); };
+
+export function C7(ctx) {
+  const { incoming, incomingText } = ctx;
   if (ctx.c7SameFile) return R('C7', 'OPEN', '(historical: the incoming handoff is the same shared, appended file as the outgoing one; nothing separate to re-read, and C8 covers the file)');
   if (!incoming) return R('C7', 'PASS', 'no incoming handoff given (nothing to re-read)');
   // Q4-1 (fix trip 4, the Captain's 12:06 ruling): the incoming is judged on the seat's WHOLE READ ALONE, never against the file
   // as it stands now. Packout step 6 tells the seat to banner, supersede or archive (git mv) that very file after step 4's
   // re-read, so "equals now" false-FAILed the protocol's own order, and a move could never be repaired. C8 keeps "equals now"
   // for the OUTGOING handoff. Still FAIL: no Read after begin, a read short of the file's end, or no length to judge it by.
-  const reads = calls.filter((k) => k.n >= from && isRead(k, incoming));
-  if (!reads.length) return R('C7', 'FAIL', `no Read of the incoming handoff after line ${from}`);
-  // "whole" = lines 1..T covered, T being the file's length AS THE LAST READ SAW IT (the Read tool's totalLines). Only when a
-  // read carries no totalLines does the file on disk supply T, and if it is gone too, C7 cannot tell "whole" and FAILs loud.
-  const lastTotal = reads[reads.length - 1].win.total;
-  const T = Number.isInteger(lastTotal) ? lastTotal : (incomingText != null ? fileLines(incomingText).length : null);
-  if (T == null) return R('C7', 'FAIL', `the incoming's Reads report no length (totalLines) and the file is not readable now, so a whole read cannot be judged`);
-  const lw = lastWhole(reads, incomingText, T);
-  if (!lw) return R('C7', 'FAIL', `incoming never read whole after line ${from} (reads ${reads.map((k) => `${k.n}:${k.win.start}-${k.win.start + k.win.lines.length - 1}`).join(', ')}; ${T} lines)`);
+  const w = incomingWhole(ctx);
+  if (w.fail) return R('C7', 'FAIL', w.fail);
+  const { lw, T } = w; // (incomingText stays in scope: the Q4-1 mutation row re-imposes "equals now" with it)
   const seen = compose(lw); let last = '';
   for (let i = T; i >= 1; i--) if ((seen.get(i) || '').trim()) { last = seen.get(i); break; }
   const canaryOk = /FULL FILE LOADED/.test(last);
@@ -351,7 +373,12 @@ function committedSinceWrite(ctx, p, ts) {
 export function C10(ctx) {
   const { calls, handoffText, incomingText, isCommitted, rootOf } = ctx;
   const outList = ctx.uncommittedOverride ?? uncommittedList(handoffText);
-  const inList = ctx.incoming ? (ctx.incomingUncommittedOverride ?? uncommittedList(incomingText)) : [];
+  // Q5-3 (fix trip 5): the incoming's ## Uncommitted list is taken from the seat's WHOLE READ of it (incomingWhole, the same group
+  // C7 judges), never from the file on disk, which packout step 6 may have moved. Only when there is no whole read (C7 then FAILs
+  // too, so no passing packout rests on this) is the file on disk used; if it is gone as well, C10 FAILs loud. Historical mode keeps
+  // its own source (the manifest's override, or the frozen file), so the six frozen verdicts cannot move.
+  const inWhole = ctx.incoming && !ctx.historical && !('incomingUncommittedOverride' in ctx) ? incomingWhole(ctx) : null;
+  const inList = !ctx.incoming ? [] : !inWhole ? (ctx.incomingUncommittedOverride ?? uncommittedList(incomingText)) : !inWhole.fail ? (uncommittedList(wholeText(inWhole)) ?? []) : incomingText != null ? (uncommittedList(incomingText) ?? []) : null;
   if (ctx.historical && (outList == null || (ctx.incoming && inList == null))) return R('C10', 'OPEN', '(historical: no machine-readable uncommitted list, and the manifest transcribes none)');
   const listed = new Set((outList || []).map(normPath));
   // F6: match on a path-segment boundary, never a bare suffix (`ray.md` must not cover `shared/stray.md`)
@@ -375,6 +402,7 @@ export function C10(ctx) {
   // 3b: committedSinceWrite fails LOUD: a write with no usable timestamp, a file with no repo, or a git failure counts as NOT
   // committed, so that file FAILs exactly as it did before this fix.
   for (const [p, { n, ts }] of written) { const c = isCommitted(p); if (c === false && !named(p) && !committedSinceWrite(ctx, p, ts)) bad.push(`${p} (written at ${n}) is uncommitted and not in "## Uncommitted"`); }
+  if (inWhole && inList == null) bad.push(`the incoming's "## Uncommitted" list cannot be read: no whole Read of it (${inWhole.fail}) and the file is not readable now`); // Q5-3: loud, never a silent skip
   for (const p of inList || []) { const c = isCommitted(abs(p)); if (c === false && !named(p)) bad.push(`incoming's uncommitted ${p} is neither committed nor carried forward`); }
   const note = `${written.size} repo files written; outgoing list ${outList ? outList.length : 'absent'}; incoming list ${inList ? inList.length : 'absent'}`;
   return bad.length ? R('C10', 'FAIL', bad.join('; ') + ` (${note})`) : R('C10', 'PASS', note + (ctx.historical ? ' [fixture-assisted: lists transcribed by the manifest]' : ''));
