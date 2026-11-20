@@ -26,7 +26,7 @@ node _evryn-meta/scripts/packout/packout.mjs verify --report <path> --predecesso
 4. **`verify`** is the successor's first act, using the three values from its footer. It finds the predecessor's transcript itself and re-derives every verdict.
 
 **Exit codes:**
-- `check`: 0 = all PASS · 1 = any FAIL (or a refusal it names) · 2 = usage.
+- `check`: 0 = all PASS · 1 = any FAIL (or a refusal it names) · 2 = it could not run: a usage error, "no packout state: run begin first", or "no transcript found". The message says which.
 - `verify`: 0 = PASS · 1 = FAIL · 2 = usage · **3 = DOWNGRADED, which is NOT a pass.** Exit 3 means the predecessor's transcript is on another machine, so only the report's hashes could be checked. Say so in your Report #0.
 
 **Two rules a seat must know:**
@@ -43,10 +43,10 @@ node _evryn-meta/scripts/packout/packout.mjs verify --report <path> --predecesso
 | C4 | the handoff is written after `begin` |
 | C5 | a different `sweep` extract, made after the handoff's first write, is Read to its marker |
 | C6 | every `Agent` call and `claude --bg` launch in the session is named in the handoff by id or name |
-| C7 | the incoming handoff is Read whole, to its canary, after `begin`. **It is judged on that read alone**, so packout step 6 may then banner, supersede or archive the file |
+| C7 | the incoming handoff is Read whole after `begin`: one version of it, every line, by Reads reporting the same length. The report says "to its canary", or "(the file carries no canary)" when the last line read is not one. **It is judged on that read alone**, so packout step 6 may then banner, supersede or archive the file (C10 reads the incoming's list from the same read) |
 | C8 | the last whole Read of the handoff equals the handoff as it stands now, exactly |
-| C9 | `<handoff-stem>.fresh-eyes.md` was written by another session after the handoff's first write, and Read whole by this seat |
-| C10 | every file this session wrote is clean, committed after its last write, or listed under `## Uncommitted`; and every path in the incoming's list is committed or carried forward |
+| C9 | `<handoff-stem>.fresh-eyes.md` was written by another session after the handoff's first write, and Read whole by this seat; that last whole Read equals the findings file now |
+| C10 | every file this session wrote is clean, committed after its last write, or listed under `## Uncommitted`; and every path in the incoming's list (taken from the seat's whole Read of the incoming) is committed or carried forward. If that list can be read neither from a whole Read nor from the file, C10 FAILs and says so |
 | C11 | there is no compaction in the transcript. If there is one, the seat must stop, and any write after it is UNVERIFIED |
 | C12 | the near-zero decisions table (under either of its names) is written after `begin`, or a `PACKOUT-NONE C12: nothing by hand — <reason>` line is in the handoff |
 
@@ -85,7 +85,9 @@ node _evryn-meta/scripts/packout/packout.mjs verify --report <path> --predecesso
 - **Q4-4** (`time`/`env` wrappers don't anchor): step 6's text gives the exact form.
 - **Q4-5** (a successor start line written after `check` and left uncommitted FAILs `verify`): step 6's text, so write it before `check` or commit it; joins SG-3.
 - **Q4-7** (in a subagent, the session id is the parent's): fails loud; seats are top-level today.
-- **Q4-8** (an unreadable incoming silently skips C10's incoming-list half): the v1.1 queue.
+- **Q5-4** (a whole Read with no reported length, then the incoming archived, FAILs C7 loud; 8 of 5,085 top-level Reads in 7 days lacked a length): v1.1.
+- **Q5-5** (C12 accepts an exact-name copy of the near-zero table elsewhere under `shared/`): v1.1.
+- **The same-version case** (an edit that keeps the incoming's line count, made between two partial Reads, can still be stitched into one "whole" read): v1.1.
 - **The orphan path's verdict** (a repaired packout can't reach VERIFY PASS): step 4's quarantine.
 
 ## Tests
