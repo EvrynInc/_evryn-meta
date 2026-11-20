@@ -1,0 +1,16 @@
+E1 table written at the OLD name	C12=PASS (near-zero decisions table written at line 15)
+E2 table written at the NEW name	C12=PASS (near-zero decisions table written at line 15)
+E3 no write, no PACKOUT-NONE C12 line	C12=FAIL (no write to the near-zero table after line 5, and no "PACKOUT-NONE C12: nothing by hand — <reason>" line)
+partial-name write: shared/projects/helm/2026/2026.10.19-near-zero-campaign-notes.md	C12=FAIL (no write to the near-zero table after line 5, and no "PACKOUT-NONE C12: nothing by hand — <reason>" line)
+partial-name write: shared/projects/helm/2026/near-zero-campaign.md	C12=FAIL (no write to the near-zero table after line 5, and no "PACKOUT-NONE C12: nothing by hand — <reason>" line)
+partial-name write: shared/projects/helm/2026/x-2026.10.19-near-zero-campaign.md	C12=FAIL (no write to the near-zero table after line 5, and no "PACKOUT-NONE C12: nothing by hand — <reason>" line)
+partial-name write: shared/projects/helm/2026/2026.10.19-near-zero-campaign.md.bak	C12=FAIL (no write to the near-zero table after line 5, and no "PACKOUT-NONE C12: nothing by hand — <reason>" line)
+E8 exact NEW name, but a stray copy at shared/projects/growth/ (the real table is at the OLD name)	C12=PASS (near-zero decisions table written at line 33)
+E9 a write to an archived copy under .../historical/	C12=FAIL (no write to the near-zero table after line 5, and no "PACKOUT-NONE C12: nothing by hand — <reason>" line)
+Q6 p7 (cross-machine + a grep whose output is the footer)	exit 3: VERIFY DOWNGRADED (cross-machine)	the report was made on SOME-OTHER-HOST; its transcript is not on this machine; checked only the report's hashes (handoff sha a8d00b57e6b
+Q6 p7b (cross-machine + an echo of a begin command plus cat of the footer)	exit 3: VERIFY DOWNGRADED (cross-machine)	the report was made on SOME-OTHER-HOST; its transcript is not on this machine; checked only the report's hashes (handoff sha a8d00b57e6b
+Q6 GHOST (a real begin row names the handoff)	exit 1: VERIFY FAIL	no transcript for session ffffffff-0000-0000-0000-000000000000 is here, but this machine holds a `packout.mjs begin` naming this handoff (C:\Users\jbmcg\AppData\Local\Temp\packout-test-nWM
+Q6 GHOST, begin typed as 'cd … && node <abs path> begin … | tail'	exit 1: VERIFY FAIL	no transcript for session ffffffff-0000-0000-0000-000000000000 is here, but this machine holds a `packout.mjs begin` naming this handoff (C:\Users\jbmcg\AppData\Local\Temp\packout-test-Bxu
+Q6 DUP	exit 1: VERIFY FAIL	session testsess is ambiguous on this machine: 2 transcripts match (C:\Users\jbmcg\AppData\Local\Temp\packout-test-VL8yo8\projects\proj\testsess.jsonl · C:\Us
+X1 incoming in place, its uncommitted path dropped from the outgoing list	C7=PASS (read whole (17; 8 lines) to its canary, judged on the read alone (Q4-1)) | C10=FAIL (incoming's uncommitted shared/carried.md is neither committed nor carried forward (5 repo files written; outgoing list 1; incoming list 1))
+X2 the SAME, then step 6 archives the incoming by git mv	C7=PASS (read whole (17; 8 lines) to its canary, judged on the read alone (Q4-1)) | C10=PASS (5 repo files written; outgoing list 1; incoming list absent)

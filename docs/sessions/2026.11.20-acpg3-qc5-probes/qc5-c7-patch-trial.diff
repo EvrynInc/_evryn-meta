@@ -1,0 +1,27 @@
+diff --git a/scripts/packout/lib/checks.mjs b/C:/Users/jbmcg/.claude/jobs/e8af53fa/tmp/qc5/fix/scripts/packout/lib/checks.mjs
+index 56c25f5..93cb06b 100644
+--- a/scripts/packout/lib/checks.mjs
++++ b/C:/Users/jbmcg/.claude/jobs/e8af53fa/tmp/qc5/fix/scripts/packout/lib/checks.mjs
+@@ -270,10 +270,18 @@ export function C7(ctx) {
+   if (!reads.length) return R('C7', 'FAIL', `no Read of the incoming handoff after line ${from}`);
+   // "whole" = lines 1..T covered, T being the file's length AS THE LAST READ SAW IT (the Read tool's totalLines). Only when a
+   // read carries no totalLines does the file on disk supply T, and if it is gone too, C7 cannot tell "whole" and FAILs loud.
+-  const lastTotal = reads[reads.length - 1].win.total;
+-  const T = Number.isInteger(lastTotal) ? lastTotal : (incomingText != null ? fileLines(incomingText).length : null);
+-  if (T == null) return R('C7', 'FAIL', `the incoming's Reads report no length (totalLines) and the file is not readable now, so a whole read cannot be judged`);
+-  const lw = lastWhole(reads, incomingText, T);
++  // QC5 SCRATCH TRIAL: compose only reads that report the SAME totalLines; take the newest such group that covers 1..T alone.
++  let lw = null, T = null;
++  for (let j = reads.length - 1; j >= 0 && !lw; j--) {
++    const t = reads[j].win.total; if (!Number.isInteger(t)) continue;
++    const c = lastWhole(reads.slice(0, j + 1).filter((k) => k.win.total === t), incomingText, t); if (c) { lw = c; T = t; }
++  }
++  if (!lw && !reads.some((k) => Number.isInteger(k.win.total))) {
++    T = incomingText != null ? fileLines(incomingText).length : null;
++    if (T == null) return R('C7', 'FAIL', `the incoming's Reads report no length (totalLines) and the file is not readable now, so a whole read cannot be judged`);
++    lw = lastWhole(reads, incomingText, T);
++  }
++  if (T == null) T = reads[reads.length - 1].win.total;
+   if (!lw) return R('C7', 'FAIL', `incoming never read whole after line ${from} (reads ${reads.map((k) => `${k.n}:${k.win.start}-${k.win.start + k.win.lines.length - 1}`).join(', ')}; ${T} lines)`);
+   const seen = compose(lw); let last = '';
+   for (let i = T; i >= 1; i--) if ((seen.get(i) || '').trim()) { last = seen.get(i); break; }

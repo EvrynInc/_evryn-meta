@@ -1,0 +1,35 @@
+DC2, fix trip 5 (resumed, same agent). From AC-PG3, Fri 2026-11-20 ~13:15 PT. Committed record: _evryn-meta-packout-guard/docs/sessions/2026.11.20-acpg3-dc2-fix-trip-5.txt
+
+QC5 reviewed fix trip 4: Q4-2, Q4-6 and the README hold, and QC4's four Q4-1 probes pass. But Q4-1 as built gives three honest-path wrong verdicts, and the Captain has ruled them must-fix (question 10 (a)). This is the last fix trip of step 1: after it, my successor AC-PG4 verifies it by probe (QC5's own scripts), not by a sixth review.
+
+Read first, each to its canary:
+1. QC5's report, C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.20-acpg3-QC5-report.md, whole (its §2 mutation run may still say NOT YET RUN; that is fine). Its §4 has the three findings and their probes.
+2. The committed copy of QC5's probes: C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.20-acpg3-qc5-probes/ (README.txt first; then p1.mjs, p2.mjs, their reference outputs, and qc5-c7-patch-trial.diff, QC5's trial of the C7 change in a scratch copy).
+3. The live brief's Log, from the entry headed "AC-PG3: QC5's report" to the end (Grep for the heading; read to the canary). The Captain's 13:04 ruling is binding.
+
+Fix exactly these. Each ships a test that FAILS without its fix, and a mutation row that reverts it. Prove each test can fail by reverting the fix; record the command.
+1. Q5-1 and Q5-2, by ONE change to C7: compose only the incoming's Reads that report the SAME totalLines, and take the newest such group that covers lines 1..T by itself (C8's HIST-ORDER branch already filters `k.win.total === T`). Keep the existing fallback for a Read with no totalLines. QC5's trial diff is a lead, not a commit: build it properly in the lane's code.
+   - Tests: QC5's H8 (a whole Read, step 6's banner, then a Read of lines 1-3) -> C7 PASS; H9 (a partial Read, a trimming Edit, a one-line Read of the new version) -> C7 FAIL. QC4's A, B, C, D and the "Q4-1 kept" cases must stay as they are.
+   - Mutation row: drop the same-length filter.
+2. Q5-3: C10's incoming half takes the incoming's `## Uncommitted` list from the seat's whole Read in the transcript (the same group as item 1: its lines joined and passed to `uncommittedList`), not from the file on disk, which step 6 may have moved. When an incoming was given and its list cannot be read from a whole Read, C10 FAILs loud and says so (no more silent `inList || []`).
+   - Tests: QC5's X2 (the incoming lists an uncommitted path; the seat drops it and leaves it uncommitted; the incoming is archived by git mv) -> C10 FAIL; X1 stays FAIL; an incoming with no `## Uncommitted` section read whole -> C10 not failed on that half.
+   - Mutation row: restore the silent skip.
+   - Careful: think about historical mode and the six frozen packouts (C10 is OPEN for all six there). historical.mjs must stay 31/31. If this change would move a historical verdict, stop and tell me before building around it.
+3. The README wording (QC5 §1, R-1 to R-4): R-1 (check exits 2 on more than usage: say which); R-2 (C7's row: a whole read PASSes "to its canary", or "(the file carries no canary)" when it has none); R-3 (C9's row: the last whole Read must also equal the findings file now); R-4 (C7's row may keep saying step 6 can archive the incoming, now that Q5-3 closes the skip; move Q4-8 out of the deferral list, since it is fixed).
+
+Out of scope, don't touch: Q5-4, Q5-5, the same-version case (an edit that keeps the line count, between two partial reads): all v1.1. Add a one-line v1.1 entry for each to the README's deferral list.
+
+Then:
+- the suite (all pass); historical.mjs (31/31, all five freeze hashes);
+- `mutations.mjs <root> --count` (every row's target exactly once, none containing its own target);
+- QC5's probes on your head: `node docs/sessions/2026.11.20-acpg3-qc5-probes/p1.mjs C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard` and the same for p2.mjs. Expected: H8 PASS, H9 FAIL, X2 FAIL (C10), and every other probe as in probes-*-new.txt. Record both outputs in your scratch and the report.
+- the new rows plus their neighbours (C7, C10, Q4-1, Q3-5, C10-since and any row whose target text you touched) in a fresh detached sandbox outside the code folder (C:/Users/jbmcg/.claude/jobs/e8af53fa/tmp/sandbox-dc2d), each red for its reason; reap it. Do NOT run all rows. NOTE: QC5's own full run may still be running in sandbox-qc5; don't touch that sandbox.
+- the real path: Guard Design Soren 11.19 2's real report (predecessor 09858954-0057-4f2d-a8ff-fa012bf86a13) still VERIFY PASS; AC-PG's still VERIFY FAIL "the report itself carries a FAIL". ~/.claude/packout/ unchanged EXCEPT my own new state folder b4ea5a2b604a (my packout has begun; don't touch it).
+
+Same limits as before: the lane's worktree and branch only; pathspec on every commit; no push, no merge; never EnterWorktree; no checkout, stash, merge, reset or rebase in a main folder; install nothing; transcripts by script only; no secrets; no network; spin no subagents; no recursive delete; backticked text only in files or quoted heredocs; don't edit my brief's Log; write nothing to ~/.claude/packout/. Bounce back anything in this ruling you think is wrong, BEFORE building around it. Finish the whole task; if you can't, do the rest and say what is missing. If you receive a STOP message from me, commit what passes and return. Until packout.mjs is signed and live, every packout in this lane is checked by the session Packout Checker 11.20 am 2 before its successor launches (Justin's rule, 11/20 9:11).
+
+Append a "## Fix trip 5" section to docs/sessions/2026.11.20-acpg3-DC2-report.md, committed: each fix's commit, its tests by name, the revert that proved each can fail, the README commit, the counts, QC5's probe outputs on your head, the two real-path results, and anything undone. Add your updated load note in one line if it changed.
+
+Return at most 25 lines, opening with "## DC2's Output" and closing with "## End of DC2's Output", headings capped at ##.
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
