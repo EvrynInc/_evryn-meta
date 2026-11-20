@@ -76,7 +76,8 @@ const M = [
   // ---- fix trip 3b (the Captain's ⓼ (a)): revert "committed = a commit no earlier than this session's last write"
   ['C10-since', CH, ' && !committedSinceWrite(ctx, p, ts)) bad.push(', ') bad.push(', /C10 \[3b i\]/],
   // ---- fix trip 4 (QC4's Q4-1, Q4-2, Q4-6; the Captain's 12:06 ruling): each row REVERTS one fix; its test must go red
-  ['Q4-1', CH, "return R('C7', 'PASS', `read whole (${lw", "if (incomingText == null || !equalsFile(lw, incomingText).equal) return R('C7', 'FAIL', 'Q4-1 reverted: the read must equal the file now'); return R('C7', 'PASS', `read whole (${lw", /Q4-1 \[A\]/],
+  // (the replacement must not CONTAIN the target, or the runner's applied-check sees it still present: hence "C7" in double quotes)
+  ['Q4-1', CH, "return R('C7', 'PASS', `read whole (${lw", "if (incomingText == null || !equalsFile(lw, incomingText).equal) return R(\"C7\", 'FAIL', 'Q4-1 reverted: the read must equal the file now'); return R(\"C7\", 'PASS', `read whole (${lw", /Q4-1 \[A\]/],
   ['Q4-2', PO, "const NEAR_ZERO_NAMES = ['2026.10.19-near-zero-campaign.md', '2026.10.19-consolidation-standup-near-zero-campaign.md'];", "const NEAR_ZERO_NAMES = ['2026.10.19-consolidation-standup-near-zero-campaign.md'];", /Q4-2 \[new name\]/],
   ['Q4-6', PO, "if (runsPackout(cmd, ['begin']) !== 'begin') continue; // Q4-6", "if (runsPackout(cmd, ['begin']) !== 'begin' && !/packout\\.mjs[\"']?\\s+begin\\b/.test(stripHeredocs(cmd))) continue; // Q4-6", /Q4-6 \[p7\]/],
 ];
@@ -85,8 +86,13 @@ const count = (s, sub) => s.split(sub).length - 1;
 // row, not only the new ones; a rewritten target prints NOT APPLIED in a full run). Safe on any checkout, branch or not.
 if (process.argv.includes('--count')) {
   let off = 0;
-  for (const [id, rel, oldS] of M) { const c = count(fs.readFileSync(path.join(root, rel), 'utf8'), oldS); if (c !== 1) off++; console.log(`${id}\t${rel}\t${c}${c === 1 ? '' : '\t<< NOT EXACTLY ONCE'}`); }
-  console.log(`COUNT\t${M.length - off}/${M.length} rows' target text occurs exactly once`);
+  // (fix trip 4: a replacement that CONTAINS its own target can never pass the applied-check, so it prints NOT APPLIED; flag it here)
+  for (const [id, rel, oldS, newS] of M) {
+    const c = count(fs.readFileSync(path.join(root, rel), 'utf8'), oldS); const self = newS.includes(oldS);
+    if (c !== 1 || self) off++;
+    console.log(`${id}\t${rel}\t${c}${c === 1 ? '' : '\t<< NOT EXACTLY ONCE'}${self ? '\t<< REPLACEMENT CONTAINS ITS TARGET' : ''}`);
+  }
+  console.log(`COUNT\t${M.length - off}/${M.length} rows' target text occurs exactly once, and no replacement contains its target`);
   process.exit(off ? 1 : 0);
 }
 // A sandbox is a DETACHED worktree (`git worktree add --detach`): a checkout on a branch is somebody's real tree, so refuse it.
