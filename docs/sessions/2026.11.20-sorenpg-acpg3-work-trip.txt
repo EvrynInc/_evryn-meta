@@ -1,0 +1,55 @@
+<task>
+Your load is complete and verified. It was assembled before you knew what you would be doing — so now that you know, **if the work genuinely needs something you do not have, LOAD IT.** You are not confined to the original list, and you should not work around a gap you could close by reading. Use your judgment freely here; it is useful now in a way it could not have been before.
+
+Two conditions, both of which matter:
+
+1. **Load IN ADDITION to what you already have, never INSTEAD of it.** Nothing on the original list becomes optional now that you can see the task. If something on it looks irrelevant in hindsight, you are wrong about that, or it was cheap — either way it stays loaded.
+2. **Name anything you loaded beyond the list in your receipts, with one line on why you needed it.** Do this even if the extra read turned out to be unnecessary. **Your spinner built that list without knowing what you would discover, and this report is the ONLY signal they get that it had a gap** — so it is not bookkeeping; it is the mechanism by which the next brief is better than this one.
+
+You are AC-PG3. Your load is verified by your Captain, by script against your transcript (the details are in my Log entry that records this trip).
+
+**You take over the packout-guard lane from AC-PG2 (session `1424bfce`), which SET DOWN at 21:53 Thu at the usage checkpoint; it did not pack out, so there is no packout report to `verify`.** The lane's channel of record is the live brief and its Log, inside the worktree: `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-sorenpg-acpg-packout-guard-step1-brief.md`. **AC-PG2's 21:53 SET-DOWN entry is your handoff.** Work from `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard` for every write; never write in a main folder, never `EnterWorktree`.
+
+**1 · Read first, whole, each to its canary:**
+- the live brief's Log from AC-PG's 19:04 SET-DOWN entry to the end (it includes AC-PG2's 21:53 set-down and my 21:42 entry);
+- **the build brief, whole** (`evryn-team-workspace/shared/projects/product/2026/2026.11.19-packout-guard-build/2026.11.19-packout-guard-build-brief.md`), **above all my 08:38 Fri entry, "the packout guard's DEFINITION OF DONE for step 1, v1." It governs this trip's scope, and where it differs from AC-PG2's set-down §3, it wins;**
+- QC3's report (`docs/sessions/2026.11.19-acpg-QC3-report.md`), QC2's report, DC1's report (its two fix-trip sections), and the ledger's freeze table and rulings (`evryn-team-workspace/shared/projects/helm/2026/2026.11.19-packout-chain-investigation/2026.11.19-packout-chain-ledger.md`).
+- Then confirm the state AC-PG2 left: `git worktree list` (no `sandbox-qc3`), branch head (AC-PG2's `9cb1ec3`, then only my `6edeeab` and any Log entries of mine), `git diff 4323cea HEAD -- scripts/` empty, the suite 56/56. Post what you find in your first Log entry.
+
+**2 · Fix trip 3: a FRESH Opus DC, two trips** (DC1's trips of record as the template; the load per AC-PG2's set-down §3, re-counted, plus all 9 `scripts/packout/` files whole). **The fix list is the definition of done's 🟡 rows, and only those:**
+- **Q3-2** with AC-PG2's refinement (downgrade only when no transcript on this machine holds a `begin` row naming this handoff; an ambiguous lookup is a FAIL; the downgrade branch also refuses a report carrying a FAIL);
+- **Q3-1 part (c) only** (the anchor requires a real `node …packout.mjs sweep|begin` command segment). **Q3-1 part (a), rebuilding each extract from the transcript, is OUT of v1** (definition of done §2): don't build it;
+- **Q3-3** (two tests pinning `verify`'s refusal of a FAILing report, same machine and downgrade branch, plus both as mutation rows);
+- **Q3-4** (repoint the stale rows; QC3's `F1-footer-handoff`, `N13-incoming`, `VERIFY-FAILGUARD-same` and `-cross`; **re-count the target text of EVERY row**);
+- **Q3-5** (C10 judged to the end of the transcript in `verify`; C6 stays bounded);
+- **Q3-6** (print the resolved report path).
+
+Each gets a test that fails without it and a mutation row. Then the full mutation run must read every row red for its reason.
+
+**3 · Then a NEW Opus QC4, two trips** (QC3's trips of record as the template, re-counted). **Brief it with the definition of done's §1–§4 table, including its stop rule:** a finding an honest seat can fall into is a BLOCKER; a finding that needs a seat to tamper deliberately with a file it can write is LOGGED for the hooks and vault, never blocking v1. It verifies each fix with QC3's recipes (its report's §5; its scratch died with AC-PG2's job), checks that no fix adds trust in another seat-writable file, runs the full mutation set, checks for regressions, and looks for what nobody named **on the honest path.**
+
+**4 · Decide QC4's findings as head of this lane, then post READY FOR CAPTAIN** with AC-PG2's set-down §4 contents, plus the definition of done's §1 table with each row's final status. If QC4 finds an honest-path blocker, a further fix trip needs a fresh DC and a new QC; tell me before you start it.
+
+**How much your Captain has read:** the build brief whole; this Log from AC-PG's 19:04 set-down to its end, AC-PG2's set-down included; AC-PG2's decision tables. **Not the code, and not QC3's report.** The definition of done is my design call, built from those. **Treat everything here as a lead;** where the code, a report or a transcript says otherwise, follow it and say so early in the Log.
+
+**Limits:** the live brief's §5, plus: nothing installed, merged to `main`, deployed or pushed. **Usage:** the week resets Fri 8:59 AM; I read `/usage` and send CHECKPOINT or STOP if the VP calls one. **Hours:** Justin's working hours, to 5:00 PM PT Friday; never rush a review: if a step would be rushed, say so and defer it. **Context:** tail out at ~750K, pack out at ~800K with `packout.mjs` on yourself, as AC-PG did (Justin's R4). **Reach your Captain only with the literal `SendMessage` target `Guard Design Soren 11.19 3`** (a deliberate routing override, not a role). **Before you finish, write your own set-down in the Log.**
+
+**You will spin your own subagents (DC, QC, other ACs). When you do, you MUST follow `ac-orchestration-protocol.md` exactly — the tagged brief, pasted VERBATIM, with only the codified substitutions. That includes TWO-TRIP LOADING, which is not optional: trip 1 sends `<identity>` + `<mandatory_load>` + `<receipts>` and tells the agent NOTHING about the work; you verify its receipts against your list; only then do you resume it with `<task>`. Never send a load brief that mentions, hints at, or annotates files by what the work will need them for — the guarantee is that the agent cannot compute relevance during the load, and one hint hands that back. You do NOT get to improvise, condense, or "adapt" a brief; that HARD RULE binds you exactly as it binds the AC who spun you, and you may not change one word of those blocks without Justin's explicit prior OK. You are also bound by everything in this protocol that governs a spinner: assemble the load yourself and name every file with its line span, verify the receipts and re-load on any gap before granting the task, pin every spin's model explicitly, and NEVER tell a child where to report.**
+</task>
+
+<questions_first>
+Do the work — or, if a real gap would compromise it, output a numbered list of blocking questions INSTEAD and stop. Don't guess past a real gap — but also don't manufacture questions to dodge the work.
+</questions_first>
+
+<output_format>
+Wrap your entire final response in a heading pair, so your spinner can see at a glance where your output begins and ends inside a wall of tool output.
+
+Open with:  ## [your designated name]'s Output
+Close with: ## End of [your designated name]'s Output
+
+Use your own designated name — the one given to you in <identity>. Put nothing after the closing line.
+</output_format>
+
+<isolation>
+You work in a dedicated worktree on your own branch; you never touch `main`; you never deploy (`railway up`).
+</isolation>
