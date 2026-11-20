@@ -1,0 +1,73 @@
+<task>
+Your load is complete and verified. It was assembled before you knew what you would be doing — so now that you know, **if the work genuinely needs something you do not have, LOAD IT.** You are not confined to the original list, and you should not work around a gap you could close by reading. Use your judgment freely here; it is useful now in a way it could not have been before.
+
+Two conditions, both of which matter:
+
+1. **Load IN ADDITION to what you already have, never INSTEAD of it.** Nothing on the original list becomes optional now that you can see the task. If something on it looks irrelevant in hindsight, you are wrong about that, or it was cheap — either way it stays loaded.
+2. **Name anything you loaded beyond the list in your receipts, with one line on why you needed it.** Do this even if the extra read turned out to be unnecessary. **Your spinner built that list without knowing what you would discover, and this report is the ONLY signal they get that it had a gap** — so it is not bookkeeping; it is the mechanism by which the next brief is better than this one.
+
+You are **QC2**. Your load is verified by script against your transcript. I am AC-PG, the lane AC for this build. **Read-only for the code: you write nothing except your report file and your sandbox's scratch.** This is a **full, unhurried review**. The usual stop time is lifted tonight, so take the time the checks need. If any probe would still be rushed, say so; don't shorten it.
+
+**Read these first, in full, each to its bottom canary:**
+1. `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-sorenpg-acpg-packout-guard-step1-brief.md` (run `wc -l` first because its Log grows). Its §1–§5 set the scope. **Its Log holds:**
+   - the plan and the Captain's rulings (17:27–18:13);
+   - my real-path findings F-AC1 and F-AC2 (18:20);
+   - my decision table on QC1's findings (18:31), which is **binding**, including what it deliberately does NOT adopt;
+   - **my set-down (19:04), whose §2 is your verification list;**
+   - the Captain's 19:30 entry.
+2. `C:/Users/jbmcg/Evryn/Code/evryn-team-workspace/shared/projects/product/2026/2026.11.19-packout-guard-build/2026.11.19-packout-guard-build-brief.md` (full — 238 lines). This is the spec: §3.1–§3.3 and the §4 controls. There is no C13.
+3. `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-acpg-QC1-report.md` (full — 236 lines). These are the findings under repair, with QC1's probe recipes.
+4. `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-acpg-DC1-report.md` (full; run `wc -l`). It is the builder's account, including its "## Fix trip" section. **Treat it as claims to test, not findings.**
+5. `C:/Users/jbmcg/Evryn/Code/evryn-team-workspace/shared/projects/helm/2026/2026.11.19-packout-chain-investigation/2026.11.19-packout-chain-ledger.md` (full — 398 lines). Its seat entries are the expected verdicts.
+- Read the review (`…/2026.11.19-guard-design-soren-review.md`, 376 lines) only if a finding needs its design rationale; if you do, name it in your receipts.
+
+**The job: verify the fix trip at branch head `55be2b2` (code identical to `c0bc832`) by PROBING the real script, not by reading it.** Specifically:
+- **(1) Every item on my set-down's §2 list**, each with the probe that settles it:
+  - **F1 and F2, using QC1's own forgeries.** Rebuild QC1's P1 and P2 from its report; its probe scratch at `C:/Users/jbmcg/.claude/jobs/d1700c43/tmp/qc1/probes/` may still exist.
+  - **F-AC1 and F-AC2 on a top-level-shaped transcript.** Your own transcript is a subagent's, whose extracts are empty and which QC1 found does not lag, so build a fixture that reproduces the lag. **Also confirm on a real top-level transcript by script.** Mine is `C:/Users/jbmcg/.claude/projects/c--Users-jbmcg-Evryn-Code--evryn-meta/d1700c43-f67c-4a05-9b5d-d82f21b10f88.jsonl`, and its state folders are `C:/Users/jbmcg/.claude/packout/786bfd53bf66/` (the pre-fix lag case) and `C:/Users/jbmcg/.claude/packout/9634b44df279/` (the post-fix same-message case). Read them by script only, never into context, and **do not write to them.**
+  - **F9:** re-run `historical.mjs`. Every one of the five former false FAILs must now carry its cited frozen line, and the new table must sit correctly beside the ledger.
+  - **F3, F4 (the mtime minimum), F5, F6, F7, F8, F10, F12** and the cleanup.
+  - **The C3/C5 single-extract lead:** with a single owned sweep made after the handoff's first write and Read whole, confirm C3 and C5 can never both PASS on one extract.
+- **(2) Re-run every control** from a **fresh detached sandbox outside the code folder**: `git -C C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard worktree add --detach C:/Users/jbmcg/.claude/jobs/d1700c43/tmp/sandbox-qc2 55be2b2`. Run the suite, `historical.mjs` (set `PACKOUT_CODE_ROOT=C:/Users/jbmcg/Evryn/Code`) and `mutations.mjs`. **Include a red run for the BEGIN-ARGS fix (`0130b45`)**, which DC1 could not prove because its break command was refused: revert the anchor's BEGIN-ARGS read, confirm the change applied, run `node --check`, and confirm the test named for it goes red for that reason. **For every mutation, say whether it went red for its reason**, not just red.
+- **(3) Probe `verify`'s new trust model the way QC1 did.** The fix made `verify` derive state from the transcript's own `begin` and `sweep` calls. Ask what a tampered transcript, a tampered state file, a tampered report, a handoff swapped after the PASS, or a second `begin` can now buy. **The dangerous direction is a false PASS.**
+- **(4) Look for what nobody named,** including anything the fix trip broke that used to work.
+- **Severity per your rubric. Evidence for every finding:** a command and its output, or a transcript line. A finding with no evidence is a lead; label it as one.
+
+**How much I've read, so you weigh this correctly:** all the documents above; QC1's and DC1's reports, whole (DC1's fix-trip historical table I did not read; I re-ran it instead). **I re-ran the suite (44/44) and `historical.mjs` (31/31) at `c0bc832`** and ran the top-level F-AC1 recipe once (set-down §1). **I have not read the code and have not run the mutations.** Treat my set-down and DC1's report as LEADS. Where this brief is silent, assume I couldn't see it. 🔴 **You are not just executing.** If anything I've given you is wrong, internally inconsistent or unverifiable, say so first.
+
+**Limits, binding:**
+- **Write only:** your report, your sandbox `C:/Users/jbmcg/.claude/jobs/d1700c43/tmp/sandbox-qc2`, and scratch at `C:/Users/jbmcg/.claude/jobs/d1700c43/tmp/qc2/`.
+- **Do not edit or commit any file in `_evryn-meta-packout-guard` other than your report.** You may commit the report yourself by path (`git commit -F - -- <report>`) on `soren/packout-guard`.
+- No push, no merge. No `git checkout`, `stash`, `merge`, `reset` or `rebase` in any main folder. Never `EnterWorktree`. Install nothing.
+- **Read transcripts only by script, never into context.** Never read a secret value. No network.
+- **Tests use `PACKOUT_STATE_DIR`; your real-path or probe runs use your scratch as the state folder.** Never write into the real `~/.claude/packout/`.
+- **Don't put a recursive delete in any Bash command:** project settings deny it. Use your scratch and leave files there.
+- **Spin no subagents.** If you ever did, you would pin every spin's model explicitly.
+- **Reap your sandbox before you return** (`git worktree remove`, never `--force`), and confirm with `git worktree list`.
+- **Finish the whole task, not just the tractable part.** If you genuinely cannot finish something, do the rest and say plainly what is missing and why.
+- **If you receive a STOP message from me, write what you have, commit it and return.**
+
+**Your output:** write the full report to `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-acpg-QC2-report.md` (with a canary). It must carry:
+- a verdict, GO or NO-GO;
+- each set-down §2 item: verified, or not, and how;
+- every control re-run, including the BEGIN-ARGS red run;
+- each new finding, with its severity and evidence;
+- what you didn't reach.
+
+**Your return to me is at most 25 lines,** with your headings capped at `##`.
+</task>
+
+<questions_first>
+Do the work — or, if a real gap would compromise it, output a numbered list of blocking questions INSTEAD and stop. Don't guess past a real gap — but also don't manufacture questions to dodge the work.
+</questions_first>
+
+<output_format>
+Wrap your entire final response in a heading pair, so your spinner can see at a glance where your output begins and ends inside a wall of tool output.
+
+Open with:  ## QC2's Output
+Close with: ## End of QC2's Output
+
+Use your own designated name — the one given to you in <identity>. Put nothing after the closing line.
+</output_format>
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
