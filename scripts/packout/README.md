@@ -54,7 +54,7 @@ node _evryn-meta/scripts/packout/packout.mjs verify --report <path> --predecesso
 
 ## What a seat writes so the script can read it
 
-- **`## Uncommitted`**: a section with exactly this heading, one backticked repo-relative path per line. It ends at the next `#` or `##` heading.
+- **`## Uncommitted`**: a section with exactly this heading, one backticked repo-relative path per line. It ends at the next `#` or `##` heading. **Write every path repo-relative to the repo that holds the handoff** (a worktree counts as its own repo), and **list a path carried forward from the incoming handoff in the incoming's own form**, so C10 recognises the carry.
 - **`PACKOUT-NONE` lines**, each at the start of a line in the handoff: `PACKOUT-NONE C1: <reason>` (AC only, interim), `PACKOUT-NONE C2: <reason>`, and `PACKOUT-NONE C12: nothing by hand — <reason>` (with an em dash). They prove presence only, and the report says so.
 - **Extract marker** (written by `sweep`): `END OF SESSION TEXT · <N> lines · sha256 <12>`.
 - **Footer** (printed by `begin`): `PREDECESSOR: <session> · HANDOFF: <path> · REPORT: <path>`.
@@ -81,6 +81,7 @@ node _evryn-meta/scripts/packout/packout.mjs verify --report <path> --predecesso
 - **SG-1** (C5 anchors on the handoff's FIRST write, so later writes go unswept): step 6's text, or v1.1.
 - **SG-3 / GC-3** (edits after `check` that the handoff never learns of): step 6's text ("after `check` passes, change nothing your successor relies on; if you must, re-run `check`"), or v1.1.
 - **GC-1** (C1 passes a whole-file rewrite that drops another session's memory note): the v1.1 queue, first.
+- **C10's list resolution, three edges** (the Captain's question 11, ruled (a), 11/20): **11.1** a repo-named path (`_evryn-meta/…`) resolves to the main checkout, never a worktree, so a worktree lane's own uncommitted file listed that way is judged against `main` and passes; **11.2** a path that lands in a real repo but names no file reads as committed, so a mistyped path passes; **11.3** the carry match runs one way, so an incoming `shared/x.md` carried as `evryn-team-workspace/shared/x.md` isn't recognised and FAILs loud. **11.1 and 11.2 are false PASSes and go first in the v1.1 queue, beside GC-1 and SG-1; 11.3 follows.** Until then, the Packout Checker confirms each path on the incoming's list names a real file in the right checkout.
 - **GC-2** (C8 covers only the handoff, not the successor's other files): the v1.1 queue.
 - **Q4-4** (`time`/`env` wrappers don't anchor): step 6's text gives the exact form.
 - **Q4-5** (a successor start line written after `check` and left uncommitted FAILs `verify`): step 6's text, so write it before `check` or commit it; joins SG-3.
