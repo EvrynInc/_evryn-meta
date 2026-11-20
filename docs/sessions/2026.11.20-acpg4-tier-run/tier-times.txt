@@ -11,3 +11,8 @@ t1b5 start 15:24:40 free=3.7GB
 t1b5 exit=0 end 15:32:58 dirty=0
 TIER1 DONE 15:32:59
 t2b6 start 15:32:59 free=3.3GB
+t2b6 exit=0 end 15:43:40 dirty=0
+t2b7 start 15:43:40 free=3.8GB
+t2b7 exit=0 end 15:57:15 dirty=0
+t2b8 start 15:57:16 free=3.5GB
+t2b8 STOPPED by AC-PG4 at 15:57:49 (set-down; no result claimed)

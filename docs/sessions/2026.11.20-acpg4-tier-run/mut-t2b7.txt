@@ -1,0 +1,7 @@
+C8	RED for its reason	line 329: const eq = { equal: true };	failing: 2 [instrument 3: an edit to the handoff by  | verify: the handoff edited after the PAS]
+C9	RED for its reason	line 345: if (!reads.length) return R('C9', 'PASS'	failing: 1 [mutation C9: deleting its deciding line ]
+dedupe	RED for its reason	line 85: if (b.type === 'tool_use') {	failing: 1 [instrument 1: one tool call written on t]
+F1-host	RED for its reason	line 433: if (false) {	failing: 1 [verify: a report saying it was made HERE]
+F1-exit3	RED for its reason	line 428: process.exit(0);	failing: 3 [verify: cross-machine (no transcript for | Q3-2 genuine cross-machine: other transc | Q4-6 [p7]: genuine cross-machine, while ]
+F1-footer-handoff	RED for its reason	line 395: if (false) problems.push(	failing: 1 [F1: verify checks the successor footer —]
+SUMMARY	6/6 mutations went red for their check's reason (filtered: C8 C9 dedupe F1-; 56 rows in all)
