@@ -1,0 +1,42 @@
+<task>
+Your load is complete and verified. It was assembled before you knew what you would be doing — so now that you know, **if the work genuinely needs something you do not have, LOAD IT.** You are not confined to the original list, and you should not work around a gap you could close by reading. Use your judgment freely here; it is useful now in a way it could not have been before.
+
+Two conditions, both of which matter:
+
+1. **Load IN ADDITION to what you already have, never INSTEAD of it.** Nothing on the original list becomes optional now that you can see the task. If something on it looks irrelevant in hindsight, you are wrong about that, or it was cheap — either way it stays loaded.
+2. **Name anything you loaded beyond the list in your receipts, with one line on why you needed it.** Do this even if the extra read turned out to be unnecessary. **Your spinner built that list without knowing what you would discover, and this report is the ONLY signal they get that it had a gap** — so it is not bookkeeping; it is the mechanism by which the next brief is better than this one.
+
+**You are AC-PG4-FE,** a fresh, separately loaded instance of AC, spun by AC-PG4 (the packout-guard lane's AC) as **packout step 5's fresh reader** of its handoff (`_evryn-meta/docs/protocols/packout-protocol.md`, step 5, which you loaded). **Read-only, except for ONE file you write: your findings.** You change nothing else.
+
+**The one question:** *could a brand-new AC-PG5, launched Monday with none of AC-PG4's context, do its next job fully and correctly from this handoff and what it points to?* Hunt errors, omissions, staleness and unclear passages. **You hold none of AC-PG4's session, and that is the point:** a gap that AC-PG4's memory fills silently stays a gap for you.
+
+### Read, each whole to its canary (all under `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/`)
+1. **The handoff under review:** `docs/sessions/2026.11.20-acpg4-acpg5-handoff.md`.
+2. **The handoff it supersedes:** `docs/sessions/2026.11.20-acpg3-acpg4-handoff.md`. **Walk it line by line and say where each line went** (carried, moved to a named home, settled, or dead), so a line AC-PG4 dropped and AC-PG5 needs is caught.
+3. **The day's record of rulings, the live brief's Log** (`docs/sessions/2026.11.19-sorenpg-acpg-packout-guard-step1-brief.md`), **from the entry headed "AC-PG4: took the lane" to the end** (find its line with `Grep`, then Read to the canary). It holds READY FOR CAPTAIN (15:33) and the Captain's rulings at 14:13, 14:23, 14:44 and 14:46, each binding on the handoff.
+4. **Anything the handoff points to that you need in order to judge it,** e.g. `scripts/packout/README.md`, the tier-run folder `docs/sessions/2026.11.20-acpg4-tier-run/`. Name each extra read in your receipts.
+
+**Expected and not a defect:** the handoff carries placeholders `@@FEID@@`, `@@FESHA@@` and `@@FEFOLD@@` (your own agent id, your findings' commit, and the fold result, filled after you return), and it says tier 2's final state is in AC-PG4's set-down entry, which is written after your read.
+
+### Write your findings
+To **`docs/sessions/2026.11.20-acpg4-acpg5-handoff.fresh-eyes.md`**, with a truncation canary, ranked **MUST-FIX / SHOULD-FIX / NIT**, each with the handoff line or section, what is wrong, and the exact fix. **Commit it by path, with the pathspec on the commit,** on branch `soren/packout-guard` (`git commit -F <msgfile> -- <that path>`; put the message in a file). **That file and its commit are the only writes you make.** No push, merge, `checkout`, `stash`, `reset` or `rebase`; never `EnterWorktree`; read transcripts only by script; no secrets.
+
+**Time:** AC-PG4 sets down by ~16:40 PT; **aim to return by ~16:05.** If you can't finish, commit what you have and say what's missing. **Finish the whole task, not just the tractable part.** If anything in this brief is wrong or unverifiable, say so rather than resolving it quietly.
+
+**Return at most 20 lines:** the counts by rank, the must-fixes in one line each, and the commit.
+</task>
+
+<questions_first>
+Do the work — or, if a real gap would compromise it, output a numbered list of blocking questions INSTEAD and stop. Don't guess past a real gap — but also don't manufacture questions to dodge the work.
+</questions_first>
+
+<output_format>
+Wrap your entire final response in a heading pair, so your spinner can see at a glance where your output begins and ends inside a wall of tool output.
+
+Open with:  ## [your designated name]'s Output
+Close with: ## End of [your designated name]'s Output
+
+Use your own designated name — the one given to you in <identity>. Put nothing after the closing line.
+</output_format>
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
