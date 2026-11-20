@@ -22,7 +22,7 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { parse, hashFirst, sha12, normPath, winPath, readLines } from './lib/transcript.mjs';
 import { buildExtract, actionDigest } from './lib/sweep.mjs';
-import { runAll, stripHeredocs, C11 } from './lib/checks.mjs';
+import { runAll, stripHeredocs, runsPackout, C10, C11 } from './lib/checks.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const CODE = process.env.PACKOUT_CODE_ROOT || path.resolve(HERE, '..', '..', '..');
@@ -47,18 +47,48 @@ const statePath = (handoff) => path.join(stateDir(handoff), 'state.json');
 function loadState(handoff) { const t = readOrNull(statePath(handoff)); return t ? JSON.parse(t) : null; }
 function saveState(handoff, s) { fs.mkdirSync(stateDir(handoff), { recursive: true }); fs.writeFileSync(statePath(handoff), JSON.stringify(s, null, 2) + '\n'); }
 
-function findTranscript(session) {
-  if (!session) return null;
-  let dirs = [];
-  try { dirs = fs.readdirSync(PROJECTS).map((d) => path.join(PROJECTS, d)).filter((d) => fs.statSync(d).isDirectory()); } catch { return null; }
+const projectDirs = () => { try { return fs.readdirSync(PROJECTS).map((d) => path.join(PROJECTS, d)).filter((d) => fs.statSync(d).isDirectory()); } catch { return []; } };
+/** Every transcript for a session id (prefix): top-level, or a subagent's. More than one hit is AMBIGUOUS, never "absent" (Q3-2). */
+function transcriptHits(session) {
+  if (!session) return [];
   const hits = [];
-  for (const d of dirs) for (const f of fs.readdirSync(d)) {
+  for (const d of projectDirs()) for (const f of fs.readdirSync(d)) {
     if (f.endsWith('.jsonl') && f.startsWith(session)) hits.push(path.join(d, f));
     // a subagent's transcript lives at <project>/<parent-session>/subagents/agent-<agentId>.jsonl
     const sub = path.join(d, f, 'subagents', `agent-${session}.jsonl`);
     if (!f.endsWith('.jsonl') && fs.existsSync(sub)) hits.push(sub);
   }
-  return hits.length === 1 ? hits[0] : null;
+  return hits;
+}
+function findTranscript(session) { const hits = transcriptHits(session); return hits.length === 1 ? hits[0] : null; }
+
+/** Q3-2: every `packout.mjs begin` row, in ANY transcript on this machine (top-level and subagent), whose footer names this
+ *  handoff. verify may downgrade only when this is empty: the seat writes the report's session and the footer's PREDECESSOR,
+ *  so a session id that matches nothing here proves nothing; a begin row naming the handoff proves this is the same machine.
+ *  Deliberately BROADER than the begin anchor (the command test is the strict one OR the old loose one), because this list
+ *  can only refuse a downgrade, never earn a PASS. Cost: a byte search for the footer token before any parse (measured
+ *  2026-11-20 on this laptop: 650 transcripts, 2.2 GB, ~1.6 s; 15 files carry the token). Never consults state.json. */
+function beginsNaming(handoff) {
+  const want = normPath(handoff); const token = Buffer.from('PREDECESSOR: '); const found = [];
+  const files = [];
+  for (const d of projectDirs()) for (const f of fs.readdirSync(d)) {
+    const p = path.join(d, f);
+    if (f.endsWith('.jsonl')) { files.push(p); continue; }
+    let subs = []; try { subs = fs.readdirSync(path.join(p, 'subagents')); } catch {}
+    for (const s of subs) if (s.endsWith('.jsonl')) files.push(path.join(p, 'subagents', s));
+  }
+  for (const file of files) {
+    let buf; try { buf = fs.readFileSync(file); } catch { continue; }
+    if (buf.indexOf(token) < 0) continue;
+    for (const k of parse(file).calls) {
+      if (!k.ok || k.name !== 'Bash') continue;
+      const cmd = String(k.input.command || '');
+      if (runsPackout(cmd, ['begin']) !== 'begin' && !/packout\.mjs["']?\s+begin\b/.test(stripHeredocs(cmd))) continue;
+      const m = String(k.text || '').match(/PREDECESSOR: (\S+) · HANDOFF: (.+?) · REPORT:/);
+      if (m && normPath(m[2].trim()) === want) found.push(`${file} line ${k.n} (session ${m[1]})`);
+    }
+  }
+  return found;
 }
 function transcriptFor(a, s) {
   if (a.transcript) return path.resolve(winPath(a.transcript));
@@ -178,16 +208,18 @@ function buildCtx({ parsed, from, agent, handoff, handoffText, incoming, incomin
 // count was 1140 while its own call sat at 1142), so a run-time count can land BEFORE calls made earlier in the same turn.
 // The row of `packout.mjs begin` is identified by its result's footer naming this handoff; each sweep by its result naming
 // the extract's path. Agent and incoming come from that begin call's own arguments, in the transcript, never from a report.
-const PO_SEG = /packout\.mjs["']?\s+(begin|sweep)\b/;
+// Q3-1 (c): a row anchors only when one of its command segments actually RUNS `node <…>packout.mjs begin|sweep`
+// (runsPackout); an `echo` whose text merely contains "packout.mjs sweep" does not. (The old text-only test survives only in
+// beginsNaming's refusal-only scan above.)
 export function anchors(calls, handoff) {
   const want = normPath(handoff);
   let begin = null; const sweeps = new Map();
   for (const k of calls) {
     if (!k.ok || k.name !== 'Bash') continue;
     const cmd = stripHeredocs(String(k.input.command || ''));
-    const m = cmd.match(PO_SEG); if (!m) continue;
+    const sub = runsPackout(cmd, ['begin', 'sweep']); if (!sub) continue;
     const out = String(k.text || '');
-    if (m[1] === 'begin') {
+    if (sub === 'begin') {
       const f = out.match(/PREDECESSOR: (\S+) · HANDOFF: (.+?) · REPORT:/);
       if (!f || normPath(f[2].trim()) !== want) continue;
       // The resolved arguments come from begin's own second output line (BEGIN-ARGS), never from re-parsing the command:
@@ -276,7 +308,7 @@ function liveCheck(a, { boundN, forVerify } = {}) {
   const h = hashFirst(t, parsed.n);
   if (s.sessions.length > 1) notes.push(`session chain ${s.sessions.join(' → ')}; checks ran on the newest transcript only (earlier links are not evaluated in step 1)`);
   const meta = { agent, transcript: t, session: an.begin.session, n: h.n, sha: h.sha, handoff, handoffSha: shaFile(handoff), from: an.begin.n, incoming, notes, machine: os.hostname() };
-  return { lines, meta };
+  return { lines, meta, ctx };
 }
 
 function cmdCheck(a) {
@@ -284,9 +316,11 @@ function cmdCheck(a) {
   if (!a.handoff) die('check needs --handoff');
   const { lines, meta } = liveCheck(a);
   const out = a.out || path.resolve(winPath(a.handoff)).replace(/\.md$/i, '') + '.packout-report.md';
-  const r = report(lines, meta, out);
+  // Q3-6: print (and write) the RESOLVED path, so `check --out <relative>` can still be bound by verify's report: match
+  const outAbs = path.resolve(winPath(out));
+  const r = report(lines, meta, outAbs);
   printLines(lines);
-  console.log(`SUMMARY\t${r.fails} FAIL, ${r.opens} OPEN, ${lines.length - r.fails - r.opens} PASS\treport: ${out}`);
+  console.log(`SUMMARY\t${r.fails} FAIL, ${r.opens} OPEN, ${lines.length - r.fails - r.opens} PASS\treport: ${outAbs}`);
   process.exit(r.fails ? 1 : 0);
 }
 
@@ -311,7 +345,10 @@ function cmdHistorical(a) {
 //    machine are hints only. It downgrades only when no transcript for that session exists on this machine;
 //  - N9: the report does not choose the bound. verify finds the `packout.mjs check` call whose output names this report and
 //    judges at least to that row (so C6/C10 see everything up to check's own row), and judges C11 UNBOUNDED;
-//  - nothing else is taken from the report but the claims under test; cross-machine ⇒ DOWNGRADED, exit 3, never 0.
+//  - nothing else is taken from the report but the claims under test; cross-machine ⇒ DOWNGRADED, exit 3, never 0;
+//  - Q3-2 (fix trip 3): a session matching several transcripts FAILs as ambiguous; with none, the downgrade is open only if NO
+//    transcript on this machine holds a begin row naming this handoff (beginsNaming); and it still refuses a FAILing report;
+//  - Q3-5: C10, like C11, is judged on the whole transcript; C6 stays bounded at check's row.
 function cmdVerify(a) {
   if (!a.report) die('verify needs --report');
   if (!a.predecessor || a.predecessor === true || !a.handoff || a.handoff === true) die('verify needs --report, --predecessor and --handoff (the last two from your start line\'s PREDECESSOR footer)');
@@ -323,6 +360,9 @@ function cmdVerify(a) {
   if (meta.session !== a.predecessor) problems.push(`the report is for session ${meta.session}, the footer names ${a.predecessor}`);
   if (normPath(path.resolve(winPath(a.handoff))) !== normPath(meta.handoff)) problems.push(`the report is for handoff ${meta.handoff}, the footer names ${a.handoff}`);
   if (problems.length) { console.log(`VERIFY FAIL\t${problems.join(' · ')}`); process.exit(1); }
+  // Q3-2: an ambiguous lookup is a FAIL, never an absence (a copied transcript must not open the downgrade)
+  const hits = transcriptHits(a.predecessor);
+  if (hits.length > 1) { console.log(`VERIFY FAIL\tsession ${a.predecessor} is ambiguous on this machine: ${hits.length} transcripts match (${hits.join(' · ')})`); process.exit(1); }
   const t = findTranscript(a.predecessor);
   if (t) {
     const h = hashFirst(t, meta.n);
@@ -336,23 +376,30 @@ function cmdVerify(a) {
       .filter((k) => { const r = String(k.text || '').match(/report: (.+)$/m); return r && normPath(r[1].trim()) === normPath(repPath); }).pop();
     if (!checkRow) { console.log(`VERIFY FAIL\tno \`packout.mjs check\` call in the predecessor's transcript produced this report (${repPath})`); process.exit(1); }
     const bound = Math.max(meta.n, checkRow.n);
-    const { lines, meta: now } = liveCheck({ handoff: meta.handoff, transcript: t }, { boundN: bound, forVerify: true });
+    const { lines, meta: now, ctx } = liveCheck({ handoff: meta.handoff, transcript: t }, { boundN: bound, forVerify: true });
     // C11 is judged on the WHOLE transcript: a compaction anywhere before the successor starts means the predecessor compacted
     const i11 = lines.findIndex((r) => r.id === 'C11');
     if (i11 >= 0) lines[i11] = C11({ compactions: full.compactions, calls: full.calls });
+    // Q3-5: so is C10 (a file left uncommitted and unlisted after `check` is the ledger's X1). C6 stays bounded at check's row,
+    // because the successor's own launch follows `check`.
+    const i10 = lines.findIndex((r) => r.id === 'C10');
+    if (i10 >= 0) lines[i10] = C10({ ...ctx, calls: full.calls });
     for (const k of ['agent', 'from', 'session']) if (String(now[k]) !== String(meta[k])) problems.push(`the report's ${k} (${meta[k]}) differs from the transcript's (${now[k]})`);
     if (normPath(now.incoming || '') !== normPath(meta.incoming || '')) problems.push(`the report's incoming (${meta.incoming}) differs from the begin call's (${now.incoming})`);
     for (const r of lines) if (meta.verdicts?.[r.id] !== r.verdict) problems.push(`${r.id}: report says ${meta.verdicts?.[r.id]}, re-run says ${r.verdict} (${r.evidence})`);
-    if (Object.values(meta.verdicts || {}).includes('FAIL')) problems.push('the report itself carries a FAIL');
+    if (Object.values(meta.verdicts || {}).includes('FAIL')) problems.push('the report itself carries a FAIL'); // Q3-3: same machine
     if (problems.length) { console.log(`VERIFY FAIL\t${problems.join(' · ')}`); process.exit(1); }
     const hint = normPath(meta.transcript || '') !== normPath(t) ? ` (the report's transcript path ${meta.transcript} differs; the transcript found by session was used)` : '';
     console.log(`VERIFY PASS\tsame machine: transcript ${t} found by session; lines 1..${meta.n} sha ${meta.sha} unchanged; ${lines.length} verdicts re-derived to check's own row ${checkRow.n} (C11 over the whole transcript), and equal${hint}`);
     process.exit(0);
   }
+  // Q3-2: no transcript for that session here. Downgrade only if NO transcript here holds a begin row naming this handoff.
+  const found = beginsNaming(meta.handoff);
+  if (found.length) { console.log(`VERIFY FAIL\tno transcript for session ${a.predecessor} is here, but this machine holds a \`packout.mjs begin\` naming this handoff (${found.join('; ')}): this is the same machine, and the report's session or the footer is wrong`); process.exit(1); }
   if (meta.machine === os.hostname()) { console.log(`VERIFY FAIL\tthe report says it was made on this machine (${meta.machine}), but no transcript for session ${a.predecessor} is here`); process.exit(1); }
   const nowSha = shaFile(meta.handoff);
   if (nowSha !== meta.handoffSha) problems.push(`the handoff changed since the check (sha ${meta.handoffSha} at check, ${nowSha} now)`);
-  if (Object.values(meta.verdicts || {}).includes('FAIL')) problems.push('the report itself carries a FAIL');
+  if (Object.values(meta.verdicts || {}).includes('FAIL')) problems.push('the report itself carries a FAIL'); // Q3-3: downgrade branch
   if (problems.length) { console.log(`VERIFY FAIL (cross-machine, downgraded)\t${problems.join(' · ')}`); process.exit(1); }
   console.log(`VERIFY DOWNGRADED (cross-machine)\tthe report was made on ${meta.machine}; its transcript is not on this machine; checked only the report's hashes (handoff sha ${nowSha} unchanged; no FAIL). NOT a pass: say so in your Report #0.`);
   process.exit(3);

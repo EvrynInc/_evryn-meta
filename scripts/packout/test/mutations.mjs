@@ -3,7 +3,8 @@
 // Truncation check: the last line of this file should read FULL FILE LOADED.
 //
 //   node scripts/packout/test/mutations.mjs <sandbox-worktree-root>
-// It refuses to run against the checkout it lives in. For each mutation: apply it, PROVE it applied (the old text now occurs
+//   node scripts/packout/test/mutations.mjs <any-root> --count     (read-only: every row's target text must occur exactly once)
+// It refuses to mutate a checkout that is on a branch. For each mutation: apply it, PROVE it applied (the old text now occurs
 // 0 times and the new text is present; the changed line is printed), `node --check` the file, run the suite, and require that
 // the tests named for that check are among the failures. The file is restored from its saved original after every mutation.
 
@@ -14,10 +15,6 @@ import { fileURLToPath } from 'node:url';
 
 const root = process.argv[2] && path.resolve(process.argv[2]);
 if (!root || !fs.existsSync(path.join(root, 'scripts', 'packout', 'packout.mjs'))) { console.error('usage: mutations.mjs <sandbox-root>'); process.exit(2); }
-// A sandbox is a DETACHED worktree (`git worktree add --detach`): a checkout on a branch is somebody's real tree, so refuse it.
-// SEALED-EXEC: followed 2026-11-19 — system git on disk, read-only rev-parse; no network.
-const head = spawnSync('git', ['-C', root, 'rev-parse', '--abbrev-ref', 'HEAD'], { encoding: 'utf8' }).stdout.trim();
-if (head !== 'HEAD') { console.error(`REFUSED: ${root} is on branch "${head}"; run this only in a detached sandbox worktree`); process.exit(2); }
 void fileURLToPath;
 
 const CH = 'scripts/packout/lib/checks.mjs', TX = 'scripts/packout/lib/transcript.mjs', PO = 'scripts/packout/packout.mjs';
@@ -39,9 +36,11 @@ const M = [
   ['C12', CH, 'const w = calls.filter(after(from)).find((k) => writes(k, nearZeroPath));', 'const w = calls.filter(after(from)).find(() => true);', /mutation C12:/],
   ['dedupe', TX, "if (b.type === 'tool_use' && !byId.has(b.id)) {", "if (b.type === 'tool_use') {", /instrument 1:/],
   // ---- fix trip (QC1 findings, AC-PG's F-AC1/F-AC2): each row REVERTS one fix; its test must go red
-  ['F1-host', PO, 'if (meta.machine === os.hostname()) {', 'if (false) {', /F1 \(QC1 P1\)/],
-  ['F1-exit3', PO, 'process.exit(3);', 'process.exit(0);', /cross-machine \(another host/],
-  ['F1-footer', PO, 'if (a.predecessor && a.predecessor !== true && meta.session !== a.predecessor)', 'if (false)', /F1: verify checks the successor footer/],
+  // (fix trip 3, Q3-4: F1-host and F1-exit3 are repointed at the tests that now catch them, renamed or re-routed in fix trip 2;
+  // F1-footer's target was rewritten by N10, so it is replaced by F1-footer-handoff, QC3's revert of the footer's HANDOFF match.)
+  ['F1-host', PO, 'if (meta.machine === os.hostname()) {', 'if (false) {', /a report saying it was made HERE/],
+  ['F1-exit3', PO, 'process.exit(3);', 'process.exit(0);', /verify: cross-machine/],
+  ['F1-footer-handoff', PO, 'if (normPath(path.resolve(winPath(a.handoff))) !== normPath(meta.handoff)) problems.push(', 'if (false) problems.push(', /F1: verify checks the successor footer/],
   ['F-AC1', PO, 'sweeps.push({ ...w, content, createdN: at.n });', 'sweeps.push({ ...w, content, createdN: w.ranAtLine });', /F-AC1:/],
   ['F-AC2', PO, 'buildCtx({ parsed, from: an.begin.n,', 'buildCtx({ parsed, from: s.beganAtRun,', /F-AC2:/],
   ['F3-empty', PO, 'if (!turns) die(', 'if (false) die(', /F3: sweep refuses/],
@@ -63,8 +62,29 @@ const M = [
   ['N15a', PO, 'if (!s) forVerify ? (console.log(', 'if (!s) false ? (console.log(', /N15 \(a\)/],
   ['N15c', PO, 'if (isMain) {', 'if (true) {', /N15 \(c\)/],
   ['F10', TX,'    else if (o.isCompactSummary) summaries.push({ n, ts: o.timestamp });', '    if (o.isCompactSummary) compactions.push({ n, ts: o.timestamp });', /F10:/],
+  // ---- fix trip 3 (QC3's Q3 findings, scoped by the definition of done): each row REVERTS one fix; its test must go red
+  ['N13-incoming', PO, "if (normPath(inc || '') !== normPath(prev.incoming || '')) die(", 'if (false) die(', /N13:/],
+  ['VERIFY-FAILGUARD-same', PO, "if (Object.values(meta.verdicts || {}).includes('FAIL')) problems.push('the report itself carries a FAIL'); // Q3-3: same machine", 'void 0; // Q3-3: same machine', /Q3-3 same machine/],
+  ['VERIFY-FAILGUARD-cross', PO, "if (Object.values(meta.verdicts || {}).includes('FAIL')) problems.push('the report itself carries a FAIL'); // Q3-3: downgrade branch", 'void 0; // Q3-3: downgrade branch', /Q3-3 downgrade branch/],
+  ['Q3-2-ambig', PO, 'if (hits.length > 1) {', 'if (false) {', /Q3-2 DUP/],
+  ['Q3-2-scan', PO, 'const found = beginsNaming(meta.handoff);', 'const found = [];', /Q3-2 GHOST/],
+  ['Q3-1c', PO, "const sub = runsPackout(cmd, ['begin', 'sweep']); if (!sub) continue;", "const sub = (cmd.match(/packout\\.mjs[\"']?\\s+(begin|sweep)\\b/) || [])[1]; if (!sub) continue;", /Q3-1 \(c\) STATE-ii/],
+  ['Q3-5', PO, 'if (i10 >= 0) lines[i10] = C10({ ...ctx, calls: full.calls });', 'void i10;', /Q3-5:/],
+  ['Q3-6', PO, 'report: ${outAbs}`);', 'report: ${out}`);', /Q3-6:/],
 ];
 const count = (s, sub) => s.split(sub).length - 1;
+// --count: READ-ONLY. Count every row's target text in its file and exit 1 unless each occurs exactly once (Q3-4: re-count EVERY
+// row, not only the new ones; a rewritten target prints NOT APPLIED in a full run). Safe on any checkout, branch or not.
+if (process.argv.includes('--count')) {
+  let off = 0;
+  for (const [id, rel, oldS] of M) { const c = count(fs.readFileSync(path.join(root, rel), 'utf8'), oldS); if (c !== 1) off++; console.log(`${id}\t${rel}\t${c}${c === 1 ? '' : '\t<< NOT EXACTLY ONCE'}`); }
+  console.log(`COUNT\t${M.length - off}/${M.length} rows' target text occurs exactly once`);
+  process.exit(off ? 1 : 0);
+}
+// A sandbox is a DETACHED worktree (`git worktree add --detach`): a checkout on a branch is somebody's real tree, so refuse it.
+// SEALED-EXEC: followed 2026-11-19 — system git on disk, read-only rev-parse; no network.
+const head = spawnSync('git', ['-C', root, 'rev-parse', '--abbrev-ref', 'HEAD'], { encoding: 'utf8' }).stdout.trim();
+if (head !== 'HEAD') { console.error(`REFUSED: ${root} is on branch "${head}"; run this only in a detached sandbox worktree`); process.exit(2); }
 // SEALED-EXEC: followed 2026-11-19 — process.execPath is the node binary already running this script; no network.
 const node = (args, cwd) => spawnSync(process.execPath, args, { cwd, encoding: 'utf8' });
 

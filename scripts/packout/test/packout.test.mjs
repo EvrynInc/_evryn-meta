@@ -7,11 +7,11 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { goodPackout, check, checkRecorded, verify, run, verdicts, Tx, codeRoot, PACKOUT } from './helpers.mjs';
+import { goodPackout, check, checkRecorded, verify, run, runAt, verdicts, Tx, codeRoot, PACKOUT } from './helpers.mjs';
 import { pathToFileURL } from 'node:url';
 import { parse, winPath, hashFirst } from '../lib/transcript.mjs';
 const verdictsN = (rep) => { const m = /```json\n([\s\S]*?)\n```/.exec(fs.readFileSync(rep, 'utf8')); return JSON.parse(m[1]).n; };
-import { C4, uncommittedList, bashWriteTargets, launchSegment, isTaskNote } from '../lib/checks.mjs';
+import { C4, uncommittedList, bashWriteTargets, launchSegment, isTaskNote, runsPackout } from '../lib/checks.mjs';
 
 const ALL = ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12'];
 function only(out, failing) {
@@ -363,6 +363,93 @@ test('F10: one compaction writes two rows; it counts once. F12: a Git-Bash path 
   tx.compact(); tx.push({ type: 'user', isCompactSummary: true, timestamp: '2026-11-19T20:00:00Z', message: { role: 'user', content: 'summary' } }); tx.flush();
   assert.equal(parse(f.transcript).compactions.length, 1);
   if (process.platform === 'win32') assert.equal(winPath('/c/Users/x'), 'C:/Users/x');
+});
+
+// ---- fix trip 3: QC3's Q3-1 (c), Q3-2, Q3-3, Q3-5 and Q3-6, scoped by the definition of done (11/20). Each fails without its fix.
+const reportOf = (g) => g.f.handoff.replace(/\.md$/, '.packout-report.md');
+test('Q3-2 GHOST: a session id that matches no transcript, plus an edited machine, while this machine holds the begin row → VERIFY FAIL, not DOWNGRADED', () => {
+  const g = goodPackout(); g.tx.blank(g.L.memory).flush();
+  assert.equal(checkRecorded(g).code, 1);
+  const ghost = 'ffffffff-0000-0000-0000-000000000000';
+  editMeta(reportOf(g), (j) => { j.session = ghost; j.machine = 'SOME-OTHER-HOST'; j.verdicts.C1 = 'PASS'; });
+  const go = () => run(g.f, 'verify', '--report', reportOf(g), '--predecessor', ghost, '--handoff', g.f.handoff);
+  let r = go();
+  assert.equal(r.code, 1, r.out); assert.match(r.out, /this machine holds a `packout.mjs begin` naming this handoff/);
+  // the begin row in a SUBAGENT's transcript is found the same way
+  const sub = path.join(g.f.root, 'projects', 'proj', 'parentsess', 'subagents', 'agent-a0b1c2d3e4f5a6b7c.jsonl');
+  fs.mkdirSync(path.dirname(sub), { recursive: true }); fs.renameSync(g.f.transcript, sub);
+  r = go();
+  assert.equal(r.code, 1, r.out); assert.match(r.out, /holds a `packout.mjs begin` naming this handoff \(.*agent-a0b1c2d3e4f5a6b7c\.jsonl/);
+});
+test('Q3-2 DUP: the same session id in two project folders is AMBIGUOUS → VERIFY FAIL, never an absence', () => {
+  const { g, rep } = passed();
+  editMeta(rep, (j) => { j.machine = 'SOME-OTHER-HOST'; });
+  const dup = path.join(g.f.root, 'projects', 'proj2', 'testsess.jsonl');
+  fs.mkdirSync(path.dirname(dup), { recursive: true }); fs.copyFileSync(g.f.transcript, dup);
+  const r = verify(g, rep);
+  assert.equal(r.code, 1, r.out); assert.match(r.out, /ambiguous on this machine: 2 transcripts match/);
+});
+test('Q3-2 genuine cross-machine: other transcripts here, one a packout of a DIFFERENT handoff, none naming this one → still DOWNGRADED, exit 3', () => {
+  const { g, rep } = passed();
+  editMeta(rep, (j) => { j.machine = 'SOME-OTHER-HOST'; });
+  const o = new Tx(path.join(g.f.root, 'projects', 'proj', 'othersess.jsonl'));
+  o.user('another seat'); o.bash('node packout.mjs begin --agent thea --handoff C:/elsewhere/other.md', 'PREDECESSOR: othersess · HANDOFF: C:\\elsewhere\\other.md · REPORT: C:\\elsewhere\\other.packout-report.md\nBEGIN-ARGS: agent=thea · incoming=-'); o.flush();
+  fs.renameSync(g.f.transcript, g.f.transcript + '.elsewhere');
+  const r = verify(g, rep);
+  assert.equal(r.code, 3, r.out); assert.match(r.out, /^VERIFY DOWNGRADED \(cross-machine\)/);
+});
+test('Q3-1 (c) STATE-ii: an echo whose text contains "packout.mjs sweep", with a real state entry and a Read to its marker, does not anchor → C5 FAIL', () => {
+  const g = goodPackout(); g.tx.blank(g.L.sweep2); // the real sweep-2 call is gone; its state entry and extract remain
+  const N = fs.readFileSync(g.s2, 'utf8').split('\n').length - 2;
+  g.tx.bash(`echo "node packout.mjs sweep" >/dev/null; echo "sweep 2: ${g.s2} (${N} lines + marker"`, `sweep 2: ${g.s2} (${N} lines + marker`);
+  g.tx.read(g.s2); g.tx.flush();
+  only(check(g.f).out, ['C5']);
+});
+test('Q3-1 (c): runsPackout counts real runs (cd &&, ../ or quoted paths, node.exe, $VAR, node flags) and not text that mentions one', () => {
+  assert.equal(runsPackout('cd /c/x && node ../_evryn-meta/scripts/packout/packout.mjs sweep --handoff h.md'), 'sweep');
+  assert.equal(runsPackout('node "C:/Users/x/Evryn Code/packout.mjs" begin --agent a'), 'begin');
+  assert.equal(runsPackout('"/c/Program Files/nodejs/node.exe" scripts/packout/packout.mjs check --handoff h.md'), 'check');
+  assert.equal(runsPackout('P=scripts/packout/packout.mjs; node "$P" sweep --handoff h.md'), 'sweep');
+  assert.equal(runsPackout('node --no-warnings packout.mjs begin', ['begin', 'sweep']), 'begin');
+  assert.equal(runsPackout('node packout.mjs check', ['begin', 'sweep']), null);
+  assert.equal(runsPackout('echo "node packout.mjs sweep" >/dev/null; echo "sweep 9: x"'), null);
+  assert.equal(runsPackout('git commit -m "packout.mjs check ran"'), null);
+  assert.equal(runsPackout('node mutations.mjs packout.mjs sweep'), null);
+  assert.equal(runsPackout("cat > n.md <<'EOF'\nnode packout.mjs sweep\nEOF"), null);
+});
+test('Q3-3 same machine: an honest packout missing one step, report untouched → VERIFY FAIL "the report itself carries a FAIL", exit 1', () => {
+  const g = goodPackout(); g.tx.blank(g.L.memory).flush();
+  assert.equal(checkRecorded(g).code, 1);
+  const r = verify(g, reportOf(g));
+  assert.equal(r.code, 1, r.out); assert.match(r.out, /^VERIFY FAIL\tthe report itself carries a FAIL$/m);
+});
+test('Q3-3 downgrade branch: the same FAILing report, machine edited, no begin row for it on this machine → exit 1, not 3', () => {
+  const g = goodPackout(); g.tx.blank(g.L.memory).flush();
+  assert.equal(checkRecorded(g).code, 1);
+  editMeta(reportOf(g), (j) => { j.machine = 'SOME-OTHER-HOST'; });
+  fs.renameSync(g.f.transcript, g.f.transcript + '.elsewhere');
+  const r = verify(g, reportOf(g));
+  assert.equal(r.code, 1, r.out); assert.match(r.out, /^VERIFY FAIL \(cross-machine, downgraded\)\tthe report itself carries a FAIL$/m);
+});
+test('Q3-5: an uncommitted, unlisted Write after check\'s own row → VERIFY FAIL on C10; an Agent spawn after it → C6 still PASS', () => {
+  let { g, rep } = passed();
+  g.tx.write(path.join(g.f.tw, 'shared', 'after-check.md'), 'x\n'); g.tx.flush();
+  let r = verify(g, rep);
+  assert.equal(r.code, 1, r.out); assert.match(r.out, /C10: report says PASS, re-run says FAIL \(.*after-check\.md/);
+  ({ g, rep } = passed());
+  g.tx.agent('the successor, launched after check', 'beef0000cafe1111'); g.tx.flush();
+  r = verify(g, rep);
+  assert.equal(r.code, 0, r.out); assert.match(r.out, /^VERIFY PASS/);
+});
+test('Q3-6: check --out <relative> prints the resolved report path, so verify still binds it → VERIFY PASS', () => {
+  const g = goodPackout();
+  const r = runAt(g.f.root, g.f, 'check', '--handoff', g.f.handoff, '--transcript', g.f.transcript, '--out', 'rel-out.packout-report.md');
+  assert.equal(r.code, 0, r.out + r.err);
+  const rep = path.join(g.f.root, 'rel-out.packout-report.md');
+  assert.ok(fs.existsSync(rep), 'the report is written relative to the working directory');
+  g.tx.bash(`node packout.mjs check --handoff ${g.f.handoff} --out rel-out.packout-report.md`, r.out); g.tx.flush();
+  const v = verify(g, rep);
+  assert.equal(v.code, 0, v.out); assert.match(v.out, /^VERIFY PASS/);
 });
 
 // Truncation canary — DO NOT REMOVE: FULL FILE LOADED

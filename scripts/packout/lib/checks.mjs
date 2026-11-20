@@ -48,6 +48,26 @@ export function launchSegment(cmd) {
   return null;
 }
 
+/** Q3-1 (c): the packout subcommand a shell command actually RUNS, or null. A segment counts only when its first word is the node
+ *  binary (bare, a path, quoted, or a "$VAR" assigned earlier in the command), the first non-flag argument is a path ending
+ *  `packout.mjs`, and the next word is one of `subs`. Segments split on ; && || | and newlines, after heredoc bodies are removed, so a
+ *  leading `cd … &&` is fine and an `echo "node packout.mjs sweep"` is not a run (QC3 STATE-ii). Mirrors launchSegment. */
+export function runsPackout(cmd, subs = ['begin', 'sweep', 'check']) {
+  const c = stripHeredocs(cmd);
+  const vars = Object.fromEntries([...c.matchAll(/(?:^|[\s;&])([A-Za-z_][A-Za-z0-9_]*)=(?:"([^"]*)"|'([^']*)'|([^\s;&|]+))/g)].map((x) => [x[1], x[2] ?? x[3] ?? x[4]]));
+  const res = (t) => t.replace(/^["']|["']$/g, '').replace(/\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?/g, (m, v) => vars[v] ?? m);
+  for (const seg of c.split(/;|&&|\|\||\||\n/)) {
+    let s = seg.trim().replace(/^\(+/, '').replace(/^(?:[A-Za-z_][A-Za-z0-9_]*=(?:"[^"]*"|'[^']*'|\S+)\s+)*/, '');
+    const words = [];
+    for (let m; s && (m = s.match(/^("[^"]*"|'[^']*'|[^\s)]+)\)*\s*/)); s = s.slice(m[0].length)) words.push(res(m[1]));
+    if (!words.length || !/(^|[\\/])node(\.exe)?$/i.test(words[0])) continue;
+    let i = 1; while (i < words.length && words[i].startsWith('-')) i++;
+    if (!/(^|[\\/])packout\.mjs$/i.test(words[i] || '')) continue;
+    if (subs.includes(words[i + 1])) return words[i + 1];
+  }
+  return null;
+}
+
 /** F7: a task note is `tasks.mjs update|close … --note` (the Captain's 18:13 ruling), with $VAR assignments resolved. */
 export function isTaskNote(cmd) {
   const c = stripHeredocs(cmd);

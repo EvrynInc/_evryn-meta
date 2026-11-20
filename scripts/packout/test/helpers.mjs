@@ -73,8 +73,10 @@ export function codeRoot(agent = 'soren') {
 }
 
 /** Run packout.mjs. SEALED-EXEC: followed 2026-11-19 — process.execPath is the node binary already running this test. */
-export function run(f, ...argv) {
-  const r = spawnSync(process.execPath, [PACKOUT, ...argv], { encoding: 'utf8', env: { ...process.env, PACKOUT_STATE_DIR: f.state, PACKOUT_CODE_ROOT: f.root, PACKOUT_PROJECTS_DIR: path.join(f.root, 'projects'), CLAUDE_CODE_SESSION_ID: 'testsess' } });
+export function run(f, ...argv) { return runAt(undefined, f, ...argv); }
+/** run, from a given working directory (Q3-6: a relative --out must resolve inside the throwaway root, never the repo). */
+export function runAt(cwd, f, ...argv) {
+  const r = spawnSync(process.execPath, [PACKOUT, ...argv], { cwd, encoding: 'utf8', env: { ...process.env, PACKOUT_STATE_DIR: f.state, PACKOUT_CODE_ROOT: f.root, PACKOUT_PROJECTS_DIR: path.join(f.root, 'projects'), CLAUDE_CODE_SESSION_ID: 'testsess' } });
   return { code: r.status, out: r.stdout, err: r.stderr };
 }
 export const verdicts = (out) => Object.fromEntries([...out.matchAll(/^(PASS|FAIL|OPEN)\t(C\d+)\t(.*)$/gm)].map((m) => [m[2], { v: m[1], e: m[3] }]));
