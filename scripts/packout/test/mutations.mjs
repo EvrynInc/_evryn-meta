@@ -51,7 +51,7 @@ const M = [
   ['F7', CH, "/tasks\\.mjs[\"']?\\s+(update|close)\\b[^|]*\\s--note\\b/", '/tasks\\.mjs[^|]*note/', /F7:/],
   ['F8', PO, 'if (!prev.sessions.includes(session) && !a.resume) die(', 'if (false) die(', /F8:/],
   // ---- fix trip 2 (QC2's N9, N1, N10, N13, N17, N15 a/c): each row REVERTS one fix; its test must go red
-  ['N9-bound', PO, 'const bound = Math.max(meta.n, checkRow.n);', 'const bound = meta.n;', /N9 \(honest, same turn\)/],
+  ['N9-bound', PO, 'const bound = Math.max(meta.n, checkRow.n);', 'const bound = meta.n;', /N9 \(honest, same turn/],
   ['N9-C11', PO, 'if (i11 >= 0) lines[i11] = C11({ compactions: full.compactions, calls: full.calls });', 'void i11;', /N9: a compaction AFTER check/],
   ['N9-norow', PO, 'if (!checkRow) { console.log(', 'if (false) { console.log(', /N9: a report no check call/],
   ['N1', PO, 'const t = findTranscript(a.predecessor);', 'const t = fs.existsSync(meta.transcript) ? meta.transcript : null;', /N1 \(QC2 P1b\)/],

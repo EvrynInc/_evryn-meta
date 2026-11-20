@@ -250,6 +250,15 @@ test('N9 (honest, same turn): a repo Write landing after check counted its lines
   const r = verify(g, g.f.handoff.replace(/\.md$/, '.packout-report.md'));
   assert.equal(r.code, 1, r.out); assert.match(r.out, /C10: report says PASS, re-run says FAIL/);
 });
+// (fix trip 3: Q3-5 judges C10 on the whole transcript, so the test above no longer needs the bound; C6 is the check that still
+// does, because it stays bounded at check's row. Without this test the N9-bound revert went green — DC2's full run, 11/20.)
+test('N9 (honest, same turn, C6): an Agent spawn landing after check counted its lines but before check\'s own row → VERIFY FAIL on C6', () => {
+  const g = goodPackout();
+  const r0 = checkRecorded(g, { before: () => g.tx.agent('spawned in the same turn as check', 'dead0000beef2222') });
+  assert.equal(r0.code, 0, 'check could not see the spawn: its row had not reached the transcript');
+  const r = verify(g, g.f.handoff.replace(/\.md$/, '.packout-report.md'));
+  assert.equal(r.code, 1, r.out); assert.match(r.out, /C6: report says PASS, re-run says FAIL .*dead0000beef2222/);
+});
 test('N9: a compaction AFTER check\'s own row, before verify → VERIFY FAIL (C11 is unbounded)', () => {
   const { g, rep } = passed();
   g.tx.compact(); g.tx.flush();
