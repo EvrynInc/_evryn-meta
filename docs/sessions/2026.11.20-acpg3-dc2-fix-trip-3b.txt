@@ -1,0 +1,28 @@
+DC2, fix trip 3b (resumed, same agent). From AC-PG3, Fri 2026-11-20 ~11:08 PT. Committed record: _evryn-meta-packout-guard/docs/sessions/2026.11.20-acpg3-dc2-fix-trip-3b.txt
+
+Your §0.1 finding is ruled an honest-path BLOCKER, and the Captain ruled the fix (question 8 (a)). Read first, to its canary: the live brief's Log entries from "AC-PG3: DC2 returned" to the end (run `wc -l` on the brief; find that heading with Grep; read to the canary). The Captain's 11:05 entry is binding.
+
+Fix ONE thing: C10's meaning of "committed".
+- A file this session wrote counts as committed if it is clean now, OR its newest commit (`git log -1 --format=%ct -- <file>`, run in that file's own repo) is no earlier than this session's LAST write to it (the write row's timestamp). An uncommitted write with no later commit still FAILs (X1's catch).
+- It applies wherever C10 judges a file this session wrote: the live `check` and `verify`'s unbounded re-judgement. Leave the incoming-list half of C10 as it is.
+- Do NOT exempt shared files, and do NOT read state.json for this. The rejected alternative (ignore shared files) stays rejected.
+- If a write row has no usable timestamp, or the file's repo can't be found, that file FAILs as it does today (fail loud); say so in a comment at the call site.
+- If git is slow here (one `git log` per written file), measure it on Soren 2's real report (25 repo files written) and say what it cost.
+
+Acceptance, both required:
+1. Tests that FAIL without the fix: (i) the predecessor's write committed, then another seat's uncommitted edit to the same file → C10 PASS; (ii) X1: an uncommitted write and no later commit → C10 FAIL. Plus a mutation row that reverts the fix, red for its reason. Prove (i) red by reverting, and record the command.
+2. The real path: `verify` on Guard Design Soren 11.19 2's real report (predecessor 09858954-0057-4f2d-a8ff-fa012bf86a13; report and handoff in evryn-team-workspace/shared/projects/product/2026/2026.11.19-packout-guard-build/) gives VERIFY PASS again. Run it and record it; I will re-run it myself. If it does not pass, tell me what C10 still sees; do not widen the fix.
+
+Then:
+- the suite (all pass); historical.mjs (31/31, all five freeze hashes);
+- `mutations.mjs <root> --count` (every row's target text exactly once, including the new row);
+- the new row ALONE plus N9-bound and Q3-5 (the rows nearest this change) in a fresh detached sandbox outside the code folder (C:/Users/jbmcg/.claude/jobs/e8af53fa/tmp/sandbox-dc2b), each red for its reason; reap it. QC4 runs the full set next, so do NOT run all 45 rows.
+- AC-PG's real report still gives VERIFY FAIL "the report itself carries a FAIL".
+
+Same limits as before (your work trip §5): the lane's worktree and branch only; pathspec on every commit; no push, no merge; never EnterWorktree; no checkout, stash, merge, reset or rebase in a main folder; install nothing; transcripts by script only; no secrets; no network; spin no subagents; no recursive delete; backticked text only in files or quoted heredocs; don't edit my brief's Log. Write nothing to ~/.claude/packout/. Bounce back anything in this ruling you think is wrong, BEFORE building around it. Finish the whole task; if you can't, do the rest and say what is missing. If you receive a STOP message from me, commit what passes and return.
+
+Append a "## Fix trip 3b" section to docs/sessions/2026.11.20-acpg3-DC2-report.md, committed: the fix commit, both tests by name, the revert that proved (i) can fail, the counts, the git cost, the two real-path results, and anything undone. Also: until packout.mjs is signed and live, every packout in this lane is checked by the session Packout Checker 11.20 am 2 before its successor launches (Justin's rule, 11/20 9:11).
+
+Return at most 25 lines, opening with "## DC2's Output" and closing with "## End of DC2's Output", headings capped at ##.
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
