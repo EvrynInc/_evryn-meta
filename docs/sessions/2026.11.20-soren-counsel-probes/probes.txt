@@ -1,0 +1,61 @@
+
+## P0 control: the builder itself passes (exit 0)
+  PASS	C1	Edit to C:\Users\jbmcg\AppData\Local\Temp\packout-test-bUC9sq\evryn-team-workspace\.claude\agent-memory\soren\MEMORY.md at line 5 (2026-11-19T20:00:04.000Z) [edit]
+  PASS	C7	read whole (15; 8 lines) to its canary, judged on the read alone (Q4-1)
+  PASS	C10	5 repo files written; outgoing list 2; incoming list 1
+
+## P1 --incoming omitted, incoming never re-read (exit 0)
+  PASS	C1	Edit to C:\Users\jbmcg\AppData\Local\Temp\packout-test-p0D0tb\evryn-team-workspace\.claude\agent-memory\soren\MEMORY.md at line 5 (2026-11-19T20:00:34.000Z) [edit]
+  PASS	C7	no incoming handoff given (nothing to re-read)
+  PASS	C10	5 repo files written; outgoing list 2; incoming list 0
+
+## P1b control: --incoming given, never re-read (exit 1)
+  PASS	C1	Edit to C:\Users\jbmcg\AppData\Local\Temp\packout-test-QPbOuz\evryn-team-workspace\.claude\agent-memory\soren\MEMORY.md at line 5 (2026-11-19T20:01:02.000Z) [edit]
+  FAIL	C7	no Read of the incoming handoff after line 3
+  PASS	C10	5 repo files written; outgoing list 2; incoming list 1
+
+## P2 second begin correcting a typo in --incoming: exit 1 | packout: REFUSED: this packout began with --incoming C:\nowhere\handof-in.md; this begin says --incoming C:\Users\jbmcg\AppData\Local\Temp\packout-test-Uz4gKS\evryn-team-workspace\shared\handoff-in.md
+
+## P2 check after the correction (the real incoming WAS re-read) (exit 1)
+  PASS	C1	Edit to C:\Users\jbmcg\AppData\Local\Temp\packout-test-Uz4gKS\evryn-team-workspace\.claude\agent-memory\soren\MEMORY.md at line 7 (2026-11-19T20:01:32.000Z) [edit]
+  FAIL	C7	no Read of the incoming handoff after line 3
+  FAIL	C10	the incoming's "## Uncommitted" list cannot be read: no whole Read of it (no Read of the incoming handoff after line 3) and the file is not readable now (5 repo files written; outgoing list 2; incoming list absent)
+
+## P3 second begin correcting a typo in --agent: exit 1 | packout: REFUSED: this packout began with --agent sorne; this begin says --agent soren
+
+## P3 check after the correction (memory WAS written) (exit 1)
+  FAIL	C1	no write to C:\Users\jbmcg\AppData\Local\Temp\packout-test-ewvFUK\evryn-team-workspace\.claude\agent-memory\sorne\MEMORY.md after line 3
+  PASS	C7	read whole (17; 8 lines) to its canary, judged on the read alone (Q4-1)
+  PASS	C10	5 repo files written; outgoing list 2; incoming list 1
+
+## P4 incoming list in shared-parent form, dropped and left dirty (exit 0)
+  PASS	C1	Edit to C:\Users\jbmcg\AppData\Local\Temp\packout-test-IXquoL\evryn-team-workspace\.claude\agent-memory\soren\MEMORY.md at line 5 (2026-11-19T20:02:34.000Z) [edit]
+  PASS	C7	read whole (15; 8 lines) to its canary, judged on the read alone (Q4-1)
+  PASS	C10	5 repo files written; outgoing list 1; incoming list 1
+
+## P4b control: repo-relative list, dropped and left dirty (exit 1)
+  PASS	C1	Edit to C:\Users\jbmcg\AppData\Local\Temp\packout-test-3R2Kc0\evryn-team-workspace\.claude\agent-memory\soren\MEMORY.md at line 5 (2026-11-19T20:03:04.000Z) [edit]
+  PASS	C7	read whole (15; 8 lines) to its canary, judged on the read alone (Q4-1)
+  FAIL	C10	incoming's uncommitted shared/carried.md is neither committed nor carried forward (5 repo files written; outgoing list 1; incoming list 1)
+
+## P4c ./-prefixed list, dropped and left dirty (exit 1)
+  PASS	C1	Edit to C:\Users\jbmcg\AppData\Local\Temp\packout-test-ZdtB0c\evryn-team-workspace\.claude\agent-memory\soren\MEMORY.md at line 5 (2026-11-19T20:03:34.000Z) [edit]
+  PASS	C7	read whole (15; 8 lines) to its canary, judged on the read alone (Q4-1)
+  FAIL	C10	incoming's uncommitted ./shared/carried.md is neither committed nor carried forward (5 repo files written; outgoing list 1; incoming list 1)
+
+## P4d backslash list, dropped and left dirty (exit 1)
+  PASS	C1	Edit to C:\Users\jbmcg\AppData\Local\Temp\packout-test-PjCk9G\evryn-team-workspace\.claude\agent-memory\soren\MEMORY.md at line 5 (2026-11-19T20:04:04.000Z) [edit]
+  PASS	C7	read whole (15; 8 lines) to its canary, judged on the read alone (Q4-1)
+  FAIL	C10	incoming's uncommitted shared\carried.md is neither committed nor carried forward (5 repo files written; outgoing list 1; incoming list 1)
+
+## P5 check run twice: second exit 0 | verify 0 VERIFY PASS	same machine: transcript C:\Users\jbmcg\AppData\Local\Temp\packout-test-s2kpuN\projects\proj\testsess.jsonl 
+
+## P6 begin with a Git-Bash path, check with a Windows path: exit 1 | anchored? true | 
+
+## P7 seat annotates the findings file as folded (exit 1)
+  PASS	C1	Edit to C:\Users\jbmcg\AppData\Local\Temp\packout-test-VvFZ5t\evryn-team-workspace\.claude\agent-memory\soren\MEMORY.md at line 7 (2026-11-19T20:05:16.000Z) [edit]
+  PASS	C7	read whole (17; 8 lines) to its canary, judged on the read alone (Q4-1)
+  FAIL	C9	the findings file was written by this seat (line 33), not by a different session
+  FAIL	C10	c:/users/jbmcg/appdata/local/temp/packout-test-vvfz5t/evryn-team-workspace/shared/handoff-out.fresh-eyes.md (written at 33) is uncommitted and not in "## Uncommitted" (6 repo files written; outgoing list 2; incoming list
+
+## P8 FAIL, repair, re-check: first 1 second 0 | verify 0 VERIFY PASS	same machine: transcript C:\Users\jbmcg\AppData\Local\Temp\packout-test-b4Gdjb\projects\

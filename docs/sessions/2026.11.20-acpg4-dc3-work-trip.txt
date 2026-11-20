@@ -1,0 +1,93 @@
+<task>
+Your load is complete and verified. It was assembled before you knew what you would be doing — so now that you know, **if the work genuinely needs something you do not have, LOAD IT.** You are not confined to the original list, and you should not work around a gap you could close by reading. Use your judgment freely here; it is useful now in a way it could not have been before.
+
+Two conditions, both of which matter:
+
+1. **Load IN ADDITION to what you already have, never INSTEAD of it.** Nothing on the original list becomes optional now that you can see the task. If something on it looks irrelevant in hindsight, you are wrong about that, or it was cheap — either way it stays loaded.
+2. **Name anything you loaded beyond the list in your receipts, with one line on why you needed it.** Do this even if the extra read turned out to be unnecessary. **Your spinner built that list without knowing what you would discover, and this report is the ONLY signal they get that it had a gap** — so it is not bookkeeping; it is the mechanism by which the next brief is better than this one.
+
+**You are DC3.** Use that name in your output headings. Your spinner is AC-PG4, the lane AC of the packout-guard build. You are the third DC in this lane; DC1 and DC2 are gone (each died with its spinner's session).
+
+**What this lane is.** `scripts/packout/packout.mjs` (step 1 of the packout guard) is a script a seat runs by hand while it packs out: `begin`, `sweep`, `check` (writes the packout report) and `verify` (the successor's first act). Five reviews and five fix trips have run on it; QC5's three findings were fixed in fix trip 5 (`71d4560`) and verified by me by probe. **The Captain's counsel (a fresh Soren that read the code cold) then found two honest-path blockers and four wording items, and the Captain has ordered them fixed (lane Log, 14:13). This is fix trip 6, and its scope is exactly those five items.** Nothing else.
+
+**How much I have read, so you weigh this correctly:** the lane's Log from AC-PG2's 21:53 set-down to its end; the definition of done; QC5's report and DC2's "## Fix trip 5" whole; counsel's report whole; QC5's and counsel's probe outputs. **I have NOT read the code.** You are about to be the most-informed party on every question of what the code does. **Treat every claim below as a LEAD,** including line numbers and function names, and **say so loudly and early if any of it is wrong.** Where I am silent, assume I could not see it, not that I checked.
+
+🔴 **You are not just executing. If anything here is wrong, internally inconsistent, or unverifiable, STOP and tell me before acting.** A contradiction you surface costs one message; one you resolve quietly costs a false record nobody knows is false.
+
+### 1 · Read first, each whole to its canary (run `wc -l` first and read to the end)
+1. Counsel's report, `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.20-soren-counsel-report.md` (179 lines): §1's probes P1 and P4 and their mechanisms, and §3's items. **It is the source of every item below.**
+2. Counsel's probes, committed read-only at `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.20-soren-counsel-probes/`: `probes.mjs` (its probe script; it imports the lane's `helpers.mjs`) and `probes.txt` (its output at `71d4560`). Run as `node docs/sessions/2026.11.20-soren-counsel-probes/probes.mjs`.
+3. The live brief `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-sorenpg-acpg-packout-guard-step1-brief.md`, **from the entry headed "AC-PG3: QC5's report" to the end** (find the heading's line with `Grep`, then Read from there to the canary). **The Captain's 14:13 entry is the ruling for this trip and is binding;** where anything below differs from it, it wins, and tell me.
+4. `C:/Users/jbmcg/Evryn/Code/evryn-team-workspace/shared/projects/product/2026/2026.11.19-packout-guard-build/2026.11.19-packout-guard-build-brief.md`, **lines 367–409 only**: the definition of done. It decides scope.
+5. DC2's report, `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.20-acpg3-DC2-report.md`, **the "## Fix trip 5" section to the canary** (from its heading, about line 239): what changed last, its tests, and the runner's conventions (a test name is cut at its first ` (<digit>`; `--count` flags a row whose replacement contains its own target).
+
+### 2 · Fix exactly these five (the Captain's 14:13 list). Items 1 and 2 each ship a test that FAILS without the fix and a mutation row in `mutations.mjs` that reverts it; items 3 and 4 each ship a test that pins the text.
+**Prove each test can fail by reverting the fix and watching it go red; record the command.** If a break command is refused, say so and don't route around it.
+
+1. **`begin` requires `--incoming <path>` or an explicit `--incoming none`, and refuses a `begin` that has neither** (counsel's P1: an omitted `--incoming` silently switches off C7, the incoming re-read, and C10's incoming half).
+   - **`--incoming none` must keep today's no-incoming behaviour** for a seat that genuinely has no predecessor (C7 PASS "no incoming handoff given"), so the choice is explicit, not silent.
+   - **Test:** P1 → `begin` refused, with a message naming both forms. Plus `--incoming none` → accepted.
+   - **Every existing test, fixture, probe helper and the `historical.mjs` path that calls `begin` without `--incoming` will now be refused.** Update the suite's fixtures and `helpers.mjs` as needed, **and tell me which callers you changed.** ⚠️ **`historical.mjs` must stay 31/31 with all five freeze hashes;** if this change would move a historical verdict, stop and tell me before building around it.
+   - **Check that `verify` still binds correctly:** it takes the arguments from the `begin` row itself, so a `begin` row with `--incoming none` must re-derive the same verdicts.
+2. **C10 resolves an incoming-list path against the code root when its first segment names a repo, otherwise against the handoff's repo, and FAILs loud on a path that resolves nowhere,** never skips it (counsel's P4; its mechanism: `abs()` against the handoff's repo, then `isCommitted() === null` skipped silently).
+   - **Tests:** P4 (the list names `evryn-team-workspace/shared/carried.md`, the writing protocol's shared-parent form; the seat drops it and leaves it dirty) → C10 FAIL. **A path that resolves to no repo at all** → C10 FAIL, loud, naming the path. **P4b (repo-relative), P4c (`./`), P4d (backslash) and the existing `Q5-3 kept` unchanged.**
+   - **Mind the outgoing half:** counsel says its `named()` already matches by suffix, so the same forms are accepted there. Don't change the outgoing half unless the fix needs it; if it does, tell me why.
+3. **The generated report's header carries v1's strength in one line, exactly:** *"Detects honest skips; does not resist a seat that edits its own evidence."* Test: the report contains the line.
+4. **`begin`'s refusal names the repair, exactly:** *"to correct `--agent` or `--incoming`, start a fresh packout with a new handoff path."* **The message only;** counsel's larger "a second `begin` may correct" design goes to v1.1, not this trip. Test: the refusal (P2's or P3's shape) contains the sentence.
+5. **README lines** (`scripts/packout/README.md`):
+   - never edit the fresh reader's findings file (C9 can't be repaired after it; counsel's P7);
+   - run `begin` as the very first act of the packout (writes before it don't count);
+   - Q4-3's cross-seat route is unmeasured (counsel §2: another seat's index holding our file across our write, then a whole-index commit; 685 of 748 team commits take the whole index);
+   - the `begin` usage line shows `--incoming <path>|none` as required;
+   - **two v1.1 lines:** C6's name-substring match (counsel's item 7); the "second `begin` corrects" design.
+
+**Out of scope, don't touch:** C6's matching itself; the second-`begin` design; SG-1, GC-1, GC-2, GC-3; Q5-4, Q5-5; anything in the hooks (steps 2–5).
+
+### 3 · Then re-run, and report each result with its command
+- **the suite** (`node --test "scripts/packout/test/*.test.mjs"`, from the worktree root): all pass;
+- **`historical.mjs`** (`PACKOUT_CODE_ROOT=C:/Users/jbmcg/Evryn/Code node scripts/packout/test/historical.mjs --scratch <your scratch>`): 31/31, all five freeze hashes;
+- **`mutations.mjs . --count`:** every row's target exactly once, none containing its own target. **Re-count EVERY row, old and new** (item 1 rewrites `begin`, which old rows may target);
+- **QC5's probes** (`node docs/sessions/2026.11.20-acpg3-qc5-probes/p1.mjs C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard`, and the same for `p2.mjs`): **every verdict as at `71d4560`**, i.e. `probes-*-new.txt` except H8 → C7 PASS, H9 → C7 FAIL, X2 → C10 FAIL and H10b → C10 FAIL. If a probe's own `begin` is now refused because it omits `--incoming`, say so; don't edit the committed probes, record what you'd change;
+- **counsel's probes** (`probes.mjs`): P1 → `begin` refused; P4 → C10 FAIL; P0, P1b, P4b–d, P5, P6 and P8 as in `probes.txt`. Same rule about not editing the committed copy;
+- **the new rows plus their neighbours only** (yours, plus C7, C10, C10-since, Q5-3 and any row whose target text you touched) in a fresh detached sandbox **outside the code folder:** `git -C C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard worktree add --detach C:/Users/jbmcg/.claude/jobs/053a2a47/tmp/sandbox-dc3 <your head>`. **Do NOT run all rows; I run the full set once on your head.** Run them sequentially, writing output to a file in `C:/Users/jbmcg/.claude/jobs/053a2a47/tmp/dc3/`: **free memory on this laptop is under 3 GB,** and two full runs today were killed for low memory. Each row must read RED for its reason, judged by the name of its failing test. Then `git status` in the sandbox (0 lines) and reap it with `git worktree remove` (never `--force`). **Don't touch `sandbox-acpg4`; it is mine.**
+- **the real path (read-only):** Guard Design Soren 11.19 2's report (`C:/Users/jbmcg/Evryn/Code/evryn-team-workspace/shared/projects/product/2026/2026.11.19-packout-guard-build/2026.11.19-guard-design-soren-2-to-guard-design-soren-3-handoff.packout-report.md`, predecessor `09858954-0057-4f2d-a8ff-fa012bf86a13`, handoff beside it) must still give **VERIFY PASS**. ⚠️ **Its `begin` row predates item 1, so it may have no `--incoming`.** **If item 1 makes `verify` FAIL a real report written before the rule existed, don't "fix" it: stop and tell me what `verify` now sees,** because that is the definition of done's one real top-level PASS. AC-PG's report (`docs/sessions/2026.11.19-acpg-acpg2-handoff.packout-report.md`, predecessor `d1700c43-f67c-4a05-9b5d-d82f21b10f88`) must still give **VERIFY FAIL "the report itself carries a FAIL"**. Write nothing to `~/.claude/packout/`; show its listing unchanged.
+
+### 4 · Limits
+- **Work in the lane's worktree `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard`, on its branch `soren/packout-guard`,** plus your sandbox and my scratch's `dc3/` folder. **Commit by path with the pathspec on the commit; no push, no merge; never `EnterWorktree`.**
+- No `checkout`, `stash`, `merge`, `reset` or `rebase` in any main folder (`_evryn-meta`, `evryn-team-workspace`). Install nothing: no settings file, hook, `CLAUDE.md`, protocol or agent-definition text. Read transcripts only by script, never into context. No secrets. No network. Spin no subagents. **No recursive delete in any Bash command.** Put any commit message containing backticks in a file or a quoted heredoc. **Don't edit my brief's Log.** Don't edit the committed probe folders.
+- **Time:** the lane stops at Justin's 5:00 PM PT, and I still have to verify your work and run the full mutation set after you. **Aim to return by ~15:10 PT.** If you can't, commit what passes and return with what's missing.
+- **Finish the whole task, not just the tractable part.** If you genuinely cannot finish something, do the rest and say plainly what is missing and why. **If you receive a STOP message from me, commit what passes and return.**
+- Until `packout.mjs` is signed and live, every packout in this lane is checked by the session `Packout Checker 11.20 am 2` before its successor launches (Justin's rule, 11/20 9:11).
+
+### 5 · Write your report, then return
+Write **`docs/sessions/2026.11.20-acpg4-DC3-report.md`** (with a truncation canary), committed. It carries:
+- each item: its fix commit, its test (by name), and the revert that proved the test can fail;
+- the callers of `begin` you changed for item 1;
+- the count check of every mutation row's target text;
+- the counts (suite, historical, the rows you ran, each with what it mutated and the test that went red);
+- QC5's and counsel's probe outputs on your head, compared verdict by verdict;
+- the two real-path `verify` results;
+- anything you bounced or found wrong in this brief; what's undone;
+- **your load note:** what on your load list you actually needed, and what you genuinely didn't (careful: a file already in your head can feel unneeded). The next DC's list is derived from it.
+
+**Return at most 25 lines.**
+</task>
+
+<questions_first>
+Do the work — or, if a real gap would compromise it, output a numbered list of blocking questions INSTEAD and stop. Don't guess past a real gap — but also don't manufacture questions to dodge the work.
+</questions_first>
+
+<output_format>
+Wrap your entire final response in a heading pair, so your spinner can see at a glance where your output begins and ends inside a wall of tool output.
+
+Open with:  ## [your designated name]'s Output
+Close with: ## End of [your designated name]'s Output
+
+Use your own designated name — the one given to you in <identity>. Put nothing after the closing line.
+</output_format>
+
+<isolation>
+You work in a dedicated worktree on your own branch; you never touch `main`; you never deploy (`railway up`).
+</isolation>
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
