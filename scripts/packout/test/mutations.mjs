@@ -69,8 +69,15 @@ const count = (s, sub) => s.split(sub).length - 1;
 const node = (args, cwd) => spawnSync(process.execPath, args, { cwd, encoding: 'utf8' });
 
 let red = 0;
-const rows = [];
+// Each row prints the moment it finishes (not batched at the end): a run killed part-way (fix trip 2: memory pressure at
+// row 9) then keeps every finished row, and the sandbox shows which mutation was live when it died.
+// Optional filter: node mutations.mjs <sandbox> <id-prefix>… runs only the rows whose id starts with one of the prefixes.
+const only = process.argv.slice(3);
+const rows = { push: (s) => console.log(s) };
+let ran = 0;
 for (const [id, rel, oldS, newS, want] of M) {
+  if (only.length && !only.some((p) => id.startsWith(p))) continue;
+  ran++;
   const f = path.join(root, rel); const orig = fs.readFileSync(f, 'utf8');
   try {
     if (count(orig, oldS) !== 1) { rows.push(`${id}\tNOT APPLIED: the text to mutate occurs ${count(orig, oldS)} times`); continue; }
@@ -87,8 +94,7 @@ for (const [id, rel, oldS, newS, want] of M) {
     rows.push(`${id}\t${hit ? 'RED for its reason' : 'NOT RED for its reason'}\tline ${lineNo}: ${newS.trim().slice(0, 90)}\tfailing: ${failed.length} [${failed.map((n) => n.slice(0, 40)).join(' | ')}]`);
   } finally { fs.writeFileSync(f, orig); }
 }
-console.log(rows.join('\n'));
-console.log(`SUMMARY\t${red}/${M.length} mutations went red for their check's reason`);
-process.exit(red === M.length ? 0 : 1);
+console.log(`SUMMARY\t${red}/${ran} mutations went red for their check's reason${only.length ? ` (filtered: ${only.join(' ')}; ${M.length} rows in all)` : ''}`);
+process.exit(red === ran ? 0 : 1);
 
 // Truncation canary — DO NOT REMOVE: FULL FILE LOADED
