@@ -23,7 +23,7 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { parse, hashFirst, sha12, normPath, readLines } from './lib/transcript.mjs';
 import { buildExtract, actionDigest, MARKER_RE } from './lib/sweep.mjs';
-import { runAll, uncommittedList } from './lib/checks.mjs';
+import { runAll, uncommittedList, stripHeredocs } from './lib/checks.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const CODE = process.env.PACKOUT_CODE_ROOT || path.resolve(HERE, '..', '..', '..');
@@ -124,22 +124,33 @@ function printLines(lines) { for (const r of lines) console.log(`${r.verdict}\t$
 // it is never rebuilt, because the rebuild was off by ±2 (review §1.2 item 2). A pipe between the script and the file = filtered.
 function historicalSweeps(calls) {
   const out = [];
-  calls.forEach((k, idx) => {
+  // One extraction per command SEGMENT (split on ; && || newline) that runs session-text.mjs and redirects it; heredoc
+  // bodies are removed first (am3 1109 wrote a file whose heredoc text quoted such a command). pm 790 ran `--help | head`
+  // and then the real extraction in one command: only a pipe INSIDE the extracting segment marks it filtered.
+  const ext = [];
+  calls.forEach((k) => {
     if (!k.ok || k.name !== 'Bash') return;
-    const cmd = String(k.input.command || '');
-    if (!/session-text\.mjs/.test(cmd) || !/>/.test(cmd)) return;
-    const vars = Object.fromEntries([...cmd.matchAll(/\b([A-Za-z_]+)="([^"]+)"/g)].map((x) => [x[1], x[2]]));
-    const seg = cmd.slice(cmd.indexOf('session-text.mjs'));
-    const m = seg.match(/>\s*"?([^"\s;&|]+)/); if (!m) return;
-    const file = m[1].replace(/\$\{?([A-Za-z_]+)\}?/g, (_, v) => vars[v] ?? `$${v}`);
-    if (!/\.txt$/i.test(file)) return;
-    const filtered = seg.slice(0, seg.indexOf(m[0])).includes('|');
-    const b = path.basename(file).toLowerCase();
-    const next = calls.slice(idx + 1).find((j) => j.ok && j.name === 'Bash' && /session-text\.mjs/.test(String(j.input.command || '')) && String(j.input.command).toLowerCase().includes(b));
-    const until = next ? next.n : Infinity;
-    const reads = calls.filter((j) => j.n > k.n && j.n < until && j.ok && j.name === 'Read' && j.win && path.basename(String(j.input.file_path)).toLowerCase() === b);
+    const cmd = stripHeredocs(String(k.input.command || ''));
+    // variable assignments, quoted or not (Lucas am's 20:40 re-extraction used S=<path> unquoted, and was missed by the prototype)
+    const vars = Object.fromEntries([...cmd.matchAll(/(?:^|[\s;&])([A-Za-z_][A-Za-z0-9_]*)=(?:"([^"]*)"|'([^']*)'|([^\s;&|]+))/g)].map((x) => [x[1], x[2] ?? x[3] ?? x[4]]));
+    for (const segRaw of cmd.split(/;|&&|\|\||\n/)) {
+      const at = segRaw.indexOf('session-text.mjs'); if (at < 0) continue;
+      const seg = segRaw.slice(at);
+      const m = seg.match(/(?:^|[^0-9&])>\s*("[^"]+"|'[^']+'|[^\s;&|]+)/); if (!m) continue;
+      const file = m[1].replace(/^["']|["']$/g, '').replace(/\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?/g, (_, v) => vars[v] ?? `$${v}`);
+      if (!/\.txt$/i.test(file)) continue;
+      ext.push({ k, file, filtered: seg.slice(0, seg.indexOf(m[0])).includes('|') });
+    }
+  });
+  ext.forEach((x, idx) => {
+    const b = path.basename(x.file).toLowerCase();
+    const next = ext.slice(idx + 1).find((y) => path.basename(y.file).toLowerCase() === b);
+    const until = next ? next.k.n : Infinity;
+    const reads = calls.filter((j) => j.n > x.k.n && j.n < until && j.ok && j.name === 'Read' && j.win && path.basename(String(j.input.file_path)).toLowerCase() === b);
     const tot = reads.map((j) => j.win.total).find((t) => Number.isInteger(t));
-    out.push({ path: file, createdN: k.n, filtered, content: null, nKnown: Number.isInteger(tot), N: Number.isInteger(tot) ? tot - 1 : null, until });
+    // N = the Read tool's totalLines, strictly: session-text ends with a newline, so its last numbered line is empty, and a
+    // full Read returns it. No line of tolerance is given (the prototype's ±2 is what step 1 removes).
+    out.push({ path: x.file, base: b, createdN: x.k.n, filtered: x.filtered, content: null, nKnown: Number.isInteger(tot), N: Number.isInteger(tot) ? tot : null, until });
   });
   return out;
 }
@@ -152,6 +163,8 @@ function buildCtx({ parsed, from, agent, handoff, handoffText, incoming, incomin
     if ('uncommitted' in hist) ctx.uncommittedOverride = hist.uncommitted;
     if ('incomingUncommitted' in hist) ctx.incomingUncommittedOverride = hist.incomingUncommitted;
     if (hist.c12Stated) ctx.c12Stated = hist.c12Stated;
+    if (hist.c8Order) ctx.c8Order = true;
+    if (hist.c7SameFile) ctx.c7SameFile = true;
   }
   return ctx;
 }

@@ -22,13 +22,59 @@ export function writes(k, p) {
   const i = k.input || {};
   if ((k.name === 'Edit' || k.name === 'Write' || k.name === 'NotebookEdit') && (samePath(i.file_path || i.notebook_path, p) || endsWithPath(i.file_path || i.notebook_path, p))) return 'edit';
   if (k.name === 'Bash') {
-    // Name match on the last TWO path segments (e.g. "current-state/current-state.md"), never the bare file name:
-    // a bare name over-matches (an AC's docs/current-state.md vs the team's shared/current-state/current-state.md).
-    const c = String(i.command || '').replace(/\\/g, '/').toLowerCase();
+    // Only a WRITE TARGET counts: the file after > or >>, append-entry.mjs's first argument, tee's, sed -i's, cp/mv's
+    // destination — with heredoc bodies removed first. A command whose TEXT merely names the file is not a write
+    // (the prototype's defect: Thea 2352 appended to a Log whose text named the handoff; am2 1090 wrote a /tmp file
+    // whose heredoc named the findings). Matching is on the last TWO path segments, never a bare file name.
     const tail = normPath(p).split('/').slice(-2).join('/');
-    if (c.includes(tail) && WRITE_BASH.test(String(i.command || ''))) return 'bash-named';
+    for (const t of bashWriteTargets(String(i.command || ''))) if (normPath(t).endsWith(tail)) return 'bash-target';
   }
   return null;
+}
+
+/** The segment of a shell command that LAUNCHES a session (its first word is the claude binary, and it carries --bg), or null.
+ *  A command whose text merely mentions "claude --bg" (a log line, a printf) is not a launch (Lucas am3 line 896). */
+export function launchSegment(cmd) {
+  const c = stripHeredocs(cmd);
+  for (const seg of c.split(/;|&&|\|\||\n/)) {
+    const words = seg.trim().replace(/^(?:[A-Za-z_][A-Za-z0-9_]*=(?:"[^"]*"|'[^']*'|\S+)\s+)*/, '');
+    const first = (words.match(/^("[^"]+"|'[^']+'|\S+)/) || [''])[0].replace(/^["']|["']$/g, '');
+    if (!/\s--bg\b/.test(seg)) continue;
+    if (/(^|[\\/])claude(\.exe)?$/i.test(first)) return seg;
+    // "$CLAUDE" --bg …, with CLAUDE assigned to the binary's path earlier in the same command (the fleet's usual form)
+    const v = first.match(/^\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?$/);
+    if (v && new RegExp(`(^|[\\s;&])${v[1]}=[^\\n]*?claude(\\.exe)?["']?(?=;|\\s|$)`, 'i').test(c)) return seg;
+  }
+  return null;
+}
+
+/** Remove heredoc bodies (<<EOF … EOF, <<'EOF' … EOF, <<-EOF) from a shell command. */
+export function stripHeredocs(cmd) {
+  const lines = String(cmd).split('\n');
+  const out = [];
+  let term = null;
+  for (const l of lines) {
+    if (term) { if (l.trim() === term) term = null; continue; }
+    out.push(l);
+    const m = l.match(/<<-?\s*(?:'([^']+)'|"([^"]+)"|([A-Za-z_][A-Za-z0-9_]*))/);
+    if (m) term = m[1] || m[2] || m[3];
+  }
+  return out.join('\n');
+}
+
+/** The files a shell command writes, as written (variables resolved where assigned in the same command). */
+export function bashWriteTargets(cmd) {
+  const c = stripHeredocs(cmd);
+  const vars = Object.fromEntries([...c.matchAll(/(?:^|[\s;&])([A-Za-z_][A-Za-z0-9_]*)=(?:"([^"]*)"|'([^']*)'|([^\s;&|]+))/g)].map((x) => [x[1], x[2] ?? x[3] ?? x[4]]));
+  const res = (t) => t.replace(/^["']|["']$/g, '').replace(/\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?/g, (_, v) => vars[v] ?? `$${v}`);
+  const tok = `("[^"]+"|'[^']+'|[^\\s;&|()<>]+)`;
+  const out = [];
+  for (const m of c.matchAll(new RegExp(`(?:^|[^0-9&<>])>>?\\s*${tok}`, 'g'))) out.push(res(m[1]));
+  for (const m of c.matchAll(new RegExp(`append-entry\\.mjs\\s+${tok}`, 'g'))) out.push(res(m[1]));
+  for (const m of c.matchAll(new RegExp(`\\btee\\s+(?:-a\\s+)?${tok}`, 'g'))) out.push(res(m[1]));
+  for (const m of c.matchAll(new RegExp(`\\bsed\\s+-i\\S*\\s+(?:'[^']*'|"[^"]*"|\\S+)\\s+${tok}`, 'g'))) out.push(res(m[1]));
+  for (const m of c.matchAll(new RegExp(`\\b(?:cp|mv)\\s+(?:-\\S+\\s+)*${tok}\\s+${tok}`, 'g'))) out.push(res(m[2]));
+  return out.filter((t) => t && t !== '/dev/null' && !/^&\d/.test(t));
 }
 const isRead = (k, p) => k.ok && k.name === 'Read' && k.win && (samePath(k.input.file_path, p) || endsWithPath(k.input.file_path, p));
 
@@ -41,8 +87,13 @@ function compose(reads) {
 /** Do these reads cover lines 1..target with no gap? */
 function covers(reads, target) {
   const m = compose(reads);
-  for (let i = 1; i <= target; i++) if (!m.has(i)) return { ok: false, gap: `${i}-${target}` };
-  return { ok: true };
+  const gaps = [];
+  for (let i = 1; i <= target; i++) {
+    if (m.has(i)) continue;
+    let j = i; while (j + 1 <= target && !m.has(j + 1)) j++;
+    gaps.push(i === j ? `${i}` : `${i}-${j}`); i = j;
+  }
+  return gaps.length ? { ok: false, gap: gaps.join(', ') } : { ok: true };
 }
 /** Compare composed reads to a file's current lines. Returns {equal, firstDiff, readLines, fileLines}. */
 function equalsFile(reads, text) {
@@ -101,8 +152,10 @@ export function C2(ctx) {
 
 /** Is a sweep read to its marker after it was made? sweep: {path, N, createdN, content|null, filtered, nKnown} */
 function sweepRead(calls, s) {
-  if (s.filtered) return { ok: false, open: 'the extract was filtered before it was written (not a plain extract)' };
-  const reads = calls.filter((k) => k.n > s.createdN && isRead(k, s.path));
+  if (s.filtered) return { ok: false, open: `extract ${base(s.path)} at ${s.createdN} was filtered before it was written (not a plain extract)` };
+  // live: the exact owned path; historical: the extract's file name, between its making and the next extract to that name
+  const reads = s.content != null ? calls.filter((k) => k.n > s.createdN && isRead(k, s.path))
+    : calls.filter((k) => k.n > s.createdN && k.n < s.until && k.ok && k.name === 'Read' && k.win && base(k.input.file_path) === s.base);
   if (s.content != null) {
     const target = s.N + 1; // the marker line
     const cv = covers(reads, target);
@@ -113,6 +166,7 @@ function sweepRead(calls, s) {
     return { ok: true, why: `extract ${base(s.path)} (${s.N} lines) made at ${s.createdN}, Read to its marker (reads ${reads.map((k) => k.n).join(',')})` };
   }
   // historical: no marker; the true length comes only from a Read that reported totalLines
+  if (!reads.length) return { ok: false, why: `extract ${base(s.path)} made at ${s.createdN} was never Read` };
   if (!s.nKnown) return { ok: false, open: `extract ${base(s.path)} at ${s.createdN}: its length is not measurable (no Read reported totalLines; a rebuilt length is not exact)` };
   const cv = covers(reads, s.N);
   return cv.ok ? { ok: true, why: `extract ${base(s.path)} (${s.N} lines, measured by Read totalLines) made at ${s.createdN}, Read whole (reads ${reads.map((k) => k.n).join(',')})` }
@@ -126,7 +180,7 @@ export function C3(ctx) {
   const res = cand.map((s) => ({ s, r: sweepRead(calls, s) }));
   const ok = res.find((x) => x.r.ok);
   if (ok) return R('C3', 'PASS', ok.r.why);
-  if (res.every((x) => x.r.open)) return R('C3', 'OPEN', `(historical: ${res.map((x) => x.r.open).join('; ')})`);
+  if (res.some((x) => x.r.open)) return R('C3', 'OPEN', `(historical: no candidate passes and at least one cannot be judged — ${res.map((x) => x.r.why || x.r.open).join('; ')})`);
   return R('C3', 'FAIL', res.map((x) => x.r.why || x.r.open).join('; '));
 }
 
@@ -147,7 +201,7 @@ export function C5(ctx) {
   const res = cand.map((s) => ({ s, r: sweepRead(ctx.calls, s) }));
   const ok = res.find((x) => x.r.ok);
   if (ok) return R('C5', 'PASS', ok.r.why + `, after the handoff's first write (${first})`);
-  if (res.every((x) => x.r.open)) return R('C5', 'OPEN', `(historical: ${res.map((x) => x.r.open).join('; ')})`);
+  if (res.some((x) => x.r.open)) return R('C5', 'OPEN', `(historical: no candidate passes and at least one cannot be judged — ${res.map((x) => x.r.why || x.r.open).join('; ')})`);
   return R('C5', 'FAIL', res.map((x) => x.r.why || x.r.open).join('; '));
 }
 function C3pick(ctx) { const cand = ctx.sweeps.filter((s) => s.createdN >= ctx.from); return cand.find((s) => sweepRead(ctx.calls, s).ok) || null; }
@@ -161,8 +215,8 @@ export function C6(ctx) {
     if (k.name === 'Agent' || k.name === 'Task') {
       const id = (String(k.text || '').match(/agentId:\s*([A-Za-z0-9]+)/) || [])[1] || (k.tur && k.tur.agentId) || null;
       spawns.push({ n: k.n, kind: 'Agent', id, name: null, desc: k.input.description });
-    } else if (k.name === 'Bash' && /\bclaude\b[^|;&]*--bg\b/.test(String(k.input.command || ''))) {
-      const c = String(k.input.command);
+    } else if (k.name === 'Bash' && launchSegment(String(k.input.command || ''))) {
+      const c = launchSegment(String(k.input.command));
       const name = (c.match(/(?:--name|-n)\s+(?:"([^"]+)"|'([^']+)'|(\S+))/) || []).slice(1).find(Boolean) || null;
       const id = (String(k.text || '').match(/\b([0-9a-f]{8})(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}\b/) || [])[1] || null;
       spawns.push({ n: k.n, kind: 'claude --bg', id, name });
@@ -177,6 +231,7 @@ export function C6(ctx) {
 
 export function C7(ctx) {
   const { calls, from, incoming, incomingText } = ctx;
+  if (ctx.c7SameFile) return R('C7', 'OPEN', '(historical: the incoming handoff is the same shared, appended file as the outgoing one; nothing separate to re-read, and C8 covers the file)');
   if (!incoming) return R('C7', 'PASS', 'no incoming handoff given (nothing to re-read)');
   if (incomingText == null) return R('C7', 'FAIL', `the incoming handoff ${incoming} is not readable now`);
   const reads = calls.filter((k) => k.n >= from && isRead(k, incoming));
@@ -194,6 +249,20 @@ export function C8(ctx) {
   if (handoffText == null) return R('C8', 'FAIL', `the handoff ${handoff} is not readable now`);
   const hw = handoffWrites(ctx);
   const lastW = hw.length ? hw[hw.length - 1].n : ctx.from;
+  if (ctx.c8Order) {
+    // HIST-ORDER: a shared, appended handoff has no true "final" for this seat, so content equality is impossible.
+    // Judge write-ordering only; it can FAIL or be OPEN, never PASS.
+    const all = calls.filter((k) => k.n >= ctx.from && isRead(k, handoff));
+    let lastWholeAt = null;
+    for (let j = all.length - 1; j >= 0 && lastWholeAt == null; j--) {
+      const T = all[j].win.total; if (!Number.isInteger(T)) continue;
+      if (covers(all.slice(0, j + 1).filter((k) => k.win.total === T), T).ok) lastWholeAt = all[j].n;
+    }
+    if (lastWholeAt == null) return R('C8', 'FAIL', `HIST-ORDER: no whole Read of the handoff after line ${ctx.from}`);
+    const later = hw.filter((k) => k.n > lastWholeAt);
+    return later.length ? R('C8', 'FAIL', `HIST-ORDER: the last whole Read (${lastWholeAt}) has ${later.length} of this seat's writes after it (${later.map((k) => k.n).join(', ')})`)
+      : R('C8', 'OPEN', `(historical: HIST-ORDER — no write by this seat after its last whole Read (${lastWholeAt}), but content equality cannot be judged on a shared appended file)`);
+  }
   const reads = calls.filter((k) => k.n > lastW && isRead(k, handoff));
   if (!reads.length) return R('C8', 'FAIL', `no Read of the handoff after its last write (${lastW})`);
   const lw = lastWhole(reads, handoffText);

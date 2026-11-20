@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { goodPackout, check, run, verdicts, Tx, codeRoot } from './helpers.mjs';
 import { parse } from '../lib/transcript.mjs';
-import { C4, uncommittedList } from '../lib/checks.mjs';
+import { C4, uncommittedList, bashWriteTargets, launchSegment } from '../lib/checks.mjs';
 
 const ALL = ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12'];
 function only(out, failing) {
@@ -98,7 +98,7 @@ test('instrument 1: one tool call written on two transcript lines counts once', 
 test('instrument 2: a sweep Read that stops one line short of its marker fails C3', () => {
   const g = goodPackout({ shortSweeps: true });
   const v = verdicts(check(g.f).out);
-  assert.equal(v.C3.v, 'FAIL'); assert.match(v.C3.e, /unread (\d+)-\1/); // exactly the marker line is unread
+  assert.equal(v.C3.v, 'FAIL'); assert.match(v.C3.e, /unread \d+(;|$)/); // exactly one line — the marker — is unread
   assert.equal(v.C5.v, 'FAIL');
 });
 test('instrument 3: an edit to the handoff by ANOTHER session after the last Read fails C8 (content inequality)', () => {
@@ -133,6 +133,21 @@ test('format: CRLF files compare equal to a Read (the Read tool strips CR)', () 
 test('form: "## Uncommitted" parses one backticked path per line', () => {
   assert.deepEqual(uncommittedList('# H\n\n## Uncommitted\n\n`a/b.md`\n`c.md`\n\n## Next\n`z.md`\n'), ['a/b.md', 'c.md']);
   assert.equal(uncommittedList('# none here\n'), null);
+});
+
+// ---- defects the historical runs found in the first build (each one a real transcript shape, reduced)
+test('a command whose TEXT names a file is not a write to it; only write targets count (heredoc bodies stripped)', () => {
+  const t = (c) => bashWriteTargets(c);
+  assert.deepEqual(t(`cat > /tmp/s6.txt <<'EOF'\nsee shared/x/handoff-review.md\nEOF`), ['/tmp/s6.txt']);
+  assert.deepEqual(t('node append-entry.mjs .claude/agent-memory/soren/MEMORY.md - <<EOF\nbody > shared/current-state/current-state.md\nEOF'), ['.claude/agent-memory/soren/MEMORY.md']);
+  assert.deepEqual(t('f=shared/a/h.md && cp /tmp/h.md $f && echo 2>&1'), ['shared/a/h.md']);
+  assert.deepEqual(t('echo hi > /dev/null'), []);
+});
+test('a launch is a segment whose first word is the claude binary (or "$VAR" set to it) with --bg; prose that mentions it is not', () => {
+  assert.ok(launchSegment('CLAUDE="$(ls -d ~/x/claude-code-* | tail -1)/resources/native-binary/claude.exe"; "$CLAUDE" --bg -n "Adm X" --model opus'));
+  assert.ok(launchSegment('claude --bg --name "A"'));
+  assert.equal(launchSegment("printf '- Reopened by `claude --bg --resume dacfb635`' >> log.md"), null);
+  assert.equal(launchSegment('cat > note.md <<EOF\nclaude --bg -n x\nEOF'), null);
 });
 
 // ---- verify (ruling ⓹)

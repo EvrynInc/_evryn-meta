@@ -1,0 +1,92 @@
+{
+  "_about": "The six frozen packouts of Thu 11/19 (ledger line 311), for historical.mjs. Paths: transcripts under ~/.claude/projects/c--Users-jbmcg-Evryn-Code-evryn-team-workspace/; files from `git show refs/audit/2026-11-19-freeze:<path>` in evryn-team-workspace. 'expect' asserts a verdict ONLY where the ledger states the step's outcome, citing the ledger line (2026.11.19-packout-chain-ledger.md); 'divergence' marks a ruled departure from the ledger (AC-PG's Captain, 17:28, rulings 1 and 3). Checks absent from 'expect' are reported as 'ledger silent'. Truncation canary at the end of _canary.",
+  "seats": [
+    {
+      "seat": "Adm Soren 1.19 am2", "session": "5f2de66b", "to": 1187, "freezeSha": "2cb9e4fd9210", "from": 680, "agent": "soren",
+      "handoff": "shared/projects/product/2026/2026.11.19-adm-soren-1.19-am2-to-admiral-soren-handoff.md",
+      "final": { "reverseEditOf": { "session": "dacfb635", "line": 920 }, "why": "the frozen file carries pm's later banner; am2's final = frozen minus pm's one Edit (ledger line 73)" },
+      "incoming": "shared/projects/product/2026/2026.11.18-adm-soren-1.19-am-to-admiral-soren-handoff.md",
+      "findings": "shared/projects/product/2026/2026.11.19-fresh-soren-am2-handoff-review.md",
+      "hist": { "c12Stated": "frozen outgoing L112 '9a: Justin did nothing by hand' — S-am2-11 (ledger 108)" },
+      "expect": {
+        "C1": ["PASS", "77: memory note by Edit (724)"],
+        "C2": ["PASS", "77: current-state appendage (760), task notes (766)"],
+        "C3": ["PASS", "77: session text extracted and read whole, 1-259 (778/783)"],
+        "C4": ["PASS", "79: Write 829"],
+        "C5": ["FAIL", "80: step 2 SKIPPED"],
+        "C7": ["FAIL", "83: incoming, no whole re-read at packout"],
+        "C8": ["FAIL", "84: read whole at 1108, then edited six more times"],
+        "C9": ["FAIL", "85: 'done, and done well' (am2 read 28-145)", "divergence: ruling 3 — the spec needs the findings Read whole; transcript shows Read 28-127 plus lines 128-145 by `sed` in Bash (1062), which does not count"],
+        "C11": ["PASS", "120: 0 compactions"],
+        "C12": ["PASS", "112/108: '9a: Justin did nothing by hand'", "divergence: ruling 3 — presence-only; truth invisible to any check (S-am2-11)"]
+      }
+    },
+    {
+      "seat": "Adm Soren 1.19 pm", "session": "dacfb635", "to": 1058, "freezeSha": "476437e50582", "from": 760, "agent": "soren",
+      "handoff": "shared/projects/product/2026/2026.11.19-adm-soren-1.19-pm-to-admiral-soren-handoff.md",
+      "incoming": "shared/projects/product/2026/2026.11.19-adm-soren-1.19-am2-to-admiral-soren-handoff.md",
+      "findings": "shared/projects/product/2026/2026.11.19-fresh-soren-pm-handoff-review.md",
+      "hist": { "c12Stated": "frozen outgoing L63, step 0 record: '9a ... Justin did nothing by hand' (ledger 130: plausible)" },
+      "expect": {
+        "C1": ["PASS", "130: memory note via append-entry (829)"],
+        "C2": ["PASS", "130: current-state appendage, task note on T-81 (851), topsheet-shelf row"],
+        "C3": ["FAIL", "145: lock 9 'DONE, with a small caveat' (lines 1-19 shown only in Bash output)", "divergence: ruling 3 — text in Bash output does not count"],
+        "C4": ["PASS", "131: Write 867"],
+        "C5": ["FAIL", "132: re-extracted (878), read 300-322 only"],
+        "C7": ["FAIL", "135: incoming walked from load read, not re-read"],
+        "C8": ["FAIL", "145: four edits after its 08:44 whole re-read"],
+        "C11": ["PASS", "222: 0 compactions"],
+        "C12": ["PASS", "130: 9a 'Justin did nothing by hand': plausible", "presence-only; truth invisible to any check"]
+      }
+    },
+    {
+      "seat": "Adm Lucas 1.19 am", "session": "4648add8", "to": 1648, "freezeSha": "cc8a22294ded", "from": 927, "agent": "lucas",
+      "toDerivation": "derived by script: the frozen transcript's last tool call is line 1643 (Bash) at Wed 11/18 21:27 PT and its last row line 1648; no row after a >60-min gap past line 861. The packout window (protocol Read 927 at 20:22 to the last handoff Edit 1396 at 20:40) lies wholly inside 1..1648, so --to = the freeze line. The brief's lead that this transcript 'runs to 09:07 Thursday' does not hold by row timestamps.",
+      "handoff": "shared/projects/helm/2026/handoffs/2026.11.18-lucas-wednesday-evening-handoff.md",
+      "final": { "frozen": true, "c8Order": true, "why": "one appended handoff shared with later seats (am2, am3): every frozen version carries their edits, so C8 is judged by write-ordering (HIST-ORDER), which can only FAIL or be OPEN" },
+      "incoming": "shared/projects/helm/2026/handoffs/2026.11.18-lucas-wednesday-afternoon-handoff.md",
+      "findings": "shared/projects/helm/2026/handoffs/2026.11.18-fresh-eyes-night-handoff-findings.md",
+      "expect": {
+        "C3": ["FAIL", "291: L-am-1, the read missed lines 1-179 and everything after 20:27"],
+        "C5": ["FAIL", "291: L-am-1, 'no re-extraction at R8'", "divergence (fact): the transcript DOES re-extract at 20:40 (line 1376, 700 lines, same path); its Read 1381 covers 180-699 of 701, so the verdict holds but the ledger's 'no re-extraction' is wrong"],
+        "C8": ["FAIL", "292: L-am-2, three more edits after the 1356 whole re-read"]
+      }
+    },
+    {
+      "seat": "Adm Lucas 1.19 am2", "session": "4f4a05ae", "to": 1542, "freezeSha": "7f888f53d102", "from": 1067, "agent": "lucas",
+      "handoff": "shared/projects/helm/2026/handoffs/2026.11.18-lucas-wednesday-evening-handoff.md",
+      "final": { "frozen": true, "c8Order": true, "why": "same shared appended handoff as Lucas am" },
+      "incoming": null, "c7SameFile": true,
+      "findings": null,
+      "expect": {
+        "C3": ["PASS", "294: step 2 swept once before writing, at 07:11, lines 1-485 (accurate)"],
+        "C5": ["FAIL", "294/296: step 2 partial; §6c session2.txt 470-628 after a first sweep of 1-485"],
+        "C8": ["FAIL", "296: L-am2-2, read 1479 followed by one more edit (1489)"]
+      }
+    },
+    {
+      "seat": "Adm Lucas 1.19 am3", "session": "0e8790fc", "to": 1633, "freezeSha": "add31a08e29b", "from": 990, "agent": "lucas",
+      "handoff": "shared/projects/helm/2026/handoffs/2026.11.18-lucas-wednesday-evening-handoff.md",
+      "final": { "frozen": true, "why": "am3 was the last seat to edit the shared handoff before the 11:55 freeze (am4's banner came at 13:57, ledger 325), so the frozen file is am3's final" },
+      "incoming": null, "c7SameFile": true,
+      "findings": "shared/projects/helm/2026/handoffs/2026.11.19-fresh-eyes-am3-handoff-findings.md",
+      "expect": {
+        "C5": ["OPEN", "297: 'its redo is real: session text re-extracted and read 1-606 whole' (build brief §4: 'Lucas am3's redo PASSes')", "divergence: ruling 1 — the extract was piped through `grep -v` before it was written (line 1470), so it is not a plain extract: OPEN (historical: filtered), never PASS"],
+        "C8": ["PASS", "297: handoff read whole 1-218 at 1543 after its last edit (1530), no edit after it"]
+      }
+    },
+    {
+      "seat": "Thea 11.17 pm", "session": "7b5b0b5b", "to": "pin", "freezeSha": null, "from": 1960, "agent": "thea",
+      "handoff": "shared/projects/helm/2026/handoffs/2026.11.19-thea-handoff.md",
+      "incoming": "shared/projects/helm/2026/handoffs/2026.11.17-thea-handoff.md",
+      "findings": "shared/projects/helm/2026/handoffs/2026.11.19-thea-handoff-fresh-eyes.md",
+      "expect": {
+        "C3": ["FAIL", "305: T-thea-2, no fragment sweep; the transcript holds no extraction"],
+        "C5": ["FAIL", "305: named step-2 deviation (no second sweep)"],
+        "C8": ["FAIL", "304: T-thea-1, four more edits after the 2332 whole Read"],
+        "C9": ["PASS", "307: step-5 reader's findings read whole 1-278 at 07:05"]
+      }
+    }
+  ],
+  "_canary": "Truncation canary — DO NOT REMOVE: FULL FILE LOADED"
+}
