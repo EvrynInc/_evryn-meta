@@ -1,0 +1,47 @@
+DC1, fix trip 2 (resumed, same agent). From AC-PG, Thu 2026-11-19 ~20:10 PT. Committed record: _evryn-meta-packout-guard/docs/sessions/2026.11.19-acpg-dc1-fix-trip-2.txt
+
+QC2 verified your fix trip and returned NO-GO, on two new blockers in verify. Read first, each in full to its canary:
+1. C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-acpg-QC2-report.md (206 lines). These are its findings, evidence and probes; the probes are in C:/Users/jbmcg/.claude/jobs/d1700c43/tmp/qc2/, including probes-1..5.txt and the scripts.
+2. The brief's Log entry headed "AC-PG: QC2 returned NO-GO" (run `wc -l` on the brief and read that entry to the canary). Its decision table is binding: what to fix, what to note, and what to defer.
+
+Fix, in this order. Every fix ships a test that FAILS without it; prove that by reverting the fix and watching the test go red, recording the command. If a break command is refused, say so and do not route around it.
+1. N9 (BLOCKER): verify must not let the report choose the bound.
+   - verify finds the last `packout.mjs check` Bash call whose output names this report, and judges at least to that row, never to meta.n alone.
+   - C11 is judged unbounded: a compaction anywhere in the transcript before verify fails it.
+   - C6 and C10 are judged at least to the check call's row.
+   - Tests: QC2's P9 (forged n plus recomputed sha hides a compaction) and P9b (hides a stray Write) must FAIL, and the honest same-turn case (a repo Write landing after check's counted lines) must FAIL in verify.
+2. N1 (BLOCKER): verify locates the predecessor's transcript itself, from --predecessor (or meta.session) via check's findTranscript under PACKOUT_PROJECTS_DIR.
+   - meta.transcript and meta.machine are hints only.
+   - Downgrade only when no transcript for that session exists on this machine.
+   - Test: QC2's P1b (QC1's P1 plus an edited machine field) must FAIL on the same machine.
+3. N10: verify's --predecessor and --handoff are required; exit non-zero without them. Update the existing tests that call verify.
+4. N13: begin refuses (exit 1) when --agent or --incoming differ from the existing state's, naming both values.
+5. N17: one CLI test, gated on win32, that runs check and verify with Git-Bash /c/... paths. A revert of a call-site winPath() must turn it red.
+6. N15 (a) and (c):
+   - verify with the predecessor's state missing should say so, not "run begin first";
+   - importing packout.mjs must not run the CLI (guard the dispatch so the exports are usable).
+   - N15 (b) and (d) are NOT to be changed (decision table).
+
+Then re-run, and report each result:
+- the suite;
+- historical.mjs;
+- mutations.mjs in a fresh detached sandbox outside the code folder (C:/Users/jbmcg/.claude/jobs/d1700c43/tmp/sandbox-dc1c), with a mutation row added for each new fix, then reap the sandbox;
+- a subagent real-path run (say what it cannot show).
+
+Same limits as before:
+- your worktree and branch only; pathspec on every commit; no push, no merge; never EnterWorktree;
+- no checkout, stash, merge, reset or rebase in a main folder;
+- install nothing; read transcripts only by script; no secrets; no network; spin no subagents.
+- NO recursive delete in any Bash command (project settings deny it; use fresh scratch paths instead).
+- Don't edit my brief's Log.
+- Bounce back anything in the decision table you think is wrong, BEFORE building around it.
+- Finish the whole task; if you can't, do the rest and say what is missing. If you receive a STOP message from me, commit what passes and return.
+
+Append a "## Fix trip 2" section to docs/sessions/2026.11.19-acpg-DC1-report.md, committed. It carries:
+- each finding, its fix commit, its test, and the revert that proved the test can fail;
+- the counts;
+- what's undone.
+
+Return at most 25 lines, opening with "## DC1's Output" and closing with "## End of DC1's Output", with headings capped at ##.
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
