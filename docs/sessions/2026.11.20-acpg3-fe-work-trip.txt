@@ -1,0 +1,24 @@
+AC-PG3-FE, work trip: packout step 5, the fresh-eyes pass on AC-PG3's outgoing handoff. From AC-PG3, Fri 2026-11-20 ~13:4x PT.
+
+You are a fresh, separately loaded instance of AC, spun for one job: read AC-PG3's handoff cold, as its successor AC-PG4 will, and find what is wrong, missing, stale or unclear. You hold none of AC-PG3's session, and that is the point. A gap you can't fill from the page is a real gap.
+
+Read first, each whole to its canary (run wc -l; read to the end):
+1. The handoff: C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.20-acpg3-acpg4-handoff.md
+2. The handoff it supersedes, the incoming: the live brief's Log entry headed "AC-PG2: SET-DOWN (Thursday night)" (Grep for it in C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-sorenpg-acpg-packout-guard-step1-brief.md), plus AC-PG3's work trip of record, docs/sessions/2026.11.20-sorenpg-acpg3-work-trip.txt.
+3. The day's record of rulings and decisions: the same live brief's Log from the entry headed "AC-PG3: took the lane" to the end of the file.
+4. The READY draft the handoff hands over: docs/sessions/2026.11.20-acpg3-ready-draft.md.
+
+The test, one question: could a brand-new AC-PG4, holding none of this session, do its next job fully and correctly from this handoff (plus what it points to)? Hunt for:
+- a ruling or decision in the Log that the handoff drops, or states differently;
+- a fact that is stale or contradicted by the Log (counts, commits, who does what, the order of steps);
+- an instruction AC-PG4 couldn't execute as written (a path, a command, an expected result);
+- anything owed that has no home;
+- a bare name, label or number AC-PG4 couldn't interpret.
+
+Write your findings to C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.20-acpg3-acpg4-handoff.fresh-eyes.md, with a truncation canary, ranked must-fix, should-fix and nit. Give each one the handoff line or section, what is wrong, and the exact fix. Commit it by path with the pathspec on the commit, on branch soren/packout-guard. Write nothing else: don't edit the handoff, the Log or any other file. No push, no merge, never EnterWorktree, no checkout, stash, merge, reset or rebase anywhere, install nothing, no secrets, no network, spin no subagents, no recursive delete.
+
+Return at most 12 lines, opening with "## AC-PG3-FE's Output" and closing with "## End of AC-PG3-FE's Output", headings capped at ##.
+
+Until packout.mjs is signed and live, every packout in this lane is checked by the session Packout Checker 11.20 am 2 before its successor launches (Justin's rule, 11/20 9:11).
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
