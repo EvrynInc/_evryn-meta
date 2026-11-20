@@ -6,9 +6,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
-import { goodPackout, check, run, verdicts, Tx, codeRoot } from './helpers.mjs';
-import { parse } from '../lib/transcript.mjs';
-import { C4, uncommittedList, bashWriteTargets, launchSegment } from '../lib/checks.mjs';
+import { spawnSync } from 'node:child_process';
+import { goodPackout, check, run, verdicts, Tx, codeRoot, PACKOUT } from './helpers.mjs';
+import { parse, winPath } from '../lib/transcript.mjs';
+import { C4, uncommittedList, bashWriteTargets, launchSegment, isTaskNote } from '../lib/checks.mjs';
 
 const ALL = ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12'];
 function only(out, failing) {
@@ -79,10 +80,7 @@ test('PACKOUT-NONE C2 and C12 lines (presence-only) restore PASS when the writes
   assert.match(v.C2.e, /presence-only/); assert.match(v.C12.e, /presence-only; truth invisible/);
 });
 test('AC profile: PACKOUT-NONE C1 passes C1 (interim), and current-state is _evryn-meta/docs/current-state.md', () => {
-  const g = goodPackout({ agent: 'soren' });
-  // re-run check as an AC: profile switches by --agent at begin; rebuild state with an AC agent
-  const st = path.join(g.f.state); const dir = fs.readdirSync(st)[0]; const sp = path.join(st, dir, 'state.json');
-  const s = JSON.parse(fs.readFileSync(sp, 'utf8')); s.agent = 'AC-PG'; fs.writeFileSync(sp, JSON.stringify(s));
+  const g = goodPackout({ agent: 'AC-PG' }); // the profile comes from the begin call's own --agent, in the transcript
   let v = verdicts(check(g.f).out);
   assert.equal(v.C1.v, 'FAIL'); assert.equal(v.C2.v, 'FAIL'); assert.match(v.C2.e, /current-state none/);
   fs.appendFileSync(g.f.handoff, 'PACKOUT-NONE C1: AC keeps no MEMORY.md\n'); g.tx.read(g.f.handoff); g.tx.flush();
@@ -182,14 +180,99 @@ test('verify: lines appended to the transcript after the check are fine; a chang
   const r = run(g.f, 'verify', '--report', rep);
   assert.equal(r.code, 1); assert.match(r.out, /first \d+ lines changed/);
 });
-test('verify: cross-machine (transcript absent) downgrades to the report hashes, and catches a handoff change', () => {
+const editMeta = (rep, fn) => { const t = fs.readFileSync(rep, 'utf8'); const m = /```json\n([\s\S]*?)\n```/.exec(t); const j = JSON.parse(m[1]); fn(j); fs.writeFileSync(rep, t.replace(m[1], JSON.stringify(j))); };
+test('verify: cross-machine (another host, transcript absent) is DOWNGRADED with exit 3, never 0, and catches a handoff change', () => {
   const { g, rep } = passed();
+  editMeta(rep, (j) => { j.machine = 'SOME-OTHER-HOST'; });
   fs.renameSync(g.f.transcript, g.f.transcript + '.elsewhere');
   let r = run(g.f, 'verify', '--report', rep);
-  assert.equal(r.code, 0); assert.match(r.out, /VERIFY DOWNGRADED \(cross-machine\)/);
+  assert.equal(r.code, 3); assert.match(r.out, /VERIFY DOWNGRADED \(cross-machine\).*NOT a pass/);
   fs.appendFileSync(g.f.handoff, 'late\n');
   r = run(g.f, 'verify', '--report', rep);
   assert.equal(r.code, 1); assert.match(r.out, /handoff changed since the check/);
+});
+
+// ---- QC1's findings and AC-PG's F-AC1/F-AC2 (fix trip). Each test fails without its fix.
+test('F1 (QC1 P1): a forged report pointing at a missing transcript, same machine → VERIFY FAIL, not DOWNGRADED', () => {
+  const g = goodPackout(); g.tx.blank(g.L.memory).flush();
+  const rep = g.f.handoff.replace(/\.md$/, '.packout-report.md');
+  assert.equal(check(g.f).code, 1);
+  editMeta(rep, (j) => { j.verdicts.C1 = 'PASS'; j.transcript = 'C:/nowhere/forged.jsonl'; });
+  const r = run(g.f, 'verify', '--report', rep);
+  assert.equal(r.code, 1, r.out); assert.match(r.out, /made on this machine.*not here/);
+});
+test('F1: verify checks the successor footer — a wrong PREDECESSOR or HANDOFF fails; the right ones pass', () => {
+  const { g, rep } = passed();
+  assert.equal(run(g.f, 'verify', '--report', rep, '--predecessor', 'someone-else', '--handoff', g.f.handoff).code, 1);
+  assert.equal(run(g.f, 'verify', '--report', rep, '--predecessor', 'testsess', '--handoff', g.f.incoming).code, 1);
+  assert.equal(run(g.f, 'verify', '--report', rep, '--predecessor', 'testsess', '--handoff', g.f.handoff).code, 0);
+});
+test('F2 (QC1 P2): a forged report state (incoming dropped, C7 flipped to PASS) → VERIFY FAIL; state comes from the transcript', () => {
+  const g = goodPackout(); g.tx.blank(g.L.incomingRead).flush();
+  const rep = g.f.handoff.replace(/\.md$/, '.packout-report.md');
+  assert.equal(verdicts(check(g.f).out).C7.v, 'FAIL');
+  editMeta(rep, (j) => { j.incoming = null; if (j.state) j.state.incoming = null; j.verdicts.C7 = 'PASS'; });
+  const r = run(g.f, 'verify', '--report', rep);
+  assert.equal(r.code, 1, r.out); assert.match(r.out, /C7: report says PASS, re-run says FAIL|incoming/);
+});
+test('F-AC1: a sweep run in the same turn as the handoff Write (the run-time count lags) still counts after the Write: C5 PASS', () => {
+  const g = goodPackout({ lagSweep: true });
+  only(check(g.f).out, []);
+});
+test('F-AC2: a write made before begin in the same turn (the run-time count lags) does NOT count as after begin', () => {
+  const g = goodPackout({ lagBegin: true });
+  const v = only(check(g.f).out, ['C1']);
+  assert.match(v.C1.e, /no write/);
+});
+test('F3: sweep refuses an extract with no user or assistant turn; nothing is recorded', () => {
+  const f = codeRoot(); const tx = new Tx(f.transcript);
+  tx.read(f.incoming); tx.flush();
+  assert.equal(run(f, 'begin', '--agent', 'soren', '--handoff', f.handoff, '--transcript', f.transcript).code, 0);
+  const r = run(f, 'sweep', '--handoff', f.handoff, '--transcript', f.transcript);
+  assert.equal(r.code, 1); assert.match(r.err, /no user or assistant turn/);
+});
+test('F3: an extract made from ANOTHER transcript, Read to its marker here, does not count', () => {
+  const g = goodPackout();
+  const other = new Tx(path.join(g.f.root, 'other.jsonl')); other.user('unrelated'); other.say('text'); other.flush();
+  const r = run(g.f, 'sweep', '--handoff', g.f.handoff, '--transcript', other.file);
+  const s3 = r.out.match(/sweep 3: (.*?) \(/)[1];
+  g.tx.blank([g.L.sweep1Read, g.L.sweep2Read]); g.tx.bash('node packout.mjs sweep', r.out); g.tx.read(s3); g.tx.flush();
+  const out = check(g.f).out;
+  only(out, ['C3', 'C5']);
+});
+test('F5: a file written by Bash, uncommitted and unlisted, fails C10', () => {
+  const g = goodPackout(); const p = path.join(g.f.tw, 'shared', 'stray-bash.md').replace(/\\/g, '/');
+  fs.writeFileSync(p, 'x\n'); g.tx.bash(`echo x >> ${p}`, ''); g.tx.flush();
+  const v = only(check(g.f).out, ['C10']); assert.match(v.C10.e, /stray-bash\.md/);
+});
+test('F6: the uncommitted-list match is on a segment boundary (`ray.md` does not cover shared/stray.md)', () => {
+  const g = goodPackout();
+  fs.writeFileSync(g.f.handoff, fs.readFileSync(g.f.handoff, 'utf8').replace('`shared/carried.md`', '`shared/carried.md`\n`ray.md`'));
+  g.tx.read(g.f.handoff); g.tx.write(path.join(g.f.tw, 'shared', 'stray.md'), 'stray\n'); g.tx.flush();
+  assert.equal(verdicts(check(g.f).out).C10.v, 'FAIL');
+});
+test('F7: a task note is tasks.mjs update|close with --note, $VAR resolved; `add … note` is not', () => {
+  assert.ok(isTaskNote('T=../_evryn-meta/scripts/tasks/tasks.mjs; node $T update T-1 --status done --note "done"'));
+  assert.ok(isTaskNote('node scripts/tasks/tasks.mjs close T-2 --note "why"'));
+  assert.equal(isTaskNote('node scripts/tasks/tasks.mjs add "a note about x"'), false);
+  assert.equal(isTaskNote('node scripts/tasks/tasks.mjs note T-1 "done"'), false);
+});
+test('F8: a second begin from a different session is refused unless --resume', () => {
+  const g = goodPackout();
+  const r = spawnSync(process.execPath, [PACKOUT, 'begin', '--agent', 'soren', '--handoff', g.f.handoff, '--transcript', g.f.transcript], { encoding: 'utf8', env: { ...process.env, PACKOUT_STATE_DIR: g.f.state, PACKOUT_CODE_ROOT: g.f.root, CLAUDE_CODE_SESSION_ID: 'another-session' } });
+  assert.equal(r.status, 1); assert.match(r.stderr, /REFUSED.*--resume/);
+  const r2 = spawnSync(process.execPath, [PACKOUT, 'begin', '--agent', 'soren', '--handoff', g.f.handoff, '--transcript', g.f.transcript, '--resume'], { encoding: 'utf8', env: { ...process.env, PACKOUT_STATE_DIR: g.f.state, PACKOUT_CODE_ROOT: g.f.root, CLAUDE_CODE_SESSION_ID: 'another-session' } });
+  assert.equal(r2.status, 0, r2.stderr);
+});
+test('F4 (minimum): findings last written before the handoff\'s first write fail C9', () => {
+  const g = goodPackout(); fs.utimesSync(g.fe, new Date('2020-01-01'), new Date('2020-01-01'));
+  const v = only(check(g.f).out, ['C9']); assert.match(v.C9.e, /before the handoff's first write/);
+});
+test('F10: one compaction writes two rows; it counts once. F12: a Git-Bash path becomes a Windows path on win32', () => {
+  const f = codeRoot(); const tx = new Tx(f.transcript);
+  tx.compact(); tx.push({ type: 'user', isCompactSummary: true, timestamp: '2026-11-19T20:00:00Z', message: { role: 'user', content: 'summary' } }); tx.flush();
+  assert.equal(parse(f.transcript).compactions.length, 1);
+  if (process.platform === 'win32') assert.equal(winPath('/c/Users/x'), 'C:/Users/x');
 });
 
 // Truncation canary — DO NOT REMOVE: FULL FILE LOADED

@@ -67,6 +67,7 @@ export function parse(file, { to } = {}) {
   const calls = [];
   const byId = new Map();
   const compactions = [];
+  const summaries = [];
   const rows = [];
   lines.forEach((ln, i) => {
     const n = i + 1;
@@ -74,12 +75,15 @@ export function parse(file, { to } = {}) {
     let o;
     try { o = JSON.parse(ln); } catch { return; }
     rows.push({ n, o });
-    if (o.isCompactSummary || (o.type === 'system' && o.subtype === 'compact_boundary')) compactions.push({ n, ts: o.timestamp });
+    // F10: one compaction writes BOTH a compact_boundary row and an isCompactSummary row; count the boundary only
+    // (the summary row is the fallback for a transcript that carries no boundary rows).
+    if (o.type === 'system' && o.subtype === 'compact_boundary') compactions.push({ n, ts: o.timestamp });
+    else if (o.isCompactSummary) summaries.push({ n, ts: o.timestamp });
     const c = o.message?.content;
     if (!Array.isArray(c)) return;
     for (const b of c) {
       if (b.type === 'tool_use' && !byId.has(b.id)) {
-        const k = { id: b.id, n, ts: o.timestamp, name: b.name, input: b.input || {} };
+        const k = { id: b.id, n, ts: o.timestamp, cwd: o.cwd, name: b.name, input: b.input || {} };
         calls.push(k);
         byId.set(b.id, k);
       } else if (b.type === 'tool_result' && byId.has(b.tool_use_id)) {
@@ -94,10 +98,13 @@ export function parse(file, { to } = {}) {
     }
   });
   for (const k of calls) k.ok = k.text !== undefined && !k.err;
-  return { lines, rows, calls, compactions, n: lines.length };
+  return { lines, rows, calls, compactions: compactions.length ? compactions : summaries, n: lines.length };
 }
 
 /** Normalize a path for comparison: forward slashes, lower case, Git-Bash /c/ and C:/ forms unified. */
+/** F12: a Git-Bash path (/c/Users/...) given on the command line, as a Windows path (C:/Users/...), on win32 only. */
+export function winPath(p) { return process.platform === 'win32' ? String(p).replace(/^\/([a-zA-Z])\//, (_, d) => d.toUpperCase() + ':/') : p; }
+
 export function normPath(p) {
   let s = String(p || '').replace(/\\/g, '/').toLowerCase();
   s = s.replace(/^\/([a-z])\//, '$1:/');

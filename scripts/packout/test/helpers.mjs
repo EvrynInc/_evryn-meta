@@ -81,7 +81,7 @@ export const verdicts = (out) => Object.fromEntries([...out.matchAll(/^(PASS|FAI
  * The GOOD packout, built step by step against the real CLI: every check should PASS.
  * Returns { f, tx, L } where L names the deciding transcript line of each step, for mutation tests.
  */
-export function goodPackout({ agent = 'soren', shortSweeps = false, bashSweeps = false, earlySweep2 = false } = {}) {
+export function goodPackout({ agent = 'soren', shortSweeps = false, bashSweeps = false, earlySweep2 = false, lagBegin = false, lagSweep = false } = {}) {
   const NL = String.fromCharCode(10), TAB = String.fromCharCode(9);
   const readSweep = (tx, p) => {
     const lines = fs.readFileSync(p, 'utf8').split(NL);
@@ -98,11 +98,14 @@ export function goodPackout({ agent = 'soren', shortSweeps = false, bashSweeps =
   tx.flush();
   let r = run(f, 'begin', '--agent', agent, '--handoff', f.handoff, '--incoming', f.incoming, '--transcript', f.transcript);
   if (r.code !== 0) throw new Error('begin failed: ' + r.err);
-  L.begin = tx.bash(`node packout.mjs begin --agent ${agent} --handoff ${f.handoff}`, r.out);
-  L.memory = tx.edit(f.memory, '# file', '# file\n\nnote');
+  // lagBegin (F-AC2): the run-time line count is taken BEFORE a write made earlier in the same turn; the begin call's own row
+  // lands after that write. Anchored to its own row, begin must not count that write as "after begin".
+  if (lagBegin) L.memory = tx.edit(f.memory, '# file', '# file\n\nnote');
+  L.begin = tx.bash(`node packout.mjs begin --agent ${agent} --handoff ${f.handoff} --incoming ${f.incoming}`, r.out);
+  if (!lagBegin) L.memory = tx.edit(f.memory, '# file', '# file\n\nnote');
   L.cs = tx.bash(`node _evryn-meta/scripts/append-entry.mjs ${f.cs.replace(/\\/g, '/')} entry.md`, ''); fs.appendFileSync(f.cs, 'x\n');
   L.top = tx.edit(f.top, '# file', '# file\nrow');
-  L.task = tx.bash('node scripts/tasks/tasks.mjs note T-1 "done"', '');
+  L.task = tx.bash('node scripts/tasks/tasks.mjs update T-1 --note "done"', '');
   L.nz = tx.edit(f.nz, '# file', '# file\n| row |');
   L.incomingRead = tx.read(f.incoming);
   tx.flush();
@@ -111,9 +114,12 @@ export function goodPackout({ agent = 'soren', shortSweeps = false, bashSweeps =
   L.sweep1 = tx.bash('node packout.mjs sweep', r.out);
   L.sweep1Read = readSweep(tx, s1);
   const writeHandoff = () => { L.handoffWrite = tx.write(f.handoff, `# Outgoing handoff\n\nSubagent a1b2c3d4 (the fresh reader).\n\n## Uncommitted\n\n\`shared/handoff-out.md\`\n\`shared/carried.md\`\n\nTruncation canary — DO NOT REMOVE: FULL FILE LOADED\n`); tx.flush(); };
-  if (!earlySweep2) writeHandoff();
+  // lagSweep (F-AC1): the handoff Write and sweep 2 run in ONE turn, and the transcript has not yet reached the Write when the
+  // sweep script runs: its run-time count understates. The sweep call's own row lands after the Write.
+  if (!earlySweep2 && !lagSweep) writeHandoff();
   tx.flush();
   r = run(f, 'sweep', '--handoff', f.handoff, '--transcript', f.transcript); if (r.code !== 0) throw new Error('sweep2: ' + r.err);
+  if (lagSweep) writeHandoff();
   const s2 = r.out.match(/sweep 2: (.*?) \(/)[1];
   L.sweep2 = tx.bash('node packout.mjs sweep', r.out);
   L.sweep2Read = readSweep(tx, s2);

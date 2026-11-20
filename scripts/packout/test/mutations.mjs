@@ -20,7 +20,7 @@ const head = spawnSync('git', ['-C', root, 'rev-parse', '--abbrev-ref', 'HEAD'],
 if (head !== 'HEAD') { console.error(`REFUSED: ${root} is on branch "${head}"; run this only in a detached sandbox worktree`); process.exit(2); }
 void fileURLToPath;
 
-const CH = 'scripts/packout/lib/checks.mjs', TX = 'scripts/packout/lib/transcript.mjs';
+const CH = 'scripts/packout/lib/checks.mjs', TX = 'scripts/packout/lib/transcript.mjs', PO = 'scripts/packout/packout.mjs';
 const M = [
   ['C1', CH, 'const w = calls.filter(after(from)).find((k) => writes(k, memoryPath));', 'const w = calls.filter(after(from)).find((k) => true);', /mutation C1:/],
   ['C2', CH, 'const ok = cs && (ts || !topsheetPath) && tn;', 'const ok = cs && (ts || !topsheetPath);', /mutation C2:/],
@@ -38,6 +38,20 @@ const M = [
   ['C11', CH, "if (!compactions.length) return R('C11', 'PASS'", "if (true) return R('C11', 'PASS'", /mutation C11:/],
   ['C12', CH, 'const w = calls.filter(after(from)).find((k) => writes(k, nearZeroPath));', 'const w = calls.filter(after(from)).find(() => true);', /mutation C12:/],
   ['dedupe', TX, "if (b.type === 'tool_use' && !byId.has(b.id)) {", "if (b.type === 'tool_use') {", /instrument 1:/],
+  // ---- fix trip (QC1 findings, AC-PG's F-AC1/F-AC2): each row REVERTS one fix; its test must go red
+  ['F1-host', PO, 'if (meta.machine === os.hostname()) {', 'if (false) {', /F1 \(QC1 P1\)/],
+  ['F1-exit3', PO, 'process.exit(3);', 'process.exit(0);', /cross-machine \(another host/],
+  ['F1-footer', PO, 'if (a.predecessor && a.predecessor !== true && meta.session !== a.predecessor)', 'if (false)', /F1: verify checks the successor footer/],
+  ['F-AC1', PO, 'sweeps.push({ ...w, content, createdN: at.n });', 'sweeps.push({ ...w, content, createdN: w.ranAtLine });', /F-AC1:/],
+  ['F-AC2', PO, 'buildCtx({ parsed, from: an.begin.n,', 'buildCtx({ parsed, from: s.beganAtRun,', /F-AC2:/],
+  ['F3-empty', PO, 'if (!turns) die(', 'if (false) die(', /F3: sweep refuses/],
+  ['F3-foreign', PO, 'if (w.transcript && normPath(w.transcript) !== normPath(t))', 'if (false)', /F3: an extract made from ANOTHER/],
+  ['F4', CH, 'if (ctx.findingsMtime != null && hw[0].ts', 'if (false && hw[0].ts', /F4 \(minimum\)/],
+  ['F5', CH, "if (k.name === 'Bash') for (const t of bashWriteTargets", "if (false) for (const t of bashWriteTargets", /F5:/],
+  ['F6', CH, "return normPath(p) === qq || normPath(p).endsWith('/' + qq);", 'return normPath(p).endsWith(qq);', /F6:/],
+  ['F7', CH, "/tasks\\.mjs[\"']?\\s+(update|close)\\b[^|]*\\s--note\\b/", '/tasks\\.mjs[^|]*note/', /F7:/],
+  ['F8', PO, 'if (!prev.sessions.includes(session) && !a.resume) die(', 'if (false) die(', /F8:/],
+  ['F10', TX, '    else if (o.isCompactSummary) summaries.push({ n, ts: o.timestamp });', '    if (o.isCompactSummary) compactions.push({ n, ts: o.timestamp });', /F10:/],
 ];
 const count = (s, sub) => s.split(sub).length - 1;
 // SEALED-EXEC: followed 2026-11-19 — process.execPath is the node binary already running this script; no network.

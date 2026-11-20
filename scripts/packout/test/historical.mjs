@@ -4,6 +4,8 @@
 //
 // NOT part of `node --test`: it needs this laptop's real transcripts and the evryn-team-workspace freeze ref.
 //   node scripts/packout/test/historical.mjs [--scratch <dir>]
+//   From a sandbox outside the code folder, set PACKOUT_CODE_ROOT=C:/Users/jbmcg/Evryn/Code (the parent of the repos);
+//   otherwise CODE resolves four levels up from this script and every `git show` returns nothing (QC1 §1).
 // For each seat it FIRST hashes the transcript's first `to` lines against the ledger's freeze table and STOPS on a mismatch.
 // Frozen files come from `git show refs/audit/2026-11-19-freeze:<path>` (read-only; nothing is checked out).
 // Assertions are made only where the manifest cites a ledger line; everything else prints as "ledger silent".
@@ -59,7 +61,7 @@ for (const s of manifest.seats) {
   const r = spawnSync(process.execPath, [PACKOUT, ...args], { encoding: 'utf8', env: { ...process.env, PACKOUT_CODE_ROOT: CODE } });
   const v = Object.fromEntries([...r.stdout.matchAll(/^(PASS|FAIL|OPEN)\t(C\d+)\t(.*)$/gm)].map((m) => [m[2], { v: m[1], e: m[3] }]));
   out.push(`## ${s.seat} (\`${s.session}\`, lines 1–${to}, from ${s.from})`);
-  out.push(`- evidence: ${s.freezeSha ? `first ${to} lines hash ${h.sha} = freeze table ✓` : pinNote}; final = ${finalNote}${s.toDerivation ? `; --to: ${s.toDerivation}` : ''}`);
+  out.push(`- evidence: ${s.freezeSha ? `first ${to} lines hash ${h.sha} = freeze table ✓` : pinNote}; final = ${finalNote}${s.toDerivation ? `; --to: ${s.toDerivation}` : ''}${s.fromDerivation ? `; --from: ${s.fromDerivation}` : ''}`);
   out.push('', '| Check | Verdict | Ledger | Agrees? | Evidence |', '|---|---|---|---|---|');
   for (const c of ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10', 'C11', 'C12']) {
     const got = v[c]; const exp = s.expect?.[c];

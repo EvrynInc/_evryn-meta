@@ -7,7 +7,7 @@
 // in Bash output never counts (review §1.3; Justin's ruling on Ballot 3).
 
 import path from 'node:path';
-import { samePath, endsWithPath, normPath } from './transcript.mjs';
+import { samePath, endsWithPath, normPath, winPath } from './transcript.mjs';
 import { WRITE_BASH, MARKER_RE } from './sweep.mjs';
 
 const R = (id, verdict, evidence) => ({ id, verdict, evidence });
@@ -46,6 +46,14 @@ export function launchSegment(cmd) {
     if (v && new RegExp(`(^|[\\s;&])${v[1]}=[^\\n]*?claude(\\.exe)?["']?(?=;|\\s|$)`, 'i').test(c)) return seg;
   }
   return null;
+}
+
+/** F7: a task note is `tasks.mjs update|close … --note` (the Captain's 18:13 ruling), with $VAR assignments resolved. */
+export function isTaskNote(cmd) {
+  const c = stripHeredocs(cmd);
+  const vars = Object.fromEntries([...c.matchAll(/(?:^|[\s;&])([A-Za-z_][A-Za-z0-9_]*)=(?:"([^"]*)"|'([^']*)'|([^\s;&|]+))/g)].map((x) => [x[1], x[2] ?? x[3] ?? x[4]]));
+  const r = c.replace(/\$\{?([A-Za-z_][A-Za-z0-9_]*)\}?/g, (m, v) => vars[v] ?? m);
+  return r.split(/;|&&|\|\||\n/).some((s) => /tasks\.mjs["']?\s+(update|close)\b[^|]*\s--note\b/.test(s));
 }
 
 /** Remove heredoc bodies (<<EOF … EOF, <<'EOF' … EOF, <<-EOF) from a shell command. */
@@ -142,11 +150,12 @@ export function C2(ctx) {
   const a = calls.filter(after(from));
   const cs = a.find((k) => writes(k, currentStatePath));
   const ts = topsheetPath ? a.find((k) => writes(k, topsheetPath)) : null;
-  const tn = a.find((k) => k.ok && k.name === 'Bash' && /tasks\.mjs\b[^|;&]*\bnote\b/.test(String(k.input.command || '')));
+  const tn = a.find((k) => k.ok && k.name === 'Bash' && isTaskNote(String(k.input.command || '')));
   const parts = [`current-state ${cs ? 'line ' + cs.n : 'none'}`, `topsheet ${topsheetPath ? (ts ? 'line ' + ts.n : 'none') : 'n/a (no topsheet for this agent)'}`, `task note ${tn ? 'line ' + tn.n : 'none'}`];
   const ok = cs && (ts || !topsheetPath) && tn;
   if (ok) return R('C2', 'PASS', parts.join('; '));
-  if (none) return R('C2', 'PASS', `presence-only: "PACKOUT-NONE C2: ${none[1].slice(0, 80)}" (${parts.join('; ')})`);
+  if (ctx.c2Stated) return R('C2', 'PASS', `presence-only; truth invisible to any check (${ctx.c2Stated}) (${parts.join('; ')})`);
+  if (none) return R('C2', 'PASS',`presence-only: "PACKOUT-NONE C2: ${none[1].slice(0, 80)}" (${parts.join('; ')})`);
   return R('C2', 'FAIL', parts.join('; ') + '; and no "PACKOUT-NONE C2:" line in the handoff');
 }
 
@@ -279,6 +288,9 @@ export function C9(ctx) {
   if (own.length) return R('C9', 'FAIL', `the findings file was written by this seat (line ${own[0].n}), not by a different session`);
   const hw = handoffWrites(ctx);
   if (!hw.length) return R('C9', 'FAIL', 'the handoff was never written');
+  // F4 (minimum): the findings must be written AFTER the handoff's first write. Live only (frozen copies carry no mtime).
+  // Residual, named: that ANOTHER session wrote it is still inferred from no parsed write here (QC1 F4; writer identity deferred).
+  if (ctx.findingsMtime != null && hw[0].ts && ctx.findingsMtime <= Date.parse(hw[0].ts)) return R('C9', 'FAIL', `the findings file was last written (${new Date(ctx.findingsMtime).toISOString()}) before the handoff's first write (${hw[0].ts}, line ${hw[0].n})`);
   const reads = calls.filter((k) => k.n > hw[0].n && isRead(k, findings));
   if (!reads.length) return R('C9', 'FAIL', `the findings file was never Read by this seat after the handoff's first write (${hw[0].n})`);
   const lw = lastWhole(reads, findingsText);
@@ -302,11 +314,18 @@ export function C10(ctx) {
   const inList = ctx.incoming ? (ctx.incomingUncommittedOverride ?? uncommittedList(incomingText)) : [];
   if (ctx.historical && (outList == null || (ctx.incoming && inList == null))) return R('C10', 'OPEN', '(historical: no machine-readable uncommitted list, and the manifest transcribes none)');
   const listed = new Set((outList || []).map(normPath));
-  const named = (p) => [...listed].some((q) => normPath(p).endsWith(q));
+  // F6: match on a path-segment boundary, never a bare suffix (`ray.md` must not cover `shared/stray.md`)
+  const named = (p) => [...listed].some((q) => { const qq = q.replace(/^\.?\//, ''); return normPath(p) === qq || normPath(p).endsWith('/' + qq); });
   const written = new Map();
   for (const k of calls) {
     if (!k.ok) continue;
     if (k.name === 'Edit' || k.name === 'Write' || k.name === 'NotebookEdit') { const p = k.input.file_path || k.input.notebook_path; if (p && rootOf(p)) written.set(normPath(p), k.n); }
+    // F5: files written by Bash count too (append-entry, >>, tee, …), resolved against the call's own working directory
+    if (k.name === 'Bash') for (const t of bashWriteTargets(String(k.input.command || ''))) {
+      if (t.includes('$')) continue; // an unresolved variable names no file we can check
+      const w = winPath(t); const p = path.isAbsolute(w) ? w : (k.cwd ? path.resolve(k.cwd, w) : null);
+      if (p && rootOf(p)) written.set(normPath(p), k.n);
+    }
   }
   const bad = [];
   // listed paths are repo-relative to the repo that holds the handoff (live); historical overrides match by suffix
@@ -339,6 +358,5 @@ export function C12(ctx) {
 export const ALL = [C1, C2, C3, C4, C5, C6, C7, C8, C9, C10, C11, C12];
 export function runAll(ctx) { return ALL.map((f) => { try { return f(ctx); } catch (e) { return R(f.name, 'FAIL', `check crashed: ${e.message}`); } }); }
 
-export { path };
 
 // Truncation canary — DO NOT REMOVE: FULL FILE LOADED
