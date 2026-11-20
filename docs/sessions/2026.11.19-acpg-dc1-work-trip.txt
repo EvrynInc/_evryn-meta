@@ -1,0 +1,92 @@
+<task>
+Your load is complete and verified. It was assembled before you knew what you would be doing — so now that you know, **if the work genuinely needs something you do not have, LOAD IT.** You are not confined to the original list, and you should not work around a gap you could close by reading. Use your judgment freely here; it is useful now in a way it could not have been before.
+
+Two conditions, both of which matter:
+
+1. **Load IN ADDITION to what you already have, never INSTEAD of it.** Nothing on the original list becomes optional now that you can see the task. If something on it looks irrelevant in hindsight, you are wrong about that, or it was cheap — either way it stays loaded.
+2. **Name anything you loaded beyond the list in your receipts, with one line on why you needed it.** Do this even if the extra read turned out to be unnecessary. **Your spinner built that list without knowing what you would discover, and this report is the ONLY signal they get that it had a gap** — so it is not bookkeeping; it is the mechanism by which the next brief is better than this one.
+
+You are **DC1**. Your load is verified by script against your transcript (13 of 13 files whole, 15 calls, 0 errored). I am AC-PG, the lane AC for this build.
+
+**Read these first, in full, each to its bottom canary.** They are your marching orders. Where they conflict with this message, item 1 governs, and inside item 1 the Captain's rulings govern:
+1. `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-sorenpg-acpg-packout-guard-step1-brief.md` (full; run `wc -l` first because its Log grows). Its §1–§5 set the scope. **Its Log holds my plan (the 17:27 entry: P1–P5 and questions ⓵–⓹) and the Captain's rulings on that plan (the 17:28 entry).** Build to that plan as ruled.
+2. `C:/Users/jbmcg/Evryn/Code/evryn-team-workspace/shared/projects/product/2026/2026.11.19-packout-guard-build/2026.11.19-packout-guard-build-brief.md` (full — 238 lines). This is the spec: §3.1–§3.3 for step 1, and §4 for the controls. **There is no C13** (Justin's B14 (b)).
+3. `C:/Users/jbmcg/Evryn/Code/evryn-team-workspace/shared/projects/helm/2026/2026.11.19-packout-chain-investigation/2026.11.19-guard-design-soren-review.md` (full — 376 lines). §1 is the evidence and the four defects in the prototype's instrument. **Its appendix is the prototype `packout-check.mjs`: it is your starting point, NOT the build.** Its ±2-line tolerance and its command-parsing are what step 1 removes.
+4. `C:/Users/jbmcg/Evryn/Code/evryn-team-workspace/shared/projects/helm/2026/2026.11.19-packout-chain-investigation/2026.11.19-packout-chain-ledger.md` (full — 398 lines). Use its freeze table, rulings and each seat's entry. **Those entries are the expected verdicts.**
+
+**What to build:** step 1 of the packout guard, which is `packout.mjs` with `begin`, `sweep`, `check` (including `--historical`) and `verify`. The layout is plan P1, under `_evryn-meta-packout-guard/scripts/packout/`. The tests run under `node --test` with Node built-ins only. **SEALED-EXEC applies: no `npx`, no dependency, no network.** Every new file gets our comment-form truncation canary.
+
+**Your order of work:**
+- **(0) Measure first, don't recall.** Answer these by script against real transcripts and real Read results:
+  - (a) Does the Read tool truncate long lines, and at what length, and how does that show in the transcript?
+  - (b) How does a Read result of a CRLF file appear?
+  - (c) How does a Read that came back over the token cap ("PARTIAL view") appear, and how does an errored Read appear?
+  - Put each answer in your report, with the command that produced it.
+  - **If Read truncates, C8 must be truncation-aware and must list every truncated line in its evidence, and `sweep` must hard-wrap so its extract Reads back exactly.**
+- **(1)** The fixture suite and the four instrument controls (P3 items 2 and 4).
+- **(2)** The six historical runs (P3 item 1), each through a manifest that cites its ledger line for every asserted verdict.
+  - Where the ledger is silent, report the verdict as "ledger silent" and assert nothing.
+  - Each divergence from the ledger gets reported beside the ledger line it diverges from. Those are rulings ⓵ and ⓷: am3's C5 is OPEN (filtered extract); Soren pm's C3 is FAIL; Soren am2's C9 is FAIL; Soren am2's C12 is PASS, labelled "presence-only; truth invisible to any check (S-am2-11)".
+  - The frozen files come from `git -C C:/Users/jbmcg/Evryn/Code/evryn-team-workspace show refs/audit/2026-11-19-freeze:<path>`. That command reads only; never check out.
+  - Hash each transcript's first `--to` lines against the freeze table **before** judging, and stop on a mismatch.
+  - Thea gets the label "not frozen; pinned by AC-PG at <time>", as the ruling says. Lucas am's `--to` is derived by script, citing the line and its timestamp.
+- **(3)** The real-path run (P3 item 5) and the `verify` fixture tests (P3 item 6). `verify` follows ruling ⓹ exactly, including failing on a changed first-N hash.
+- **(4)** The code mutations (P3 item 3), one per check, in a **detached sandbox worktree outside the code folder**: `git -C C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard worktree add --detach C:/Users/jbmcg/.claude/jobs/d1700c43/tmp/sandbox-dc1 <your sha>`.
+  - Each mutated script passes `node --check` first. Prove each break applied by printing the changed line.
+  - The suite must go red for that check's reason.
+  - Reap the sandbox afterwards (`git worktree remove`, never `--force`).
+
+**The machine-readable forms (ruling ⓸), exactly:**
+- The handoff's uncommitted list is a section headed `## Uncommitted`, with one backticked repo-relative path per line.
+- The "none" lines are `PACKOUT-NONE C1: <reason>` (AC profile only, and interim), `PACKOUT-NONE C2: <reason>` and `PACKOUT-NONE C12: nothing by hand — <reason>`.
+- The agent profiles:
+  - **team agent:** memory is `evryn-team-workspace/.claude/agent-memory/<agent>/MEMORY.md`; current-state is `evryn-team-workspace/shared/current-state/current-state.md`; the topsheet is found by `**/<agent>-topsheet.md`.
+  - **AC** (`--agent AC*`): C1 accepts `PACKOUT-NONE C1`; current-state is `_evryn-meta/docs/current-state.md`.
+  - Task notes are `tasks.mjs note` calls.
+- Put the final list of forms in your report.
+
+**How much of the system I have read, so you weigh this brief correctly:** all four documents above, whole; the existing scripts on your load list; and the orchestration protocols. **I have read no transcript and run no check:** not the prototype, not one historical control. Everything in my plan about what the transcripts contain comes from the review and the ledger. **You will be the first agent in this lane to actually examine the transcripts.** Treat every factual claim in my plan as a LEAD, not a fact; that includes the line numbers. Re-derive what the work rests on, and **say so loudly and early if any of it is wrong.** Where this brief is silent, don't read that as "the spinner checked and there was nothing there"; assume I couldn't see it. 🔴 **You are not just executing.** If anything I've given you is wrong, internally inconsistent, or unverifiable, stop and tell me before acting on it. A contradiction you surface costs one message. One you resolve quietly costs a false record that nobody knows is false.
+
+**Limits, binding:**
+- Change only branch `soren/packout-guard` in `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard`, plus your sandbox and your scratch folder `C:/Users/jbmcg/.claude/jobs/d1700c43/tmp/dc1/`.
+- Commit on that branch only. **The pathspec goes on the commit** (`git commit -F - -- <paths>`), and `git diff <file>` comes first for any file you didn't create. My brief's Log is mine: don't edit it.
+- **No push, no merge.** No `git checkout`, `stash`, `merge`, `reset` or `rebase` in any main folder (`_evryn-meta`, `evryn-team-workspace`). Never `EnterWorktree`. Never deploy.
+- Install nothing: no settings file, no hook, no `CLAUDE.md`, protocol, Hub, spoke or agent-definition text.
+- **Read transcripts only by script, never into your context.** One can overflow you. Print counts and short lines only.
+- Never read a secret value: no `.env`, no `backups/full-public*`. Send nothing outside the company.
+- Tests use `PACKOUT_STATE_DIR` and never touch `~/.claude/packout/`. For the real-path run, if a write to `~/.claude/packout/` is refused, log the refusal text and use your scratch folder instead. **Never route around a refusal.**
+- **Spin no subagents.** If you ever did, you would pin every spin's model explicitly.
+- **Finish the whole task, not just the tractable part.** If you genuinely cannot finish something, do the rest and say plainly what is missing and why.
+- 🔴 **Time: stop by 18:50 PT**, commit everything that passes, and return. The lane stops at 19:40, and a QC must still review your work. Do the work in the order above, so a short trip leaves the most important controls done. **Shorten no control to fit; report what didn't get done.**
+
+**Your output:** write the full report to `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-acpg-DC1-report.md` (with a canary) and commit it with your work. It must carry:
+- your branch head;
+- the test command and its counts;
+- each control, with what it mutated and whether it went red for that reason;
+- the six historical runs, check by check, beside the ledger;
+- the answers to (0);
+- the machine-readable forms;
+- what's undone;
+- everything you loaded beyond your list.
+
+**Your return to me is at most 25 lines,** with your headings capped at `##`.
+</task>
+
+<questions_first>
+Do the work — or, if a real gap would compromise it, output a numbered list of blocking questions INSTEAD and stop. Don't guess past a real gap — but also don't manufacture questions to dodge the work.
+</questions_first>
+
+<output_format>
+Wrap your entire final response in a heading pair, so your spinner can see at a glance where your output begins and ends inside a wall of tool output.
+
+Open with:  ## DC1's Output
+Close with: ## End of DC1's Output
+
+Use your own designated name — the one given to you in <identity>. Put nothing after the closing line.
+</output_format>
+
+<isolation>
+You work in a dedicated worktree on your own branch; you never touch `main`; you never deploy (`railway up`).
+</isolation>
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
