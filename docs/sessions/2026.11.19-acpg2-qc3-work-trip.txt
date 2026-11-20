@@ -1,0 +1,106 @@
+<task>
+Your load is complete and verified. It was assembled before you knew what you would be doing — so now that you know, **if the work genuinely needs something you do not have, LOAD IT.** You are not confined to the original list, and you should not work around a gap you could close by reading. Use your judgment freely here; it is useful now in a way it could not have been before.
+
+Two conditions, both of which matter:
+
+1. **Load IN ADDITION to what you already have, never INSTEAD of it.** Nothing on the original list becomes optional now that you can see the task. If something on it looks irrelevant in hindsight, you are wrong about that, or it was cheap — either way it stays loaded.
+2. **Name anything you loaded beyond the list in your receipts, with one line on why you needed it.** Do this even if the extra read turned out to be unnecessary. **Your spinner built that list without knowing what you would discover, and this report is the ONLY signal they get that it had a gap** — so it is not bookkeeping; it is the mechanism by which the next brief is better than this one.
+
+You are **QC3**. Your load is verified by script against your transcript. I am **AC-PG2**, the lane AC for this build: I took the lane over tonight from AC-PG (session `d1700c43`), which packed out at ~890K. **You are read-only for the code: you write nothing except your report file, your sandbox and your scratch.** This is a **full, unhurried review**, so take the time the checks need. If any probe would still be rushed, say so; don't shorten it.
+
+**Your two session-startup items, answered:**
+- **Do NOT delete or touch any `settings.local.json`.** It is a settings file and outside the files you may write.
+- **The branch `soren/packout-guard` is deliberate:** it is this lane's branch, in its own worktree.
+
+**Read these first, in full, each to its bottom canary:**
+1. `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-sorenpg-acpg-packout-guard-step1-brief.md`. Run `wc -l` first, because its Log grows. Its §1–§5 set the scope. **In its Log:**
+   - AC-PG's 19:04 SET-DOWN: its §2 is the list that fix trip 1 answered;
+   - AC-PG's 20:05 decision table on QC2's findings, which is **binding**, including what it deliberately defers (N15 (d)) or routes to step 6's text (N14, N16) or names as a residual (N11);
+   - the Captain's 20:06 and 20:07 entries;
+   - AC-PG's 20:24 entry (fix trip 2 landed; the mutation run killed);
+   - my own entries from 20:40.
+   - **My QUESTION ⓻ is already named,** so don't re-report it as new: the orphan-path repair can never reach VERIFY PASS, because `verify` stops on any FAIL and C9 needs the predecessor's own Read.
+2. `C:/Users/jbmcg/Evryn/Code/evryn-team-workspace/shared/projects/product/2026/2026.11.19-packout-guard-build/2026.11.19-packout-guard-build-brief.md` (full — 288 lines). It is the spec: §3.1–§3.3 and the §4 controls. There is no C13.
+3. `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-acpg-QC2-report.md` (full — 206 lines). These are the findings fix trip 2 repairs, with QC2's probe recipes. **QC2's probe scripts and outputs are still in its scratch,** `C:/Users/jbmcg/.claude/jobs/d1700c43/tmp/qc2/`: `probes.mjs`, `probes2.mjs`, `probes3.mjs`, `probes5.mjs`, `probes-1.txt` … `probes-5.txt`, `realtop.mjs`, `checklag.mjs`, `rpcheck.mjs` and `mut2.mjs`. Read and run copies; don't edit them in place.
+4. `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-acpg-DC1-report.md` (full — 565 lines). It is the builder's account, with "## Fix trip" and "## Fix trip 2". **Treat it as claims to test, not findings.**
+5. `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-acpg-QC1-report.md` (full — 236 lines): the first review, and your regression baseline.
+6. **The first TOP-LEVEL real packout run on fix-trip-2 code:** AC-PG's own packout, at code `4323cea`. Read three files whole:
+   - its handoff, `docs/sessions/2026.11.19-acpg-acpg2-handoff.md` (95 lines);
+   - its generated report, `docs/sessions/2026.11.19-acpg-acpg2-handoff.packout-report.md` (with my hand-written repair section below the generated part);
+   - my findings on the handoff, `docs/sessions/2026.11.19-acpg-acpg2-handoff.fresh-eyes.md`.
+7. `C:/Users/jbmcg/Evryn/Code/evryn-team-workspace/shared/projects/helm/2026/2026.11.19-packout-chain-investigation/2026.11.19-packout-chain-ledger.md` (full — 398 lines). Its seat entries are the expected verdicts.
+- Read the review (`…/2026.11.19-guard-design-soren-review.md`) only if a finding needs its design rationale; if you do, name it in your receipts.
+
+**The job: verify fix trip 2 at code `4323cea` (unchanged at branch head) by PROBING the real script, not by reading it.**
+- **(1) Each fix-trip-2 item, by probe plus its named test:**
+  - **N9:** QC2's P9 (a forged `n` hiding a compaction) and P9b (hiding a stray Write) must FAIL; QC2's honest same-turn write must FAIL; a report that no `check` call produced must FAIL; C11 must be judged on the whole transcript.
+  - **N1:** QC2's P1b (QC1's P1 plus an edited `machine`) must FAIL on this machine. `verify` must find the transcript by session itself, and must downgrade only when no transcript for that session exists here.
+  - **N10, N13, N17, N15 (a) and N15 (c),** each with a probe of its own beyond its test.
+- **(2) 🔴 The mutation run DC1 lost.** Fix trip 2's run was **killed by Claude Code for low system memory at row 9 of 36**, so **the 10 fix-trip-2 revert rows have no recorded red run.** The 36 rows are 13 per-check rows, 13 fix-trip-1 reverts and 10 fix-trip-2 reverts, per `mutations.mjs`.
+  - **Make a fresh detached sandbox outside the code folder:** `git -C C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard worktree add --detach C:/Users/jbmcg/.claude/jobs/1424bfce/tmp/sandbox-qc3 HEAD`.
+  - **First, the filtered run:** `node scripts/packout/test/mutations.mjs <sandbox> N9 N1 N10 N13 N17 N15`. It prints each row as it finishes.
+    - The filters are id prefixes, so `N1` also selects `N10`, `N13`, `N15a`, `N15c` and both `N17` rows. Confirm the runner runs each row once.
+    - **For every row, say whether it went red for its reason, not just red.**
+  - **Then the full run,** if memory allows.
+    - **If either run is killed,** check the sandbox for a live mutation: `git -C <sandbox> diff`, then `git -C <sandbox> restore <file>`, until `git status` shows 0 lines.
+    - Record which rows finished, and **restart at most once.** If it dies twice, report it as not reached, with the row it died on.
+- **(3) No regression in anything QC1 and QC2 verified:**
+  - the suite (56) and `historical.mjs` (31/31, all five freeze hashes; set `PACKOUT_CODE_ROOT=C:/Users/jbmcg/Evryn/Code`);
+  - QC1's P1/P2 and QC2's P10/P13 forgeries;
+  - the C3/C5 single-extract rule.
+  - **F-AC1 on a real TOP-LEVEL transcript, by script:** AC-PG's transcript `C:/Users/jbmcg/.claude/projects/c--Users-jbmcg-Evryn-Code--evryn-meta/d1700c43-f67c-4a05-9b5d-d82f21b10f88.jsonl`, at:
+    - its 19:05 re-test (handoff Write at row 1460, sweep anchored at 1462);
+    - its packout sweeps (rows 1896 and 1935).
+    - **Your own transcript is a subagent's, which does not lag, so you can't make a top-level case yourself.**
+- **(4) AC-PG's packout as a live specimen.** Re-derive its twelve verdicts with the real CLI, as far as the CLI allows without writing anywhere outside your scratch: its state folder `C:/Users/jbmcg/.claude/packout/707d6cf3c306/` is **read-only for you; copy it to your scratch** if a run needs a state folder. Do they reproduce? Then probe `verify` on that report and on forged copies of it.
+- **(5) Look for what nobody named,** above all in `verify`'s new trust model after N9 and N1. What can a seat now buy with a tampered report, a tampered state file, a second transcript for the same session id, a subagent transcript whose agent id collides with a session prefix, a handoff swapped after the PASS, or a second `begin`? **The dangerous direction is a false PASS; a false FAIL costs Justin's time.**
+- **Severity per your rubric. Evidence for every finding:** a command and its output, or a transcript line. A finding with no evidence is a lead; label it as one.
+
+**How much I've read, so you weigh this correctly:**
+- **Read:** every document above, whole.
+- **Re-run by me at branch head `2b8fdec`:** the suite (56/56) and `historical.mjs` (31/31).
+- **Run by me:** `verify` on AC-PG's report (FAIL on C9, before and after my repair).
+- **Checked by me with `calls.mjs`:** AC-PG's report's eleven PASSes against its transcript.
+- **NOT read by me:** the code, except `checks.mjs`'s C9 function and the mutation table, both by `Grep`.
+- **NOT run by me:** any mutation or forgery.
+
+⇒ **Treat my entries, AC-PG's set-down and DC1's report as LEADS.** Where this brief is silent, assume I couldn't see it. 🔴 **You are not just executing.** If anything I've given you is wrong, internally inconsistent or unverifiable, **stop and tell me before acting on it.** A contradiction you surface costs one message; one you resolve quietly costs a false record nobody knows is false.
+
+**Limits, binding:**
+- **Write only:** your report; your sandbox `C:/Users/jbmcg/.claude/jobs/1424bfce/tmp/sandbox-qc3`; your scratch `C:/Users/jbmcg/.claude/jobs/1424bfce/tmp/qc3/`.
+- **Do not edit or commit any file in `_evryn-meta-packout-guard` other than your report.** You may commit the report yourself by path (`git commit -F - -- <report>`) on `soren/packout-guard`.
+- No push, no merge. No `git checkout`, `stash`, `merge`, `reset` or `rebase` in any main folder. Never `EnterWorktree`. Install nothing.
+- **Read transcripts only by script, never into context.** Never read a secret value. No network.
+- **Tests use `PACKOUT_STATE_DIR`; your probe and real-path runs use your scratch as the state folder.** Never write into the real `~/.claude/packout/`.
+- **Don't put a recursive delete in any Bash command:** project settings deny it. Leave files in your scratch.
+- **Spin no subagents.** If you ever did, you would pin every spin's model explicitly.
+- **Reap your sandbox before you return** (`git worktree remove`, never `--force`), and confirm with `git worktree list`.
+- **Finish the whole task, not just the tractable part.** If you genuinely cannot finish something, do the rest and say plainly what is missing and why.
+- **If you receive a STOP or CHECKPOINT message from me,** write what you have, commit it and return.
+
+**Your output:** write the full report to `C:/Users/jbmcg/Evryn/Code/_evryn-meta-packout-guard/docs/sessions/2026.11.19-acpg-QC3-report.md`, with a canary. It must carry:
+- a verdict, GO or NO-GO;
+- each fix-trip-2 item: verified or not, and how;
+- every mutation row, red for its reason or not;
+- each regression check;
+- what AC-PG's packout reproduces;
+- each new finding, with its severity and evidence;
+- what you didn't reach.
+
+**Your return is at most 25 lines,** with your headings capped at `##`.
+</task>
+
+<questions_first>
+Do the work — or, if a real gap would compromise it, output a numbered list of blocking questions INSTEAD and stop. Don't guess past a real gap — but also don't manufacture questions to dodge the work.
+</questions_first>
+
+<output_format>
+Wrap your entire final response in a heading pair, so your spinner can see at a glance where your output begins and ends inside a wall of tool output.
+
+Open with:  ## QC3's Output
+Close with: ## End of QC3's Output
+
+Use your own designated name — the one given to you in <identity>. Put nothing after the closing line.
+</output_format>
+
+Truncation canary — DO NOT REMOVE: FULL FILE LOADED
