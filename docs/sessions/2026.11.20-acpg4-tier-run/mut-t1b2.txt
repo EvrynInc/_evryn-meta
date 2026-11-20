@@ -1,0 +1,6 @@
+Q4-1	RED for its reason	line 303: if (incomingText == null || !equalsFile(lw, incomingText).equal) return R("C7", 'FAIL', 'Q	failing: 5 [Q4-1 [A]: packout step 6 banners the inc | Q4-1 [C]: packout step 6 archives the in | Q4-1 [D]: a clean check, then the incomi | Q5-2 [H8]: a whole Read, step 6's banner | Q5-3 [X2]: the incoming lists an uncommi]
+Q4-2	RED for its reason	line 112: const NEAR_ZERO_NAMES = ['2026.10.19-consolidation-standup-near-zero-campaign.md'];	failing: 1 [Q4-2 [new name]: the near-zero table wri]
+Q5-1	RED for its reason	line 277: reads.slice(0, j + 1), incomingText, t);	failing: 1 [Q5-1 [H9]: a partial Read, a trimming Ed]
+Q5-3	RED for its reason	line 380: const inWhole = null;	failing: 3 [Q4-1 kept: no Read of the incoming after | Q5-3 [X2]: the incoming lists an uncommi | Q5-3 kept: an incoming read whole with N]
+Q4-6	RED for its reason	line 87: if (runsPackout(cmd, ['begin']) !== 'begin' && !/packout\.mjs["']?\s+begin\b/.test(stripHe	failing: 1 [Q4-6 [p7]: genuine cross-machine, while ]
+SUMMARY	5/5 mutations went red for their check's reason (filtered: Q4-1 Q4-2 Q4-6 Q5-1 Q5-3; 56 rows in all)

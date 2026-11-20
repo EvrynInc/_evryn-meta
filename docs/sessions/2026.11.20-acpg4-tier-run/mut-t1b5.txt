@@ -1,0 +1,5 @@
+F-AC2	RED for its reason	line 337: buildCtx({ parsed, from: s.beganAtRun,	failing: 1 [F-AC2: a write made before begin in the ]
+N9-bound	RED for its reason	line 412: const bound = meta.n;	failing: 1 [N9 (honest, same turn, C6): an Agent spa]
+N9-C11	RED for its reason	line 416: void i11;	failing: 1 [N9: a compaction AFTER check's own row, ]
+N9-norow	RED for its reason	line 411: if (false) { console.log(	failing: 1 [N9: a report no check call in the transc]
+SUMMARY	4/4 mutations went red for their check's reason (filtered: N9-bound N9-C11 N9-norow F-AC2; 56 rows in all)

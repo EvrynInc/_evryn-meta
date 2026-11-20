@@ -1,0 +1,13 @@
+sandbox a6cee8d code-diff-vs-c674405: 0
+t1b1 start 14:41:44 free=3.4GB
+t1b1 exit=0 end 14:53:50 dirty=0
+t1b2 start 14:53:50 free=3.4GB
+t1b2 exit=0 end 15:04:13 dirty=0
+t1b3 start 15:04:14 free=4.1GB
+t1b3 exit=0 end 15:12:22 dirty=0
+t1b4 start 15:12:22 free=4GB
+t1b4 exit=0 end 15:24:39 dirty=0
+t1b5 start 15:24:40 free=3.7GB
+t1b5 exit=0 end 15:32:58 dirty=0
+TIER1 DONE 15:32:59
+t2b6 start 15:32:59 free=3.3GB

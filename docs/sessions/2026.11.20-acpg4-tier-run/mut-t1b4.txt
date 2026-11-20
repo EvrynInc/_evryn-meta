@@ -1,0 +1,7 @@
+F6	RED for its reason	line 388: return normPath(p).endsWith(qq);	failing: 1 [F6: the uncommitted-list match is on a s]
+F8	RED for its reason	line 279: if (false) die(	failing: 1 [F8: a second begin from a different sess]
+N13	RED for its reason	line 285: if (false) die(	failing: 2 [N13: a second begin with a different --a | item 4: a second begin changing --agent ]
+N17-check	RED for its reason	line 351: const out = a.out || path.resolve(a.handoff)	failing: 1 [N17: check and verify with Git-Bash /c/.]
+N13-incoming	RED for its reason	line 286: if (false) die(	failing: 2 [N13: a second begin with a different --a | item 4: a second begin changing --agent ]
+Q3-6	RED for its reason	line 357: report: ${out}`);	failing: 1 [Q3-6: check --out <relative> prints the ]
+SUMMARY	6/6 mutations went red for their check's reason (filtered: N13 N17-check Q3-6 F6 F8; 56 rows in all)

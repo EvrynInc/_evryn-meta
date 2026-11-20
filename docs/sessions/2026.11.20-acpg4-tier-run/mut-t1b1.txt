@@ -1,0 +1,7 @@
+T6-1-incoming	RED for its reason	line 268: if (false) die(	failing: 1 [item 1 [P1]: begin with no --incoming, o]
+T6-2-repo	RED for its reason	line 416: if (false) return path.join(ctx.codeRoot, rel);	failing: 1 [item 2 [P4]: the same dropped path FAILs]
+T6-2-loud	RED for its reason	line 428: if (false) { bad.push(	failing: 1 [item 2 [no repo]: an incoming entry that]
+T6-6-handoff	RED for its reason	line 385: const autoListed = ctx.historical ? [] : [null, ctx.reportPath];	failing: 1 [item 6: the handoff and its packout repo]
+T6-6-report	RED for its reason	line 385: const autoListed = ctx.historical ? [] : [ctx.handoff, null];	failing: 1 [item 6: the handoff and its packout repo]
+T6-7-form	RED for its reason	line 434: + ` (${note})`)	failing: 1 [item 7: a C10 FAIL names the expected fo]
+SUMMARY	6/6 mutations went red for their check's reason (filtered: T6-; 56 rows in all)

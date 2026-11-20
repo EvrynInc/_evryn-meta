@@ -1,0 +1,1 @@
+C2	RED for its reason	line 175: const ok = cs && (ts || !topsheetPath);	failing: 2 [mutation C2: deleting its deciding line  | PACKOUT-NONE C2 and C12 lines (presence-]

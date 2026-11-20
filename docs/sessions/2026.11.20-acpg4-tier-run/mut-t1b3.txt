@@ -1,0 +1,5 @@
+C7	RED for its reason	line 274: if (!reads.length) return { lw: [], T: 0, reads };	failing: 3 [mutation C7: deleting its deciding line  | F2 (QC1 P2): a forged report state (inco | Q4-1 kept: no Read of the incoming after]
+C10	RED for its reason	line 422: if (false && !named(p) && !committedSinceWrite(ctx, p, ts)) bad.push(	failing: 9 [mutation C10: inserting a Write to a rep | N9 (QC2 P9b): a forged n that hides an u | N9 (honest, same turn): a repo Write lan | F5: a file written by Bash, uncommitted  | F6: the uncommitted-list match is on a s | Q3-5: an uncommitted, unlisted Write aft | C10 [3b ii] X1 kept: an uncommitted writ | item 6: the handoff and its packout repo | item 7: a C10 FAIL names the expected fo]
+C12	RED for its reason	line 448: const w = calls.filter(after(from)).find(() => true);	failing: 2 [mutation C12: deleting its deciding line | PACKOUT-NONE C2 and C12 lines (presence-]
+C10-since	RED for its reason	line 422: ) bad.push(	failing: 1 [C10 [3b i]: the predecessor's write comm]
+SUMMARY	4/4 mutations went red for their check's reason (filtered: C7 C10 C12; 56 rows in all)
