@@ -73,7 +73,7 @@ const M = [
   ['Q3-5', PO, 'if (i10 >= 0) lines[i10] = C10({ ...ctx, calls: full.calls });', 'void i10;', /Q3-5:/],
   ['Q3-6', PO, 'report: ${outAbs}`);', 'report: ${out}`);', /Q3-6:/],
   // ---- fix trip 3b (the Captain's ⓼ (a)): revert "committed = a commit no earlier than this session's last write"
-  ['C10-since', CH, ' && !committedSinceWrite(ctx, p, ts)) bad.push(', ') bad.push(', /C10 \(3b, i\)/],
+  ['C10-since', CH, ' && !committedSinceWrite(ctx, p, ts)) bad.push(', ') bad.push(', /C10 \[3b i\]/],
 ];
 const count = (s, sub) => s.split(sub).length - 1;
 // --count: READ-ONLY. Count every row's target text in its file and exit 1 unless each occurs exactly once (Q3-4: re-count EVERY

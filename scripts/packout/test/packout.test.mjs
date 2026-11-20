@@ -452,7 +452,8 @@ test('Q3-5: an uncommitted, unlisted Write after check\'s own row → VERIFY FAI
 });
 // ---- fix trip 3b (the Captain's ⓼ (a), 11/20): "committed" = this session's write reached a commit, not "the file is clean now"
 const otherSeatEdits = (p) => fs.appendFileSync(p, 'another seat appended this and has not committed\n'); // no row in this transcript
-test('C10 (3b, i): the predecessor\'s write committed, then ANOTHER seat\'s uncommitted edit to the same shared file → C10 PASS (check and verify)', () => {
+// (Names carry no "(" followed by a digit: mutations.mjs reads a failing test's name up to the first " (<digit>", its duration.)
+test('C10 [3b i]: the predecessor\'s write committed, then ANOTHER seat\'s uncommitted edit to the same shared file → C10 PASS (check and verify)', () => {
   let g = goodPackout(); otherSeatEdits(g.f.cs); otherSeatEdits(g.f.top);
   const v = only(check(g.f).out, []);
   assert.match(v.C10.e, /repo files written/);
@@ -462,7 +463,7 @@ test('C10 (3b, i): the predecessor\'s write committed, then ANOTHER seat\'s unco
   const r = verify(g, p.rep);
   assert.equal(r.code, 0, r.out); assert.match(r.out, /^VERIFY PASS/);
 });
-test('C10 (3b, ii) X1 kept: an uncommitted write with no LATER commit (the file was committed before it) → C10 FAIL', () => {
+test('C10 [3b ii] X1 kept: an uncommitted write with no LATER commit (the file was committed before it) → C10 FAIL', () => {
   const g = goodPackout(); // every file but the handoff is committed at this point
   const n = g.tx.edit(g.f.top, '# file', '# file\nan edit this seat never committed');
   // make the write row LATER than the file's newest commit (fixture rows are otherwise dated 11/19, before any test commit)
