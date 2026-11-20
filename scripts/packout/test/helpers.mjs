@@ -51,7 +51,7 @@ export class Tx {
 export const git = (cwd, ...a) => execFileSync('git', ['-C', cwd, ...a], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
 
 /** A throwaway code root: evryn-team-workspace (a git repo) with memory, current-state, topsheet and near-zero files. */
-export function codeRoot(agent = 'soren') {
+export function codeRoot(agent = 'soren', { nzName = '2026.10.19-consolidation-standup-near-zero-campaign.md' } = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'packout-test-'));
   const tw = path.join(root, 'evryn-team-workspace');
   const f = {
@@ -60,7 +60,7 @@ export function codeRoot(agent = 'soren') {
     memory: path.join(tw, '.claude', 'agent-memory', agent, 'MEMORY.md'),
     cs: path.join(tw, 'shared', 'current-state', 'current-state.md'),
     top: path.join(tw, 'shared', 'projects', 'product', `${agent}-topsheet.md`),
-    nz: path.join(tw, 'shared', 'projects', 'helm', '2026', '2026.10.19-consolidation-standup-near-zero-campaign.md'),
+    nz: path.join(tw, 'shared', 'projects', 'helm', '2026', nzName), // Q4-2: either of the table's names
     handoff: path.join(tw, 'shared', 'handoff-out.md'),
     incoming: path.join(tw, 'shared', 'handoff-in.md'),
   };
@@ -85,7 +85,7 @@ export const verdicts = (out) => Object.fromEntries([...out.matchAll(/^(PASS|FAI
  * The GOOD packout, built step by step against the real CLI: every check should PASS.
  * Returns { f, tx, L } where L names the deciding transcript line of each step, for mutation tests.
  */
-export function goodPackout({ agent = 'soren', shortSweeps = false, bashSweeps = false, earlySweep2 = false, lagBegin = false, lagSweep = false } = {}) {
+export function goodPackout({ agent = 'soren', shortSweeps = false, bashSweeps = false, earlySweep2 = false, lagBegin = false, lagSweep = false, nzName } = {}) {
   const NL = String.fromCharCode(10), TAB = String.fromCharCode(9);
   const readSweep = (tx, p) => {
     const lines = fs.readFileSync(p, 'utf8').split(NL);
@@ -93,7 +93,7 @@ export function goodPackout({ agent = 'soren', shortSweeps = false, bashSweeps =
     if (bashSweeps) return tx.bash(`sed -n '1,9999p' ${p}`, lines.map((l, i) => (i + 1) + TAB + l).join(NL));
     return shortSweeps ? tx.read(p, { a: 1, b: N }) : tx.read(p);
   };
-  const f = codeRoot(agent);
+  const f = codeRoot(agent, nzName ? { nzName } : undefined);
   const tx = new Tx(f.transcript);
   const L = {};
   tx.user('start line: do the work, then pack out');

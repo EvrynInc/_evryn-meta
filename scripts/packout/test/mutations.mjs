@@ -34,7 +34,8 @@ const M = [
   // (fix trip 3b: C10's line gained the committed-since-write term; this row's target follows it, same mutation)
   ['C10', CH, 'if (c === false && !named(p) && !committedSinceWrite(ctx, p, ts)) bad.push(', 'if (false && !named(p) && !committedSinceWrite(ctx, p, ts)) bad.push(', /mutation C10:/],
   ['C11', CH, "if (!compactions.length) return R('C11', 'PASS'", "if (true) return R('C11', 'PASS'", /mutation C11:/],
-  ['C12', CH, 'const w = calls.filter(after(from)).find((k) => writes(k, nearZeroPath));', 'const w = calls.filter(after(from)).find(() => true);', /mutation C12:/],
+  // (fix trip 4: C12's line now looks for the table under either name; this row's target follows it, same mutation)
+  ['C12', CH, 'const w = calls.filter(after(from)).find((k) => nearZeroPaths.some((p) => writes(k, p)));', 'const w = calls.filter(after(from)).find(() => true);', /mutation C12:/],
   ['dedupe', TX, "if (b.type === 'tool_use' && !byId.has(b.id)) {", "if (b.type === 'tool_use') {", /instrument 1:/],
   // ---- fix trip (QC1 findings, AC-PG's F-AC1/F-AC2): each row REVERTS one fix; its test must go red
   // (fix trip 3, Q3-4: F1-host and F1-exit3 are repointed at the tests that now catch them, renamed or re-routed in fix trip 2;
@@ -74,6 +75,10 @@ const M = [
   ['Q3-6', PO, 'report: ${outAbs}`);', 'report: ${out}`);', /Q3-6:/],
   // ---- fix trip 3b (the Captain's ⓼ (a)): revert "committed = a commit no earlier than this session's last write"
   ['C10-since', CH, ' && !committedSinceWrite(ctx, p, ts)) bad.push(', ') bad.push(', /C10 \[3b i\]/],
+  // ---- fix trip 4 (QC4's Q4-1, Q4-2, Q4-6; the Captain's 12:06 ruling): each row REVERTS one fix; its test must go red
+  ['Q4-1', CH, "return R('C7', 'PASS', `read whole (${lw", "if (incomingText == null || !equalsFile(lw, incomingText).equal) return R('C7', 'FAIL', 'Q4-1 reverted: the read must equal the file now'); return R('C7', 'PASS', `read whole (${lw", /Q4-1 \[A\]/],
+  ['Q4-2', PO, "const NEAR_ZERO_NAMES = ['2026.10.19-near-zero-campaign.md', '2026.10.19-consolidation-standup-near-zero-campaign.md'];", "const NEAR_ZERO_NAMES = ['2026.10.19-consolidation-standup-near-zero-campaign.md'];", /Q4-2 \[new name\]/],
+  ['Q4-6', PO, "if (runsPackout(cmd, ['begin']) !== 'begin') continue; // Q4-6", "if (runsPackout(cmd, ['begin']) !== 'begin' && !/packout\\.mjs[\"']?\\s+begin\\b/.test(stripHeredocs(cmd))) continue; // Q4-6", /Q4-6 \[p7\]/],
 ];
 const count = (s, sub) => s.split(sub).length - 1;
 // --count: READ-ONLY. Count every row's target text in its file and exit 1 unless each occurs exactly once (Q3-4: re-count EVERY

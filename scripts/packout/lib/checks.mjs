@@ -137,8 +137,8 @@ function equalsFile(reads, text) {
 }
 /** The newest set of reads whose composition is the "last whole read": walk back from the newest read until 1..T is covered,
  *  T being the file's length AS THAT READ SAW IT (toolUseResult totalLines) when known, else its length now. */
-function lastWhole(readsAll, text) {
-  const T = readsAll.length && Number.isInteger(readsAll[readsAll.length - 1].win.total) ? readsAll[readsAll.length - 1].win.total : fileLines(text).length;
+function lastWhole(readsAll, text, Tgiven) {
+  const T = Tgiven ?? (readsAll.length && Number.isInteger(readsAll[readsAll.length - 1].win.total) ? readsAll[readsAll.length - 1].win.total : fileLines(text).length);
   const want = { length: T };
   const picked = [];
   const m = new Set();
@@ -262,15 +262,23 @@ export function C7(ctx) {
   const { calls, from, incoming, incomingText } = ctx;
   if (ctx.c7SameFile) return R('C7', 'OPEN', '(historical: the incoming handoff is the same shared, appended file as the outgoing one; nothing separate to re-read, and C8 covers the file)');
   if (!incoming) return R('C7', 'PASS', 'no incoming handoff given (nothing to re-read)');
-  if (incomingText == null) return R('C7', 'FAIL', `the incoming handoff ${incoming} is not readable now`);
+  // Q4-1 (fix trip 4, the Captain's 12:06 ruling): the incoming is judged on the seat's WHOLE READ ALONE, never against the file
+  // as it stands now. Packout step 6 tells the seat to banner, supersede or archive (git mv) that very file after step 4's
+  // re-read, so "equals now" false-FAILed the protocol's own order, and a move could never be repaired. C8 keeps "equals now"
+  // for the OUTGOING handoff. Still FAIL: no Read after begin, a read short of the file's end, or no length to judge it by.
   const reads = calls.filter((k) => k.n >= from && isRead(k, incoming));
   if (!reads.length) return R('C7', 'FAIL', `no Read of the incoming handoff after line ${from}`);
-  const lw = lastWhole(reads, incomingText);
-  if (!lw) return R('C7', 'FAIL', `incoming never read whole after line ${from} (reads ${reads.map((k) => `${k.n}:${k.win.start}-${k.win.start + k.win.lines.length - 1}`).join(', ')})`);
-  const eq = equalsFile(lw, incomingText);
-  const want = fileLines(incomingText); const canaryOk = /FULL FILE LOADED/.test(want.filter((l) => l.trim()).pop() || '');
-  if (!eq.equal) return R('C7', 'FAIL', `the last whole read (${lw.map((k) => k.n).join(',')}) differs from the incoming file now: ${eq.why}`);
-  return R('C7', 'PASS', `read whole (${lw.map((k) => k.n).join(',')})${canaryOk ? ' to its canary' : ' (the file carries no canary)'}, equal to the file now`);
+  // "whole" = lines 1..T covered, T being the file's length AS THE LAST READ SAW IT (the Read tool's totalLines). Only when a
+  // read carries no totalLines does the file on disk supply T, and if it is gone too, C7 cannot tell "whole" and FAILs loud.
+  const lastTotal = reads[reads.length - 1].win.total;
+  const T = Number.isInteger(lastTotal) ? lastTotal : (incomingText != null ? fileLines(incomingText).length : null);
+  if (T == null) return R('C7', 'FAIL', `the incoming's Reads report no length (totalLines) and the file is not readable now, so a whole read cannot be judged`);
+  const lw = lastWhole(reads, incomingText, T);
+  if (!lw) return R('C7', 'FAIL', `incoming never read whole after line ${from} (reads ${reads.map((k) => `${k.n}:${k.win.start}-${k.win.start + k.win.lines.length - 1}`).join(', ')}; ${T} lines)`);
+  const seen = compose(lw); let last = '';
+  for (let i = T; i >= 1; i--) if ((seen.get(i) || '').trim()) { last = seen.get(i); break; }
+  const canaryOk = /FULL FILE LOADED/.test(last);
+  return R('C7', 'PASS', `read whole (${lw.map((k) => k.n).join(',')}; ${T} lines)${canaryOk ? ' to its canary' : ' (the file carries no canary)'}, judged on the read alone (Q4-1)`);
 }
 
 export function C8(ctx) {
@@ -381,8 +389,9 @@ export function C11(ctx) {
 }
 
 export function C12(ctx) {
-  const { calls, from, nearZeroPath, handoffText } = ctx;
-  const w = calls.filter(after(from)).find((k) => writes(k, nearZeroPath));
+  const { calls, from, handoffText } = ctx;
+  const nearZeroPaths = ctx.nearZeroPaths || []; // Q4-2: the table under either of its names (packout.mjs NEAR_ZERO_NAMES)
+  const w = calls.filter(after(from)).find((k) => nearZeroPaths.some((p) => writes(k, p)));
   if (w) return R('C12', 'PASS', `near-zero decisions table written at line ${w.n}`);
   const m = /^PACKOUT-NONE C12: nothing by hand — (.+)$/m.exec(handoffText || '');
   if (m) return R('C12', 'PASS', `presence-only; truth invisible to any check: "PACKOUT-NONE C12: nothing by hand — ${m[1].slice(0, 70)}"`);

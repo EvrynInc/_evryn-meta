@@ -65,8 +65,9 @@ function findTranscript(session) { const hits = transcriptHits(session); return 
 /** Q3-2: every `packout.mjs begin` row, in ANY transcript on this machine (top-level and subagent), whose footer names this
  *  handoff. verify may downgrade only when this is empty: the seat writes the report's session and the footer's PREDECESSOR,
  *  so a session id that matches nothing here proves nothing; a begin row naming the handoff proves this is the same machine.
- *  Deliberately BROADER than the begin anchor (the command test is the strict one OR the old loose one), because this list
- *  can only refuse a downgrade, never earn a PASS. Cost: a byte search for the footer token before any parse (measured
+ *  Q4-6 (fix trip 4): the command must RUN `node <…>packout.mjs begin` (runsPackout), exactly like the anchor. The old loose
+ *  text test also counted a `grep` of a start line whose output is the footer (a Packout Checker's own command), which turned a
+ *  genuine cross-machine DOWNGRADE into a FAIL with a false "same machine" diagnosis. BEGIN-ARGS is not required. Cost: a byte search for the footer token before any parse (measured
  *  2026-11-20 on this laptop: 650 transcripts, 2.2 GB, ~1.6 s; 15 files carry the token). Never consults state.json. */
 function beginsNaming(handoff) {
   const want = normPath(handoff); const token = Buffer.from('PREDECESSOR: '); const found = [];
@@ -83,7 +84,7 @@ function beginsNaming(handoff) {
     for (const k of parse(file).calls) {
       if (!k.ok || k.name !== 'Bash') continue;
       const cmd = String(k.input.command || '');
-      if (runsPackout(cmd, ['begin']) !== 'begin' && !/packout\.mjs["']?\s+begin\b/.test(stripHeredocs(cmd))) continue;
+      if (runsPackout(cmd, ['begin']) !== 'begin') continue; // Q4-6: a real run only; a grep of a start line is not a begin
       const m = String(k.text || '').match(/PREDECESSOR: (\S+) · HANDOFF: (.+?) · REPORT:/);
       if (m && normPath(m[2].trim()) === want) found.push(`${file} line ${k.n} (session ${m[1]})`);
     }
@@ -106,6 +107,17 @@ function walkFind(dir, name, depth = 6) {
   for (const e of ents) if (e.isDirectory() && !e.name.startsWith('.') && e.name !== 'node_modules' && e.name !== 'historical') { const r = walkFind(path.join(dir, e.name), name, depth - 1); if (r) return r; }
   return null;
 }
+// Q4-2 (fix trip 4): the near-zero decisions table, by EITHER name. The team is renaming it (11/20); both must PASS C12 before and
+// after the rename commits. Resolved at run time, like topsheetPath: each name at its usual place, plus wherever walkFind finds it.
+const NEAR_ZERO_NAMES = ['2026.10.19-near-zero-campaign.md', '2026.10.19-consolidation-standup-near-zero-campaign.md'];
+function nearZeroPathsIn(team) {
+  const out = [];
+  for (const name of NEAR_ZERO_NAMES) {
+    out.push(path.join(team, 'shared', 'projects', 'helm', '2026', name));
+    const found = walkFind(path.join(team, 'shared'), name); if (found) out.push(found);
+  }
+  return [...new Map(out.map((p) => [normPath(p), p])).values()];
+}
 export function profileFor(agent) {
   const isAC = /^AC/i.test(agent);
   const team = path.join(CODE, 'evryn-team-workspace');
@@ -114,7 +126,7 @@ export function profileFor(agent) {
     memoryPath: isAC ? null : path.join(team, '.claude', 'agent-memory', agent.toLowerCase(), 'MEMORY.md'),
     currentStatePath: isAC ? path.join(CODE, '_evryn-meta', 'docs', 'current-state.md') : path.join(team, 'shared', 'current-state', 'current-state.md'),
     topsheetPath: walkFind(path.join(team, 'shared'), `${agent.toLowerCase()}-topsheet.md`),
-    nearZeroPath: path.join(team, 'shared', 'projects', 'helm', '2026', '2026.10.19-consolidation-standup-near-zero-campaign.md'),
+    nearZeroPaths: nearZeroPathsIn(team),
   };
 }
 

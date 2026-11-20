@@ -7,7 +7,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { goodPackout, check, checkRecorded, verify, run, runAt, verdicts, Tx, codeRoot, PACKOUT } from './helpers.mjs';
+import { goodPackout, check, checkRecorded, verify, run, runAt, verdicts, Tx, codeRoot, PACKOUT, git } from './helpers.mjs';
 import { pathToFileURL } from 'node:url';
 import { parse, winPath, hashFirst } from '../lib/transcript.mjs';
 const verdictsN = (rep) => { const m = /```json\n([\s\S]*?)\n```/.exec(fs.readFileSync(rep, 'utf8')); return JSON.parse(m[1]).n; };
@@ -471,6 +471,55 @@ test('C10 [3b ii] X1 kept: an uncommitted write with no LATER commit (the file w
   g.tx.rows[n - 1] = JSON.stringify({ ...JSON.parse(g.tx.rows[n - 1]), timestamp: later }); g.tx.flush();
   const v = only(check(g.f).out, ['C10']);
   assert.match(v.C10.e, /topsheet\.md \(written at \d+\) is uncommitted and not in "## Uncommitted"/);
+});
+// ---- fix trip 4: QC4's Q4-1, Q4-2 and Q4-6 (the Captain's 12:06 ruling). Each fails without its fix. Names carry no "(<digit>".
+const banner = (p) => fs.writeFileSync(p, '**SUPERSEDED BY:** shared/handoff-out.md\n\n' + fs.readFileSync(p, 'utf8'));
+const archived = (f) => path.join(f.tw, 'shared', 'historical', '2026.11', 'handoff-in.md');
+const archive = (f) => { fs.mkdirSync(path.dirname(archived(f)), { recursive: true }); git(f.tw, 'mv', 'shared/handoff-in.md', 'shared/historical/2026.11/handoff-in.md'); git(f.tw, 'commit', '-qm', 'step 6: retire the incoming', '--', 'shared/handoff-in.md', 'shared/historical/2026.11/handoff-in.md'); };
+test('Q4-1 [A]: packout step 6 banners the incoming SUPERSEDED after the whole re-read → C7 PASS, judged on the read alone', () => {
+  const g = goodPackout();
+  g.tx.edit(g.f.incoming, '# Incoming handoff', '**SUPERSEDED BY:** shared/handoff-out.md\n\n# Incoming handoff'); g.tx.flush();
+  git(g.f.tw, 'commit', '-qm', 'step 6: supersede the incoming', '--', 'shared/handoff-in.md');
+  const v = only(check(g.f).out, []);
+  assert.match(v.C7.e, /read whole .* to its canary, judged on the read alone/);
+});
+test('Q4-1 [C]: packout step 6 archives the incoming by git mv after the whole re-read → C7 PASS, though the old path is gone', () => {
+  const g = goodPackout(); archive(g.f);
+  assert.equal(fs.existsSync(g.f.incoming), false);
+  only(check(g.f).out, []);
+});
+test('Q4-1 [D]: a clean check, then the incoming bannered before the successor\'s verify → VERIFY PASS', () => {
+  const { g, rep } = passed(); banner(g.f.incoming);
+  const r = verify(g, rep);
+  assert.equal(r.code, 0, r.out); assert.match(r.out, /^VERIFY PASS/);
+});
+test('Q4-1 kept: no Read of the incoming after begin, or a Read short of its end, still FAILs C7 (also when the file has moved)', () => {
+  let g = goodPackout(); g.tx.blank(g.L.incomingRead).flush(); archive(g.f);
+  let v = only(check(g.f).out, ['C7']); assert.match(v.C7.e, /no Read of the incoming handoff after line/);
+  g = goodPackout(); g.tx.blank(g.L.incomingRead); g.tx.read(g.f.incoming, { a: 1, b: 3 }); g.tx.flush();
+  v = only(check(g.f).out, ['C7']); assert.match(v.C7.e, /incoming never read whole/);
+  // a whole Read made only BEFORE begin (spliced in after the opening user row) does not count
+  g = goodPackout(); g.tx.blank(g.L.incomingRead);
+  const early = new Tx(path.join(g.f.root, 'early.jsonl')); early.read(g.f.incoming); g.tx.rows.splice(1, 0, ...early.rows); g.tx.flush();
+  v = only(check(g.f).out, ['C7']); assert.match(v.C7.e, /no Read of the incoming handoff after line/);
+});
+test('Q4-2 [new name]: the near-zero table written at 2026.10.19-near-zero-campaign.md → C12 PASS', () => {
+  const g = goodPackout({ nzName: '2026.10.19-near-zero-campaign.md' });
+  const v = only(check(g.f).out, []); assert.match(v.C12.e, /near-zero decisions table written at line/);
+});
+test('Q4-2 [old name]: the near-zero table written at 2026.10.19-consolidation-standup-near-zero-campaign.md → C12 PASS', () => {
+  const g = goodPackout({ nzName: '2026.10.19-consolidation-standup-near-zero-campaign.md' });
+  const v = only(check(g.f).out, []); assert.match(v.C12.e, /near-zero decisions table written at line/);
+});
+test('Q4-6 [p7]: genuine cross-machine, while another transcript here holds a grep of the start line whose output is the footer → still DOWNGRADED, exit 3', () => {
+  const { g, rep } = passed();
+  editMeta(rep, (j) => { j.machine = 'SOME-OTHER-HOST'; });
+  const c = new Tx(path.join(g.f.root, 'projects', 'proj', 'checkersess.jsonl'));
+  c.user('check the packout before its successor launches');
+  c.bash('grep -n "packout.mjs begin\\|PREDECESSOR" start-line.txt', `3:PREDECESSOR: testsess · HANDOFF: ${g.f.handoff} · REPORT: ${rep}`); c.flush();
+  fs.renameSync(g.f.transcript, g.f.transcript + '.elsewhere');
+  const r = verify(g, rep);
+  assert.equal(r.code, 3, r.out); assert.match(r.out, /^VERIFY DOWNGRADED \(cross-machine\)/);
 });
 test('Q3-6: check --out <relative> prints the resolved report path, so verify still binds it → VERIFY PASS', () => {
   const g = goodPackout();
