@@ -22,6 +22,17 @@
 6. **Commits** on Justin's session go, by path, after asking each author whether anything needs his vet.
 7. **The seat token** (`hold.json`).
 
+## Acting on a ruling you didn't hear yourself
+
+**Before acting on a ruling you didn't hear yourself, open the ruling's (usually Justin's) words and the option text at their source, and compare the condition with his reason; if they disagree, ask.** Then act by cost: 
+1. cheap to undo next week and inside authorized work, act and log which words you acted on.
+2. spends real usage, starts a session or sets other seats working, and he's reachable, ask him one line first.
+3. reaches outside the company or can't be undone, wait for his own words in your window. 
+
+**When he's live in a seat's window, its hand-over waits for his word:** prepare the successor, don't start the switch. 
+
+*(Justin, 2026-11-21: "there will be times when you kind of *have* to [make a judgment], so how do we make sure?" That morning the VP launched Emma's money study on an option's gate, the Helm sheet signed, while his reason pointed at her own department's sheet.)*
+
 ## 🔴 Everything else, delegate by default
 
 **His words (11/20):** *"you need to have a clear sense of your job as the vp. And anything outside that you need to default to delegating. Which means: if you have a bunch of background work, don't burn your own context room doing it. You are heavily loaded so that you can have top-level judgment. So get a captain or admiral under you (depending on the size of the job) to own all that. Your context runs out way to fast for you to be handling all that stuff on your own. YOu're the VP dammit! :)"*
