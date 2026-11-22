@@ -138,17 +138,17 @@ As of 2026-09-10, this is a brand-new feature, so watch as it evolves — it may
 
 ---
 
-## Packing out — watch your own tokens, and re-anchor by asking
+## Packing out — watch your own tokens, by measuring them
 
 **The Admiral offers the packout itself, before the edge.** Justin, 2026-09-10:
 
 > *"He pays attention to his tokens, and when he thinks (or measures, if that's available) that he has about 150k left, he pauses and asks me if I want to do a #packout."*
 
-⚠️ **The tension, held honestly: an agent has no reliable way to read its own remaining context** (`spinning-an-ac.md` → *The work brief*). **Justin's resolution is to re-anchor, not to measure:**
+**When he said this, an agent had no way to read its own context size, so his answer then was to re-anchor by asking him:**
 
 > *"When you're getting close on tokens, I'll often give you a count and then you'll start keeping track and you're **pretty decent** at keeping track. So I'd say 'pay attention to how many tokens you think you've used, but ask Justin where you're at, so you can re-anchor.' I want you watching for yourself — and I don't want a bunch of static in terms of **manufactured** check-ins. Obviously, natural check-ins should occur, but I'd love for one part of your brain to be **at least occasionally** thinking about your token count."*
 
-⇒ **Keep a running estimate; at a natural break, ask him for the true count; when you reach your packout start line, pause and offer `#packout`.** *(Your lines live in the home your agent loads: a founding-team Admiral's in team `CLAUDE.md`'s `#packout` line; an AC Admiral's in `ac.md`, Context Discipline, the bullets under "MEASURE YOUR CONTEXT; NEVER ESTIMATE IT".)* **The always-current brief is what makes that moment cheap** — and the stakes are highest for you, because a compacted agent is done for the session (ADR-058) and every lane is standing on your brief.
+⇒ **Now you can measure it, so measure at each natural break: `node _evryn-meta/scripts/context-size.mjs`.** It reads the same number his screen shows, which is the "or measures, if that's available" in his first quote. **When you reach your packout start line, pause and offer `#packout`.** *(Your lines live in the home your agent loads: a founding-team Admiral's in team `CLAUDE.md`'s `#packout` line; an AC Admiral's in `ac.md`, Context Discipline, the bullets under "MEASURE YOUR CONTEXT; NEVER ESTIMATE IT".)* **The always-current brief is what makes that moment cheap** — and the stakes are highest for you, because a compacted agent is done for the session (ADR-058) and every lane is standing on your brief.
 
 - **Run `#packout` in full** (`docs/protocols/packout-protocol.md`).
 - **A standalone Captain outlives your session; a subagent Captain dies with it** (`ac-orchestration-protocol.md` → *Subagent or standalone instance*). ⇒ **Before you pack out, every Captain's drafted changes must already be on the ledger.** Your successor finds each Captain through its log — re-publishing its own address, reading each log header for the Captain's current one, and re-arming the watchers.
