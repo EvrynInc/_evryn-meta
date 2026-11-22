@@ -28,7 +28,7 @@
 >
 > **And Justin said that this happens *over and over again* - agents skip steps because they seem redundant and they forward *scores* of errors.**
 >
-> **The moment to distrust is *"I just wrote this, I know what it says."*** You know what you meant, and that's the very thing hiding the gaps. **Read back through the conversation carefully, beat by beat, read every brief whole, and keep going until a pass comes back clean. There's room:** compaction doesn't hit until 1MM tokens, and *"I'm short on room"* is almost never true.
+> **The moment to distrust is *"I just wrote this, I know what it says."*** You know what you meant, and that's the very thing hiding the gaps. **Read back through the conversation carefully, beat by beat, read every brief whole, and keep going until a pass comes back clean. There's room:** a packout started on time finishes well before compaction (the lines: a founding-team agent's are in team `CLAUDE.md`'s `#packout` line; an AC's, DC's, QC's or OC's in `ac.md`, Context Discipline, the bullets under *"MEASURE YOUR CONTEXT; NEVER ESTIMATE IT"*), and *"I'm short on room"* is almost never true.
 >
 > **What my first handoff would have passed on** *(Lucas, 2026-11-03)*. It looked finished, I told Justin "every step ran," and he sent me back. I had glanced back through the session and read part of two briefs. The real passes found **eighteen things it had wrong or had lost**:
 > - A Captain had posted READY FOR JUSTIN, and the handoff still said he was working.
@@ -77,7 +77,7 @@
 
 **Having said that: if you are short on context, the most important thing you can do here is to get your handoff in good working order** - so if you are concerned you'll compact before you get that done, you can change the order so that your handoff is solid before you do a lock. Just read the lock protocol first, then think about what you need to do first, to make sure that if you compact, you haven't lost important information. **The #lock's fragment sweep and the fresh-eyes passes are the things that will be the hardest to re-create after you compact. If you capture those, the rest can fairly easily be re-derived.**
 
-**If you started your packout on time (~850K, team `CLAUDE.md`), you have plenty of room for every step, so you have *no reason* to skimp on any step.** If you do get short on room, still don't skimp: just do the steps in priority order, and as you near the edge of compaction, work in small chunks, persisting each to disk before starting the next, so that if you do compact, no problem — you've captured as much as you could. *(Justin, 2026-11-18.)*
+**If you started your packout on time, you have plenty of room for every step, so you have *no reason* to skimp on any step.** *(On time means the start line in the home your agent loads: a founding-team agent's is team `CLAUDE.md`'s `#packout` line; an AC's is `ac.md`, Context Discipline, the bullets under "MEASURE YOUR CONTEXT; NEVER ESTIMATE IT". A DC, QC or OC has no figure in its own manual, so it uses the AC's.)* If you do get short on room, still don't skimp: just do the steps in priority order, and as you near the edge of compaction, work in small chunks, persisting each to disk before starting the next, so that if you do compact, no problem — you've captured as much as you could. *(Justin, 2026-11-18.)*
 
 ---
 
@@ -153,6 +153,8 @@
 
 > ***Could a brand-new instance, holding none of your current context, understand this fully?***
 
+> 🔴 **Only a handoff's original author changes the handoff's body.** A step-5 fresh reader, a Packout Checker, a VP or any other session that finds something wrong hands its notes back to the authoring session to fix. If that session can't take them (stopped, compacted, out of room), the outside session adds them at the bottom of the handoff, in a section headed "Outside notes," each with where it came from, and changes nothing above it. **If outside changes already went inline, revert them to the author's text and re-place them as outside notes, and tell any successor who has already loaded the handoff to diff it.** **Why:** an outside session can't understand the work the way its author did, so its notes are useful inputs, not gospel; written into the body, they read to the successor as the author's own understanding, and the successor can't tell which lines to weigh as outside input. *(Justin, 2026-11-21; first written as the Packout Checker's standing rule, `evryn-team-workspace/shared/projects/helm/2026/2026.11.19-packout-chain-investigation/2026.11.20-packout-checker-method.md` §2 item 8.)*
+
 ### 6 · Retire the old brief — or say plainly why it must stay
 
 **Per `_evryn-meta/docs/protocols/lock-protocol.md`retirement section.** **If it stays, it states its hold condition in its own first lines — for an AC, the `HELD-SESSION-DOC` banner, with a testable condition and a lineage owner. If it goes, it is archived under its OWN date and its filename does not change.**
@@ -166,6 +168,8 @@
 - **Not done:** then do it now.
 
 **Never launch your successor (never send its start line) until every step reads "done, with evidence."** If a step *genuinely* doesn't apply, write why it *genuinely doesn't apply*, with the check you ran.
+
+**And check that the handoff's body is all yours before you launch:** every outside finding is either folded in by you or sits under "Outside notes" at the bottom (step 5's rule, *"Only a handoff's original author changes the handoff's body"*). If another session's text is inline, revert it to your own and re-place it as an outside note first.
 
 #### 🔑 Why steps get skipped even with plenty of room, and what this gate is built against
 
