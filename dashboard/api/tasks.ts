@@ -11,11 +11,18 @@
 //   - one table (tasks), one fixed column list (COLUMNS below), read filters only,
 //     exactly two reads (not-closed, and closed in the last 30 days);
 //   - no insert / update / upsert / delete / rpc, and no direct fetch, anywhere in this file.
-// test/tasks.test.ts pins those against a recording fake client and a global fetch
-// that fails on any call; on EVERY response it also checks that no secret appears and
-// that a 200 carries only the five top-level keys and the eight columns; and it checks
-// the server log carries no secret. test/mutation-controls.mjs proves each of those
-// checks goes red when the code breaks it.
+// test/tasks.test.ts pins the ACCIDENTAL-EDIT forms of those, on every request (with
+// rows or without): a write or rpc on the client, a read beyond the two expected (or
+// outside the literal 30-day window), a column beyond the eight, a header beyond the
+// per-status allowlist, a non-200 body that is not its fixed string, a plain-text
+// secret in any header, body or log line, and any use of the global fetch (stubbed
+// before this file loads, never restored, throwing). A source-text lint keeps network
+// and timer APIs and any second import out of this file. test/mutation-controls.mjs
+// shows each of those checks going red against a broken copy.
+//
+// A test suite is not proof against code written ON PURPOSE to slip past it (an
+// encoded secret, an indirection built to dodge the checks). Reviewing the diff is
+// that defense.
 //
 // PRIVACY: the column list is deliberately narrow. Task bodies, links, RACI, tags,
 // notes and sign-off fields never leave the server; the headline is the most this
