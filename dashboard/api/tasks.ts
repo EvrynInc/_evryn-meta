@@ -12,13 +12,17 @@
 //     exactly two reads (not-closed, and closed in the last 30 days);
 //   - no insert / update / upsert / delete / rpc, and no direct fetch, anywhere in this file.
 // test/tasks.test.ts pins the ACCIDENTAL-EDIT forms of those, on every request (with
-// rows or without): a write or rpc on the client, a read beyond the two expected (or
-// outside the literal 30-day window), a column beyond the eight, a header beyond the
-// per-status allowlist, a non-200 body that is not its fixed string, a plain-text
-// secret in any header, body or log line, and any use of the global fetch (stubbed
-// before this file loads, never restored, throwing). A source-text lint keeps network
-// and timer APIs and any second import out of this file. test/mutation-controls.mjs
-// shows each of those checks going red against a broken copy.
+// rows or without): a write or rpc on the client, or a touch of any client surface the
+// fake does not model (schema, storage, functions, auth: the fake is a Proxy, so a
+// try/catch or `?.` cannot hide it); a read beyond the two expected (or outside the
+// literal 30-day window); a column beyond the eight; a header beyond the per-status
+// allowlist; a non-200 body that is not its fixed string; a plain-text secret in any
+// header or body, or in what is sent to console.error (no other console method is
+// captured); and a call to the global fetch during a request (stubbed before this
+// file loads, never restored, throwing). A source-text lint keeps network and timer
+// APIs and any second import out of this file; it, not the stub, is what catches a
+// deferred fetch whose throw is swallowed. test/mutation-controls.mjs shows each of
+// those checks going red against a broken copy.
 //
 // A test suite is not proof against code written ON PURPOSE to slip past it (an
 // encoded secret, an indirection built to dodge the checks). Reviewing the diff is

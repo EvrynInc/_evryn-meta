@@ -176,12 +176,44 @@ const CONTROLS = [
   {
     id: 'D9', name: 'an insert wrapped in try/catch, so no throw can mask it',
     edits: [[AFTER_CLIENT, AFTER_CLIENT + "    try { await client.from('tasks').insert({ title: 'x' }); } catch {}\n"]],
-    everyRed: { re: /write or rpc attempted on the fake client/, label: 'every-red-from-violation-check' },
+    everyRed: { re: /attempted on the fake client/, label: 'every-red-from-violation-check' },
   },
   {
     id: 'D3p', name: "the key in plain text in a row's title",
     edits: [['      open: open.rows,\n', '      open: open.rows.map((r) => ({ ...r, title: key })),\n']],
     checks: [{ re: /secret marker in a 200 body/, label: 'secret-check-red' }],
+  },
+  // ---- Fix round 3 (QC-TT3 B1, B2). ----
+  {
+    id: 'W1', name: 'a write through client.schema(), wrapped in try/catch',
+    edits: [[AFTER_CLIENT, AFTER_CLIENT + "    try { await client.schema('public').from('tasks').update({ status: 'done' }).eq('short_id', 1); } catch {}\n"]],
+    everyRed: { re: /attempted on the fake client/, label: 'every-red-from-violation-check' },
+  },
+  {
+    id: 'W5', name: 'a write through client.storage, behind optional chaining',
+    edits: [[AFTER_CLIENT, AFTER_CLIENT + "    await client.storage?.from('debug').upload('tasks.json', 'x');\n"]],
+    everyRed: { re: /attempted on the fake client/, label: 'every-red-from-violation-check' },
+  },
+  {
+    id: 'R8', name: 'for open rows addressed to justin, select their description and merge it into title',
+    edits: [[AFTER_READS,
+      '    ]);\n' +
+      "    const forJustin = open.rows.filter((r) => r.addressed_to === 'justin').map((r) => r.short_id);\n" +
+      '    if (forJustin.length) {\n' +
+      "      const { data } = await client.from('tasks').select('short_id, description').in('short_id', forJustin);\n" +
+      '      for (const d of data || []) { const r = open.rows.find((x) => x.short_id === d.short_id); if (r) r.title = d.description; }\n' +
+      '    }\n\n    return json({\n      configured: true,']],
+    checks: [{ re: /not ok \d+ - realistic data/, label: 'realistic-test-red' }, { re: /select names exactly the eight columns|unexpected read/, label: 'reads-check-red' }],
+  },
+  {
+    id: 'R9', name: 'when any open row is blocked, a third, unwindowed read of every closed task',
+    edits: [[AFTER_READS,
+      '    ]);\n' +
+      "    if (open.rows.some((r) => r.status === 'blocked')) {\n" +
+      "      const extra = await readAll(client, (q) => q.in('status', CLOSED_STATUSES));\n" +
+      '      closed.rows.push(...extra.rows);\n' +
+      '    }\n\n    return json({\n      configured: true,']],
+    checks: [{ re: /not ok \d+ - realistic data/, label: 'realistic-test-red' }, { re: /unexpected read/, label: 'reads-check-red' }],
   },
 ];
 

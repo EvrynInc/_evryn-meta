@@ -7,17 +7,23 @@
 // { env, createClient }), with a FAKE Supabase client that records every call.
 //
 // WHAT THIS SUITE PINS — the ACCIDENTAL-EDIT classes. On EVERY request, inside run():
-//   - no write or rpc on the fake client, and reads only from `tasks`, with only read ops;
+//   - no write or rpc on the fake client, and no touch of any client surface the fake
+//     does not model (schema, storage, functions, auth, ...: the fake is a Proxy that
+//     records any such access, so try/catch or `?.` cannot hide it); reads only from
+//     `tasks`, with only read ops;
 //   - every select names exactly the eight columns;
 //   - exactly the two expected reads (two first pages, each the not-closed or the
 //     closed-in-window shape) and a closed window of a literal 30 days;
 //   - response headers exactly the allowlist for that status, every non-200 body
 //     exactly its fixed string, and no secret marker in any header or body;
 //   - a 200 carries exactly its top-level keys, and rows only the eight columns;
-//   - nothing sent to console.error carries a secret marker.
+//   - nothing sent to console.error carries a secret marker (only console.error is
+//     captured; console.log and the other methods are not).
 // And for the whole run: the global fetch is replaced BEFORE tasks.ts loads, is never
-// restored, and throws synchronously, so a call made at any time fails the run; and a
-// source-text lint keeps network and timer APIs out of tasks.ts.
+// restored, and throws synchronously, so a call during a request fails that test, and
+// an unhandled deferred call fails the run. A deferred call whose throw is swallowed by
+// its own try/catch is NOT caught by the stub; the source-text lint, which keeps network
+// and timer APIs out of tasks.ts, is what catches that.
 //
 // WHAT IT DOES NOT PIN: code written on purpose to slip past it (an encoded secret, an
 // indirection built to dodge these checks). No test suite is proof against deliberate
@@ -144,7 +150,7 @@ async function run(request, env, fake) {
 
   // The fake client: writes first, then reads.
   if (fake.violations) {
-    assert.deepEqual(fake.violations, [], 'write or rpc attempted on the fake client');
+    assert.deepEqual(fake.violations, [], 'write, rpc or unmodeled access attempted on the fake client');
     for (const c of fake.log) {
       if (c.on === 'client') {
         assert.equal(c.op, 'from', `client.${c.op} is not a read`);
@@ -285,9 +291,25 @@ function makeFake({ pages = {}, dataset = null, error = null, endless = false } 
     client[op] = () => { violations.push(`${op} on client`); throw new Error(`fake: ${op} is forbidden`); };
   }
 
+  // Hand out a Proxy: reading ANY property the fake does not model (schema, storage,
+  // functions, auth, rest, ...) is recorded as a violation. Without this such a read is
+  // just `undefined`, and the TypeError it causes is swallowed by any try/catch or `?.`,
+  // so a write through that surface would pass silently. `then` is skipped because
+  // `await` probes it on every awaited value.
+  const proxied = new Proxy(client, {
+    get(target, prop) {
+      if (typeof prop === 'symbol' || prop === 'then') return target[prop];
+      if (!(prop in target)) {
+        violations.push(`unmodeled client property: ${prop}`);
+        log.push({ on: 'client', op: `get:${prop}`, args: [] });
+      }
+      return target[prop];
+    },
+  });
+
   const createClient = async (url, key) => {
     factoryCalls.push({ url, key });
-    return client;
+    return proxied;
   };
   return { createClient, log, violations, factoryCalls, builders };
 }
@@ -388,6 +410,20 @@ test('read-only: against a filtering table, an unknown status comes back in open
   assert.deepEqual(body.open.map((r) => r.short_id), [1, 2], 'open includes the unknown status');
   assert.deepEqual(body.open.map((r) => r.status), ['open', 'awaiting_review']);
   assert.deepEqual(body.closed.map((r) => r.short_id), [3], 'only the closure inside 30 days');
+});
+
+test('realistic data: every open status, addressed to justin and lucas, plus a recent closure', async () => {
+  const OPEN_STATUSES_LITERAL = ['backlog', 'proposed', 'open', 'in_progress', 'blocked', 'needs_acceptance'];
+  const openRows = OPEN_STATUSES_LITERAL.map((status, i) => rows(i + 1, 1, {
+    status,
+    addressed_to: i % 2 === 0 ? 'justin' : 'lucas',
+    needed_by: '2026-12-01',
+  })[0]);
+  const doneRow = rows(20, 1, { status: 'done', closed_at: new Date(Date.now() - 3 * 86400000).toISOString() })[0];
+  const fake = makeFake({ dataset: [...openRows, doneRow] });
+  const { body } = await run(req(), fullEnv(), fake);
+  assert.deepEqual(body.open, openRows, 'open rows come back exactly as stored');
+  assert.deepEqual(body.closed, [doneRow], 'the recent closure comes back exactly as stored');
 });
 
 test('response: configured, fetched_at, rows split open/closed, truncated false', async () => {
