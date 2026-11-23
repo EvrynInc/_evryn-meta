@@ -41,6 +41,12 @@ git diff --stat origin/main..main -- dashboard/    # empty = no-op redeploy of i
 
 Tabs are plain `<button data-tab>` elements switching `.tab-pane` visibility. Adding one means adding a button, a pane, and its content.
 
+- **Tasks** *(tab one, the default; task T-142)* — a live, **read-only** view of the team task list (`public.tasks` in the Evryn Team project), so Justin can watch a task move the moment it changes.
+  - **Endpoint:** `api/tasks.ts` (`GET /api/tasks`). It reads the same `TEAM_SUPABASE_URL` / `TEAM_SUPABASE_SERVICE_ROLE_KEY` as the Team Runtime tab, so it needs **no new env var**; with either unset it returns `{ configured: false }`.
+  - **Read-only by construction:** GET only (anything else gets 405), one table, eight columns (`short_id, title, status, owner, addressed_to, needed_by, updated_at, closed_at`), and no write call anywhere in the file. Task bodies, links, RACI, tags, notes and sign-off fields never leave the server.
+  - **What it returns:** every task that is not closed, plus tasks closed in the last 30 days. Each read pages by `short_id` until a page comes back empty, because PostgREST silently caps an unbounded read at 1,000 rows. If the page bound is ever hit, the response says `truncated: true` and the tab shows a warning.
+  - **Refresh:** the tab polls every 15 seconds while the browser tab is visible and stops while it is hidden. It fetches at once when the tab is shown again, and never sends two requests at once. A header pinned to the top shows when the data was last updated, in Pacific time. If a poll fails, the last good data stays on screen with a stale warning.
+  - **Tests:** run `npm test` from `dashboard/`. No install is needed: Node 25 runs the `.ts` tests directly against a fake database client. To prove those tests can fail, run `node test/mutation-controls.mjs`. It breaks temp copies of the endpoint seven ways and checks that the suite goes red each time.
 - **The Map** *(in progress — destined to be tab one)* — the visual map of the product. See `MAP-DESIGN.md`.
 - **Evryn Product** — product vitals, deliberately phone-first: health, recent activity, error count, spend.
 - **Team Runtime** — the founding-team runtime.

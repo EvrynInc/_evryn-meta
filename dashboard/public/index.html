@@ -460,6 +460,46 @@
 
     .tr-section-label { font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 1px; margin: 20px 0 8px; }
     .tr-empty { background: #111; border: 1px dashed #333; border-radius: 8px; padding: 20px; text-align: center; color: #666; font-size: 0.82rem; }
+
+    /* ===== Tasks tab (T-142): live, read-only view of the team task list ===== */
+    /* The header sticks to the top of the viewport however far you scroll. It spans the
+       body's 16px side padding (negative margin), and its right padding keeps its text
+       clear of the fixed Refresh button (top-right, z-index 50), which sits above it. */
+    .tk-header {
+      position: sticky; top: 0; z-index: 40;
+      background: #0a0a0a; border-bottom: 1px solid #333;
+      margin: 0 -16px 12px; padding: 10px 112px 10px 16px;
+    }
+    .tk-updated { font-size: 0.85rem; color: #aaa; font-weight: 600; }
+    .tk-updated .t { color: #fff; }
+    .tk-stale { display: block; font-size: 0.78rem; color: #f97316; font-weight: 600; margin-top: 2px; }
+    .tk-summary { font-size: 0.72rem; color: #888; margin-top: 2px; }
+    .tk-summary .od { color: #ef4444; font-weight: 600; }
+    .tk-note { font-size: 0.72rem; color: #777; margin: 0 0 8px; }
+    .tk-group { margin-top: 18px; }
+    .tk-group-head h3 { font-size: 0.85rem; color: #ccc; text-transform: uppercase; letter-spacing: 1px; margin: 0; display: flex; gap: 8px; align-items: baseline; }
+    .tk-count { color: #888; font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+    .tk-sub { font-size: 0.72rem; color: #666; margin: 2px 0 4px; }
+    .tk-empty { font-size: 0.75rem; color: #555; margin-top: 4px; }
+    .tk-card { background: #1a1a1a; border: 1px solid #333; border-left: 4px solid #333; border-radius: 6px; padding: 10px 12px; margin-top: 8px; min-width: 0; }
+    .tk-card.overdue { border-left-color: #ef4444; }
+    .tk-head { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: 0.75rem; }
+    .tk-id { font-family: ui-monospace, Consolas, Menlo, monospace; font-weight: 700; color: #fff; }
+    .tk-chip { padding: 1px 8px; border-radius: 10px; font-size: 0.68rem; font-weight: 600; background: #333; color: #ccc; }
+    .tk-s-needs_acceptance { background: #2e1065; color: #c4b5fd; }
+    .tk-s-proposed { background: #422006; color: #eab308; }
+    .tk-s-open { background: #1e3a5f; color: #60a5fa; }
+    .tk-s-in_progress { background: #134e4a; color: #2dd4bf; }
+    .tk-s-blocked { background: #7f1d1d; color: #fca5a5; }
+    .tk-s-backlog, .tk-s-done, .tk-s-decided_against { background: #1f2937; color: #9ca3af; }
+    .tk-title { font-size: 0.92rem; font-weight: 600; color: #f3f3f3; margin: 4px 0 6px; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .tk-meta { display: flex; flex-wrap: wrap; gap: 2px 16px; font-size: 0.75rem; color: #aaa; }
+    .tk-meta .k { color: #666; }
+    .tk-need.overdue { color: #ef4444; font-weight: 600; }
+    .tk-need.today { color: #eab308; font-weight: 600; }
+    .tk-muted { color: #666; }
+    .tk-closed { margin-top: 24px; }
+    .tk-closed > summary { cursor: pointer; font-size: 0.85rem; color: #ccc; text-transform: uppercase; letter-spacing: 1px; padding: 6px 0; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
@@ -486,7 +526,8 @@
 
   <!-- Tab switcher -->
   <div class="tabs">
-    <button class="tab-btn active" data-tab="product-tab">Evryn Product</button>
+    <button class="tab-btn active" data-tab="tasks-tab">Tasks</button>
+    <button class="tab-btn" data-tab="product-tab">Evryn Product</button>
     <button class="tab-btn" data-tab="team-tab">Team Runtime</button>
     <button class="tab-btn" data-tab="agents-tab">Agents</button>
   </div>
@@ -591,8 +632,16 @@
     <button class="load-more" id="load-more" style="display:none;">Load More</button>
   </div>
 
+  <!-- Tasks Tab (T-142): live, read-only. Data comes only from /api/tasks; nothing is cached into the page. -->
+  <div id="tasks-tab" class="tab-pane active">
+    <div id="tasks-content">
+      <div class="tk-header" id="tasks-header"><span class="tk-updated">Loading the task list…</span></div>
+      <div id="tasks-body"></div>
+    </div>
+  </div>
+
   <!-- Evryn Product Tab -->
-  <div id="product-tab" class="tab-pane active">
+  <div id="product-tab" class="tab-pane">
     <div id="product-content">
       <div class="loading">Loading...</div>
     </div>
@@ -768,6 +817,7 @@
         loadData();
         loadProductData();
         loadTeamData();
+        loadTasksData().then(scheduleTasksPoll);
       }
     }
 
@@ -1513,6 +1563,245 @@
       }
     });
 
+    // ========== Tasks tab (T-142) ==========
+    // A live, READ-ONLY view of the team task list (public.tasks in the Evryn Team
+    // project), read through /api/tasks. It polls every 15s while this browser tab is
+    // visible, stops while it is hidden, and fetches at once when it is shown again.
+    // Never two requests at once. No realtime subscription (that would need a key in
+    // the browser), no task data cached into the page, and nothing here writes.
+    // Every string from the response goes through escapeHtml.
+    const TASKS_POLL_MS = 15000;
+    const TASKS_FETCH_TIMEOUT_MS = 10000;
+    const TASKS_TZ = 'America/Los_Angeles';
+    // Display order. Statuses outside this list land in "Other statuses", so a row never vanishes.
+    const TASK_GROUPS = [
+      { status: 'needs_acceptance', label: 'Needs acceptance', sub: 'Done by the owner, waiting for the accountable to accept' },
+      { status: 'proposed', label: 'Proposed', sub: 'Waiting for authorization' },
+      { status: 'open', label: 'Open', sub: 'Authorized, not started' },
+      { status: 'in_progress', label: 'In progress', sub: 'Being worked, or sent back with feedback' },
+      { status: 'blocked', label: 'Blocked', sub: 'Waiting on someone else' },
+      { status: 'backlog', label: 'Backlog', sub: 'Ideas kept for later; the date is the review date' },
+    ];
+    const TASK_STATUS_LABEL = {
+      needs_acceptance: 'Needs acceptance', proposed: 'Proposed', open: 'Open', in_progress: 'In progress',
+      blocked: 'Blocked', backlog: 'Backlog', done: 'Done', decided_against: 'Decided against',
+    };
+    let tasksLast = null;        // body of the last SUCCESSFUL response
+    let tasksFailedAt = null;    // when the latest poll failed; null when the latest poll succeeded
+    let tasksInFlight = false;   // guards against overlapping requests
+    let tasksTimer = null;       // the one pending poll, if any
+    let tasksClosedOpen = false; // the closed section stays as Justin left it across re-renders
+    let tasksBodyKey = null;     // skip re-rendering the list when nothing changed
+
+    // Calendar-date helpers: a needed_by is a DATE ('YYYY-MM-DD'), so compare dates as
+    // dates, never through a local-time Date (which would shift it by the time zone).
+    function tasksTodayPT() {
+      return new Intl.DateTimeFormat('en-CA', { timeZone: TASKS_TZ, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+    }
+    function tasksIsYmd(s) { return typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s); }
+    function tasksYmdUtc(s) { const [y, m, d] = s.split('-').map(Number); return Date.UTC(y, m - 1, d); }
+    function tasksDayDiff(a, b) { return Math.round((tasksYmdUtc(b) - tasksYmdUtc(a)) / 86400000); }
+    function tasksFmtDate(ymd) {
+      return new Intl.DateTimeFormat('en-US', { timeZone: 'UTC', weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })
+        .format(new Date(tasksYmdUtc(ymd)));
+    }
+    function tasksFmtTime(value, withSeconds) {
+      const d = value instanceof Date ? value : new Date(value);
+      if (isNaN(d.getTime())) return '—';
+      const opts = { timeZone: TASKS_TZ, weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' };
+      if (withSeconds) opts.second = '2-digit';
+      return new Intl.DateTimeFormat('en-US', opts).format(d);
+    }
+
+    function taskCard(t, closed, today) {
+      const status = String(t.status || '');
+      const isBacklog = status === 'backlog';
+      let needHtml = '<span class="tk-muted">none</span>';
+      let overdue = false;
+      if (tasksIsYmd(t.needed_by)) {
+        if (closed) {
+          needHtml = escapeHtml(tasksFmtDate(t.needed_by));
+        } else {
+          const d = tasksDayDiff(today, t.needed_by);
+          overdue = d < 0;
+          const rel = d < 0 ? (isBacklog ? 'review overdue by ' : 'overdue by ') + (-d) + ' day' + (d === -1 ? '' : 's')
+            : d === 0 ? (isBacklog ? 'review today' : 'due today')
+            : 'in ' + d + ' day' + (d === 1 ? '' : 's');
+          needHtml = `<span class="tk-need${overdue ? ' overdue' : d === 0 ? ' today' : ''}">${escapeHtml(tasksFmtDate(t.needed_by))} ` +
+            `<span class="tk-muted">(${escapeHtml(rel)})</span></span>`;
+        }
+      } else if (t.needed_by) {
+        needHtml = escapeHtml(String(t.needed_by));
+      }
+      const who = (v) => v ? escapeHtml(String(v)) : '<span class="tk-muted">none</span>';
+      const closedHtml = closed && t.closed_at
+        ? `<span><span class="k">closed:</span> ${escapeHtml(tasksFmtTime(t.closed_at, false))}</span>` : '';
+      return `
+        <div class="tk-card${overdue ? ' overdue' : ''}">
+          <div class="tk-head">
+            <span class="tk-id">T-${escapeHtml(String(t.short_id ?? '?'))}</span>
+            <span class="tk-chip tk-s-${escapeHtml(status)}">${escapeHtml(TASK_STATUS_LABEL[status] || status || '(no status)')}</span>
+          </div>
+          <div class="tk-title">${escapeHtml(t.title)}</div>
+          <div class="tk-meta">
+            <span><span class="k">owner:</span> ${who(t.owner)}</span>
+            <span><span class="k">to:</span> ${who(t.addressed_to)}</span>
+            <span><span class="k">${isBacklog ? 'review by' : 'needed by'}:</span> ${needHtml}</span>
+            ${closedHtml}
+          </div>
+        </div>`;
+    }
+
+    // Dated first, earliest first; then by T-number (the snapshot page's order).
+    function tasksByNeed(a, b) {
+      const an = tasksIsYmd(a.needed_by) ? a.needed_by : null, bn = tasksIsYmd(b.needed_by) ? b.needed_by : null;
+      if (an && bn && an !== bn) return an < bn ? -1 : 1;
+      if (an && !bn) return -1;
+      if (!an && bn) return 1;
+      return (Number(a.short_id) || 0) - (Number(b.short_id) || 0);
+    }
+
+    function tasksOverdueCount(open, today) {
+      return open.filter((t) => tasksIsYmd(t.needed_by) && tasksDayDiff(today, t.needed_by) < 0).length;
+    }
+
+    function renderTasksHeader() {
+      const el = document.getElementById('tasks-header');
+      if (!el) return;
+      const d = tasksLast;
+      if (!d) {
+        el.innerHTML = tasksFailedAt
+          ? `<span class="tk-updated">Not loaded yet</span><span class="tk-stale">Couldn't reach the task list at ${escapeHtml(tasksFmtTime(tasksFailedAt, true))}; retrying every 15s.</span>`
+          : '<span class="tk-updated">Loading the task list…</span>';
+        return;
+      }
+      if (d.configured === false) {
+        el.innerHTML = '<span class="tk-updated">Task list not connected</span>';
+        return;
+      }
+      const open = d.open || [];
+      const overdue = tasksOverdueCount(open, tasksTodayPT());
+      let html = `<span class="tk-updated">Last updated <span class="t">${escapeHtml(tasksFmtTime(d.fetched_at, true))}</span></span>`;
+      if (tasksFailedAt) {
+        html += `<span class="tk-stale">Couldn't refresh at ${escapeHtml(tasksFmtTime(tasksFailedAt, true))}; showing data from ${escapeHtml(tasksFmtTime(d.fetched_at, true))}.</span>`;
+      }
+      if (d.truncated) {
+        html += '<span class="tk-stale">The list is longer than the page limit; some rows are not shown.</span>';
+      }
+      html += `<div class="tk-summary">${open.length} not closed` +
+        (overdue ? ` · <span class="od">${overdue} overdue</span>` : ' · none overdue') + '</div>';
+      el.innerHTML = html;
+    }
+
+    function renderTasksBody() {
+      const el = document.getElementById('tasks-body');
+      if (!el) return;
+      const d = tasksLast;
+      const today = tasksTodayPT();
+      if (!d) {
+        if (tasksBodyKey !== null) return; // keep whatever is shown
+        el.innerHTML = tasksFailedAt ? '<div class="error">Failed to load the task list</div>' : '<div class="loading">Loading...</div>';
+        return;
+      }
+      if (d.configured === false) {
+        tasksBodyKey = 'unconfigured';
+        el.innerHTML = '<div class="product-notice">Task list not connected — it reads the same ' +
+          '<code>TEAM_SUPABASE_URL</code> and <code>TEAM_SUPABASE_SERVICE_ROLE_KEY</code> env vars as the Team Runtime tab.</div>';
+        return;
+      }
+      const open = Array.isArray(d.open) ? d.open : [];
+      const closed = Array.isArray(d.closed) ? d.closed : [];
+      // Re-render only when the rows (or the date that decides "overdue") changed.
+      const key = today + '|' + JSON.stringify(open) + '|' + JSON.stringify(closed);
+      if (key === tasksBodyKey) return;
+      tasksBodyKey = key;
+
+      const known = new Set(TASK_GROUPS.map((g) => g.status));
+      const groups = TASK_GROUPS.slice();
+      const others = open.filter((t) => !known.has(t.status));
+      if (others.length) groups.push({ status: '__other', label: 'Other statuses', sub: 'Statuses this tab does not know yet; shown so nothing is hidden' });
+
+      let html = '<p class="tk-note">Shows what the task table holds right now. A status here is a record, not proof that anyone authorized anything.</p>';
+      groups.forEach((g) => {
+        const items = (g.status === '__other' ? others : open.filter((t) => t.status === g.status)).slice().sort(tasksByNeed);
+        html += `<div class="tk-group">
+          <div class="tk-group-head"><h3>${escapeHtml(g.label)} <span class="tk-count">${items.length}</span></h3>
+          <div class="tk-sub">${escapeHtml(g.sub)}</div></div>
+          ${items.length ? items.map((t) => taskCard(t, false, today)).join('') : '<div class="tk-empty">Nothing here.</div>'}
+        </div>`;
+      });
+
+      const closedSorted = closed.slice().sort((a, b) => String(b.closed_at || '').localeCompare(String(a.closed_at || '')));
+      html += `<details class="tk-closed" id="tasks-closed"${tasksClosedOpen ? ' open' : ''}>
+        <summary>Closed in the last 30 days <span class="tk-count">${closedSorted.length}</span></summary>
+        <div class="tk-sub">Done or decided against, newest first.</div>
+        ${closedSorted.length ? closedSorted.map((t) => taskCard(t, true, today)).join('') : '<div class="tk-empty">Nothing closed in the last 30 days.</div>'}
+      </details>`;
+
+      el.innerHTML = html;
+      const det = document.getElementById('tasks-closed');
+      if (det) det.addEventListener('toggle', () => { tasksClosedOpen = det.open; });
+    }
+
+    function renderTasks() {
+      renderTasksHeader();
+      renderTasksBody();
+    }
+
+    // One fetch. On failure the last good data stays on screen and the header says it is stale.
+    async function loadTasksData() {
+      if (!authHeader || tasksInFlight) return;
+      tasksInFlight = true;
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), TASKS_FETCH_TIMEOUT_MS);
+      try {
+        const res = await fetch('/api/tasks', {
+          method: 'GET',
+          headers: { 'Authorization': authHeader },
+          cache: 'no-store',
+          signal: controller.signal,
+        });
+        if (res.status === 401) {
+          localStorage.removeItem('evryn_auth'); authHeader = null; showLogin(true); return;
+        }
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        if (data.configured !== false && (!Array.isArray(data.open) || !Array.isArray(data.closed))) {
+          throw new Error('unexpected response shape');
+        }
+        tasksLast = data;
+        tasksFailedAt = null;
+      } catch (err) {
+        console.error('Tasks error:', err);
+        tasksFailedAt = new Date();
+      } finally {
+        clearTimeout(timer);
+        tasksInFlight = false;
+      }
+      renderTasks();
+    }
+
+    // Keep exactly one pending poll, and none while the browser tab is hidden.
+    function scheduleTasksPoll() {
+      clearTimeout(tasksTimer);
+      tasksTimer = null;
+      if (document.hidden) return;
+      tasksTimer = setTimeout(async () => {
+        tasksTimer = null;
+        await loadTasksData();
+        scheduleTasksPoll();
+      }, TASKS_POLL_MS);
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        clearTimeout(tasksTimer);
+        tasksTimer = null;
+      } else {
+        loadTasksData().then(scheduleTasksPoll);
+      }
+    });
+
     // Set up login handlers
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('login-btn').addEventListener('click', doLogin);
@@ -1541,6 +1830,8 @@
     loadProductData();
     // Team runtime loads on its own track too (a third, separate database).
     loadTeamData();
+    // Tasks: a fourth independent track, on its own visible-only 15s poll (not the 30s intervals below).
+    loadTasksData().then(scheduleTasksPoll);
 
     // Auto-refresh every 30 seconds
     setInterval(loadData, 30000);
