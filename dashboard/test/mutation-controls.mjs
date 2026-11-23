@@ -33,7 +33,11 @@ const SRC = join(DASH, 'api', 'tasks.ts');
 const TEST = join(DASH, 'test', 'tasks.test.ts');
 const PKG = join(DASH, 'package.json');
 
-const original = readFileSync(SRC, 'utf8');
+const originalBytes = readFileSync(SRC, 'utf8');
+// The anchors below are written with LF. A Windows checkout (core.autocrlf) can give
+// the file CRLF endings, so the temp copies are made from an LF-normalized text. The
+// real file is only ever read; the unchanged-check at the end compares its raw bytes.
+const original = originalBytes.replace(/\r\n/g, '\n');
 
 // Each control: a name, the suite that must go red, and one exact-text replacement.
 const CONTROLS = [
@@ -153,7 +157,7 @@ for (const c of CONTROLS) {
 }
 
 const after = readFileSync(SRC, 'utf8');
-const untouched = after === original;
+const untouched = after === originalBytes;
 console.log(`real api/tasks.ts unchanged: ${untouched ? 'YES' : 'NO'}`);
 if (!untouched) allHold = false;
 
