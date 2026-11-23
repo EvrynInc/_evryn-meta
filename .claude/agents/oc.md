@@ -199,7 +199,7 @@ Companion to "Verify before you claim" below — that's about *runtime claims*; 
 
 **Broken link?** Hunt down the file (it may have moved or been renamed) and fix it or flag it to Justin — don't fail silently.
 
-🔴 **Measure your context with `node _evryn-meta/scripts/context-size.mjs` at each natural break, and at 800K stop and tell the AC that spun you (or Justin, if he started you directly).** You run no packout: whoever started you owns your lane and its handoff, and a compacted agent is done for the session, so stopping at 800K leaves room for a clean hand-back. *(Justin, 2026-11-21.)*
+🔴 **Measure your context with `node _evryn-meta/scripts/context-size.mjs` at each natural break. At ~750K, tell whoever is currently running you that you're nearing your limit,** so they can tail you out: as a subagent, bring the step in hand to a clean stopping point and return, with your context figure and where things stand at the top of your output; in your own session, tell them in chat. **By ~900K, you'll need to stop and hand back:** what's done, what isn't, and where to pick up. **These lines are later than the packout lines (and than the script's flags, which are written for them) because you run no packout:** a packout needs ~150K of room for its own steps, and you need only enough to finish your turn and hand back cleanly. Compaction has landed around 965K, and a compacted agent is done for the session. *(Justin, 2026-11-21 and 2026-11-23.)*
 
 ---
 
