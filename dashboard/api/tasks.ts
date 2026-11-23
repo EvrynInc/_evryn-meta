@@ -7,11 +7,15 @@
 // and no client is created.
 //
 // READ-ONLY BY CONSTRUCTION, because the key is a service-role key that COULD write:
-//   - GET only; any other method gets 405 before a client exists;
-//   - one table (tasks), one fixed column list (COLUMNS below), read filters only;
-//   - no insert / update / upsert / delete / rpc anywhere in this file.
-// test/tasks.test.ts pins all of that against a recording fake client, and
-// test/mutation-controls.mjs proves each of those tests goes red when it should.
+//   - GET only; any other method (HEAD and OPTIONS included) gets 405 before a client exists;
+//   - one table (tasks), one fixed column list (COLUMNS below), read filters only,
+//     exactly two reads (not-closed, and closed in the last 30 days);
+//   - no insert / update / upsert / delete / rpc, and no direct fetch, anywhere in this file.
+// test/tasks.test.ts pins those against a recording fake client and a global fetch
+// that fails on any call; on EVERY response it also checks that no secret appears and
+// that a 200 carries only the five top-level keys and the eight columns; and it checks
+// the server log carries no secret. test/mutation-controls.mjs proves each of those
+// checks goes red when the code breaks it.
 //
 // PRIVACY: the column list is deliberately narrow. Task bodies, links, RACI, tags,
 // notes and sign-off fields never leave the server; the headline is the most this
@@ -37,9 +41,13 @@ export const config = {
 export const COLUMNS =
   'short_id, title, status, owner, addressed_to, needed_by, updated_at, closed_at';
 
-// The six statuses that are not closed (migration 005's eight, minus the two closed ones).
-export const OPEN_STATUSES = ['backlog', 'proposed', 'open', 'in_progress', 'blocked', 'needs_acceptance'];
+// The two closed statuses. The "open" read takes EVERY status that is not one of these,
+// not a list of known open ones, so a status added later is still fetched and lands
+// in the tab's "Other statuses" group instead of vanishing.
 export const CLOSED_STATUSES = ['done', 'decided_against'];
+// PostgREST list syntax for .not('status', 'in', ...): supabase-js passes this value
+// through as-is (`status=not.in.(done,decided_against)`), unlike .in(), which builds it.
+export const CLOSED_FILTER = `(${CLOSED_STATUSES.join(',')})`;
 export const CLOSED_WINDOW_DAYS = 30;
 
 // Rows per page: under PostgREST's 1,000-row default ceiling, so a page is never
@@ -90,8 +98,23 @@ function checkAuth(request: Request, validPassword: string | undefined): Respons
   return null; // Auth passed
 }
 
-// Thrown on a database error. Carries nothing: the caller answers with a generic 500.
-class TasksReadError extends Error {}
+// A token is safe to log only if it is short and plain: no spaces, slashes, dots or
+// colons, so it cannot carry a URL, a key or a message. Anything else logs as 'unknown'.
+const SAFE_TOKEN = /^[A-Za-z0-9_]{1,40}$/;
+export function safeToken(value: unknown): string {
+  return typeof value === 'string' && SAFE_TOKEN.test(value) ? value : 'unknown';
+}
+
+// Thrown on a database error. Carries only the sanitized error code (e.g. 42703 for a
+// missing column, PGRST301 for a bad key), never the message, details, hint or object.
+class TasksReadError extends Error {
+  dbCode = 'unknown';
+  constructor(code: unknown) {
+    super('tasks read failed');
+    this.name = 'TasksReadError';
+    this.dbCode = safeToken(code);
+  }
+}
 
 // Page one read to exhaustion by keyset on short_id. `filter` applies the read's
 // own WHERE clauses to a fresh select on tasks.
@@ -105,7 +128,7 @@ async function readAll(
     let q = filter(client.from('tasks').select(COLUMNS));
     if (last !== null) q = q.gt('short_id', last);
     const { data, error } = await q.order('short_id', { ascending: true }).limit(PAGE_SIZE);
-    if (error) throw new TasksReadError();
+    if (error) throw new TasksReadError(error && error.code);
     const rows = Array.isArray(data) ? data : [];
     if (rows.length === 0) return { rows: out, truncated: false };
     out.push(...rows);
@@ -141,7 +164,7 @@ export async function handleTasks(
     const cutoff = new Date(Date.now() - CLOSED_WINDOW_DAYS * 86400000).toISOString();
 
     const [open, closed] = await Promise.all([
-      readAll(client, (q) => q.in('status', OPEN_STATUSES)),
+      readAll(client, (q) => q.not('status', 'in', CLOSED_FILTER)),
       readAll(client, (q) => q.in('status', CLOSED_STATUSES).gte('closed_at', cutoff)),
     ]);
 
@@ -152,9 +175,14 @@ export async function handleTasks(
       closed: closed.rows,
       truncated: open.truncated || closed.truncated,
     });
-  } catch {
-    // Generic on purpose: a client error object can carry the project URL.
-    console.error('Tasks API: read failed');
+  } catch (err) {
+    // The response is generic on purpose: a client error object can carry the project
+    // URL. The log carries only a sanitized code and name, so the causes can be told
+    // apart on Vercel (a failed dynamic import, a bad key, a missing column, the network).
+    const e = err as { code?: unknown; name?: unknown } | null;
+    const code = err instanceof TasksReadError ? err.dbCode : safeToken(e && e.code);
+    const name = safeToken(e && e.name);
+    console.error(`Tasks API: read failed (code=${code}, name=${name})`);
     return json({ error: 'Failed to load tasks' }, 500);
   }
 }

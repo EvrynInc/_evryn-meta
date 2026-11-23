@@ -60,7 +60,7 @@ const CONTROLS = [
     id: 'd', name: 'auth: remove the checkAuth call (must turn the AUTH suite red)',
     find: '  const denied = checkAuth(request, env.DASHBOARD_PASSWORD);\n  if (denied) return denied;\n',
     replace: '',
-    mustFail: /^not ok \d+ - auth: /m,
+    mustFail: /^not ok \d+ - auth: /m, label: 'auth-suite-red',
   },
   {
     id: 'e', name: 'columns: add description to the select',
@@ -76,6 +76,49 @@ const CONTROLS = [
     id: 'g', name: 'paging: stop on a short page instead of a zero-row page',
     find: '    if (rows.length === 0) return { rows: out, truncated: false };\n    out.push(...rows);\n',
     replace: '    out.push(...rows);\n    if (rows.length < PAGE_SIZE) return { rows: out, truncated: false };\n',
+  },
+  // ---- Fix round (QC-TT B1-B3, N1, N2, N7). Each names the check that must catch it. ----
+  {
+    id: 'h', name: 'B1: put the URL and key in the 200 body (debug: { url, key })',
+    find: '      truncated: open.truncated || closed.truncated,\n',
+    replace: '      truncated: open.truncated || closed.truncated,\n      debug: { url, key },\n',
+    mustFail: /secret marker in a 200 body/, label: 'secret-check-red',
+  },
+  {
+    id: 'i', name: 'B2: an unawaited DELETE through the global fetch, around the client',
+    find: '    const client = await deps.createClient(url, key);\n',
+    replace: "    const client = await deps.createClient(url, key);\n    fetch(url + '/rest/v1/tasks?id=not.is.null', { method: 'DELETE', headers: { apikey: key, Authorization: 'Bearer ' + key } }).catch(() => {});\n",
+    mustFail: /global fetch was called/, label: 'fetch-guard-red',
+  },
+  {
+    id: 'j', name: 'B3: closed window 30 -> 36500 days',
+    find: 'export const CLOSED_WINDOW_DAYS = 30;',
+    replace: 'export const CLOSED_WINDOW_DAYS = 36500;',
+    mustFail: /not ok \d+ - read-only: the closed window is 30 days, pinned to a literal/, label: 'window-test-red',
+  },
+  {
+    id: 'k', name: 'B3: a third read over every status, no window, merged into closed',
+    find: '    ]);\n\n    return json({\n      configured: true,',
+    replace: '    ]);\n    const extra = await readAll(client, (q) => q);\n    closed.rows.push(...extra.rows);\n\n    return json({\n      configured: true,',
+    mustFail: /not ok \d+ - read-only: exactly two reads per request/, label: 'two-reads-test-red',
+  },
+  {
+    id: 'l', name: 'N1: revert the open read to the six known statuses',
+    find: "q.not('status', 'in', CLOSED_FILTER)",
+    replace: "q.in('status', ['backlog', 'proposed', 'open', 'in_progress', 'blocked', 'needs_acceptance'])",
+    mustFail: /not ok \d+ - read-only: against a filtering table, an unknown status comes back in open/, label: 'unknown-status-test-red',
+  },
+  {
+    id: 'm', name: 'N2: log the raw error object',
+    find: '    console.error(`Tasks API: read failed (code=${code}, name=${name})`);\n',
+    replace: "    console.error('Tasks API: read failed', err);\n",
+    mustFail: /secret marker in the server log/, label: 'log-check-red',
+  },
+  {
+    id: 'n', name: 'N7: let HEAD through the method gate',
+    find: "  if (request.method !== 'GET') {",
+    replace: "  if (request.method !== 'GET' && request.method !== 'HEAD') {",
+    mustFail: /not ok \d+ - read-only: HEAD with valid auth/, label: 'head-test-red',
   },
 ];
 
@@ -147,7 +190,7 @@ for (const c of CONTROLS) {
   let extra = '';
   if (c.mustFail) {
     const hit = c.mustFail.test(suite.out);
-    extra = ` auth-suite-red=${hit ? 'YES' : 'NO'}`;
+    extra = ` ${c.label}=${hit ? 'YES' : 'NO'}`;
     holds = holds && hit;
   }
   if (!holds) allHold = false;
