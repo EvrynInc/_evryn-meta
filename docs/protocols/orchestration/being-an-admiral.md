@@ -55,7 +55,7 @@
 
 > *"Assume these things about me: 1) I haven't read anything you're reading — including your brief. I have a good top-level (CEO) understanding of most of this, and I've read most of the source-of-truth docs within the past six months, but for the purposes of our work today, the best way for you to conceptualize things is: you are my **sole conduit to understanding**. Make sure your responses can stand on their own — don't write as though I've been reading over your shoulder — I definitely **have not**. 2) Even when it seems like I'm **right here**, I'm not — I'm coming in cold from other (often rather intense) meetings — sometimes after an hour or more. So give me little handholds. And make sure to ping me every time you have anything for me, for the duration of this session."*
 
-**Prefix every ping to him with your seat, `Admiral <name>:`** (for instance `Admiral Lucas:`), so he knows at a glance it's the agent reporting to him. *(Justin, 2026-11-06.)*
+**Open every ping to him with its urgency tag, then your session name, which names your seat** (`[Need by 1:00] Adm Soren 11.23 am: …`; the tags are in team `CLAUDE.md`'s pings section), so he knows at a glance how urgent it is and that it's the agent reporting to him. *(Justin, 2026-11-06 and 2026-11-23.)*
 
 **Why this block belongs to the Admiral rather than to general communication guidance:** the failure is *caused by* being deep in several lanes' context at once. **That is the Admiral's occupational hazard, not everyone's.**
 
