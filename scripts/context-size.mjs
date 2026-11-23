@@ -24,7 +24,7 @@
 //   - It is the size at the LAST COMPLETED API call, so it lags the current turn by whatever that turn has added.
 //   - A session resumed after a restart can come back under a NEW session id; find it with --recent.
 //   - The compaction point is observed, not documented (~965K so far). The lines this script flags: start tailing out at ~750K,
-//     start your packout at ~800K, be done by ~950K. The packout guard's hand-off ceiling is 940K, so the top flag fires there.
+//     start your packout at ~800K, be done by ~950K.
 //     Packing out earlier than ~800K costs Justin an extra re-spin, so nothing prints below 750K.
 //   - SYNC: these numbers have two homes, and this script is a third copy of them: team CLAUDE.md's #packout line (team agents)
 //     and _evryn-meta/.claude/agents/ac.md, Context Discipline, "MEASURE YOUR CONTEXT; NEVER ESTIMATE IT" (ACs). Change all three together.
@@ -77,10 +77,10 @@ function measure(file) {
 function report(label, file) {
   const m = measure(file);
   const pct = Math.round((m.now / WINDOW) * 100);
-  // Justin's measured lines, 2026-11-21 (see SYNC in the header): tail out at ~750K, start the packout at ~800K, be done by ~950K;
-  // the packout guard hands off at 940K. A warning that fires earlier gets read as "pack out now" and costs an extra re-spin,
+  // Justin's measured lines, 2026-11-21 (see SYNC in the header): tail out at ~750K, start the packout at ~800K, be done by ~950K.
+  // A warning that fires earlier gets read as "pack out now" and costs an extra re-spin,
   // so nothing prints below 750K, and no line says to pack out before ~800K.
-  const flag = m.now >= 940_000 ? '  🔴🔴 BE DONE NOW: be done by ~950K; the packout guard hands off at 940K; compaction has landed ~965K'
+  const flag = m.now >= 950_000 ? '  🔴🔴 BE DONE NOW: you are past ~950K; compaction has landed ~965K'
     : m.now >= 800_000 ? '  🔴 start your packout now (be done by ~950K)'
     : m.now >= 750_000 ? '  🟡 start tailing out: finish what is in hand, start nothing big; start your packout at ~800K'
     : '';

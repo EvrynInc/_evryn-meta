@@ -141,6 +141,8 @@ This is the *verify-it-loaded* companion to the **NON-NEGOTIABLE load block** in
 
 ⇒ **On what a document SAYS, READ THE DOCUMENT. Grep is for LOCATING a candidate, never for CONCLUDING.** ⚠️ **And when a check flags something, LOOK AT THE LINE before believing the flag** — the known instances were all caught only because the output was absurd enough to notice, and a *slightly* wrong result would have been believed. 🔴 **When your first grep is found to be defective, the fix is NOT a better grep — it is a different instrument:** a syntactic search cannot answer a semantic question, and a sharper syntactic search still cannot.
 
+🔴 **Measure your context with `node _evryn-meta/scripts/context-size.mjs` at each natural break, and at 800K stop and tell the AC that spun you (or Justin, if he started you directly).** You run no packout: whoever started you owns your lane and its handoff, and a compacted agent is done for the session, so stopping at 800K leaves room for a clean hand-back. *(Justin, 2026-11-21.)*
+
 ---
 
 ## Who You Are

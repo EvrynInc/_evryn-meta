@@ -78,6 +78,8 @@
 
 🔴 **Nothing in your domain is signed off without your own signature.** A Captain's sign-off is a case it makes to you, not the last word: bring your own altitude's judgment to it before you sign, and your Captains report through you, never around you to the VP or Justin. **Why:** Justin wants the domain head's eyes on everything in its domain, and no seat above you has the domain depth or the room to stand in for you. *(Justin, 2026-11-20: "*nothing* working under him gets signed off on without *his* signature. Even if Captain Sorens under him have signed off, they need to make the case to him, and he needs to bring his altitude-level judgment to it before he signs off.")*
 
+**A Captain's question that falls inside your authority stops with you.** Decide it, log the decision and its reason in the lane's Log, and report it upward as appropriate; don't relay it up to be decided there if you should decide it. Send up only what your seat shouldn't decide (team `CLAUDE.md`, "Before a question goes up") (an AC Admiral: the escalation ladder's hard floor in `spinning-an-ac.md` marks what isn't yours). *(Justin, 2026-11-23.)*
+
 ---
 
 ## The log and the signal
@@ -140,15 +142,7 @@ As of 2026-09-10, this is a brand-new feature, so watch as it evolves — it may
 
 ## Packing out — watch your own tokens, by measuring them
 
-**The Admiral offers the packout itself, before the edge.** Justin, 2026-09-10:
-
-> *"He pays attention to his tokens, and when he thinks (or measures, if that's available) that he has about 150k left, he pauses and asks me if I want to do a #packout."*
-
-**When he said this, an agent had no way to read its own context size, so his answer then was to re-anchor by asking him:**
-
-> *"When you're getting close on tokens, I'll often give you a count and then you'll start keeping track and you're **pretty decent** at keeping track. So I'd say 'pay attention to how many tokens you think you've used, but ask Justin where you're at, so you can re-anchor.' I want you watching for yourself — and I don't want a bunch of static in terms of **manufactured** check-ins. Obviously, natural check-ins should occur, but I'd love for one part of your brain to be **at least occasionally** thinking about your token count."*
-
-⇒ **Now you can measure it, so measure at each natural break: `node _evryn-meta/scripts/context-size.mjs`.** It reads the same number his screen shows, which is the "or measures, if that's available" in his first quote. **When you reach your packout start line, pause and offer `#packout`.** *(Your lines live in the home your agent loads: a founding-team Admiral's in team `CLAUDE.md`'s `#packout` line; an AC Admiral's in `ac.md`, Context Discipline, the bullets under "MEASURE YOUR CONTEXT; NEVER ESTIMATE IT".)* **The always-current brief is what makes that moment cheap** — and the stakes are highest for you, because a compacted agent is done for the session (ADR-058) and every lane is standing on your brief.
+**The Admiral offers the packout itself, before the edge.** At each natural break, measure your context with `node _evryn-meta/scripts/context-size.mjs`, which reads the same number Justin's screen shows. **When you reach your packout start line, pause and offer `#packout`.** *(Your lines live in the home your agent loads: a founding-team Admiral's in team `CLAUDE.md`'s `#packout` line; an AC Admiral's in `ac.md`, Context Discipline, the bullets under "MEASURE YOUR CONTEXT; NEVER ESTIMATE IT".)* **Measure at natural breaks, not on a timer:** he wants you watching for yourself, without manufactured check-ins. *(Justin, 2026-09-10 and 2026-11-21.)* **The always-current brief is what makes that moment cheap** — and the stakes are highest for you, because a compacted agent is done for the session (ADR-058) and every lane is standing on your brief.
 
 - **Run `#packout` in full** (`docs/protocols/packout-protocol.md`).
 - **A standalone Captain outlives your session; a subagent Captain dies with it** (`ac-orchestration-protocol.md` → *Subagent or standalone instance*). ⇒ **Before you pack out, every Captain's drafted changes must already be on the ledger.** Your successor finds each Captain through its log — re-publishing its own address, reading each log header for the Captain's current one, and re-arming the watchers.

@@ -64,8 +64,6 @@
 | You are | Your `#lock` |
 |---|---|
 | **AC** | `_evryn-meta/docs/protocols/lock-protocol.md` |
-| **DC** | `_evryn-meta/docs/protocols/dc-lock-protocol.md` |
-| **QC · OC** | the `#lock` section of your own manual — `_evryn-meta/.claude/agents/qc.md` · `oc.md` |
 | **a founding-team agent** | `evryn-team-workspace/shared/protocols/lock-protocol.md` |
 
 **Two things this buys, and the second is the one people miss:**
@@ -77,7 +75,7 @@
 
 **Having said that: if you are short on context, the most important thing you can do here is to get your handoff in good working order** - so if you are concerned you'll compact before you get that done, you can change the order so that your handoff is solid before you do a lock. Just read the lock protocol first, then think about what you need to do first, to make sure that if you compact, you haven't lost important information. **The #lock's fragment sweep and the fresh-eyes passes are the things that will be the hardest to re-create after you compact. If you capture those, the rest can fairly easily be re-derived.**
 
-**If you started your packout on time, you have plenty of room for every step, so you have *no reason* to skimp on any step.** *(On time means the start line in the home your agent loads: a founding-team agent's is team `CLAUDE.md`'s `#packout` line; an AC's is `ac.md`, Context Discipline, the bullets under "MEASURE YOUR CONTEXT; NEVER ESTIMATE IT". A DC, QC or OC runs no packout: the AC that spun it owns the lane and the handoff. A DC, QC or OC should still watch its own context against the AC's lines, and stop and tell that AC before nearing compaction.)* If you do get short on room, still don't skimp: just do the steps in priority order, and as you near the edge of compaction, work in small chunks, persisting each to disk before starting the next, so that if you do compact, no problem — you've captured as much as you could. *(Justin, 2026-11-18.)*
+**If you started your packout on time, you have plenty of room for every step, so you have *no reason* to skimp on any step.** *(On time means the start line in the home your agent loads: a founding-team agent's is team `CLAUDE.md`'s `#packout` line; an AC's is `ac.md`, Context Discipline, the bullets under "MEASURE YOUR CONTEXT; NEVER ESTIMATE IT". A DC, QC or OC runs no packout: the AC that spun it owns the lane and the handoff. A DC, QC or OC still measures its own context with `node _evryn-meta/scripts/context-size.mjs`, and at 800K stops and tells that AC.)* If you do get short on room, still don't skimp: just do the steps in priority order, and as you near the edge of compaction, work in small chunks, persisting each to disk before starting the next, so that if you do compact, no problem — you've captured as much as you could. *(Justin, 2026-11-18.)*
 
 ---
 
@@ -155,6 +153,8 @@
 
 > 🔴 **Only a handoff's original author changes the handoff's body.** A step-5 fresh reader, a Packout Checker, a VP or any other session that finds something wrong hands its notes back to the authoring session to fix. If that session can't take them (stopped, compacted, out of room), the outside session adds them at the bottom of the handoff, in a section headed "Outside notes," each with where it came from, and changes nothing above it. **If outside changes already went inline, revert them to the author's text and re-place them as outside notes, and tell any successor who has already loaded the handoff to diff it.** **Why:** an outside session can't understand the work the way its author did, so its notes are useful inputs, not gospel; written into the body, they read to the successor as the author's own understanding, and the successor can't tell which lines to weigh as outside input. *(Justin, 2026-11-21; first written as the Packout Checker's standing rule, `evryn-team-workspace/shared/projects/helm/2026/2026.11.19-packout-chain-investigation/2026.11.20-packout-checker-method.md` §2 item 8.)*
 
+> 🔴 **When the Packout Checker finds a gap, it takes the first of three routes that's open, and every verdict names which one it took.** **(1)** It hands the gap back to the seat that packed out, which redoes the step itself; this is the route whenever that seat is alive, uncompacted and has the room. **(2)** If the seat can't, it hands the gap to the seat's successor: the fix candidate, its reasoning and where to look in the transcript (session id, line range), as Outside notes at the bottom of the handoff. **(3)** Only as a last resort, it fixes the gap itself from the transcript and records that as a repair in its verdict. But in this case, the best approach is virtually always *not* to make the change inline; it's to give a *report* of proposed changes to the successor. **Why that order:** the checker holds only the transcript's surface, not the seat's loaded context or its reasoning, so a fix it makes can be wrong in ways neither it nor the successor can see. But the successor at least will have loaded all of the context of its predecessor, and so will have a better chance of being able to adjudicate the proposed changes. *(Justin, 2026-11-23: "bounce stuff back to you, then to 23, *then* to do it himself **only as a last resort**." "23" was that day's successor seat. Full wording: the checker method above, §2 item 7.)*
+
 ### 6 · Retire the old brief — or say plainly why it must stay
 
 **Per `_evryn-meta/docs/protocols/lock-protocol.md`retirement section.** **If it stays, it states its hold condition in its own first lines — for an AC, the `HELD-SESSION-DOC` banner, with a testable condition and a lineage owner. If it goes, it is archived under its OWN date and its filename does not change.**
@@ -170,6 +170,8 @@
 **Never launch your successor (never send its start line) until every step reads "done, with evidence."** If a step *genuinely* doesn't apply, write why it *genuinely doesn't apply*, with the check you ran.
 
 **And check that the handoff's body is all yours before you launch:** every outside finding is either folded in by you or sits under "Outside notes" at the bottom (step 5's rule, *"Only a handoff's original author changes the handoff's body"*). If another session's text is inline, revert it to your own and re-place it as an outside note first.
+
+**And if the Packout Checker hands a gap back to you** (its first route, step 5), **redo that step yourself and walk this gate for it again, with fresh evidence, before your successor starts.**
 
 #### 🔑 Why steps get skipped even with plenty of room, and what this gate is built against
 

@@ -199,6 +199,8 @@ Companion to "Verify before you claim" below — that's about *runtime claims*; 
 
 **Broken link?** Hunt down the file (it may have moved or been renamed) and fix it or flag it to Justin — don't fail silently.
 
+🔴 **Measure your context with `node _evryn-meta/scripts/context-size.mjs` at each natural break, and at 800K stop and tell the AC that spun you (or Justin, if he started you directly).** You run no packout: whoever started you owns your lane and its handoff, and a compacted agent is done for the session, so stopping at 800K leaves room for a clean hand-back. *(Justin, 2026-11-21.)*
+
 ---
 
 ## Continuous Improvement & Verification

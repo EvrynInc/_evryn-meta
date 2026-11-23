@@ -241,9 +241,9 @@ The sub-AC lacks context the head has: cross-lane collisions, sequencing, deploy
 
 ⚠️ **Honest limits on this measurement:** it is one night, two lanes, one runtime. It establishes the *shape* — burn does not propagate, reports do — **not a constant you should plan a week against.**
 
-**⚠️ There is no known way for an agent to read its own remaining context** — no `whoami` for tokens, no meter it can query. **So do NOT design around measuring the cliff.** *(If a sub-AC can be made to self-report a useful estimate, that's worth testing — but nothing should depend on it.)*
+**A sub-AC measures its own context with `node _evryn-meta/scripts/context-size.mjs`, and its conductor can measure it too** (`--agent <agentId>` for a subagent, `--session <id>` for a standalone lane). Measure at each checkpoint against the lines in `ac.md`, Context Discipline, the bullets under "MEASURE YOUR CONTEXT; NEVER ESTIMATE IT"; a sub-AC's own estimate runs 2–3× off.
 
-**The structural answer instead: make falling off the cliff FREE.** If the brief holds the real state — decisions, open questions, what's done, what's next, what was tried and rejected — then **a re-spin costs a load, not a memory.** The head kills the exhausted sub-AC, spins a fresh one, points it at the same brief, and the lane continues. **Don't measure context; make re-spins lossless.** That inverts the problem from "how do I keep this agent alive" to "how do I make its death not matter."
+**And make falling off the cliff FREE as well.** If the brief holds the real state — decisions, open questions, what's done, what's next, what was tried and rejected — then **a re-spin costs a load, not a memory.** The head kills the exhausted sub-AC, spins a fresh one, points it at the same brief, and the lane continues. **Measure context, and make re-spins lossless.** That inverts the problem from "how do I keep this agent alive" to "how do I make its death not matter."
 
 **⇒ So the brief must ALWAYS be current enough to re-spin from cold.** The test, at every append: *"if this instance died right now, could a fresh one pick up from this file alone?"* If no, the brief is behind — fix it before doing anything else. This is the same discipline as the Autonomous Work Protocol's handoff doc (AC `CLAUDE.md`), applied one level down.
 
