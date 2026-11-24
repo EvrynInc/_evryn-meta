@@ -92,7 +92,7 @@ Run `calls.mjs` from line N to the end. **Build the list yourself; never take on
 
 Walk every step of the seat's lock protocol and of the packout protocol. **For each, write one line:** **DONE** with its evidence (transcript line, Read span, commit hash, Log entry), **GAP** with what's missing, or **SKIPPED** with the reason the seat gave (in its gate) or no reason at all.
 
-🔑 **You don't decide whether a skipped step genuinely didn't apply; the seat does.** Only the seat knows its own landscape, and seats are very good at judging a skip once it's put right in front of them. **So every SKIPPED line goes back to the seat with Step E's fix list:** the step, the reason it gave (if any), and one question to them: *"Does this reason genuinely hold, or should you do the step?"* Record its answer.
+🔑 **You don't decide whether a skipped step genuinely didn't apply; the seat does.** Only the seat knows its own landscape, and seats are very good at judging a skip once it's put right in front of them. **So every SKIPPED line goes back to the seat with Step E's fix list:** the step, the reason it gave (if any), and one question to them: *"Does this reason genuinely hold, or should you do the step?"* Record their answer.
 
 These are where seats have repeatedly failed, so each gets an explicit look:
 1. **Both fragment sweeps:** `session-text.mjs` extracts, each Read with the Read tool to its last line.

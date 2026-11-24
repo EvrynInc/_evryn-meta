@@ -10,7 +10,7 @@
 
 ## Who starts a Checker, and when
 
-**The seat one layer up from the seat packing out (its manager) starts it, by command, the moment the seat says "ready for review".** That's the seat's Admiral, its VP, or the session that spun it. **A seat with nobody above it (The VP, a Fleet Admiral) starts its own Checker, and names Justin as its escalation contact.**
+**The seat one layer up from the seat packing out (its manager) starts it, by command, the moment the seat says "ready for review".** That's the seat's Admiral, its VP, or the session that spun it. **A seat with nobody above it (the VP, a Fleet Admiral) starts its own Checker, and names Justin as its escalation contact.**
 
 **Why one layer up, and not the seat itself:**
 - **Independence:** the seat doesn't choose who checks it.
