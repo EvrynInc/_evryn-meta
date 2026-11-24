@@ -20,6 +20,10 @@
 
 ---
 
+## 2026-11-24 (VP Lucas 11.24 am2: the packout protocol's step-5 reader must be fully loaded)
+
+- **`docs/protocols/packout-protocol.md`, step 5:** the fresh-eyes reader is loaded by the subagent-loading discipline in `docs/protocols/ac-orchestration-protocol.md` (two trips; its full startup cascade plus the files it reviews, this protocol and the writing protocol, each read whole to its canary; model pinned; load verified by script before its task), and the gate names its agent id and the verification. A reader on a lighter load is not a fresh reader. **Why:** on Mon 11/23 two step-5 readers ran on light loads, and Justin ruled their findings junk; step 5 had said only "a fresh, separately loaded instance." Approved by Justin Tue 11/24 (his "B2 a", typed in VP Lucas 11.24 am2's window). Record: `evryn-team-workspace/shared/projects/helm/2026/check-in-logs/2026.11.24-check-in-log.md`, ~07:30.
+
 ## 2026-11-06 (`Tasks AC`: the founding team's task database is live, in `scripts/tasks/`)
 
 - **New: `scripts/tasks/` (merge `7a60d07`).** A task CLI (`tasks.mjs`: `pull`, `mine`, `closed`, `show`, `search`, `add`, `update`, `close`, `sign`, `export`); `check.mjs`; `schema-snapshot.mjs` and `snapshot-compare.mjs`; `make-paste.mjs`; a one-time Linear importer; their own migration folder; and unit tests plus a local-Postgres acceptance suite. **No npm dependencies.** A task is one owed item with one owner, stored as a headline (at most 80 characters) and a short body (at most 600) that points to a doc. **Not yet on any agent's load: that waits on Justin's ruling.**
