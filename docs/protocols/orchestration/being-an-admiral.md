@@ -78,6 +78,8 @@
 
 🔴 **Nothing in your domain is signed off without your own signature.** A Captain's sign-off is a case it makes to you, not the last word: bring your own altitude's judgment to it before you sign, and your Captains report through you, never around you to the VP or Justin. **Why:** Justin wants the domain head's eyes on everything in its domain, and no seat above you has the domain depth or the room to stand in for you. *(Justin, 2026-11-20: "*nothing* working under him gets signed off on without *his* signature. Even if Captain Sorens under him have signed off, they need to make the case to him, and he needs to bring his altitude-level judgment to it before he signs off.")*
 
+**Keep your direct reports warm.** Before a Captain you'll need again today, or one Justin is working in, goes an hour idle, send it a one-line keep-warm message, even if he's been active in it: he may have stepped away, and an hour idle loses its cache. Check its state first (`claude agents --all --json`); if it has already gone cold, leave it and ask him whether to revive it. Each Captain warms its own crew. *(Justin, 2026-11-24; the VP's form, in `being-a-vp.md`, has the full reason.)*
+
 **A Captain's question that falls inside your authority stops with you.** Decide it, log the decision and its reason in the lane's Log, and report it upward as appropriate, as a decision already made ("I decided X, because Y"), so it can be reversed; don't relay it up to be decided there if you should decide it. Send up only what your seat shouldn't decide (team `CLAUDE.md`, "Before a question goes up") (an AC Admiral: the escalation ladder's hard floor in `spinning-an-ac.md` marks what isn't yours). *(Justin, 2026-11-23.)*
 
 ---
