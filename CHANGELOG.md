@@ -20,6 +20,21 @@
 
 ---
 
+## 2026-11-24 (ACPC Packout Captain 11.24: packouts run their own fresh-eyes passes; a light Packout Checker verifies; earlier packout lines)
+
+- **New: `.claude/agents/packout-checker.md` and `docs/protocols/orchestration/spinning-a-packout-checker.md`.** The Packout Checker becomes a one-shot worker, not a seat. It is started by command, from a fixed start line, by the seat one layer up from the seat packing out. It reads that seat's transcript by script, builds its own list of what the seat did, walks every packout and lock step against it, and hands gaps (and every skipped step, for the seat to judge) back to the seat. It posts one verdict to the Log and ends. **It judges steps, never content, and launches no one.** Its load is two protocols; its definition removes Write and Edit, so "never edits the seat's files" is enforced by tooling. The spin doc is self-contained: its orchestration-index row rules so, and no manager loads the lobby to start one. **Replaces** the full-Lucas Checker seat (~500K load, about five checks a seat). The redesign's drafts and reasoning: `docs/sessions/2026.11.24-acpc-vplucas-packout-checker-pitch.md`.
+- **`docs/protocols/packout-protocol.md`:**
+  - **step 5** is now the seat's own fresh-eyes passes over its handoff and start line, at most five, until one comes back clean, after one cheap live-state check. This retires the separately loaded reader made mandatory earlier today (the entry below), and with it the original-author and three-route blocks.
+  - **step 7** ends with "ready for review" to the seat that started you, and no successor launches until the Checker's verdict is SOUND or SOUND AFTER FIXES. The "handoff body is yours" rule keeps one line there.
+  - **step 1** has the start line point the successor at its own live-state pass.
+  - The lane-ending test is updated.
+- **The successor's live-state pass:** `ac.md` → Context Discipline (and team `CLAUDE.md`'s equivalent). The incoming seat checks sessions, room, the Log since the handoff's save, and unanswered reports. Where live state differs from the handoff, live state wins.
+- **Earlier packout lines:** tail out ~700K, start the packout ~750K, done by ~950K, in `ac.md` (and team `CLAUDE.md`). ⚠️ **`scripts/context-size.mjs` still flags the old 750K/800K until its change lands** (routed to a DC; see the pitch, §4).
+- **`docs/protocols/lock-protocol.md`** (and the team lock protocol, and the packout protocol): one header line saying any edit must check and update the Packout Checker's definition.
+- **Pointers:** `CLAUDE.md` (the router) has a Packout Checker row; `ac-orchestration-protocol.md`'s index has a self-contained row; `ac.md` → `#packout`; `being-an-admiral.md` → "Packing out".
+- **Not part of this:** `packout.mjs` (the guard, on the branch `soren/packout-guard`, never live). Task T-153 rebuilds it for the new rule.
+- **Why:** Justin, Tue 11/24: the seat packing out is "the most-contextualized *anyone could be*" to do its own fresh-eyes pass, so the Checker gets "completely out of the fresh reader business" and only verifies that steps ran. His rulings B10, B13 (a), B14, B15, B16, B17 and B18 (a), typed in the VP's window; his yes typed in ACPC's window. Record: `docs/sessions/2026.11.24-vplucas-acpc-packout-captain-brief.md` (Log), and `evryn-team-workspace/shared/projects/helm/2026/check-in-logs/2026.11.24-check-in-log.md`.
+
 ## 2026-11-24 (VP Lucas 11.24 am2: the packout protocol's step-5 reader must be fully loaded)
 
 - **`docs/protocols/packout-protocol.md`, step 5:** the fresh-eyes reader is loaded by the subagent-loading discipline in `docs/protocols/ac-orchestration-protocol.md` (two trips; its full startup cascade plus the files it reviews, this protocol and the writing protocol, each read whole to its canary; model pinned; load verified by script before its task), and the gate names its agent id and the verification. A reader on a lighter load is not a fresh reader. **Why:** on Mon 11/23 two step-5 readers ran on light loads, and Justin ruled their findings junk; step 5 had said only "a fresh, separately loaded instance." Approved by Justin Tue 11/24 (his "B2 a", typed in VP Lucas 11.24 am2's window). Record: `evryn-team-workspace/shared/projects/helm/2026/check-in-logs/2026.11.24-check-in-log.md`, ~07:30.

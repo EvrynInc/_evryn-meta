@@ -31,6 +31,7 @@
 | **a SCOUT** (read-only: map a runtime, return a targeted read-list) | `docs/protocols/orchestration/spinning-a-scout.md` |
 | **a founding-team agent** (Soren, Mira, …) | `docs/protocols/orchestration/spinning-a-team-agent.md` |
 | **OC** (ops) | **nothing further — this is a RULING, not your judgement.** OC uses the blocks in the core exactly as written, including its `<identity>`. |
+| **a Packout Checker** (one packout, by command) | `docs/protocols/orchestration/spinning-a-packout-checker.md` **alone: that file is self-contained, a RULING like the OC row's.** Its start line is used verbatim. |
 | **a generic subagent** (a path lookup) | **nothing further — also a RULING.** But read "The generic-subagent exception" below *first*, because deciding you are in this row is the most-abused call in this protocol. |
 
 ⚠️ **Two rows say "nothing further." Note that THIS TABLE decided that — you did not.** If your target is not literally in a row above, you do not have a "core alone" case; you have an unlisted case, and an unlisted case is a **stop-and-ask**, never a proceed-on-the-skeleton.

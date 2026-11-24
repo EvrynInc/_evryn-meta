@@ -148,7 +148,7 @@ As of 2026-09-10, this is a brand-new feature, so watch as it evolves — it may
 
 - **Run `#packout` in full** (`docs/protocols/packout-protocol.md`).
 - **A standalone Captain outlives your session; a subagent Captain dies with it** (`ac-orchestration-protocol.md` → *Subagent or standalone instance*). ⇒ **Before you pack out, every Captain's drafted changes must already be on the ledger.** Your successor finds each Captain through its log — re-publishing its own address, reading each log header for the Captain's current one, and re-arming the watchers.
-- **A Captain packs out into its own log, and you verify it** — the log is its handoff, so the test above applies to it too.
+- **A Captain packs out into its own log; when it tells you "ready for review", you start its Packout Checker (`docs/protocols/orchestration/spinning-a-packout-checker.md`), and its successor launches only on a SOUND or SOUND AFTER FIXES verdict** — the log is its handoff, so the test above applies to it too.
 
 ### Closing a Captain — you take it through its own `#lock`
 

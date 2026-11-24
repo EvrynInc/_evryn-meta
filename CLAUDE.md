@@ -60,6 +60,7 @@ That is the whole safety floor, and it is deliberately not a checklist. **An age
 | **DC** (Developer Claude) | `_evryn-meta/.claude/agents/dc.md` |
 | **QC** (Quality Claude) | `_evryn-meta/.claude/agents/qc.md` |
 | **OC** (Operations Claude) | `_evryn-meta/.claude/agents/oc.md` |
+| **The Packout Checker** (a worker that checks one packout, started by command) | `_evryn-meta/.claude/agents/packout-checker.md` |
 | **A founding-team agent** (Lucas, Soren, Mira, Emma, Marlowe, Thea, Nathan, Dominic) | split across `evryn-team-workspace/CLAUDE.md` + `.claude/agents/<name>.md` + `.claude/agent-memory/<name>/MEMORY.md` — your spinner names all of them |
 
 **Paths are rooted at the shared parent directory** that holds every Evryn repo as a sibling folder — so `evryn-team-workspace/CLAUDE.md` means *"go up out of whatever repo you are in, into the sibling `evryn-team-workspace`."*
