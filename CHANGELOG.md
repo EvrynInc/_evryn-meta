@@ -20,6 +20,10 @@
 
 ---
 
+## 2026-11-24 (VP Lucas 11.24 pm2: `scripts/context-size.mjs` warns at the new packout lines)
+
+- **The context meter now flags tail-out at ~700K and the packout start at ~750K** (was 750K and 800K), matching team `CLAUDE.md`'s `#packout` line and `ac.md`'s Context Discipline since the packout redesign (`392c0f3`, `4c28d781`). Two thresholds, the two warning strings and the header's CAVEATS lines changed; nothing else. **Why:** the meter was the third copy of the lines (its own SYNC note) and still told seats to start packing out 50K late. Done by the VP seat on Justin's authorization typed in its window (Tue 11/24, ~14:06: *"I auth it"*), in place of the DC trip ACPC had queued (his ballot ⓳ in ACPC's window). Checked by running it on a session above 700K.
+
 ## 2026-11-24 (ACPC Packout Captain 11.24: packouts run their own fresh-eyes passes; a light Packout Checker verifies; earlier packout lines)
 
 - **New: `.claude/agents/packout-checker.md` and `docs/protocols/orchestration/spinning-a-packout-checker.md`.** The Packout Checker becomes a one-shot worker, not a seat. It is started by command, from a fixed start line, by the seat one layer up from the seat packing out. It reads that seat's transcript by script, builds its own list of what the seat did, walks every packout and lock step against it, and hands gaps (and every skipped step, for the seat to judge) back to the seat. It posts one verdict to the Log and ends. **It judges steps, never content, and launches no one.** Its load is two protocols; its definition removes Write and Edit, so "never edits the seat's files" is enforced by tooling. The spin doc is self-contained: its orchestration-index row rules so, and no manager loads the lobby to start one. **Replaces** the full-Lucas Checker seat (~500K load, about five checks a seat). The redesign's drafts and reasoning: `docs/sessions/2026.11.24-acpc-vplucas-packout-checker-pitch.md`.
