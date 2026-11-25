@@ -1,0 +1,4 @@
+OK: change set 001-004: both paste files are current (migrations sha256 ff0e05fc4738…, 104 statements).
+OK: change set 005: both paste files are current (migrations sha256 c544ae7285a7…, 19 statements).
+OK: change set 006: both paste files are current (migrations sha256 aeca893ddd03…, 88 statements).
+exit=0

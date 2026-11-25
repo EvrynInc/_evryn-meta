@@ -1,0 +1,13 @@
+seeded: backlog=10, blocked=30, done=40, in_progress=20, open=150, proposed=25; history rows 315
+CRLF dry run as postgres (non-superuser): exit 3 in 1.4 s :: ERROR:  DRY RUN OK — nothing was changed (275 rows; 0 NOT VALID; 30 backlog rows moved; 170 rows backfilled)
+schema unchanged after the dry run: true; task_authorizations exists: false
+CRLF apply: exit 0 in 0.6 s 
+reaches the golden after-006 snapshot: true
+after: backlog=40, done=40, in_progress=20, open=150, proposed=25
+authorization rows: backfill/authorization=170
+active tasks pointing at exactly their own backfill row: 170 of 170
+tasks with two or more authorization rows: 0; non-active tasks with a pointer: 0
+moved backlog rows by review date: 14 x10, 20 x10, 90 x10 (days from today)
+rows whose scope_hash is missing or wrong: 0; history rows now 515
+function bodies stored with a carriage return (CRLF paste): 9 of 13
+an authorization on the CRLF-pasted database: exit 0; task open

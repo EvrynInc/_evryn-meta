@@ -1,0 +1,194 @@
+postgres is superuser: false; owner of public.tasks: postgres
+
+== PASTE 1 (dry run), as postgres (not a superuser), defaults ON ==
+exit 3 :: ERROR:  DRY RUN OK — nothing was changed (17 rows; 0 NOT VALID; 4 backlog rows moved; 9 rows backfilled)
+schema unchanged: true; rows+history unchanged: true
+== PASTE 2 (apply) ==
+exit 0 
+reaches the golden after-006 snapshot: true
+settings after the paste (new session): evryn.actor='' evryn.migration=''
+
+== DATA STEPS, row by row (before -> after) ==
+T-1 legacy: status open -> open; needed_by null -> null; row note null -> "authorized (T-auth #1, tier backfill): migration 006 backfill: no authorization record existed; active since before the task system."; updated_at BUMPED; hash_ok true; pointer 1
+      auth: backfill/migration_006/justin/sess=NULL :: migration 006 backfill: no authorization record existed; active since before the task system.
+T-2 bk120: status blocked -> backlog; needed_by 2027-03-20 -> 2027-02-18; row note null -> null; updated_at BUMPED; hash_ok true; pointer NULL
+      auth: (no authorization row)
+T-3 bkNull: status blocked -> backlog; needed_by null -> 2026-12-04; row note null -> null; updated_at BUMPED; hash_ok true; pointer NULL
+      auth: (no authorization row)
+T-4 bkPast: status blocked -> backlog; needed_by 2026-11-15 -> 2026-11-15; row note null -> null; updated_at BUMPED; hash_ok true; pointer NULL
+      auth: (no authorization row)
+T-5 bk70: status blocked -> backlog; needed_by 2027-01-29 -> 2027-01-29; row note null -> null; updated_at BUMPED; hash_ok true; pointer NULL
+      auth: (no authorization row)
+T-6 realBacklog: status backlog -> backlog; needed_by 2026-12-20 -> 2026-12-20; row note null -> null; updated_at same; hash_ok true; pointer NULL
+      auth: (no authorization row)
+T-7 open: status open -> open; needed_by null -> null; row note "a standing note on the row" -> "authorized (T-auth #2, tier backfill): migration 006 backfill: no authorization record existed; last moved into an active status by task_history #6 (soren)."; updated_at BUMPED; hash_ok true; pointer 2
+      auth: backfill/migration_006/justin/sess=NULL :: migration 006 backfill: no authorization record existed; last moved into an active status by task_history #6 (soren).
+T-8 inprog: status in_progress -> in_progress; needed_by null -> null; row note null -> "authorized (T-auth #3, tier backfill): migration 006 backfill: no authorization record existed; last moved into an active status by task_history #7 (soren)."; updated_at BUMPED; hash_ok true; pointer 3
+      auth: backfill/migration_006/justin/sess=NULL :: migration 006 backfill: no authorization record existed; last moved into an active status by task_history #7 (soren).
+T-9 blocked: status blocked -> blocked; needed_by null -> null; row note null -> "authorized (T-auth #4, tier backfill): migration 006 backfill: no authorization record existed; last moved into an active status by task_history #8 (mira)."; updated_at BUMPED; hash_ok true; pointer 4
+      auth: backfill/migration_006/justin/sess=NULL :: migration 006 backfill: no authorization record existed; last moved into an active status by task_history #8 (mira).
+T-10 na: status needs_acceptance -> needs_acceptance; needed_by null -> null; row note null -> "authorized (T-auth #5, tier backfill): migration 006 backfill: no authorization record existed; last moved into an active status by task_history #9 (soren)."; updated_at BUMPED; hash_ok true; pointer 5
+      auth: backfill/migration_006/justin/sess=NULL :: migration 006 backfill: no authorization record existed; last moved into an active status by task_history #9 (soren).
+T-11 naJ: status needs_acceptance -> needs_acceptance; needed_by 2026-11-23 -> 2026-11-23; row note null -> "authorized (T-auth #6, tier backfill): migration 006 backfill: no authorization record existed; last moved into an active status by task_history #10 (soren)."; updated_at BUMPED; hash_ok true; pointer 6
+      auth: backfill/migration_006/justin/sess=NULL :: migration 006 backfill: no authorization record existed; last moved into an active status by task_history #10 (soren).
+T-12 done: status done -> done; needed_by null -> null; row note null -> null; updated_at same; hash_ok true; pointer NULL
+      auth: (no authorization row)
+T-13 against: status decided_against -> decided_against; needed_by null -> null; row note null -> null; updated_at same; hash_ok true; pointer NULL
+      auth: (no authorization row)
+T-14 proposed: status proposed -> proposed; needed_by null -> null; row note null -> null; updated_at same; hash_ok true; pointer NULL
+      auth: (no authorization row)
+T-15 signed: status open -> open; needed_by null -> null; row note null -> "authorized (T-auth #7, tier backfill): migration 006 backfill: no authorization record existed; last moved into an active status by task_history #16 (soren)."; updated_at BUMPED; hash_ok true; pointer 7
+      auth: backfill/migration_006/justin/sess=NULL :: migration 006 backfill: no authorization record existed; last moved into an active status by task_history #16 (soren).
+T-16 child: status open -> open; needed_by null -> null; row note null -> "authorized (T-auth #8, tier backfill): migration 006 backfill: no authorization record existed; last moved into an active status by task_history #18 (soren)."; updated_at BUMPED; hash_ok true; pointer 8
+      auth: backfill/migration_006/justin/sess=NULL :: migration 006 backfill: no authorization record existed; last moved into an active status by task_history #18 (soren).
+T-17 linear: status open -> open; needed_by null -> null; row note null -> "authorized (T-auth #9, tier backfill): migration 006 backfill: no authorization record existed; last moved into an active status by task_history #19 (ac)."; updated_at BUMPED; hash_ok true; pointer 9
+      auth: backfill/migration_006/justin/sess=NULL :: migration 006 backfill: no authorization record existed; last moved into an active status by task_history #19 (ac).
+dates for reference: today 2026-11-20, +14 2026-12-04, +90 2027-02-18
+history rows added by the paste: justin:needed_by,status:sess=NULL | justin:needed_by,status:sess=NULL | justin:status:sess=NULL | justin:status:sess=NULL | justin:authorization_id:sess=NULL | justin:authorization_id:sess=NULL | justin:authorization_id:sess=NULL | justin:authorization_id:sess=NULL | justin:authorization_id:sess=NULL | justin:authorization_id:sess=NULL | justin:authorization_id:sess=NULL | justin:authorization_id:sess=NULL | justin:authorization_id:sess=NULL
+
+== A. anon and authenticated, through the API ==
+table privileges held by client roles: task_auth_config:service_role:SELECT task_authorizations:service_role:INSERT task_authorizations:service_role:SELECT task_history:service_role:INSERT task_history:service_role:SELECT
+EXECUTE held by client roles on task functions: task_justin_tier_ok:service_role task_request_actor:service_role task_request_session:service_role task_roster:service_role task_scope_hash:service_role team_tasks_schema_snapshot:service_role
+sequence privileges held by client roles: (none)
+[info   ] A.anon select count(*) from tasks -> 0 (RLS: sees no rows)
+[held   ] A.anon.1 insert a proposed task :: ERROR:  42501: permission denied for function task_request_actor
+[held   ] A.anon.2 update an open task :: exit 0, rows returned '' ; task now open ptr=10 reauth=false
+[held   ] A.anon.3 select task_authorizations :: ERROR:  42501: permission denied for table task_authorizations
+[held   ] A.anon.4 insert an authorization row as actor lucas :: ERROR:  42501: permission denied for table task_authorizations
+[held   ] A.anon.5 select task_auth_config :: ERROR:  42501: permission denied for table task_auth_config
+[held   ] A.anon.6 update task_auth_config :: ERROR:  42501: permission denied for table task_auth_config
+[held   ] A.anon.7 select task_history :: ERROR:  42501: permission denied for table task_history
+[held   ] A.anon.8 call task_justin_tier_ok() :: ERROR:  42501: permission denied for function task_justin_tier_ok
+[held   ] A.anon.9 truncate tasks (holds the old default TRUNCATE grant; not reachable through PostgREST) :: ERROR:  0A000: cannot truncate a table referenced in a foreign key constraint HINT:  Truncate table "proposals" at the same time, or use TRUNCATE ... CASCADE.
+[held   ] A.anon.10 delete from tasks :: ERROR:  ET004: task delete refused: tasks are never deleted. HINT:  Close it instead, as done or decided_against, with a closing note: tasks close T-<n> --note "..." [--decided-against].
+          task still there: 1
+[info   ] A.authenticated select count(*) from tasks -> 0 (RLS: sees no rows)
+[held   ] A.authenticated.1 insert a proposed task :: ERROR:  42501: permission denied for function task_request_actor
+[held   ] A.authenticated.2 update an open task :: exit 0, rows returned '' ; task now open ptr=10 reauth=false
+[held   ] A.authenticated.3 select task_authorizations :: ERROR:  42501: permission denied for table task_authorizations
+[held   ] A.authenticated.4 insert an authorization row as actor lucas :: ERROR:  42501: permission denied for table task_authorizations
+[held   ] A.authenticated.5 select task_auth_config :: ERROR:  42501: permission denied for table task_auth_config
+[held   ] A.authenticated.6 update task_auth_config :: ERROR:  42501: permission denied for table task_auth_config
+[held   ] A.authenticated.7 select task_history :: ERROR:  42501: permission denied for table task_history
+[held   ] A.authenticated.8 call task_justin_tier_ok() :: ERROR:  42501: permission denied for function task_justin_tier_ok
+[held   ] A.authenticated.9 truncate tasks (holds the old default TRUNCATE grant; not reachable through PostgREST) :: ERROR:  0A000: cannot truncate a table referenced in a foreign key constraint HINT:  Truncate table "proposals" at the same time, or use TRUNCATE ... CASCADE.
+[held   ] A.authenticated.10 delete from tasks :: ERROR:  ET004: task delete refused: tasks are never deleted. HINT:  Close it instead, as done or decided_against, with a closing note: tasks close T-<n> --note "..." [--decided-against].
+          task still there: 1
+
+== B. service_role, actor ac/soren (its own name) ==
+[held   ] B1 insert at open :: ERROR:  ET011: task write refused: only an authorization record (tasks authorize, as lucas or justin) makes work authorized; only an acceptance record makes it done. Propose it: --status proposed --to lucas. HINT:  Create it as pr
+[held   ] B1 insert at in_progress :: ERROR:  ET011: task write refused: only an authorization record (tasks authorize, as lucas or justin) makes work authorized; only an acceptance record makes it done. Propose it: --status proposed --to lucas. HINT:  Create it as pr
+[held   ] B1 insert at blocked :: ERROR:  ET011: task write refused: only an authorization record (tasks authorize, as lucas or justin) makes work authorized; only an acceptance record makes it done. Propose it: --status proposed --to lucas. HINT:  Create it as pr
+[held   ] B1 insert at needs_acceptance :: ERROR:  ET011: task write refused: only an authorization record (tasks authorize, as lucas or justin) makes work authorized; only an acceptance record makes it done. Propose it: --status proposed --to lucas. HINT:  Create it as pr
+[held   ] B1 insert at done :: ERROR:  ET011: task write refused: only an authorization record (tasks authorize, as lucas or justin) makes work authorized; only an acceptance record makes it done. Propose it: --status proposed --to lucas. HINT:  Create it as pr
+[held   ] B1 insert at decided_against :: ERROR:  ET011: task write refused: only an authorization record (tasks authorize, as lucas or justin) makes work authorized; only an acceptance record makes it done. Propose it: --status proposed --to lucas. HINT:  Create it as pr
+[held   ] B2a upsert (merge-duplicates shape) onto an existing PROPOSED task with status open :: ERROR:  ET011: task write refused: only an authorization record (tasks authorize, as lucas or justin) makes work authorized; only an acceptance record makes it done. Propose it: --status proposed --to lucas. HINT:  Create it as pr
+[held   ] B2b upsert onto an existing proposed task: payload status proposed, DO UPDATE sets status open :: ERROR:  ET011: task write refused: only an authorization record (tasks authorize, as lucas or justin) makes work authorized; only an acceptance record makes it done. Propose it: --status proposed --to lucas.
+[held   ] B2c upsert carrying authorization_id :: ERROR:  ET014: task write refused: authorization_id and needs_reauthorization are set only by an authorization record.
+[held   ] B3a status write proposed -> open :: ERROR:  ET011: task write refused: only an authorization record (tasks authorize, as lucas or justin) makes work authorized; only an acceptance record makes it done. Propose it: --status proposed --to lucas.
+[held   ] B3b proposed -> open carrying another task's authorization id :: ERROR:  ET014: task write refused: authorization_id is set only by an authorization record (tasks authorize).
+[held   ] B3c proposed -> needs_acceptance :: ERROR:  ET011: task write refused: only an authorization record (tasks authorize, as lucas or justin) makes work authorized; only an acceptance record makes it done. Propose it: --status proposed --to lucas.
+[held   ] B3d proposed -> done :: ERROR:  ET011: task write refused: only an authorization record (tasks authorize, as lucas or justin) makes work authorized; only an acceptance record makes it done. Propose it: --status proposed --to lucas.
+[held   ] B3e open -> done by a status write :: ERROR:  ET011: task write refused: only an authorization record (tasks authorize, as lucas or justin) makes work authorized; only an acceptance record makes it done. Propose it: --status proposed --to lucas.
+[held   ] B4a authorization row, payload claims actor lucas, header says ac :: ERROR:  ET012: authorization refused: only lucas or justin may write an authorization or acceptance record. HINT:  Propose it instead: tasks update T-<n> --status proposed --to lucas --note "<why>".
+[held   ] B4b authorization row with header actor "Lucas" (capital) :: ERROR:  ET012: authorization refused: only lucas or justin may write an authorization or acceptance record. HINT:  Propose it instead: tasks update T-<n> --status proposed --to lucas --note "<why>".
+[held   ] B4c acceptance row by ac :: ERROR:  ET012: authorization refused: only lucas or justin may write an authorization or acceptance record. HINT:  Propose it instead: tasks update T-<n> --status proposed --to lucas --note "<why>".
+[held   ] B5a update task_auth_config :: ERROR:  42501: permission denied for table task_auth_config
+[held   ] B5b insert task_auth_config :: ERROR:  42501: permission denied for table task_auth_config
+[held   ] B5c delete task_auth_config :: ERROR:  42501: permission denied for table task_auth_config
+[held   ] B6a update an authorization row :: ERROR:  42501: permission denied for table task_authorizations
+[held   ] B6b delete an authorization row :: ERROR:  42501: permission denied for table task_authorizations
+[held   ] B6c insert a history row directly :: ERROR:  ET005: task_history insert refused: history is written only by the database, from the tasks trigger.
+[held   ] B6d call set_config to set evryn.authorizing in the same transaction, then move the task (NOT reachable through PostgREST; needs SQL) :: ERROR:  ET014: task write refused: authorization_id is set only by an authorization record (tasks authorize).
+
+[OBSERVE] B7 a proposed task is edited by its owner (soren, own name) after the authorizer read it; lucas then authorizes, sending the scope_hash he saw :: authorization ACCEPTED
+          task now: open ptr=15 reauth=false; title Deploy the web app to production
+          record: tier justin, scope.title=Deploy the web app to production, stored hash = the hash lucas sent: false, justin_ref=Log 11/20: Justin said yes to the README typo fix
+          history flags on that task: || (empty = nothing flagged)
+[held   ] B8a ac decides against AUTHORIZED work it does not own, in one write :: ERROR:  ET011: task write refused: only an authorization record (tasks authorize, as lucas or justin) makes work authorized; only an acceptance record makes it done. Propose it: --status proposed --to lucas. HINT:  Deciding agains
+[OBSERVE] B8b the same in two writes (withdraw to proposed, then decided_against), by ac, not the owner :: write1 exit 0, write2 exit 0 ; task now decided_against ptr=NULL reauth=false
+[OBSERVE] B9 ac rewrites closing_note and closed_at of a DONE task :: exit 0 ; closing_note now 'rewritten by ac', closed_at 2020-01-01; acceptance row note still 'delivered: docs/x.md'
+[held   ] B9b ac edits the title of that done task :: ERROR:  ET015: task update refused: only lucas or justin may change the title, body or owner of a closed task.
+[OBSERVE] B10 ac closes mira's PROPOSED task as decided_against :: exit 0; task now decided_against ptr=NULL reauth=false
+[held   ] B10b ac (not lucas) reopens it :: ERROR:  ET011: task write refused: only an authorization record (tasks authorize, as lucas or justin) makes work authorized; only an acceptance record makes it done. Propose it: --status proposed --to lucas. HINT:  Only lucas or j
+[OBSERVE] B11 insert with client-set created_at/updated_at/created_by :: created_at 2020-01-01, updated_at 2020-01-01, created_by ac (created_by is the database's; the two dates are the client's, as before 006)
+
+== C. service_role, actor lucas ==
+[held   ] C1 lucas inserts a task at open :: ERROR:  ET011: task write refused: only an authorization record (tasks authorize, as lucas or justin) makes work authorized; only an acceptance record makes it done. Propose it: --status proposed --to lucas. HINT:  Create it as pr
+[held   ] C2 lucas status write proposed -> open :: ERROR:  ET011: task write refused: only an authorization record (tasks authorize, as lucas or justin) makes work authorized; only an acceptance record makes it done. Propose it: --status proposed --to lucas.
+[held   ] C3 lucas-tier row without rule_ref :: ERROR:  ET012: authorization refused: a Lucas-tier record needs rule_ref, the rule that allows it.
+[held   ] C4 justin-tier row without justin_ref :: ERROR:  ET012: authorization refused: a Justin-tier record needs justin_ref, where his own words are.
+[held   ] C5 row with no session header :: ERROR:  ET012: authorization refused: the request carries no x-evryn-session header. HINT:  The tasks CLI sends CLAUDE_CODE_SESSION_ID; run it from a Claude Code session.
+[held   ] C6 client-set tier backfill :: ERROR:  ET012: authorization refused: tier backfill and source migration_006 are written only by migration 006's data step.
+[held   ] C7 authorization of a decided_against task :: ERROR:  ET012: authorization refused: the task is decided_against; a closed task is reopened to proposed (lucas or justin) before it is authorized.
+[held   ] C8a control: lucas-tier acceptance of Justin-tier authorized work :: ERROR:  ET012: acceptance refused: Justin authorized this task himself, so only a justin-tier acceptance closes it (authorization-rules.md §3).
+[OBSERVE] C8b lucas re-authorizes the same task at tier LUCAS (pointer moves off the Justin-tier row), then accepts at tier lucas :: re-authorize exit 0 ; accept exit 0 ; task now done ptr=26 reauth=false
+[held   ] C9a under justin_signin: lucas (service_role) writes a Justin-tier authorization :: ERROR:  ET012: authorization refused: under task_auth_config justin_signin, this request may not write a Justin-tier record.
+[held   ] C9b under justin_signin: service_role carrying Justin's JWT claims writes Justin-tier :: ERROR:  ET012: authorization refused: under task_auth_config justin_signin, this request may not write a Justin-tier record.
+[held   ] C9c under justin_signin: lucas-tier acceptance of Justin-tier work :: ERROR:  ET012: acceptance refused: Justin authorized this task himself, so only a justin-tier acceptance closes it (authorization-rules.md §3).
+[OBSERVE] C9d under justin_signin: lucas-tier re-authorization, then lucas-tier acceptance of the Justin-tier task :: exit 0/0  ; task now done ptr=32 reauth=false
+[info   ] C9e under justin_signin: Justin's own sign-in (role authenticated, his sub, aal2) writes a Justin-tier row :: exit 3 ERROR:  42501: permission denied for table task_authorizations (expected to be refused until T-97's migration grants that path)
+
+== D. legitimate paths (each must work) ==
+[works  ] D1a owner: open -> in_progress, with a note :: ok 
+[works  ] D1b owner: in_progress -> blocked :: ok 
+[works  ] D1c owner: blocked -> in_progress :: ok 
+[works  ] D1d owner hands in: needs_acceptance, to lucas, note (one write, the CLI shape) :: ok 
+[works  ] D1e lucas sends it back: needs_acceptance -> in_progress :: ok 
+[works  ] D1f owner hands in again :: ok 
+[works  ] D1g lucas accepts at tier lucas :: ok 35
+          -> done ptr=34 reauth=false, closed_at set true, closing_note 'delivered: docs/x.md'
+[works  ] D2a upgrade an in_progress lucas-tier task to a Justin-tier authorization :: ok 37
+          -> in_progress ptr=37 reauth=false (status kept), current row tier justin, authorization rows on the task: 2
+[works  ] D2b justin-tier acceptance of it (lucas relaying, with justin_ref) :: ok 38
+[works  ] D3a owner withdraws authorized work to proposed :: ok 
+          -> proposed ptr=NULL reauth=false
+[works  ] D3b lucas re-authorizes it :: ok 40
+          -> open ptr=40 reauth=false
+[works  ] D4a lucas reopens a DONE task to proposed :: ok 
+          -> proposed ptr=NULL reauth=false; closed_at left behind: true, closing_note left behind: 'delivered: docs/x.md'
+[works  ] D4b lucas re-authorizes the reopened task :: ok 41
+[works  ] D4c second acceptance of the same task :: ok 42
+          -> done ptr=41 reauth=false, closing_note 'delivered again'
+[works  ] D4d lucas reopens a DECIDED_AGAINST task to proposed :: ok 
+[works  ] D5a note-only write on a proposed task, any actor :: ok 
+[works  ] D5b note-only write on an open task, any actor :: ok 
+[works  ] D5c note-only write on a done task, any actor :: ok 
+[works  ] D5d launcher writes a note on an open task, with NO session :: ok 
+          -> open ptr=43 reauth=false; history row: launcher sess=NULL flags=
+[works  ] D5e launcher creates a proposed task with no session :: ok 49
+[works  ] D6a owner edits the body of authorized work (the return) :: ok 
+          -> proposed ptr=NULL reauth=true; note 're-authorization needed: scope changed (description)'
+[works  ] D6b owner keeps editing while it is proposed :: ok 
+[works  ] D6c lucas re-authorizes it :: ok 44
+          -> open ptr=44 reauth=false
+[works  ] D7a lucas moves authorized work to another owner (returns to proposed) :: ok 
+[works  ] D7b lucas re-authorizes it under the new owner :: ok 45
+          -> open ptr=45 reauth=false, owner mira
+[works  ] D7c changing accountable, tags, needed_by, addressed_to, links, parent on authorized work keeps the authorization :: ok 
+          -> open ptr=45 reauth=false
+[works  ] D8a owner proposes a backlog idea :: ok 
+[works  ] D8b owner parks it back in backlog :: ok 
+[works  ] D8c lucas authorizes a BACKLOG task directly :: ok 46
+          -> open ptr=46 reauth=false
+[REFUSED] D8d owner parks AUTHORIZED work in backlog in one write :: ERROR:  ET011: task write refused: only an authorization record (tasks authorize, as lucas or justin) makes work authorized; only an acceptance record makes it done. Propose it: --status proposed --to lucas.
+[works  ] D8e ...the two-write way: withdraw to proposed, then backlog :: ok 
+[works  ] D8f ...then backlog :: ok 
+[works  ] D9a owner closes its own proposed idea as decided_against (the CLI close shape) :: ok 
+[works  ] D9b lucas decides against authorized work :: ok 
+[works  ] D10 lucas signs an active task (a record) :: ok 
+
+-- backfilled tasks (authorized only by migration 006's backfill row) --
+[works  ] D11a owner moves a backfilled open task to in_progress :: ok 
+[works  ] D11b note-only on a backfilled task :: ok 
+[works  ] D11c lucas-tier acceptance of a backfilled needs_acceptance task (the brief's known residual) :: ok 48
+[works  ] D11d upgrade a backfilled task to Justin tier :: ok 49
+          -> in_progress ptr=49 reauth=false
+[works  ] D11e justin-tier acceptance of the backfilled task addressed to justin :: ok 50
+[works  ] D11f the legacy pre-task-system row: owner hands it in :: ok 
+[works  ] D12a a moved pre-005 backlog row: owner proposes it :: ok 
+[works  ] D12b a moved pre-005 backlog row: owner re-dates it with a note :: ok 
+[works  ] D12c the row whose review date is past: owner closes it :: ok 
+[works  ] D13 authorize with an envelope and a proposal_ref :: ok 51|justin|lucas_relay
+
+[OBSERVE] E1 ONE request by ac (PATCH /tasks?status=in.(...)) withdraws EVERY authorized task, anyone's :: exit 0 ; active before 13, after 0; pointers left 0

@@ -1,0 +1,1018 @@
+TAP version 13
+# Subtest: audit: a row whose session transcript holds the authorize command passes; nothing else to flag exits 0
+ok 1 - audit: a row whose session transcript holds the authorize command passes; nothing else to flag exits 0
+  ---
+  duration_ms: 20.1102
+  type: 'test'
+  ...
+# Subtest: audit: a transcript WITHOUT the command (a write as lucas from a session that never ran it) is flagged; the transcript text is never printed
+ok 2 - audit: a transcript WITHOUT the command (a write as lucas from a session that never ran it) is flagged; the transcript text is never printed
+  ---
+  duration_ms: 0.8513
+  type: 'test'
+  ...
+# Subtest: audit: a session whose transcript is not on this machine is NOT CHECKED, flagged, and named at the end
+ok 3 - audit: a session whose transcript is not on this machine is NOT CHECKED, flagged, and named at the end
+  ---
+  duration_ms: 0.568
+  type: 'test'
+  ...
+# Subtest: audit: a display name is shown, marked as deciding nothing; a backfill row needs no session; an acceptance is matched to accept
+ok 4 - audit: a display name is shown, marked as deciding nothing; a backfill row needs no session; an acceptance is matched to accept
+  ---
+  duration_ms: 0.8047
+  type: 'test'
+  ...
+# Subtest: audit: writes as justin are flagged unless they are migration 006's data steps; no-session writes and returns to proposed are listed
+ok 5 - audit: writes as justin are flagged unless they are migration 006's data steps; no-session writes and returns to proposed are listed
+  ---
+  duration_ms: 1.3356
+  type: 'test'
+  ...
+# Subtest: audit: refuses a non-team URL before any request; never prints the key
+ok 6 - audit: refuses a non-team URL before any request; never prints the key
+  ---
+  duration_ms: 0.4252
+  type: 'test'
+  ...
+# Subtest: audit helpers: the command match is exact to the task number; names come from either capture shape; a bad session id finds no file
+ok 7 - audit helpers: the command match is exact to the task number; names come from either capture shape; a bad session id finds no file
+  ---
+  duration_ms: 0.3086
+  type: 'test'
+  ...
+# Subtest: --help opens with Soren's definition and documents pull, search, close, the actor, status and the screen
+ok 8 - --help opens with Soren's definition and documents pull, search, close, the actor, status and the screen
+  ---
+  duration_ms: 3.0446
+  type: 'test'
+  ...
+# Subtest: help needs no credentials and makes no request
+ok 9 - help needs no credentials and makes no request
+  ---
+  duration_ms: 0.3162
+  type: 'test'
+  ...
+# Subtest: R5: a product URL is refused before ANY request, and no value is printed
+ok 10 - R5: a product URL is refused before ANY request, and no value is printed
+  ---
+  duration_ms: 1.9571
+  type: 'test'
+  ...
+# Subtest: missing credentials are named, the exit is non-zero, nothing is sent
+ok 11 - missing credentials are named, the exit is non-zero, nothing is sent
+  ---
+  duration_ms: 0.2854
+  type: 'test'
+  ...
+# Subtest: no secret in any output — including a forced server error that echoes the key and a thrown network error
+ok 12 - no secret in any output — including a forced server error that echoes the key and a thrown network error
+  ---
+  duration_ms: 39.5286
+  type: 'test'
+  ...
+# Subtest: PostgREST refusals are printed with message, code and hint, and exit 1
+ok 13 - PostgREST refusals are printed with message, code and hint, and exit 1
+  ---
+  duration_ms: 1.4811
+  type: 'test'
+  ...
+# Subtest: a write without an actor is refused BEFORE any request (the database is the control; this is a courtesy)
+ok 14 - a write without an actor is refused BEFORE any request (the database is the control; this is a courtesy)
+  ---
+  duration_ms: 0.6706
+  type: 'test'
+  ...
+# Subtest: EVRYN_ACTOR works in place of --as, and a malformed name is refused
+ok 15 - EVRYN_ACTOR works in place of --as, and a malformed name is refused
+  ---
+  duration_ms: 31.9768
+  type: 'test'
+  ...
+# Subtest: every write sends x-evryn-actor
+ok 16 - every write sends x-evryn-actor
+  ---
+  duration_ms: 2.8339
+  type: 'test'
+  ...
+# Subtest: pull: line shape is "T-12 [blocked] headline (needed 11/20)"
+ok 17 - pull: line shape is "T-12 [blocked] headline (needed 11/20)"
+  ---
+  duration_ms: 0.4513
+  type: 'test'
+  ...
+# Subtest: pull: my open tasks plus those addressed to me, then my closed in the last 30 days
+ok 18 - pull: my open tasks plus those addressed to me, then my closed in the last 30 days
+  ---
+  duration_ms: 4.0154
+  type: 'test'
+  ...
+# Subtest: pull: a hard cap with a LOUD "+N more", and nothing silently dropped
+ok 19 - pull: a hard cap with a LOUD "+N more", and nothing silently dropped
+  ---
+  duration_ms: 3.2699
+  type: 'test'
+  ...
+# Subtest: pull pages to exhaustion (page size 2)
+ok 20 - pull pages to exhaustion (page size 2)
+  ---
+  duration_ms: 0.8073
+  type: 'test'
+  ...
+# Subtest: closed: needs a who (--as, --by or --all); --all lists everyone with owners
+ok 21 - closed: needs a who (--as, --by or --all); --all lists everyone with owners
+  ---
+  duration_ms: 0.9307
+  type: 'test'
+  ...
+# Subtest: search: everyone's tasks, decided-against flagged, terms bounded
+ok 22 - search: everyone's tasks, decided-against flagged, terms bounded
+  ---
+  duration_ms: 2.2488
+  type: 'test'
+  ...
+# Subtest: show: the row and its history
+ok 23 - show: the row and its history
+  ---
+  duration_ms: 1.2223
+  type: 'test'
+  ...
+# Subtest: R6: an email anywhere in a write is REFUSED and nothing is sent
+ok 24 - R6: an email anywhere in a write is REFUSED and nothing is sent
+  ---
+  duration_ms: 3.0694
+  type: 'test'
+  ...
+# Subtest: R6: a phone number WARNS and the write still goes
+ok 25 - R6: a phone number WARNS and the write still goes
+  ---
+  duration_ms: 0.6448
+  type: 'test'
+  ...
+# Subtest: courtesy checks: 81-char title, 601-char body, closing status via update, justin without date
+ok 26 - courtesy checks: 81-char title, 601-char body, closing status via update, justin without date
+  ---
+  duration_ms: 1.2404
+  type: 'test'
+  ...
+# Subtest: close requires --note; --decided-against sets decided_against with closed_at
+ok 27 - close requires --note; --decided-against sets decided_against with closed_at
+  ---
+  duration_ms: 0.4528
+  type: 'test'
+  ...
+# Subtest: update merges raci and adds links rather than replacing them
+ok 28 - update merges raci and adds links rather than replacing them
+  ---
+  duration_ms: 0.6334
+  type: 'test'
+  ...
+# Subtest: export: deterministic, LF, keys sorted, and it round-trips
+ok 29 - export: deterministic, LF, keys sorted, and it round-trips
+  ---
+  duration_ms: 1.0966
+  type: 'test'
+  ...
+# Subtest: export refuses to write if ANY row fails the screen
+ok 30 - export refuses to write if ANY row fails the screen
+  ---
+  duration_ms: 0.3597
+  type: 'test'
+  ...
+# Subtest: tasks.mjs end to end: a product URL refused with no network (spawned, env injected)
+ok 31 - tasks.mjs end to end: a product URL refused with no network (spawned, env injected)
+  ---
+  duration_ms: 441.0748
+  type: 'test'
+  ...
+# Subtest: unknown options and commands are usage errors (exit 2)
+ok 32 - unknown options and commands are usage errors (exit 2)
+  ---
+  duration_ms: 0.3249
+  type: 'test'
+  ...
+# Subtest: 005: the status lists are split, and the sets are exactly as designed
+ok 33 - 005: the status lists are split, and the sets are exactly as designed
+  ---
+  duration_ms: 0.192
+  type: 'test'
+  ...
+# Subtest: 005: update refuses --status without --note, before any request
+ok 34 - 005: update refuses --status without --note, before any request
+  ---
+  duration_ms: 0.2091
+  type: 'test'
+  ...
+# Subtest: 005: update T-n --note alone is a COMMENT: the patch carries only the note
+ok 35 - 005: update T-n --note alone is a COMMENT: the patch carries only the note
+  ---
+  duration_ms: 0.7007
+  type: 'test'
+  ...
+# Subtest: 005: a status change with --note sends both
+ok 36 - 005: a status change with --note sends both
+  ---
+  duration_ms: 0.4453
+  type: 'test'
+  ...
+# Subtest: 005: a --note identical to the task's current note is refused after one read, and nothing is written
+ok 37 - 005: a --note identical to the task's current note is refused after one read, and nothing is written
+  ---
+  duration_ms: 0.2833
+  type: 'test'
+  ...
+# Subtest: 005: a blank or over-long --note is refused before any request
+ok 38 - 005: a blank or over-long --note is refused before any request
+  ---
+  duration_ms: 0.2355
+  type: 'test'
+  ...
+# Subtest: 005: add --note writes the note on the insert
+ok 39 - 005: add --note writes the note on the insert
+  ---
+  duration_ms: 0.3227
+  type: 'test'
+  ...
+# Subtest: 005: close --note still writes closing_note, and no second note (006: decided-against only)
+ok 40 - 005: close --note still writes closing_note, and no second note (006: decided-against only)
+  ---
+  duration_ms: 0.1886
+  type: 'test'
+  ...
+# Subtest: 005: sign refuses any actor but lucas or justin before a request; lucas may sign, with an optional --note
+ok 41 - 005: sign refuses any actor but lucas or justin before a request; lucas may sign, with an optional --note
+  ---
+  duration_ms: 0.4732
+  type: 'test'
+  ...
+# Subtest: 005: an add owned by someone else is a REQUEST: proposed, addressed to them — each default yields to its option
+ok 42 - 005: an add owned by someone else is a REQUEST: proposed, addressed to them — each default yields to its option
+  ---
+  duration_ms: 1.051
+  type: 'test'
+  ...
+# Subtest: 005: needs_acceptance must be addressed (courtesy, ahead of tasks_acceptance_addressed)
+ok 43 - 005: needs_acceptance must be addressed (courtesy, ahead of tasks_acceptance_addressed)
+  ---
+  duration_ms: 0.3259
+  type: 'test'
+  ...
+# Subtest: 005: show prints each history row's note under it, and a note-only row as a comment
+ok 44 - 005: show prints each history row's note under it, and a note-only row as a comment
+  ---
+  duration_ms: 0.5684
+  type: 'test'
+  ...
+# Subtest: 005: export reads and writes the note column
+ok 45 - 005: export reads and writes the note column
+  ---
+  duration_ms: 0.3209
+  type: 'test'
+  ...
+# Subtest: ptToday is Pacific: 2026-11-06T05:00Z is still 11/05 in Seattle
+ok 46 - ptToday is Pacific: 2026-11-06T05:00Z is still 11/05 in Seattle
+  ---
+  duration_ms: 0.3238
+  type: 'test'
+  ...
+# Subtest: Ruling 2.1–2.3: due yesterday and today appear in the review section; tomorrow, another owner's, and the open section never
+ok 47 - Ruling 2.1–2.3: due yesterday and today appear in the review section; tomorrow, another owner's, and the open section never
+  ---
+  duration_ms: 0.6754
+  type: 'test'
+  ...
+# Subtest: Ruling 2.4: twelve due rows give ten lines and a loud +2, and the open section's count and overflow do not move
+ok 48 - Ruling 2.4: twelve due rows give ten lines and a loud +2, and the open section's count and overflow do not move
+  ---
+  duration_ms: 0.7774
+  type: 'test'
+  ...
+# Subtest: Ruling 2.5: at page size 2, five due rows are all counted (the review query pages to exhaustion)
+ok 49 - Ruling 2.5: at page size 2, five due rows are all counted (the review query pages to exhaustion)
+  ---
+  duration_ms: 0.4938
+  type: 'test'
+  ...
+# Subtest: Ruling 2.6: mine shows every due row, uncapped; mine --backlog shows all, by date, marking the due ones
+ok 50 - Ruling 2.6: mine shows every due row, uncapped; mine --backlog shows all, by date, marking the due ones
+  ---
+  duration_ms: 0.688
+  type: 'test'
+  ...
+# Subtest: Ruling 2.7: search still returns backlog
+ok 51 - Ruling 2.7: search still returns backlog
+  ---
+  duration_ms: 0.2032
+  type: 'test'
+  ...
+# Subtest: backlog courtesy: a review date is required and at most 90 Pacific days out; re-dating needs a note
+ok 52 - backlog courtesy: a review date is required and at most 90 Pacific days out; re-dating needs a note
+  ---
+  duration_ms: 1.146
+  type: 'test'
+  ...
+# Subtest: Ruling 6.2: leaving backlog without --needed-by warns that the review date becomes a needed-by
+ok 53 - Ruling 6.2: leaving backlog without --needed-by warns that the review date becomes a needed-by
+  ---
+  duration_ms: 0.5274
+  type: 'test'
+  ...
+# Subtest: Ruling 3.1: add without --accountable writes raci.a = lucas (DEFAULT_ACCOUNTABLE)
+ok 54 - Ruling 3.1: add without --accountable writes raci.a = lucas (DEFAULT_ACCOUNTABLE)
+  ---
+  duration_ms: 0.2565
+  type: 'test'
+  ...
+# Subtest: Ruling 3.2: --accountable justin writes justin, and warns when there is no --link
+ok 55 - Ruling 3.2: --accountable justin writes justin, and warns when there is no --link
+  ---
+  duration_ms: 0.4305
+  type: 'test'
+  ...
+# Subtest: 005 help text: the eight statuses, the note rule, the sign rule, the backlog review, the accountable line
+ok 56 - 005 help text: the eight statuses, the note rule, the sign rule, the backlog review, the accountable line
+  ---
+  duration_ms: 0.3214
+  type: 'test'
+  ...
+# Subtest: 006: add refuses any status but backlog or proposed, before any request (nothing is created authorized)
+ok 57 - 006: add refuses any status but backlog or proposed, before any request (nothing is created authorized)
+  ---
+  duration_ms: 0.5565
+  type: 'test'
+  ...
+# Subtest: 006: every request sends x-evryn-session when CLAUDE_CODE_SESSION_ID is set, and none when it is not; a malformed one is refused before any request
+ok 58 - 006: every request sends x-evryn-session when CLAUDE_CODE_SESSION_ID is set, and none when it is not; a malformed one is refused before any request
+  ---
+  duration_ms: 0.5432
+  type: 'test'
+  ...
+# Subtest: 006: authorize inserts one task_authorizations row for the task's uuid, with tier, rule, note, envelope and proposal; it prints the T-auth id
+ok 59 - 006: authorize inserts one task_authorizations row for the task's uuid, with tier, rule, note, envelope and proposal; it prints the T-auth id
+  ---
+  duration_ms: 0.7593
+  type: 'test'
+  ...
+# Subtest: 006: authorize and accept refuse, before any request: an actor but lucas or justin, no or a bad tier, a Lucas tier with no --rule, a Justin tier with no --ref, no note, no session, a bad envelope
+ok 60 - 006: authorize and accept refuse, before any request: an actor but lucas or justin, no or a bad tier, a Lucas tier with no --rule, a Justin tier with no --ref, no note, no session, a bad envelope
+  ---
+  duration_ms: 0.7317
+  type: 'test'
+  ...
+# Subtest: 006: accept inserts an acceptance row; close without --decided-against is retired and points at accept
+ok 61 - 006: accept inserts an acceptance row; close without --decided-against is retired and points at accept
+  ---
+  duration_ms: 0.3324
+  type: 'test'
+  ...
+# Subtest: 006: on authorized work, update refuses --title, --body or --owner without --rescope (no write); --rescope sends it and warns; on a proposed task there is no refusal
+ok 62 - 006: on authorized work, update refuses --title, --body or --owner without --rescope (no write); --rescope sends it and warns; on a proposed task there is no refusal
+  ---
+  duration_ms: 1.7218
+  type: 'test'
+  ...
+# Subtest: 006: a status write from backlog or proposed into authorized work is refused before any write, pointing at authorize
+ok 63 - 006: a status write from backlog or proposed into authorized work is refused before any write, pointing at authorize
+  ---
+  duration_ms: 0.4144
+  type: 'test'
+  ...
+# Subtest: 006: show prints the authorization record (tier, source, actor, session, ref, envelope, proposal, scope, whether it still matches) and RE-AUTHORIZATION NEEDED; pull marks the flag
+ok 64 - 006: show prints the authorization record (tier, source, actor, session, ref, envelope, proposal, scope, whether it still matches) and RE-AUTHORIZATION NEEDED; pull marks the flag
+  ---
+  duration_ms: 0.8453
+  type: 'test'
+  ...
+# Subtest: identical snapshots: no stop, nothing listed
+ok 65 - identical snapshots: no stop, nothing listed
+  ---
+  duration_ms: 2.3763
+  type: 'test'
+  ...
+# Subtest: a server-version-only difference is not a stop, and both versions are printed first
+ok 66 - a server-version-only difference is not a stop, and both versions are printed first
+  ---
+  duration_ms: 0.5706
+  type: 'test'
+  ...
+# Subtest: STOP fixtures — one of each kind in the rule
+ok 67 - STOP fixtures — one of each kind in the rule
+  ---
+  duration_ms: 1.0983
+  type: 'test'
+  ...
+# Subtest: STOP fixtures — a grant difference to each core role, on a table and on a function
+ok 68 - STOP fixtures — a grant difference to each core role, on a table and on a function
+  ---
+  duration_ms: 1.706
+  type: 'test'
+  ...
+# Subtest: LISTED fixtures — a Supabase-only role, and a default privilege for future objects
+ok 69 - LISTED fixtures — a Supabase-only role, and a default privilege for future objects
+  ---
+  duration_ms: 0.3878
+  type: 'test'
+  ...
+# Subtest: MAINTAIN (QC Finding 9): LISTED only when the servers straddle 17; a STOP between two 17s or when a version is unknown
+ok 70 - MAINTAIN (QC Finding 9): LISTED only when the servers straddle 17; a STOP between two 17s or when a version is unknown
+  ---
+  duration_ms: 0.3681
+  type: 'test'
+  ...
+# Subtest: QC N3: against the REAL golden fixture, a PostgreSQL-15-shaped live side LISTS the MAINTAIN lines and does not stop
+ok 71 - QC N3: against the REAL golden fixture, a PostgreSQL-15-shaped live side LISTS the MAINTAIN lines and does not stop
+  ---
+  duration_ms: 2.0835
+  type: 'test'
+  ...
+# Subtest: targets (QC Finding 4): a live side taken from loopback, with no target line, or from the same target is REFUSED
+ok 72 - targets (QC Finding 4): a live side taken from loopback, with no target line, or from the same target is REFUSED
+  ---
+  duration_ms: 0.3208
+  type: 'test'
+  ...
+# Subtest: an unrecognized or unparseable line STOPS rather than slipping through
+ok 73 - an unrecognized or unparseable line STOPS rather than slipping through
+  ---
+  duration_ms: 0.1318
+  type: 'test'
+  ...
+# Subtest: runCompare: exit 1 on a stop, 0 otherwise, 2 on usage
+ok 74 - runCompare: exit 1 on a stop, 0 otherwise, 2 on usage
+  ---
+  duration_ms: 0.3361
+  type: 'test'
+  ...
+# Subtest: this process is recognized as a test run
+ok 75 - this process is recognized as a test run
+  ---
+  duration_ms: 0.8445
+  type: 'test'
+  ...
+# Subtest: TRIPWIRE: reading the real team .env inside a test run throws BEFORE touching the file
+ok 76 - TRIPWIRE: reading the real team .env inside a test run throws BEFORE touching the file
+  ---
+  duration_ms: 0.4234
+  type: 'test'
+  ...
+# Subtest: TRIPWIRE: the meta .env (LINEAR_API_KEY) is guarded the same way
+ok 77 - TRIPWIRE: the meta .env (LINEAR_API_KEY) is guarded the same way
+  ---
+  duration_ms: 0.137
+  type: 'test'
+  ...
+# Subtest: TRIPWIRE: loadVars without an injected env goes through the tripwire
+ok 78 - TRIPWIRE: loadVars without an injected env goes through the tripwire
+  ---
+  duration_ms: 0.2447
+  type: 'test'
+  ...
+# Subtest: TRIPWIRE end-to-end: every script, spawned in a test run without an injected env, trips instead of reading .env
+ok 79 - TRIPWIRE end-to-end: every script, spawned in a test run without an injected env, trips instead of reading .env
+  ---
+  duration_ms: 6562.8559
+  type: 'test'
+  ...
+# Subtest: an injected env is the ONLY source: no file is consulted
+ok 80 - an injected env is the ONLY source: no file is consulted
+  ---
+  duration_ms: 0.689
+  type: 'test'
+  ...
+# Subtest: parseEnvText handles quotes, CRLF, export and comments
+ok 81 - parseEnvText handles quotes, CRLF, export and comments
+  ---
+  duration_ms: 0.3247
+  type: 'test'
+  ...
+# Subtest: R5: the team URL and a secret key are accepted; the key goes nowhere but the target
+ok 82 - R5: the team URL and a secret key are accepted; the key goes nowhere but the target
+  ---
+  duration_ms: 0.259
+  type: 'test'
+  ...
+# Subtest: R5: a product URL is refused, and the refusal prints no value
+ok 83 - R5: a product URL is refused, and the refusal prints no value
+  ---
+  duration_ms: 0.2422
+  type: 'test'
+  ...
+# Subtest: R5: look-alike hosts are refused (subdomain trick, http, other port, path trick)
+ok 84 - R5: look-alike hosts are refused (subdomain trick, http, other port, path trick)
+  ---
+  duration_ms: 0.2791
+  type: 'test'
+  ...
+# Subtest: R5: key kinds — publishable refused; legacy anon refused; legacy for another project refused; legacy team service_role accepted
+ok 85 - R5: key kinds — publishable refused; legacy anon refused; legacy for another project refused; legacy team service_role accepted
+  ---
+  duration_ms: 0.4402
+  type: 'test'
+  ...
+# Subtest: a missing variable is NAMED, and nothing else is printed
+ok 86 - a missing variable is NAMED, and nothing else is printed
+  ---
+  duration_ms: 0.1118
+  type: 'test'
+  ...
+# Subtest: R5 for Postgres: there is NO live Postgres target — without a loopback cluster, every psql path refuses (no password exists)
+ok 87 - R5 for Postgres: there is NO live Postgres target — without a loopback cluster, every psql path refuses (no password exists)
+  ---
+  duration_ms: 0.2848
+  type: 'test'
+  ...
+# Subtest: the local-test channel accepts loopback only
+ok 88 - the local-test channel accepts loopback only
+  ---
+  duration_ms: 0.1921
+  type: 'test'
+  ...
+# Subtest: redact strips known secrets and URI-shaped text
+ok 89 - redact strips known secrets and URI-shaped text
+  ---
+  duration_ms: 0.1944
+  type: 'test'
+  ...
+# Subtest: Finding 2: a Backlog ticket is SKIPPED (by state type or name), never planned as a row, and carries no title
+ok 90 - Finding 2: a Backlog ticket is SKIPPED (by state type or name), never planned as a row, and carries no title
+  ---
+  duration_ms: 1.9404
+  type: 'test'
+  ...
+# Subtest: Finding 2: the report counts Backlog BY R: OWNER, lists no Backlog titles, and leaves them out of the ticket table
+ok 91 - Finding 2: the report counts Backlog BY R: OWNER, lists no Backlog titles, and leaves them out of the ticket table
+  ---
+  duration_ms: 9.3386
+  type: 'test'
+  ...
+# Subtest: Finding 2: triage stays unmapped and FAILS loudly
+ok 92 - Finding 2: triage stays unmapped and FAILS loudly
+  ---
+  duration_ms: 0.2133
+  type: 'test'
+  ...
+# Subtest: Finding 2: --apply never inserts a Backlog ticket
+ok 93 - Finding 2: --apply never inserts a Backlog ticket
+  ---
+  duration_ms: 22.3986
+  type: 'test'
+  ...
+# Subtest: Finding 13: held Nathan tickets appear by Linear id ONLY — no title anywhere in the report
+ok 94 - Finding 13: held Nathan tickets appear by Linear id ONLY — no title anywhere in the report
+  ---
+  duration_ms: 0.458
+  type: 'test'
+  ...
+# Subtest: Finding 8: the report FILE is redacted too, not only stdout
+ok 95 - Finding 8: the report FILE is redacted too, not only stdout
+  ---
+  duration_ms: 0.9449
+  type: 'test'
+  ...
+# Subtest: Finding 14: --dry-run is an explicit no-op alias; with --apply it is a usage error
+ok 96 - Finding 14: --dry-run is an explicit no-op alias; with --apply it is a usage error
+  ---
+  duration_ms: 0.5682
+  type: 'test'
+  ...
+# Subtest: the Linear query is read-only (no mutation) and scoped to team Evryn, open states only
+ok 97 - the Linear query is read-only (no mutation) and scoped to team Evryn, open states only
+  ---
+  duration_ms: 0.1702
+  type: 'test'
+  ...
+# Subtest: "Authorized" maps to open — NOT to any authorized state — and the verbatim status is kept
+ok 98 - "Authorized" maps to open — NOT to any authorized state — and the verbatim status is kept
+  ---
+  duration_ms: 0.3368
+  type: 'test'
+  ...
+# Subtest: a title over 80 characters FAILS the ticket and is never truncated
+ok 99 - a title over 80 characters FAILS the ticket and is never truncated
+  ---
+  duration_ms: 0.2643
+  type: 'test'
+  ...
+# Subtest: Nathan's tickets are held, not imported
+ok 100 - Nathan's tickets are held, not imported
+  ---
+  duration_ms: 0.1181
+  type: 'test'
+  ...
+# Subtest: Justin tickets: with a due date → addressed_to justin + needed_by; without → neither, and flagged for the report
+ok 101 - Justin tickets: with a due date → addressed_to justin + needed_by; without → neither, and flagged for the report
+  ---
+  duration_ms: 0.1243
+  type: 'test'
+  ...
+# Subtest: owner and accountable carry over; C/I become raci lists; other labels become tags
+ok 102 - owner and accountable carry over; C/I become raci lists; other labels become tags
+  ---
+  duration_ms: 0.1677
+  type: 'test'
+  ...
+# Subtest: no owner, two owners, unmapped status, email → fail; phone → warning only
+ok 103 - no owner, two owners, unmapped status, email → fail; phone → warning only
+  ---
+  duration_ms: 0.2157
+  type: 'test'
+  ...
+# Subtest: a body over 600 fails by default; --long-body pointer replaces it with a pointer
+ok 104 - a body over 600 fails by default; --long-body pointer replaces it with a pointer
+  ---
+  duration_ms: 0.5443
+  type: 'test'
+  ...
+# Subtest: the report lists every ticket, the long titles, and the undated Justin tickets with a count and headlines
+ok 105 - the report lists every ticket, the long titles, and the undated Justin tickets with a count and headlines
+  ---
+  duration_ms: 0.3167
+  type: 'test'
+  ...
+# Subtest: S3: "Needs Acceptance" imports as blocked, keeps the verbatim status, and is listed under awaiting Justin's acceptance
+ok 106 - S3: "Needs Acceptance" imports as blocked, keeps the verbatim status, and is listed under awaiting Justin's acceptance
+  ---
+  duration_ms: 0.2148
+  type: 'test'
+  ...
+# Subtest: S3: a Justin ticket is R: justin, OR R: lucas with I: justin — and it drives addressed_to and the undated list
+ok 107 - S3: a Justin ticket is R: justin, OR R: lucas with I: justin — and it drives addressed_to and the undated list
+  ---
+  duration_ms: 0.2891
+  type: 'test'
+  ...
+# Subtest: S3: every ticket whose body was replaced by a pointer is listed as OWED in the report
+ok 108 - S3: every ticket whose body was replaced by a pointer is listed as OWED in the report
+  ---
+  duration_ms: 0.2219
+  type: 'test'
+  ...
+# Subtest: dry run (the default): reads Linear to the end, touches NO team endpoint, never prints the key
+ok 109 - dry run (the default): reads Linear to the end, touches NO team endpoint, never prints the key
+  ---
+  duration_ms: 0.7167
+  type: 'test'
+  ...
+# Subtest: --apply: writes as actor ac, skips tickets already imported (idempotent on linear_id), never writes to Linear
+ok 110 - --apply: writes as actor ac, skips tickets already imported (idempotent on linear_id), never writes to Linear
+  ---
+  duration_ms: 0.7939
+  type: 'test'
+  ...
+# Subtest: --apply with a product URL refuses before reading Linear or writing anything
+ok 111 - --apply with a product URL refuses before reading Linear or writing anything
+  ---
+  duration_ms: 0.2848
+  type: 'test'
+  ...
+# Subtest: a missing LINEAR_API_KEY is named; a Linear error is loud and keyless
+ok 112 - a missing LINEAR_API_KEY is named; a Linear error is loud and keyless
+  ---
+  duration_ms: 0.4182
+  type: 'test'
+  ...
+# Subtest: every test file imports ../helpers.mjs FIRST (it arms the .env tripwire before anything else loads)
+ok 113 - every test file imports ../helpers.mjs FIRST (it arms the .env tripwire before anything else loads)
+  ---
+  duration_ms: 12.2663
+  type: 'test'
+  ...
+# Subtest: SEALED-EXEC: every spawn call site carries the audit comment on the line above
+ok 114 - SEALED-EXEC: every spawn call site carries the audit comment on the line above
+  ---
+  duration_ms: 17.7932
+  type: 'test'
+  ...
+# Subtest: no script invokes a tool by bare name through a package runner
+ok 115 - no script invokes a tool by bare name through a package runner
+  ---
+  duration_ms: 14.2986
+  type: 'test'
+  ...
+# Subtest: the roster lives in exactly one place (public.task_roster, defined in 003 and redefined in 006); nothing else copies it
+ok 116 - the roster lives in exactly one place (public.task_roster, defined in 003 and redefined in 006); nothing else copies it
+  ---
+  duration_ms: 17.0029
+  type: 'test'
+  ...
+# Subtest: Ruling 3.4 (Soren-005): the accountable default lives in ONE place — DEFAULT_ACCOUNTABLE in lib/defaults.mjs — and both its users import it
+ok 117 - Ruling 3.4 (Soren-005): the accountable default lives in ONE place — DEFAULT_ACCOUNTABLE in lib/defaults.mjs — and both its users import it
+  ---
+  duration_ms: 12.2014
+  type: 'test'
+  ...
+# Subtest: every migration and script carries its truncation canary
+ok 118 - every migration and script carries its truncation canary
+  ---
+  duration_ms: 9.8184
+  type: 'test'
+  ...
+# Subtest: splitSql: splits on top-level semicolons only
+ok 119 - splitSql: splits on top-level semicolons only
+  ---
+  duration_ms: 1.6527
+  type: 'test'
+  ...
+# Subtest: splitSql: a ; inside strings, E-strings, identifiers, comments and dollar quotes does not split
+ok 120 - splitSql: a ; inside strings, E-strings, identifiers, comments and dollar quotes does not split
+  ---
+  duration_ms: 0.4729
+  type: 'test'
+  ...
+# Subtest: splitSql: comment-only fragments are dropped; unterminated quotes are LOUD
+ok 121 - splitSql: comment-only fragments are dropped; unterminated quotes are LOUD
+  ---
+  duration_ms: 0.5069
+  type: 'test'
+  ...
+# Subtest: splitSql over the real migrations: every statement survives, none is empty, the canaries are dropped
+ok 122 - splitSql over the real migrations: every statement survives, none is empty, the canaries are dropped
+  ---
+  duration_ms: 2.801
+  type: 'test'
+  ...
+# Subtest: the committed paste files are exactly what the sources produce, for every change set (regenerate with node make-paste.mjs)
+ok 123 - the committed paste files are exactly what the sources produce, for every change set (regenerate with node make-paste.mjs)
+  ---
+  duration_ms: 15.1959
+  type: 'test'
+  ...
+# Subtest: the APPLIED 001-004 pair is byte-identical to what Justin ran on 2026-11-06 (sha256 pinned), and still generated from 001–004 only
+ok 124 - the APPLIED 001-004 pair is byte-identical to what Justin ran on 2026-11-06 (sha256 pinned), and still generated from 001–004 only
+  ---
+  duration_ms: 1.8057
+  type: 'test'
+  ...
+# Subtest: every migration belongs to exactly one change set; a migration in none (a future 006) makes make-paste THROW
+ok 125 - every migration belongs to exactly one change set; a migration in none (a future 006) makes make-paste THROW
+  ---
+  duration_ms: 0.9844
+  type: 'test'
+  ...
+# Subtest: each header carries the sha256 of ITS OWN set's migrations (file name + LF text, in order), and names its own files and sources
+ok 126 - each header carries the sha256 of ITS OWN set's migrations (file name + LF text, in order), and names its own files and sources
+  ---
+  duration_ms: 1.6997
+  type: 'test'
+  ...
+# Subtest: each paste is ONE statement: a single DO $paste$ block (plus only the NOTIFY in Paste 2), with no transaction control or psql meta-commands
+ok 127 - each paste is ONE statement: a single DO $paste$ block (plus only the NOTIFY in Paste 2), with no transaction control or psql meta-commands
+  ---
+  duration_ms: 2.4187
+  type: 'test'
+  ...
+# Subtest: in each set, the two pastes differ ONLY in the header, the final in-block statement, and Paste 2's trailing NOTIFY
+ok 128 - in each set, the two pastes differ ONLY in the header, the final in-block statement, and Paste 2's trailing NOTIFY
+  ---
+  duration_ms: 1.3742
+  type: 'test'
+  ...
+# Subtest: QC N7: the first statement inside each block sets a transaction-local lock_timeout of 5s
+ok 129 - QC N7: the first statement inside each block sets a transaction-local lock_timeout of 5s
+  ---
+  duration_ms: 0.7059
+  type: 'test'
+  ...
+# Subtest: Paste 1 ends with the exact dry-run wording as a prefix; Paste 2 refuses on any NOT VALID constraint
+ok 130 - Paste 1 ends with the exact dry-run wording as a prefix; Paste 2 refuses on any NOT VALID constraint
+  ---
+  duration_ms: 0.1272
+  type: 'test'
+  ...
+# Subtest: Paste 2's FIRST line is the STOP instruction; both end with the canary; Paste 1 explains its expected error
+ok 131 - Paste 2's FIRST line is the STOP instruction; both end with the canary; Paste 1 explains its expected error
+  ---
+  duration_ms: 0.5436
+  type: 'test'
+  ...
+# Subtest: every migration statement of a set appears verbatim inside an EXECUTE with a unique dollar tag, in its own set's paste only
+ok 132 - every migration statement of a set appears verbatim inside an EXECUTE with a unique dollar tag, in its own set's paste only
+  ---
+  duration_ms: 5.0813
+  type: 'test'
+  ...
+# Subtest: 005's before-assertions pin TODAY'S LIVE SHAPE: every pinned block is verbatim lines of the live snapshot of 2026-11-06 (and of the golden after-004 fixture)
+ok 133 - 005's before-assertions pin TODAY'S LIVE SHAPE: every pinned block is verbatim lines of the live snapshot of 2026-11-06 (and of the golden after-004 fixture)
+  ---
+  duration_ms: 3.369
+  type: 'test'
+  ...
+# Subtest: the 005 pair is byte-identical to the committed record (sha256 pinned), and still generated from 005 only
+ok 134 - the 005 pair is byte-identical to the committed record (sha256 pinned), and still generated from 005 only
+  ---
+  duration_ms: 1.7927
+  type: 'test'
+  ...
+# Subtest: 006: its dry run reports the data steps (B backlog rows moved; A rows backfilled); 001-004 and 005 keep the original final statement
+ok 135 - 006: its dry run reports the data steps (B backlog rows moved; A rows backfilled); 001-004 and 005 keep the original final statement
+  ---
+  duration_ms: 0.2615
+  type: 'test'
+  ...
+# Subtest: 006's before-assertions pin THE POST-005 SHAPE: every pinned block is verbatim lines of the after-005 golden
+ok 136 - 006's before-assertions pin THE POST-005 SHAPE: every pinned block is verbatim lines of the after-005 golden
+  ---
+  duration_ms: 1.5473
+  type: 'test'
+  ...
+# Subtest: 006's after-assertions pin every replaced or new function's body exactly as the after-006 golden prints it
+ok 137 - 006's after-assertions pin every replaced or new function's body exactly as the after-006 golden prints it
+  ---
+  duration_ms: 2.125
+  type: 'test'
+  ...
+# Subtest: a secret key travels on apikey ONLY, never Authorization; the actor header is sent
+ok 138 - a secret key travels on apikey ONLY, never Authorization; the actor header is sent
+  ---
+  duration_ms: 25.8074
+  type: 'test'
+  ...
+# Subtest: a legacy service_role JWT is also sent as Authorization: Bearer
+ok 139 - a legacy service_role JWT is also sent as Authorization: Bearer
+  ---
+  duration_ms: 0.5351
+  type: 'test'
+  ...
+# Subtest: R8: 5 rows at a page size of 2 all come back, ending on a zero-row page
+ok 140 - R8: 5 rows at a page size of 2 all come back, ending on a zero-row page
+  ---
+  duration_ms: 1.452
+  type: 'test'
+  ...
+# Subtest: R8: a server cap SMALLER than the page size still loses nothing (no short-page termination)
+ok 141 - R8: a server cap SMALLER than the page size still loses nothing (no short-page termination)
+  ---
+  duration_ms: 0.6308
+  type: 'test'
+  ...
+# Subtest: R8: 2,500 rows behind a 1,000-row cap all come back
+ok 142 - R8: 2,500 rows behind a 1,000-row cap all come back
+  ---
+  duration_ms: 3.2921
+  type: 'test'
+  ...
+# Subtest: R8: running out of page budget is LOUD, never a silent prefix
+ok 143 - R8: running out of page budget is LOUD, never a silent prefix
+  ---
+  duration_ms: 0.7255
+  type: 'test'
+  ...
+# Subtest: R8: an out-of-order page is refused
+ok 144 - R8: an out-of-order page is refused
+  ---
+  duration_ms: 0.309
+  type: 'test'
+  ...
+# Subtest: PostgREST errors surface message, code, hint and details
+ok 145 - PostgREST errors surface message, code, hint and details
+  ---
+  duration_ms: 0.3338
+  type: 'test'
+  ...
+# Subtest: a network error surfaces only its message — never the request, its headers or the key
+ok 146 - a network error surfaces only its message — never the request, its headers or the key
+  ---
+  duration_ms: 0.6763
+  type: 'test'
+  ...
+# Subtest: email addresses are caught
+ok 147 - email addresses are caught
+  ---
+  duration_ms: 0.8819
+  type: 'test'
+  ...
+# Subtest: phone numbers are caught (narrow pattern)
+ok 148 - phone numbers are caught (narrow pattern)
+  ---
+  duration_ms: 1.1003
+  type: 'test'
+  ...
+# Subtest: the phone pattern does NOT trip on dates, ticket ids, task ids, SHAs, times, versions or counts
+ok 149 - the phone pattern does NOT trip on dates, ticket ids, task ids, SHAs, times, versions or counts
+  ---
+  duration_ms: 0.1548
+  type: 'test'
+  ...
+# Subtest: screenRow: email REFUSES, phone WARNS, across every free-text field
+ok 150 - screenRow: email REFUSES, phone WARNS, across every free-text field
+  ---
+  duration_ms: 0.9836
+  type: 'test'
+  ...
+# Subtest: screenRow never echoes the matched text
+ok 151 - screenRow never echoes the matched text
+  ---
+  duration_ms: 0.1316
+  type: 'test'
+  ...
+# Subtest: clean text passes
+ok 152 - clean text passes
+  ---
+  duration_ms: 0.1142
+  type: 'test'
+  ...
+# Subtest: check: presence, ref match, key kind, row count, CHECK OK — no password asked for, no value printed
+ok 153 - check: presence, ref match, key kind, row count, CHECK OK — no password asked for, no value printed
+  ---
+  duration_ms: 21.1136
+  type: 'test'
+  ...
+# Subtest: check: missing variables named; a product URL is a mismatch and is never contacted
+ok 154 - check: missing variables named; a product URL is a mismatch and is never contacted
+  ---
+  duration_ms: 0.2331
+  type: 'test'
+  ...
+# Subtest: check: a publishable key is refused; a legacy service_role JWT is classified
+ok 155 - check: a publishable key is refused; a legacy service_role JWT is classified
+  ---
+  duration_ms: 0.5682
+  type: 'test'
+  ...
+# Subtest: check --absent: after the dry run, both probes report absent — and the output says it is ADVISORY, not the guard
+ok 156 - check --absent: after the dry run, both probes report absent — and the output says it is ADVISORY, not the guard
+  ---
+  duration_ms: 1.2439
+  type: 'test'
+  ...
+# Subtest: check --absent: if the new objects are visible, it FAILS and says not to run Paste 2
+ok 157 - check --absent: if the new objects are visible, it FAILS and says not to run Paste 2
+  ---
+  duration_ms: 0.382
+  type: 'test'
+  ...
+# Subtest: check --absent-005: after the 005 dry run both note columns report absent (ADVISORY); if visible it FAILS; it cannot be combined with --absent
+ok 158 - check --absent-005: after the 005 dry run both note columns report absent (ADVISORY); if visible it FAILS; it cannot be combined with --absent
+  ---
+  duration_ms: 0.8012
+  type: 'test'
+  ...
+# Subtest: migrate: with no local cluster it REFUSES and runs nothing (there is no live target, and no password)
+ok 159 - migrate: with no local cluster it REFUSES and runs nothing (there is no live target, and no password)
+  ---
+  duration_ms: 0.3718
+  type: 'test'
+  ...
+# Subtest: migrate: the old live flags are gone — any argument is a usage error that points at the paste
+ok 160 - migrate: the old live flags are gone — any argument is a usage error that points at the paste
+  ---
+  duration_ms: 0.1899
+  type: 'test'
+  ...
+# Subtest: migrate: refuses unless runtime 003 is present
+ok 161 - migrate: refuses unless runtime 003 is present
+  ---
+  duration_ms: 0.3947
+  type: 'test'
+  ...
+# Subtest: migrate: one transaction (-1), every file in order, lock_timeout; NOT VALID surfaced; failure loud
+ok 162 - migrate: one transaction (-1), every file in order, lock_timeout; NOT VALID surfaced; failure loud
+  ---
+  duration_ms: 2.2896
+  type: 'test'
+  ...
+# Subtest: snapshot: ONE source — the query is extracted from migration 004's function body, run read-only
+ok 163 - snapshot: ONE source — the query is extracted from migration 004's function body, run read-only
+  ---
+  duration_ms: 1.1975
+  type: 'test'
+  ...
+# Subtest: snapshot: the query comes from the NEWEST migration that defines it (006), and is 004's verbatim with the two authorization tables added to each table list
+ok 164 - snapshot: the query comes from the NEWEST migration that defines it (006), and is 004's verbatim with the two authorization tables added to each table list
+  ---
+  duration_ms: 1.9867
+  type: 'test'
+  ...
+# Subtest: snapshot (local): SQL on stdin, flags-only argv, target line first with no port
+ok 165 - snapshot (local): SQL on stdin, flags-only argv, target line first with no port
+  ---
+  duration_ms: 0.5913
+  type: 'test'
+  ...
+# Subtest: snapshot (local): with no local cluster it refuses — there is no live psql path
+ok 166 - snapshot (local): with no local cluster it refuses — there is no live psql path
+  ---
+  duration_ms: 0.2124
+  type: 'test'
+  ...
+# Subtest: snapshot --api: calls rpc/team_tasks_schema_snapshot with the secret key, prints the api target line, never the key
+ok 167 - snapshot --api: calls rpc/team_tasks_schema_snapshot with the secret key, prints the api target line, never the key
+  ---
+  duration_ms: 0.2847
+  type: 'test'
+  ...
+# Subtest: snapshot --api: a product URL is refused before any request; a missing function says Paste 2 may not have run
+ok 168 - snapshot --api: a product URL is refused before any request; a missing function says Paste 2 may not have run
+  ---
+  duration_ms: 0.2767
+  type: 'test'
+  ...
+1..168
+# tests 168
+# suites 0
+# pass 168
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7775.0248

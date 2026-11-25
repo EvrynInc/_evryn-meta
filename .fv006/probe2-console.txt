@@ -1,0 +1,21 @@
+cluster dir: C:\Users\jbmcg\AppData\Local\Temp\evryn-tasks-sbpg-uSG00Y port 52717
+== 1. Paste 2 while an agent's task write is in flight (uncommitted for ~3 s) ==
+in-flight write: exit 0 
+paste: exit 3 after 2.8 s :: ERROR:  AFTER-ASSERTION FAILED: expected 2 new history row(s) (1 backlog moves + 1 backfills), found 3. Everything was rolled back.
+006 applied? task_authorizations exists: false; the in-flight write survived: a write in flight during the paste
+re-run of the same paste, nothing in flight: exit 0 
+-- and with the write held longer than the paste's 5 s lock timeout: reasoned, not executed (the ALTER TABLE gives up with a lock-timeout error; nothing changes) --
+
+== 2. A scope edit racing an authorization (two overlapping sessions) ==
+2a authorization first (held open 2 s), edit second: authorization exit 0, edit exit 0 ; task now proposed ptr=NULL reauth=true | row hash = current authorization hash: n/a
+2b edit first (held open 2 s), authorization second: authorization exit 0 ; task now open ptr=3 reauth=false | row hash = current authorization hash: true; the record's scope body: 'edited first, uncommitted for 2 s'
+
+== 3. Replaying a superseded row, by someone who can set evryn.authorizing (owner or SQL access only) ==
+3a withdrawn task, its OLD authorization row replayed by ac: exit 0 ; task now open ptr=4 reauth=false | row hash = current authorization hash: true
+3b reopened and re-handed-in task, its OLD acceptance row replayed by ac: exit 0 ; task now done ptr=7 reauth=false | row hash = current authorization hash: true
+
+== 4. Follow-ups ==
+4a Justin-tier task: withdrawn, re-authorized at tier lucas, handed in, accepted at tier lucas: exit 0/0 ; task now done ptr=9 reauth=false | row hash = current authorization hash: true; rows: authorization:justin, authorization:lucas, acceptance:lucas
+4b ac edits the body of soren's authorized task (returns it), then closes it as decided_against: exit 0/0; task now decided_against ptr=NULL reauth=false | row hash = current authorization hash: n/a
+4c a reopened task closed again with the SAME closing note (the CLI close shape): exit 3 ERROR:  ET008: task update refused: a status change, or a new review date on a backlog item, needs a note saying why. HINT:  a status change, or a new review date on a backlog item, needs a note (--note) saying why; if you sent one, it matches the previous not
+4d known residual, for the record: service_role sending actor justin writes a Justin-tier row under lucas_relay: exit 0; justin/lucas_relay/justin

@@ -1,0 +1,1204 @@
+TAP version 13
+# Subtest: the acceptance suite actually ran (PostgreSQL 17 tools and runtime 003 were found)
+ok 1 - the acceptance suite actually ran (PostgreSQL 17 tools and runtime 003 were found)
+  ---
+  duration_ms: 12996.7588
+  type: 'test'
+  ...
+# Subtest: local copy is faithful to the Supabase shape
+    # Subtest: service_role has BYPASSRLS; anon and authenticated do not
+    ok 1 - service_role has BYPASSRLS; anon and authenticated do not
+      ---
+      duration_ms: 707.6195
+      type: 'test'
+      ...
+    # Subtest: tasks was born with Supabase's default table grants to anon and authenticated (only RLS stops them)
+    ok 2 - tasks was born with Supabase's default table grants to anon and authenticated (only RLS stops them)
+      ---
+      duration_ms: 0.5942
+      type: 'test'
+      ...
+    # Subtest: the migration did NOT revoke tasks' existing grants (outside the go)
+    ok 3 - the migration did NOT revoke tasks' existing grants (outside the go)
+      ---
+      duration_ms: 1468.2508
+      type: 'test'
+      ...
+    # Subtest: golden snapshots: before and after migrating (our objects; identical in both modes)
+    ok 4 - golden snapshots: before and after migrating (our objects; identical in both modes)
+      ---
+      duration_ms: 2166.07
+      type: 'test'
+      ...
+    # Subtest: QC Finding 1: the after-snapshot of our objects is IDENTICAL with Supabase's defaults on (this run) and off
+    ok 5 - QC Finding 1: the after-snapshot of our objects is IDENTICAL with Supabase's defaults on (this run) and off
+      ---
+      duration_ms: 11135.5393
+      type: 'test'
+      ...
+    # mode on vs off: 184 object lines identical
+    # Subtest: QC Finding 6: public.proposals is unchanged by the migration (columns, constraints, triggers, grants, RLS)
+    ok 6 - QC Finding 6: public.proposals is unchanged by the migration (columns, constraints, triggers, grants, RLS)
+      ---
+      duration_ms: 1595.2837
+      type: 'test'
+      ...
+    1..6
+ok 2 - local copy is faithful to the Supabase shape
+  ---
+  duration_ms: 17074.4697
+  type: 'suite'
+  ...
+# Subtest: migrate.mjs
+    # Subtest: applied all three files on a clean table and validated every constraint
+    ok 1 - applied all three files on a clean table and validated every constraint
+      ---
+      duration_ms: 405.7288
+      type: 'test'
+      ...
+    # Subtest: re-applying is idempotent: succeeds and leaves the schema identical
+    ok 2 - re-applying is idempotent: succeeds and leaves the schema identical
+      ---
+      duration_ms: 4619.1636
+      type: 'test'
+      ...
+    # Subtest: refuses when runtime 003 is absent
+    ok 3 - refuses when runtime 003 is absent
+      ---
+      duration_ms: 3474.3061
+      type: 'test'
+      ...
+    # Subtest: refuses a non-loopback EVRYN_TASKS_LOCAL_PG
+    ok 4 - refuses a non-loopback EVRYN_TASKS_LOCAL_PG
+      ---
+      duration_ms: 502.4071
+      type: 'test'
+      ...
+    # Subtest: existing rows that fail a rule: constraint left NOT VALID and reported; old rows unchanged; new writes still checked
+    ok 5 - existing rows that fail a rule: constraint left NOT VALID and reported; old rows unchanged; new writes still checked
+      ---
+      duration_ms: 10703.3134
+      type: 'test'
+      ...
+    1..5
+ok 3 - migrate.mjs
+  ---
+  duration_ms: 19705.693
+  type: 'suite'
+  ...
+# Subtest: R1 actor
+    # Subtest: no actor (no headers, no evryn.actor) → refused
+    ok 1 - no actor (no headers, no evryn.actor) → refused
+      ---
+      duration_ms: 1165.0345
+      type: 'test'
+      ...
+    # Subtest: headers present without x-evryn-actor → refused
+    ok 2 - headers present without x-evryn-actor → refused
+      ---
+      duration_ms: 319.2287
+      type: 'test'
+      ...
+    # Subtest: empty request.headers → refused cleanly, not a JSON error
+    ok 3 - empty request.headers → refused cleanly, not a JSON error
+      ---
+      duration_ms: 408.2023
+      type: 'test'
+      ...
+    # Subtest: malformed request.headers → treated as absent, not a JSON error
+    ok 4 - malformed request.headers → treated as absent, not a JSON error
+      ---
+      duration_ms: 888.0947
+      type: 'test'
+      ...
+    # Subtest: a malformed name is refused (shape of isSafeActorName)
+    ok 5 - a malformed name is refused (shape of isSafeActorName)
+      ---
+      duration_ms: 1628.5944
+      type: 'test'
+      ...
+    # Subtest: psql path: evryn.actor is accepted when no header is sent
+    ok 6 - psql path: evryn.actor is accepted when no header is sent
+      ---
+      duration_ms: 1294.968
+      type: 'test'
+      ...
+    # Subtest: the header wins over evryn.actor
+    ok 7 - the header wins over evryn.actor
+      ---
+      duration_ms: 1435.7769
+      type: 'test'
+      ...
+    # Subtest: created_by comes from the request, not from the client's value
+    ok 8 - created_by comes from the request, not from the client's value
+      ---
+      duration_ms: 1564.9793
+      type: 'test'
+      ...
+    # Subtest: a raw update with no actor fails; with an off-roster actor it is written and flagged
+    ok 9 - a raw update with no actor fails; with an off-roster actor it is written and flagged
+      ---
+      duration_ms: 3894.5804
+      type: 'test'
+      ...
+    # Subtest: an on-roster actor is not flagged
+    ok 10 - an on-roster actor is not flagged
+      ---
+      duration_ms: 1563.9479
+      type: 'test'
+      ...
+    # Subtest: an off-roster owner is written and flagged; an off-roster addressed_to too
+    ok 11 - an off-roster owner is written and flagged; an off-roster addressed_to too
+      ---
+      duration_ms: 1357.5409
+      type: 'test'
+      ...
+    # Subtest: created_by, id and created_at are immutable
+    ok 12 - created_by, id and created_at are immutable
+      ---
+      duration_ms: 3754.7971
+      type: 'test'
+      ...
+    # Subtest: the frozen runtime's propose_work insert shape (no header) fails loudly
+    ok 13 - the frozen runtime's propose_work insert shape (no header) fails loudly
+      ---
+      duration_ms: 1360.74
+      type: 'test'
+      ...
+    1..13
+ok 4 - R1 actor
+  ---
+  duration_ms: 20637.5952
+  type: 'suite'
+  ...
+# Subtest: R2 history
+    # Subtest: an insert writes exactly one history row (op insert)
+    ok 1 - an insert writes exactly one history row (op insert)
+      ---
+      duration_ms: 2473.8022
+      type: 'test'
+      ...
+    # Subtest: one update → exactly one history row, recording only the changed fields
+    ok 2 - one update → exactly one history row, recording only the changed fields
+      ---
+      duration_ms: 4705.1242
+      type: 'test'
+      ...
+    # Subtest: a no-change update writes no row and leaves updated_at alone
+    ok 3 - a no-change update writes no row and leaves updated_at alone
+      ---
+      duration_ms: 4801.4471
+      type: 'test'
+      ...
+    # Subtest: a client cannot forge updated_at (and doing so alone is a no-op)
+    ok 4 - a client cannot forge updated_at (and doing so alone is a no-op)
+      ---
+      duration_ms: 5889.5212
+      type: 'test'
+      ...
+    # Subtest: a real change bumps updated_at
+    ok 5 - a real change bumps updated_at
+      ---
+      duration_ms: 3516.4093
+      type: 'test'
+      ...
+    # Subtest: a direct insert into history is refused — as service_role and as the owner
+    ok 6 - a direct insert into history is refused — as service_role and as the owner
+      ---
+      duration_ms: 2811.8051
+      type: 'test'
+      ...
+    # Subtest: update, delete and truncate on history are refused — as service_role (grants) and as the owner (trigger)
+    ok 7 - update, delete and truncate on history are refused — as service_role (grants) and as the owner (trigger)
+      ---
+      duration_ms: 7380.5757
+      type: 'test'
+      ...
+    # Subtest: history ids are generated and cannot be chosen
+    ok 8 - history ids are generated and cannot be chosen
+      ---
+      duration_ms: 904.0983
+      type: 'test'
+      ...
+    1..8
+ok 5 - R2 history
+  ---
+  duration_ms: 32483.4731
+  type: 'suite'
+  ...
+# Subtest: R3 constraints
+    # Subtest: close without a note → refused (done and decided_against); blank note too; note without closed_at too
+    ok 1 - close without a note → refused (done and decided_against); blank note too; note without closed_at too
+      ---
+      duration_ms: 4729.3245
+      type: 'test'
+      ...
+    # Subtest: an 81-character title → refused; 80 → accepted
+    ok 2 - an 81-character title → refused; 80 → accepted
+      ---
+      duration_ms: 1785.0325
+      type: 'test'
+      ...
+    # Subtest: status banana → refused; an omitted status (default todo) → refused
+    ok 3 - status banana → refused; an omitted status (default todo) → refused
+      ---
+      duration_ms: 1996.2027
+      type: 'test'
+      ...
+    # Subtest: every allowed status is accepted
+    ok 4 - every allowed status is accepted
+      ---
+      duration_ms: 1891.3233
+      type: 'test'
+      ...
+    # Subtest: a signed time with no ref → refused; with a ref → accepted
+    ok 5 - a signed time with no ref → refused; with a ref → accepted
+      ---
+      duration_ms: 2751.8965
+      type: 'test'
+      ...
+    # Subtest: addressed to justin with no needed_by → refused (any case); with a date → accepted
+    ok 6 - addressed to justin with no needed_by → refused (any case); with a date → accepted
+      ---
+      duration_ms: 2276.2531
+      type: 'test'
+      ...
+    # Subtest: one owner, enforced: missing or blank raci.r → refused
+    ok 7 - one owner, enforced: missing or blank raci.r → refused
+      ---
+      duration_ms: 1394.7437
+      type: 'test'
+      ...
+    # Subtest: QC Finding 7: one owner means one JSON STRING — an array, object, number or null is refused
+    ok 8 - QC Finding 7: one owner means one JSON STRING — an array, object, number or null is refused
+      ---
+      duration_ms: 3626.3706
+      type: 'test'
+      ...
+    # Subtest: addressed_to must have the actor-name shape
+    ok 9 - addressed_to must have the actor-name shape
+      ---
+      duration_ms: 1383.5393
+      type: 'test'
+      ...
+    # Subtest: delete and truncate on tasks are refused — as service_role and as the owner
+    ok 10 - delete and truncate on tasks are refused — as service_role and as the owner
+      ---
+      duration_ms: 5116.0729
+      type: 'test'
+      ...
+    # Subtest: parent_id: a missing parent and a self-parent are refused; a real parent is accepted
+    ok 11 - parent_id: a missing parent and a self-parent are refused; a real parent is accepted
+      ---
+      duration_ms: 4034.364
+      type: 'test'
+      ...
+    # Subtest: parent cycle of 2 (A→B, then B→A) is refused
+    ok 12 - parent cycle of 2 (A→B, then B→A) is refused
+      ---
+      duration_ms: 3475.9415
+      type: 'test'
+      ...
+    # Subtest: parent cycle of 3 (A→B→C, then C→A) is refused
+    ok 13 - parent cycle of 3 (A→B→C, then C→A) is refused
+      ---
+      duration_ms: 4119.1797
+      type: 'test'
+      ...
+    # Subtest: QC Finding 10: under REPEATABLE READ, a cycle closed by a link committed after the snapshot is REFUSED, not committed
+    ok 14 - QC Finding 10: under REPEATABLE READ, a cycle closed by a link committed after the snapshot is REFUSED, not committed
+      ---
+      duration_ms: 3091.2806
+      type: 'test'
+      ...
+    # Subtest: a chain of exactly 50 ancestors is accepted; one more is refused at the bound
+    ok 15 - a chain of exactly 50 ancestors is accepted; one more is refused at the bound
+      ---
+      duration_ms: 3560.1957
+      type: 'test'
+      ...
+    # Subtest: short_id cannot be chosen by a client; linear_id is unique
+    ok 16 - short_id cannot be chosen by a client; linear_id is unique
+      ---
+      duration_ms: 1921.7348
+      type: 'test'
+      ...
+    1..16
+ok 6 - R3 constraints
+  ---
+  duration_ms: 47154.6377
+  type: 'suite'
+  ...
+# Subtest: R4 grants and RLS
+    # Subtest: anon INSERT into tasks is refused by the FUNCTION GRANT (message asserted), and writes nothing
+    ok 1 - anon INSERT into tasks is refused by the FUNCTION GRANT (message asserted), and writes nothing
+      ---
+      duration_ms: 1244.3948
+      type: 'test'
+      ...
+    # Subtest: anon INSERT into tasks is refused by RLS ON ITS OWN, even if the function grant were widened (rolled back)
+    ok 2 - anon INSERT into tasks is refused by RLS ON ITS OWN, even if the function grant were widened (rolled back)
+      ---
+      duration_ms: 1874.7705
+      type: 'test'
+      ...
+    # Subtest: anon: RLS is enabled on tasks and no policy admits the role
+    ok 3 - anon: RLS is enabled on tasks and no policy admits the role
+      ---
+      duration_ms: 690.1208
+      type: 'test'
+      ...
+    # Subtest: anon SELECT on tasks returns zero rows while service_role returns at least one
+    ok 4 - anon SELECT on tasks returns zero rows while service_role returns at least one
+      ---
+      duration_ms: 2418.6578
+      type: 'test'
+      ...
+    # Subtest: anon UPDATE on tasks touches nothing (RLS hides every row) and leaves no history
+    ok 5 - anon UPDATE on tasks touches nothing (RLS hides every row) and leaves no history
+      ---
+      duration_ms: 4702.9493
+      type: 'test'
+      ...
+    # Subtest: anon SELECT on task_history is denied outright
+    ok 6 - anon SELECT on task_history is denied outright
+      ---
+      duration_ms: 281.9864
+      type: 'test'
+      ...
+    # Subtest: anon cannot execute the task functions
+    ok 7 - anon cannot execute the task functions
+      ---
+      duration_ms: 671.9118
+      type: 'test'
+      ...
+    # Subtest: authenticated INSERT into tasks is refused by the FUNCTION GRANT (message asserted), and writes nothing
+    ok 8 - authenticated INSERT into tasks is refused by the FUNCTION GRANT (message asserted), and writes nothing
+      ---
+      duration_ms: 1348.7179
+      type: 'test'
+      ...
+    # Subtest: authenticated INSERT into tasks is refused by RLS ON ITS OWN, even if the function grant were widened (rolled back)
+    ok 9 - authenticated INSERT into tasks is refused by RLS ON ITS OWN, even if the function grant were widened (rolled back)
+      ---
+      duration_ms: 3056.246
+      type: 'test'
+      ...
+    # Subtest: authenticated: RLS is enabled on tasks and no policy admits the role
+    ok 10 - authenticated: RLS is enabled on tasks and no policy admits the role
+      ---
+      duration_ms: 1630.1387
+      type: 'test'
+      ...
+    # Subtest: authenticated SELECT on tasks returns zero rows while service_role returns at least one
+    ok 11 - authenticated SELECT on tasks returns zero rows while service_role returns at least one
+      ---
+      duration_ms: 2607.4976
+      type: 'test'
+      ...
+    # Subtest: authenticated UPDATE on tasks touches nothing (RLS hides every row) and leaves no history
+    ok 12 - authenticated UPDATE on tasks touches nothing (RLS hides every row) and leaves no history
+      ---
+      duration_ms: 5384.9452
+      type: 'test'
+      ...
+    # Subtest: authenticated SELECT on task_history is denied outright
+    ok 13 - authenticated SELECT on task_history is denied outright
+      ---
+      duration_ms: 843.6744
+      type: 'test'
+      ...
+    # Subtest: authenticated cannot execute the task functions
+    ok 14 - authenticated cannot execute the task functions
+      ---
+      duration_ms: 488.9946
+      type: 'test'
+      ...
+    # Subtest: service_role inserts into both identity tables with no sequence grant of its own
+    ok 15 - service_role inserts into both identity tables with no sequence grant of its own
+      ---
+      duration_ms: 3405.7757
+      type: 'test'
+      ...
+    # Subtest: no task function is SECURITY DEFINER; every one pins search_path
+    ok 16 - no task function is SECURITY DEFINER; every one pins search_path
+      ---
+      duration_ms: 2502.2834
+      type: 'test'
+      ...
+    # Subtest: task_history has RLS on, the service_role_only policy, and only SELECT/INSERT for service_role
+    ok 17 - task_history has RLS on, the service_role_only policy, and only SELECT/INSERT for service_role
+      ---
+      duration_ms: 1649.5856
+      type: 'test'
+      ...
+    1..17
+ok 7 - R4 grants and RLS
+  ---
+  duration_ms: 34803.8615
+  type: 'suite'
+  ...
+# Subtest: QC fix trip 2 (defaults on)
+    # Subtest: CTO fence 3: after the revokes, service_role can still INSERT, UPDATE and CLOSE a task, with history for each
+    ok 1 - CTO fence 3: after the revokes, service_role can still INSERT, UPDATE and CLOSE a task, with history for each
+      ---
+      duration_ms: 4252.8453
+      type: 'test'
+      ...
+    # Subtest: QC Finding 1: no client role holds any privilege on the new identity sequences
+    ok 2 - QC Finding 1: no client role holds any privilege on the new identity sequences
+      ---
+      duration_ms: 21914.6283
+      type: 'test'
+      ...
+    # Subtest: QC Finding 1: no trigger function is executable by any client role, service_role included; the two helpers by service_role only
+    ok 3 - QC Finding 1: no trigger function is executable by any client role, service_role included; the two helpers by service_role only
+      ---
+      duration_ms: 15658.3617
+      type: 'test'
+      ...
+    # Subtest: QC Finding 3: replica mode cannot skip the triggers — no-actor insert, history rewrite and task delete are all still refused
+    ok 4 - QC Finding 3: replica mode cannot skip the triggers — no-actor insert, history rewrite and task delete are all still refused
+      ---
+      duration_ms: 10287.4956
+      type: 'test'
+      ...
+    1..4
+ok 8 - QC fix trip 2 (defaults on)
+  ---
+  duration_ms: 52113.6973
+  type: 'suite'
+  ...
+# Subtest: paste files, change set 001-004 (defaults on)
+    # Subtest: Paste 1 (dry run) raises "DRY RUN OK — nothing was changed (0 rows; 0 NOT VALID)" and leaves the snapshot BYTE-IDENTICAL
+    ok 1 - Paste 1 (dry run) raises "DRY RUN OK — nothing was changed (0 rows; 0 NOT VALID)" and leaves the snapshot BYTE-IDENTICAL
+      ---
+      duration_ms: 18578.6367
+      type: 'test'
+      ...
+    # Subtest: Paste 2 (apply) succeeds and produces exactly the golden after-004 state (the live shape since 2026-11-06); the snapshot function returns the script's text
+    ok 2 - Paste 2 (apply) succeeds and produces exactly the golden after-004 state (the live shape since 2026-11-06); the snapshot function returns the script's text
+      ---
+      duration_ms: 9909.5736
+      type: 'test'
+      ...
+    # Subtest: CRLF, as the editor sends it from a Windows clipboard: the 001-004 dry run and apply behave exactly as with LF
+    ok 3 - CRLF, as the editor sends it from a Windows clipboard: the 001-004 dry run and apply behave exactly as with LF
+      ---
+      duration_ms: 12096.2403
+      type: 'test'
+      ...
+    # Subtest: Paste 2 run a SECOND time is refused by its before-assertions and changes nothing
+    ok 4 - Paste 2 run a SECOND time is refused by its before-assertions and changes nothing
+      ---
+      duration_ms: 10189.5596
+      type: 'test'
+      ...
+    # Subtest: a deliberately BROKEN after-assertion rolls EVERYTHING back — snapshot byte-identical — even in continue-on-error mode
+    ok 5 - a deliberately BROKEN after-assertion rolls EVERYTHING back — snapshot byte-identical — even in continue-on-error mode
+      ---
+      duration_ms: 15814.7138
+      type: 'test'
+      ...
+    # Subtest: a deliberately BROKEN before-assertion refuses before anything runs — snapshot byte-identical
+    ok 6 - a deliberately BROKEN before-assertion refuses before anything runs — snapshot byte-identical
+      ---
+      duration_ms: 7675.3107
+      type: 'test'
+      ...
+    # Subtest: QC N2 (Q3): a pre-existing tasks_short_id_key on (id) is refused by Paste 2 — nothing changed
+    ok 7 - QC N2 (Q3): a pre-existing tasks_short_id_key on (id) is refused by Paste 2 — nothing changed
+      ---
+      duration_ms: 7434.8363
+      type: 'test'
+      ...
+    # Subtest: QC N2 (Q4): an extra permissive anon policy on tasks is refused by Paste 2 — nothing changed
+    ok 8 - QC N2 (Q4): an extra permissive anon policy on tasks is refused by Paste 2 — nothing changed
+      ---
+      duration_ms: 7040.7234
+      type: 'test'
+      ...
+    # Subtest: QC N2: one of our index names pre-existing on ANOTHER table is refused (IF NOT EXISTS would have skipped ours)
+    ok 9 - QC N2: one of our index names pre-existing on ANOTHER table is refused (IF NOT EXISTS would have skipped ours)
+      ---
+      duration_ms: 8006.177
+      type: 'test'
+      ...
+    # Subtest: QC N4: a migration that alters public.proposals is caught INSIDE Paste 2 by its after-assertion — snapshot byte-identical
+    ok 10 - QC N4: a migration that alters public.proposals is caught INSIDE Paste 2 by its after-assertion — snapshot byte-identical
+      ---
+      duration_ms: 8048.4685
+      type: 'test'
+      ...
+    # Subtest: QC N4: a migration that revokes a grant on public.tasks is caught INSIDE Paste 2 by its after-assertion — snapshot byte-identical
+    ok 11 - QC N4: a migration that revokes a grant on public.tasks is caught INSIDE Paste 2 by its after-assertion — snapshot byte-identical
+      ---
+      duration_ms: 9962.5106
+      type: 'test'
+      ...
+    # Subtest: QC N4: a migration that grants a new sequence to anon is caught INSIDE Paste 2 by its after-assertion — snapshot byte-identical
+    ok 12 - QC N4: a migration that grants a new sequence to anon is caught INSIDE Paste 2 by its after-assertion — snapshot byte-identical
+      ---
+      duration_ms: 5590.0895
+      type: 'test'
+      ...
+    # Subtest: QC N7: a held lock on tasks FAILS the paste after lock_timeout (5s) instead of hanging — nothing changed
+    ok 13 - QC N7: a held lock on tasks FAILS the paste after lock_timeout (5s) instead of hanging — nothing changed
+      ---
+      duration_ms: 15172.2693
+      type: 'test'
+      ...
+    # Subtest: a live tasks that is NOT runtime 003's shape is refused (an extra column)
+    ok 14 - a live tasks that is NOT runtime 003's shape is refused (an extra column)
+      ---
+      duration_ms: 5094.1238
+      type: 'test'
+      ...
+    # Subtest: old rows that break a rule: the dry run REPORTS the counts, and Paste 2 REFUSES by itself, changing nothing
+    ok 15 - old rows that break a rule: the dry run REPORTS the counts, and Paste 2 REFUSES by itself, changing nothing
+      ---
+      duration_ms: 10616.7469
+      type: 'test'
+      ...
+    1..15
+ok 9 - paste files, change set 001-004 (defaults on)
+  ---
+  duration_ms: 151231.2393
+  type: 'suite'
+  ...
+# Subtest: 005 rules at the database (defaults on)
+    # Subtest: §1.5 item 1: backlog (with a review date) and needs_acceptance (addressed) are accepted; banana is refused
+    ok 1 - §1.5 item 1: backlog (with a review date) and needs_acceptance (addressed) are accepted; banana is refused
+      ---
+      duration_ms: 4712.6191
+      type: 'test'
+      ...
+    # Subtest: §1.5 item 2: a status change with no note is refused with ET008 (and its hint); with a note it succeeds, and the history row carries the note
+    ok 2 - §1.5 item 2: a status change with no note is refused with ET008 (and its hint); with a note it succeeds, and the history row carries the note
+      ---
+      duration_ms: 3226.8335
+      type: 'test'
+      ...
+    # Subtest: §1.5 item 3: a note-only write (a comment) gives exactly one history row, empty changed_fields, the note — and bumps updated_at
+    ok 3 - §1.5 item 3: a note-only write (a comment) gives exactly one history row, empty changed_fields, the note — and bumps updated_at
+      ---
+      duration_ms: 7634.7574
+      type: 'test'
+      ...
+    # Subtest: §1.3: the note belongs to ONE write — the next write without one clears it, records none, and a stale-note no-op writes nothing
+    ok 4 - §1.3: the note belongs to ONE write — the next write without one clears it, records none, and a stale-note no-op writes nothing
+      ---
+      duration_ms: 6420.578
+      type: 'test'
+      ...
+    # Subtest: §1.5 item 4: a status change whose note repeats the previous write's note word for word is refused (ET008)
+    ok 5 - §1.5 item 4: a status change whose note repeats the previous write's note word for word is refused (ET008)
+      ---
+      duration_ms: 4079.9328
+      type: 'test'
+      ...
+    # Subtest: §1.3: a blank note is no note — a status change carrying only whitespace is refused (ET008)
+    ok 6 - §1.3: a blank note is no note — a status change carrying only whitespace is refused (ET008)
+      ---
+      duration_ms: 1822.1454
+      type: 'test'
+      ...
+    # Subtest: §1.5 item 5: a close with a fresh closing_note and no note succeeds; reopening it with no note is refused
+    ok 7 - §1.5 item 5: a close with a fresh closing_note and no note succeeds; reopening it with no note is refused
+      ---
+      duration_ms: 4498.0478
+      type: 'test'
+      ...
+    # Subtest: §1.3: an insert's note goes to task_history.note and NOT into the snapshot; a note over 600 characters is refused
+    ok 8 - §1.3: an insert's note goes to task_history.note and NOT into the snapshot; a note over 600 characters is refused
+      ---
+      duration_ms: 2421.4328
+      type: 'test'
+      ...
+    # Subtest: §1.5 item 6: a needs_acceptance task with no addressee is refused, on insert and on update
+    ok 9 - §1.5 item 6: a needs_acceptance task with no addressee is refused, on insert and on update
+      ---
+      duration_ms: 2696.3054
+      type: 'test'
+      ...
+    # Subtest: §1.5 item 7 / §2.2: a sign by nathan is refused (ET009); lucas and justin may sign; mira may not clear or change one
+    ok 10 - §1.5 item 7 / §2.2: a sign by nathan is refused (ET009); lucas and justin may sign; mira may not clear or change one
+      ---
+      duration_ms: 7893.9773
+      type: 'test'
+      ...
+    # Subtest: Ruling 1.1: a backlog insert with no needed_by is refused with SQLSTATE 23514 on tasks_backlog_needs_review_date (not a trigger error)
+    ok 11 - Ruling 1.1: a backlog insert with no needed_by is refused with SQLSTATE 23514 on tasks_backlog_needs_review_date (not a trigger error)
+      ---
+      duration_ms: 331.2202
+      type: 'test'
+      ...
+    # Subtest: Ruling 1.2: a backlog insert at PT today +89 succeeds; at +91 it is refused with ET010
+    ok 12 - Ruling 1.2: a backlog insert at PT today +89 succeeds; at +91 it is refused with ET010
+      ---
+      duration_ms: 3258.3624
+      type: 'test'
+      ...
+    # Subtest: Ruling 1.3: re-dating an existing backlog row to +91, even with a note, is refused with ET010
+    ok 13 - Ruling 1.3: re-dating an existing backlog row to +91, even with a note, is refused with ET010
+      ---
+      duration_ms: 2214.7124
+      type: 'test'
+      ...
+    # Subtest: Ruling 1.4: re-dating to +30 without a note is refused (ET008); with one it succeeds, and history records the note and needed_by old → new
+    ok 14 - Ruling 1.4: re-dating to +30 without a note is refused (ET008); with one it succeeds, and history records the note and needed_by old → new
+      ---
+      duration_ms: 6177.7873
+      type: 'test'
+      ...
+    # Subtest: Ruling 1.5: an open row with needed_by at +200 is accepted (the cap is backlog-only)
+    ok 15 - Ruling 1.5: an open row with needed_by at +200 is accepted (the cap is backlog-only)
+      ---
+      duration_ms: 1078.1133
+      type: 'test'
+      ...
+    # Subtest: Ruling 1.6: an unrelated update (tags) to a backlog row dated +80 succeeds
+    ok 16 - Ruling 1.6: an unrelated update (tags) to a backlog row dated +80 succeeds
+      ---
+      duration_ms: 2005.6982
+      type: 'test'
+      ...
+    # Subtest: Ruling 1.7: a blocked row dated +120, moved to backlog with a note, is refused with ET010
+    ok 17 - Ruling 1.7: a blocked row dated +120, moved to backlog with a note, is refused with ET010
+      ---
+      duration_ms: 2672.1195
+      type: 'test'
+      ...
+    # Subtest: 005 replaced two trigger FUNCTIONS and recreated no trigger: all five are still ENABLE ALWAYS, and both functions INVOKER with EXECUTE held by no client role
+    ok 18 - 005 replaced two trigger FUNCTIONS and recreated no trigger: all five are still ENABLE ALWAYS, and both functions INVOKER with EXECUTE held by no client role
+      ---
+      duration_ms: 5503.4221
+      type: 'test'
+      ...
+    1..18
+ok 10 - 005 rules at the database (defaults on)
+  ---
+  duration_ms: 68649.5878
+  type: 'suite'
+  ...
+# Subtest: paste files, change set 005 (defaults on)
+    # Subtest: item 9a: on the post-004 shape, Paste 1 raises "DRY RUN OK — nothing was changed (N rows; 0 NOT VALID)" and changes NOTHING (both psql modes)
+    ok 1 - item 9a: on the post-004 shape, Paste 1 raises "DRY RUN OK — nothing was changed (N rows; 0 NOT VALID)" and changes NOTHING (both psql modes)
+      ---
+      duration_ms: 29469.7219
+      type: 'test'
+      ...
+    # Subtest: item 9a: on the post-004 shape, Paste 2 reaches exactly the new golden state (= migrate.mjs's 001–005) — no trigger recreated, no row value changed, no history row written
+    ok 2 - item 9a: on the post-004 shape, Paste 2 reaches exactly the new golden state (= migrate.mjs's 001–005) — no trigger recreated, no row value changed, no history row written
+      ---
+      duration_ms: 11904.2082
+      type: 'test'
+      ...
+    # Subtest: CRLF, as the editor sends it: the 005 dry run reaches "DRY RUN OK — nothing was changed (N rows; 0 NOT VALID)" and changes nothing
+    ok 3 - CRLF, as the editor sends it: the 005 dry run reaches "DRY RUN OK — nothing was changed (N rows; 0 NOT VALID)" and changes nothing
+      ---
+      duration_ms: 9432.7627
+      type: 'test'
+      ...
+    # Subtest: CRLF, as the editor sends it: the 005 apply reaches the new golden — the CRs really reached the server, and no comment or rule carries one
+    ok 4 - CRLF, as the editor sends it: the 005 apply reaches the new golden — the CRs really reached the server, and no comment or rule carries one
+      ---
+      duration_ms: 12446.9381
+      type: 'test'
+      ...
+    # Subtest: item 9b: on runtime 003's ORIGINAL shape, the 005 paste refuses and changes nothing
+    ok 5 - item 9b: on runtime 003's ORIGINAL shape, the 005 paste refuses and changes nothing
+      ---
+      duration_ms: 6030.4994
+      type: 'test'
+      ...
+    # Subtest: item 9b: on an ALREADY-APPLIED state, the 005 paste (dry run and apply) refuses and changes nothing
+    ok 6 - item 9b: on an ALREADY-APPLIED state, the 005 paste (dry run and apply) refuses and changes nothing
+      ---
+      duration_ms: 8225.2337
+      type: 'test'
+      ...
+    # Subtest: a tasks_before_write that is not 003's exact body (one comment line added) is refused by the body-hash pin — nothing changed
+    ok 7 - a tasks_before_write that is not 003's exact body (one comment line added) is refused by the body-hash pin — nothing changed
+      ---
+      duration_ms: 10446.7515
+      type: 'test'
+      ...
+    # Subtest: a live status rule that is NOT the six-value one (a seventh value) is refused — the drop never runs on an unknown variant
+    ok 8 - a live status rule that is NOT the six-value one (a seventh value) is refused — the drop never runs on an unknown variant
+      ---
+      duration_ms: 8966.6802
+      type: 'test'
+      ...
+    # Subtest: ADR-061's premise: if authenticator is a member of postgres, the paste refuses (fails closed) — nothing changed
+    ok 9 - ADR-061's premise: if authenticator is a member of postgres, the paste refuses (fails closed) — nothing changed
+      ---
+      duration_ms: 7436.6886
+      type: 'test'
+      ...
+    # Subtest: a migration that recreates a trigger (resetting ENABLE ALWAYS) is caught INSIDE the 005 paste by its after-assertion — snapshot byte-identical
+    ok 10 - a migration that recreates a trigger (resetting ENABLE ALWAYS) is caught INSIDE the 005 paste by its after-assertion — snapshot byte-identical
+      ---
+      duration_ms: 10455.5508
+      type: 'test'
+      ...
+    # Subtest: a migration that adds an extra column to tasks is caught INSIDE the 005 paste by its after-assertion — snapshot byte-identical
+    ok 11 - a migration that adds an extra column to tasks is caught INSIDE the 005 paste by its after-assertion — snapshot byte-identical
+      ---
+      duration_ms: 8422.6363
+      type: 'test'
+      ...
+    # Subtest: a migration that alters public.proposals is caught INSIDE the 005 paste by its after-assertion — snapshot byte-identical
+    ok 12 - a migration that alters public.proposals is caught INSIDE the 005 paste by its after-assertion — snapshot byte-identical
+      ---
+      duration_ms: 7095.6796
+      type: 'test'
+      ...
+    # Subtest: a migration that revokes a grant on public.tasks is caught INSIDE the 005 paste by its after-assertion — snapshot byte-identical
+    ok 13 - a migration that revokes a grant on public.tasks is caught INSIDE the 005 paste by its after-assertion — snapshot byte-identical
+      ---
+      duration_ms: 7390.6368
+      type: 'test'
+      ...
+    # Subtest: a migration that grants EXECUTE on a replaced function to service_role is caught INSIDE the 005 paste by its after-assertion — snapshot byte-identical
+    ok 14 - a migration that grants EXECUTE on a replaced function to service_role is caught INSIDE the 005 paste by its after-assertion — snapshot byte-identical
+      ---
+      duration_ms: 7017.882
+      type: 'test'
+      ...
+    # Subtest: a migration that drops another constraint is caught INSIDE the 005 paste by its after-assertion — snapshot byte-identical
+    ok 15 - a migration that drops another constraint is caught INSIDE the 005 paste by its after-assertion — snapshot byte-identical
+      ---
+      duration_ms: 8212.7088
+      type: 'test'
+      ...
+    # Subtest: a migration that changes an existing value is caught INSIDE the 005 paste by its after-assertion — snapshot byte-identical
+    ok 16 - a migration that changes an existing value is caught INSIDE the 005 paste by its after-assertion — snapshot byte-identical
+      ---
+      duration_ms: 8133.4526
+      type: 'test'
+      ...
+    # Subtest: a deliberately BROKEN after-assertion (the pinned new body hash) rolls EVERYTHING back, even in continue-on-error mode
+    ok 17 - a deliberately BROKEN after-assertion (the pinned new body hash) rolls EVERYTHING back, even in continue-on-error mode
+      ---
+      duration_ms: 14675.8473
+      type: 'test'
+      ...
+    1..17
+ok 11 - paste files, change set 005 (defaults on)
+  ---
+  duration_ms: 175765.0997
+  type: 'suite'
+  ...
+# Subtest: search and R8
+    # Subtest: full-text search finds a word in the body
+    ok 1 - full-text search finds a word in the body
+      ---
+      duration_ms: 1213.818
+      type: 'test'
+      ...
+    # Subtest: keyset pagination on short_id, page size 2, returns all 5 rows and stops on an empty page
+    ok 2 - keyset pagination on short_id, page size 2, returns all 5 rows and stops on an empty page
+      ---
+      duration_ms: 6875.0256
+      type: 'test'
+      ...
+    1..2
+ok 12 - search and R8
+  ---
+  duration_ms: 8089.2418
+  type: 'suite'
+  ...
+# Subtest: the 006 acceptance suite actually ran (PostgreSQL 17 tools and runtime 003 were found)
+ok 13 - the 006 acceptance suite actually ran (PostgreSQL 17 tools and runtime 003 were found)
+  ---
+  duration_ms: 10685.0983
+  type: 'test'
+  ...
+# Subtest: 006: the shape (defaults on)
+    # Subtest: golden: the snapshot after migrate.mjs 001–006 (our objects; identical in both default-privilege modes)
+    ok 1 - golden: the snapshot after migrate.mjs 001–006 (our objects; identical in both default-privilege modes)
+      ---
+      duration_ms: 10870.0828
+      type: 'test'
+      ...
+    # Subtest: no task function is SECURITY DEFINER; every one pins search_path; trigger functions are executable by no client role; helpers by service_role only
+    ok 2 - no task function is SECURITY DEFINER; every one pins search_path; trigger functions are executable by no client role; helpers by service_role only
+      ---
+      duration_ms: 18354.3319
+      type: 'test'
+      ...
+    # Subtest: every trigger on tasks, task_history and task_authorizations is ENABLE ALWAYS, and 006 recreated none of 003's
+    ok 3 - every trigger on tasks, task_history and task_authorizations is ENABLE ALWAYS, and 006 recreated none of 003's
+      ---
+      duration_ms: 461.6679
+      type: 'test'
+      ...
+    # Subtest: task_auth_config is seeded lucas_relay, readable by service_role, and writable by no client role
+    ok 4 - task_auth_config is seeded lucas_relay, readable by service_role, and writable by no client role
+      ---
+      duration_ms: 6750.2656
+      type: 'test'
+      ...
+    1..4
+ok 14 - 006: the shape (defaults on)
+  ---
+  duration_ms: 36437.0832
+  type: 'suite'
+  ...
+# Subtest: 006: the authorization record (defaults on)
+    # Subtest: 1. an insert at open, in_progress, blocked, needs_acceptance or done is refused (ET011) as ac, lucas and justin; backlog and proposed succeed
+    ok 1 - 1. an insert at open, in_progress, blocked, needs_acceptance or done is refused (ET011) as ac, lucas and justin; backlog and proposed succeed
+      ---
+      duration_ms: 17800.7974
+      type: 'test'
+      ...
+    # Subtest: 2. a status write proposed → open is refused (ET011) as ac and as lucas
+    ok 2 - 2. a status write proposed → open is refused (ET011) as ac and as lucas
+      ---
+      duration_ms: 2819.9601
+      type: 'test'
+      ...
+    # Subtest: 3. an authorization row by ac is refused (ET012); by lucas at tier lucas with rule_ref it moves the task to open in the same transaction, with a history row by lucas; without rule_ref it is refused
+    ok 3 - 3. an authorization row by ac is refused (ET012); by lucas at tier lucas with rule_ref it moves the task to open in the same transaction, with a history row by lucas; without rule_ref it is refused
+      ---
+      duration_ms: 10307.8348
+      type: 'test'
+      ...
+    # Subtest: 4. a Justin-tier row by lucas without justin_ref is refused; with it, under lucas_relay, it succeeds with source lucas_relay; under justin_signin the same row is refused
+    ok 4 - 4. a Justin-tier row by lucas without justin_ref is refused; with it, under lucas_relay, it succeeds with source lucas_relay; under justin_signin the same row is refused
+      ---
+      duration_ms: 9485.7829
+      type: 'test'
+      ...
+    # Subtest: 5. a client-set tier backfill or source migration_006 is refused (ET012)
+    ok 5 - 5. a client-set tier backfill or source migration_006 is refused (ET012)
+      ---
+      duration_ms: 4884.823
+      type: 'test'
+      ...
+    # Subtest: 6. a row without x-evryn-session is refused (ET012)
+    ok 6 - 6. a row without x-evryn-session is refused (ET012)
+      ---
+      duration_ms: 2855.3482
+      type: 'test'
+      ...
+    # Subtest: 7. UPDATE, DELETE and TRUNCATE on task_authorizations are refused as service_role (grants) and as the owner (ET013); anon and authenticated can neither read nor insert
+    ok 7 - 7. UPDATE, DELETE and TRUNCATE on task_authorizations are refused as service_role (grants) and as the owner (ET013); anon and authenticated can neither read nor insert
+      ---
+      duration_ms: 11868.8624
+      type: 'test'
+      ...
+    # Subtest: 8. the return: a description edit on an open task (by ac, and by lucas) leaves it proposed, unauthorized, flagged, with the forced note; note, needed_by, tags and in_progress → blocked keep the authorization
+    ok 8 - 8. the return: a description edit on an open task (by ac, and by lucas) leaves it proposed, unauthorized, flagged, with the forced note; note, needed_by, tags and in_progress → blocked keep the authorization
+      ---
+      duration_ms: 13159.8046
+      type: 'test'
+      ...
+    # Subtest: 9. the revert attack: after a return, editing the scope back and writing status open is refused
+    ok 9 - 9. the revert attack: after a return, editing the scope back and writing status open is refused
+      ---
+      duration_ms: 7088.0079
+      type: 'test'
+      ...
+    # Subtest: 10. a client write to authorization_id or needs_reauthorization is refused (ET014); a client scope_hash is overwritten
+    ok 10 - 10. a client write to authorization_id or needs_reauthorization is refused (ET014); a client scope_hash is overwritten
+      ---
+      duration_ms: 10427.6631
+      type: 'test'
+      ...
+    # Subtest: 11. acceptance: by ac refused; not needs_acceptance refused; lucas-tier acceptance of a Justin-tier authorization refused; justin-tier succeeds (done, closed_at, closing_note); a status write to done refused
+    ok 11 - 11. acceptance: by ac refused; not needs_acceptance refused; lucas-tier acceptance of a Justin-tier authorization refused; justin-tier succeeds (done, closed_at, closing_note); a status write to done refused
+      ---
+      duration_ms: 10149.9104
+      type: 'test'
+      ...
+    # Subtest: 12. moves: active → proposed by ac allowed; active → decided_against by ac refused, by lucas allowed; out of done by ac refused, by lucas only to proposed; a closed task's title edit by ac refused (ET015)
+    ok 12 - 12. moves: active → proposed by ac allowed; active → decided_against by ac refused, by lucas allowed; out of done by ac refused, by lucas only to proposed; a closed task's title edit by ac refused (ET015)
+      ---
+      duration_ms: 17555.8185
+      type: 'test'
+      ...
+    # Subtest: 13. the data steps, on a post-005 database with representative rows
+    ok 13 - 13. the data steps, on a post-005 database with representative rows
+      ---
+      duration_ms: 26984.8074
+      type: 'test'
+      ...
+    # Subtest: 14. the session stamp lands in task_history.session_id and task_authorizations.session_id; a malformed one is refused (ET002)
+    ok 14 - 14. the session stamp lands in task_history.session_id and task_authorizations.session_id; a malformed one is refused (ET002)
+      ---
+      duration_ms: 6319.8161
+      type: 'test'
+      ...
+    # Subtest: 15. launcher is on the roster (not flagged) and is refused as an authorizer (ET012)
+    ok 15 - 15. launcher is on the roster (not flagged) and is refused as an authorizer (ET012)
+      ---
+      duration_ms: 3734.7169
+      type: 'test'
+      ...
+    # Subtest: 16. the hash is the database's: task_scope_hash() on a fixed vector equals the pinned value
+    ok 16 - 16. the hash is the database's: task_scope_hash() on a fixed vector equals the pinned value
+      ---
+      duration_ms: 3835.0906
+      type: 'test'
+      ...
+    # Subtest: 17. C4: the authorizing setting is bound to one row AND one task: two rows in one request move exactly their two tasks; a crafted write naming a row cannot move a third task; the setting reads '' after
+    ok 17 - 17. C4: the authorizing setting is bound to one row AND one task: two rows in one request move exactly their two tasks; a crafted write naming a row cannot move a third task; the setting reads '' after
+      ---
+      duration_ms: 6619.2087
+      type: 'test'
+      ...
+    # Subtest: 18. C5: the data-step exemption needs a non-client role — a service_role request carrying evryn.migration = 006 gets none; the owner with it does (the positive control)
+    ok 18 - 18. C5: the data-step exemption needs a non-client role — a service_role request carrying evryn.migration = 006 gets none; the owner with it does (the positive control)
+      ---
+      duration_ms: 10863.6981
+      type: 'test'
+      ...
+    1..18
+ok 15 - 006: the authorization record (defaults on)
+  ---
+  duration_ms: 176763.7281
+  type: 'suite'
+  ...
+# Subtest: 006 keeps 005 (defaults on)
+    # Subtest: no actor → refused (ET001); created_by from the request; id, created_by and created_at immutable (ET003)
+    ok 1 - no actor → refused (ET001); created_by from the request; id, created_by and created_at immutable (ET003)
+      ---
+      duration_ms: 6170.9089
+      type: 'test'
+      ...
+    # Subtest: Rule N (ET008): a status change with no note is refused; a repeated note counts as none
+    ok 2 - Rule N (ET008): a status change with no note is refused; a repeated note counts as none
+      ---
+      duration_ms: 5583.8733
+      type: 'test'
+      ...
+    # Subtest: ET009: only lucas or justin sign; ET010: a backlog review date over 90 days is refused
+    ok 3 - ET009: only lucas or justin sign; ET010: a backlog review date over 90 days is refused
+      ---
+      duration_ms: 4994.3016
+      type: 'test'
+      ...
+    # Subtest: ET007: a parent cycle is refused; a no-change update writes no history row; delete is refused; history is append-only
+    ok 4 - ET007: a parent cycle is refused; a no-change update writes no history row; delete is refused; history is append-only
+      ---
+      duration_ms: 10165.2527
+      type: 'test'
+      ...
+    # Subtest: an unknown status is still refused by tasks_status_allowed (not ET011), on insert and on update
+    ok 5 - an unknown status is still refused by tasks_status_allowed (not ET011), on insert and on update
+      ---
+      duration_ms: 2947.5121
+      type: 'test'
+      ...
+    # Subtest: 005 §1.3 on the 001–006 shape: a note-only write is ONE comment row (empty changed_fields, the note); a stale-note no-op writes nothing
+    ok 6 - 005 §1.3 on the 001–006 shape: a note-only write is ONE comment row (empty changed_fields, the note); a stale-note no-op writes nothing
+      ---
+      duration_ms: 18516.8959
+      type: 'test'
+      ...
+    1..6
+ok 16 - 006 keeps 005 (defaults on)
+  ---
+  duration_ms: 48379.2596
+  type: 'suite'
+  ...
+# Subtest: 006: QC6 fixes (defaults on)
+    # Subtest: QC6-NB1 a: a setting naming row A and task C cannot authorize C, as service_role (set local) and as the owner
+    ok 1 - QC6-NB1 a: a setting naming row A and task C cannot authorize C, as service_role (set local) and as the owner
+      ---
+      duration_ms: 7460.5016
+      type: 'test'
+      ...
+    # Subtest: QC6-NB1 b: a task returned by a scope edit cannot be reopened on its OWN stale authorization row
+    ok 2 - QC6-NB1 b: a task returned by a scope edit cannot be reopened on its OWN stale authorization row
+      ---
+      duration_ms: 3511.9472
+      type: 'test'
+      ...
+    # Subtest: QC6-NB1 c: ac cannot close task E as done with task D's acceptance row
+    ok 3 - QC6-NB1 c: ac cannot close task E as done with task D's acceptance row
+      ---
+      duration_ms: 12268.2514
+      type: 'test'
+      ...
+    # Subtest: QC6-NB2 a: a backfill row of kind acceptance is refused, even from the owner carrying evryn.migration
+    ok 4 - QC6-NB2 a: a backfill row of kind acceptance is refused, even from the owner carrying evryn.migration
+      ---
+      duration_ms: 3670.8723
+      type: 'test'
+      ...
+    # Subtest: QC6-NB2 b: an authorization of a DONE task, written as lucas, is refused, and its pointer does not move
+    ok 5 - QC6-NB2 b: an authorization of a DONE task, written as lucas, is refused, and its pointer does not move
+      ---
+      duration_ms: 4428.3709
+      type: 'test'
+      ...
+    # Subtest: QC6-NB2 c: an acceptance of a needs_acceptance task that carries NO authorization is refused for that reason
+    ok 6 - QC6-NB2 c: an acceptance of a needs_acceptance task that carries NO authorization is refused for that reason
+      ---
+      duration_ms: 4384.2472
+      type: 'test'
+      ...
+    # Subtest: QC6-NB2 d: an acceptance of a task whose scope no longer matches its authorization is refused
+    ok 7 - QC6-NB2 d: an acceptance of a task whose scope no longer matches its authorization is refused
+      ---
+      duration_ms: 4073.1127
+      type: 'test'
+      ...
+    # Subtest: QC6-NB2 e: the NULL-session exemption is for backfill rows only — a lucas-tier row with no session is refused even from the owner carrying evryn.migration
+    ok 8 - QC6-NB2 e: the NULL-session exemption is for backfill rows only — a lucas-tier row with no session is refused even from the owner carrying evryn.migration
+      ---
+      duration_ms: 2035.3064
+      type: 'test'
+      ...
+    # Subtest: QC6-NB2 f: the return applies only to ACTIVE tasks — a lucas title edit on a done task leaves it done (departure 6)
+    ok 9 - QC6-NB2 f: the return applies only to ACTIVE tasks — a lucas title edit on a done task leaves it done (departure 6)
+      ---
+      duration_ms: 5913.433
+      type: 'test'
+      ...
+    # Subtest: QC6-NB2 g: an active → active move on a task with a NULL authorization pointer is refused (ET011, its own hint)
+    ok 10 - QC6-NB2 g: an active → active move on a task with a NULL authorization pointer is refused (ET011, its own hint)
+      ---
+      duration_ms: 2915.9201
+      type: 'test'
+      ...
+    # Subtest: QC6-NB2 h: an active → active move whose authorization row's scope no longer matches is refused (ET011, its own hint)
+    ok 11 - QC6-NB2 h: an active → active move whose authorization row's scope no longer matches is refused (ET011, its own hint)
+      ---
+      duration_ms: 4137.5905
+      type: 'test'
+      ...
+    # Subtest: QC6-NB4: C5 is an allow-list — a role NOT on the old deny-list, carrying evryn.migration = 006, gets no exemption; the owner still does
+    ok 12 - QC6-NB4: C5 is an allow-list — a role NOT on the old deny-list, carrying evryn.migration = 006, gets no exemption; the owner still does
+      ---
+      duration_ms: 9668.0658
+      type: 'test'
+      ...
+    # Subtest: QC6-C5: on authorized work, one write that changes the scope AND the status is refused (ET016); scope plus a withdrawal to proposed is allowed
+    ok 13 - QC6-C5: on authorized work, one write that changes the scope AND the status is refused (ET016); scope plus a withdrawal to proposed is allowed
+      ---
+      duration_ms: 6410.1069
+      type: 'test'
+      ...
+    # Subtest: QC6-C6: a task returned for re-authorization and then decided against no longer carries needs_reauthorization; a client still cannot clear it (ET014)
+    ok 14 - QC6-C6: a task returned for re-authorization and then decided against no longer carries needs_reauthorization; a client still cannot clear it (ET014)
+      ---
+      duration_ms: 8289.6738
+      type: 'test'
+      ...
+    1..14
+ok 17 - 006: QC6 fixes (defaults on)
+  ---
+  duration_ms: 79168.6167
+  type: 'suite'
+  ...
+# Subtest: paste files, change set 006 (defaults on)
+    # Subtest: Paste 1 on the post-005 shape raises "DRY RUN OK — nothing was changed (N rows; 0 NOT VALID; B backlog rows moved; A rows backfilled)" and changes NOTHING (both psql modes)
+    ok 1 - Paste 1 on the post-005 shape raises "DRY RUN OK — nothing was changed (N rows; 0 NOT VALID; B backlog rows moved; A rows backfilled)" and changes NOTHING (both psql modes)
+      ---
+      duration_ms: 34992.6837
+      type: 'test'
+      ...
+    # Subtest: Paste 2 on the post-005 shape reaches exactly the new golden (= migrate.mjs's 001–006), with the data steps done
+    ok 2 - Paste 2 on the post-005 shape reaches exactly the new golden (= migrate.mjs's 001–006), with the data steps done
+      ---
+      duration_ms: 17425.8815
+      type: 'test'
+      ...
+    # Subtest: CRLF, as the editor sends it from a Windows clipboard: the 006 dry run and apply behave exactly as with LF
+    ok 3 - CRLF, as the editor sends it from a Windows clipboard: the 006 dry run and apply behave exactly as with LF
+      ---
+      duration_ms: 16641.1702
+      type: 'test'
+      ...
+    # Subtest: a second Paste 2 is refused by its before-assertions and changes nothing; on the post-004 shape it refuses too
+    ok 4 - a second Paste 2 is refused by its before-assertions and changes nothing; on the post-004 shape it refuses too
+      ---
+      duration_ms: 22108.5881
+      type: 'test'
+      ...
+    # Subtest: a deliberately BROKEN before-assertion refuses before anything runs; a BROKEN after-assertion rolls EVERYTHING back (both psql modes)
+    ok 5 - a deliberately BROKEN before-assertion refuses before anything runs; a BROKEN after-assertion rolls EVERYTHING back (both psql modes)
+      ---
+      duration_ms: 47691.3772
+      type: 'test'
+      ...
+    # Subtest: a migration that recreates a trigger (resetting ENABLE ALWAYS) is caught INSIDE the 006 paste by its after-assertion — snapshot byte-identical
+    ok 6 - a migration that recreates a trigger (resetting ENABLE ALWAYS) is caught INSIDE the 006 paste by its after-assertion — snapshot byte-identical
+      ---
+      duration_ms: 11066.334
+      type: 'test'
+      ...
+    # Subtest: a migration that alters public.proposals is caught INSIDE the 006 paste by its after-assertion — snapshot byte-identical
+    ok 7 - a migration that alters public.proposals is caught INSIDE the 006 paste by its after-assertion — snapshot byte-identical
+      ---
+      duration_ms: 14235.0216
+      type: 'test'
+      ...
+    # Subtest: a migration that grants INSERT on task_auth_config to service_role is caught INSIDE the 006 paste by its after-assertion — snapshot byte-identical
+    ok 8 - a migration that grants INSERT on task_auth_config to service_role is caught INSIDE the 006 paste by its after-assertion — snapshot byte-identical
+      ---
+      duration_ms: 10463.4784
+      type: 'test'
+      ...
+    # Subtest: a migration that grants UPDATE on task_authorizations to service_role is caught INSIDE the 006 paste by its after-assertion — snapshot byte-identical
+    ok 9 - a migration that grants UPDATE on task_authorizations to service_role is caught INSIDE the 006 paste by its after-assertion — snapshot byte-identical
+      ---
+      duration_ms: 11444.4632
+      type: 'test'
+      ...
+    # Subtest: a migration that changes an existing title is caught INSIDE the 006 paste by its after-assertion — snapshot byte-identical
+    ok 10 - a migration that changes an existing title is caught INSIDE the 006 paste by its after-assertion — snapshot byte-identical
+      ---
+      duration_ms: 15350.6391
+      type: 'test'
+      ...
+    # Subtest: a migration that leaves an active task unbackfilled is caught INSIDE the 006 paste by its after-assertion — snapshot byte-identical
+    ok 11 - a migration that leaves an active task unbackfilled is caught INSIDE the 006 paste by its after-assertion — snapshot byte-identical
+      ---
+      duration_ms: 12335.3408
+      type: 'test'
+      ...
+    1..11
+ok 18 - paste files, change set 006 (defaults on)
+  ---
+  duration_ms: 213755.8712
+  type: 'suite'
+  ...
+# Subtest: the Supabase-owner paste suite actually ran (PostgreSQL 17 tools and runtime 003 were found)
+ok 19 - the Supabase-owner paste suite actually ran (PostgreSQL 17 tools and runtime 003 were found)
+  ---
+  duration_ms: 8985.6563
+  type: 'test'
+  ...
+# Subtest: the committed pastes as a NON-superuser owner, as on Supabase (defaults on)
+    # Subtest: postgres owns the database and is not a superuser; supabase_admin is
+    ok 1 - postgres owns the database and is not a superuser; supabase_admin is
+      ---
+      duration_ms: 1854.0094
+      type: 'test'
+      ...
+    # Subtest: 001-004, 005, then 006 (dry run, apply) succeed as postgres; the dry run reports its counts and changes nothing; the apply reaches the golden after-006 snapshot
+    ok 2 - 001-004, 005, then 006 (dry run, apply) succeed as postgres; the dry run reports its counts and changes nothing; the apply reaches the golden after-006 snapshot
+      ---
+      duration_ms: 11866.9879
+      type: 'test'
+      ...
+    1..2
+ok 20 - the committed pastes as a NON-superuser owner, as on Supabase (defaults on)
+  ---
+  duration_ms: 13721.4618
+  type: 'suite'
+  ...
+1..20
+# tests 179
+# suites 17
+# pass 179
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 656816.6694
